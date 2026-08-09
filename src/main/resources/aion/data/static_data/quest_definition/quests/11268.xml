@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="11268" version="1">
+  <metadata name="Winning Veille's Favor" display-name-id="1125178" min-level="55" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <items>
+      <item id="182006281" count="6" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="25350" />
+        <reward kind="EXP" id="0" amount="7067452" />
+        <reward kind="SELECTABLE_ITEM" id="110101231" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="110301161" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="110501132" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="110601114" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="110301526" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

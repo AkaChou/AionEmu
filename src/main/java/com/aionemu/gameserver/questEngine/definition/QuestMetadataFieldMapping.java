@@ -36,12 +36,12 @@ public final class QuestMetadataFieldMapping {
 		fields.put("titleId", "QuestMetadata.titleId");
 		fields.put("collect_items", "QuestMetadata.itemRequirements");
 		fields.put("inventory_items", "QuestMetadata.inventoryItems");
-		fields.put("rewards", "QuestMetadata.rewards");
+		fields.put("rewards", "QuestMetadata.rewardGroups");
 		fields.put("bonus", "QuestMetadata.bonuses");
-		fields.put("extended_rewards", "QuestMetadata.extendedRewards");
+		fields.put("extended_rewards", "QuestMetadata.extendedRewardGroups");
 		fields.put("quest_drop", "QuestMetadata.drops");
 		fields.put("quest_kill", "QuestMetadata.kills");
-		fields.put("start_conditions", "QuestMetadata.startConditions");
+		fields.put("start_conditions", "QuestMetadata.startConditionGroups");
 		fields.put("class_permitted", "QuestMetadata.permittedClasses");
 		fields.put("gender_permitted", "QuestMetadata.permittedGender");
 		fields.put("quest_work_items", "QuestMetadata.questWorkItems");

@@ -26,31 +26,61 @@ import java.util.Set;
 
 /** Real {@link QuestEventPort}: freezes the pre-event player facts for one owner. */
 public final class PlayerQuestEventPort implements QuestEventPort {
+	@FunctionalInterface
+	interface EventActivitySource {
+		boolean isActive(int questId);
+	}
+
 	private final QuestPlayerPort players;
 	private final QuestStartEligibilityPort startEligibilityPort;
+	private final EventActivitySource eventActivitySource;
 
 	public PlayerQuestEventPort(QuestPlayerPort players) {
-		this(players, null);
+		this(players, null, questId -> GameEventServices.eventService().checkQuestIsActive(questId));
 	}
 
 	public PlayerQuestEventPort(QuestPlayerPort players, QuestStartEligibilityPort startEligibilityPort) {
+		this(players, startEligibilityPort,
+			questId -> GameEventServices.eventService().checkQuestIsActive(questId));
+	}
+
+	PlayerQuestEventPort(QuestPlayerPort players, QuestStartEligibilityPort startEligibilityPort,
+			EventActivitySource eventActivitySource) {
 		this.players = Objects.requireNonNull(players, "players");
 		this.startEligibilityPort = startEligibilityPort;
+		this.eventActivitySource = Objects.requireNonNull(eventActivitySource, "eventActivitySource");
 	}
 
 	@Override
 	public QuestSnapshot snapshot(Connection connection, int playerId, int questId, QuestEvent event)
 			throws SQLException {
+		return snapshot(connection, playerId, questId, event, false);
+	}
+
+	@Override
+	public QuestSnapshot snapshot(Connection connection, int playerId, int questId, QuestEvent event,
+			boolean includeStartEligibility) throws SQLException {
+		return snapshot(connection, playerId, questId, event, includeStartEligibility, Set.of());
+	}
+
+	@Override
+	public QuestSnapshot snapshot(Connection connection, int playerId, int questId, QuestEvent event,
+			boolean includeStartEligibility, Set<Integer> eventActivityQuestIds) throws SQLException {
 		Objects.requireNonNull(connection, "connection");
 		Objects.requireNonNull(event, "event");
+		Objects.requireNonNull(eventActivityQuestIds, "eventActivityQuestIds");
 		Player player = players.find(playerId);
 		if (player == null) {
 			throw new SQLException("player is unavailable: " + playerId);
 		}
 		QuestSnapshot snapshot = snapshotOf(player, questId);
+		Map<Integer, Boolean> eventActivities = eventActivitiesOf(eventActivityQuestIds);
+		if (eventActivities != null) {
+			snapshot = snapshot.withEventActivities(eventActivities);
+		}
 		snapshot = enrich(snapshot, event);
-		if (startEligibilityPort != null) {
-			snapshot = snapshot.withStartEligibility(startEligibilityPort.snapshot(playerId, questId));
+		if (includeStartEligibility && startEligibilityPort != null) {
+			snapshot = snapshot.withStartEligibility(startEligibilityPort.snapshot(playerId, questId, event));
 		}
 		PlayerCommonData commonData = player.getCommonData();
 		if (commonData != null) {
@@ -61,6 +91,9 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 			}
 			if (commonData.getGender() != null) {
 				snapshot = snapshot.withGender(commonData.getGender());
+			}
+			if (commonData.getRace() != null) {
+				snapshot = snapshot.withRace(commonData.getRace());
 			}
 		}
 		snapshot = snapshot.withTeamFacts(new QuestTeamFacts(player.isInGroup2(), player.isInAlliance2()));
@@ -87,7 +120,7 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 	 * 从在线玩家冻结一个任务事件快照，不修改玩家状态。
 	 * Freeze one quest-event snapshot from an online player without mutating player state.
 	 */
-	private static QuestSnapshot snapshotOf(Player player, int questId) {
+	private QuestSnapshot snapshotOf(Player player, int questId) {
 		QuestState state = player.getQuestStateList().getQuestState(questId);
 		QuestStatus status = state == null ? QuestStatus.NONE : state.getStatus();
 		int packed = state == null ? 0 : state.getQuestVars().getQuestVars();
@@ -132,9 +165,28 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 	}
 
 	/** Event data may be unavailable during partial startup or isolated tests; preserve unknown facts. */
-	private static Boolean eventActiveOf(int questId) {
+	private Boolean eventActiveOf(int questId) {
 		try {
-			return GameEventServices.eventService().checkQuestIsActive(questId);
+			return eventActivitySource.isActive(questId);
+		} catch (RuntimeException | LinkageError unavailable) {
+			return null;
+		}
+	}
+
+	/** Event data may be unavailable during partial startup; preserve unknown facts as uncaptured. */
+	private Map<Integer, Boolean> eventActivitiesOf(Set<Integer> questIds) {
+		if (questIds.isEmpty()) {
+			return Map.of();
+		}
+		try {
+			Map<Integer, Boolean> activities = new HashMap<>();
+			for (int questId : questIds) {
+				if (questId <= 0) {
+					throw new IllegalArgumentException("event activity quest ids must be positive");
+				}
+				activities.put(questId, eventActivitySource.isActive(questId));
+			}
+			return Map.copyOf(activities);
 		} catch (RuntimeException | LinkageError unavailable) {
 			return null;
 		}

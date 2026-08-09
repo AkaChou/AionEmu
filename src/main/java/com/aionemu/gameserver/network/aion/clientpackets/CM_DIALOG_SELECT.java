@@ -3,12 +3,10 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.actions.PlayerMode;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.questEngine.QuestEngine;
@@ -56,7 +54,7 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		final Player player = getConnection().getActivePlayer();
-		QuestTemplate questTemplate = DataManager.QUEST_DATA.getQuestById(questId);
+		var metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null);
 		QuestEnv env = new QuestEnv(null, player, questId, 0);
 
         /* 	if (player.isInPlayerMode(PlayerMode.RIDE)) { - dismount player with pet when interact with npc.
@@ -67,7 +65,7 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 			return;
 		}
 		if (targetObjectId == 0 || targetObjectId == player.getObjectId()) {
-			if (questTemplate != null && !questTemplate.isCannotShare() && (dialogId == 1002 || dialogId == 20000)) {
+			if (metadata != null && !metadata.cannotShare() && (dialogId == 1002 || dialogId == 20000)) {
 				QuestService.startQuest(env);
 				return;
 			}

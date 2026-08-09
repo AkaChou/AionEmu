@@ -1,22 +1,29 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.SystemMessageId;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestSystemMessage;
 import com.aionemu.gameserver.questEngine.definition.QuestSystemMessagePacket;
 import com.aionemu.gameserver.questEngine.definition.QuestSystemMessageTarget;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.Objects;
+import java.util.function.IntFunction;
 
 /** Production system-message boundary for the currently modeled quest messages. */
 public final class PlayerQuestSystemMessagePort implements QuestSystemMessagePort {
 	private final QuestPlayerPort players;
 	private final MessageOperations operations;
+	private final IntFunction<QuestMetadata> metadata;
 
 	public PlayerQuestSystemMessagePort(QuestPlayerPort players) {
+		this(players, questId -> GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null));
+	}
+
+	PlayerQuestSystemMessagePort(QuestPlayerPort players, IntFunction<QuestMetadata> metadata) {
 		this(players, new MessageOperations() {
 			@Override
 			public void questFailed(Player player, String questName) {
@@ -34,12 +41,19 @@ public final class PlayerQuestSystemMessagePort implements QuestSystemMessagePor
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(message.npcShout(), message.messageId(),
 					objectId, message.textColorId(), message.params().toArray()));
 			}
-		});
+		}, metadata);
 	}
 
 	PlayerQuestSystemMessagePort(QuestPlayerPort players, MessageOperations operations) {
+		this(players, operations,
+			questId -> GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null));
+	}
+
+	PlayerQuestSystemMessagePort(QuestPlayerPort players, MessageOperations operations,
+			IntFunction<QuestMetadata> metadata) {
 		this.players = Objects.requireNonNull(players, "players");
 		this.operations = Objects.requireNonNull(operations, "operations");
+		this.metadata = Objects.requireNonNull(metadata, "metadata");
 	}
 
 	@Override
@@ -53,11 +67,11 @@ public final class PlayerQuestSystemMessagePort implements QuestSystemMessagePor
 		}
 		switch (message) {
 			case QUEST_FAILED -> {
-				var quest = DataManager.QUEST_DATA == null ? null : DataManager.QUEST_DATA.getQuestById(snapshot.questId());
-				if (quest == null || quest.getName() == null) {
+				QuestMetadata questMetadata = metadata.apply(snapshot.questId());
+				if (questMetadata == null) {
 					throw new IllegalStateException("QUEST_FAILED requires quest metadata for " + snapshot.questId());
 				}
-				operations.questFailed(player, quest.getName());
+				operations.questFailed(player, questMetadata.name());
 			}
 			case WAREHOUSE_FULL_INVENTORY -> operations.warehouseFull(player);
 		}

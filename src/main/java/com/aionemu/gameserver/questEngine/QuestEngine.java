@@ -26,7 +26,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import com.aionemu.commons.utils.collections.IntProcedure;
 import com.aionemu.gameserver.GameServerError;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.GameEngine;
@@ -34,10 +33,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.templates.QuestTemplate;
-import com.aionemu.gameserver.model.templates.quest.HandlerSideDrop;
-import com.aionemu.gameserver.model.templates.quest.QuestCategory;
-import com.aionemu.gameserver.model.templates.quest.QuestDrop;
 import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.model.templates.quest.QuestNpc;
 import com.aionemu.gameserver.model.templates.rewards.BonusType;
@@ -45,7 +40,10 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
+import com.aionemu.gameserver.questEngine.definition.QuestCatalogDrop;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionCatalogManifest;
+import com.aionemu.gameserver.questEngine.definition.QuestCatalogRegistry;
+import com.aionemu.gameserver.questEngine.definition.QuestDropScope;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
@@ -61,6 +59,7 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.runtime.PlayerQuestBroadcastPort;
 import com.aionemu.gameserver.questEngine.runtime.QuestDispatchContract;
+import com.aionemu.gameserver.questEngine.runtime.QuestInteractionObjectValidator;
 import com.aionemu.gameserver.questEngine.runtime.QuestProductionDispatcher;
 import com.aionemu.gameserver.questEngine.runtime.QuestRouteResult;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeComposition;
@@ -136,6 +135,15 @@ public class QuestEngine implements GameEngine {
 	private final QuestRuntimeComposition runtimeComposition = QuestRuntimeComposition.production();
 	/** Live typed owner catalog and central Router/Coordinator execution chain. */
 	private volatile QuestProductionDispatcher productionDispatcher = QuestProductionDispatcher.disabled();
+
+	/** Fully validated immutable typed runtime waiting to be published. */
+	public record PreparedProductionDefinitions(QuestCatalogRegistry catalog,
+			QuestProductionDispatcher dispatcher) {
+		public PreparedProductionDefinitions {
+			java.util.Objects.requireNonNull(catalog, "catalog");
+			java.util.Objects.requireNonNull(dispatcher, "dispatcher");
+		}
+	}
 	/** 可行动作监听 / Can-act listeners */
 	private IntObjectHashMap<IntArrayList> questCanAct = new IntObjectHashMap<IntArrayList>();
 	/** 挖掘号奖励监听 / Dredgion reward listeners */
@@ -168,6 +176,16 @@ public class QuestEngine implements GameEngine {
 
 	QuestRuntimeComposition runtimeComposition() {
 		return runtimeComposition;
+	}
+
+	/** Returns the immutable catalog snapshot used by the currently published typed dispatcher. */
+	public QuestCatalogRegistry questCatalog() {
+		return productionDispatcher.catalogRegistry();
+	}
+
+	/** Returns quest drops from the exact catalog snapshot used by live event routing. */
+	public List<QuestCatalogDrop> questDrops(int npcId) {
+		return productionDispatcher.questDrops(npcId);
 	}
 
 	/**
@@ -215,14 +233,42 @@ public class QuestEngine implements GameEngine {
 				QuestEvent event = npcId == 0
 					? new QuestEvent.QuestDialog(env.getDialogId())
 					: new QuestEvent.TalkToNpc(npcId, env.getDialogId(), npc.getObjectId());
-				return typed.dispatch(event, player.getObjectId(), requestedOwner,
-					QuestDispatchContract.EXCLUSIVE).claimed();
+				var result = typed.dispatch(event, player.getObjectId(), requestedOwner,
+					QuestDispatchContract.EXCLUSIVE);
+				if (result.handled()) {
+					env.setQuestId(requestedOwner);
+					return true;
+				}
+				// A failed typed owner still owns this exclusive route, but the interaction failed.
+				// Never report it as successful and never replay the retired owner.
+				return false;
 			}
 
 			if (requestedOwner == 0 && npcId != 0) {
 				QuestEvent event = new QuestEvent.TalkToNpc(npcId, env.getDialogId(), npc.getObjectId());
-				if (typed.dispatch(event, player.getObjectId(), 0, QuestDispatchContract.EXCLUSIVE).claimed()) {
+				var result = typed.dispatch(event, player.getObjectId(), 0, QuestDispatchContract.EXCLUSIVE);
+				if (result.handled()) {
+					result.handledOwners().stream().findFirst().ifPresent(env::setQuestId);
 					return true;
+				}
+				if (result.claimed()) {
+					return false;
+				}
+				// Most quest interaction objects use a pure ACTION_ITEM_USE eligibility route and no
+				// separate TALK transition. Re-run that side-effect-free route at use completion so
+				// QuestItemNpcAI2 receives the actual owner id for group/alliance drop filtering.
+				QuestEvent.CanAct actionObject = new QuestEvent.CanAct(npcId, QuestActionType.ACTION_ITEM_USE.name());
+				if (env.getDialogId() == -1 && npc.getAi2() != null
+						&& "quest_use_item".equals(npc.getAi2().getName()) && typed.hasRoutes(actionObject)) {
+					var actionResult = typed.dispatch(actionObject, player.getObjectId(), 0,
+						QuestDispatchContract.EXCLUSIVE);
+					if (actionResult.handled()) {
+						actionResult.handledOwners().stream().findFirst().ifPresent(env::setQuestId);
+						return true;
+					}
+					if (actionResult.claimed()) {
+						return false;
+					}
 				}
 			}
 
@@ -233,13 +279,13 @@ public class QuestEngine implements GameEngine {
 					if (questHandler.onDialogEvent(env)) {
 						return true;
 					}
-						QuestTemplate qt = DataManager.QUEST_DATA.getQuestById(requestedOwner);
-						if (qt != null && qt.getCategory() == QuestCategory.CHALLENGE_TASK
+						var metadata = questCatalog().findMetadata(requestedOwner).orElse(null);
+						if (metadata != null && "CHALLENGE_TASK".equals(metadata.category())
 								&& player.getAccessLevel() > 0) {
 							PacketSendUtility.sendMessage(player,
 								"You're GM! So system won't apply countNextRepeatTime()");
 							return true;
-						} else if (qt != null && qt.getCategory() == QuestCategory.CHALLENGE_TASK
+						} else if (metadata != null && "CHALLENGE_TASK".equals(metadata.category())
 								&& player.getAccessLevel() == 0) {
 							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400855, 9));
 						}
@@ -251,8 +297,7 @@ public class QuestEngine implements GameEngine {
 					return false;
 				}
 				for (int questId : onTalkEvents) {
-					QuestTemplate qt = DataManager.QUEST_DATA.getQuestById(questId);
-					if (qt == null) {
+					if (questCatalog().findMetadata(questId).isEmpty()) {
 						log.warn(I18n.get("log.2e7b7247f488", questId));
 						continue;
 					}
@@ -1363,14 +1408,22 @@ public class QuestEngine implements GameEngine {
 		QuestProductionDispatcher typed = productionDispatcher;
 		QuestEvent event = new QuestEvent.CanAct(templateId, questActionType.name());
 		Set<Integer> typedClaimedOwners;
+		Set<Integer> typedHandledOwners;
 		try {
-			typedClaimedOwners = typed.dispatch(event, env.getPlayer().getObjectId(), 0,
-				QuestDispatchContract.EXCLUSIVE).claimedOwners();
+			var result = typed.dispatch(event, env.getPlayer().getObjectId(), 0,
+				QuestDispatchContract.EXCLUSIVE);
+			if (result.claimed() && !result.handled()) {
+				return false;
+			}
+			typedClaimedOwners = result.claimedOwners();
+			typedHandledOwners = result.handledOwners();
 		} catch (RuntimeException ignored) {
 			// Preserve legacy action owners when typed execution is unavailable.
 			typedClaimedOwners = Set.of();
+			typedHandledOwners = Set.of();
 		}
 		final Set<Integer> claimedOwners = typedClaimedOwners;
+		final Set<Integer> handledOwners = typedHandledOwners;
 		if (questCanAct.containsKey(templateId)) {
 			IntArrayList questIds = questCanAct.get(templateId);
 			boolean legacyHandled = !questIds.forEach(new IntProcedure() {
@@ -1389,9 +1442,9 @@ public class QuestEngine implements GameEngine {
 						return true;
 					}
 				});
-				return !claimedOwners.isEmpty() || legacyHandled;
+				return !handledOwners.isEmpty() || legacyHandled;
 		}
-		return !claimedOwners.isEmpty();
+		return !handledOwners.isEmpty();
 	}
 
 	/**
@@ -2262,6 +2315,12 @@ public class QuestEngine implements GameEngine {
 		return questHandlers.get(questId);
 	}
 
+	/** Returns explicit recipe resources owned by the current legacy executable owner. */
+	public List<Integer> legacyQuestOwnedRecipes(int questId) {
+		QuestHandler handler = getQuestHandlerByQuestId(questId);
+		return handler == null ? List.of() : List.copyOf(handler.getQuestOwnedRecipeIds());
+	}
+
 	/**
 	 * 是否已有该任务的处理器。
 	 * Whether a handler is registered for the quest.
@@ -2289,7 +2348,7 @@ public class QuestEngine implements GameEngine {
 			return false;
 		}
 		return productionDispatcher.dispatch(new QuestEvent.Abandon(), player.getObjectId(), questId,
-			QuestDispatchContract.EXCLUSIVE).claimed();
+			QuestDispatchContract.EXCLUSIVE).handled();
 	}
 
 	/** 从显式 production catalog 加载已通过 owner 审核的 typed 定义。 */
@@ -2312,9 +2371,19 @@ public class QuestEngine implements GameEngine {
 	 * All owners and event wiring are validated first; the dispatcher is published only after
 	 * NPC indexes have been registered.</p>
 	 */
-	void installProductionDefinitions(QuestCatalog catalog) {
-		QuestProductionDispatcher dispatcher = QuestProductionDispatcher.production(catalog, runtimeComposition);
-		runtimeComposition.installBroadcastPort(new PlayerQuestBroadcastPort(
+	PreparedProductionDefinitions prepareProductionDefinitions(QuestCatalog catalog) {
+		QuestCatalogRegistry registry = catalog instanceof QuestCatalogRegistry existing
+			? existing : new QuestCatalogRegistry(catalog);
+		QuestRuntimeComposition snapshotComposition = QuestRuntimeComposition.production(registry);
+		QuestProductionDispatcher dispatcher = QuestProductionDispatcher.production(registry, snapshotComposition);
+		QuestInteractionObjectValidator.validate(dispatcher, templateId -> {
+			if (DataManager.NPC_DATA == null) {
+				return null;
+			}
+			var template = DataManager.NPC_DATA.getNpcTemplate(templateId);
+			return template == null ? null : template.getAi();
+		});
+		snapshotComposition.installBroadcastPort(new PlayerQuestBroadcastPort(
 			playerId -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId),
 			(player, questIds) -> {
 				boolean any = false;
@@ -2323,8 +2392,16 @@ public class QuestEngine implements GameEngine {
 						QuestDispatchContract.EXCLUSIVE).claimed();
 				}
 				return any;
+			},
+			(player, questIds) -> {
+				boolean any = false;
+				for (int questId : questIds) {
+					any |= dispatcher.dispatch(new QuestEvent.EventQuestRefresh(), player.getObjectId(), questId,
+						QuestDispatchContract.EXCLUSIVE).claimed();
+				}
+				return any;
 			}));
-		for (CompiledQuestDefinition definition : catalog.all()) {
+		for (CompiledQuestDefinition definition : registry.executables()) {
 			if (questHandlers.containsKey(definition.id())) {
 				throw new IllegalStateException("quest " + definition.id() + " already has a legacy handler");
 			}
@@ -2350,6 +2427,7 @@ public class QuestEngine implements GameEngine {
 						&& !(transition.event() instanceof QuestEvent.NpcReachTarget)
 						&& !(transition.event() instanceof QuestEvent.NpcLostTarget)
 						&& !(transition.event() instanceof QuestEvent.ZoneMissionEnd)
+						&& !(transition.event() instanceof QuestEvent.EventQuestRefresh)
 							&& !(transition.event() instanceof QuestEvent.InvisibleTimerEnd)
 							&& !(transition.event() instanceof QuestEvent.FailCraft)
 							&& !(transition.event() instanceof QuestEvent.EquipItem)
@@ -2377,7 +2455,17 @@ public class QuestEngine implements GameEngine {
 				throw new IllegalStateException("typed item-play event has no indexed route");
 			}
 		}
-		for (CompiledQuestDefinition definition : catalog.all()) {
+		return new PreparedProductionDefinitions(registry, dispatcher);
+	}
+
+	void installProductionDefinitions(QuestCatalog catalog) {
+		installProductionDefinitions(prepareProductionDefinitions(catalog));
+	}
+
+	private void installProductionDefinitions(PreparedProductionDefinitions prepared) {
+		QuestCatalogRegistry catalog = prepared.catalog();
+		QuestProductionDispatcher dispatcher = prepared.dispatcher();
+		for (CompiledQuestDefinition definition : catalog.executables()) {
 			for (var transition : definition.definition().transitions()) {
 				if (transition.event() instanceof QuestEvent.TalkToNpc talk) {
 					QuestNpc questNpc = registerQuestNpc(talk.npcId());
@@ -2437,6 +2525,31 @@ public class QuestEngine implements GameEngine {
 		productionDispatcher = dispatcher;
 	}
 
+	/** Compiles and validates the complete canonical catalog without changing the live dispatcher. */
+	public PreparedProductionDefinitions prepareProductionDefinitions() {
+		try {
+			return prepareProductionDefinitions(loadProductionCatalog());
+		} catch (Exception e) {
+			throw new GameServerError("Can't prepare typed quest catalog.", e);
+		}
+	}
+
+	/** Returns the exact catalog/dispatcher pair currently published. */
+	public PreparedProductionDefinitions currentProductionDefinitions() {
+		QuestProductionDispatcher dispatcher = productionDispatcher;
+		return new PreparedProductionDefinitions(dispatcher.catalogRegistry(), dispatcher);
+	}
+
+	/** Rejects XML owners that would collide with a prepared typed owner before runtime state is cleared. */
+	public void validateLegacyOwnerConflicts(PreparedProductionDefinitions prepared, List<XMLQuest> scripts) {
+		for (XMLQuest script : scripts) {
+			if (prepared.dispatcher().owns(script.getId())) {
+				throw new GameServerError("Quest " + script.getId()
+					+ " is owned by both the typed catalog and an XML quest script.");
+			}
+		}
+	}
+
 	/**
 	 * 注册处理器：调用其 {@link QuestHandler#register()} 并放入映射。
 	 * Register a handler: invoke {@link QuestHandler#register()} and store it.
@@ -2466,8 +2579,7 @@ public class QuestEngine implements GameEngine {
 	 * Chance
 	 */
 	public void addHandlerSideQuestDrop(int questId, int npcId, int itemId, int amount, int chance) {
-		HandlerSideDrop hsd = new HandlerSideDrop(questId, npcId, itemId, amount, chance);
-		QuestService.addQuestDrop(hsd.getNpcId(), hsd);
+		QuestService.addHandlerSideQuestDrop(handlerSideDrop(questId, npcId, itemId, amount, chance, 0));
 	}
 
 	/**
@@ -2482,8 +2594,16 @@ public class QuestEngine implements GameEngine {
 	 * @param step 所需步骤 / Required step
 	 */
 	public void addHandlerSideQuestDrop(int questId, int npcId, int itemId, int amount, int chance, int step) {
-		HandlerSideDrop hsd = new HandlerSideDrop(questId, npcId, itemId, amount, chance, step);
-		QuestService.addQuestDrop(hsd.getNpcId(), hsd);
+		QuestService.addHandlerSideQuestDrop(handlerSideDrop(questId, npcId, itemId, amount, chance, step));
+	}
+
+	private QuestCatalogDrop handlerSideDrop(int questId, int npcId, int itemId, int amount, int chance, int step) {
+		var metadata = questCatalog().findMetadata(questId);
+		QuestDropScope scope = metadata.stream().flatMap(value -> value.drops().stream())
+			.filter(drop -> drop.npcId() == npcId && drop.itemId() == itemId)
+			.map(com.aionemu.gameserver.questEngine.definition.QuestDrop::scope)
+			.findFirst().orElse(QuestDropScope.NONE);
+		return new QuestCatalogDrop(questId, npcId, itemId, chance, scope, step, amount, metadata);
 	}
 
 	/**
@@ -2493,21 +2613,19 @@ public class QuestEngine implements GameEngine {
 	 * @param progressLatch 进度闩锁（可空） / Progress latch (nullable)
 	 */
 	public void load(CountDownLatch progressLatch) {
+		load(progressLatch, null);
+	}
+
+	/** Loads handlers using an already compiled and validated typed snapshot. */
+	public void load(CountDownLatch progressLatch, PreparedProductionDefinitions prepared) {
 		log.info(I18n.get("log.5359e35f8f99"));
-		QuestsData questData = DataManager.QUEST_DATA;
-		for (QuestTemplate data : questData.getQuestsData()) {
-			for (QuestDrop drop : data.getQuestDrop()) {
-				drop.setQuestId(data.getId());
-				QuestService.addQuestDrop(drop.getNpcId(), drop);
-			}
-		}
 		AggregatedClassListener acl = new AggregatedClassListener();
 		acl.addClassListener(new OnClassLoadUnloadListener());
 		acl.addClassListener(new ScheduledTaskClassListener());
 		acl.addClassListener(new QuestHandlerLoader());
 
 		try {
-			installProductionDefinitions(loadProductionCatalog());
+			installProductionDefinitions(prepared == null ? prepareProductionDefinitions(loadProductionCatalog()) : prepared);
 			acl.postLoad(CompiledScriptLoader.load("com.aionemu.gameserver.quest.handlers"));
 			XMLQuests xmlQuests = DataManager.XML_QUESTS;
 			for (XMLQuest xmlQuest : xmlQuests.getQuest()) {
@@ -2549,13 +2667,13 @@ public class QuestEngine implements GameEngine {
 				SM_SYSTEM_MESSAGE weeklyMessage = new SM_SYSTEM_MESSAGE(1400856);
 				for (Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 					for (QuestState qs : player.getQuestStateList().getAllQuestState()) {
-						if (qs != null && qs.canRepeat()) {
-							QuestTemplate template = DataManager.QUEST_DATA.getQuestById(qs.getQuestId());
-							if (template.isDaily()) {
+						var metadata = qs == null ? null : questCatalog().findMetadata(qs.getQuestId()).orElse(null);
+						if (qs != null && qs.canRepeat(metadata)) {
+							if (metadata.repeatPolicy().daily()) {
 								player.getController().updateZone();
 								player.getController().updateNearbyQuests();
 								PacketSendUtility.sendPacket(player, dailyMessage);
-							} else if (template.isWeekly()) {
+							} else if (metadata.repeatPolicy().weekly()) {
 								player.getController().updateZone();
 								player.getController().updateNearbyQuests();
 								PacketSendUtility.sendPacket(player, weeklyMessage);

@@ -3,8 +3,11 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
+import com.aionemu.gameserver.model.account.Account;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
+import com.aionemu.gameserver.questEngine.definition.RepeatPolicy;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
@@ -14,8 +17,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -144,6 +150,26 @@ class PlayerQuestStatePortTest {
 		assertEquals(3, committed.getCompleteCount());
 		assertEquals(3, committed.getRewardOrNull());
 		assertEquals(persistedCompleteTime, committed.getCompleteTime());
+	}
+
+	@Test
+	void completionRepeatTimestampComesFromCanonicalMetadata() throws Exception {
+		Player player = playerWithState(QuestStatus.REWARD, 1);
+		setField(Player.class, player, "playerAccount", new Account(1));
+		QuestMetadata metadata = new QuestMetadata("Daily", 1, 1, 80, Set.of(), "QUEST",
+			new RepeatPolicy(255, 0, true, false), Set.of(), List.of(), List.of(), List.of());
+		RecordingDao dao = new RecordingDao();
+		PlayerQuestStatePort port = new PlayerQuestStatePort(playerId -> player, dao,
+			questId -> questId == QUEST_ID ? metadata : null);
+		QuestMutationPlan plan = new QuestMutationPlan(QUEST_ID, QuestStatus.COMPLETE, 0,
+			List.of(new com.aionemu.gameserver.questEngine.definition.QuestAction.CompleteQuest(0)), List.of());
+
+		port.apply(connection(), PLAYER_ID, plan);
+
+		Timestamp nextRepeat = dao.stores.getFirst().getFirst().getNextRepeatTime();
+		ZonedDateTime scheduled = nextRepeat.toInstant().atZone(ZoneId.systemDefault());
+		assertEquals(9, scheduled.getHour());
+		assertEquals(0, scheduled.getMinute());
 	}
 
 	@Test

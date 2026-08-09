@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80989" version="1">
+  <metadata name="[Event] Ancient Hero's Resting Place" display-name-id="1803905" min-level="10" max-level="2147483647" category="EVENT">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="1" />
+        <reward kind="ITEM" id="188058635" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

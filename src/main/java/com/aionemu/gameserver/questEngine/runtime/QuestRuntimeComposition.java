@@ -10,12 +10,15 @@ import com.aionemu.gameserver.dao.PlayerSkillListDAO;
 import com.aionemu.gameserver.dao.PlayerTitleListDAO;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
+import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.services.item.ItemService;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.IntFunction;
 
 /** Production object graph for typed quest required and after-commit capabilities. */
 public final class QuestRuntimeComposition {
@@ -53,6 +56,17 @@ public final class QuestRuntimeComposition {
 	}
 
 	public static QuestRuntimeComposition production() {
+		return production(questId -> com.aionemu.gameserver.lifecycle.GameEngineServices.questEngine()
+			.questCatalog().findMetadata(questId).orElse(null));
+	}
+
+	/** Builds a production graph whose metadata reads are pinned to one immutable catalog snapshot. */
+	public static QuestRuntimeComposition production(QuestCatalog catalog) {
+		Objects.requireNonNull(catalog, "catalog");
+		return production(questId -> catalog.findMetadata(questId).orElse(null));
+	}
+
+	private static QuestRuntimeComposition production(IntFunction<QuestMetadata> metadata) {
 		QuestPlayerPort players = playerId -> GameWorldBootstrapServices.world().findPlayer(playerId);
 		QuestSpawnRegistry spawns = QuestSpawnRegistry.global();
 		return new QuestRuntimeComposition(TypedQuestAfterCommitPort.fullyComposed(
@@ -61,11 +75,12 @@ public final class QuestRuntimeComposition {
 			new PlayerQuestMoviePort(players),
 			new PlayerQuestSpawnPort(players, spawns),
 			new PlayerQuestAiPort(players, spawns),
-			new PlayerQuestTimerPort(players), new PlayerQuestStateSyncPort(players),
-			new PlayerQuestStatsPort(players), new PlayerQuestEffectPort(players),
-			new PlayerQuestNpcPort(GameWorldBootstrapServices::world), new PlayerQuestSystemMessagePort(players)),
-			new PlayerQuestEventPort(players, new PlayerQuestStartEligibilityPort(players)),
-			new LazyProductionActionPort(players), new LazyProductionStatePort(players),
+			new PlayerQuestTimerPort(players), new PlayerQuestStateSyncPort(players, metadata),
+			new PlayerQuestStatsPort(players), new PlayerQuestEffectPort(players, metadata),
+			new PlayerQuestNpcPort(GameWorldBootstrapServices::world),
+			new PlayerQuestSystemMessagePort(players, metadata)),
+			new PlayerQuestEventPort(players, new PlayerQuestStartEligibilityPort(players, metadata)),
+			new LazyProductionActionPort(players), new LazyProductionStatePort(players, metadata),
 			new PlayerQuestPvpEventPort(), new PlayerQuestProximityEventPort(),
 			new PlayerQuestAiPerceptionEventPort(), new PlayerQuestHousingEventPort(),
 			new PlayerQuestMovementEventPort(), new PlayerQuestPvpInstanceEventPort(),
@@ -179,10 +194,12 @@ public final class QuestRuntimeComposition {
 
 	private static final class LazyProductionStatePort implements QuestStatePort {
 		private final QuestPlayerPort players;
+		private final IntFunction<QuestMetadata> metadata;
 		private volatile QuestStatePort delegate;
 
-		private LazyProductionStatePort(QuestPlayerPort players) {
+		private LazyProductionStatePort(QuestPlayerPort players, IntFunction<QuestMetadata> metadata) {
 			this.players = players;
+			this.metadata = metadata;
 		}
 
 		@Override
@@ -207,7 +224,7 @@ public final class QuestRuntimeComposition {
 			}
 			synchronized (this) {
 				if (delegate == null) {
-					delegate = new PlayerQuestStatePort(players, DAOManager.getDAO(PlayerQuestListDAO.class));
+					delegate = new PlayerQuestStatePort(players, DAOManager.getDAO(PlayerQuestListDAO.class), metadata);
 				}
 				return delegate;
 			}

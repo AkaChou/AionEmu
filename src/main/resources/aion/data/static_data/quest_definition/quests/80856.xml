@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80856" version="1">
+  <metadata name="[Event] Satisfy Terminus the Gourmet Apprentice" display-name-id="1185982" min-level="60" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="164002344" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="164002341" amount="1" />
+        <reward kind="ITEM" id="188055214" amount="1" />
+        <reward kind="ITEM" id="182216015" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

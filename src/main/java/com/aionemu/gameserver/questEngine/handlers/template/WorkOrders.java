@@ -1,15 +1,12 @@
 package com.aionemu.gameserver.questEngine.handlers.template;
 
 import java.util.Iterator;
+import java.util.List;
 
-import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.templates.QuestTemplate;
-import com.aionemu.gameserver.model.templates.quest.CollectItem;
-import com.aionemu.gameserver.model.templates.quest.CollectItems;
-import com.aionemu.gameserver.model.templates.quest.QuestItems;
-import com.aionemu.gameserver.model.templates.quest.QuestWorkItems;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
 import com.aionemu.gameserver.questEngine.handlers.models.WorkOrdersData;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
@@ -28,6 +25,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class WorkOrders extends QuestHandler {
 	/** 工单 XML 配置数据 / work-order XML config data */
 	private final WorkOrdersData workOrdersData;
+	private final QuestMetadata metadata;
 
 	/**
 	 * 构造制作工单任务处理器。
@@ -38,6 +36,9 @@ public class WorkOrders extends QuestHandler {
 	public WorkOrders(WorkOrdersData workOrdersData) {
 		super(workOrdersData.getId());
 		this.workOrdersData = workOrdersData;
+		this.metadata = GameEngineServices.questEngine().questCatalog().findMetadata(workOrdersData.getId())
+			.orElseThrow(() -> new IllegalStateException(
+				"missing canonical metadata for legacy work-order quest " + workOrdersData.getId()));
 	}
 
 	/**
@@ -67,7 +68,7 @@ public class WorkOrders extends QuestHandler {
 		int targetId = env.getTargetId();
 		if (workOrdersData.getStartNpcIds().contains(targetId)) {
 			QuestState qs = player.getQuestStateList().getQuestState(workOrdersData.getId());
-			if (qs == null || qs.getStatus() == QuestStatus.NONE || qs.canRepeat()) {
+			if (qs == null || qs.getStatus() == QuestStatus.NONE || qs.canRepeat(metadata)) {
 				switch (env.getDialog()) {
 				case START_DIALOG: {
 					return sendQuestDialog(env, 4);
@@ -90,17 +91,10 @@ public class WorkOrders extends QuestHandler {
 					int var = qs.getQuestVarById(0);
 					if (QuestService.collectItemCheck(env, false)) {
 						changeQuestStep(env, var, var, true);
-						QuestWorkItems qwi = DataManager.QUEST_DATA.getQuestById(workOrdersData.getId())
-								.getQuestWorkItems();
-						if (qwi != null) {
-							long count = 0;
-							for (QuestItems qi : qwi.getQuestWorkItem()) {
-								if (qi != null) {
-									count = player.getInventory().getItemCountByItemId(qi.getItemId());
-									if (count > 0) {
-										player.getInventory().decreaseByItemId(qi.getItemId(), count);
-									}
-								}
+						for (var workItem : metadata.questWorkItems()) {
+							long count = player.getInventory().getItemCountByItemId(workItem.itemId());
+							if (count > 0) {
+								player.getInventory().decreaseByItemId(workItem.itemId(), count);
 							}
 						}
 						return sendQuestDialog(env, 5);
@@ -109,13 +103,10 @@ public class WorkOrders extends QuestHandler {
 					}
 				}
 			} else if (qs.getStatus() == QuestStatus.REWARD) {
-				QuestTemplate template = DataManager.QUEST_DATA.getQuestById(workOrdersData.getId());
-				CollectItems collectItems = template.getCollectItems();
-				long count = 0;
-				for (CollectItem collectItem : collectItems.getCollectItem()) {
-					count = player.getInventory().getItemCountByItemId(collectItem.getItemId());
+				for (var collectItem : metadata.itemRequirements()) {
+					long count = player.getInventory().getItemCountByItemId(collectItem.itemId());
 					if (count > 0) {
-						player.getInventory().decreaseByItemId(collectItem.getItemId(), count);
+						player.getInventory().decreaseByItemId(collectItem.itemId(), count);
 					}
 				}
 				player.getRecipeList().deleteRecipe(player, workOrdersData.getRecipeId());
@@ -129,5 +120,10 @@ public class WorkOrders extends QuestHandler {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public List<Integer> getQuestOwnedRecipeIds() {
+		return List.of(workOrdersData.getRecipeId());
 	}
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="9558" version="1">
+  <metadata name="[Event] Thirst for Invention!" display-name-id="1112029" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="20000" />
+        <reward kind="ITEM" id="162002007" amount="10" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

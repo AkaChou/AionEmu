@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="21269" version="1">
+  <metadata name="Standing For Asmodae" display-name-id="1127189" min-level="55" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <items>
+      <item id="182006282" count="5" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="47850" />
+        <reward kind="EXP" id="0" amount="7067452" />
+        <reward kind="SELECTABLE_ITEM" id="113101131" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="113301134" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="113501110" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="113601075" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="113301503" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80884" version="1">
+  <metadata name="[Event] Taking Revenge for Harorunerk" display-name-id="1802785" min-level="65" max-level="2147483647" category="EVENT">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="188100380" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

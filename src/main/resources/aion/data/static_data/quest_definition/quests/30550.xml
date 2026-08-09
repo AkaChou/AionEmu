@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="30550" version="1">
+  <metadata name="Moment Of Crisis" display-name-id="1135507" min-level="57" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="99720" />
+        <reward kind="EXP" id="0" amount="9178961" />
+        <reward kind="ITEM" id="169000010" amount="140" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

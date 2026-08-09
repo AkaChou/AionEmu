@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80483" version="1">
+  <metadata name="[Event] Stories Of Sword's Edge" display-name-id="1199977" min-level="30" max-level="2147483647" category="EVENT">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="30000" />
+        <reward kind="EXP" id="0" amount="20000" />
+        <reward kind="ITEM" id="160010085" amount="5" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

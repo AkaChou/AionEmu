@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="30042" version="1">
+  <metadata name="Reian Relations" display-name-id="1800494" min-level="53" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="8798808" />
+        <reward kind="SELECTABLE_ITEM" id="166050221" amount="2" />
+        <reward kind="SELECTABLE_ITEM" id="166050222" amount="2" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="unfinished" quest-id="30001" />
+        <condition type="noacquired" quest-id="30001" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

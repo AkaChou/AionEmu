@@ -250,6 +250,11 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 			requireSuccess(aiPort.broadcastEmotion(snapshot, plan, emotion.slot(), emotion.emotion()), action, snapshot);
 			return;
 		}
+		if (action instanceof AfterCommitAction.BroadcastInteractionNpcEmotion emotion) {
+			requireAiPort();
+			requireSuccess(aiPort.broadcastInteractionEmotion(snapshot, plan, emotion.emotion()), action, snapshot);
+			return;
+		}
 		if (action instanceof AfterCommitAction.WatchFollowZone followZone) {
 			requireAiPort();
 			requireSuccess(aiPort.watchFollowZone(snapshot, plan, followZone.slot(), followZone.zone()), action, snapshot);
@@ -381,6 +386,14 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 				throw new IllegalArgumentException("broadcastZoneMissionEnd requires a broadcast port");
 			}
 			requireSuccess(broadcastPort.broadcastZoneMissionEnd(snapshot, plan, broadcast.questIds()), action, snapshot);
+			return;
+		}
+		if (action instanceof AfterCommitAction.ScheduleEventQuestRefresh refresh) {
+			if (broadcastPort == null) {
+				throw new IllegalArgumentException("scheduleEventQuestRefresh requires a broadcast port");
+			}
+			requireSuccess(broadcastPort.scheduleEventQuestRefresh(snapshot, plan, refresh.seconds(),
+				refresh.questIds()), action, snapshot);
 			return;
 		}
 		throw new IllegalArgumentException("unsupported after-commit action: " + action.getClass().getName());

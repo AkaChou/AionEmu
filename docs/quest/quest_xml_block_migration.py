@@ -196,12 +196,18 @@ def talk_event(npc_id: int, dialog_id: int) -> dict[str, Any]:
 	return canon("talk-to-npc", **{"npc-id": npc_id, "dialog-id": dialog_id})
 
 
-def metadata_rewards(root: ET.Element) -> list[dict[str, Any]]:
+def metadata_reward_groups(root: ET.Element) -> list[list[dict[str, Any]]]:
 	metadata = child(root, "metadata")
 	rewards = child(metadata, "rewards") if metadata is not None else None
-	if rewards is None:
+	groups = child(metadata, "reward-groups") if metadata is not None else None
+	if rewards is not None and groups is not None:
+		raise ValueError("metadata declares both rewards and reward-groups")
+	if rewards is not None:
+		return [[dict(item.attrib) for item in children(rewards, "reward")]]
+	if groups is None:
 		return []
-	return [dict(item.attrib) for item in children(rewards, "reward")]
+	return [[dict(item.attrib) for item in children(group, "reward")]
+		for group in children(groups, "group")]
 
 
 def reward_action(reward: dict[str, str]) -> dict[str, Any]:
@@ -348,13 +354,16 @@ def expand_kill_chain_ir(block: ET.Element) -> list[dict[str, Any]]:
 	return result
 
 
-def expand_npc_complete_ir(block: ET.Element, rewards: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def expand_npc_complete_ir(block: ET.Element, reward_groups: list[list[dict[str, Any]]]) -> list[dict[str, Any]]:
 	npc_id = int(block.get("npc-id"))
 	source = block.get("source")
 	target = block.get("target")
+	complete_index = int(block.get("complete-reward-index"))
+	if not reward_groups:
+		raise ValueError("npc-complete requires reward metadata")
+	rewards = reward_groups[0] if len(reward_groups) == 1 else reward_groups[complete_index]
 	fixed_indices = [int(value) for value in block.get("fixed-reward-indices", "").split()]
 	fixed = [reward_action(rewards[index]) for index in fixed_indices]
-	complete_index = int(block.get("complete-reward-index"))
 	finish = block.get("finish")
 	after = [canon("refresh-player-stats"), canon("sync-quest-state", mode="COMPLETION")]
 	if finish == "SELECTION_DIALOG":
@@ -384,7 +393,7 @@ def expand_npc_complete_ir(block: ET.Element, rewards: list[dict[str, Any]]) -> 
 def semantic_summary(data: bytes) -> dict[str, Any]:
 	root = ET.fromstring(data)
 	transitions = child(root, "transitions")
-	rewards = metadata_rewards(root)
+	reward_groups = metadata_reward_groups(root)
 	statuses, variables, _fields = node_context(root)
 	result: list[dict[str, Any]] = []
 	if transitions is not None:
@@ -406,7 +415,7 @@ def semantic_summary(data: bytes) -> dict[str, Any]:
 			elif element.tag == "npc-report":
 				result.extend(expand_npc_report_ir(element))
 			elif element.tag == "npc-complete":
-				result.extend(expand_npc_complete_ir(element, rewards))
+				result.extend(expand_npc_complete_ir(element, reward_groups))
 			else:
 				raise ValueError(f"unsupported transitions child {element.tag}")
 	payload = json.dumps(result, ensure_ascii=True, sort_keys=True, separators=(",", ":")).encode()

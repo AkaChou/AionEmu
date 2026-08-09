@@ -9,27 +9,53 @@ import java.util.Optional;
 
 /** Deterministic immutable catalog; duplicate owners fail during construction. */
 public final class ImmutableQuestCatalog implements QuestCatalog {
-	private final Map<Integer, CompiledQuestDefinition> definitions;
+	private final Map<Integer, QuestCatalogEntry> entries;
+	private final Collection<CompiledQuestDefinition> executables;
 
 	public ImmutableQuestCatalog(Collection<CompiledQuestDefinition> definitions) {
-		Objects.requireNonNull(definitions, "definitions");
-		Map<Integer, CompiledQuestDefinition> index = new LinkedHashMap<>();
-		for (CompiledQuestDefinition definition : definitions) {
-			Objects.requireNonNull(definition, "definition");
-			if (index.putIfAbsent(definition.id(), definition) != null) {
-				throw new QuestCompilationException("DUPLICATE_OWNER", "duplicate quest owner: " + definition.id());
+		this(definitions.stream().map(QuestCatalogEntry::executable).toList(), true);
+	}
+
+	public static ImmutableQuestCatalog fromEntries(Collection<QuestCatalogEntry> entries) {
+		return new ImmutableQuestCatalog(entries, true);
+	}
+
+	private ImmutableQuestCatalog(Collection<QuestCatalogEntry> entries, boolean ignored) {
+		Objects.requireNonNull(entries, "entries");
+		Map<Integer, QuestCatalogEntry> index = new LinkedHashMap<>();
+		for (QuestCatalogEntry entry : entries) {
+			Objects.requireNonNull(entry, "entry");
+			if (index.putIfAbsent(entry.id(), entry) != null) {
+				throw new QuestCompilationException("DUPLICATE_CATALOG_ENTRY",
+					"duplicate quest catalog entry: " + entry.id());
 			}
 		}
-		this.definitions = Collections.unmodifiableMap(index);
+		this.entries = Collections.unmodifiableMap(index);
+		this.executables = index.values().stream().flatMap(entry -> entry.executable().stream()).toList();
 	}
 
 	@Override
-	public Optional<CompiledQuestDefinition> find(int questId) {
-		return Optional.ofNullable(definitions.get(questId));
+	public Optional<QuestCatalogEntry> findEntry(int questId) {
+		return Optional.ofNullable(entries.get(questId));
 	}
 
 	@Override
-	public Collection<CompiledQuestDefinition> all() {
-		return definitions.values();
+	public Optional<QuestMetadata> findMetadata(int questId) {
+		return findEntry(questId).map(QuestCatalogEntry::metadata);
+	}
+
+	@Override
+	public Optional<CompiledQuestDefinition> findExecutable(int questId) {
+		return findEntry(questId).flatMap(QuestCatalogEntry::executable);
+	}
+
+	@Override
+	public Collection<QuestCatalogEntry> entries() {
+		return entries.values();
+	}
+
+	@Override
+	public Collection<CompiledQuestDefinition> executables() {
+		return executables;
 	}
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="30237" version="1">
+  <metadata name="[Group] New Polearm" display-name-id="1114337" min-level="52" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <classes>
+      <class id="WARRIOR" />
+      <class id="GLADIATOR" />
+      <class id="TEMPLAR" />
+    </classes>
+    <items>
+      <item id="101300686" count="1" />
+      <item id="186000099" count="1" />
+      <item id="186000106" count="1" />
+      <item id="182216246" count="1" />
+    </items>
+    <work-items>
+      <item id="182209635" count="1" />
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="6517414" />
+        <reward kind="ITEM" id="101300689" amount="1" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="30020" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="50049" version="1">
+  <metadata name="[Event] Greater Catalium Snowball" display-name-id="1801271" min-level="10" max-level="2147483647" category="EVENT">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="188053925" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="188053935" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

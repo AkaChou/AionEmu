@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80812" version="1">
+  <metadata name="[Prestige/Daily] Prestigious Splendor" display-name-id="1185898" min-level="50" max-level="2147483647" category="EVENT">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="186000057" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80964" version="1">
+  <metadata name="[Instanced Dungeon/Group] Request 2: Theobomos Test Chamber" display-name-id="1803659" min-level="66" max-level="2147483647" category="EVENT">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="90000000" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="80963" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

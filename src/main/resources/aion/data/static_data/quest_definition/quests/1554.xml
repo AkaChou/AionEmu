@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="1554" version="1">
+  <metadata name="[Spy/Group] The Seiren's Fin" display-name-id="1102754" min-level="43" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <items>
+      <item id="182201797" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="3307050" />
+        <reward kind="AP" id="0" amount="150" />
+        <reward kind="TITLE" id="28" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="120000852" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="120000853" amount="1" />
+        <reward kind="ITEM" id="186000469" amount="5" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="213352" item-id="182201797" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="1553" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

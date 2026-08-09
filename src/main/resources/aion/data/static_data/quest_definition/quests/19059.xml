@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="19059" version="1">
+  <metadata name="Its Rightful Owner" display-name-id="1130042" min-level="15" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <work-items>
+      <item id="182212232" count="1" />
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="10000" />
+        <reward kind="EXP" id="0" amount="21000" />
+        <reward kind="AP" id="0" amount="700" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

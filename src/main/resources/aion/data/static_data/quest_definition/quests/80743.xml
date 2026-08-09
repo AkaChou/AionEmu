@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80743" version="1">
+  <metadata name="[Event] One More Chance" display-name-id="1185850" min-level="30" max-level="2147483647" category="EVENT">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <items>
+      <item id="182007390" count="15" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="188054094" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

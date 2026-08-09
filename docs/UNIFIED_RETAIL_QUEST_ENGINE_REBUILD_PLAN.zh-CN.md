@@ -1,7 +1,19 @@
 # AionEmu 统一任务引擎迁移计划
 
 状态：`ACTIVE`
-最后更新：2026-08-03
+最后更新：2026-08-09
+
+## 2026-08-09 批次进展
+
+- 完成 110 个剩余 legacy XML Owner 的全面权威证据审计（客户端 unpak 字符串表/quest.xml + 真端 + 5.8 静态文件）。
+- 迁移 34 个任务：24 个 EXECUTABLE（hunt/talk 行为建模，含 80278/80280/80281/80283 monster_hunt、8017x/8020x 事件链）+ 10 个 METADATA_ONLY（无行为任务）。
+- 76 个任务 BLOCKED（客户端/真端/字符串表均无权威证据：90001-90070 Encom 私有 book 任务、80267、39716/49716、50011/50012/51011/51012 收集物品缺失）。
+- 关键证据突破：`/Users/mc/PycharmProjects/unpak/`（Aion PAK 解包工具）提供 client_strings_quest.xml（9546 条权威 nameId）与 Quest_unpacked/quest.xml。
+- 能力缺口记录：EXTEND_INVENTORY 奖励 kind 枚举存在但 PlayerQuestRewardPort.supported() fail-closed（50033 受影响，已记录）。
+- legacy_xml_owners: 110 → 76；catalog_entries: 6477 → 6511；typed_owners: 6032 → 6056。
+- 完整 mvn verify：Tests run: 2371, Failures: 0, Errors: 0, BUILD SUCCESS。
+- **2026-08-09 用户指示删除私服任务**：90001-90070（69 个 Encom book 任务）+ 80267 + 39716/49716 共 72 个无客户端/真端记录的私服任务已从 quest_script_data（book.xml/merry_and_green.xml/event.xml）删除，claims 标记 RELEASED。
+- 删除后：legacy_xml_owners: 76 → **4**（仅剩 50011/50012/51011/51012 官方任务 BLOCKED）；ids: 6587 → 6515；MISSING_AUTHORITY_METADATA: 148 → 76。
 
 ## 目标
 
@@ -67,8 +79,8 @@ evidence、源码 locator、迁移状态、比对覆盖率和 blocker 等过程�
 
 ## 当前落地
 
-- 正式定义位于 `src/main/resources/aion/data/static_data/quest_definition/quests/`；生产启动通过 `quest_definition_catalog.xml` 装载已审核并完成 owner 接管的 typed 定义。
-- `quests/` 目录扫描器只用于全量编译和一致性校验；目录中仍可能有尚未完成接管的候选 XML，不能直接把整个目录当生产 owner。生产 catalog 条目仍按数字 ID 唯一、文件名/根 ID 一致和资源存在性 fail-closed。
+- 正式定义位于 `src/main/resources/aion/data/static_data/quest_definition/quests/`；生产启动通过 schema v2 `quest_definition_catalog.xml` 显式区分 `EXECUTABLE` 与 `METADATA_ONLY`。只有前者进入事件索引，后者只提供 canonical metadata。
+- `quests/` 目录扫描器只用于全量编译和一致性校验，并按定义是否包含 nodes/transitions 保留 metadata-only 隔离；不能直接把整个目录当生产 owner。生产 catalog 条目仍按数字 ID 唯一、文件名/根 ID 一致和资源存在性 fail-closed。
 - 1101、1102 已从 `quest_script_data/poeta.xml` 删除，不存在同 owner fallback。
 - 当前生产入口已接通对话、击杀、升级、进入世界、物品使用、进入区域、影片结束、隐形定时器结束、
   Zone Mission 结束和对象交互资格等 typed 事件；其他事件需先接入通用中央入口再迁移对应 owner。

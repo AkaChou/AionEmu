@@ -6,9 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
-import com.aionemu.gameserver.model.templates.QuestTemplate;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 
 /**
  * 玩家单个任务的运行时状态，包含进度变量、状态、完成次数与持久化标记。
@@ -246,15 +246,25 @@ public class QuestState {
 	 * @return true 可重复；false 不可 / true if repeatable; false otherwise
 	 */
 	public boolean canRepeat() {
-		QuestTemplate template = DataManager.QUEST_DATA.getQuestById(questId);
+		QuestMetadata metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null);
+		return canRepeat(metadata);
+	}
+
+	public boolean canRepeat(QuestMetadata metadata) {
+		if (metadata == null) {
+			return false;
+		}
+		var repeat = metadata.repeatPolicy();
 		if (status != QuestStatus.NONE && (status != QuestStatus.COMPLETE
-				|| (completeCount >= template.getMaxRepeatCount() && template.getMaxRepeatCount() != 255))) {
+				|| (completeCount >= repeat.maxRepeatCount() && repeat.maxRepeatCount() != 255))) {
 			return false;
 		}
 		if (questVars.getQuestVars() != 0) {
 			return false;
 		}
-		if (template.isTimeBased() && nextRepeatTime != null) {
+		boolean timeBased = repeat.daily() || repeat.weekly() || repeat.cooldownSeconds() > 0
+			|| !metadata.repeatCycles().isEmpty();
+		if (timeBased && nextRepeatTime != null) {
 			Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 			if (currentTime.before(nextRepeatTime)) {
 				return false;

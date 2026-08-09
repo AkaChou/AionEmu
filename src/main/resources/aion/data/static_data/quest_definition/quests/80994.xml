@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80994" version="1">
+  <metadata name="[Event] Securing Hell Pass" display-name-id="1803816" min-level="46" max-level="50" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="20000000" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

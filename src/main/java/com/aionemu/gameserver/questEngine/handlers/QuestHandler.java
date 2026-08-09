@@ -1,13 +1,13 @@
 package com.aionemu.gameserver.questEngine.handlers;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collections;
+import java.util.List;
 
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.EmotionId;
 import com.aionemu.gameserver.model.EmotionType;
@@ -16,10 +16,8 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.quest.QuestItems;
-import com.aionemu.gameserver.model.templates.quest.XMLStartCondition;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
@@ -32,6 +30,7 @@ import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.runtime.PlayerQuestStartEligibilityPort;
 import com.aionemu.gameserver.questEngine.task.QuestTasks;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.item.ItemService;
@@ -1339,15 +1338,11 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 				}
 			}
 		}
-		QuestTemplate template = DataManager.QUEST_DATA.getQuestById(env.getQuestId());
-		for (XMLStartCondition startCondition : template.getXMLStartConditions()) {
-			if (!startCondition.check(player, false)) {
-				if (qs == null) {
-					QuestService.startMission(env, QuestStatus.LOCKED);
-				}
-				return false;
+		if (!matchesCanonicalStartConditions(player, env.getQuestId())) {
+			if (qs == null) {
+				QuestService.startMission(env, QuestStatus.LOCKED);
 			}
-
+			return false;
 		}
 		QuestService.startMission(env, QuestStatus.START);
 		return true;
@@ -1425,14 +1420,11 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 				}
 			}
 		}
-		QuestTemplate template = DataManager.QUEST_DATA.getQuestById(env.getQuestId());
-		for (XMLStartCondition startCondition : template.getXMLStartConditions()) {
-			if (!startCondition.check(player, false)) {
-				if (qs == null && !isZoneMission) {
-					QuestService.startMission(env, QuestStatus.LOCKED);
-				}
-				return false;
+		if (!matchesCanonicalStartConditions(player, env.getQuestId())) {
+			if (qs == null && !isZoneMission) {
+				QuestService.startMission(env, QuestStatus.LOCKED);
 			}
+			return false;
 		}
 		if (qs == null) {
 			QuestService.startMission(env, QuestStatus.START);
@@ -1518,8 +1510,7 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean sendQuestNoneDialog(QuestEnv env, int startNpcId) {
-		QuestTemplate template = DataManager.QUEST_DATA.getQuestById(questId);
-		return sendQuestNoneDialog(env, template, startNpcId, 1011);
+		return sendQuestNoneDialog(env, startNpcId, 1011);
 	}
 
 	/**
@@ -1533,25 +1524,9 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean sendQuestNoneDialog(QuestEnv env, int startNpcId, int dialogId) {
-		QuestTemplate template = DataManager.QUEST_DATA.getQuestById(questId);
-		return sendQuestNoneDialog(env, template, startNpcId, dialogId);
-	}
-
-	/**
-	 * 未接取时按模板向起始 NPC 发送对话框。
-	 * Send a none-status dialog at the start NPC using the given template.
-	 *
-	 * @param env 任务环境 / Quest environment
-	 * Quest template
-	 * Start NPC id
-	 * Dialog id
-	 *
-	 * @return 是否已处理 / Whether handled
-	 */
-	public boolean sendQuestNoneDialog(QuestEnv env, QuestTemplate template, int startNpcId, int dialogId) {
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (qs == null || qs.getStatus() == QuestStatus.NONE || qs.canRepeat()) {
+		if (canStartFromNone(qs)) {
 			if (env.getTargetId() == startNpcId) {
 				if (env.getDialog() == QuestDialog.START_DIALOG) {
 					return sendQuestDialog(env, dialogId);
@@ -1575,8 +1550,7 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean sendQuestNoneDialog(QuestEnv env, int startNpcId, int dialogId, int itemId, int itemCout) {
-		QuestTemplate template = DataManager.QUEST_DATA.getQuestById(questId);
-		return sendQuestNoneDialog(env, template, startNpcId, dialogId, itemId, itemCout);
+		return sendQuestNoneDialogWithItem(env, startNpcId, dialogId, itemId, itemCout);
 	}
 
 	/**
@@ -1590,26 +1564,25 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean sendQuestNoneDialog(QuestEnv env, int startNpcId, int itemId, int itemCout) {
-		QuestTemplate template = DataManager.QUEST_DATA.getQuestById(questId);
-		return sendQuestNoneDialog(env, template, startNpcId, 1011, itemId, itemCout);
+		return sendQuestNoneDialogWithItem(env, startNpcId, 1011, itemId, itemCout);
 	}
 
 	/**
-	 * 未接取时按模板发送对话框，接受时附带起始物品。
-	 * Send a none-status dialog from the template and grant a starter item on accept.
+	 * 未接取时发送对话框，接受时附带起始物品。
+	 * Send a none-status dialog and grant a starter item on accept.
 	 *
 	 * @param env 任务环境 / Quest environment
-	 * Quest template
 	 * Start NPC id
 	 * Dialog id
 	 * Starter item id
 	 * @param itemCout 起始物品数量 / Starter item count
 	 * @return 是否已处理 / Whether handled
 	 */
-	public boolean sendQuestNoneDialog(QuestEnv env, QuestTemplate template, int startNpcId, int dialogId, int itemId, int itemCout) {
+	private boolean sendQuestNoneDialogWithItem(QuestEnv env, int startNpcId, int dialogId, int itemId,
+			int itemCout) {
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (qs == null || qs.getStatus() == QuestStatus.NONE || qs.canRepeat()) {
+		if (canStartFromNone(qs)) {
 			if (env.getTargetId() == startNpcId) {
 				if (env.getDialog() == QuestDialog.START_DIALOG) {
 					return sendQuestDialog(env, dialogId);
@@ -1630,6 +1603,27 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 			}
 		}
 		return false;
+	}
+
+	/** Returns legacy owner resources that must be released by generic abandon cleanup. */
+	public List<Integer> getQuestOwnedRecipeIds() {
+		return List.of();
+	}
+
+	private boolean matchesCanonicalStartConditions(Player player, int questId) {
+		var catalog = qe.questCatalog();
+		var metadata = catalog.findMetadata(questId).orElse(null);
+		return metadata != null && new PlayerQuestStartEligibilityPort(playerId -> player,
+			id -> catalog.findMetadata(id).orElse(null))
+			.matchesCanonicalStartConditions(player, metadata);
+	}
+
+	private boolean canStartFromNone(QuestState state) {
+		if (state == null || state.getStatus() == QuestStatus.NONE) {
+			return true;
+		}
+		var metadata = qe.questCatalog().findMetadata(questId).orElse(null);
+		return metadata != null && state.canRepeat(metadata);
 	}
 
 	/**

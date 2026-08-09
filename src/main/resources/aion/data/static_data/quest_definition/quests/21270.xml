@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="21270" version="1">
+  <metadata name="Path Of Asmodae" display-name-id="1127190" min-level="55" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <items>
+      <item id="182006282" count="3" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="47850" />
+        <reward kind="EXP" id="0" amount="6517414" />
+        <reward kind="SELECTABLE_ITEM" id="114101158" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114301165" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114501114" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114601068" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114301542" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

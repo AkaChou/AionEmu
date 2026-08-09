@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="18930" version="1">
+  <metadata name="[Group] Eliminate the Ashunatal Dredgion Captain" display-name-id="1141628" min-level="66" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="454480" />
+        <reward kind="EXP" id="0" amount="39090822" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

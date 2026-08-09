@@ -10,6 +10,8 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.model.items.storage.PlayerStorage;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
+import com.aionemu.gameserver.questEngine.definition.ProgressLayout;
+import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
@@ -19,8 +21,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -97,15 +105,55 @@ class PlayerQuestEventPortTest {
 	}
 
 	@Test
-	void productionEventBoundaryFreezesTypedStartEligibilityFacts() throws Exception {
+	void productionEventBoundaryOnlyFreezesStartEligibilityWhenRequestedByTransition() throws Exception {
 		Player player = emptyPlayer();
+		AtomicInteger calls = new AtomicInteger();
 		PlayerQuestEventPort port = new PlayerQuestEventPort(playerId -> player,
-			(playerId, questId) -> QuestStartEligibility.allowed());
+			(playerId, questId, event) -> {
+				calls.incrementAndGet();
+				return QuestStartEligibility.allowed();
+			});
+
+		port.snapshot(connection(), PLAYER_ID, QUEST_ID,
+			new QuestEvent.TalkToNpc(203700, 1002, 900007));
+		assertEquals(0, calls.get());
 
 		QuestSnapshot snapshot = port.snapshot(connection(), PLAYER_ID, QUEST_ID,
-			new QuestEvent.TalkToNpc(203700, 1002, 900007));
-
+			new QuestEvent.TalkToNpc(203700, 1002, 900007), true);
+		assertEquals(1, calls.get());
 		assertTrue(snapshot.startEligibility().eligible());
+	}
+
+	@Test
+	void snapshotCapturesOnlyExplicitlyRequestedExternalEventActivities() throws Exception {
+		Player player = emptyPlayer();
+		List<Integer> requestedQuestIds = new ArrayList<>();
+		PlayerQuestEventPort port = new PlayerQuestEventPort(playerId -> player, null, questId -> {
+			requestedQuestIds.add(questId);
+			return questId == 80029;
+		});
+
+		QuestSnapshot snapshot = port.snapshot(connection(), PLAYER_ID, QUEST_ID, event(), false,
+			Set.of(80029));
+
+		assertEquals(Boolean.TRUE, snapshot.eventActivity(80029));
+		assertNull(snapshot.eventActivity(80032));
+		assertEquals(List.of(QUEST_ID, 80029), requestedQuestIds);
+	}
+
+	@Test
+	void unavailableEventServiceLeavesExternalActivityUnknownAndFailsClosed() throws Exception {
+		Player player = emptyPlayer();
+		PlayerQuestEventPort port = new PlayerQuestEventPort(playerId -> player, null, questId -> {
+			throw new IllegalStateException("event service unavailable");
+		});
+
+		QuestSnapshot snapshot = port.snapshot(connection(), PLAYER_ID, QUEST_ID, event(), false,
+			Set.of(80029));
+
+		assertNull(snapshot.eventActivity(80029));
+		assertFalse(QuestConditionEvaluator.matches(ProgressLayout.empty(), snapshot,
+			List.of(new QuestCondition.EventActive(80029))));
 	}
 
 	@Test

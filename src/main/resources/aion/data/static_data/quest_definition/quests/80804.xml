@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80804" version="1">
+  <metadata name="[Prestige] Prestige Society Majesty" display-name-id="1185936" min-level="65" max-level="2147483647" category="EVENT" cannot-share="true" target-type="FORCE">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="186000469" amount="210" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="80733" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

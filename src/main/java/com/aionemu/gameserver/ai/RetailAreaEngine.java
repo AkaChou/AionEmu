@@ -6,6 +6,7 @@ import com.aionemu.gameserver.dataholders.RetailAiData.LocationAliasPoint;
 import com.aionemu.gameserver.dataholders.RetailAiData.LimitArea;
 import com.aionemu.gameserver.dataholders.RetailAiData.QuestArea;
 import com.aionemu.gameserver.dataholders.RetailAiData.ResurrectArea;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DYNAMIC_LIMIT_AREA_INFO;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
@@ -89,7 +90,7 @@ public final class RetailAreaEngine {
 
 	public static void onPlayerMoved(Player player) {
 		RetailGroupControlEngine.initialize(player.getPosition().getWorldMapInstance());
-		if (DataManager.RETAIL_AI_DATA == null || DataManager.QUEST_DATA == null) {
+		if (DataManager.RETAIL_AI_DATA == null) {
 			return;
 		}
 		WorldMapInstance instance = player.getPosition().getWorldMapInstance();
@@ -230,8 +231,8 @@ public final class RetailAreaEngine {
 	}
 
 	private static boolean hasQuestTemplates(QuestArea area) {
-		return DataManager.QUEST_DATA != null && area.questIds().stream()
-			.allMatch(id -> DataManager.QUEST_DATA.getQuestById(id) != null);
+		var catalog = GameEngineServices.questEngine().questCatalog();
+		return area.questIds().stream().allMatch(id -> catalog.findMetadata(id).isPresent());
 	}
 
 	private static boolean matchesPrefix(String name, String prefix) {

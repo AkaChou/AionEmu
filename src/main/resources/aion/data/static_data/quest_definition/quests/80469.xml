@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80469" version="1">
+  <metadata name="[Event] Blessings From The Lords!" display-name-id="1185666" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="169620111" amount="1" />
+        <reward kind="ITEM" id="169620112" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

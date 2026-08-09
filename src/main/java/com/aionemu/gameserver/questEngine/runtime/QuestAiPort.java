@@ -40,6 +40,12 @@ public interface QuestAiPort {
 	/** Broadcasts one closed-set emotion for the authoritative slot handle. */
 	boolean broadcastEmotion(QuestSnapshot snapshot, QuestMutationPlan plan, String slot, QuestNpcEmotion emotion);
 
+	/** Broadcasts one closed-set emote from the authoritative NPC used by the current interaction. */
+	default boolean broadcastInteractionEmotion(QuestSnapshot snapshot, QuestMutationPlan plan,
+			QuestNpcEmotion emotion) {
+		return false;
+	}
+
 	/** Starts the quest follow checker for the authoritative slot and destination zone. */
 	boolean watchFollowZone(QuestSnapshot snapshot, QuestMutationPlan plan, String slot, String zone);
 

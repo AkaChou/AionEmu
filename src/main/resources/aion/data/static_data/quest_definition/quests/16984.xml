@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="16984" version="1">
+  <metadata name="Danuar Sanctuary" display-name-id="1141618" min-level="63" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="225990" />
+        <reward kind="EXP" id="0" amount="3446553" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

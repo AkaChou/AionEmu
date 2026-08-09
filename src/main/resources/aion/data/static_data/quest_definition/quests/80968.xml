@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80968" version="1">
+  <metadata name="[Instanced Dungeon/Group] Request 6: Cradle of Eternity" display-name-id="1803663" min-level="66" max-level="2147483647" category="EVENT">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="110000000" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="80967" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

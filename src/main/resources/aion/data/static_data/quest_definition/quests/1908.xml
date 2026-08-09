@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="1908" version="1">
+  <metadata name="Ulaguru Speaks" display-name-id="1102908" min-level="10" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="1810" />
+        <reward kind="EXP" id="0" amount="1425" />
+      </group>
+      <group>
+        <reward kind="GOLD" id="0" amount="300" />
+        <reward kind="EXP" id="0" amount="75" />
+      </group>
+      <group>
+        <reward kind="GOLD" id="0" amount="50" />
+        <reward kind="EXP" id="0" amount="15" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="1901" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

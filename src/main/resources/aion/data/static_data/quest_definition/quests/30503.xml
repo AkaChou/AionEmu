@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="30503" version="1">
+  <metadata name="[Group] Rodelion Rescue" display-name-id="1135496" min-level="57" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="598320" />
+        <reward kind="EXP" id="0" amount="6907092" />
+        <reward kind="SELECTABLE_ITEM" id="160001338" amount="15" />
+        <reward kind="SELECTABLE_ITEM" id="160001339" amount="15" />
+        <reward kind="SELECTABLE_ITEM" id="160001340" amount="15" />
+        <reward kind="SELECTABLE_ITEM" id="160001341" amount="15" />
+        <reward kind="SELECTABLE_ITEM" id="160001342" amount="15" />
+        <reward kind="SELECTABLE_ITEM" id="160001343" amount="15" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

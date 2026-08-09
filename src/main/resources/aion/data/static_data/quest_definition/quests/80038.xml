@@ -179,5 +179,9 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
+    <transition source="unaccepted" target="started"><event><event-quest-refresh/></event><conditions><has-item item-id="164002017" count="5"/><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
+    <transition source="started" target="started"><event><event-quest-refresh/></event><conditions><has-item item-id="164002017" count="5"/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
+    <transition source="reward" target="reward"><event><event-quest-refresh/></event><conditions><has-item item-id="164002017" count="5"/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
+    <transition source="complete" target="started"><event><event-quest-refresh/></event><conditions><has-item item-id="164002017" count="5"/><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
   </transitions>
 </quest-definition>

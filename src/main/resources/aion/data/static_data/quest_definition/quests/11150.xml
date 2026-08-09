@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="11150" version="1">
+  <metadata name="Drana Farm Alarm" display-name-id="1800495" min-level="54" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="8802718" />
+        <reward kind="SELECTABLE_ITEM" id="164000076" amount="15" />
+        <reward kind="SELECTABLE_ITEM" id="164000073" amount="15" />
+        <reward kind="SELECTABLE_ITEM" id="164000134" amount="15" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

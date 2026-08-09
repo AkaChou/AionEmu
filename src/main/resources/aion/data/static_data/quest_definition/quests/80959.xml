@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80959" version="1">
+  <metadata name="[Event] Challenge and Reward" display-name-id="1803517" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="186000484" count="1" />
+      <item id="182400001" count="1000000" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="186000486" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

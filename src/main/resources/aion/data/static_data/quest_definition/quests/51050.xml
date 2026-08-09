@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="51050" version="1">
+  <metadata name="[Event] The Catalium Snowball" display-name-id="1801272" min-level="10" max-level="2147483647" category="EVENT">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="188053924" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="188053936" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

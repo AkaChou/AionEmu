@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80720" version="1">
+  <metadata name="[Event] Ice Festival Group's Token of Gratitude" display-name-id="1801353" min-level="40" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <items>
+      <item id="182215805" count="50" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="185000236" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

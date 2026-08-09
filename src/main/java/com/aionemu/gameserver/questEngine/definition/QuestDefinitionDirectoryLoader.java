@@ -22,9 +22,8 @@ public final class QuestDefinitionDirectoryLoader {
 	}
 
 	/**
-	 * Scan and compile every {@code quests/<numericQuestId>.xml} resource.
-	 * This is deliberately separate from production ownership: the directory also contains
-	 * candidates that are not yet safe to install as live owners.
+	 * Scan and validate every {@code quests/<numericQuestId>.xml} resource. Definitions without nodes and
+	 * transitions remain metadata-only entries and are never exposed as executable owners.
 	 */
 	public static QuestCatalog compile(ClassLoader loader) {
 		Objects.requireNonNull(loader, "loader");
@@ -40,7 +39,7 @@ public final class QuestDefinitionDirectoryLoader {
 		resources.sort(Comparator.comparingInt(QuestDefinitionDirectoryLoader::questId)
 			.thenComparing(Comparator.naturalOrder()));
 
-		List<CompiledQuestDefinition> definitions = QuestDefinitionCatalogManifest.compileResources(
+		List<QuestCatalogEntry> definitions = QuestDefinitionCatalogManifest.compileResourceEntries(
 			resources, loader, "QUEST_RESOURCE_MISSING", "QUEST_RESOURCE_READ_FAILED");
 		for (int i = 0; i < resources.size(); i++) {
 			String resource = resources.get(i);
@@ -50,7 +49,7 @@ public final class QuestDefinitionDirectoryLoader {
 					+ " actual=" + definitions.get(i).id());
 			}
 		}
-		return new ImmutableQuestCatalog(definitions);
+		return ImmutableQuestCatalog.fromEntries(definitions);
 	}
 
 	private static List<String> listResources(URL directoryUrl) {

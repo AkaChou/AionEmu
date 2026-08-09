@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80019" version="1">
+  <metadata name="[Event] Filth And Frolics" display-name-id="1180019" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <repeat max-repeat-count="10" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="182214011" count="10" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="20000" />
+        <reward kind="EXP" id="0" amount="10000" />
+        <reward kind="ITEM" id="188051107" amount="1" />
+      </group>
+    </reward-groups>
+    <extended-reward-groups>
+      <group>
+        <reward kind="ITEM" id="188051106" amount="1" />
+      </group>
+    </extended-reward-groups>
+    <drops>
+      <drop npc-id="217279" item-id="182214011" chance="100" each-member="false" collecting-step="0" scope="NONE" />
+    </drops>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="80018" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

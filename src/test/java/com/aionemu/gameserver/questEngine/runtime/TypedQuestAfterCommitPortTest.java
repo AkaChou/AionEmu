@@ -365,19 +365,29 @@ class TypedQuestAfterCommitPortTest {
 			}
 
 			@Override
+			public boolean broadcastInteractionEmotion(QuestSnapshot snapshot, QuestMutationPlan plan,
+					QuestNpcEmotion emotion) {
+				commands.add("interaction-emotion:" + snapshot.interactionObjectId() + ":" + emotion);
+				return true;
+			}
+
+			@Override
 			public boolean watchFollowZone(QuestSnapshot snapshot, QuestMutationPlan plan, String slot, String zone) {
 				commands.add("zone:" + slot + ":" + zone);
 				return true;
 			}
 		};
 		TypedQuestAfterCommitPort port = new TypedQuestAfterCommitPort(dialogPort(), null, null, null, ai, null);
-		QuestSnapshot snapshot = new QuestSnapshot(7, 1001, QuestStatus.START, 0, Map.of());
+		QuestSnapshot snapshot = new QuestSnapshot(7, 1001, QuestStatus.START, 0, Map.of())
+			.withInteractionObjectId(900009);
 		QuestMutationPlan plan = new QuestMutationPlan(1001, QuestStatus.START, 0, List.of(), List.of());
 
 		port.execute(new AfterCommitAction.BroadcastNpcEmotion("escort", QuestNpcEmotion.START_EMOTE2), snapshot, plan);
+		port.execute(new AfterCommitAction.BroadcastInteractionNpcEmotion(QuestNpcEmotion.NO), snapshot, plan);
 		port.execute(new AfterCommitAction.WatchFollowZone("escort", "DF2_ITEMUSEAREA_Q2333"), snapshot, plan);
 
-		assertEquals(List.of("emotion:escort:START_EMOTE2", "zone:escort:DF2_ITEMUSEAREA_Q2333"), commands);
+		assertEquals(List.of("emotion:escort:START_EMOTE2", "interaction-emotion:900009:NO",
+			"zone:escort:DF2_ITEMUSEAREA_Q2333"), commands);
 	}
 
 	@Test
@@ -482,6 +492,32 @@ class TypedQuestAfterCommitPortTest {
 		port.execute(new AfterCommitAction.RefreshPlayerStats(), snapshot, plan);
 
 		assertEquals(List.of("movie:250", "timer:300", "follow:escort", "stats"), commands);
+	}
+
+	@Test
+	void routesDelayedEventQuestRefreshToBroadcastPort() {
+		List<String> commands = new ArrayList<>();
+		TypedQuestAfterCommitPort port = new TypedQuestAfterCommitPort(dialogPort());
+		port.withBroadcastPort(new QuestBroadcastPort() {
+			@Override
+			public boolean broadcastZoneMissionEnd(QuestSnapshot snapshot, QuestMutationPlan plan, int[] questIds) {
+				return true;
+			}
+
+			@Override
+			public boolean scheduleEventQuestRefresh(QuestSnapshot snapshot, QuestMutationPlan plan,
+					int seconds, int[] questIds) {
+				commands.add(seconds + ":" + java.util.Arrays.toString(questIds));
+				return true;
+			}
+		});
+		QuestSnapshot snapshot = new QuestSnapshot(7, 80030, QuestStatus.NONE, 0, Map.of());
+		QuestMutationPlan plan = new QuestMutationPlan(80030, QuestStatus.NONE, 0, List.of(), List.of());
+
+		port.execute(new AfterCommitAction.ScheduleEventQuestRefresh(10,
+			new int[] {80030, 80034, 80035, 80036}), snapshot, plan);
+
+		assertEquals(List.of("10:[80030, 80034, 80035, 80036]"), commands);
 	}
 
 	private static final class RecordingAiPort implements QuestAiPort {

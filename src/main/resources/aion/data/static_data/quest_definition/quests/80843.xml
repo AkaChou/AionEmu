@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80843" version="1">
+  <metadata name="[Event] Legend of the Giving Tree" display-name-id="1185976" min-level="30" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="188055121" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

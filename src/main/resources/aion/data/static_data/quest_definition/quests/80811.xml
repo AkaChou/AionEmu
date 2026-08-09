@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80811" version="1">
+  <metadata name="[Prestige/Daily] Prestige Society Valor" display-name-id="1185897" min-level="65" max-level="2147483647" category="EVENT">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <reward-groups>
+      <group>
+        <reward kind="GP" id="0" amount="5" />
+        <reward kind="ITEM" id="186000236" amount="10" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="15311" version="1">
+  <metadata name="Kaisinel's Daevanion Shoes" display-name-id="1801448" min-level="65" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="182215829" count="1" />
+      <item id="182215830" count="1" />
+      <item id="182215831" count="1" />
+    </items>
+    <work-items>
+      <item id="182215865" count="1" />
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="2412587" />
+        <reward kind="SELECTABLE_ITEM" id="114101779" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114301918" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114301919" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114501837" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114501838" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114501853" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114601661" amount="1" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="15307" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

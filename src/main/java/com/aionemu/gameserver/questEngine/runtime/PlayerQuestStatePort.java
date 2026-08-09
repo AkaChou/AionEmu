@@ -12,13 +12,15 @@ import java.util.List;
 import java.util.Objects;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.IntFunction;
 
-import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.model.templates.QuestTemplate;
-import com.aionemu.gameserver.model.templates.quest.QuestRepeatCycle;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 
 /**
  * 通过调用方事务持久化规范任务投影，不提前推进实时内存状态。
@@ -31,11 +33,19 @@ import com.aionemu.gameserver.questEngine.definition.QuestAction;
 public final class PlayerQuestStatePort implements QuestStatePort {
 	private final QuestPlayerPort players;
 	private final PlayerQuestListDAO questDao;
+	private final IntFunction<QuestMetadata> metadata;
 	private final Map<PendingKey, QuestState> pending = new ConcurrentHashMap<>();
 
 	public PlayerQuestStatePort(QuestPlayerPort players, PlayerQuestListDAO questDao) {
+		this(players, questDao,
+			questId -> GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null));
+	}
+
+	PlayerQuestStatePort(QuestPlayerPort players, PlayerQuestListDAO questDao,
+			IntFunction<QuestMetadata> metadata) {
 		this.players = Objects.requireNonNull(players, "players");
 		this.questDao = Objects.requireNonNull(questDao, "questDao");
+		this.metadata = Objects.requireNonNull(metadata, "metadata");
 	}
 
 	@Override
@@ -49,7 +59,9 @@ public final class PlayerQuestStatePort implements QuestStatePort {
 		QuestState state = player.getQuestStateList().getQuestState(plan.questId());
 		// 暂存投影写入 DB 但不触碰 live 内存；新状态走 INSERT，已有状态走 UPDATE。
 		// The staged projection is written without mutating live memory; new states insert and existing states update.
-		QuestState stagedProjection = projection(player, state, plan);
+		QuestMetadata questMetadata = plan.requiredActions().stream()
+			.anyMatch(QuestAction.CompleteQuest.class::isInstance) ? metadata.apply(plan.questId()) : null;
+		QuestState stagedProjection = projection(player, state, plan, questMetadata);
 		if (state == null || state.getPersistentState() == PersistentState.NEW) {
 			stagedProjection.setPersistentState(PersistentState.NEW);
 		} else {
@@ -67,13 +79,15 @@ public final class PlayerQuestStatePort implements QuestStatePort {
 	@Override
 	public void publish(int playerId, QuestMutationPlan plan) {
 		Objects.requireNonNull(plan, "plan");
-		QuestState committed = pending.remove(new PendingKey(playerId, plan));
+		PendingKey key = new PendingKey(playerId, plan);
+		QuestState committed = pending.get(key);
 		if (committed == null) {
 			throw new IllegalStateException("quest projection was not prepared: " + plan.questId());
 		}
 		Player player = players.find(playerId);
 		if (player == null) {
 			// 提交已成功但玩家已登出:内存无对象可发布,数据库值已是正确投影,重登时恢复。
+			pending.remove(key, committed);
 			return;
 		}
 		QuestState state = player.getQuestStateList().getQuestState(plan.questId());
@@ -92,6 +106,7 @@ public final class PlayerQuestStatePort implements QuestStatePort {
 		}
 		// 已持久化:避免下一次 store(Connection, Player) 重复写。
 		state.setPersistentState(PersistentState.UPDATED);
+		pending.remove(key, committed);
 	}
 
 	@Override
@@ -99,7 +114,8 @@ public final class PlayerQuestStatePort implements QuestStatePort {
 		pending.remove(new PendingKey(playerId, Objects.requireNonNull(plan, "plan")));
 	}
 
-	private static QuestState projection(Player player, QuestState state, QuestMutationPlan plan) {
+	private static QuestState projection(Player player, QuestState state, QuestMutationPlan plan,
+			QuestMetadata metadata) {
 		int completeCount = state == null ? 0 : state.getCompleteCount();
 		Timestamp nextRepeatTime = state == null ? null : state.getNextRepeatTime();
 		Integer reward = state == null ? null : state.getRewardOrNull();
@@ -112,28 +128,36 @@ public final class PlayerQuestStatePort implements QuestStatePort {
 			completeCount++;
 			reward = completion.rewardIndex();
 			completeTime = new Timestamp(System.currentTimeMillis());
-			QuestTemplate template = DataManager.QUEST_DATA == null ? null : DataManager.QUEST_DATA.getQuestById(plan.questId());
-			if (template != null && ((template.getRepeatCycle() != null && player.getAccessLevel() == 0)
-					|| template.getQuestCoolTime() > 0)) {
-				nextRepeatTime = nextRepeatTime(template);
+			if (metadata != null && shouldScheduleRepeat(player, metadata)) {
+				nextRepeatTime = nextRepeatTime(metadata);
 			}
 		}
 		return new QuestState(plan.questId(), plan.nextStatus(), plan.nextPackedVariables(), completeCount,
 			nextRepeatTime, reward, completeTime);
 	}
 
-	private static Timestamp nextRepeatTime(QuestTemplate template) {
+	private static boolean shouldScheduleRepeat(Player player, QuestMetadata metadata) {
+		var repeat = metadata.repeatPolicy();
+		boolean timeBased = repeat.daily() || repeat.weekly() || !metadata.repeatCycles().isEmpty();
+		return (timeBased && player.getAccessLevel() == 0) || repeat.cooldownSeconds() > 0;
+	}
+
+	private static Timestamp nextRepeatTime(QuestMetadata metadata) {
+		var repeat = metadata.repeatPolicy();
 		ZonedDateTime now = ZonedDateTime.now();
 		ZonedDateTime repeatDate = now.withHour(9).withMinute(0).withSecond(0).withNano(0);
-		if (template.isDaily()) {
+		if (repeat.daily()) {
 			if (now.isAfter(repeatDate)) repeatDate = repeatDate.plusHours(24);
-		} else if (template.getQuestCoolTime() > 0) {
-			repeatDate = repeatDate.plusSeconds(template.getQuestCoolTime());
+		} else if (repeat.cooldownSeconds() > 0) {
+			repeatDate = repeatDate.plusSeconds(repeat.cooldownSeconds());
 		} else {
+			Set<Integer> cycleDays = cycleDays(metadata.repeatCycles());
+			if (cycleDays.isEmpty()) {
+				throw new IllegalStateException("weekly quest metadata has no repeat cycle");
+			}
 			int daysToAdd = 7;
 			int startDay = 7;
-			for (QuestRepeatCycle weekDay : template.getRepeatCycle()) {
-				int dayValue = weekDay.getDay();
+			for (int dayValue : cycleDays) {
 				int diff = dayValue - repeatDate.getDayOfWeek().getValue();
 				if (diff > 0 && diff < daysToAdd) daysToAdd = diff;
 				if (startDay > dayValue) startDay = dayValue;
@@ -145,6 +169,27 @@ public final class PlayerQuestStatePort implements QuestStatePort {
 			repeatDate = repeatDate.plusDays(daysToAdd);
 		}
 		return new Timestamp(repeatDate.toInstant().toEpochMilli());
+	}
+
+	private static Set<Integer> cycleDays(Set<String> cycles) {
+		Set<Integer> days = new LinkedHashSet<>();
+		for (String cycle : cycles) {
+			if ("ALL".equals(cycle)) {
+				for (int day = 1; day <= 7; day++) days.add(day);
+				continue;
+			}
+			days.add(switch (cycle) {
+				case "MON" -> 1;
+				case "TUE" -> 2;
+				case "WED" -> 3;
+				case "THU" -> 4;
+				case "FRI" -> 5;
+				case "SAT" -> 6;
+				case "SUN" -> 7;
+				default -> throw new IllegalStateException("unsupported repeat cycle " + cycle);
+			});
+		}
+		return Set.copyOf(days);
 	}
 
 	private record PendingKey(int playerId, QuestMutationPlan plan) {

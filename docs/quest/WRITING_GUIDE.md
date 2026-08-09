@@ -9,7 +9,7 @@ This guide is for quest authors. It explains how to write quest definitions in p
 | Location | `src/main/resources/aion/data/static_data/quest_definition/quests/<id>.xml` | Java code (test fixtures / tooling) |
 | Production use | ✅ sole source of production owners | ❌ tests and tooling only |
 | Validation | XSD + semantic checks in `QuestDefinitionCompiler` | same compiler as XML |
-| Loading | registered in `quest_definition_catalog.xml`, loaded by QuestEngine | compiled directly via `compile()` |
+| Loading | registered with a mode in schema-v2 `quest_definition_catalog.xml`, loaded by QuestEngine | compiled directly via `compile()` |
 
 Rule: **write production quests as XML only.** The DSL exists to build equivalent definitions in tests (`QuestDefinitionCompilerTest` and others assert `assertEquivalent` — the DSL and XML compile to exactly equal definitions) and to prototype a quest before writing the XML.
 
@@ -28,13 +28,17 @@ Events are facts, conditions are tests, actions are state changes, after-commit 
 ### 3.1 Steps
 
 1. Write `quests/<id>.xml`; use the domain blocks below only for their exact standard patterns, and write ordinary transitions for everything else.
-2. Register it in `quest_definition_catalog.xml`: `<definition id="<id>" resource="aion/data/static_data/quest_definition/quests/<id>.xml"/>` (each ID exactly once).
-3. Take static metadata from `src/main/resources/aion/data/static_data/quest_data/quest_data.xml` (name, nameId, minlevel_permitted, race_permitted, category, rewards, quest_work_items, start_conditions, quest_drop).
+2. Register it in the schema-v2 catalog: `<definition id="<id>" resource="aion/data/static_data/quest_definition/quests/<id>.xml" mode="EXECUTABLE"/>` (each ID exactly once).
+3. While a legacy template exists, use `quest_data.xml` as the metadata migration source. If it is absent, obtain field-level authority from the retail server/client; never infer missing values from a candidate XML or behavior alone.
 4. Delete the old execution entry (`quest_script_data/*.xml` node / old Java handler) in the same change — one owner per quest.
+
+The catalog has two modes. `EXECUTABLE` exposes canonical metadata and the one execution owner. `METADATA_ONLY` exposes metadata needed for names, categories, repeat policy, and historical-state interpretation, but its XML must not declare nodes or transitions and it is never loaded by the event index or dispatcher. A legacy `item_collecting` owner may become `METADATA_ONLY` only when `start_npc_ids`, `end_npc_ids`, `action_item_ids`, and `next_npc_id` are all zero and an authoritative legacy template exists. Missing authority or any executable ingress keeps the owner BLOCKED.
 
 ### 3.2 Structure (order-sensitive, strictly validated by `quest_definition.xsd`)
 
-`metadata` child order is fixed: `races` → `classes` → `gender` → `repeat` → `prerequisites` → `items` → `inventory-items` → `work-items` → `rewards` → `extended-rewards` → `drops` → `bonuses` → `kills` → `start-conditions` → `class-rewards`. **`drops` must come after `rewards`.**
+`metadata` child order is fixed: `races` → `classes` → `gender` → `repeat` → `prerequisites` → `items` → `inventory-items` → `work-items` → `rewards`/`reward-groups` → `extended-rewards`/`extended-reward-groups` → `drops` → `bonuses` → `kills` → `start-conditions`/`start-condition-groups` → `class-rewards`. Each shorthand/grouped pair is mutually exclusive. **`drops` comes after rewards.**
+
+`<rewards>` and `<start-conditions>` are single-group shorthands. Preserve multiple reward groups in declaration order with `<reward-groups>`; `complete-reward-index` selects a group before fixed/choice indices are interpreted within it. Preserve multiple start-condition groups with `<start-condition-groups>`: conditions are AND inside one group and groups are OR alternatives. Never flatten them into one global AND.
 
 Transition child order is fixed: `event` → `conditions` → `actions` → `after-commit`.
 
@@ -99,7 +103,7 @@ Standard NPC reward settlement:
               finish="SELECTION_DIALOG"/>
 ```
 
-Reward indices refer to the ordered `<metadata><rewards>` list. Fixed indices must not point to `SELECTABLE_ITEM`. For N-choose-1 rewards, omit `dialog-ids` and map each client choice explicitly; `fallback` completes with fixed rewards only:
+Reward indices refer to the ordered reward group selected by `complete-reward-index`; shorthand `<rewards>` is group 0. Fixed indices must not point to `SELECTABLE_ITEM`. For N-choose-1 rewards, omit `dialog-ids` and map each client choice explicitly; `fallback` completes with fixed rewards only:
 
 ```xml
 <npc-complete npc-id="203123" source="reward" target="complete"
@@ -111,7 +115,7 @@ Reward indices refer to the ordered `<metadata><rewards>` list. Fixed indices mu
 </npc-complete>
 ```
 
-Choice indices must point to `SELECTABLE_ITEM`; the compiler lowers that metadata entry to the concrete `ITEM` reward. Dialog IDs must be unique across preview, generic, choice, and fallback routes. The source must project `REWARD`, the target `COMPLETE`. Every completion route orders actions as fixed rewards, optional choice reward, `complete-quest`; after commit it always runs `refresh-player-stats`, `sync-quest-state mode="COMPLETION"`, then exactly one finish policy: `SELECTION_DIALOG`, `CLOSE_DIALOG`, or `NONE`. Preview routes display page 5.
+Choice indices must point to `SELECTABLE_ITEM`; the compiler lowers that metadata entry to the concrete `ITEM` reward. Dialog IDs must be unique across preview, generic, choice, and fallback routes. The source must project `REWARD`, the target `COMPLETE`. Every completion route orders actions as fixed rewards, optional choice reward, `complete-quest`; after commit it always runs `refresh-player-stats`, `sync-quest-state mode="COMPLETION"`, then exactly one finish policy. Ordinary NPCs default to `SELECTION_DIALOG`; `useitem`, `quest_use_item`, and `quest_start_use_item` interaction objects default to `CLOSE_DIALOG`. `NONE` requires an evidence-backed whitelist. Preview routes display page 5.
 
 Use these blocks only when the entire expansion is correct. Extra conditions on acquisition, nonstandard dialogs/pages, reward-side mutations, or any additional after-commit effect require explicit `<transition>` elements. Compiler failures use stable `QuestCompilationException` codes and identify the quest, block, and offending attribute.
 
@@ -485,20 +489,39 @@ Key points:
 | item_order | start_item_id given on accept, talk_npc dialog advances var, end_npc report | `quests/2146.xml`, `quests/2210.xml` |
 | xml_quest (complex) | one node per var value, one transition per dialog branch | `quests/1115.xml`, `quests/1127.xml` |
 | selectable rewards (N-choose-1) | metadata `SELECTABLE_ITEM` × N; reward→complete split into N transitions by dialog 8, 9, 10..., shared rewards repeated + one ITEM each | `quests/1002.xml` (6 options), `quests/1686.xml` (2 options) |
+| quest interaction object | `can-act`/`action-item-use` route plus catalog drops; validate NPC template, AI, and TALK route together | `quests/1109.xml` (wine barrel 700106) |
+| ordinary chest | `ChestAI2`, key/use progress, death, and instance-drop chain; do not create a Quest Owner | Ancient Box 702700/702701 |
+| delayed cross-quest event refresh | the source owner checks external event/race facts and schedules; target owners declare live inventory thresholds and state recovery with `event-quest-refresh` | `quests/80030.xml`, `quests/80033.xml`, `quests/80034.xml`–`80039.xml` |
 | timed failure | after-commit `start-quest-timer`, event `quest-timer-end` → failure node | — |
 
 Multi-NPC rule: every NPC in start_npc_ids gets its own accept transitions; every NPC in end_npc_ids gets its own report/reward transitions.
 
+Delayed cross-quest event refresh example:
+
+```xml
+<conditions>
+  <event-active quest-id="80029"/>
+  <player-race-is race="ELYOS"/>
+</conditions>
+<after-commit>
+  <schedule-event-quest-refresh seconds="10"
+      quest-ids="80030 80034 80035 80036"/>
+</after-commit>
+```
+
+When the delay expires, the runtime resolves the live player again and sends the internal `event-quest-refresh` to every target through the shared dispatcher, transaction, and publish chain. Every target owner must declare its own live `has-item` threshold and the keep/start/restart rule for NONE, START, REWARD, and COMPLETE. A COMPLETE → START route must also carry `start-eligible`, so canonical metadata and `QuestState.canRepeat(metadata)` decide whether repetition is legal. Do not replace this with an immediate broadcast, a direct call to legacy `QuestService.startEventQuest`, or a quest-ID-specific callback. The current scheduler is in-process, session-scoped, and at-most-once; pending refreshes are not restored after a server restart. Add persistence only when authoritative behavior proves cross-restart recovery is required.
+
 ## 6. Writing Checklist
 
 1. XML passes XSD validation; `metadata` child order and transition child order are correct (drops after rewards).
-2. Registered exactly once in the catalog; old entry (quest_script_data / Java handler) deleted — no double ownership.
-3. Static metadata matches `quest_data.xml`; when a field cannot be verified locally, check the true server (58Server/Map/XML/quest.xml etc.) — never guess.
+2. Registered exactly once in schema-v2 catalog with the correct mode. An `EXECUTABLE` entry has no old quest_script_data/Java owner; a `METADATA_ONLY` entry has no nodes, transitions, or event route.
+3. Every metadata field has an authority source. If the legacy template is absent, check the retail server/client; if it cannot be verified, mark the migration BLOCKED instead of guessing.
 4. Accept transitions carry `start-eligible`; status changes carry `sync-quest-state`.
-5. `grant-reward` mirrors metadata rewards one-to-one (GOLD/EXP as QUEST_BASE).
+5. `grant-reward` mirrors the selected ordered reward group one-to-one (GOLD/EXP as QUEST_BASE); do not flatten groups.
 6. Quests with drops have a `<drops>` section; quests with work items have give/has/remove and the missing-item rejection branch.
 7. Consecutive duplicate actions (repeated refresh/sync/show-quest-selection-dialog) are an error unless the old logic explicitly required both.
-8. Reward settlement uses a valid `npc-complete` block or ends with `source="reward" target="complete"` + `complete-quest` + `refresh-player-stats` + `sync COMPLETION`.
+8. Reward settlement uses a valid `npc-complete` block or ends with `source="reward" target="complete"` + `complete-quest` + `refresh-player-stats` + `sync COMPLETION`, followed by the correct NPC/interaction-object window policy.
+9. Start conditions retain AND-within-group and OR-between-groups. Quest interaction objects use catalog route/drop indices; `ChestAI2` chests remain in the chest/instance-drop domain.
 
 ## 7. Verification Commands
 

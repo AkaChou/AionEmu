@@ -4,10 +4,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.aionemu.gameserver.configs.main.GroupConfig;
-import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
-import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.questEngine.handlers.models.Monster;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -26,8 +25,8 @@ public class MentorMonsterHunt extends MonsterHunt {
 	private int menteMinLevel;
 	/** 学员最高等级 / mentee maximum level */
 	private int menteMaxLevel;
-	/** 任务模板（含导师类型） / quest template (includes mentor type) */
-	private QuestTemplate qt;
+	/** Canonical mentor mode captured from the installed catalog snapshot. */
+	private final String mentorType;
 
 	/**
 	 * 构造导师击杀任务处理器。
@@ -44,7 +43,10 @@ public class MentorMonsterHunt extends MonsterHunt {
         super(questId, startNpcIds, endNpcIds, monsters, 0, 0, null, 0, false);
 		this.menteMinLevel = menteMinLevel;
 		this.menteMaxLevel = menteMaxLevel;
-		this.qt = DataManager.QUEST_DATA.getQuestById(questId);
+		this.mentorType = GameEngineServices.questEngine().questCatalog().findMetadata(questId)
+			.map(metadata -> metadata.mentorType())
+			.orElseThrow(() -> new IllegalStateException(
+				"missing canonical metadata for legacy mentor quest " + questId));
 	}
 
 	/**
@@ -59,8 +61,8 @@ public class MentorMonsterHunt extends MonsterHunt {
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(getQuestId());
 		if (qs != null && qs.getStatus() == QuestStatus.START) {
-			switch (qt.getMentorType()) {
-			case MENTOR:
+			switch (mentorType) {
+			case "MENTOR":
 				if (player.isMentor()) {
 					PlayerGroup group = player.getPlayerGroup2();
 					for (Player member : group.getMembers()) {
@@ -70,7 +72,7 @@ public class MentorMonsterHunt extends MonsterHunt {
 					}
 				}
 				break;
-			case MENTE:
+			case "MENTE":
 				if (player.isInGroup2()) {
 					PlayerGroup group = player.getPlayerGroup2();
 					for (Player member : group.getMembers()) {

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="42105" version="1">
+  <metadata name="[Event/Daily] Challenge! Defence of the Sea of Life" display-name-id="1803842" min-level="68" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <inventory-items>
+      <item id="186000494" count="1" />
+    </inventory-items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="154656000" />
+        <reward kind="ITEM" id="188055607" amount="1" />
+        <reward kind="ITEM" id="188054912" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

@@ -20,16 +20,16 @@ class NpcFactionQuestDataTest {
 		"src/main/resources/aion/data/static_data/npc_factions/npc_factions_quest.xml");
 
 	@Test
-	void retailSnapshotContainsAll436QuestWeekdayEntries() throws Exception {
-		assertEquals(436, load().size());
+	void retailSnapshotContainsAll425QuestWeekdayEntries() throws Exception {
+		assertEquals(425, load().size());
 	}
 
 	@Test
 	void disabledQuestsKeepAllWeekdayBitsAtZero() throws Exception {
 		NpcFactionQuestData data = load();
 		for (int day = Calendar.SUNDAY; day <= Calendar.SATURDAY; day++) {
-			assertFalse(data.isActiveOn(36517, day), "36517 must stay disabled on " + day);
-			assertFalse(data.isActiveOn(35030, day), "35030 must stay disabled on " + day);
+			assertFalse(data.isActiveOn(37000, day), "37000 must stay disabled on " + day);
+			assertFalse(data.isActiveOn(37500, day), "37500 must stay disabled on " + day);
 		}
 	}
 

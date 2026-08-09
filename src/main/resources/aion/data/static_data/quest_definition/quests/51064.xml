@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="51064" version="1">
+  <metadata name="[Event/Daily] Elimination of the Redeye Hare Legion" display-name-id="1803155" min-level="55" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <items>
+      <item id="182007410" count="10" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="25000000" />
+        <reward kind="ITEM" id="188057010" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

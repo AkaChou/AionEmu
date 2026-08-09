@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="50120" version="1">
+  <metadata name="[Event] Attack on the Kumuki Hideout" display-name-id="1803927" min-level="46" max-level="50" category="EVENT">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="20000000" />
+        <reward kind="ITEM" id="162001063" amount="5" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

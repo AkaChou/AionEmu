@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="3118" version="1">
+  <metadata name="[Instance/Cash/Group] The Lord Of The Adma Stronghold" display-name-id="1137093" min-level="46" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="3773237" />
+        <reward kind="ITEM" id="186000005" amount="1" />
+        <reward kind="ITEM" id="188050829" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="25030" version="1">
+  <metadata name="Clues from the Undead" display-name-id="1800841" min-level="58" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <items>
+      <item id="182215712" count="10" />
+    </items>
+    <work-items>
+      <item id="182215713" count="1" />
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="103200" />
+        <reward kind="EXP" id="0" amount="9340221" />
+        <reward kind="SELECTABLE_ITEM" id="160002336" amount="7" />
+        <reward kind="SELECTABLE_ITEM" id="160002337" amount="7" />
+        <reward kind="SELECTABLE_ITEM" id="160002338" amount="7" />
+        <reward kind="SELECTABLE_ITEM" id="160002339" amount="7" />
+        <reward kind="SELECTABLE_ITEM" id="160002340" amount="7" />
+        <reward kind="SELECTABLE_ITEM" id="160002341" amount="7" />
+        <reward kind="ITEM" id="186000231" amount="10" />
+        <reward kind="ITEM" id="186000237" amount="15" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="219940" item-id="182215712" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="219941" item-id="182215712" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="219942" item-id="182215712" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+  </metadata>
+</quest-definition>

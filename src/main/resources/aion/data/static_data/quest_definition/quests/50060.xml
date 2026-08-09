@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="50060" version="1">
+  <metadata name="[Event] The girl searching for the Jack" display-name-id="1802815" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="188100384" count="2" />
+    </items>
+  </metadata>
+</quest-definition>

@@ -200,6 +200,46 @@ class QuestXmlDomainBlocksTest {
 	}
 
 	@Test
+	void npcCompleteSelectsFixedRewardsInsideThePersistedRewardGroup() {
+		String xml = """
+			<quest-definition id="990069" version="1">
+			  <metadata name="group-complete" display-name-id="1" min-level="0" max-level="99" category="QUEST">
+			    <reward-groups>
+			      <group><reward kind="ITEM" id="188000001" amount="1"/></group>
+			      <group><reward kind="ITEM" id="188000002" amount="2"/></group>
+			    </reward-groups>
+			  </metadata>
+			  <nodes><node label="reward"><project status="REWARD"/></node><node label="complete"><project status="COMPLETE"/></node></nodes>
+			  <transitions><npc-complete npc-id="203123" source="reward" target="complete"
+			      fixed-reward-indices="0" dialog-ids="8" complete-reward-index="1"
+			      preview-dialog-ids="1009" finish="CLOSE_DIALOG"/></transitions>
+			</quest-definition>
+			""";
+		QuestTransition completion = compile(xml).definition().transitions().stream()
+			.filter(transition -> "complete".equals(transition.targetNode())).findFirst().orElseThrow();
+
+		assertEquals(new QuestAction.GrantReward("ITEM", 188000002, 2, QuestRewardAmountMode.EXACT),
+			completion.actions().getFirst());
+		assertEquals(new QuestAction.CompleteQuest(1), completion.actions().get(1));
+	}
+
+	@Test
+	void npcCompleteAllowsRewardlessQuestToPersistCompletionRewardIndex() {
+		String xml = """
+			<quest-definition id="990070" version="1">
+			  <metadata name="rewardless-complete" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+			  <nodes><node label="reward"><project status="REWARD"/></node><node label="complete"><project status="COMPLETE"/></node></nodes>
+			  <transitions><npc-complete npc-id="203123" source="reward" target="complete"
+			      dialog-ids="8" complete-reward-index="0" preview-dialog-ids="1009" finish="CLOSE_DIALOG"/></transitions>
+			</quest-definition>
+			""";
+		QuestTransition completion = compile(xml).definition().transitions().stream()
+			.filter(transition -> "complete".equals(transition.targetNode())).findFirst().orElseThrow();
+
+		assertEquals(List.of(new QuestAction.CompleteQuest(0)), completion.actions());
+	}
+
+	@Test
 	void blocksAndOrdinaryTransitionsKeepDocumentOrder() {
 		String xml = """
 			<quest-definition id="990063" version="1">

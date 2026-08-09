@@ -42,7 +42,10 @@ public record QuestMetadata(
 	List<QuestBonus> bonuses,
 	List<QuestKill> kills,
 	List<QuestStartCondition> startConditions,
-	Map<String, List<QuestReward>> classRewards) {
+	Map<String, List<QuestReward>> classRewards,
+	List<QuestRewardGroup> rewardGroups,
+	List<QuestRewardGroup> extendedRewardGroups,
+	List<QuestStartConditionGroup> startConditionGroups) {
 
 	/** Backward-compatible constructor for the initial definition DSL. */
 	public QuestMetadata(String name, int displayNameId, int minLevel, int maxLevel,
@@ -52,7 +55,28 @@ public record QuestMetadata(
 		this(name, displayNameId, minLevel, maxLevel, permittedRaces, category, repeatPolicy,
 			prerequisites, itemRequirements, rewards, drops, Set.of(), "", 0, 1, 1, false,
 			false, false, 0, null, null, false, Set.of(), 0, "NONE", "NONE", 0, List.of(),
-			List.of(), List.of(), List.of(), List.of(), List.of(), Map.of());
+			List.of(), List.of(), List.of(), List.of(), List.of(), Map.of(), groupsOf(rewards), List.of(), List.of());
+	}
+
+	/** Backward-compatible full constructor for Java DSL definitions created before grouped metadata. */
+	public QuestMetadata(String name, int displayNameId, int minLevel, int maxLevel,
+		Set<String> permittedRaces, String category, RepeatPolicy repeatPolicy,
+		Set<Integer> prerequisites, List<QuestItemRequirement> itemRequirements,
+		List<QuestReward> rewards, List<QuestDrop> drops, Set<String> permittedClasses,
+		String permittedGender, int rank, int maxCountLimitedQuest, int countRecoverLimitedQuest,
+		boolean cannotShare, boolean cannotGiveup, boolean bountyReward, int useClassReward,
+		Integer combineSkill, Integer combineSkillPoint, boolean timer, Set<String> repeatCycles,
+		int npcFactionId, String mentorType, String targetType, int titleId,
+		List<QuestItemRequirement> inventoryItems, List<QuestItemRequirement> questWorkItems,
+		List<QuestReward> extendedRewards, List<QuestBonus> bonuses, List<QuestKill> kills,
+		List<QuestStartCondition> startConditions, Map<String, List<QuestReward>> classRewards) {
+		this(name, displayNameId, minLevel, maxLevel, permittedRaces, category, repeatPolicy,
+			prerequisites, itemRequirements, rewards, drops, permittedClasses, permittedGender, rank,
+			maxCountLimitedQuest, countRecoverLimitedQuest, cannotShare, cannotGiveup, bountyReward,
+			useClassReward, combineSkill, combineSkillPoint, timer, repeatCycles, npcFactionId, mentorType,
+			targetType, titleId, inventoryItems, questWorkItems, extendedRewards, bonuses, kills,
+			startConditions, classRewards, groupsOf(rewards), groupsOf(extendedRewards),
+			startGroupsOf(startConditions));
 	}
 
 	public QuestMetadata {
@@ -103,6 +127,10 @@ public record QuestMetadata(
 		kills = List.copyOf(Objects.requireNonNull(kills, "kills"));
 		startConditions = List.copyOf(Objects.requireNonNull(startConditions, "startConditions"));
 		classRewards = copyClassRewards(classRewards);
+		rewardGroups = normalizeRewardGroups(rewards, rewardGroups, "rewardGroups");
+		extendedRewardGroups = normalizeRewardGroups(extendedRewards, extendedRewardGroups,
+			"extendedRewardGroups");
+		startConditionGroups = normalizeStartConditionGroups(startConditions, startConditionGroups);
 	}
 
 	public static QuestMetadata minimal(String name, int displayNameId, String category) {
@@ -137,5 +165,42 @@ public record QuestMetadata(
 			copy.put(className, List.copyOf(Objects.requireNonNull(rewards, "classRewards value")));
 		});
 		return Collections.unmodifiableMap(copy);
+	}
+
+	private static List<QuestRewardGroup> groupsOf(List<QuestReward> rewards) {
+		return rewards == null || rewards.isEmpty() ? List.of() : List.of(new QuestRewardGroup(rewards));
+	}
+
+	private static List<QuestStartConditionGroup> startGroupsOf(List<QuestStartCondition> conditions) {
+		return conditions == null || conditions.isEmpty()
+			? List.of() : List.of(new QuestStartConditionGroup(conditions));
+	}
+
+	private static List<QuestRewardGroup> normalizeRewardGroups(List<QuestReward> flattened,
+			List<QuestRewardGroup> groups, String field) {
+		Objects.requireNonNull(groups, field);
+		List<QuestRewardGroup> copy = List.copyOf(groups);
+		List<QuestReward> groupRewards = copy.stream().flatMap(group -> group.rewards().stream()).toList();
+		if (copy.isEmpty()) {
+			return groupsOf(flattened);
+		}
+		if (!groupRewards.equals(flattened)) {
+			throw new IllegalArgumentException(field + " must preserve the flattened reward order");
+		}
+		return copy;
+	}
+
+	private static List<QuestStartConditionGroup> normalizeStartConditionGroups(
+			List<QuestStartCondition> flattened, List<QuestStartConditionGroup> groups) {
+		Objects.requireNonNull(groups, "startConditionGroups");
+		List<QuestStartConditionGroup> copy = List.copyOf(groups);
+		List<QuestStartCondition> grouped = copy.stream().flatMap(group -> group.conditions().stream()).toList();
+		if (copy.isEmpty()) {
+			return startGroupsOf(flattened);
+		}
+		if (!grouped.equals(flattened)) {
+			throw new IllegalArgumentException("startConditionGroups must preserve the flattened condition order");
+		}
+		return copy;
 	}
 }

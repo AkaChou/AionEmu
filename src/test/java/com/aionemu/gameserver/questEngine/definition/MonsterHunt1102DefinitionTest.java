@@ -70,7 +70,8 @@ class MonsterHunt1102DefinitionTest {
 		assertTrue(QuestMutationPlanner.plan(compiled,
 			snapshot.withStartEligibility(QuestStartEligibility.rejected("PREREQUISITE")), accept).isEmpty());
 		assertTrue(QuestMutationPlanner.plan(compiled,
-			snapshot.withStartEligibility(QuestStartEligibility.allowed()), accept).isPresent());
+			snapshot.withCompletedQuestIds(Set.of(1101))
+				.withStartEligibility(QuestStartEligibility.allowed()), accept).isPresent());
 	}
 
 	@Test

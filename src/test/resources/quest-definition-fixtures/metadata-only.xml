@@ -1,0 +1,5 @@
+<quest-definition id="990002" version="1">
+  <metadata name="metadata-only" display-name-id="990002" min-level="1" max-level="75" category="QUEST">
+    <rewards><reward kind="EXP" id="0" amount="10"/></rewards>
+  </metadata>
+</quest-definition>

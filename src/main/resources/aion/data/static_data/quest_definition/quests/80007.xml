@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80007" version="1">
+  <metadata name="[Event] Heart Headband Chase" display-name-id="1180007" min-level="41" max-level="55" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <items>
+      <item id="182214005" count="10" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="300000" />
+        <reward kind="EXP" id="0" amount="3000000" />
+        <reward kind="ITEM" id="125040060" amount="1" />
+        <reward kind="ITEM" id="164002019" amount="10" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="213090" item-id="182214005" chance="100" each-member="false" collecting-step="0" scope="NONE" />
+      <drop npc-id="213091" item-id="182214005" chance="100" each-member="false" collecting-step="0" scope="NONE" />
+      <drop npc-id="213162" item-id="182214005" chance="100" each-member="false" collecting-step="0" scope="NONE" />
+      <drop npc-id="213163" item-id="182214005" chance="100" each-member="false" collecting-step="0" scope="NONE" />
+      <drop npc-id="213210" item-id="182214005" chance="100" each-member="false" collecting-step="0" scope="NONE" />
+      <drop npc-id="213103" item-id="182214005" chance="100" each-member="false" collecting-step="0" scope="NONE" />
+      <drop npc-id="213104" item-id="182214005" chance="100" each-member="false" collecting-step="0" scope="NONE" />
+    </drops>
+  </metadata>
+</quest-definition>

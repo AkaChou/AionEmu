@@ -5,6 +5,7 @@ import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.manager.EmoteManager;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.model.EmotionId;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -34,7 +35,8 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 		ATTACK_TARGET,
 		ATTACK_NPC_TEMPLATE,
 		START_WALKING,
-		BROADCAST_START_EMOTE2
+		BROADCAST_START_EMOTE2,
+		BROADCAST_INTERACTION_EMOTION
 	}
 
 	/** 可注入的 AI 命令委托 (生产 = 真实 AI 调用, 测试 = 记录器)。 */
@@ -132,6 +134,12 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 			case BROADCAST_START_EMOTE2 -> {
 				PacketSendUtility.broadcastPacket(npc,
 					new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
+				yield true;
+			}
+			case BROADCAST_INTERACTION_EMOTION -> {
+				EmotionId emotion = EmotionId.valueOf(argument);
+				PacketSendUtility.broadcastPacket(player,
+					new SM_EMOTION(npc, EmotionType.EMOTE, emotion.id(), player.getObjectId()), true);
 				yield true;
 			}
 		}, objectId -> GameWorldBootstrapServices.world().findVisibleObject(objectId),
@@ -307,6 +315,22 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 			throw new IllegalArgumentException("unsupported quest NPC emotion: " + emotion);
 		}
 		return run(snapshot, slot, Command.BROADCAST_START_EMOTE2, null);
+	}
+
+	@Override
+	public boolean broadcastInteractionEmotion(QuestSnapshot snapshot, QuestMutationPlan plan,
+			QuestNpcEmotion emotion) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		if (emotion != QuestNpcEmotion.NO && emotion != QuestNpcEmotion.PANIC) {
+			throw new IllegalArgumentException("unsupported interaction NPC emotion: " + emotion);
+		}
+		Player player = players.find(snapshot.playerId());
+		if (player == null || snapshot.interactionObjectId() == 0) {
+			return false;
+		}
+		VisibleObject visible = targets.find(snapshot.interactionObjectId());
+		return visible instanceof Npc npc
+			&& ai.apply(npc, player, player, Command.BROADCAST_INTERACTION_EMOTION, emotion.name());
 	}
 
 	@Override

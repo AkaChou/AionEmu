@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="21275" version="1">
+  <metadata name="Weapons Of Asmodae" display-name-id="1127195" min-level="55" max-level="2147483647" category="QUEST" use-class-reward="1">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <items>
+      <item id="182006282" count="9" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="47860" />
+        <reward kind="EXP" id="0" amount="7067452" />
+      </group>
+    </reward-groups>
+    <class-rewards>
+      <class id="FIGHTER">
+        <reward kind="ITEM" id="100001083" amount="1" />
+        <reward kind="ITEM" id="100100821" amount="1" />
+        <reward kind="ITEM" id="100900823" amount="1" />
+        <reward kind="ITEM" id="101300792" amount="1" />
+        <reward kind="ITEM" id="101700866" amount="1" />
+      </class>
+      <class id="KNIGHT">
+        <reward kind="ITEM" id="100001083" amount="1" />
+        <reward kind="ITEM" id="100100821" amount="1" />
+        <reward kind="ITEM" id="100900823" amount="1" />
+      </class>
+      <class id="RANGER">
+        <reward kind="ITEM" id="100200956" amount="1" />
+        <reward kind="ITEM" id="100001083" amount="1" />
+        <reward kind="ITEM" id="101700866" amount="1" />
+      </class>
+      <class id="ASSASSIN">
+        <reward kind="ITEM" id="100200956" amount="1" />
+        <reward kind="ITEM" id="100001083" amount="1" />
+        <reward kind="ITEM" id="101700866" amount="1" />
+      </class>
+      <class id="WIZARD">
+        <reward kind="ITEM" id="100600899" amount="1" />
+        <reward kind="ITEM" id="100500843" amount="1" />
+      </class>
+      <class id="ELEMENTALIST">
+        <reward kind="ITEM" id="100600899" amount="1" />
+        <reward kind="ITEM" id="100500843" amount="1" />
+      </class>
+      <class id="PRIEST">
+        <reward kind="ITEM" id="100100821" amount="1" />
+        <reward kind="ITEM" id="101500849" amount="1" />
+      </class>
+      <class id="CHANTER">
+        <reward kind="ITEM" id="100100821" amount="1" />
+        <reward kind="ITEM" id="101500849" amount="1" />
+      </class>
+      <class id="GUNSLINGER">
+        <reward kind="ITEM" id="101800716" amount="1" />
+        <reward kind="ITEM" id="101900722" amount="1" />
+      </class>
+      <class id="SONGWEAVER">
+        <reward kind="ITEM" id="102000756" amount="1" />
+      </class>
+      <class id="AETHERTECH">
+        <reward kind="ITEM" id="102100631" amount="1" />
+      </class>
+    </class-rewards>
+  </metadata>
+</quest-definition>

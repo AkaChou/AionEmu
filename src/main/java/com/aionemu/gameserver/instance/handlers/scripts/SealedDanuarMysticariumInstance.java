@@ -103,6 +103,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 702700: //Ancient Box.
+			case 702701: //Ancient Box.
 			case 702702: //Ancient Box.
 				switch (Rnd.get(1, 3)) {
 				    case 1:

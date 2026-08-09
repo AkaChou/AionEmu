@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="26835" version="1">
+  <metadata name="[Instanced Dungeon/Group] Path to the Trials of Eternity" display-name-id="1803210" min-level="66" max-level="2147483647" category="SIGNIFICANT">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="310320" />
+        <reward kind="EXP" id="0" amount="17736250" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

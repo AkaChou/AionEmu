@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80833" version="1">
+  <metadata name="Playing Your Hand" display-name-id="1802068" min-level="60" max-level="65" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+  </metadata>
+</quest-definition>

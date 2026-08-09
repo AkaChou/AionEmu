@@ -2,9 +2,10 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import java.util.Objects;
 
-/** Immutable audit record for an owner invocation failure during routing. */
+/** Immutable structured audit record for a failed or degraded typed-owner invocation. */
 public record QuestAuditEvent(int questId, String eventType, QuestDispatchContract contract,
-	QuestRouteResult result, String failureType) {
+	QuestRouteResult result, String sourceNode, String targetNode, int npcId, int dialogId,
+	QuestFailureStage failureStage, boolean committed, Throwable failure) {
 	public QuestAuditEvent {
 		if (questId <= 0) {
 			throw new IllegalArgumentException("questId must be positive");
@@ -12,10 +13,17 @@ public record QuestAuditEvent(int questId, String eventType, QuestDispatchContra
 		eventType = requireText(eventType, "eventType");
 		contract = Objects.requireNonNull(contract, "contract");
 		result = Objects.requireNonNull(result, "result");
-		failureType = requireText(failureType, "failureType");
-		if (result != QuestRouteResult.FAILED) {
-			throw new IllegalArgumentException("audit events must describe a failed owner invocation");
+		sourceNode = sourceNode == null ? "*" : sourceNode;
+		targetNode = requireText(targetNode, "targetNode");
+		if (npcId < 0) {
+			throw new IllegalArgumentException("npcId must be non-negative");
 		}
+		failureStage = Objects.requireNonNull(failureStage, "failureStage");
+		failure = Objects.requireNonNull(failure, "failure");
+	}
+
+	public String failureType() {
+		return failure.getClass().getName();
 	}
 
 	private static String requireText(String value, String field) {

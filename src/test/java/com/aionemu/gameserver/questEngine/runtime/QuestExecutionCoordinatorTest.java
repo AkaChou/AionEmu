@@ -32,6 +32,7 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.talkToNpc;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -56,7 +57,8 @@ class QuestExecutionCoordinatorTest {
 				throw new AssertionError("apply must not run after failed preflight");
 			}
 		};
-		assertThrows(SQLException.class, () -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(connection, 7,
+		QuestExecutionFailureException failure = assertThrows(QuestExecutionFailureException.class,
+			() -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(connection, 7,
 				definition, event, transition, snapshotPort(), actions, new QuestStatePort() {
 				@Override
 				public void apply(Connection ignored, int ignoredPlayer, QuestMutationPlan ignoredPlan) {
@@ -68,6 +70,9 @@ class QuestExecutionCoordinatorTest {
 				}
 			},
 						(ignoredAction, ignoredSnapshot, ignoredPlan) -> afterCommit[0] = true));
+		assertEquals(QuestFailureStage.PREFLIGHT, failure.stage());
+		assertFalse(failure.committed());
+		assertInstanceOf(SQLException.class, failure.getCause());
 		assertEquals(List.of("setAutoCommit:false", "rollback"), calls);
 		assertEquals(false, stateApplied[0]);
 		assertEquals(false, afterCommit[0]);
@@ -98,6 +103,73 @@ class QuestExecutionCoordinatorTest {
 		assertEquals(List.of("setAutoCommit:false", "preflight:1", "apply:1", "state", "commit",
 			"required-commit", "publish", "after"), calls);
 		assertEquals(1, result.afterCommitFailures().size());
+	}
+
+	@Test
+	void publishFailureResynchronizesCommittedStateWithoutReplayingRequiredActions() throws Exception {
+		List<String> calls = new ArrayList<>();
+		CompiledQuestDefinition definition = definition();
+		QuestExecutionResult result = new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
+			connection(calls), 7, definition, talkToNpc(700001), definition.definition().transitions().get(0),
+			snapshotPort(), new RecordingActionPort(calls), new QuestStatePort() {
+				@Override
+				public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
+					calls.add("state");
+				}
+
+				@Override
+				public void publish(int playerId, QuestMutationPlan plan) {
+					calls.add("publish");
+					throw new IllegalStateException("publish failed");
+				}
+
+				@Override
+				public void resynchronize(int playerId, QuestMutationPlan plan) {
+					calls.add("resync");
+				}
+			}, (action, snapshot, plan) -> calls.add("after"));
+
+		assertEquals(QuestExecutionStatus.COMMITTED, result.status());
+		assertEquals(List.of("setAutoCommit:false", "preflight:1", "apply:1", "state", "commit",
+			"required-commit", "publish", "resync", "after"), calls);
+		QuestPostCommitFailure failure = assertInstanceOf(QuestPostCommitFailure.class,
+			result.afterCommitFailures().get(0));
+		assertEquals(QuestFailureStage.STATE_PUBLISH, failure.stage());
+		assertEquals("publish failed", failure.getCause().getMessage());
+	}
+
+	@Test
+	void resyncFailureIsCommittedAndNeverReplaysRewardsOrAfterCommitEffects() {
+		List<String> calls = new ArrayList<>();
+		CompiledQuestDefinition definition = definition();
+		QuestExecutionFailureException failure = assertThrows(QuestExecutionFailureException.class,
+			() -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
+				connection(calls), 7, definition, talkToNpc(700001), definition.definition().transitions().get(0),
+				snapshotPort(), new RecordingActionPort(calls), new QuestStatePort() {
+					@Override
+					public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
+						calls.add("state");
+					}
+
+					@Override
+					public void publish(int playerId, QuestMutationPlan plan) {
+						calls.add("publish");
+						throw new IllegalStateException("publish failed");
+					}
+
+					@Override
+					public void resynchronize(int playerId, QuestMutationPlan plan) {
+						calls.add("resync");
+						throw new IllegalStateException("resync failed");
+					}
+				}, (action, snapshot, plan) -> calls.add("after")));
+
+		assertEquals(QuestFailureStage.STATE_RESYNC, failure.stage());
+		assertTrue(failure.committed());
+		assertEquals("publish failed", failure.getCause().getMessage());
+		assertEquals("resync failed", failure.getCause().getSuppressed()[0].getMessage());
+		assertEquals(List.of("setAutoCommit:false", "preflight:1", "apply:1", "state", "commit",
+			"required-commit", "publish", "resync"), calls);
 	}
 
 	@Test
@@ -167,7 +239,10 @@ class QuestExecutionCoordinatorTest {
 
 		assertEquals(QuestExecutionStatus.COMMITTED, result.status());
 		assertEquals(1, result.afterCommitFailures().size());
-		assertTrue(result.afterCommitFailures().get(0) instanceof QuestAfterCommitException);
+		QuestPostCommitFailure failure = assertInstanceOf(QuestPostCommitFailure.class,
+			result.afterCommitFailures().get(0));
+		assertEquals(QuestFailureStage.AFTER_COMMIT, failure.stage());
+		assertInstanceOf(QuestAfterCommitException.class, failure.getCause());
 	}
 
 	@Test
@@ -239,7 +314,8 @@ class QuestExecutionCoordinatorTest {
 			}
 		};
 
-		assertThrows(SQLException.class, () -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(connection, 7,
+		QuestExecutionFailureException failure = assertThrows(QuestExecutionFailureException.class,
+			() -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(connection, 7,
 				definition, event, definition.definition().transitions().get(0), snapshotPort(),
 				new CompositeQuestActionPort(inventory, currency, rewards),
 				new QuestStatePort() {
@@ -254,6 +330,9 @@ class QuestExecutionCoordinatorTest {
 				}
 			},
 				(ignoredAction, ignoredSnapshot, ignoredPlan) -> calls.add("after")));
+		assertEquals(QuestFailureStage.PREFLIGHT, failure.stage());
+		assertFalse(failure.committed());
+		assertInstanceOf(SQLException.class, failure.getCause());
 		assertEquals(List.of("setAutoCommit:false", "inventory-preflight", "currency-preflight", "rollback"), calls);
 	}
 
@@ -266,7 +345,8 @@ class QuestExecutionCoordinatorTest {
 		QuestEventPort wrongSnapshot = (connection, playerId, questId, ignored) ->
 				new QuestSnapshot(99, questId + 1, QuestStatus.START, 0, Map.of(182400001, 5));
 
-		assertThrows(IllegalStateException.class, () -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
+		QuestExecutionFailureException failure = assertThrows(QuestExecutionFailureException.class,
+			() -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
 				connection(calls), 7, definition, event, transition, wrongSnapshot,
 				new RecordingActionPort(calls), new QuestStatePort() {
 				@Override
@@ -280,6 +360,9 @@ class QuestExecutionCoordinatorTest {
 				}
 			},
 				(ignoredAction, ignoredSnapshot, ignoredPlan) -> calls.add("after")));
+		assertEquals(QuestFailureStage.SNAPSHOT, failure.stage());
+		assertFalse(failure.committed());
+		assertInstanceOf(IllegalStateException.class, failure.getCause());
 		assertEquals(List.of("setAutoCommit:false", "rollback"), calls);
 	}
 
@@ -302,7 +385,8 @@ class QuestExecutionCoordinatorTest {
 			}
 		};
 
-		assertThrows(SQLException.class, () -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
+		QuestExecutionFailureException failure = assertThrows(QuestExecutionFailureException.class,
+			() -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
 			connection(calls, true), 7, definition, talkToNpc(700001), definition.definition().transitions().get(0),
 			snapshotPort(), actions, new QuestStatePort() {
 				@Override
@@ -320,6 +404,9 @@ class QuestExecutionCoordinatorTest {
 					calls.add("state-rollback");
 				}
 			}, (ignoredAction, ignoredSnapshot, ignoredPlan) -> calls.add("after")));
+		assertEquals(QuestFailureStage.COMMIT, failure.stage());
+		assertFalse(failure.committed());
+		assertInstanceOf(SQLException.class, failure.getCause());
 		assertEquals(List.of("setAutoCommit:false", "preflight", "required-apply", "state", "commit",
 			"rollback", "state-rollback", "required-rollback"), calls);
 	}
@@ -374,7 +461,8 @@ class QuestExecutionCoordinatorTest {
 		boolean[] spawned = {false};
 		CompiledQuestDefinition definition = spawnDefinition();
 		// 注入 commit 失败:afterCommit 不得执行,spawn 绝不发生。
-		assertThrows(SQLException.class, () -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
+		QuestExecutionFailureException failure = assertThrows(QuestExecutionFailureException.class,
+			() -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
 				connection(calls, true), 7, definition, talkToNpc(700001), definition.definition().transitions().get(0),
 				snapshotPort(), new RecordingActionPort(calls), new QuestStatePort() {
 				@Override
@@ -385,6 +473,9 @@ class QuestExecutionCoordinatorTest {
 				public void publish(int ignoredPlayer, QuestMutationPlan ignoredPlan) {
 				}
 			}, spawnAfterCommitPort(spawned)));
+		assertEquals(QuestFailureStage.COMMIT, failure.stage());
+		assertFalse(failure.committed());
+		assertInstanceOf(SQLException.class, failure.getCause());
 		assertFalse(spawned[0]);
 	}
 

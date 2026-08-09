@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80470" version="1">
+  <metadata name="[Event] Daeva's Day Celebrations!" display-name-id="1185667" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="169620111" amount="1" />
+        <reward kind="ITEM" id="169620112" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

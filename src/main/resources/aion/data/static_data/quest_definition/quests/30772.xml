@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="30772" version="1">
+  <metadata name="Spy] Checking the Gate" display-name-id="1800930" min-level="65" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="301320" />
+        <reward kind="EXP" id="0" amount="6893106" />
+        <reward kind="ITEM" id="186000469" amount="210" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

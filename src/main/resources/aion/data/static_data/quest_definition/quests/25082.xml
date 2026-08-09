@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="25082" version="1">
+  <metadata name="Tyrant Take Out" display-name-id="1800857" min-level="62" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <items>
+      <item id="182215728" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="137760" />
+        <reward kind="EXP" id="0" amount="9804928" />
+        <reward kind="ITEM" id="186000231" amount="4" />
+        <reward kind="ITEM" id="186000237" amount="30" />
+        <reward kind="ITEM" id="162000124" amount="14" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="219758" item-id="182215728" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="219759" item-id="182215728" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+  </metadata>
+</quest-definition>

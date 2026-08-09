@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="30771" version="1">
+  <metadata name="Impending Debris Energy" display-name-id="1800929" min-level="57" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="99720" />
+        <reward kind="EXP" id="0" amount="2216451" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

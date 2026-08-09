@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80612" version="1">
+  <metadata name="[Event] Quack's Prescription" display-name-id="1800280" min-level="65" max-level="65" category="EVENT">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <items>
+      <item id="182215579" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="4000" />
+        <reward kind="EXP" id="0" amount="400000" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="80611" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

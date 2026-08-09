@@ -7,6 +7,7 @@ import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeComposition;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import com.aionemu.gameserver.questEngine.runtime.QuestSpawnRegistry;
@@ -245,8 +246,26 @@ class QuestEngineRuntimeCompositionTest {
 	}
 
 	@Test
-	void unsupportedProductionEventFailsBeforeRegisteringAnyNpcOwner() {
+	void preparedProductionCatalogIsNotPublishedUntilInstallation() {
 		QuestEngine engine = new QuestEngine();
+		var oldDefinition = reloadDefinition(990020, "old snapshot");
+		var newDefinition = reloadDefinition(990021, "new snapshot");
+		engine.installProductionDefinitions(new ImmutableQuestCatalog(java.util.List.of(oldDefinition)));
+
+		QuestEngine.PreparedProductionDefinitions prepared = engine.prepareProductionDefinitions(
+			new ImmutableQuestCatalog(java.util.List.of(newDefinition)));
+
+		assertTrue(engine.questCatalog().findExecutable(990020).isPresent());
+		assertFalse(engine.questCatalog().findExecutable(990021).isPresent());
+		assertEquals("new snapshot", prepared.catalog().findMetadata(990021).orElseThrow().name());
+		assertTrue(prepared.dispatcher().owns(990021));
+	}
+
+	@Test
+	void unsupportedProductionEventKeepsThePreviouslyPublishedSnapshot() {
+		QuestEngine engine = new QuestEngine();
+		var previous = reloadDefinition(990020, "old snapshot");
+		engine.installProductionDefinitions(new ImmutableQuestCatalog(java.util.List.of(previous)));
 		var talk = QuestDsl.quest(990001)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("var0", 0)))
@@ -263,5 +282,17 @@ class QuestEngineRuntimeCompositionTest {
 
 		assertEquals(java.util.List.of(), engine.getQuestNpc(203057).getOnTalkEvent());
 		assertFalse(engine.isHaveHandler(990001));
+		assertTrue(engine.isProductionOwner(990020));
+		assertEquals("old snapshot", engine.questCatalog().findMetadata(990020).orElseThrow().name());
+	}
+
+	private static com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition reloadDefinition(
+			int questId, String name) {
+		return QuestDsl.quest(questId)
+			.metadata(QuestMetadata.minimal(name, questId, "QUEST"))
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("start", project(QuestStatus.START, vars("var0", 0)))
+			.on(new QuestEvent.LevelUp()).from("start").goTo("start")
+			.compile();
 	}
 }

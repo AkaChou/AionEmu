@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80889" version="1">
+  <metadata name="[Event] Soup Made From Axes (Training)" display-name-id="1802803" min-level="45" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <items>
+      <item id="164002373" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="188055603" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

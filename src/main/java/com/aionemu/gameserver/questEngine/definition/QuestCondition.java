@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Gender;
+import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import java.util.HashSet;
@@ -15,7 +16,8 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		QuestCondition.VariableSumIs, QuestCondition.VariableSumBelow,
 		QuestCondition.RecipeKnown, QuestCondition.CanGrantCraftSkill, QuestCondition.PvpVictimLevelDelta,
 		QuestCondition.PvpRecipientInZone, QuestCondition.StartEligible, QuestCondition.PlayerClassIs,
-		QuestCondition.AdvancedClassIs, QuestCondition.GenderIs, QuestCondition.PlayerInGroup,
+		QuestCondition.AdvancedClassIs, QuestCondition.GenderIs, QuestCondition.PlayerRaceIs,
+		QuestCondition.PlayerInGroup,
 		QuestCondition.WorldIs, QuestCondition.WorldNpcIs, QuestCondition.ZoneIs,
 		QuestCondition.NpcHpBelowPercent, QuestCondition.CurrencyAtLeast, QuestCondition.CurrencyBelow,
 		QuestCondition.QuestsFinished, QuestCondition.UnfinishedQuest, QuestCondition.NoAcquiredQuest,
@@ -137,6 +139,15 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
+	/** Matches the player's authoritative race projection. */
+	record PlayerRaceIs(Race race) implements QuestCondition {
+		public PlayerRaceIs {
+			if (race == null || race == Race.PC_ALL) {
+				throw new IllegalArgumentException("race must be ELYOS or ASMODIANS");
+			}
+		}
+	}
+
 	/** Matches whether the player is in a regular group (not merely an alliance). */
 	record PlayerInGroup(boolean expected) implements QuestCondition {
 		public PlayerInGroup() {
@@ -244,9 +255,23 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 	 * Matches whether the current game event still contains this quest,
 	 * mirroring {@code EventService.checkQuestIsActive}. Unknown facts fail closed.
 	 */
-	record EventActive(boolean expected) implements QuestCondition {
+	record EventActive(int questId, boolean expected) implements QuestCondition {
+		public EventActive {
+			if (questId < 0) {
+				throw new IllegalArgumentException("questId must not be negative");
+			}
+		}
+
 		public EventActive() {
-			this(true);
+			this(0, true);
+		}
+
+		public EventActive(boolean expected) {
+			this(0, expected);
+		}
+
+		public EventActive(int questId) {
+			this(questId, true);
 		}
 	}
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="50048" version="1">
+  <metadata name="[Event/Daily] The Signal Flare" display-name-id="1801149" min-level="46" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <inventory-items>
+      <item id="186000401" count="1" />
+    </inventory-items>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="186000469" amount="420" />
+        <reward kind="ITEM" id="186000051" amount="3" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

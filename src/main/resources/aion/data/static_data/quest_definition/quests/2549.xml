@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="2549" version="1">
+  <metadata name="A Gift For Amma" display-name-id="1103849" min-level="34" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <work-items>
+      <item id="182204436" count="1" />
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="35690" />
+        <reward kind="EXP" id="0" amount="633457" />
+        <reward kind="ITEM" id="186000008" amount="2" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

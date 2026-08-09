@@ -56,4 +56,35 @@ class QuestMetadataXmlTest {
 		assertEquals("FIGHTER", metadata.classRewards().keySet().iterator().next());
 		assertEquals(2, metadata.kills().get(0).npcIds().size());
 	}
+
+	@Test
+	void groupedRewardsAndAlternativeStartConditionsPreserveTheirBoundaries() {
+		String xml = """
+				<quest-definition id="1002" version="1">
+				  <metadata name="grouped" display-name-id="1101002" min-level="2" max-level="55" category="QUEST">
+				    <reward-groups>
+				      <group><reward kind="EXP" id="0" amount="10"/></group>
+				      <group><reward kind="ITEM" id="182400001" amount="1"/><reward kind="GOLD" id="0" amount="20"/></group>
+				    </reward-groups>
+				    <start-condition-groups>
+				      <group><condition type="finished" quest-id="9001"/><condition type="acquired" quest-id="9002"/></group>
+				      <group><condition type="finished" quest-id="9003"/></group>
+				    </start-condition-groups>
+				  </metadata>
+				  <nodes><node label="start"><project status="START"/></node></nodes>
+				  <transitions><transition source="start" target="start"><event><talk-to-npc npc-id="700001"/></event></transition></transitions>
+				</quest-definition>
+				""";
+
+		QuestMetadata metadata = QuestDefinitionXmlCompiler.compile(
+			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))).definition().metadata();
+
+		assertEquals(2, metadata.rewardGroups().size());
+		assertEquals(1, metadata.rewardGroups().get(0).rewards().size());
+		assertEquals(2, metadata.rewardGroups().get(1).rewards().size());
+		assertEquals(3, metadata.rewards().size());
+		assertEquals(2, metadata.startConditionGroups().size());
+		assertEquals(2, metadata.startConditionGroups().get(0).conditions().size());
+		assertEquals(1, metadata.startConditionGroups().get(1).conditions().size());
+	}
 }

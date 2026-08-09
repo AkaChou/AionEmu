@@ -80,7 +80,10 @@ class PlayerQuestCraftPortTest {
 		assertTrue(publisher.calls.isEmpty());
 		assertEquals(Set.of(RECIPE, AUTO_RECIPE), recipesDao.added.stream().map(Call::id).collect(java.util.stream.Collectors.toSet()));
 		assertTrue(recipesDao.added.stream().allMatch(call -> call.connection() == connection));
-		assertEquals(List.of(new Call(connection, SKILL, 400)), skillsDao.stored);
+		assertEquals(1, skillsDao.stored.size());
+		assertSame(connection, skillsDao.stored.getFirst().connection());
+		assertEquals(SKILL, skillsDao.stored.getFirst().id());
+		assertEquals(400, skillsDao.stored.getFirst().value());
 		participant.afterCommit();
 		assertEquals(1, publisher.calls.size());
 		assertEquals(Set.of(RECIPE, AUTO_RECIPE), publisher.calls.get(0).learned());
@@ -121,8 +124,13 @@ class PlayerQuestCraftPortTest {
 			new QuestAction.ForgetRecipe(RECIPE)));
 		participant.afterCommit();
 
-		assertEquals(List.of(new Call(connection, RECIPE, 0)), recipesDao.deleted);
-		assertEquals(List.of(new Call(connection, SKILL, 450)), skillsDao.stored);
+		assertEquals(1, recipesDao.deleted.size());
+		assertSame(connection, recipesDao.deleted.getFirst().connection());
+		assertEquals(RECIPE, recipesDao.deleted.getFirst().id());
+		assertEquals(1, skillsDao.stored.size());
+		assertSame(connection, skillsDao.stored.getFirst().connection());
+		assertEquals(SKILL, skillsDao.stored.getFirst().id());
+		assertEquals(450, skillsDao.stored.getFirst().value());
 		assertEquals(Set.of(RECIPE), publisher.calls.get(0).forgotten());
 		assertTrue(publisher.calls.get(0).learned().isEmpty());
 	}

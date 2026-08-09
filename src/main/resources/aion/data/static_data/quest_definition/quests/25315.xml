@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="25315" version="1">
+  <metadata name="Marchutan's Daevanion Tunic" display-name-id="1801493" min-level="65" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="152003019" count="30" />
+      <item id="182215895" count="80" />
+    </items>
+    <work-items>
+      <item id="182215881" count="1" />
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="2412587" />
+        <reward kind="SELECTABLE_ITEM" id="110101920" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="110301915" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="110301916" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="110551254" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="110551255" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="110551268" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="110601710" amount="1" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="234525" item-id="182215895" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="234283" item-id="182215895" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="234284" item-id="182215895" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="234285" item-id="182215895" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="25307" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

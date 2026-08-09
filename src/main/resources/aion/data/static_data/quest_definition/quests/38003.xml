@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="38003" version="1">
+  <metadata name="Alabaster Order's Call" display-name-id="1126124" min-level="30" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="58283" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="unfinished" quest-id="38000" />
+        <condition type="noacquired" quest-id="38000" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

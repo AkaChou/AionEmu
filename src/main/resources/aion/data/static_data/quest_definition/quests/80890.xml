@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80890" version="1">
+  <metadata name="[Event] Golden Saam of the Eloquent Speaker" display-name-id="1802804" min-level="45" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="164002368" amount="5" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

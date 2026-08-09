@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="51041" version="1">
+  <metadata name="[Event/Weekly] Death to the Generals" display-name-id="1800107" min-level="25" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="true" cycles="WED" />
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="166030007" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

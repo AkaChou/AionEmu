@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="11272" version="1">
+  <metadata name="Favors Of Fancy" display-name-id="1125182" min-level="55" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <items>
+      <item id="182006281" count="5" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="25350" />
+        <reward kind="EXP" id="0" amount="7067452" />
+        <reward kind="SELECTABLE_ITEM" id="112101073" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="112301058" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="112501048" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="112601063" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="112301408" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80852" version="1">
+  <metadata name="[Event/Daily] A special schedule from an assistant" display-name-id="1185966" min-level="1" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <items>
+      <item id="182007404" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="188055146" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

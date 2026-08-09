@@ -478,6 +478,7 @@ final class QuestXmlBlockExpander {
 			fail("NPC_COMPLETE_INVALID_COMPLETE_REWARD_INDEX", context, "npc-complete",
 				"complete-reward-index", "must be non-negative");
 		}
+		List<QuestReward> selectedRewardGroup = rewardGroup(context, completeRewardIndex);
 
 		List<Integer> fixedRewardIndices = block.hasAttribute("fixed-reward-indices")
 			? integerTokens(context, block, "npc-complete", "fixed-reward-indices", false) : List.of();
@@ -487,7 +488,7 @@ final class QuestXmlBlockExpander {
 		}
 		List<QuestAction> fixedRewards = new ArrayList<>();
 		for (int rewardIndex : fixedRewardIndices) {
-			QuestReward reward = reward(context, "fixed-reward-indices", rewardIndex);
+			QuestReward reward = reward(context, selectedRewardGroup, "fixed-reward-indices", rewardIndex);
 			if (rewardKind(context, "fixed-reward-indices", rewardIndex, reward) == QuestRewardKind.SELECTABLE_ITEM) {
 				fail("NPC_COMPLETE_FIXED_REWARD_TYPE", context, "npc-complete", "fixed-reward-indices",
 					"reward index " + rewardIndex + " is SELECTABLE_ITEM");
@@ -507,7 +508,7 @@ final class QuestXmlBlockExpander {
 			int dialogId = integer(context, choice, "npc-complete", "dialog-id");
 			dialogs.addSingle(dialogId, "choice.dialog-id");
 			int rewardIndex = integer(context, choice, "npc-complete", "reward-index");
-			QuestReward reward = reward(context, "choice.reward-index", rewardIndex);
+			QuestReward reward = reward(context, selectedRewardGroup, "choice.reward-index", rewardIndex);
 			if (rewardKind(context, "choice.reward-index", rewardIndex, reward) != QuestRewardKind.SELECTABLE_ITEM) {
 				fail("NPC_COMPLETE_CHOICE_REWARD_TYPE", context, "npc-complete", "choice.reward-index",
 					"reward index " + rewardIndex + " is not SELECTABLE_ITEM");
@@ -558,12 +559,31 @@ final class QuestXmlBlockExpander {
 		return result;
 	}
 
-	private static QuestReward reward(Context context, String attribute, int rewardIndex) {
-		if (rewardIndex < 0 || rewardIndex >= context.metadata().rewards().size()) {
-			return fail("NPC_COMPLETE_REWARD_INDEX_OUT_OF_RANGE", context, "npc-complete", attribute,
-				"reward index " + rewardIndex + " is not present in metadata");
+	private static List<QuestReward> rewardGroup(Context context, int completeRewardIndex) {
+		List<QuestRewardGroup> groups = context.metadata().rewardGroups();
+		if (groups.isEmpty()) {
+			// Rewardless quests still persist the completion reward index as part of QuestState.
+			// Any fixed or selectable reward reference is validated against this empty group below.
+			return List.of();
 		}
-		return context.metadata().rewards().get(rewardIndex);
+		// A few evidence-backed custom owners persist a non-zero completion reward while declaring one
+		// physical reward group. Preserve that state contract; only multiple groups use the index as a selector.
+		if (groups.size() == 1) {
+			return groups.get(0).rewards();
+		}
+		if (completeRewardIndex >= groups.size()) {
+			return fail("NPC_COMPLETE_REWARD_GROUP_OUT_OF_RANGE", context, "npc-complete",
+				"complete-reward-index", "reward group " + completeRewardIndex + " is not present in metadata");
+		}
+		return groups.get(completeRewardIndex).rewards();
+	}
+
+	private static QuestReward reward(Context context, List<QuestReward> group, String attribute, int rewardIndex) {
+		if (rewardIndex < 0 || rewardIndex >= group.size()) {
+			return fail("NPC_COMPLETE_REWARD_INDEX_OUT_OF_RANGE", context, "npc-complete", attribute,
+				"reward index " + rewardIndex + " is not present in the selected reward group");
+		}
+		return group.get(rewardIndex);
 	}
 
 	private static QuestRewardKind rewardKind(Context context, String attribute, int rewardIndex,

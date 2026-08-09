@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80893" version="1">
+  <metadata name="[Event/Infiltration] Defeating the Liar 1" display-name-id="1802807" min-level="66" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="465480" />
+        <reward kind="EXP" id="0" amount="26790048" />
+        <reward kind="ITEM" id="164002368" amount="2" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

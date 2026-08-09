@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80921" version="1">
+  <metadata name="[Event/Daily] A Father’s Request" display-name-id="1803085" min-level="66" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="26790048" />
+        <reward kind="ITEM" id="188056737" amount="2" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

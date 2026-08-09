@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80829" version="1">
+  <metadata name="[Event] Missing Husband" display-name-id="1185954" min-level="1" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <items>
+      <item id="182215955" count="4" />
+    </items>
+    <reward-groups>
+      <group />
+    </reward-groups>
+    <drops>
+      <drop npc-id="241280" item-id="182215955" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="241281" item-id="182215955" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="241282" item-id="182215955" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="241283" item-id="182215955" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+  </metadata>
+</quest-definition>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="25604" version="1">
+  <metadata name="Prison of Silence" display-name-id="1802267" min-level="68" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <items>
+      <item id="182216003" count="5" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="465480" />
+        <reward kind="EXP" id="0" amount="46547274" />
+        <reward kind="SELECTABLE_ITEM" id="112601697" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="112601698" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="112501807" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="112501808" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="112501809" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="112301840" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="112301841" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="112101727" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="112101728" amount="1" />
+        <reward kind="ITEM" id="188055318" amount="1" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="243380" item-id="182216003" chance="100" each-member="true" collecting-step="4" scope="GROUP" />
+      <drop npc-id="243381" item-id="182216003" chance="100" each-member="true" collecting-step="4" scope="GROUP" />
+      <drop npc-id="243382" item-id="182216003" chance="100" each-member="true" collecting-step="4" scope="GROUP" />
+      <drop npc-id="243383" item-id="182216003" chance="100" each-member="true" collecting-step="4" scope="GROUP" />
+      <drop npc-id="243384" item-id="182216003" chance="100" each-member="true" collecting-step="4" scope="GROUP" />
+      <drop npc-id="243385" item-id="182216003" chance="100" each-member="true" collecting-step="4" scope="GROUP" />
+    </drops>
+  </metadata>
+</quest-definition>

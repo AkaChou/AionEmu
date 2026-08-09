@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="25548" version="1">
+  <metadata name="Gift from Azphel's Sanctuary" display-name-id="1802829" min-level="75" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="186000453" amount="1" />
+        <reward kind="ITEM" id="186000451" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

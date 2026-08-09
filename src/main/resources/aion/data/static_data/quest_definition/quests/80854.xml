@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80854" version="1">
+  <metadata name="[Event] Satisfy Pallas the Gourmet Apprentice" display-name-id="1185980" min-level="60" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="164002343" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="164002338" amount="1" />
+        <reward kind="ITEM" id="188055213" amount="1" />
+        <reward kind="ITEM" id="182216015" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

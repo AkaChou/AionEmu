@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="15315" version="1">
+  <metadata name="Kaisinel's Daevanion Tunic" display-name-id="1801452" min-level="65" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="152003019" count="30" />
+      <item id="182215888" count="80" />
+    </items>
+    <work-items>
+      <item id="182215869" count="1" />
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="2412587" />
+        <reward kind="SELECTABLE_ITEM" id="110101918" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="110301911" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="110301912" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="110551250" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="110551251" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="110551266" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="110601708" amount="1" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="234526" item-id="182215888" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="234286" item-id="182215888" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="234288" item-id="182215888" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="234290" item-id="182215888" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="15307" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

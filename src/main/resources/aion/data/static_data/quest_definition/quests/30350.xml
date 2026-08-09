@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="30350" version="1">
+  <metadata name="[Group] Improved Cipher-Blade" display-name-id="1141647" min-level="52" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <classes>
+      <class id="TECHNIST" />
+      <class id="AETHERTECH" />
+    </classes>
+    <items>
+      <item id="102100585" count="1" />
+      <item id="186000099" count="1" />
+      <item id="186000106" count="1" />
+      <item id="182216246" count="1" />
+    </items>
+    <work-items>
+      <item id="182213560" count="1" />
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="6517414" />
+        <reward kind="ITEM" id="102100587" amount="1" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="30141" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

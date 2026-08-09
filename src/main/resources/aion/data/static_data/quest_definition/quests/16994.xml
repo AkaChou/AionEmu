@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="16994" version="1">
+  <metadata name="[Instance] Robbers and Hoods" display-name-id="1801984" min-level="65" max-level="2147483647" category="IMPORTANT" use-class-reward="2">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="10" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="182215947" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="4825175" />
+      </group>
+    </reward-groups>
+    <extended-reward-groups>
+      <group>
+        <reward kind="ITEM" id="188054371" amount="1" />
+      </group>
+    </extended-reward-groups>
+    <drops>
+      <drop npc-id="702960" item-id="182215947" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+  </metadata>
+</quest-definition>

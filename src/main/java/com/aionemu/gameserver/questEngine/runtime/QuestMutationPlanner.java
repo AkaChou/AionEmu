@@ -288,24 +288,28 @@ public final class QuestMutationPlanner {
 			|| target.projection().status() == QuestStatus.NONE) {
 			return true;
 		}
-		List<QuestCondition> conditions = new ArrayList<>();
 		if (!definition.definition().metadata().prerequisites().isEmpty()) {
-			conditions.add(new QuestCondition.QuestsFinished(definition.definition().metadata().prerequisites()));
+			QuestCondition prerequisite = new QuestCondition.QuestsFinished(
+				definition.definition().metadata().prerequisites());
+			if (!QuestConditionEvaluator.matches(definition.definition().progressLayout(), snapshot,
+					List.of(prerequisite))) {
+				return false;
+			}
 		}
-		for (var startCondition : definition.definition().metadata().startConditions()) {
-			conditions.add(switch (startCondition.type()) {
-				case "finished" -> new QuestCondition.QuestsFinished(Set.of(startCondition.questId()));
-				case "unfinished" -> new QuestCondition.UnfinishedQuest(Set.of(startCondition.questId()));
-				case "noacquired" -> new QuestCondition.NoAcquiredQuest(Set.of(startCondition.questId()));
-				case "acquired" -> new QuestCondition.AcquiredQuest(Set.of(startCondition.questId()));
-				default -> throw new IllegalArgumentException(
-					"unsupported start condition type: " + startCondition.type());
-			});
-		}
-		if (conditions.isEmpty()) {
+		var groups = definition.definition().metadata().startConditionGroups();
+		if (groups.isEmpty()) {
 			return true;
 		}
-		return QuestConditionEvaluator.matches(definition.definition().progressLayout(), snapshot, conditions);
+		return groups.stream().anyMatch(group -> QuestConditionEvaluator.matches(
+			definition.definition().progressLayout(), snapshot, group.conditions().stream().map(startCondition ->
+				(QuestCondition) switch (startCondition.type()) {
+					case "finished" -> new QuestCondition.QuestsFinished(Set.of(startCondition.questId()));
+					case "unfinished" -> new QuestCondition.UnfinishedQuest(Set.of(startCondition.questId()));
+					case "noacquired" -> new QuestCondition.NoAcquiredQuest(Set.of(startCondition.questId()));
+					case "acquired" -> new QuestCondition.AcquiredQuest(Set.of(startCondition.questId()));
+					default -> throw new IllegalArgumentException(
+						"unsupported start condition type: " + startCondition.type());
+				}).toList()));
 	}
 
 	/**

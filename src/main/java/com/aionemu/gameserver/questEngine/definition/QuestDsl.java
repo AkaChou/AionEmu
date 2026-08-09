@@ -4,6 +4,7 @@ import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -347,6 +348,19 @@ public final class QuestDsl {
 		return new QuestCondition.EventActive(expected);
 	}
 
+	/** 指定任务属于当前活动。 */
+	public static QuestCondition eventActive(int questId) {
+		return new QuestCondition.EventActive(questId);
+	}
+
+	public static QuestCondition eventActive(int questId, boolean expected) {
+		return new QuestCondition.EventActive(questId, expected);
+	}
+
+	public static QuestCondition playerRaceIs(Race race) {
+		return new QuestCondition.PlayerRaceIs(race);
+	}
+
 	public static QuestCondition equippedItem(int itemId) {
 		return new QuestCondition.EquippedItem(itemId);
 	}
@@ -605,6 +619,10 @@ public final class QuestDsl {
 		return new AfterCommitAction.BroadcastNpcEmotion(slot, emotion);
 	}
 
+	public static AfterCommitAction broadcastInteractionNpcEmotion(QuestNpcEmotion emotion) {
+		return new AfterCommitAction.BroadcastInteractionNpcEmotion(emotion);
+	}
+
 	public static AfterCommitAction watchFollowZone(String slot, String zone) {
 		return new AfterCommitAction.WatchFollowZone(slot, zone);
 	}
@@ -640,6 +658,10 @@ public final class QuestDsl {
 	/** 对若干目标任务广播 zone-mission-end 事件, 触发其启动/推进。 */
 	public static AfterCommitAction broadcastZoneMissionEnd(int... questIds) {
 		return new AfterCommitAction.BroadcastZoneMissionEnd(questIds);
+	}
+
+	public static AfterCommitAction scheduleEventQuestRefresh(int seconds, int... questIds) {
+		return new AfterCommitAction.ScheduleEventQuestRefresh(seconds, questIds);
 	}
 
 	public static final class QuestBuilder {

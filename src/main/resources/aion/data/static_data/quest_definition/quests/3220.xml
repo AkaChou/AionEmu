@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="3220" version="1">
+  <metadata name="Key Item Hidden Quest 02 (Elyos)" display-name-id="1103043" min-level="1" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="185000055" count="1" />
+      <item id="185000050" count="1" />
+      <item id="185000073" count="1" />
+    </items>
+    <drops>
+      <drop npc-id="215058" item-id="185000055" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="215066" item-id="185000050" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="215411" item-id="185000073" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+  </metadata>
+</quest-definition>

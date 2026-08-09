@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  80020 [Event] Solorius Joy.
+  Runtime authority: legacy _80020EventSoloriusJoy; metadata authority: quest_data.xml and
+  /Users/mc/IdeaProjects/58Server-new/Map/XML/China/quest.xml (Q80020).
+-->
+<quest-definition id="80020" version="1">
+  <metadata name="[Event] Solorius Joy" display-name-id="1180020" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races><race id="ELYOS"/></races>
+    <repeat max-repeat-count="5" cooldown-seconds="0" daily="false" weekly="false"/>
+    <work-items>
+      <item id="182214012" count="1"/>
+      <item id="182214013" count="2"/>
+    </work-items>
+    <rewards>
+      <reward kind="GOLD" id="0" amount="20000"/>
+      <reward kind="EXP" id="0" amount="10000"/>
+      <reward kind="ITEM" id="164002020" amount="1"/>
+      <reward kind="ITEM" id="160010097" amount="1"/>
+    </rewards>
+    <extended-rewards><reward kind="ITEM" id="188051108" amount="1"/></extended-rewards>
+  </metadata>
+  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+  <nodes>
+    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="s0"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="s1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="s2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799769" dialog-ids="-1 31"/></event><conditions><start-eligible/><event-active expected="true"/></conditions><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="complete" target="complete"><event><talk-to-npc npc-id="799769" dialog-ids="-1 31"/></event><conditions><start-eligible/><event-active expected="true"/></conditions><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799769" dialog-id="1007"/></event><conditions><start-eligible/><event-active expected="true"/></conditions><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="complete" target="complete"><event><talk-to-npc npc-id="799769" dialog-id="1007"/></event><conditions><start-eligible/><event-active expected="true"/></conditions><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="s0"><event><talk-to-npc npc-id="799769" dialog-id="1002"/></event><conditions><start-eligible/><event-active expected="true"/></conditions><actions><give-item item-id="182214012" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
+    <transition source="complete" target="s0"><event><talk-to-npc npc-id="799769" dialog-id="1002"/></event><conditions><start-eligible/><event-active expected="true"/></conditions><actions><give-item item-id="182214012" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
+    <transition source="unaccepted" target="s0"><event><talk-to-npc npc-id="799769" dialog-id="20000"/></event><conditions><start-eligible/><event-active expected="true"/></conditions><actions><give-item item-id="182214012" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="complete" target="s0"><event><talk-to-npc npc-id="799769" dialog-id="20000"/></event><conditions><start-eligible/><event-active expected="true"/></conditions><actions><give-item item-id="182214012" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799769" dialog-ids="1003 1004 20001"/></event><conditions><start-eligible/><event-active expected="true"/></conditions><after-commit><close-dialog/></after-commit></transition>
+    <transition source="complete" target="complete"><event><talk-to-npc npc-id="799769" dialog-ids="1003 1004 20001"/></event><conditions><start-eligible/><event-active expected="true"/></conditions><after-commit><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799769" dialog-id="1008"/></event><conditions><start-eligible/><event-active expected="true"/></conditions><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="complete" target="complete"><event><talk-to-npc npc-id="799769" dialog-id="1008"/></event><conditions><start-eligible/><event-active expected="true"/></conditions><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+
+    <transition source="s0" target="s0"><event><talk-to-npc npc-id="799768" dialog-ids="-1 31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="s0" target="s1"><event><talk-to-npc npc-id="799768" dialog-id="10000"/></event><actions><give-item item-id="182214013" count="2"/><remove-item item-id="182214012" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="s1" target="s1"><event><talk-to-npc npc-id="203170" dialog-ids="-1 31"/></event><after-commit><show-quest-dialog dialog-id="1693"/></after-commit></transition>
+    <transition source="s1" target="s1"><event><talk-to-npc npc-id="203170" dialog-id="1694"/></event><after-commit><broadcast-interaction-npc-emotion emotion="NO"/><show-quest-dialog dialog-id="1694"/></after-commit></transition>
+    <transition source="s1" target="s2"><event><talk-to-npc npc-id="203170" dialog-id="10001"/></event><actions><remove-item item-id="182214013" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="s2" target="s2"><event><talk-to-npc npc-id="203140" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2034"/></after-commit></transition>
+    <transition source="s2" target="s2"><event><talk-to-npc npc-id="203140" dialog-id="2035"/></event><after-commit><broadcast-interaction-npc-emotion emotion="PANIC"/><show-quest-dialog dialog-id="2035"/></after-commit></transition>
+    <transition source="s2" target="reward"><event><talk-to-npc npc-id="203140" dialog-id="10002"/></event><actions><remove-item item-id="182214013" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="799769" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
+    <npc-complete npc-id="799769" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+
+    <transition source="s0" target="unaccepted"><event><level-up/></event><conditions><event-active expected="false"/></conditions><actions><abandon-quest/></actions></transition>
+    <transition source="s1" target="unaccepted"><event><level-up/></event><conditions><event-active expected="false"/></conditions><actions><abandon-quest/></actions></transition>
+    <transition source="s2" target="unaccepted"><event><level-up/></event><conditions><event-active expected="false"/></conditions><actions><abandon-quest/></actions></transition>
+    <transition source="reward" target="unaccepted"><event><level-up/></event><conditions><event-active expected="false"/></conditions><actions><abandon-quest/></actions></transition>
+    <transition source="complete" target="unaccepted"><event><level-up/></event><conditions><event-active expected="false"/></conditions><actions><abandon-quest/></actions></transition>
+  </transitions>
+</quest-definition>

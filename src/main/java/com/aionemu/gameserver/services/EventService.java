@@ -16,15 +16,16 @@ import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.EventType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.model.templates.event.EventTemplate;
-import com.aionemu.gameserver.model.templates.quest.XMLStartCondition;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.runtime.PlayerQuestStartEligibilityPort;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 
@@ -139,43 +140,17 @@ public class EventService {
 	 * @param start true 表示可新开任务 / true to start new quests
 	 */
 	void StartOrMaintainQuests(Player player, ListIterator<Integer> questList, Map<Integer, List<EventTemplate>> templateMap, boolean start) {
+		var catalog = GameEngineServices.questEngine().questCatalog();
+		PlayerQuestStartEligibilityPort eligibility = new PlayerQuestStartEligibilityPort(playerId -> player,
+			id -> catalog.findMetadata(id).orElse(null));
 		while (questList.hasNext()) {
 			int questId = questList.next();
 			QuestState qs = player.getQuestStateList().getQuestState(questId);
 			QuestEnv cookie = new QuestEnv(null, player, questId, 0);
 			QuestStatus status = qs == null ? QuestStatus.START : qs.getStatus();
 
-			if (QuestService.checkLevelRequirement(questId, player.getCommonData().getLevel())) {
-				QuestTemplate template = DataManager.QUEST_DATA.getQuestById(questId);
-				if (!template.isRacePermitted(player.getCommonData().getRace())) {
-					continue;
-				}
-
-				if (template.getClassPermitted().size() != 0) {
-					if (!template.getClassPermitted().contains(player.getCommonData().getPlayerClass())) {
-						continue;
-					}
-				}
-
-				if (template.getGenderPermitted() != null) {
-					if (template.getGenderPermitted().ordinal() != player.getGender().ordinal()) {
-						continue;
-					}
-				}
-
-				int amountOfStartConditions = template.getXMLStartConditions().size();
-				int fulfilledStartConditions = 0;
-				if (amountOfStartConditions != 0) {
-					for (XMLStartCondition startCondition : template.getXMLStartConditions()) {
-						if (startCondition.check(player, false)) {
-							fulfilledStartConditions++;
-						}
-					}
-					if (fulfilledStartConditions < 1) {
-						continue;
-					}
-				}
-
+			QuestMetadata metadata = catalog.findMetadata(questId).orElse(null);
+			if (matchesEventQuestMetadata(player, metadata, eligibility)) {
 				if (qs != null) {
 					if (qs.getCompleteTime() != null || status == QuestStatus.COMPLETE) {
 						ZonedDateTime completed = null;
@@ -210,6 +185,28 @@ public class EventService {
 				}
 			}
 		}
+	}
+
+	static boolean matchesEventQuestMetadata(Player player, QuestMetadata metadata,
+			PlayerQuestStartEligibilityPort eligibility) {
+		if (metadata == null || player.getLevel() < metadata.minLevel()
+				|| player.getLevel() > metadata.maxLevel()) {
+			return false;
+		}
+		if (!metadata.permittedRaces().isEmpty()
+				&& (player.getRace() == null || !metadata.permittedRaces().contains(player.getRace().name()))) {
+			return false;
+		}
+		if (!metadata.permittedClasses().isEmpty()
+				&& (player.getCommonData() == null || player.getCommonData().getPlayerClass() == null
+					|| !metadata.permittedClasses().contains(player.getCommonData().getPlayerClass().name()))) {
+			return false;
+		}
+		if (!metadata.permittedGender().isEmpty()
+				&& (player.getGender() == null || !metadata.permittedGender().equals(player.getGender().name()))) {
+			return false;
+		}
+		return eligibility.matchesCanonicalStartConditions(player, metadata);
 	}
 
 	/**

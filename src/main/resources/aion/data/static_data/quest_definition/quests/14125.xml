@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="14125" version="1">
+  <metadata name="A Fuzzy Deal" display-name-id="1129994" min-level="25" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="203989" />
+        <reward kind="ITEM" id="182215318" amount="1" />
+        <reward kind="ITEM" id="182215319" amount="1" />
+        <reward kind="ITEM" id="182215320" amount="1" />
+        <reward kind="ITEM" id="182215321" amount="1" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="acquired" quest-id="14023" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

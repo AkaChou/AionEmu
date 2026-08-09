@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80864" version="1">
+  <metadata name="[Event/Weekly] The Elyos Vow" display-name-id="1185994" min-level="65" max-level="2147483647" category="EVENT">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="true" cycles="WED" />
+    <reward-groups>
+      <group>
+        <reward kind="GP" id="0" amount="25" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

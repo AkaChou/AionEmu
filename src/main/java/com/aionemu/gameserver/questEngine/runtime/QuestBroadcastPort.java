@@ -11,4 +11,10 @@ public interface QuestBroadcastPort {
 	 * @return true 表示已分发; false 表示失败 (best-effort, 记录审计)
 	 */
 	boolean broadcastZoneMissionEnd(QuestSnapshot snapshot, QuestMutationPlan plan, int[] questIds);
+
+	/** Schedules an internal refresh for typed event-quest owners. */
+	default boolean scheduleEventQuestRefresh(QuestSnapshot snapshot, QuestMutationPlan plan, int seconds,
+			int[] questIds) {
+		return false;
+	}
 }

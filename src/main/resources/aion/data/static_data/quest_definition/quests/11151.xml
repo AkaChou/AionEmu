@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="11151" version="1">
+  <metadata name="Silence the Murmurs and Hush the Snufflers" display-name-id="1800496" min-level="54" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="8802718" />
+        <reward kind="ITEM" id="162000050" amount="9" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

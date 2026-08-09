@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="15314" version="1">
+  <metadata name="Kaisinel's Daevanion Leggings" display-name-id="1801451" min-level="65" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="182215835" count="1" />
+    </items>
+    <work-items>
+      <item id="182215868" count="1" />
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="2412587" />
+        <reward kind="SELECTABLE_ITEM" id="113101745" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="113301881" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="113301882" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="113501829" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="113501830" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="113501845" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="113601655" amount="1" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="15307" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

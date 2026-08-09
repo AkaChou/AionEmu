@@ -1,13 +1,12 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.ENpcFactionQuestState;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.NpcFaction;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.NpcFactions;
-import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestPlayerEmotion;
+import com.aionemu.gameserver.questEngine.definition.RepeatPolicy;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
@@ -15,6 +14,7 @@ import org.objenesis.ObjenesisStd;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -62,34 +62,43 @@ class PlayerQuestEffectPortTest {
 	void factionLifecycleFailsClosedWhenTheActiveFactionPointsToAnotherQuest() throws Exception {
 		int questId = 14114;
 		int npcFactionId = 4;
-		QuestTemplate template = new QuestTemplate();
-		setField(QuestTemplate.class, template, "id", questId);
-		setField(QuestTemplate.class, template, "npcFactionId", npcFactionId);
-		QuestsData quests = new QuestsData();
-		quests.setQuestsData(List.of(template));
-		QuestsData previousQuestData = DataManager.QUEST_DATA;
-		try {
-			DataManager.QUEST_DATA = quests;
-			NpcFaction faction = new ObjenesisStd().newInstance(NpcFaction.class);
-			setField(NpcFaction.class, faction, "id", npcFactionId);
-			setField(NpcFaction.class, faction, "active", true);
-			setField(NpcFaction.class, faction, "state", ENpcFactionQuestState.START);
-			setField(NpcFaction.class, faction, "questId", questId + 1);
-			RecordingNpcFactions factions = new RecordingNpcFactions(faction);
-			Player player = new ObjenesisStd().newInstance(Player.class);
-			player.setNpcFactions(factions);
+		NpcFaction faction = new ObjenesisStd().newInstance(NpcFaction.class);
+		setField(NpcFaction.class, faction, "id", npcFactionId);
+		setField(NpcFaction.class, faction, "active", true);
+		setField(NpcFaction.class, faction, "state", ENpcFactionQuestState.START);
+		setField(NpcFaction.class, faction, "questId", questId + 1);
+		RecordingNpcFactions factions = new RecordingNpcFactions(faction);
+		Player player = new ObjenesisStd().newInstance(Player.class);
+		player.setNpcFactions(factions);
+		QuestMetadata metadata = factionMetadata(npcFactionId);
+		PlayerQuestEffectPort port = new PlayerQuestEffectPort(playerId -> player, noOpEffects(),
+			id -> id == questId ? metadata : null);
+		QuestSnapshot snapshot = new QuestSnapshot(7, questId, QuestStatus.REWARD, 0, Map.of());
+		QuestMutationPlan plan = new QuestMutationPlan(questId, QuestStatus.COMPLETE, 0, List.of(), List.of());
 
-			PlayerQuestEffectPort port = new PlayerQuestEffectPort(playerId -> player);
-			QuestSnapshot snapshot = new QuestSnapshot(7, questId, QuestStatus.REWARD, 0, Map.of());
-			QuestMutationPlan plan = new QuestMutationPlan(questId, QuestStatus.COMPLETE, 0, List.of(), List.of());
+		assertFalse(port.completeNpcFactionQuest(snapshot, plan, npcFactionId));
+		assertFalse(factions.completeCalled);
+		assertFalse(port.abortNpcFactionQuest(snapshot, plan, npcFactionId));
+		assertFalse(factions.abortCalled);
+	}
 
-			assertFalse(port.completeNpcFactionQuest(snapshot, plan, npcFactionId));
-			assertFalse(factions.completeCalled);
-			assertFalse(port.abortNpcFactionQuest(snapshot, plan, npcFactionId));
-			assertFalse(factions.abortCalled);
-		} finally {
-			DataManager.QUEST_DATA = previousQuestData;
-		}
+	private static QuestMetadata factionMetadata(int npcFactionId) {
+		return new QuestMetadata("Faction quest", 1, 1, 80, Set.of(), "QUEST", RepeatPolicy.once(),
+			Set.of(), List.of(), List.of(), List.of(), Set.of(), "", 0, 1, 1,
+			false, false, false, 0, null, null, false, Set.of(), npcFactionId,
+			"NONE", "NONE", 0, List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), Map.of());
+	}
+
+	private static PlayerQuestEffectPort.EffectOperations noOpEffects() {
+		return new PlayerQuestEffectPort.EffectOperations() {
+			@Override
+			public void apply(Player player, int skillId, int durationMillis) {
+			}
+
+			@Override
+			public void remove(Player player, int effectId) {
+			}
+		};
 	}
 
 	private static void setField(Class<?> declaringClass, Object target, String name, Object value) throws Exception {
@@ -114,12 +123,12 @@ class PlayerQuestEffectPortTest {
 		}
 
 		@Override
-		public void completeQuest(QuestTemplate questTemplate) {
+		public void completeQuest(int npcFactionId, boolean mentor) {
 			completeCalled = true;
 		}
 
 		@Override
-		public void abortQuest(QuestTemplate questTemplate) {
+		public void abortQuest(int npcFactionId) {
 			abortCalled = true;
 		}
 	}

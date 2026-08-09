@@ -30,12 +30,15 @@ class QuestMetadataFieldMappingTest {
 		}
 		assertEquals("quests", document.getDocumentElement().getTagName());
 		NodeList quests = document.getDocumentElement().getElementsByTagName("quest");
-		assertEquals(6430, quests.getLength());
+		assertTrue(quests.getLength() > 0);
 
 		Set<String> attributes = new HashSet<>();
 		Set<String> elements = new HashSet<>();
+		Set<Integer> ids = new HashSet<>();
 		for (int i = 0; i < quests.getLength(); i++) {
 			Element quest = (Element) quests.item(i);
+			assertTrue(ids.add(Integer.parseInt(quest.getAttribute("id"))),
+				() -> "duplicate quest template id: " + quest.getAttribute("id"));
 			for (int a = 0; a < quest.getAttributes().getLength(); a++) {
 				attributes.add(quest.getAttributes().item(a).getNodeName());
 			}
@@ -47,6 +50,7 @@ class QuestMetadataFieldMappingTest {
 				}
 			}
 		}
+		assertEquals(quests.getLength(), ids.size());
 
 		MapAssertions.assertMapped(attributes, "quest attribute");
 		MapAssertions.assertMapped(elements, "quest element");

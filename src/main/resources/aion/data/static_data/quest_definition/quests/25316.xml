@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="25316" version="1">
+  <metadata name="Marchutan's Daevanion Weapon" display-name-id="1801494" min-level="65" max-level="2147483647" category="SEEN_MARKER" cannot-share="true" target-type="FORCE">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="182215851" count="150" />
+      <item id="182215852" count="10" />
+      <item id="182215922" count="10" />
+      <item id="182215853" count="3" />
+    </items>
+    <work-items>
+      <item id="182215882" count="1" />
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="2412587" />
+        <reward kind="SELECTABLE_ITEM" id="100201601" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="100001894" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="100101421" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="100901456" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="101301344" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="101501439" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="101701437" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="100601500" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="100501381" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="102001317" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="101801289" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="101901195" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="102101133" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="115001880" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="115001881" amount="1" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="702829" item-id="182215852" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="702862" item-id="182215922" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="25307" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

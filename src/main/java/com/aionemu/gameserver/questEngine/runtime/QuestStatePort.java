@@ -19,6 +19,11 @@ public interface QuestStatePort {
 	 */
 	void publish(int playerId, QuestMutationPlan plan);
 
+	/** Re-applies the committed projection when the first in-memory publish failed after the database commit. */
+	default void resynchronize(int playerId, QuestMutationPlan plan) {
+		publish(playerId, plan);
+	}
+
 	/** Clears any projection prepared by {@link #apply} when the owning transaction rolls back. */
 	default void rollback(int playerId, QuestMutationPlan plan) {
 	}

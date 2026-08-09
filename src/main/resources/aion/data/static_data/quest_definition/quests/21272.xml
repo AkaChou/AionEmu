@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="21272" version="1">
+  <metadata name="Bearing Up For Asmodae" display-name-id="1127192" min-level="55" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <items>
+      <item id="182006282" count="5" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="47850" />
+        <reward kind="EXP" id="0" amount="7067452" />
+        <reward kind="SELECTABLE_ITEM" id="112101074" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="112301059" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="112501049" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="112601064" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="112301417" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

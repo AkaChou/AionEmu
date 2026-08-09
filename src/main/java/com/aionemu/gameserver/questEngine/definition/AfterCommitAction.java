@@ -13,7 +13,7 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		AfterCommitAction.SpawnNpc, AfterCommitAction.SpawnNpcRandom, AfterCommitAction.DespawnNpc, AfterCommitAction.StartFollow,
 		AfterCommitAction.StopFollow, AfterCommitAction.AttackTarget, AfterCommitAction.AttackNpcTemplate, AfterCommitAction.StartWalking,
 		AfterCommitAction.StartFollowCurrentTargetToPoint, AfterCommitAction.StartFollowCurrentTargetToNpc,
-		AfterCommitAction.BroadcastNpcEmotion,
+		AfterCommitAction.BroadcastNpcEmotion, AfterCommitAction.BroadcastInteractionNpcEmotion,
 		AfterCommitAction.WatchFollowZone, AfterCommitAction.WatchFollowCoordinate,
 		AfterCommitAction.StartQuestTimer, AfterCommitAction.StartInvisibleTimer,
 		AfterCommitAction.CancelQuestTimer, AfterCommitAction.SyncQuestState,
@@ -26,7 +26,8 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		AfterCommitAction.AbortNpcFactionQuest,
 		AfterCommitAction.AddNpcAggro, AfterCommitAction.DeleteInteractionNpc,
 		AfterCommitAction.DeleteWorldNpcs,
-		AfterCommitAction.BroadcastZoneMissionEnd, AfterCommitAction.PlayMovieRandom {
+		AfterCommitAction.BroadcastZoneMissionEnd, AfterCommitAction.ScheduleEventQuestRefresh,
+		AfterCommitAction.PlayMovieRandom {
 	record CloseDialog() implements AfterCommitAction {
 	}
 
@@ -259,6 +260,15 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
+	/** Broadcasts an emote from the authoritative NPC used by the current interaction. */
+	record BroadcastInteractionNpcEmotion(QuestNpcEmotion emotion) implements AfterCommitAction {
+		public BroadcastInteractionNpcEmotion {
+			if (emotion != QuestNpcEmotion.NO && emotion != QuestNpcEmotion.PANIC) {
+				throw new IllegalArgumentException("interaction NPC emotion must be NO or PANIC");
+			}
+		}
+	}
+
 	record WatchFollowZone(String slot, String zone) implements AfterCommitAction {
 		public WatchFollowZone {
 			if (slot == null || slot.isBlank()) {
@@ -473,6 +483,32 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 					throw new IllegalArgumentException("questIds must be positive");
 				}
 			}
+		}
+	}
+
+	/**
+	 * After a session-scoped delay, dispatches an internal refresh event to the listed typed owners.
+	 * Each target owner re-reads live inventory/state and owns its own start/restart rules.
+	 */
+	record ScheduleEventQuestRefresh(int seconds, int[] questIds) implements AfterCommitAction {
+		public ScheduleEventQuestRefresh {
+			if (seconds <= 0) {
+				throw new IllegalArgumentException("seconds must be positive");
+			}
+			if (questIds == null || questIds.length == 0) {
+				throw new IllegalArgumentException("questIds must not be empty");
+			}
+			questIds = questIds.clone();
+			for (int id : questIds) {
+				if (id <= 0) {
+					throw new IllegalArgumentException("questIds must be positive");
+				}
+			}
+		}
+
+		@Override
+		public int[] questIds() {
+			return questIds.clone();
 		}
 	}
 }

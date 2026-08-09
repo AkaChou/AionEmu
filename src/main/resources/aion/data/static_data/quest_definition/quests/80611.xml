@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80611" version="1">
+  <metadata name="[Event] Please Save My Son..." display-name-id="1800279" min-level="65" max-level="65" category="EVENT">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="3000" />
+        <reward kind="EXP" id="0" amount="500000" />
+        <reward kind="ITEM" id="188056900" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

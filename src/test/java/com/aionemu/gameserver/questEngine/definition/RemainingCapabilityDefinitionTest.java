@@ -113,6 +113,7 @@ class RemainingCapabilityDefinitionTest {
 			.then(QuestDsl.setVariable("var0", 1))
 			.goTo("done")
 			.afterCommit(QuestDsl.playerEmotion(QuestPlayerEmotion.STAND))
+			.afterCommit(QuestDsl.broadcastInteractionNpcEmotion(QuestNpcEmotion.NO))
 			.afterCommit(QuestDsl.addNpcAggro(203175, 50))
 			.compile();
 		String xml = """
@@ -124,7 +125,7 @@ class RemainingCapabilityDefinitionTest {
 			  <transitions><transition source="start" target="done"><event><quest-dialog dialog="ACCEPT_QUEST"/></event>
 			    <conditions><status-is status="START"/></conditions>
 			    <actions><remove-item item-id="182200501" count="ALL"/><set-variable field="var0" value="1"/></actions>
-			    <after-commit><player-emotion emotion="STAND"/><add-npc-aggro npc-id="203175" damage="50"/></after-commit>
+			    <after-commit><player-emotion emotion="STAND"/><broadcast-interaction-npc-emotion emotion="NO"/><add-npc-aggro npc-id="203175" damage="50"/></after-commit>
 			  </transition></transitions>
 			</quest-definition>
 			""";

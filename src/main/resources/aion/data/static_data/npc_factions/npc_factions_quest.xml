@@ -36,10 +36,6 @@
 	<npc_faction_quest quest_id="35024" faction_id="2" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
 	<npc_faction_quest quest_id="35025" faction_id="2" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
 	<npc_faction_quest quest_id="35026" faction_id="2" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
-	<npc_faction_quest quest_id="35027" faction_id="2" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
-	<npc_faction_quest quest_id="35028" faction_id="2" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
-	<npc_faction_quest quest_id="35029" faction_id="2" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
-	<npc_faction_quest quest_id="35030" faction_id="2" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
 	<npc_faction_quest quest_id="35031" faction_id="2" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
 	<npc_faction_quest quest_id="35032" faction_id="2" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
 	<npc_faction_quest quest_id="35033" faction_id="2" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
@@ -99,10 +95,8 @@
 	<npc_faction_quest quest_id="36510" faction_id="4" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
 	<npc_faction_quest quest_id="36511" faction_id="4" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
 	<npc_faction_quest quest_id="36512" faction_id="4" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
-	<npc_faction_quest quest_id="36514" faction_id="4" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
 	<npc_faction_quest quest_id="36515" faction_id="4" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
 	<npc_faction_quest quest_id="36516" faction_id="4" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
-	<npc_faction_quest quest_id="36517" faction_id="4" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
 	<npc_faction_quest quest_id="36520" faction_id="4" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
 	<npc_faction_quest quest_id="36521" faction_id="4" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
 	<npc_faction_quest quest_id="36522" faction_id="4" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
@@ -164,7 +158,6 @@
 	<npc_faction_quest quest_id="37003" faction_id="8" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
 	<npc_faction_quest quest_id="37004" faction_id="8" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
 	<npc_faction_quest quest_id="37005" faction_id="8" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
-	<npc_faction_quest quest_id="37006" faction_id="8" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
 	<npc_faction_quest quest_id="37007" faction_id="8" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
 	<npc_faction_quest quest_id="37008" faction_id="8" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
 	<npc_faction_quest quest_id="37100" faction_id="9" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
@@ -256,10 +249,6 @@
 	<npc_faction_quest quest_id="45024" faction_id="5" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
 	<npc_faction_quest quest_id="45025" faction_id="5" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
 	<npc_faction_quest quest_id="45026" faction_id="5" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
-	<npc_faction_quest quest_id="45027" faction_id="5" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
-	<npc_faction_quest quest_id="45028" faction_id="5" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
-	<npc_faction_quest quest_id="45029" faction_id="5" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
-	<npc_faction_quest quest_id="45030" faction_id="5" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0" sun="0"/>
 	<npc_faction_quest quest_id="45031" faction_id="5" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
 	<npc_faction_quest quest_id="45032" faction_id="5" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>
 	<npc_faction_quest quest_id="45033" faction_id="5" mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1"/>

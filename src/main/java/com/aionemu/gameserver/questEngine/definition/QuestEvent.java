@@ -7,7 +7,8 @@ import java.util.Set;
 public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.KillNpc,
 		QuestEvent.KillNpcSet, QuestEvent.AttackNpc, QuestEvent.UseItem, QuestEvent.CollectItem,
 		QuestEvent.ItemPlay, QuestEvent.HouseItemUse, QuestEvent.GetItem, QuestEvent.LevelUp,
-		QuestEvent.ZoneMissionEnd, QuestEvent.Die, QuestEvent.LogOut, QuestEvent.EnterWorld,
+		QuestEvent.ZoneMissionEnd, QuestEvent.EventQuestRefresh, QuestEvent.Die, QuestEvent.LogOut,
+		QuestEvent.EnterWorld,
 		QuestEvent.EnterZone, QuestEvent.LeaveZone, QuestEvent.PassFlyingRing, QuestEvent.MovieEnd,
 		QuestEvent.QuestTimerEnd, QuestEvent.InvisibleTimerEnd, QuestEvent.KillRanked,
 		QuestEvent.KillInWorld, QuestEvent.UseSkill, QuestEvent.FailCraft, QuestEvent.EquipItem,
@@ -169,6 +170,14 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		@Override
 		public String type() {
 			return "ZONE_MISSION_END";
+		}
+	}
+
+	/** Internal event used by delayed, typed cross-owner event-quest refreshes. */
+	record EventQuestRefresh() implements QuestEvent {
+		@Override
+		public String type() {
+			return "EVENT_QUEST_REFRESH";
 		}
 	}
 

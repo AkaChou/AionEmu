@@ -12,6 +12,7 @@
   <xs:simpleType name="timer-overwrite"><xs:restriction base="xs:string"><xs:enumeration value="REPLACE"/><xs:enumeration value="KEEP_EXISTING"/><xs:enumeration value="FAIL_IF_RUNNING"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="timer-delivery"><xs:restriction base="xs:string"><xs:enumeration value="AT_MOST_ONCE"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="npc-emotion"><xs:restriction base="xs:string"><xs:enumeration value="START_EMOTE2"/><xs:enumeration value="NO"/><xs:enumeration value="PANIC"/></xs:restriction></xs:simpleType>
+  <xs:simpleType name="interaction-npc-emotion"><xs:restriction base="xs:string"><xs:enumeration value="NO"/><xs:enumeration value="PANIC"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="player-emotion"><xs:restriction base="xs:string"><xs:enumeration value="STAND"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="quest-system-message"><xs:restriction base="xs:string"><xs:enumeration value="QUEST_FAILED"/><xs:enumeration value="WAREHOUSE_FULL_INVENTORY"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="quest-system-message-target"><xs:restriction base="xs:string"><xs:enumeration value="NONE"/><xs:enumeration value="PLAYER"/></xs:restriction></xs:simpleType>
@@ -44,7 +45,7 @@
     <xs:element name="item-play"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="animation-millis" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="house-item-use"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="get-item"><xs:complexType><xs:attribute name="item-id" type="xs:int" use="required"/></xs:complexType></xs:element>
-    <xs:element name="level-up" type="empty-type"/><xs:element name="zone-mission-end" type="empty-type"/><xs:element name="die" type="empty-type"/><xs:element name="log-out" type="empty-type"/><xs:element name="abandon" type="empty-type"/><xs:element name="enter-world" type="empty-type"/>
+    <xs:element name="level-up" type="empty-type"/><xs:element name="zone-mission-end" type="empty-type"/><xs:element name="event-quest-refresh" type="empty-type"/><xs:element name="die" type="empty-type"/><xs:element name="log-out" type="empty-type"/><xs:element name="abandon" type="empty-type"/><xs:element name="enter-world" type="empty-type"/>
     <xs:element name="enter-zone"><xs:complexType><xs:attribute name="zone" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="leave-zone"><xs:complexType><xs:attribute name="zone" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="pass-flying-ring"><xs:complexType><xs:attribute name="ring" type="xs:string" use="required"/></xs:complexType></xs:element>
@@ -82,6 +83,7 @@
     <xs:element name="player-class-is"><xs:complexType><xs:attribute name="starting-class" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="advanced-class-is"><xs:complexType><xs:attribute name="class" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="gender-is"><xs:complexType><xs:attribute name="gender" type="quest-gender" use="required"/></xs:complexType></xs:element>
+    <xs:element name="player-race-is"><xs:complexType><xs:attribute name="race" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="player-in-group"><xs:complexType><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
     <xs:element name="world-is"><xs:complexType><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
     <xs:element name="world-npc-is"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
@@ -95,7 +97,7 @@
     <xs:element name="membership-permission"><xs:complexType><xs:attribute name="permission" type="xs:string" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
     <xs:element name="dp-at-max" type="empty-type"/>
     <xs:element name="complete-count-is"><xs:complexType><xs:attribute name="value" type="xs:int" use="required"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
-    <xs:element name="event-active"><xs:complexType><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
+    <xs:element name="event-active"><xs:complexType><xs:attribute name="quest-id" type="xs:int" default="0"/><xs:attribute name="expected" type="xs:boolean" default="true"/></xs:complexType></xs:element>
   </xs:choice></xs:complexType>
 
   <xs:complexType name="actions-type"><xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -137,7 +139,7 @@
     <xs:element name="player-emotion"><xs:complexType><xs:attribute name="emotion" type="player-emotion" use="required"/></xs:complexType></xs:element>
     <xs:element name="add-npc-aggro"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/><xs:attribute name="damage" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="flight-teleport"><xs:complexType><xs:attribute name="flight-teleport-id" type="xs:int" use="required"/></xs:complexType></xs:element>
-    <xs:element name="broadcast-zone-mission-end"><xs:complexType><xs:attribute name="quest-ids" type="xs:string" use="required"/></xs:complexType></xs:element><xs:element name="delete-interaction-npc"><xs:complexType><xs:attribute name="schedule-respawn" type="xs:boolean" default="true"/></xs:complexType></xs:element><xs:element name="delete-world-npcs" type="empty-type"/>
+    <xs:element name="broadcast-zone-mission-end"><xs:complexType><xs:attribute name="quest-ids" type="xs:string" use="required"/></xs:complexType></xs:element><xs:element name="schedule-event-quest-refresh"><xs:complexType><xs:attribute name="seconds" type="xs:int" use="required"/><xs:attribute name="quest-ids" type="xs:string" use="required"/></xs:complexType></xs:element><xs:element name="delete-interaction-npc"><xs:complexType><xs:attribute name="schedule-respawn" type="xs:boolean" default="true"/></xs:complexType></xs:element><xs:element name="delete-world-npcs" type="empty-type"/>
     <xs:element name="spawn-npc-current-or-default"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="template-id" type="xs:int" use="required"/><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
 	<xs:element name="spawn-npc-random"><xs:complexType><xs:sequence><xs:element name="variant" minOccurs="1" maxOccurs="32"><xs:complexType><xs:attribute name="template-id" type="xs:int" use="required"/><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element></xs:sequence><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="replace-existing" type="xs:boolean" default="false"/></xs:complexType></xs:element>
     <xs:element name="spawn-npc-fixed-instance"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="template-id" type="xs:int" use="required"/><xs:attribute name="world-id" type="xs:int" use="required"/><xs:attribute name="instance-id" type="xs:int" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="heading" type="xs:byte" use="required"/></xs:complexType></xs:element>
@@ -151,6 +153,7 @@
 	<xs:element name="attack-npc-template"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="template-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="start-walking"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="broadcast-npc-emotion"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="emotion" type="npc-emotion" use="required"/></xs:complexType></xs:element>
+    <xs:element name="broadcast-interaction-npc-emotion"><xs:complexType><xs:attribute name="emotion" type="interaction-npc-emotion" use="required"/></xs:complexType></xs:element>
     <xs:element name="watch-follow-zone"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="zone" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="watch-follow-coordinate"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/></xs:complexType></xs:element>
     <xs:element name="start-quest-timer"><xs:complexType><xs:attribute name="seconds" type="xs:int" use="required"/><xs:attributeGroup ref="timer-policy-attributes"/></xs:complexType></xs:element>
@@ -274,6 +277,19 @@
     <xs:attribute name="finish" type="npc-complete-finish" use="required"/>
   </xs:complexType>
 
+  <xs:complexType name="quest-rewards-type"><xs:sequence>
+    <xs:element name="reward" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:attribute name="kind" use="required"/><xs:attribute name="id" type="xs:int" use="required"/><xs:attribute name="amount" type="xs:long" use="required"/></xs:complexType></xs:element>
+  </xs:sequence></xs:complexType>
+  <xs:complexType name="quest-reward-groups-type"><xs:sequence>
+    <xs:element name="group" type="quest-rewards-type" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence></xs:complexType>
+  <xs:complexType name="quest-start-conditions-type"><xs:sequence>
+    <xs:element name="condition" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:attribute name="type" use="required"/><xs:attribute name="quest-id" type="xs:int" use="required"/><xs:attribute name="reward-mode" type="xs:int" default="0"/></xs:complexType></xs:element>
+  </xs:sequence></xs:complexType>
+  <xs:complexType name="quest-start-condition-groups-type"><xs:sequence>
+    <xs:element name="group" type="quest-start-conditions-type" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence></xs:complexType>
+
   <xs:element name="quest-definition">
     <xs:complexType>
       <xs:sequence>
@@ -286,12 +302,15 @@
           <xs:element name="items" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="item" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:attribute name="id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:int" use="required"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
           <xs:element name="inventory-items" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="item" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:attribute name="id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:int" use="required"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
           <xs:element name="work-items" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="item" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:attribute name="id" type="xs:int" use="required"/><xs:attribute name="count" type="xs:int" use="required"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
-          <xs:element name="rewards" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="reward" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:attribute name="kind" use="required"/><xs:attribute name="id" type="xs:int" use="required"/><xs:attribute name="amount" type="xs:long" use="required"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
-          <xs:element name="extended-rewards" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="reward" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:attribute name="kind" use="required"/><xs:attribute name="id" type="xs:int" use="required"/><xs:attribute name="amount" type="xs:long" use="required"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
+          <xs:element name="rewards" type="quest-rewards-type" minOccurs="0"/>
+          <xs:element name="reward-groups" type="quest-reward-groups-type" minOccurs="0"/>
+          <xs:element name="extended-rewards" type="quest-rewards-type" minOccurs="0"/>
+          <xs:element name="extended-reward-groups" type="quest-reward-groups-type" minOccurs="0"/>
           <xs:element name="drops" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="drop" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/><xs:attribute name="item-id" type="xs:int" use="required"/><xs:attribute name="chance" type="xs:int" use="required"/><xs:attribute name="each-member" type="xs:boolean" use="required"/><xs:attribute name="collecting-step" type="xs:int" use="required"/><xs:attribute name="scope" type="drop-scope" use="optional"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
           <xs:element name="bonuses" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="bonus" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:attribute name="type" use="required"/><xs:attribute name="level" type="xs:int"/><xs:attribute name="skill" type="xs:int"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
           <xs:element name="kills" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="kill" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:sequence><xs:element name="npc" minOccurs="1" maxOccurs="unbounded"><xs:complexType><xs:attribute name="id" type="xs:int" use="required"/></xs:complexType></xs:element></xs:sequence><xs:attribute name="sequence" type="xs:int" use="required"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
-          <xs:element name="start-conditions" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="condition" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:attribute name="type" use="required"/><xs:attribute name="quest-id" type="xs:int" use="required"/><xs:attribute name="reward-mode" type="xs:int" default="0"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
+          <xs:element name="start-conditions" type="quest-start-conditions-type" minOccurs="0"/>
+          <xs:element name="start-condition-groups" type="quest-start-condition-groups-type" minOccurs="0"/>
           <xs:element name="class-rewards" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="class" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:sequence><xs:element name="reward" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:attribute name="kind" use="required"/><xs:attribute name="id" type="xs:int" use="required"/><xs:attribute name="amount" type="xs:long" use="required"/></xs:complexType></xs:element></xs:sequence><xs:attribute name="id" use="required"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
         </xs:sequence><xs:attribute name="name" use="required"/><xs:attribute name="display-name-id" type="xs:int" use="required"/><xs:attribute name="min-level" type="xs:int" use="required"/><xs:attribute name="max-level" type="xs:int" use="required"/><xs:attribute name="category" use="required"/><xs:attribute name="rank" type="xs:int" default="0"/><xs:attribute name="max-count-limited-quest" type="xs:int" default="1"/><xs:attribute name="count-recover-limited-quest" type="xs:int" default="1"/><xs:attribute name="cannot-share" type="xs:boolean" default="false"/><xs:attribute name="cannot-giveup" type="xs:boolean" default="false"/><xs:attribute name="bounty-reward" type="xs:boolean" default="false"/><xs:attribute name="use-class-reward" type="xs:int" default="0"/><xs:attribute name="combine-skill" type="xs:int"/><xs:attribute name="combine-skill-point" type="xs:int"/><xs:attribute name="timer" type="xs:boolean" default="false"/><xs:attribute name="npc-faction-id" type="xs:int" default="0"/><xs:attribute name="mentor-type" default="NONE"/><xs:attribute name="target-type" default="NONE"/><xs:attribute name="title-id" type="xs:int" default="0"/></xs:complexType></xs:element>
         <xs:element name="progress" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="bit-field" minOccurs="0" maxOccurs="32"><xs:complexType><xs:attribute name="name" use="required"/><xs:attribute name="offset" type="xs:int" use="required"/><xs:attribute name="width" type="xs:int" use="required"/><xs:attribute name="min" type="xs:int" use="required"/><xs:attribute name="max" type="xs:int" use="required"/><xs:attribute name="persistence" type="persistence" use="required"/><xs:attribute name="scope" type="scope" use="required"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>

@@ -2,12 +2,15 @@ package com.aionemu.gameserver.model.gameobjects.player.npcFaction;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.IntPredicate;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -24,6 +27,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TITLE_INFO;
+import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
+import com.aionemu.gameserver.questEngine.runtime.PlayerQuestStartEligibilityPort;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -80,7 +85,7 @@ public class NpcFactions {
 
 	/** 设置 active / Sets the active */
 	public NpcFaction setActive(int npcFactionId) {
-		NpcFaction npcFaction = factions.get(npcFactionId);
+		NpcFaction npcFaction = getNpcFactionById(npcFactionId);
 		if (npcFaction == null) {
 			npcFaction = new NpcFaction(npcFactionId, 0, false, ENpcFactionQuestState.NOTING, 0);
 			factions.put(npcFactionId, npcFaction);
@@ -206,8 +211,13 @@ public class NpcFactions {
 
 	/** 启动任务。 / Start quest. */
 	public void startQuest(QuestTemplate questTemplate) {
-		NpcFaction npcFaction = activeNpcFaction[questTemplate.isMentor() ? 1 : 0];
-		if (npcFaction == null) {
+		startQuest(questTemplate.getNpcFactionId());
+	}
+
+	/** Canonical metadata lifecycle entry point after QuestTemplate retirement. */
+	public void startQuest(int npcFactionId) {
+		NpcFaction npcFaction = factions.get(npcFactionId);
+		if (npcFaction == null || !npcFaction.isActive()) {
 			return;
 		}
 		if (npcFaction.getState() != ENpcFactionQuestState.NOTING && npcFaction.getQuestId() == 0) {
@@ -218,7 +228,12 @@ public class NpcFactions {
 
 	/** Abort Quest / Abort Quest */
 	public void abortQuest(QuestTemplate questTemplate) {
-		NpcFaction npcFaction = this.factions.get(questTemplate.getNpcFactionId());
+		abortQuest(questTemplate.getNpcFactionId());
+	}
+
+	/** Canonical metadata lifecycle entry point after QuestTemplate retirement. */
+	public void abortQuest(int npcFactionId) {
+		NpcFaction npcFaction = getNpcFactionById(npcFactionId);
 		if (npcFaction == null || !npcFaction.isActive()) {
 			return;
 		}
@@ -228,14 +243,19 @@ public class NpcFactions {
 
 	/** Complete Quest / Complete Quest */
 	public void completeQuest(QuestTemplate questTemplate) {
-		NpcFaction npcFaction = activeNpcFaction[questTemplate.isMentor() ? 1 : 0];
-		if (npcFaction == null) {
+		completeQuest(questTemplate.getNpcFactionId(), questTemplate.getMentorType() == QuestMentorType.MENTOR);
+	}
+
+	/** Canonical metadata lifecycle entry point after QuestTemplate retirement. */
+	public void completeQuest(int npcFactionId, boolean mentor) {
+		NpcFaction npcFaction = getNpcFactionById(npcFactionId);
+		if (npcFaction == null || !npcFaction.isActive()) {
 			return;
 		}
 		npcFaction.setTime(getNextTime());
 		npcFaction.setState(ENpcFactionQuestState.COMPLETE);
 		this.timeLimit[npcFaction.isMentor() ? 1 : 0] = npcFaction.getTime();
-		if (questTemplate.getMentorType() == QuestMentorType.MENTOR) {
+		if (mentor) {
 			owner.getCommonData().setMentorFlagTime((int) (System.currentTimeMillis() / 1000) + 60 * 60 * 24);
 			PacketSendUtility.broadcastPacket(owner, new SM_TITLE_INFO(owner, true), false);
 			PacketSendUtility.sendPacket(owner, new SM_TITLE_INFO(true));
@@ -270,21 +290,46 @@ public class NpcFactions {
 				break;
 			}
 			if (questId == 0) {
-				List<QuestTemplate> quests = DataManager.QUEST_DATA.getQuestsByNpcFaction(faction.getId(), owner);
-				if (quests.isEmpty()) {
-					continue;
-				}
+				var questEngine = GameEngineServices.questEngine();
+				var catalog = questEngine.questCatalog();
+				PlayerQuestStartEligibilityPort eligibility = new PlayerQuestStartEligibilityPort(playerId -> owner,
+					id -> catalog.findMetadata(id).orElse(null));
 				// 真端按星期位控制势力每日任务发放；当天不可发放的任务不进随机池，空池跳过不发。
 				int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-				quests.removeIf(q -> !DataManager.NPC_FACTIONS_QUEST_DATA.isActiveOn(q.getId(), today));
+				List<Integer> quests = canonicalDailyQuestCandidates(catalog, faction.getId(),
+					questEngine::isHaveHandler,
+					id -> isNpcFactionRotationEligible(eligibility, id, faction.getId()),
+					id -> DataManager.NPC_FACTIONS_QUEST_DATA.isActiveOn(id, today));
 				if (quests.isEmpty()) {
 					continue;
 				}
-				questId = quests.get(Rnd.get(quests.size())).getId();
+				questId = quests.get(Rnd.get(quests.size()));
 				faction.setQuestId(questId);
 				faction.setTime(getNextTime());
 			}
 			PacketSendUtility.sendPacket(owner, new SM_QUEST_ACTION(questId, true));
+		}
+	}
+
+	static List<Integer> canonicalDailyQuestCandidates(QuestCatalog catalog, int npcFactionId,
+			IntPredicate hasOwner, IntPredicate eligible, IntPredicate activeToday) {
+		return new ArrayList<>(catalog.entries().stream()
+			.filter(entry -> entry.metadata().npcFactionId() == npcFactionId)
+			.mapToInt(entry -> entry.id())
+			.filter(hasOwner)
+			.filter(eligible)
+			.filter(activeToday)
+			.sorted()
+			.boxed()
+			.toList());
+	}
+
+	private boolean isNpcFactionRotationEligible(PlayerQuestStartEligibilityPort eligibility, int questId,
+			int npcFactionId) {
+		try {
+			return eligibility.snapshotNpcFactionRotation(owner.getObjectId(), questId, npcFactionId).eligible();
+		} catch (java.sql.SQLException e) {
+			return false;
 		}
 	}
 
@@ -323,7 +368,12 @@ public class NpcFactions {
 
 	/** 是否开始任务 / Whether start quest*/
 	public boolean canStartQuest(QuestTemplate template) {
-		int type = template.isMentor() ? 1 : 0;
+		return canStartQuest(template.isMentor());
+	}
+
+	/** Canonical metadata entry point used after legacy QuestTemplate retirement. */
+	public boolean canStartQuest(boolean mentor) {
+		int type = mentor ? 1 : 0;
 		NpcFaction faction = activeNpcFaction[type];
 		if (faction != null && this.timeLimit[type] < System.currentTimeMillis() / 1000) {
 			return true;

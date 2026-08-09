@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="30554" version="1">
+  <metadata name="[Group] Saving Private Paios" display-name-id="1135511" min-level="57" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="897480" />
+        <reward kind="EXP" id="0" amount="6907092" />
+        <reward kind="SELECTABLE_ITEM" id="164000066" amount="15" />
+        <reward kind="SELECTABLE_ITEM" id="164000121" amount="15" />
+        <reward kind="SELECTABLE_ITEM" id="164000070" amount="15" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="30553" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

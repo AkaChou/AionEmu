@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="4116" version="1">
+  <metadata name="[Group] Into The Theobomos Lab" display-name-id="1137062" min-level="46" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <items>
+      <item id="182213257" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="462240" />
+        <reward kind="EXP" id="0" amount="5390338" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="214668" item-id="182213257" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+  </metadata>
+</quest-definition>

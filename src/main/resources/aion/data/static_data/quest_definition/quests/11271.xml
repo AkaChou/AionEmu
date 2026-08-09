@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="11271" version="1">
+  <metadata name="Favor Feud" display-name-id="1125181" min-level="55" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <items>
+      <item id="182006281" count="3" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="25350" />
+        <reward kind="EXP" id="0" amount="6517414" />
+        <reward kind="SELECTABLE_ITEM" id="111101116" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="111301112" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="111501097" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="111601087" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="111301465" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

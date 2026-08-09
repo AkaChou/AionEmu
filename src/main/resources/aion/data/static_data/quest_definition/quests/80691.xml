@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80691" version="1">
+  <metadata name="[Event] Recapturing the Vault" display-name-id="1800540" min-level="40" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="169610152" amount="1" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="80689" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

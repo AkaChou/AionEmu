@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="4219" version="1">
+  <metadata name="Key Item Hidden Quest 01 (Asmodian)" display-name-id="1104246" min-level="1" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="185000077" count="1" />
+      <item id="185000078" count="1" />
+    </items>
+    <drops>
+      <drop npc-id="215064" item-id="185000077" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="215065" item-id="185000078" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+  </metadata>
+</quest-definition>

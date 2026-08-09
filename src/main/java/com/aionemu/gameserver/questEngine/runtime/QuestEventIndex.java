@@ -18,7 +18,7 @@ public final class QuestEventIndex {
 	private final Map<QuestEvent, List<Route>> routes;
 
 	public QuestEventIndex(QuestCatalog catalog) {
-		List<CompiledQuestDefinition> definitions = new ArrayList<>(catalog.all());
+		List<CompiledQuestDefinition> definitions = new ArrayList<>(catalog.executables());
 		definitions.sort(Comparator.comparingInt(CompiledQuestDefinition::id));
 		Map<QuestEvent, List<Route>> mutable = new LinkedHashMap<>();
 		for (CompiledQuestDefinition definition : definitions) {

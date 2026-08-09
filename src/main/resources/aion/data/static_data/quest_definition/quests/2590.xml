@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="2590" version="1">
+  <metadata name="[Cash] For The safety Of The village and its surroundings" display-name-id="1103890" min-level="39" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+  </metadata>
+</quest-definition>

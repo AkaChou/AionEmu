@@ -50,6 +50,11 @@ public final class QuestDefinitionXmlCompiler {
 	}
 
 	public static CompiledQuestDefinition compile(InputStream input) {
+		return QuestDefinitionCompiler.compile(parse(input));
+	}
+
+	/** Parses and validates XML without requiring executable nodes or transitions. */
+	public static QuestDefinition parse(InputStream input) {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setNamespaceAware(false);
@@ -76,7 +81,7 @@ public final class QuestDefinitionXmlCompiler {
 				}
 			});
 			Document document = builder.parse(input);
-			return QuestDefinitionCompiler.compile(parseDefinition(document.getDocumentElement()));
+			return parseDefinition(document.getDocumentElement());
 		} catch (QuestCompilationException e) {
 			throw e;
 		} catch (Exception e) {
@@ -122,12 +127,17 @@ public final class QuestDefinitionXmlCompiler {
 		List<QuestItemRequirement> items = parseItems(child(element, "items"));
 		List<QuestItemRequirement> inventoryItems = parseItems(child(element, "inventory-items"));
 		List<QuestItemRequirement> questWorkItems = parseItems(child(element, "work-items"));
-		List<QuestReward> rewards = parseRewards(child(element, "rewards"));
-		List<QuestReward> extendedRewards = parseRewards(child(element, "extended-rewards"));
+		List<QuestRewardGroup> rewardGroups = parseRewardGroups(element, "rewards", "reward-groups");
+		List<QuestReward> rewards = flattenRewards(rewardGroups);
+		List<QuestRewardGroup> extendedRewardGroups = parseRewardGroups(element, "extended-rewards",
+			"extended-reward-groups");
+		List<QuestReward> extendedRewards = flattenRewards(extendedRewardGroups);
 		List<QuestDrop> drops = parseDrops(child(element, "drops"));
 		List<QuestBonus> bonuses = parseBonuses(child(element, "bonuses"));
 		List<QuestKill> kills = parseKills(child(element, "kills"));
-		List<QuestStartCondition> startConditions = parseStartConditions(child(element, "start-conditions"));
+		List<QuestStartConditionGroup> startConditionGroups = parseStartConditionGroups(element);
+		List<QuestStartCondition> startConditions = startConditionGroups.stream()
+			.flatMap(group -> group.conditions().stream()).toList();
 		Map<String, List<QuestReward>> classRewards = parseClassRewards(child(element, "class-rewards"));
 		return new QuestMetadata(attribute(element, "name"), integer(element, "display-name-id"),
 			integer(element, "min-level"), integer(element, "max-level"), races, attribute(element, "category"),
@@ -139,7 +149,8 @@ public final class QuestDefinitionXmlCompiler {
 			nullableInteger(element, "combine-skill-point"), booleanOrDefault(element, "timer", false), repeatCycles,
 			integerOrDefault(element, "npc-faction-id", 0), attributeOrDefault(element, "mentor-type", "NONE"),
 			attributeOrDefault(element, "target-type", "NONE"), integerOrDefault(element, "title-id", 0),
-			inventoryItems, questWorkItems, extendedRewards, bonuses, kills, startConditions, classRewards);
+			inventoryItems, questWorkItems, extendedRewards, bonuses, kills, startConditions, classRewards,
+			rewardGroups, extendedRewardGroups, startConditionGroups);
 	}
 
 	private static Set<String> parseIdSet(Element parent, String childName) {
@@ -203,6 +214,29 @@ public final class QuestDefinitionXmlCompiler {
 		return result;
 	}
 
+	private static List<QuestRewardGroup> parseRewardGroups(Element metadata, String shorthandName,
+			String groupsName) {
+		Element shorthand = child(metadata, shorthandName);
+		Element groups = child(metadata, groupsName);
+		if (shorthand != null && groups != null) {
+			return fail("DUPLICATE_REWARD_REPRESENTATION",
+				"declare either " + shorthandName + " or " + groupsName);
+		}
+		if (groups == null) {
+			List<QuestReward> rewards = parseRewards(shorthand);
+			return rewards.isEmpty() ? List.of() : List.of(new QuestRewardGroup(rewards));
+		}
+		List<QuestRewardGroup> result = new ArrayList<>();
+		for (Element group : children(groups, "group")) {
+			result.add(new QuestRewardGroup(parseRewards(group)));
+		}
+		return result;
+	}
+
+	private static List<QuestReward> flattenRewards(List<QuestRewardGroup> groups) {
+		return groups.stream().flatMap(group -> group.rewards().stream()).toList();
+	}
+
 	private static List<QuestDrop> parseDrops(Element parent) {
 		List<QuestDrop> result = new ArrayList<>();
 		if (parent != null) {
@@ -250,6 +284,24 @@ public final class QuestDefinitionXmlCompiler {
 				result.add(new QuestStartCondition(attribute(condition, "type"), integer(condition, "quest-id"),
 					integerOrDefault(condition, "reward-mode", 0)));
 			}
+		}
+		return result;
+	}
+
+	private static List<QuestStartConditionGroup> parseStartConditionGroups(Element metadata) {
+		Element shorthand = child(metadata, "start-conditions");
+		Element groups = child(metadata, "start-condition-groups");
+		if (shorthand != null && groups != null) {
+			return fail("DUPLICATE_START_CONDITION_REPRESENTATION",
+				"declare either start-conditions or start-condition-groups");
+		}
+		if (groups == null) {
+			List<QuestStartCondition> conditions = parseStartConditions(shorthand);
+			return conditions.isEmpty() ? List.of() : List.of(new QuestStartConditionGroup(conditions));
+		}
+		List<QuestStartConditionGroup> result = new ArrayList<>();
+		for (Element group : children(groups, "group")) {
+			result.add(new QuestStartConditionGroup(parseStartConditions(group)));
 		}
 		return result;
 	}
@@ -402,6 +454,7 @@ public final class QuestDefinitionXmlCompiler {
 			case "get-item" -> new QuestEvent.GetItem(integer(element, "item-id"));
 			case "level-up" -> new QuestEvent.LevelUp();
 			case "zone-mission-end" -> new QuestEvent.ZoneMissionEnd();
+			case "event-quest-refresh" -> new QuestEvent.EventQuestRefresh();
 			case "die" -> new QuestEvent.Die();
 			case "log-out" -> new QuestEvent.LogOut();
 			case "abandon" -> new QuestEvent.Abandon();
@@ -529,6 +582,8 @@ public final class QuestDefinitionXmlCompiler {
 			case "advanced-class-is" -> new QuestCondition.AdvancedClassIs(
 				PlayerClass.valueOf(attribute(element, "class")));
 			case "gender-is" -> new QuestCondition.GenderIs(enumValue(Gender.class, element, "gender"));
+			case "player-race-is" -> new QuestCondition.PlayerRaceIs(
+				enumValue(com.aionemu.gameserver.model.Race.class, element, "race"));
 			case "player-in-group" -> new QuestCondition.PlayerInGroup(
 				booleanOrDefault(element, "expected", true));
 			case "world-is" -> new QuestCondition.WorldIs(integer(element, "world-id"),
@@ -555,7 +610,8 @@ public final class QuestDefinitionXmlCompiler {
 			case "dp-at-max" -> new QuestCondition.DpAtMax();
 			case "complete-count-is" -> new QuestCondition.CompleteCountIs(integer(element, "value"),
 				booleanOrDefault(element, "expected", true));
-			case "event-active" -> new QuestCondition.EventActive(booleanOrDefault(element, "expected", true));
+			case "event-active" -> new QuestCondition.EventActive(integerOrDefault(element, "quest-id", 0),
+				booleanOrDefault(element, "expected", true));
 			default -> fail("UNKNOWN_CONDITION", element.getTagName());
 		};
 	}
@@ -632,6 +688,8 @@ public final class QuestDefinitionXmlCompiler {
 			case "delete-world-npcs" -> new AfterCommitAction.DeleteWorldNpcs();
 			case "broadcast-zone-mission-end" -> new AfterCommitAction.BroadcastZoneMissionEnd(
 				parseQuestIdArray(action, "quest-ids"));
+			case "schedule-event-quest-refresh" -> new AfterCommitAction.ScheduleEventQuestRefresh(
+				integer(action, "seconds"), parseQuestIdArray(action, "quest-ids"));
 			case "spawn-npc-current-or-default" -> new AfterCommitAction.SpawnNpc(attribute(action, "slot"),
 				integer(action, "template-id"), new QuestSpawnLocation.Fixed(integer(action, "world-id"),
 					QuestInstanceTarget.currentOrDefault(),
@@ -658,6 +716,8 @@ public final class QuestDefinitionXmlCompiler {
 			case "start-walking" -> new AfterCommitAction.StartWalking(attribute(action, "slot"));
 			case "broadcast-npc-emotion" -> new AfterCommitAction.BroadcastNpcEmotion(
 				attribute(action, "slot"), enumValue(QuestNpcEmotion.class, action, "emotion"));
+			case "broadcast-interaction-npc-emotion" -> new AfterCommitAction.BroadcastInteractionNpcEmotion(
+				enumValue(QuestNpcEmotion.class, action, "emotion"));
 			case "watch-follow-zone" -> new AfterCommitAction.WatchFollowZone(
 				attribute(action, "slot"), attribute(action, "zone"));
 			case "watch-follow-coordinate" -> new AfterCommitAction.WatchFollowCoordinate(

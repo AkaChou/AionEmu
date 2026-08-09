@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="48005" version="1">
+  <metadata name="Message from The Daemons" display-name-id="1128126" min-level="50" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="1347585" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="unfinished" quest-id="48002" />
+        <condition type="noacquired" quest-id="48002" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

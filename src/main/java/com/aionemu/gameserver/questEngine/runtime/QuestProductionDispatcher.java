@@ -6,6 +6,8 @@ import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
+import com.aionemu.gameserver.questEngine.definition.QuestCatalogDrop;
+import com.aionemu.gameserver.questEngine.definition.QuestCatalogRegistry;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,8 +28,9 @@ public final class QuestProductionDispatcher {
 		Connection open() throws SQLException;
 	}
 
-	private final QuestCatalog catalog;
+	private final QuestCatalogRegistry catalog;
 	private final QuestEventIndex index;
+	private final QuestDropIndex dropIndex;
 	private final QuestEventRouter router;
 	private final QuestExecutionCoordinator coordinator;
 	private final QuestEventPort eventPort;
@@ -35,11 +38,16 @@ public final class QuestProductionDispatcher {
 	private final QuestStatePort statePort;
 	private final QuestAfterCommitPort afterCommitPort;
 	private final ConnectionProvider connections;
+	private final QuestAuditSink auditSink;
+	private final QuestRuntimeMetrics metrics;
 
 	private QuestProductionDispatcher(QuestCatalog catalog) {
-		this.catalog = Objects.requireNonNull(catalog, "catalog");
-		this.index = new QuestEventIndex(catalog);
-		this.router = new QuestEventRouter(index, new LocalizedQuestAuditSink(), new QuestRuntimeMetricsCollector());
+		this.catalog = registry(catalog);
+		this.index = new QuestEventIndex(this.catalog);
+		this.dropIndex = new QuestDropIndex(this.catalog);
+		this.auditSink = new LocalizedQuestAuditSink();
+		this.metrics = new QuestRuntimeMetricsCollector();
+		this.router = new QuestEventRouter(index, auditSink, metrics);
 		this.coordinator = null;
 		this.eventPort = null;
 		this.actionPort = null;
@@ -52,9 +60,12 @@ public final class QuestProductionDispatcher {
 			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
 			QuestAfterCommitPort afterCommitPort, ConnectionProvider connections,
 			QuestAuditSink auditSink, QuestRuntimeMetrics metrics) {
-		this.catalog = Objects.requireNonNull(catalog, "catalog");
-		this.index = new QuestEventIndex(catalog);
-		this.router = new QuestEventRouter(index, auditSink, metrics);
+		this.catalog = registry(catalog);
+		this.index = new QuestEventIndex(this.catalog);
+		this.dropIndex = new QuestDropIndex(this.catalog);
+		this.auditSink = Objects.requireNonNull(auditSink, "auditSink");
+		this.metrics = Objects.requireNonNull(metrics, "metrics");
+		this.router = new QuestEventRouter(index, this.auditSink, this.metrics);
 		this.coordinator = Objects.requireNonNull(coordinator, "coordinator");
 		this.eventPort = Objects.requireNonNull(eventPort, "eventPort");
 		this.actionPort = Objects.requireNonNull(actionPort, "actionPort");
@@ -77,9 +88,24 @@ public final class QuestProductionDispatcher {
 			new LocalizedQuestAuditSink(), new QuestRuntimeMetricsCollector());
 	}
 
+	private static QuestCatalogRegistry registry(QuestCatalog catalog) {
+		Objects.requireNonNull(catalog, "catalog");
+		return catalog instanceof QuestCatalogRegistry registry ? registry : new QuestCatalogRegistry(catalog);
+	}
+
+	/** Returns the exact immutable metadata/owner snapshot used by this dispatcher's event index. */
+	public QuestCatalogRegistry catalogRegistry() {
+		return catalog;
+	}
+
+	/** Returns canonical quest drops from the same immutable snapshot as event routing. */
+	public List<QuestCatalogDrop> questDrops(int npcId) {
+		return npcId <= 0 ? List.of() : dropIndex.dropsFor(npcId);
+	}
+
 	/** 判断 typed catalog 是否拥有任务。 Return whether the typed catalog owns the quest. */
 	public boolean owns(int questId) {
-		return questId > 0 && catalog.find(questId).isPresent();
+		return questId > 0 && catalog.findExecutable(questId).isPresent();
 	}
 
 	/** Returns whether the catalog has a route for the supplied event key. */
@@ -99,7 +125,7 @@ public final class QuestProductionDispatcher {
 
 	/** 返回排序后的正式 owner ID。 Return sorted production owner IDs. */
 	public List<Integer> owners() {
-		return catalog.all().stream().map(CompiledQuestDefinition::id).sorted().toList();
+		return catalog.executables().stream().map(CompiledQuestDefinition::id).sorted().toList();
 	}
 
 	/**
@@ -131,7 +157,7 @@ public final class QuestProductionDispatcher {
 			throw new IllegalArgumentException("questId must not be negative");
 		}
 		try (LazyConnection connection = new LazyConnection(connections)) {
-			QuestRouteHandler handler = route -> execute(connection, playerId, event, route);
+			QuestRouteHandler handler = route -> execute(connection, playerId, event, route, contract);
 			return questId == 0
 				? router.dispatch(event, contract, handler)
 				: router.dispatchOwner(event, questId, contract, handler);
@@ -139,20 +165,28 @@ public final class QuestProductionDispatcher {
 	}
 
 	private QuestRouteResult execute(LazyConnection connection, int playerId, QuestEvent event,
-		QuestEventIndex.Route route) {
+		QuestEventIndex.Route route, QuestDispatchContract contract) {
 		// The index deliberately routes all dialogs for one NPC through one broad key.
 		// A candidate with another dialog is an ordinary non-match, not an execution
 		// failure; keep it non-conclusive so the router can try the next transition.
 		if (!QuestEvent.matches(route.transition().event(), event)) {
 			return QuestRouteResult.UNKNOWN;
 		}
-		CompiledQuestDefinition definition = catalog.find(route.questId()).orElseThrow();
+		CompiledQuestDefinition definition = catalog.findExecutable(route.questId()).orElseThrow();
 		try {
 			QuestExecutionResult result = coordinator.execute(connection.get(), playerId, definition, event,
 				route.transition(), eventPort, actionPort, statePort, afterCommitPort);
 			if (!result.afterCommitFailures().isEmpty()) {
 				log.warn(I18n.get("log.quest_engine.typed_after_commit_failures",
 					definition.id(), result.afterCommitFailures().size()));
+				for (RuntimeException failure : result.afterCommitFailures()) {
+					try {
+						auditSink.record(QuestEventRouter.auditEvent(event, contract, route,
+							QuestRouteResult.HANDLED, failure));
+					} catch (RuntimeException auditFailure) {
+						metrics.onAuditFailure(route.questId(), auditFailure.getClass().getName());
+					}
+				}
 			}
 			return switch (result.status()) {
 				case COMMITTED -> result.plan().requiredActions().stream()

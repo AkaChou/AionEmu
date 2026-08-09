@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80689" version="1">
+  <metadata name="[Event] Secret of the Vault" display-name-id="1800538" min-level="40" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="188600310" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

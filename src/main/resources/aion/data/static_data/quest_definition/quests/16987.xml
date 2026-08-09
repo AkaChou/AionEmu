@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="16987" version="1">
+  <metadata name="[Spy] Seek Out the Corridor" display-name-id="1800824" min-level="65" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="75330" />
+        <reward kind="EXP" id="0" amount="3446553" />
+        <reward kind="ITEM" id="186000469" amount="210" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

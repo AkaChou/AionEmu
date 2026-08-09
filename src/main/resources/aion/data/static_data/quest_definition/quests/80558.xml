@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80558" version="1">
+  <metadata name="[Event] Elyshugo's Wedding Invitation" display-name-id="1199990" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <work-items>
+      <item id="182215445" count="1" />
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="50000" />
+        <reward kind="EXP" id="0" amount="20000" />
+        <reward kind="ITEM" id="164002009" amount="5" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="80557" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

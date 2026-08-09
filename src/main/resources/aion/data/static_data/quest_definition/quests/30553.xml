@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="30553" version="1">
+  <metadata name="[Group] Comrades In Arms" display-name-id="1135510" min-level="57" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="897480" />
+        <reward kind="EXP" id="0" amount="6907092" />
+        <reward kind="SELECTABLE_ITEM" id="160002336" amount="15" />
+        <reward kind="SELECTABLE_ITEM" id="160002337" amount="15" />
+        <reward kind="SELECTABLE_ITEM" id="160002338" amount="15" />
+        <reward kind="SELECTABLE_ITEM" id="160002339" amount="15" />
+        <reward kind="SELECTABLE_ITEM" id="160002340" amount="15" />
+        <reward kind="SELECTABLE_ITEM" id="160002341" amount="15" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="42110" version="1">
+  <metadata name="[Event/Group/Daily] Challenge! Elimination of Aion's Gorge Creatures" display-name-id="1803844" min-level="68" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <inventory-items>
+      <item id="186000494" count="1" />
+    </inventory-items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="465480" />
+        <reward kind="EXP" id="0" amount="232679952" />
+        <reward kind="ITEM" id="188055607" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

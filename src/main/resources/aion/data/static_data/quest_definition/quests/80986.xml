@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80986" version="1">
+  <metadata name="Collect Power of Creation Sealing Stone 28" display-name-id="1803788" min-level="66" max-level="2147483647" category="MISSION">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <items>
+      <item id="188100390" count="1" />
+    </items>
+  </metadata>
+</quest-definition>

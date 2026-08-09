@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80556" version="1">
+  <metadata name="[Event] Asmomumu's Revenge" display-name-id="1199988" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="200000" />
+        <reward kind="EXP" id="0" amount="50000" />
+        <reward kind="ITEM" id="188052667" amount="3" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="80555" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

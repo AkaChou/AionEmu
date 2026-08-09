@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80741" version="1">
+  <metadata name="[Event/Daily] In Search of Sharp Needle" display-name-id="1185848" min-level="30" max-level="2147483647" category="EVENT">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="188054094" amount="3" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

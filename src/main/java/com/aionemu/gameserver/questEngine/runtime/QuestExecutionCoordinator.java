@@ -4,12 +4,17 @@ import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
+import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.function.BiConsumer;
 
 /**
@@ -63,14 +68,26 @@ public final class QuestExecutionCoordinator {
 		QuestTransactionParticipant participant = QuestTransactionParticipant.none();
 		QuestMutationPlan appliedPlan = null;
 		boolean committed = false;
+		QuestFailureStage stage = QuestFailureStage.SNAPSHOT;
+		List<RuntimeException> committedFailures = new ArrayList<>();
 		try (QuestUnitOfWork unit = QuestUnitOfWork.open(connection)) {
-			QuestSnapshot snapshot = eventPort.snapshot(unit.connection(), playerId, definition.id(), event);
+			stage = QuestFailureStage.SNAPSHOT;
+			boolean includeStartEligibility = transition.conditions().stream()
+				.anyMatch(QuestCondition.StartEligible.class::isInstance);
+			Set<Integer> eventActivityQuestIds = transition.conditions().stream()
+				.filter(QuestCondition.EventActive.class::isInstance)
+				.map(QuestCondition.EventActive.class::cast)
+				.map(condition -> condition.questId() == 0 ? definition.id() : condition.questId())
+				.collect(Collectors.toUnmodifiableSet());
+			QuestSnapshot snapshot = eventPort.snapshot(unit.connection(), playerId, definition.id(), event,
+				includeStartEligibility, eventActivityQuestIds);
 			if (snapshot == null) {
 				throw new IllegalStateException("event port returned no snapshot");
 			}
 			if (snapshot.playerId() != playerId || snapshot.questId() != definition.id()) {
 				throw new IllegalStateException("event snapshot does not belong to player/quest");
 			}
+			stage = QuestFailureStage.PLAN;
 			Optional<QuestMutationPlan> plan = QuestMutationPlanner.plan(definition, snapshot, event, transition);
 			if (plan.isEmpty()) {
 				unit.rollback();
@@ -86,35 +103,71 @@ public final class QuestExecutionCoordinator {
 					.toList();
 			boolean persistState = requiresStatePersistence(snapshot, resolved);
 			if (!durableActions.isEmpty()) {
+				stage = QuestFailureStage.PREFLIGHT;
 				actionPort.preflight(unit.connection(), snapshot, durableActions);
+				stage = QuestFailureStage.APPLY_ACTIONS;
 				participant = actionPort.apply(unit.connection(), snapshot, durableActions);
 			}
 			if (persistState) {
+				stage = QuestFailureStage.APPLY_STATE;
 				statePort.apply(unit.connection(), playerId, resolved);
 				appliedPlan = resolved;
 			}
 			for (AfterCommitAction action : resolved.afterCommit()) {
-				unit.afterCommit(() -> afterCommitPort.execute(action, snapshot, resolved));
+				unit.afterCommit(() -> {
+					try {
+						afterCommitPort.execute(action, snapshot, resolved);
+					} catch (RuntimeException failure) {
+						throw new QuestPostCommitFailure(QuestFailureStage.AFTER_COMMIT, failure);
+					}
+				});
 			}
 			if (persistState
 					&& (resolved.nextStatus() == QuestStatus.COMPLETE || resolved.nextStatus() == QuestStatus.NONE)) {
 				// Cleanup is an ordered, best-effort post-commit action too. Register it last so
 				// domain effects can still resolve their quest-owned resources before teardown.
-				unit.afterCommit(() -> terminalCleanup.accept(playerId, resolved.questId()));
+				unit.afterCommit(() -> {
+					try {
+						terminalCleanup.accept(playerId, resolved.questId());
+					} catch (RuntimeException failure) {
+						throw new QuestPostCommitFailure(QuestFailureStage.AFTER_COMMIT, failure);
+					}
+				});
 			}
+			stage = QuestFailureStage.COMMIT;
 			unit.commit();
 			committed = true;
 			// 只有提交成功后内存才前进;commit 失败时 publish 不执行,内存保持事件前值。
 			// required participant 先清理已提交的 dirty 状态，再发布 quest state 和协议动作。
+			stage = QuestFailureStage.PARTICIPANT_AFTER_COMMIT;
 			try {
 				participant.afterCommit();
-			} finally {
-				if (persistState) {
+			} catch (RuntimeException failure) {
+				committedFailures.add(new QuestPostCommitFailure(QuestFailureStage.PARTICIPANT_AFTER_COMMIT, failure));
+			}
+			if (persistState) {
+				stage = QuestFailureStage.STATE_PUBLISH;
+				try {
 					statePort.publish(playerId, resolved);
+				} catch (RuntimeException publishFailure) {
+					try {
+						stage = QuestFailureStage.STATE_RESYNC;
+						statePort.resynchronize(playerId, resolved);
+					} catch (RuntimeException resyncFailure) {
+						publishFailure.addSuppressed(resyncFailure);
+						throw new QuestExecutionFailureException(QuestFailureStage.STATE_RESYNC, true,
+							publishFailure);
+					}
+					committedFailures.add(new QuestPostCommitFailure(QuestFailureStage.STATE_PUBLISH,
+						publishFailure));
 				}
 			}
+			stage = QuestFailureStage.AFTER_COMMIT;
 			unit.runAfterCommit();
-			return new QuestExecutionResult(QuestExecutionStatus.COMMITTED, resolved, unit.afterCommitFailures());
+			committedFailures.addAll(unit.afterCommitFailures());
+			return new QuestExecutionResult(QuestExecutionStatus.COMMITTED, resolved, committedFailures);
+		} catch (QuestExecutionFailureException failure) {
+			throw failure;
 		} catch (Exception failure) {
 			if (!committed) {
 				if (appliedPlan != null) {
@@ -130,7 +183,7 @@ public final class QuestExecutionCoordinator {
 					failure.addSuppressed(rollbackFailure);
 				}
 			}
-			throw failure;
+			throw new QuestExecutionFailureException(stage, committed, failure);
 		}
 	}
 

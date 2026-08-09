@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80818" version="1">
+  <metadata name="[Event] Concoct a Remedy for the Plague" display-name-id="1185942" min-level="30" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <items>
+      <item id="188100293" count="1" />
+      <item id="188100294" count="1" />
+      <item id="188100295" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="164002320" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

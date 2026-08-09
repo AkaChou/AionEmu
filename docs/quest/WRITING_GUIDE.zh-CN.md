@@ -9,7 +9,7 @@
 | 位置 | `src/main/resources/aion/data/static_data/quest_definition/quests/<id>.xml` | Java 代码（测试 fixture / 工具） |
 | 生产使用 | ✅ 唯一生产 owner 来源 | ❌ 仅测试与工具 |
 | 校验 | XSD + `QuestDefinitionCompiler` 语义校验 | 与 XML 走同一 compiler |
-| 加载 | 经 `quest_definition_catalog.xml` 注册后由 QuestEngine 加载 | 编译期直接 `compile()` |
+| 加载 | 经 schema v2 `quest_definition_catalog.xml` 按 mode 注册后由 QuestEngine 加载 | 编译期直接 `compile()` |
 
 规则：**生产任务只写 XML**。DSL 用于在测试中构造等价定义（`QuestDefinitionCompilerTest` 等用 `assertEquivalent` 验证 DSL 与 XML 编译结果完全一致），并可作为设计任务的草稿原型。
 
@@ -28,13 +28,17 @@
 ### 3.1 步骤
 
 1. 写 `quests/<id>.xml`；仅在完全符合下述标准模式时使用领域积木，其他流程继续写普通 transition。
-2. 在 `quest_definition_catalog.xml` 注册一行 `<definition id="<id>" resource="aion/data/static_data/quest_definition/quests/<id>.xml"/>`（每个 ID 只注册一次）。
-3. 静态元数据以 `src/main/resources/aion/data/static_data/quest_data/quest_data.xml` 为准（name、nameId、minlevel_permitted、race_permitted、category、rewards、quest_work_items、start_conditions、quest_drop）。
+2. 在 schema v2 `quest_definition_catalog.xml` 注册一行 `<definition id="<id>" resource="aion/data/static_data/quest_definition/quests/<id>.xml" mode="EXECUTABLE"/>`（每个 ID 只注册一次）。
+3. 旧模板仍存在时，以 `quest_data.xml` 作为静态元数据迁移来源；旧模板缺失时必须从真端/客户端取得逐字段权威证据，禁止从现有候选 XML 或任务行为反推猜值。
 4. 删除旧执行入口（`quest_script_data/*.xml` 中对应节点 / 旧 Java handler），同一改动完成 owner 交接。
+
+Catalog 只有两种 mode：`EXECUTABLE` 同时提供 metadata 与唯一执行 Owner；`METADATA_ONLY` 只提供名称、分类、重复规则、历史状态解释等 canonical metadata，XML 中不得声明 `nodes` 或 `transitions`，事件索引和 dispatcher 永远不会装载它。只有旧 `item_collecting` Owner 的 `start_npc_ids`、`end_npc_ids`、`action_item_ids`、`next_npc_id` 全部为 0，且存在权威旧模板时，才可按“无任何可注册入口”迁为 `METADATA_ONLY`。缺任一权威字段或仍有执行入口时必须保持 BLOCKED，不能为了清零旧 Owner 而生成定义。
 
 ### 3.2 结构（顺序敏感，受 `quest_definition.xsd` 严格校验）
 
-`metadata` 子元素顺序固定：`races` → `classes` → `gender` → `repeat` → `prerequisites` → `items` → `inventory-items` → `work-items` → `rewards` → `extended-rewards` → `drops` → `bonuses` → `kills` → `start-conditions` → `class-rewards`。**drops 必须在 rewards 之后**。
+`metadata` 子元素顺序固定：`races` → `classes` → `gender` → `repeat` → `prerequisites` → `items` → `inventory-items` → `work-items` → `rewards`/`reward-groups` → `extended-rewards`/`extended-reward-groups` → `drops` → `bonuses` → `kills` → `start-conditions`/`start-condition-groups` → `class-rewards`。每对简写/分组写法只能二选一；**drops 必须在奖励之后**。
+
+`<rewards>` 与 `<start-conditions>` 只是单组简写。多奖励组必须按旧顺序写 `<reward-groups><group>...</group></reward-groups>`；`complete-reward-index` 先选择 reward group，再在该组内解释 fixed/choice 索引。多开始条件组必须写 `<start-condition-groups>`：组内条件为 AND，组间为 OR，禁止展开成全局 AND。
 
 transition 内部顺序固定：`event` → `conditions` → `actions` → `after-commit`。
 
@@ -99,7 +103,7 @@ transition 内部顺序固定：`event` → `conditions` → `actions` → `afte
               finish="SELECTION_DIALOG"/>
 ```
 
-奖励索引对应 `<metadata><rewards>` 的顺序。固定奖励索引不得指向 `SELECTABLE_ITEM`。N 选 1 奖励应省略 `dialog-ids`，逐项声明客户端选择映射；`fallback` 表示只发固定奖励：
+奖励索引对应 `complete-reward-index` 选中的有序 reward group；单组 `<rewards>` 等价于 group 0。固定奖励索引不得指向 `SELECTABLE_ITEM`。N 选 1 奖励应省略 `dialog-ids`，逐项声明客户端选择映射；`fallback` 表示只发固定奖励：
 
 ```xml
 <npc-complete npc-id="203123" source="reward" target="complete"
@@ -111,7 +115,7 @@ transition 内部顺序固定：`event` → `conditions` → `actions` → `afte
 </npc-complete>
 ```
 
-choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目降为具体 `ITEM` 奖励。preview、普通领取、choice、fallback 的 dialog ID 不能重复。source 必须投影为 `REWARD`，target 必须投影为 `COMPLETE`。每条完成路径的动作顺序固定为：固定奖励、可选的 choice 奖励、`complete-quest`；提交后始终执行 `refresh-player-stats`、`sync-quest-state mode="COMPLETION"`，最后按 `SELECTION_DIALOG`、`CLOSE_DIALOG`、`NONE` 三选一结束。预览路径固定显示 page 5。
+choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目降为具体 `ITEM` 奖励。preview、普通领取、choice、fallback 的 dialog ID 不能重复。source 必须投影为 `REWARD`，target 必须投影为 `COMPLETE`。每条完成路径的动作顺序固定为：固定奖励、可选的 choice 奖励、`complete-quest`；提交后始终执行 `refresh-player-stats`、`sync-quest-state mode="COMPLETION"`，最后按 `SELECTION_DIALOG`、`CLOSE_DIALOG`、`NONE` 三选一结束。预览路径固定显示 page 5。普通 NPC 默认 `SELECTION_DIALOG`；`useitem`、`quest_use_item`、`quest_start_use_item` 交互物默认 `CLOSE_DIALOG`。`NONE` 只允许有旧包序列或真端行为证据的白名单任务。
 
 只有整个展开结果都正确时才使用积木。接取附加条件、非标准 dialog/page、领奖事务动作或额外 after-commit 副作用都必须写显式 `<transition>`。编译失败使用稳定的 `QuestCompilationException` code，并指出任务、积木和出错属性。
 
@@ -484,20 +488,39 @@ private static QuestDsl.QuestBuilder simpleCollect1103() {
 | item_order | start_item_id 接取时 give-item，talk_npc 对话推进 var，end_npc 报告 | `quests/2146.xml`、`quests/2210.xml` |
 | xml_quest（复杂） | 每 var 值一个 node，每 dialog 分支一条 transition | `quests/1115.xml`、`quests/1127.xml` |
 | 选择奖励（N 选 1） | metadata `SELECTABLE_ITEM` × N；reward→complete 按 dialog 8、9、10... 拆 N 条，公共奖励重复 + 各一条 ITEM | `quests/1002.xml`（6 选 1）、`quests/1686.xml`（2 选 1） |
+| 任务交互物 | `can-act`/`action-item-use` route + catalog drops；NPC 模板、AI 与 TALK route 必须一起校验 | `quests/1109.xml`（wine barrel 700106） |
+| 普通宝箱 | `ChestAI2`、钥匙/使用进度、死亡与实例掉落链；不创建 Quest Owner | Ancient Box 702700/702701 |
+| 延迟跨任务活动刷新 | 来源 Owner 检查外部活动/种族并调度；目标 Owner 用 `event-quest-refresh` 声明实时背包阈值和状态恢复 | `quests/80030.xml`、`quests/80033.xml`、`quests/80034.xml`–`80039.xml` |
 | 定时失败 | after-commit `start-quest-timer`，事件 `quest-timer-end` → 失败节点 | — |
 
 双 NPC 规则：start_npc_ids 每个 NPC 各一份接取过渡；end_npc_ids 每个 NPC 各一份报告/奖励过渡。
 
+延迟跨任务活动刷新示例：
+
+```xml
+<conditions>
+  <event-active quest-id="80029"/>
+  <player-race-is race="ELYOS"/>
+</conditions>
+<after-commit>
+  <schedule-event-quest-refresh seconds="10"
+      quest-ids="80030 80034 80035 80036"/>
+</after-commit>
+```
+
+延迟到期后，运行时重新查找在线玩家，并通过统一 dispatcher、事务与 publish 链向每个目标发送内部 `event-quest-refresh`。每个目标 Owner 必须自行声明实时 `has-item` 阈值，以及 NONE/START/REWARD/COMPLETE 各状态应保持、启动或重启的规则；COMPLETE → START 还必须带 `start-eligible`，由 canonical metadata 和 `QuestState.canRepeat(metadata)` 决定能否重复。禁止改成立即广播、直接调用旧 `QuestService.startEventQuest` 或按任务 ID 写特例 callback。当前调度是进程内、session-scoped、at-most-once 风格，服务器重启不会恢复未执行任务；只有权威行为要求跨重启持久化时才应另行设计持久化机制。
+
 ## 6. 编写检查清单
 
 1. XML 通过 XSD 校验；`metadata` 子元素与 transition 内部顺序正确（drops 在 rewards 之后）。
-2. catalog 注册一次，旧入口（quest_script_data / Java handler）已删除，无双 owner。
-3. 静态元数据与 `quest_data.xml` 一致；无法核对字段时查真端（58Server/Map/XML/quest.xml 等），禁止猜测。
+2. catalog schema v2 注册一次且 mode 正确；`EXECUTABLE` 的旧入口（quest_script_data / Java handler）已删除，无双 owner；`METADATA_ONLY` 无节点、无 transition、无事件 route。
+3. 静态元数据逐字段有权威来源；旧模板缺失时查真端（58Server/Map/XML/quest.xml 等）或客户端，不能核对就标记 BLOCKED，禁止猜测。
 4. 接受类过渡带 `start-eligible`；状态变更后带 `sync-quest-state`。
-5. `grant-reward` 与 metadata rewards 一一对应（GOLD/EXP 用 QUEST_BASE）。
+5. `grant-reward` 与选中的有序 reward group 一一对应（GOLD/EXP 用 QUEST_BASE）；多组不扁平化。
 6. 有 drops 的任务 metadata 已写 `<drops>` 段；有 work item 的任务 give/has/remove 齐全且无物品拒绝分支存在。
 7. 连续重复动作（连续 refresh/sync/show-quest-selection-dialog）视为错误，除非旧逻辑明确要求。
-8. 奖励结算使用合法 `npc-complete`，或保持 `source="reward" target="complete"` + `complete-quest` + `refresh-player-stats` + `sync COMPLETION` 结尾。
+8. 奖励结算使用合法 `npc-complete`，或保持 `source="reward" target="complete"` + `complete-quest` + `refresh-player-stats` + `sync COMPLETION` 结尾，并按 NPC/交互物规则收尾窗口。
+9. 开始条件保持组内 AND、组间 OR；任务交互物走 catalog route/drop 索引，`ChestAI2` 宝箱保持在宝箱/实例掉落域。
 
 ## 7. 校验命令
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="4117" version="1">
+  <metadata name="[Coin/Group] Preemptive Strike" display-name-id="1137063" min-level="46" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="3773237" />
+        <reward kind="ITEM" id="186000010" amount="1" />
+        <reward kind="ITEM" id="188050919" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

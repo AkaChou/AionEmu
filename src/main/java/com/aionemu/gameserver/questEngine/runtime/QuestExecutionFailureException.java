@@ -1,0 +1,23 @@
+package com.aionemu.gameserver.questEngine.runtime;
+
+import java.util.Objects;
+
+/** A staged execution failure; {@code committed} prevents callers from ever replaying durable rewards. */
+public final class QuestExecutionFailureException extends Exception {
+	private final QuestFailureStage stage;
+	private final boolean committed;
+
+	public QuestExecutionFailureException(QuestFailureStage stage, boolean committed, Throwable cause) {
+		super(Objects.requireNonNull(cause, "cause").getMessage(), cause);
+		this.stage = Objects.requireNonNull(stage, "stage");
+		this.committed = committed;
+	}
+
+	public QuestFailureStage stage() {
+		return stage;
+	}
+
+	public boolean committed() {
+		return committed;
+	}
+}

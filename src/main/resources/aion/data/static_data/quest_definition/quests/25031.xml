@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="25031" version="1">
+  <metadata name="The Tejhi Ghost" display-name-id="1800842" min-level="58" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <items>
+      <item id="182215714" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="103200" />
+        <reward kind="EXP" id="0" amount="9340221" />
+        <reward kind="SELECTABLE_ITEM" id="169300007" amount="500" />
+        <reward kind="SELECTABLE_ITEM" id="169000010" amount="500" />
+        <reward kind="ITEM" id="186000231" amount="10" />
+        <reward kind="ITEM" id="186000237" amount="15" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="220030" item-id="182215714" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+  </metadata>
+</quest-definition>

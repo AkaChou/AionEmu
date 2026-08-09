@@ -127,6 +127,25 @@ class PlayerQuestAiPortTest {
 	}
 
 	@Test
+	void residentInteractionNpcBroadcastsClosedSetEmotionTowardThePlayer() {
+		QuestSpawnRegistry registry = new QuestSpawnRegistry();
+		Npc resident = npc(799768);
+		Player player = player();
+		List<String> calls = new ArrayList<>();
+		PlayerQuestAiPort port = new PlayerQuestAiPort(playerId -> player, registry,
+			(npc, p, target, command, argument) -> {
+				calls.add(npc.getObjectId() + ":" + target.getObjectId() + ":" + command + ":" + argument);
+				return true;
+			}, objectId -> objectId == resident.getObjectId() ? resident : null,
+			(p, npc, questId, zone) -> CompletableFuture.completedFuture(null));
+
+		assertTrue(port.broadcastInteractionEmotion(
+			snapshot().withInteractionObjectId(resident.getObjectId()), plan(), QuestNpcEmotion.NO));
+		assertEquals(List.of(resident.getObjectId() + ":" + player.getObjectId()
+			+ ":BROADCAST_INTERACTION_EMOTION:NO"), calls);
+	}
+
+	@Test
 	void residentInteractionNpcCanFollowPlayerToCoordinateTarget() {
 		QuestSpawnRegistry registry = new QuestSpawnRegistry();
 		Npc escort = npc(799036);

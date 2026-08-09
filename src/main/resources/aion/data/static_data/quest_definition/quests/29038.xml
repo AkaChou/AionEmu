@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="29038" version="1">
+  <metadata name="[Master] Cook's Potential" display-name-id="1124838" min-level="29" max-level="2147483647" category="SIGNIFICANT" cannot-share="true" combine-skill="40001" combine-skill-point="499">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <work-items>
+      <item id="152207202" count="1" />
+      <item id="152207203" count="1" />
+      <item id="152207204" count="1" />
+      <item id="152207205" count="1" />
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="291412" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="2934" />
+        <condition type="unfinished" quest-id="29008" />
+        <condition type="noacquired" quest-id="29008" />
+      </group>
+      <group>
+        <condition type="finished" quest-id="4956" />
+        <condition type="unfinished" quest-id="29014" />
+        <condition type="noacquired" quest-id="29014" />
+      </group>
+      <group>
+        <condition type="unfinished" quest-id="29020" />
+        <condition type="noacquired" quest-id="29020" />
+      </group>
+      <group>
+        <condition type="unfinished" quest-id="29026" />
+        <condition type="noacquired" quest-id="29026" />
+      </group>
+      <group>
+        <condition type="unfinished" quest-id="29032" />
+        <condition type="noacquired" quest-id="29032" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

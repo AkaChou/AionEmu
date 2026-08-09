@@ -7,11 +7,9 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
-import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -38,14 +36,16 @@ public class QuestStartAction extends AbstractItemAction {
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		QuestState qs = player.getQuestStateList().getQuestState(questid);
-		if (qs == null || qs.getStatus() == QuestStatus.NONE || qs.canRepeat()) {
+		var metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questid).orElse(null);
+		if (qs == null || qs.getStatus() == QuestStatus.NONE || qs.canRepeat(metadata)) {
 			return true;
 		}
 		if (qs.getStatus() != QuestStatus.COMPLETE) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_QUEST_ACQUIRE_ERROR_WORKING_QUEST);
-		} else if (!qs.canRepeat()) {
+		} else if (!qs.canRepeat(metadata)) {
+			String questName = metadata == null ? Integer.toString(questid) : metadata.name();
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE
-					.STR_QUEST_ACQUIRE_ERROR_NONE_REPEATABLE(DataManager.QUEST_DATA.getQuestById(questid).getName()));
+					.STR_QUEST_ACQUIRE_ERROR_NONE_REPEATABLE(questName));
 		}
 		return false;
 	}

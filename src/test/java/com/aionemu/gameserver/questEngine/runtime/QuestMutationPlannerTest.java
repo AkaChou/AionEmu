@@ -194,6 +194,37 @@ class QuestMutationPlannerTest {
 	}
 
 	@Test
+	void startConditionGroupsAreAndInsideAndOrAcrossGroups() {
+		String xml = """
+				<quest-definition id="1306" version="1">
+				  <metadata name="grouped-start" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+				    <start-condition-groups>
+				      <group><condition type="finished" quest-id="9001"/><condition type="acquired" quest-id="9002"/></group>
+				      <group><condition type="finished" quest-id="9003"/></group>
+				    </start-condition-groups>
+				  </metadata>
+				  <nodes><node label="none"><project status="NONE"/></node><node label="started"><project status="START"/></node></nodes>
+				  <transitions><transition source="none" target="started"><event><talk-to-npc npc-id="700001"/></event></transition></transitions>
+				</quest-definition>
+				""";
+		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
+			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+		var transition = definition.definition().transitions().get(0);
+		QuestEvent event = new QuestEvent.TalkToNpc(700001);
+
+		assertTrue(QuestMutationPlanner.plan(definition,
+			new QuestSnapshot(7, 1306, QuestStatus.NONE, 0, Map.of()).withCompletedQuestIds(Set.of(9003)),
+			event, transition).isPresent());
+		assertTrue(QuestMutationPlanner.plan(definition,
+			new QuestSnapshot(7, 1306, QuestStatus.NONE, 0, Map.of())
+				.withCompletedQuestIds(Set.of(9001)).withActiveQuestIds(Set.of(9002)),
+			event, transition).isPresent());
+		assertTrue(QuestMutationPlanner.plan(definition,
+			new QuestSnapshot(7, 1306, QuestStatus.NONE, 0, Map.of()).withCompletedQuestIds(Set.of(9001)),
+			event, transition).isEmpty());
+	}
+
+	@Test
 	void unequipRemoveCountIsConsumedBeforeASeparateInventoryRemoval() {
 		CompiledQuestDefinition definition = QuestDsl.quest(1304)
 			.node("started", project(QuestStatus.START, Map.of()))
@@ -258,11 +289,11 @@ class QuestMutationPlannerTest {
 
 	@Test
 	void dailyRotatingNpcFactionQuestStartsTheFactionLifecycleOnAccept() throws Exception {
-		// 真端依据:36517 阵营任务每日轮换,daily 标志不可靠;NONE→START 接取即应
-		// 启动阵营生命周期(min-level 999 已防护轮换窗口),不再按 timeBased 取消。
+		// 真端依据:36525 阵营任务每日轮换,daily 标志不可靠;NONE→START 接取即应
+		// 启动阵营生命周期,不再按 timeBased 取消。
 		CompiledQuestDefinition definition;
 		try (InputStream input = Objects.requireNonNull(getClass().getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/36517.xml"))) {
+			"/aion/data/static_data/quest_definition/quests/36525.xml"))) {
 			definition = QuestDefinitionXmlCompiler.compile(input);
 		}
 
@@ -271,7 +302,7 @@ class QuestMutationPlannerTest {
 				&& "started".equals(transition.targetNode()))
 			.findFirst().orElseThrow();
 		var acceptPlan = QuestMutationPlanner.plan(definition,
-			new QuestSnapshot(7, 36517, QuestStatus.NONE, 0, Map.of())
+			new QuestSnapshot(7, 36525, QuestStatus.NONE, 0, Map.of())
 				.withStartEligibility(QuestStartEligibility.allowed()),
 			new QuestEvent.TalkToNpc(799837, 1002), accept).orElseThrow();
 

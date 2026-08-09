@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.EmotionId;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -9,14 +8,15 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.ENpcFactionQuestState;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.NpcFaction;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
-import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ASCENSION_MORPH;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.questEngine.definition.QuestPlayerEmotion;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.services.ClassChangeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.Objects;
+import java.util.function.IntFunction;
 
 /**
  * Real {@link QuestEffectPort}: after commit, sends the ascension-morph and
@@ -26,8 +26,13 @@ import java.util.Objects;
 public final class PlayerQuestEffectPort implements QuestEffectPort {
 	private final QuestPlayerPort players;
 	private final EffectOperations effectOperations;
+	private final IntFunction<QuestMetadata> metadata;
 
 	public PlayerQuestEffectPort(QuestPlayerPort players) {
+		this(players, questId -> GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null));
+	}
+
+	PlayerQuestEffectPort(QuestPlayerPort players, IntFunction<QuestMetadata> metadata) {
 		this(players, new EffectOperations() {
 			@Override
 			public void apply(Player player, int skillId, int durationMillis) {
@@ -38,12 +43,19 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 			public void remove(Player player, int effectId) {
 				player.getEffectController().removeEffect(effectId);
 			}
-		});
+		}, metadata);
 	}
 
 	PlayerQuestEffectPort(QuestPlayerPort players, EffectOperations effectOperations) {
+		this(players, effectOperations,
+			questId -> GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null));
+	}
+
+	PlayerQuestEffectPort(QuestPlayerPort players, EffectOperations effectOperations,
+			IntFunction<QuestMetadata> metadata) {
 		this.players = Objects.requireNonNull(players, "players");
 		this.effectOperations = Objects.requireNonNull(effectOperations, "effectOperations");
+		this.metadata = Objects.requireNonNull(metadata, "metadata");
 	}
 
 	@Override
@@ -82,15 +94,15 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 		Objects.requireNonNull(snapshot, "snapshot");
 		Objects.requireNonNull(plan, "plan");
 		Player player = players.find(snapshot.playerId());
-		QuestTemplate template = npcFactionTemplate(snapshot, npcFactionId);
-		if (player == null || template == null || player.getNpcFactions() == null) {
+		QuestMetadata questMetadata = npcFactionMetadata(snapshot, npcFactionId);
+		if (player == null || questMetadata == null || player.getNpcFactions() == null) {
 			return false;
 		}
 		NpcFaction faction = player.getNpcFactions().getNpcFactionById(npcFactionId);
 		if (faction == null || !faction.isActive() || faction.getQuestId() != snapshot.questId()) {
 			return false;
 		}
-		player.getNpcFactions().startQuest(template);
+		player.getNpcFactions().startQuest(npcFactionId);
 		return faction.getState() == ENpcFactionQuestState.START;
 	}
 
@@ -99,15 +111,15 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 		Objects.requireNonNull(snapshot, "snapshot");
 		Objects.requireNonNull(plan, "plan");
 		Player player = players.find(snapshot.playerId());
-		QuestTemplate template = npcFactionTemplate(snapshot, npcFactionId);
-		if (player == null || template == null || player.getNpcFactions() == null) {
+		QuestMetadata questMetadata = npcFactionMetadata(snapshot, npcFactionId);
+		if (player == null || questMetadata == null || player.getNpcFactions() == null) {
 			return false;
 		}
 		NpcFaction faction = player.getNpcFactions().getNpcFactionById(npcFactionId);
 		if (faction == null || !faction.isActive() || faction.getQuestId() != snapshot.questId()) {
 			return false;
 		}
-		player.getNpcFactions().completeQuest(template);
+		player.getNpcFactions().completeQuest(npcFactionId, "MENTOR".equals(questMetadata.mentorType()));
 		return faction.getState() == ENpcFactionQuestState.COMPLETE;
 	}
 
@@ -116,24 +128,24 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 		Objects.requireNonNull(snapshot, "snapshot");
 		Objects.requireNonNull(plan, "plan");
 		Player player = players.find(snapshot.playerId());
-		QuestTemplate template = npcFactionTemplate(snapshot, npcFactionId);
-		if (player == null || template == null || player.getNpcFactions() == null) {
+		QuestMetadata questMetadata = npcFactionMetadata(snapshot, npcFactionId);
+		if (player == null || questMetadata == null || player.getNpcFactions() == null) {
 			return false;
 		}
 		NpcFaction faction = player.getNpcFactions().getNpcFactionById(npcFactionId);
 		if (faction == null || !faction.isActive() || faction.getQuestId() != snapshot.questId()) {
 			return false;
 		}
-		player.getNpcFactions().abortQuest(template);
+		player.getNpcFactions().abortQuest(npcFactionId);
 		return faction.getState() == ENpcFactionQuestState.NOTING;
 	}
 
-	private static QuestTemplate npcFactionTemplate(QuestSnapshot snapshot, int npcFactionId) {
-		if (npcFactionId <= 0 || DataManager.QUEST_DATA == null) {
+	private QuestMetadata npcFactionMetadata(QuestSnapshot snapshot, int npcFactionId) {
+		if (npcFactionId <= 0) {
 			return null;
 		}
-		QuestTemplate template = DataManager.QUEST_DATA.getQuestById(snapshot.questId());
-		return template != null && template.getNpcFactionId() == npcFactionId ? template : null;
+		QuestMetadata questMetadata = metadata.apply(snapshot.questId());
+		return questMetadata != null && questMetadata.npcFactionId() == npcFactionId ? questMetadata : null;
 	}
 
 	@Override

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80555" version="1">
+  <metadata name="[Event] Troubled Asmomumu" display-name-id="1199987" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <items>
+      <item id="182215446" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="100000" />
+        <reward kind="EXP" id="0" amount="30000" />
+        <reward kind="ITEM" id="188052667" amount="1" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="234192" item-id="182215446" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="80554" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

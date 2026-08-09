@@ -70,7 +70,10 @@ public class Reload extends AdminCommand {
 					if (data != null && data.getQuest() != null)
 						newQuestScripts.addAll(data.getQuest());
 				}
-				reloadQuests(newQuestData.getQuestsData(), newQuestScripts);
+				QuestEngine questEngine = GameEngineServices.questEngine();
+				QuestEngine.PreparedProductionDefinitions prepared = questEngine.prepareProductionDefinitions();
+				questEngine.validateLegacyOwnerConflicts(prepared, newQuestScripts);
+				reloadQuests(newQuestData.getQuestsData(), newQuestScripts, prepared);
 				PacketSendUtility.sendMessage(admin, "Quest reload Success!");
 			}
 			catch (Exception | GameServerError e) {
@@ -160,21 +163,23 @@ public class Reload extends AdminCommand {
 	 * @param quests 新任务模板列表 / new quest templates
 	 * @param scripts 新 XML 任务脚本列表 / new XML quest scripts
 	 */
-	private void reloadQuests(List<QuestTemplate> quests, List<XMLQuest> scripts) {
+	private void reloadQuests(List<QuestTemplate> quests, List<XMLQuest> scripts,
+			QuestEngine.PreparedProductionDefinitions prepared) {
 		List<QuestTemplate> oldQuests = DataManager.QUEST_DATA.getQuestsData();
 		List<XMLQuest> oldScripts = DataManager.XML_QUESTS.getQuest();
 		QuestEngine questEngine = GameEngineServices.questEngine();
+		QuestEngine.PreparedProductionDefinitions previous = questEngine.currentProductionDefinitions();
 		questEngine.shutdown();
 		try {
 			DataManager.QUEST_DATA.setQuestsData(quests);
 			DataManager.XML_QUESTS.setData(scripts);
-			questEngine.load(null);
+			questEngine.load(null, prepared);
 		} catch (GameServerError e) {
 			questEngine.shutdown();
 			DataManager.QUEST_DATA.setQuestsData(oldQuests);
 			DataManager.XML_QUESTS.setData(oldScripts);
 			try {
-				questEngine.load(null);
+				questEngine.load(null, previous);
 			} catch (Throwable rollbackFailure) {
 				e.addSuppressed(rollbackFailure);
 			}

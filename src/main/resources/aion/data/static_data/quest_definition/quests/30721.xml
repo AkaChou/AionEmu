@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="30721" version="1">
+  <metadata name="Ominous Debris Energy" display-name-id="1800928" min-level="57" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <inventory-items>
+      <item id="182215698" count="1" />
+    </inventory-items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="99720" />
+        <reward kind="EXP" id="0" amount="2216451" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

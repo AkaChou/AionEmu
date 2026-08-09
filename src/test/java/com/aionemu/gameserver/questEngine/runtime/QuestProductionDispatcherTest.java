@@ -71,6 +71,14 @@ class QuestProductionDispatcherTest {
 		assertTrue(result.claimed(), "FAILED is conclusive and must block legacy fallback");
 		assertEquals(QuestRouteResult.FAILED, result.owners().get(0).result());
 		assertEquals(1, audits.size());
+		QuestAuditEvent audit = audits.get(0);
+		assertEquals("started", audit.sourceNode());
+		assertEquals("reward", audit.targetNode());
+		assertEquals(203057, audit.npcId());
+		assertEquals(1009, audit.dialogId());
+		assertEquals(QuestFailureStage.SNAPSHOT, audit.failureStage());
+		assertFalse(audit.committed());
+		assertEquals(SQLException.class.getName(), audit.failureType());
 		assertEquals(List.of("setAutoCommit:false", "rollback", "close"), calls);
 	}
 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="3119" version="1">
+  <metadata name="[Instance/Group] Valuable Research Material" display-name-id="1137094" min-level="46" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="5" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="182213256" count="10" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="3773237" />
+        <reward kind="ITEM" id="164000076" amount="22" />
+      </group>
+    </reward-groups>
+    <extended-reward-groups>
+      <group>
+        <reward kind="ITEM" id="188050587" amount="1" />
+      </group>
+    </extended-reward-groups>
+    <drops>
+      <drop npc-id="214686" item-id="182213256" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="214687" item-id="182213256" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="214688" item-id="182213256" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="214689" item-id="182213256" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="214690" item-id="182213256" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+  </metadata>
+</quest-definition>

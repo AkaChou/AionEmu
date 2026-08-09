@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="21326" version="1">
+  <metadata name="Malicious Manticores" display-name-id="1802348" min-level="53" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="127800" />
+        <reward kind="EXP" id="0" amount="10095161" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

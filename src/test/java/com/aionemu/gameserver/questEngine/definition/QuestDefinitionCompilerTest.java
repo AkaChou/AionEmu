@@ -198,7 +198,7 @@ class QuestDefinitionCompilerTest {
 		CompiledQuestDefinition second = quest(1001).version(2)
 			.node("start", project(QuestStatus.START, Map.of()))
 			.on(talkToNpc(700001)).from("start").goTo("start").compile();
-		assertEquals("DUPLICATE_OWNER", assertThrows(QuestCompilationException.class,
+		assertEquals("DUPLICATE_CATALOG_ENTRY", assertThrows(QuestCompilationException.class,
 				() -> new ImmutableQuestCatalog(List.of(first, second))).code());
 	}
 

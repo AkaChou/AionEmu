@@ -45,6 +45,7 @@ public final class QuestConditionEvaluator {
 				case QuestCondition.AdvancedClassIs playerClass ->
 					advancedClass(snapshot, playerClass.playerClass());
 				case QuestCondition.GenderIs gender -> gender(snapshot, gender);
+				case QuestCondition.PlayerRaceIs race -> snapshot.race() != null && snapshot.race() == race.race();
 				case QuestCondition.PlayerInGroup group -> playerInGroup(snapshot, group);
 				case QuestCondition.WorldIs world -> worldIs(snapshot, world);
 				case QuestCondition.WorldNpcIs npc -> worldNpcIs(snapshot, npc);
@@ -282,7 +283,8 @@ public final class QuestConditionEvaluator {
 	 * Event-activity conditions match only captured facts; unknown facts fail closed.
 	 */
 	private static boolean eventActive(QuestSnapshot snapshot, QuestCondition.EventActive condition) {
-		Boolean actual = snapshot.eventActive();
+		Boolean actual = condition.questId() == 0
+			? snapshot.eventActive() : snapshot.eventActivity(condition.questId());
 		return actual != null && actual == condition.expected();
 	}
 }

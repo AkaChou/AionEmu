@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80963" version="1">
+  <metadata name="[Instanced Dungeon/Group] Request 1: Adma's Fall" display-name-id="1803658" min-level="66" max-level="2147483647" category="EVENT">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="90000000" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

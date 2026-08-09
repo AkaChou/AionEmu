@@ -31,12 +31,13 @@ public final class QuestDefinitionCatalogManifest {
 	private static final String SCHEMA =
 		"/aion/data/static_data/quest_definition/quest_definition_catalog.xsd";
 
-	public record Entry(int id, String resource) {
+	public record Entry(int id, String resource, QuestCatalogEntryMode mode) {
 		public Entry {
 			if (id <= 0) {
 				throw new IllegalArgumentException("quest id must be positive");
 			}
 			resource = requireResource(resource);
+			mode = Objects.requireNonNull(mode, "mode");
 		}
 	}
 
@@ -44,8 +45,8 @@ public final class QuestDefinitionCatalogManifest {
 	private final List<Entry> entries;
 
 	private QuestDefinitionCatalogManifest(int version, List<Entry> entries) {
-		if (version <= 0) {
-			fail("INVALID_CATALOG_VERSION", "version must be positive");
+		if (version != 2) {
+			fail("INVALID_CATALOG_VERSION", "catalog schema version must be 2");
 		}
 		if (entries.isEmpty()) {
 			fail("EMPTY_PRODUCTION_CATALOG", "production catalog must list definitions");
@@ -111,7 +112,8 @@ public final class QuestDefinitionCatalogManifest {
 			Set<Integer> ids = new HashSet<>();
 			Set<String> resources = new HashSet<>();
 			for (Element definition : children(root, "definition")) {
-				Entry entry = new Entry(integer(definition, "id"), required(definition, "resource"));
+				Entry entry = new Entry(integer(definition, "id"), required(definition, "resource"),
+					entryMode(definition));
 				if (!ids.add(entry.id())) {
 					fail("DUPLICATE_CATALOG_OWNER", Integer.toString(entry.id()));
 				}
@@ -133,9 +135,7 @@ public final class QuestDefinitionCatalogManifest {
 	public static QuestCatalog compile(InputStream manifest, ClassLoader loader) {
 		Objects.requireNonNull(loader, "loader");
 		QuestDefinitionCatalogManifest parsed = load(manifest);
-		List<CompiledQuestDefinition> definitions = compileResources(
-			parsed.entries.stream().map(Entry::resource).toList(), loader,
-			"CATALOG_RESOURCE_MISSING", "CATALOG_RESOURCE_READ_FAILED");
+		List<QuestCatalogEntry> definitions = compileEntries(parsed.entries, loader);
 		for (int i = 0; i < parsed.entries.size(); i++) {
 			Entry entry = parsed.entries.get(i);
 			if (definitions.get(i).id() != entry.id()) {
@@ -143,7 +143,49 @@ public final class QuestDefinitionCatalogManifest {
 					+ " actual=" + definitions.get(i).id());
 			}
 		}
-		return new ImmutableQuestCatalog(definitions);
+		return ImmutableQuestCatalog.fromEntries(definitions);
+	}
+
+	private static List<QuestCatalogEntry> compileEntries(List<Entry> entries, ClassLoader loader) {
+		int processors = java.lang.management.ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
+		ExecutorService pool = Executors.newFixedThreadPool(Math.min(processors, 8));
+		try {
+			List<Future<QuestCatalogEntry>> futures = new ArrayList<>(entries.size());
+			for (Entry entry : entries) {
+				futures.add(pool.submit(() -> {
+					try (InputStream input = loader.getResourceAsStream(entry.resource())) {
+						if (input == null) {
+							throw new QuestCompilationException("CATALOG_RESOURCE_MISSING", entry.resource());
+						}
+						return switch (entry.mode()) {
+							case EXECUTABLE -> QuestCatalogEntry.executable(QuestDefinitionXmlCompiler.compile(input));
+							case METADATA_ONLY -> QuestCatalogEntry.metadataOnly(QuestDefinitionXmlCompiler.parse(input));
+						};
+					} catch (IOException e) {
+						throw new QuestCompilationException("CATALOG_RESOURCE_READ_FAILED", entry.resource());
+					}
+				}));
+			}
+			List<QuestCatalogEntry> compiled = new ArrayList<>(entries.size());
+			for (Future<QuestCatalogEntry> future : futures) {
+				try {
+					compiled.add(future.get());
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					throw new QuestCompilationException("COMPILE_INTERRUPTED", e.getMessage());
+				} catch (ExecutionException e) {
+					Throwable cause = e.getCause();
+					if (cause instanceof QuestCompilationException qce) {
+						throw qce;
+					}
+					throw new QuestCompilationException("COMPILE_FAILED",
+						cause == null ? null : cause.getMessage());
+				}
+			}
+			return compiled;
+		} finally {
+			pool.shutdown();
+		}
 	}
 
 	/**
@@ -151,26 +193,30 @@ public final class QuestDefinitionCatalogManifest {
 	 * 编译管线无共享可变状态，Schema 静态化后线程安全。The compile pipeline has no shared mutable state,
 	 * and the shared Schema is thread-safe, so per-resource work can run concurrently.
 	 */
-	static List<CompiledQuestDefinition> compileResources(List<String> resources, ClassLoader loader,
+	static List<QuestCatalogEntry> compileResourceEntries(List<String> resources, ClassLoader loader,
 			String missingCode, String readFailedCode) {
 		int processors = java.lang.management.ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
 		ExecutorService pool = Executors.newFixedThreadPool(Math.min(processors, 8));
 		try {
-			List<Future<CompiledQuestDefinition>> futures = new ArrayList<>(resources.size());
+			List<Future<QuestCatalogEntry>> futures = new ArrayList<>(resources.size());
 			for (String resource : resources) {
 				futures.add(pool.submit(() -> {
 					try (InputStream input = loader.getResourceAsStream(resource)) {
 						if (input == null) {
 							throw new QuestCompilationException(missingCode, resource);
 						}
-						return QuestDefinitionXmlCompiler.compile(input);
+						QuestDefinition definition = QuestDefinitionXmlCompiler.parse(input);
+						if (definition.nodes().isEmpty() && definition.transitions().isEmpty()) {
+							return QuestCatalogEntry.metadataOnly(definition);
+						}
+						return QuestCatalogEntry.executable(QuestDefinitionCompiler.compile(definition));
 					} catch (IOException e) {
 						throw new QuestCompilationException(readFailedCode, resource);
 					}
 				}));
 			}
-			List<CompiledQuestDefinition> definitions = new ArrayList<>(resources.size());
-			for (Future<CompiledQuestDefinition> future : futures) {
+			List<QuestCatalogEntry> definitions = new ArrayList<>(resources.size());
+			for (Future<QuestCatalogEntry> future : futures) {
 				try {
 					definitions.add(future.get());
 				} catch (InterruptedException e) {
@@ -224,6 +270,15 @@ public final class QuestDefinitionCatalogManifest {
 		} catch (NumberFormatException e) {
 			fail("INVALID_CATALOG_INTEGER", element.getTagName() + "." + name);
 			return 0;
+		}
+	}
+
+	private static QuestCatalogEntryMode entryMode(Element element) {
+		try {
+			return QuestCatalogEntryMode.valueOf(required(element, "mode"));
+		} catch (IllegalArgumentException e) {
+			fail("INVALID_CATALOG_MODE", element.getAttribute("mode"));
+			return null;
 		}
 	}
 

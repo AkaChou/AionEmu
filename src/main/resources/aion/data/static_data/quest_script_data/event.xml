@@ -5,15 +5,12 @@
 	Make By (Encom)
  -->
 	<!-- [Event/Daily] Cranky Grankers -->
-	<item_collecting start_npc_ids="831032 831038" id="50011"/>
 	<!-- [Event/Daily] Cranky Grankers -->
-	<item_collecting start_npc_ids="831032 831038" id="50012"/>
 	<!-- [Event/Daily] Sweetie Choco Wuv-Ums -->
 	<!-- [Event/Daily] Alchemist's Experiment -->
 	<!-- [Event/Repeat] Alchemist's Trade -->
 	<!-- [Event/Daily] Love And Slaughter -->
-	<item_collecting start_npc_ids="000000" id="50032"/>
-	<item_collecting start_npc_ids="000000" id="50033"/>
+	<!-- [Event] The Lord's Shining Cube (DELETED 2026-08-09 (min-level=999) -->
 	<!-- [Event/Daily] Long Live Atreia -->
 	<!-- [Event] The Halves And Half-Nots -->
 	<!-- [Event/Weekly] Asserting Dominance -->
@@ -23,9 +20,7 @@
 	<!-- [Event/Daily] Cranky Grankers -->
 	<!-- [Event] Bitter Or Sweet ? -->
 	<!-- [Event/Daily] Cranky Grankers -->
-	<item_collecting start_npc_ids="831033 831039" id="51011"/>
 	<!-- [Event/Daily] Cranky Grankers -->
-	<item_collecting start_npc_ids="831033 831039" id="51012"/>
 	<!-- [Event/Daily] Cutie-Wootie Choco Wuv -->
 	<!-- [Event/Daily] Chocolate, Extra-Bitter -->
 	<!-- [Event/Daily] Candypocalypse -->
@@ -39,8 +34,6 @@
 	<!-- [Event/Daily] Alchemist's Experiment -->
 	<!-- [Event/Repeat] Alchemist's Trade -->
 	<!-- [Event/Daily] Love Is Pain -->
-	<item_collecting start_npc_ids="000000" id="51032"/>
-	<item_collecting start_npc_ids="000000" id="51033"/>
 	<!-- [Event/Daily] For The Revolution -->
 	<!-- [Event] The Wrong Half -->
 	<!-- [Event/Weekly] Bloody Dominance -->
@@ -48,89 +41,60 @@
 	<!-- [Event] Material For Studying The Corridor Of Dimension 3 -->
 	<!-- [Event] Material For Studying The Corridor Of Dimension 4 -->
 	<!-- [Event] The Pumpkin King -->
-	<!-- [Event] A Father's Letter -->
-	<item_collecting start_npc_ids="799763" id="80172"/>
+	<!-- 80172 [이벤트] 아버지의 편지 (METADATA_ONLY, DELETED 2026-08-09 (min-level=999) -->
 	<!-- [Event] Mother's Medicine -->
-	<item_collecting start_npc_ids="799763" id="80173"/>
 	<!-- [Event] Don't Feed The Wildlife -->
-	<item_collecting start_npc_ids="799763" id="80174"/>
 	<!-- [Event] Herbal Remedy -->
-	<!-- [Event] A Father's Letter -->
-	<item_collecting start_npc_ids="799763" id="80176"/>
-	<!-- [Event] Mother's Medicine -->
-	<item_collecting start_npc_ids="799763" id="80177"/>
+	<!-- [Event] A Father's Letter (DELETED 2026-08-09 (min-level=999) -->
+	<!-- [Event] Mother's Medicine (DELETED 2026-08-09 (min-level=999) -->
 	<!-- [Event] Don't Feed The Wildlife -->
-	<item_collecting start_npc_ids="799763" id="80178"/>
 	<!-- [Event] Herbal Remedy -->
 	<!-- [Event] Mysterious Proposal -->
-	<item_collecting start_npc_ids="799763" id="80180"/>
-	<!-- [Event] Find Mother -->
-	<item_collecting start_npc_ids="799763" id="80181"/>
-	<!-- [Event] Mother's Happiness -->
-	<item_collecting start_npc_ids="799763" id="80182"/>
+	<!-- 80180 [이벤트] 사랑의 서약 (talk, DELETED 2026-08-09 (min-level=999) -->
+	<!-- [Event] Find Mother (DELETED 2026-08-09 (min-level=999) -->
+	<!-- [Event] Secret of Birth (DELETED 2026-08-09 (min-level=999) -->
 	<!-- [Event] Daughter's Wrath -->
 	<!-- [Event] Worst Proposal Ever -->
-	<item_collecting start_npc_ids="799763" id="80184"/>
-	<!-- [Event] Taking Her Time -->
-	<item_collecting start_npc_ids="799763" id="80185"/>
-	<!-- [Event] Never, Ever, Ever Together -->
-	<item_collecting start_npc_ids="799763" id="80186"/>
+	<!-- 80184 [Event] Eternal Vow (talk, migrated to quest_definition/quests/80184.xml) -->
+	<!-- [Event] Shackles Of The Past (hunt, DELETED 2026-08-09 (min-level=999) -->
+	<!-- [Event] Never, Ever, Ever Together (item_collecting placeholder, DELETED 2026-08-09 (min-level=999) -->
 	<!-- [Event] Forget You -->
 	<!-- [Event] The Wrights Of Dawn -->
-	<item_collecting start_npc_ids="799763" id="80188"/>
-	<!-- [Event] Wright Recommendation -->
-	<item_collecting start_npc_ids="799763" id="80189"/>
+	<!-- 80188 [Event] Crafting Guild (talk, DELETED 2026-08-09 (min-level=999) -->
+	<!-- 80189 [Event] Wright Recommendation (item_collecting placeholder, DELETED 2026-08-09 (min-level=999) -->
 	<!-- [Event] Wright For The Job -->
-	<item_collecting start_npc_ids="799763" id="80190"/>
 	<!-- [Event] Got The Wright One -->
 	<!-- [Event] The Shapers Of Dusk -->
-	<item_collecting start_npc_ids="799763" id="80192"/>
 	<!-- [Event] Shaper Recommendation -->
-	<item_collecting start_npc_ids="799763" id="80193"/>
-	<!-- [Event] Shaper's Test -->
-	<item_collecting start_npc_ids="799763" id="80194"/>
+	<!-- 80192 [Event] Crafting Guild (talk, DELETED 2026-08-09 (min-level=999) -->
+	<!-- 80193 [Event] Craft Association Recommendation (METADATA_ONLY, DELETED 2026-08-09 (min-level=999) -->
 	<!-- [Event] Shaping Expectations -->
 	<!-- [Event] A Difficult Confession -->
 	<!-- [Event] Love Confession -->
-	<item_collecting start_npc_ids="799763" id="80197"/>
+	<!-- 80197 [이벤트] 사랑 고백 편지_아이템형 (METADATA_ONLY, DELETED 2026-08-09 (min-level=999) -->
 	<!-- [Event] Affection For That Person -->
-	<item_collecting start_npc_ids="799763" id="80198"/>
 	<!-- [Event] Crossing Minds -->
-	<item_collecting start_npc_ids="799763" id="80199"/>
+	<!-- [Event] Crossing Minds (talk, DELETED 2026-08-09 (min-level=999) -->
 	<!-- [Event] A Difficult Confession -->
 	<!-- [Event] Love Confession -->
-	<item_collecting start_npc_ids="799763" id="80201"/>
+	<!-- 80201 [이벤트] 사랑 고백 편지_아이템형 (METADATA_ONLY, DELETED 2026-08-09 (min-level=999) -->
 	<!-- [Event] Affection For That Person -->
-	<item_collecting start_npc_ids="799763" id="80202"/>
+	<!-- [Event] Affection For That Person (hunt, migrated to quest_definition/quests/80202.xml) -->
 	<!-- [Event] Crossing Minds -->
-	<item_collecting start_npc_ids="799763" id="80203"/>
-	<!-- [Event] Sailor Costume -->
-	<item_collecting start_npc_ids="799763" id="80204"/>
+	<!-- [Event] Crossing Minds (talk, DELETED 2026-08-09 (min-level=999) -->
+	<!-- [Event] Sailor Costume (talk, DELETED 2026-08-09 (min-level=999) -->
 	<!-- [Event] Inisha's Revenge -->
-	<monster_hunt start_npc_ids="831085" id="80205">
-        <monster var="0" npc_ids="219508 219509 219510" end_var="18"/>
-		<monster var="0" npc_ids="219516 219517 219518" end_var="18"/>
-		<monster var="0" npc_ids="219524 219525 219526" end_var="18"/>
-    </monster_hunt>
 	<!-- [Event] No! Bad Manduri! -->
 	<!-- [Event] Who Throws Away A Shoe ? -->
 	<!-- [Event] Ring Her, Maybe ? -->
-	<item_collecting start_npc_ids="799763" id="80208"/>
+	<!-- 80208 [이벤트] 사랑은 갈대와 같이 (talk, DELETED 2026-08-09 (min-level=999) -->
 	<!-- [Event] Request From The D.E.R.P -->
-	<item_collecting start_npc_ids="799763" id="80209"/>
 	<!-- [Event] Stealing Sweet Dado -->
-	<!-- [이벤트] 놀러와요, 메이드 카페 -->
-	<item_collecting start_npc_ids="799763" id="80267"/>
+	<!-- [이벤트] 놀러와요, 메이드 카페 (80267, private-server quest with no client/retail record; removed) -->
 	<!-- [Event] Waiting On You -->
 	<!-- [Event] Tasty Treats -->
 	<!-- [Event] Service With A Smile -->
 	<!-- [Event] Scrumptious Snack's -->
-	<!-- [Event] Durability Test (Asmodians Only) -->
-	<monster_hunt start_npc_ids="831085" id="80283">
-        <monster var="0" npc_ids="219508 219509 219510" end_var="18"/>
-		<monster var="0" npc_ids="219516 219517 219518" end_var="18"/>
-		<monster var="0" npc_ids="219524 219525 219526" end_var="18"/>
-    </monster_hunt>
 	<!-- ELYOS -->
 	<!-- Troubled Ciello -->
 	<!-- Faviolla's Request -->
@@ -148,12 +112,9 @@
 	<!-- [Event/Daily] Prescription For Medicine -->
 	<!-- [Event/Daily] Prescription For Psychiatric Medicine -->
 	<!-- [Event/Daily] Rolling On The Loot -->
-	<item_collecting start_npc_ids="0" id="80328"/>
 	<!-- [Event/Daily] Just Roll With It -->
-	<item_collecting start_npc_ids="0" id="80329"/>
 	<!-- [Event] Alchemist's Gift -->
 	<!-- [Event] Pearl On My Hands -->
-	<item_collecting start_npc_ids="0" id="80350"/>
 	<!-- [Event/Daily] The First Drink Is Free -->
 	<!-- [Event] Ice Hot ! -->
 	<!-- [Event] Closing This Party Down -->
@@ -172,15 +133,10 @@
 	<!-- [Event] Trust The Shugo Broker -->
 	<!-- [Event] A Day To Rejoice -->
 	<!-- [Event] Unending Blessings! -->
-	<item_collecting start_npc_ids="0" id="80468"/>
 	<!-- [Event] Blessings From The Lords! -->
-	<item_collecting start_npc_ids="0" id="80469"/>
 	<!-- [Event] Daeva's Day Celebrations! -->
-	<item_collecting start_npc_ids="0" id="80470"/>
 	<!-- [Event] Take Wing, Daeva! -->
-	<item_collecting start_npc_ids="0" id="80471"/>
 	<!-- [Event] Take Wing, Daeva! -->
-	<item_collecting start_npc_ids="0" id="80472"/>
 	<!-- [Event] A Roaring Bonfire -->
 	<!-- [Event] Drowning Is Not An Option -->
 	<!-- [Event] Fire, Fire Burning Bright -->
@@ -200,29 +156,17 @@
 	<!-- [Event/Daily] A Noble Mission -->
 	<!-- [Event/Daily] Spread The Joy -->
 	<!-- [Event] Elyshugo's Invitation -->
-	<item_collecting start_npc_ids="0" id="80553"/>
 	<!-- [Event] Elyshugo's Wedding Invitation -->
-	<item_collecting start_npc_ids="0" id="80554"/>
 	<!-- [Event] Troubled Asmomumu -->
-	<item_collecting start_npc_ids="0" id="80555"/>
 	<!-- [Event] Asmomumu's Revenge -->
-	<item_collecting start_npc_ids="0" id="80556"/>
 	<!-- [Event] Elyshugo's Invitation -->
-	<item_collecting start_npc_ids="0" id="80557"/>
 	<!-- [Event] Elyshugo's Wedding Invitation -->
-	<item_collecting start_npc_ids="0" id="80558"/>
 	<!-- [Event] Troubled Asmomumu -->
-	<item_collecting start_npc_ids="0" id="80559"/>
 	<!-- [Event] Asmomumu's Revenge -->
-	<item_collecting start_npc_ids="0" id="80560"/>
 	<!-- [Event] Trump Event A Poker -->
-	<item_collecting start_npc_ids="0" id="80561"/>
 	<!-- [Event] Trump Event B Pair -->
-	<item_collecting start_npc_ids="0" id="80562"/>
 	<!-- [Event] Trump Event C -->
-	<item_collecting start_npc_ids="0" id="80563"/>
 	<!-- [Event] Trump Event D -->
-	<item_collecting start_npc_ids="0" id="80564"/>
 	<!-- 名誉の交換 -->
 	<!-- 名誉の交換 -->
 	<!-- AION の文字収集 -->

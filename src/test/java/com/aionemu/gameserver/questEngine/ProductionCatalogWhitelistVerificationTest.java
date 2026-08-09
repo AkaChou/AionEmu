@@ -29,7 +29,12 @@ public class ProductionCatalogWhitelistVerificationTest {
 			List<String> compileFailures = new ArrayList<>();
 			List<String> violations = new ArrayList<>();
 			int ok = 0;
+			int expectedExecutables = 0;
 			for (var entry : manifest.entries()) {
+				if (entry.mode() != com.aionemu.gameserver.questEngine.definition.QuestCatalogEntryMode.EXECUTABLE) {
+					continue;
+				}
+				expectedExecutables++;
 				String expectedResource = "aion/data/static_data/quest_definition/quests/"
 					+ entry.id() + ".xml";
 				if (!expectedResource.equals(entry.resource())) {
@@ -76,6 +81,7 @@ public class ProductionCatalogWhitelistVerificationTest {
 							&& !(t.event() instanceof QuestEvent.NpcReachTarget)
 							&& !(t.event() instanceof QuestEvent.NpcLostTarget)
 							&& !(t.event() instanceof QuestEvent.ZoneMissionEnd)
+							&& !(t.event() instanceof QuestEvent.EventQuestRefresh)
 							&& !(t.event() instanceof QuestEvent.InvisibleTimerEnd)
 							&& !(t.event() instanceof QuestEvent.FailCraft)
 							&& !(t.event() instanceof QuestEvent.EquipItem)
@@ -98,7 +104,7 @@ public class ProductionCatalogWhitelistVerificationTest {
 			compileFailures.stream().limit(30).forEach(System.out::println);
 			System.out.println("PRODUCTION_WHITELIST_VIOLATIONS=" + violations.size());
 			violations.stream().limit(60).forEach(System.out::println);
-			org.junit.jupiter.api.Assertions.assertEquals(manifest.entries().size(), ok,
+			org.junit.jupiter.api.Assertions.assertEquals(expectedExecutables, ok,
 				() -> "production catalog compile failures: " + compileFailures);
 			org.junit.jupiter.api.Assertions.assertTrue(compileFailures.isEmpty(),
 				() -> "production catalog compile failures: " + compileFailures);

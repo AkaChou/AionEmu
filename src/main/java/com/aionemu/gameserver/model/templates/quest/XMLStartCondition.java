@@ -9,10 +9,10 @@ import jakarta.xml.bind.annotation.XmlList;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
-import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -54,9 +54,13 @@ public class XMLStartCondition {
 						|| !checkReward(questId, reward, qs.getReward())) {
 					return false;
 				}
-				QuestTemplate template = DataManager.QUEST_DATA.getQuestById(questId);
-				if (template != null && template.isRepeatable()) {
-					if (template.getMaxRepeatCount() != 255 && qs.getCompleteCount() != template.getMaxRepeatCount()) {
+				var metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null);
+				if (metadata == null) {
+					return false;
+				}
+				if (metadata.repeatPolicy().maxRepeatCount() != 1) {
+					if (metadata.repeatPolicy().maxRepeatCount() != 255
+							&& qs.getCompleteCount() != metadata.repeatPolicy().maxRepeatCount()) {
 						return false;
 					}
 				}

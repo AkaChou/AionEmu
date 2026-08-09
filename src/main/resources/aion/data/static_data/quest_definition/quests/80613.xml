@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80613" version="1">
+  <metadata name="[Event] Ginseng is the Best!" display-name-id="1800281" min-level="65" max-level="65" category="EVENT">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="7000" />
+        <reward kind="EXP" id="0" amount="700000" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="80611" />
+        <condition type="finished" quest-id="80612" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

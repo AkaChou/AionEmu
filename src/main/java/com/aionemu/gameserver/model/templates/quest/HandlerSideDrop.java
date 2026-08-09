@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.model.templates.quest;
 
-import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.model.templates.QuestTemplate;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 /**
  * 处理器 Side 掉落模板（静态数据/XML）。
@@ -17,13 +16,15 @@ public class HandlerSideDrop extends QuestDrop {
 		this.itemId = itemId;
 		this.chance = chance;
 
-		QuestTemplate template = DataManager.QUEST_DATA.getQuestById(questId);
-		for (QuestDrop drop : template.getQuestDrop()) {
-			if (drop.npcId == npcId && drop.itemId == itemId) {
-				this.dropEachMember = drop.dropEachMember;
-				break;
-			}
-		}
+		GameEngineServices.questEngine().questCatalog().findMetadata(questId).stream()
+			.flatMap(metadata -> metadata.drops().stream())
+			.filter(drop -> drop.npcId() == npcId && drop.itemId() == itemId)
+			.findFirst()
+			.ifPresent(drop -> this.dropEachMember = switch (drop.scope()) {
+				case GROUP -> 1;
+				case ALLIANCE -> 2;
+				case NONE -> 0;
+			});
 		this.neededAmount = amount;
 	}
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="11152" version="1">
+  <metadata name="Get to the Root of it" display-name-id="1800497" min-level="54" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <items>
+      <item id="182215636" count="6" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="8802718" />
+        <reward kind="SELECTABLE_ITEM" id="167000518" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="167000555" amount="1" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="215630" item-id="182215636" chance="100" each-member="false" collecting-step="0" scope="NONE" />
+    </drops>
+  </metadata>
+</quest-definition>

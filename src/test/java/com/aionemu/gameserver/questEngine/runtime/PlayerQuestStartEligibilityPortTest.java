@@ -1,87 +1,206 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.gameserver.configs.main.CustomConfig;
+import com.aionemu.gameserver.model.Gender;
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
+import com.aionemu.gameserver.model.gameobjects.player.npcFaction.NpcFaction;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.NpcFactions;
 import com.aionemu.gameserver.model.items.storage.PlayerStorage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
-import com.aionemu.gameserver.model.templates.QuestTemplate;
-import com.aionemu.gameserver.model.templates.quest.InventoryItem;
-import com.aionemu.gameserver.model.templates.quest.InventoryItems;
-import com.aionemu.gameserver.model.templates.quest.QuestCategory;
-import com.aionemu.gameserver.model.templates.quest.QuestRepeatCycle;
+import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
+import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
+import com.aionemu.gameserver.questEngine.model.QuestState;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.objenesis.ObjenesisStd;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlayerQuestStartEligibilityPortTest {
 	private static final int PLAYER_ID = 7;
-	private static final int QUEST_ID = 987654;
-	private static final int REQUIRED_ITEM_ID = 182400001;
+	private int originalQuestLimit;
+
+	@BeforeEach
+	void setUp() {
+		originalQuestLimit = CustomConfig.BASIC_QUEST_SIZE_LIMIT;
+		CustomConfig.BASIC_QUEST_SIZE_LIMIT = 40;
+	}
+
+	@AfterEach
+	void tearDown() {
+		CustomConfig.BASIC_QUEST_SIZE_LIMIT = originalQuestLimit;
+	}
 
 	@Test
-	void missingRequiredInventoryItemFailsClosedWithoutLegacyWarningSideEffects() throws Exception {
-		QuestTemplate template = templateRequiringItem();
-		Player player = playerWithEmptyInventory();
-		PlayerQuestStartEligibilityPort port = new PlayerQuestStartEligibilityPort(playerId -> player,
-			questId -> template, ignored -> false, ignored -> true);
+	void actualAutomaticMissionLevelsAndPrerequisitesAreStrictOnBothEntrypoints() throws Exception {
+		QuestMetadata quest1001 = metadata(1001);
+		QuestMetadata quest10501 = metadata(10501);
+		Map<Integer, QuestMetadata> metadata = Map.of(1001, quest1001, 10501, quest10501);
 
-		QuestStartEligibility result = port.snapshot(PLAYER_ID, QUEST_ID);
+		Player early1001 = player(1);
+		PlayerQuestStartEligibilityPort earlyPort = port(early1001, metadata);
+		assertRejected(earlyPort, 1001, new QuestEvent.LevelUp(), "MIN_LEVEL_NOT_MET");
+		assertRejected(earlyPort, 1001, new QuestEvent.ZoneMissionEnd(), "MIN_LEVEL_NOT_MET");
+
+		Player exact1001 = player(2);
+		PlayerQuestStartEligibilityPort exactPort = port(exact1001, metadata);
+		assertTrue(exactPort.snapshot(PLAYER_ID, 1001, new QuestEvent.LevelUp()).eligible());
+		assertTrue(exactPort.snapshot(PLAYER_ID, 1001, new QuestEvent.ZoneMissionEnd()).eligible());
+
+		Player early10501 = player(55);
+		assertRejected(port(early10501, metadata), 10501, new QuestEvent.LevelUp(), "MIN_LEVEL_NOT_MET");
+		Player exact10501 = player(56);
+		PlayerQuestStartEligibilityPort prerequisitePort = port(exact10501, metadata);
+		assertRejected(prerequisitePort, 10501, new QuestEvent.LevelUp(), "START_CONDITION_REJECTED");
+		exact10501.getQuestStateList().addQuest(10500,
+			new QuestState(10500, QuestStatus.COMPLETE, 0, 1, null, 0, null));
+		assertTrue(prerequisitePort.snapshot(PLAYER_ID, 10501, new QuestEvent.LevelUp()).eligible());
+		assertTrue(prerequisitePort.snapshot(PLAYER_ID, 10501, new QuestEvent.ZoneMissionEnd()).eligible());
+	}
+
+	@Test
+	void activeNpcFactionRotationAllowsTheRotatedQuestToStart() throws Exception {
+		// 35015 [Daily] Protecting Your Members: retained npc-faction quest (faction id 2, levels 40-50).
+		QuestMetadata factionQuest = metadata(35015);
+		Player factionPlayer = player(45);
+		NpcFaction faction = new ObjenesisStd().newInstance(NpcFaction.class);
+		setField(NpcFaction.class, faction, "id", 2);
+		setField(NpcFaction.class, faction, "active", true);
+		factionPlayer.setNpcFactions(new ActiveNpcFactions(faction));
+		PlayerQuestStartEligibilityPort factionPort = port(factionPlayer, Map.of(35015, factionQuest));
+		assertTrue(factionPort.snapshotNpcFactionRotation(PLAYER_ID, 35015, 2).eligible());
+		setField(NpcFaction.class, faction, "questId", 35015);
+		assertTrue(factionPort
+			.snapshot(PLAYER_ID, 35015, new QuestEvent.LevelUp()).eligible());
+	}
+
+	@Test
+	void groupedStartConditionsUseAndInsideAGroupAndOrAcrossGroups() throws Exception {
+		QuestMetadata grouped = metadataFromXml("""
+			<metadata name="grouped" display-name-id="1" min-level="1" max-level="99" category="QUEST">
+			  <races><race id="ELYOS"/></races>
+			  <start-condition-groups>
+			    <group><condition type="finished" quest-id="9001"/><condition type="acquired" quest-id="9002"/></group>
+			    <group><condition type="finished" quest-id="9003"/></group>
+			  </start-condition-groups>
+			</metadata>
+			""");
+		Player player = player(10);
+		player.getQuestStateList().addQuest(9003,
+			new QuestState(9003, QuestStatus.COMPLETE, 0, 1, null, 0, null));
+
+		assertTrue(port(player, Map.of(990001, grouped))
+			.snapshot(PLAYER_ID, 990001, new QuestEvent.LevelUp()).eligible());
+	}
+
+	@Test
+	void missingRequiredInventoryItemFailsClosedWithoutLegacyTemplateAccess() throws Exception {
+		QuestMetadata metadata = metadataFromXml("""
+			<metadata name="inventory" display-name-id="1" min-level="1" max-level="99" category="TASK">
+			  <races><race id="ELYOS"/></races>
+			  <inventory-items><item id="182400001" count="2"/></inventory-items>
+			</metadata>
+			""");
+		QuestStartEligibility result = port(player(10), Map.of(987654, metadata))
+			.snapshot(PLAYER_ID, 987654, new QuestEvent.LevelUp());
 
 		assertFalse(result.eligible());
 		assertEquals("REQUIRED_INVENTORY_ITEM_MISSING", result.reason());
 	}
 
 	@Test
-	void timeBasedNpcFactionQuestStillRequiresTheActiveFactionQuest() throws Exception {
-		QuestTemplate template = templateWithNpcFaction(true);
-		Player player = playerWithEmptyInventory();
+	void npcFactionQuestStillRequiresTheActiveRotatedQuest() throws Exception {
+		QuestMetadata metadata = metadata(35015);
+		Player player = player(65);
 		player.setNpcFactions(new MissingNpcFaction());
-		PlayerQuestStartEligibilityPort port = new PlayerQuestStartEligibilityPort(playerId -> player,
-			questId -> template, ignored -> false, ignored -> true);
 
-		QuestStartEligibility result = port.snapshot(PLAYER_ID, QUEST_ID);
+		QuestStartEligibility result = port(player, Map.of(35015, metadata))
+			.snapshot(PLAYER_ID, 35015, new QuestEvent.LevelUp());
 
 		assertFalse(result.eligible());
 		assertEquals("NPC_FACTION_QUEST_NOT_ACTIVE", result.reason());
 	}
 
-	private static QuestTemplate templateRequiringItem() throws Exception {
-		QuestTemplate template = new QuestTemplate();
-		setField(QuestTemplate.class, template, "id", QUEST_ID);
-		setField(QuestTemplate.class, template, "minlevelPermitted", 0);
-		setField(QuestTemplate.class, template, "category", QuestCategory.TASK);
-		InventoryItem required = new InventoryItem();
-		setField(InventoryItem.class, required, "itemId", REQUIRED_ITEM_ID);
-		InventoryItems inventoryItems = new InventoryItems();
-		inventoryItems.getInventoryItem().add(required);
-		setField(QuestTemplate.class, template, "inventoryItems", inventoryItems);
-		return template;
-	}
+	@Test
+	void completedCharmedEventChildrenCanRestartThroughCanonicalRepeatMetadata() throws Exception {
+		for (int questId : List.of(80034, 80035, 80036, 80037, 80038, 80039)) {
+			int prerequisiteId = questId <= 80036 ? 80029 : 80032;
+			Race race = questId <= 80036 ? Race.ELYOS : Race.ASMODIANS;
+			QuestMetadata targetMetadata = metadata(questId);
+			QuestMetadata prerequisiteMetadata = metadata(prerequisiteId);
+			Player player = player(10, race);
+			player.getQuestStateList().addQuest(prerequisiteId,
+				new QuestState(prerequisiteId, QuestStatus.COMPLETE, 0, 1, null, 0, null));
+			QuestState completed = new QuestState(questId, QuestStatus.COMPLETE, 0, 1, null, 0, null);
+			player.getQuestStateList().addQuest(questId, completed);
 
-	private static QuestTemplate templateWithNpcFaction(boolean timeBased) throws Exception {
-		QuestTemplate template = new QuestTemplate();
-		setField(QuestTemplate.class, template, "id", QUEST_ID);
-		setField(QuestTemplate.class, template, "minlevelPermitted", 0);
-		setField(QuestTemplate.class, template, "category", QuestCategory.TASK);
-		setField(QuestTemplate.class, template, "npcFactionId", 4);
-		if (timeBased) {
-			setField(QuestTemplate.class, template, "repeatCycle", List.of(QuestRepeatCycle.ALL));
+			assertTrue(completed.canRepeat(targetMetadata), "quest " + questId + " should be repeatable");
+			assertTrue(port(player, Map.of(questId, targetMetadata, prerequisiteId, prerequisiteMetadata))
+				.snapshot(PLAYER_ID, questId, new QuestEvent.EventQuestRefresh()).eligible(),
+				"quest " + questId + " refresh should pass canonical start eligibility");
 		}
-		return template;
 	}
 
-	private static Player playerWithEmptyInventory() throws Exception {
+	private static PlayerQuestStartEligibilityPort port(Player player, Map<Integer, QuestMetadata> metadata) {
+		return new PlayerQuestStartEligibilityPort(playerId -> player, metadata::get, (questId, value) -> false);
+	}
+
+	private static void assertRejected(PlayerQuestStartEligibilityPort port, int questId, QuestEvent event,
+			String reason) throws Exception {
+		QuestStartEligibility result = port.snapshot(PLAYER_ID, questId, event);
+		assertFalse(result.eligible());
+		assertEquals(reason, result.reason());
+	}
+
+	private static QuestMetadata metadata(int questId) throws Exception {
+		try (InputStream input = PlayerQuestStartEligibilityPortTest.class.getClassLoader().getResourceAsStream(
+				"aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
+			if (input == null) {
+				throw new IllegalStateException("missing quest " + questId);
+			}
+			return QuestDefinitionXmlCompiler.parse(input).metadata();
+		}
+	}
+
+	private static QuestMetadata metadataFromXml(String metadata) {
+		String xml = "<quest-definition id=\"990001\" version=\"1\">" + metadata
+			+ "<nodes><node label=\"start\"><project status=\"START\"/></node></nodes>"
+			+ "<transitions><transition source=\"start\" target=\"start\"><event><level-up/></event>"
+			+ "</transition></transitions></quest-definition>";
+		return QuestDefinitionXmlCompiler.compile(
+			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))).definition().metadata();
+	}
+
+	private static Player player(int level) throws Exception {
+		return player(level, Race.ELYOS);
+	}
+
+	private static Player player(int level, Race race) throws Exception {
 		Player player = new ObjenesisStd().newInstance(Player.class);
 		setField(AionObject.class, player, "objectId", PLAYER_ID);
-		setField(Player.class, player, "playerCommonData", new PlayerCommonData(PLAYER_ID));
+		PlayerCommonData common = new PlayerCommonData(PLAYER_ID);
+		setField(PlayerCommonData.class, common, "level", level);
+		setField(PlayerCommonData.class, common, "race", race);
+		setField(PlayerCommonData.class, common, "playerClass", PlayerClass.WARRIOR);
+		setField(PlayerCommonData.class, common, "gender", Gender.MALE);
+		setField(Player.class, player, "playerCommonData", common);
 		setField(Player.class, player, "questStateList", new QuestStateList());
 		PlayerStorage inventory = new PlayerStorage(StorageType.CUBE);
 		inventory.setOwner(player);
@@ -89,14 +208,32 @@ class PlayerQuestStartEligibilityPortTest {
 		return player;
 	}
 
-	private static final class MissingNpcFaction extends NpcFactions {
+	private static class MissingNpcFaction extends NpcFactions {
 		private MissingNpcFaction() {
 			super(null);
 		}
 
 		@Override
-		public com.aionemu.gameserver.model.gameobjects.player.npcFaction.NpcFaction getNpcFactionById(int id) {
+		public NpcFaction getNpcFactionById(int id) {
 			return null;
+		}
+	}
+
+	private static final class ActiveNpcFactions extends MissingNpcFaction {
+		private final NpcFaction faction;
+
+		private ActiveNpcFactions(NpcFaction faction) {
+			this.faction = faction;
+		}
+
+		@Override
+		public NpcFaction getNpcFactionById(int id) {
+			return faction.getId() == id ? faction : null;
+		}
+
+		@Override
+		public boolean canStartQuest(boolean mentor) {
+			return true;
 		}
 	}
 

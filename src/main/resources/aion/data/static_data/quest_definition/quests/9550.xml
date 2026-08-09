@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="9550" version="1">
+  <metadata name="[Event] Solorius Donations" display-name-id="1112021" min-level="10" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="1225" />
+        <reward kind="ITEM" id="160001273" amount="2" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="equipped" quest-id="125040015" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

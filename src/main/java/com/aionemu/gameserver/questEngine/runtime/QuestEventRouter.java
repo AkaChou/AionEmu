@@ -95,8 +95,7 @@ public final class QuestEventRouter {
 		} catch (RuntimeException failure) {
 			metrics.onOwnerResult(contract, route.questId(), QuestRouteResult.FAILED);
 			try {
-				auditSink.record(new QuestAuditEvent(route.questId(), event.type(), contract,
-					QuestRouteResult.FAILED, failure.getClass().getName()));
+				auditSink.record(auditEvent(event, contract, route, QuestRouteResult.FAILED, failure));
 			} catch (RuntimeException auditFailure) {
 				metrics.onAuditFailure(route.questId(), auditFailure.getClass().getName());
 			}
@@ -104,9 +103,62 @@ public final class QuestEventRouter {
 		}
 	}
 
+	static QuestAuditEvent auditEvent(QuestEvent event, QuestDispatchContract contract,
+			QuestEventIndex.Route route, QuestRouteResult result, Throwable failure) {
+		QuestExecutionFailureException executionFailure = cause(failure, QuestExecutionFailureException.class);
+		QuestPostCommitFailure postCommitFailure = cause(failure, QuestPostCommitFailure.class);
+		QuestFailureStage stage = executionFailure != null ? executionFailure.stage()
+			: postCommitFailure != null ? postCommitFailure.stage() : QuestFailureStage.ROUTING;
+		boolean committed = executionFailure != null ? executionFailure.committed() : postCommitFailure != null;
+		Throwable root = rootCause(failure);
+		int npcId = switch (event) {
+			case QuestEvent.TalkToNpc talk -> talk.npcId();
+			case QuestEvent.KillNpc kill -> kill.npcId();
+			case QuestEvent.AttackNpc attack -> attack.npcId();
+			case QuestEvent.AtDistance distance -> distance.npcId();
+			case QuestEvent.CanAct canAct -> canAct.templateId();
+			default -> 0;
+		};
+		int dialogId = switch (event) {
+			case QuestEvent.TalkToNpc talk -> talk.dialogId() == null ? 0 : talk.dialogId();
+			case QuestEvent.QuestDialog dialog -> dialog.dialogId();
+			default -> 0;
+		};
+		return new QuestAuditEvent(route.questId(), event.type(), contract, result,
+			route.transition().sourceNode(), route.transition().targetNode(), npcId, dialogId,
+			stage, committed, root);
+	}
+
+	private static Throwable rootCause(Throwable failure) {
+		Throwable current = Objects.requireNonNull(failure, "failure");
+		while (current.getCause() != null && current.getCause() != current) {
+			current = current.getCause();
+		}
+		return current;
+	}
+
+	private static <T extends Throwable> T cause(Throwable failure, Class<T> type) {
+		Throwable current = failure;
+		while (current != null) {
+			if (type.isInstance(current)) {
+				return type.cast(current);
+			}
+			current = current.getCause();
+		}
+		return null;
+	}
+
 	public record DispatchResult(QuestDispatchContract contract, List<OwnerResult> owners) {
 		public boolean consumed() {
+			return handled();
+		}
+
+		public boolean handled() {
 			return owners.stream().anyMatch(owner -> owner.result() == QuestRouteResult.HANDLED);
+		}
+
+		public boolean failed() {
+			return owners.stream().anyMatch(owner -> owner.result() == QuestRouteResult.FAILED);
 		}
 
 		/** A handled or failed owner conclusively claims the event, so no legacy fallback may run. */
@@ -118,6 +170,14 @@ public final class QuestEventRouter {
 		public Set<Integer> claimedOwners() {
 			return Set.copyOf(owners.stream()
 				.filter(owner -> QuestEventRouter.isConclusive(owner.result()))
+				.map(OwnerResult::questId)
+				.toList());
+		}
+
+		/** Returns owners that completed successfully; failed and explicitly blocked routes are excluded. */
+		public Set<Integer> handledOwners() {
+			return Set.copyOf(owners.stream()
+				.filter(owner -> owner.result() == QuestRouteResult.HANDLED)
 				.map(OwnerResult::questId)
 				.toList());
 		}

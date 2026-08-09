@@ -30,8 +30,6 @@ class ReportToManyDialogRouteRegressionTest {
 		new ExpectedRoute(28210, 205986, 2375),
 		new ExpectedRoute(35025, 799800, 2375),
 		new ExpectedRoute(35025, 799801, 2375),
-		new ExpectedRoute(35030, 799800, 2375),
-		new ExpectedRoute(35030, 799801, 2375),
 		new ExpectedRoute(39000, 800501, 1352),
 		new ExpectedRoute(39000, 800500, 2375),
 		new ExpectedRoute(49000, 800503, 1352),

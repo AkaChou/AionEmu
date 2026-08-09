@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80753" version="1">
+  <metadata name="[Event] Help from Werewolf" display-name-id="1185877" min-level="40" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="186000416" amount="2" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

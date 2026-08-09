@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="11270" version="1">
+  <metadata name="Veille's Favor-ite" display-name-id="1125180" min-level="55" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <items>
+      <item id="182006281" count="3" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="25350" />
+        <reward kind="EXP" id="0" amount="6517414" />
+        <reward kind="SELECTABLE_ITEM" id="114101157" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114301164" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114501113" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114601067" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114301529" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

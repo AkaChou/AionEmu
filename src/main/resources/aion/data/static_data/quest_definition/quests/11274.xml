@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="11274" version="1">
+  <metadata name="Shield Veille" display-name-id="1125184" min-level="55" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <items>
+      <item id="182006281" count="6" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="25360" />
+        <reward kind="EXP" id="0" amount="7067452" />
+        <reward kind="ITEM" id="115001142" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

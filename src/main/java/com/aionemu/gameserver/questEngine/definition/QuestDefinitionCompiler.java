@@ -120,12 +120,12 @@ public final class QuestDefinitionCompiler {
 				fail("BLOCK_DEFAULT_ITEM_USE_EVENT_MISMATCH",
 					"block-default-item-use is only valid on use-item events");
 			}
-			boolean blockOnlyCompletion = blockOnly
-				&& transition.sourceNode() != null
+			boolean preservesCompletedProjection = transition.sourceNode() != null
 				&& transition.sourceNode().equals(transition.targetNode())
 				&& nodes.get(transition.sourceNode()).projection().status() == QuestStatus.COMPLETE
-				&& effectiveStatus == QuestStatus.COMPLETE;
-			if (effectiveStatus == QuestStatus.COMPLETE && completions != 1 && !blockOnlyCompletion) {
+				&& effectiveStatus == QuestStatus.COMPLETE
+				&& (transition.actions().isEmpty() || blockOnly);
+			if (effectiveStatus == QuestStatus.COMPLETE && completions != 1 && !preservesCompletedProjection) {
 				fail("COMPLETE_QUEST_ACTION_REQUIRED",
 					"a COMPLETE projection requires exactly one complete-quest action");
 			}
@@ -147,7 +147,7 @@ public final class QuestDefinitionCompiler {
 			}
 			boolean completionSync = stateSyncs.size() == 1
 				&& stateSyncs.get(0).mode() == QuestStateSyncMode.COMPLETION;
-			if (effectiveStatus == QuestStatus.COMPLETE && !completionSync && !blockOnlyCompletion) {
+			if (effectiveStatus == QuestStatus.COMPLETE && !completionSync && !preservesCompletedProjection) {
 				fail("COMPLETE_QUEST_SYNC_REQUIRED",
 					"a COMPLETE projection requires one COMPLETION quest-state sync");
 			}
@@ -422,6 +422,9 @@ public final class QuestDefinitionCompiler {
 		if (left instanceof QuestCondition.GenderIs a && right instanceof QuestCondition.GenderIs b) {
 			return a.gender() != b.gender();
 		}
+		if (left instanceof QuestCondition.PlayerRaceIs a && right instanceof QuestCondition.PlayerRaceIs b) {
+			return a.race() != b.race();
+		}
 		if (left instanceof QuestCondition.PlayerClassIs a && right instanceof QuestCondition.PlayerClassIs b) {
 			return a.startingClass() != b.startingClass();
 		}
@@ -453,7 +456,7 @@ public final class QuestDefinitionCompiler {
 			return a.value() == b.value() && a.expected() != b.expected();
 		}
 		if (left instanceof QuestCondition.EventActive a && right instanceof QuestCondition.EventActive b) {
-			return a.expected() != b.expected();
+			return a.questId() == b.questId() && a.expected() != b.expected();
 		}
 		return false;
 	}

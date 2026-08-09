@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="16976" version="1">
+  <metadata name="Velkur's Valuable Piece" display-name-id="1129997" min-level="63" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <items>
+      <item id="182215790" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="150660" />
+        <reward kind="EXP" id="0" amount="9388701" />
+        <reward kind="ITEM" id="186000236" amount="30" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="235768" item-id="182215790" chance="100" each-member="true" collecting-step="1" scope="GROUP" />
+      <drop npc-id="235769" item-id="182215790" chance="100" each-member="true" collecting-step="1" scope="GROUP" />
+      <drop npc-id="235770" item-id="182215790" chance="100" each-member="true" collecting-step="1" scope="GROUP" />
+      <drop npc-id="235771" item-id="182215790" chance="100" each-member="true" collecting-step="1" scope="GROUP" />
+    </drops>
+  </metadata>
+</quest-definition>

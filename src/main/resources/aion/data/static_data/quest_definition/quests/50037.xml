@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="50037" version="1">
+  <metadata name="[Event] Rice Cake for the Soup Chef" display-name-id="1800063" min-level="21" max-level="2147483647" category="EVENT">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="186000387" count="4" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="162000124" amount="2" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

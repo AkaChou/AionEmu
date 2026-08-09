@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="25032" version="1">
+  <metadata name="Avenge Varnur" display-name-id="1800843" min-level="58" max-level="2147483647" category="IMPORTANT">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="103200" />
+        <reward kind="EXP" id="0" amount="9340221" />
+        <reward kind="ITEM" id="186000231" amount="10" />
+        <reward kind="ITEM" id="186000237" amount="15" />
+        <reward kind="ITEM" id="162000050" amount="9" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="25031" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

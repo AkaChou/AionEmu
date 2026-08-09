@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="29049" version="1">
+  <metadata name="[Craft] Construction Basics" display-name-id="1130016" min-level="10" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <items>
+      <item id="152025175" count="3" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="10940" />
+        <reward kind="EXP" id="0" amount="7500" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="2929" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

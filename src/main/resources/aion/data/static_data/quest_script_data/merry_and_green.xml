@@ -4,13 +4,5 @@
     Quest The Merry And Green 4.8
 	Make By (Encom)
 -->
-	<!-- Introducing The Merry And Green handled by script (Elyos Only) -->
-	<!-- [Daily] A Foreign Idium (Elyos Only) -->
-	<!-- [일일] 상급 단체원: 광산의 안전 (Elyos Only) -->
-  <item_collecting id="39716" start_npc_ids="0" end_npc_ids="800936 800937 800938"/>
-
-	<!-- Meet The Merry And Green handled by script (Asmodians Only) -->
-	<!-- [Daily] Blowing The Whistle (Asmodians Only) -->
-	<!-- [일일] 상급 단체원: 광산의 안전 (Asmodians Only) -->
-	<item_collecting id="49716" start_npc_ids="0" end_npc_ids="800934 800935"/>
+	<!-- 39716/49716 are private-server (Encom) daily quests with no client/retail record; removed. -->
 </quest_scripts>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="3326" version="1">
+  <metadata name="The Shugo Menace" display-name-id="1102623" min-level="25" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="203989" />
+        <reward kind="ITEM" id="182201020" amount="1" />
+        <reward kind="ITEM" id="182201021" amount="1" />
+        <reward kind="ITEM" id="182201022" amount="1" />
+        <reward kind="ITEM" id="182201023" amount="1" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="acquired" quest-id="1037" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

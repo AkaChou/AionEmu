@@ -9,6 +9,7 @@ public final class LocalizedQuestAuditSink implements QuestAuditSink {
 	@Override
 	public void record(QuestAuditEvent event) {
 		log.warn(I18n.get("log.quest_engine.owner_failed", event.questId(), event.eventType(),
-			event.contract(), event.failureType()));
+			event.contract(), event.result(), event.sourceNode(), event.targetNode(), event.npcId(),
+			event.dialogId(), event.failureStage(), event.committed(), event.failureType()), event.failure());
 	}
 }

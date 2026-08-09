@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80816" version="1">
+  <metadata name="[Event] Search for Rare Medicinal Ingredients" display-name-id="1185940" min-level="30" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <items>
+      <item id="182215951" count="10" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="188100294" amount="1" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="241274" item-id="182215951" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+  </metadata>
+</quest-definition>

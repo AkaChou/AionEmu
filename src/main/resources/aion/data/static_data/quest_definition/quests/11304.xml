@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="11304" version="1">
+  <metadata name="The Remaining Faithful" display-name-id="1141747" min-level="55" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <items>
+      <item id="182215336" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="10236874" />
+        <reward kind="TITLE" id="149" amount="1" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="216182" item-id="182215336" chance="100" each-member="true" collecting-step="1" scope="GROUP" />
+      <drop npc-id="216263" item-id="182215336" chance="100" each-member="true" collecting-step="1" scope="GROUP" />
+    </drops>
+  </metadata>
+</quest-definition>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="21243" version="1">
+  <metadata name="Sakti's Crystal" display-name-id="1127163" min-level="52" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <work-items>
+      <item id="182207923" count="1" />
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="40500" />
+        <reward kind="EXP" id="0" amount="6240944" />
+        <reward kind="ITEM" id="186000109" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

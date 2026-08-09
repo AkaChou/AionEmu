@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="28809" version="1">
+  <metadata name="First Class or Coach?" display-name-id="1136611" min-level="30" max-level="2147483647" category="SEEN_MARKER" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="58283" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

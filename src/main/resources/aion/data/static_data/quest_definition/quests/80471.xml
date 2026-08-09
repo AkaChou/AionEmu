@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80471" version="1">
+  <metadata name="[Event] Take Wing, Daeva!" display-name-id="1185668" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="true" cycles="WED" />
+    <reward-groups>
+      <group>
+        <reward kind="SELECTABLE_ITEM" id="187060089" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="187060088" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

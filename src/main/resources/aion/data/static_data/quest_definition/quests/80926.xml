@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80926" version="1">
+  <metadata name="[Event/Daily] A Son’s Request" display-name-id="1803090" min-level="66" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <items>
+      <item id="164002387" count="20" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="5384534" />
+        <reward kind="ITEM" id="188056737" amount="2" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

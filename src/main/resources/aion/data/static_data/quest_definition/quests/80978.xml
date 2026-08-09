@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80978" version="1">
+  <metadata name="[Event/Daily] Candy Craze" display-name-id="1803780" min-level="65" max-level="2147483647" category="EVENT" cannot-share="true" cannot-giveup="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <work-items>
+      <item id="188058259" count="1" />
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="188058259" amount="2" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

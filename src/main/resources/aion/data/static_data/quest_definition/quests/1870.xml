@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="1870" version="1">
+  <metadata name="[Daily/Group] The Sealed Place" display-name-id="1104670" min-level="50" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <items>
+      <item id="182215905" count="4" />
+      <item id="182215906" count="4" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="2110906" />
+        <reward kind="AP" id="0" amount="1200" />
+        <reward kind="ITEM" id="188054228" amount="1" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="220259" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220260" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220261" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220264" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220265" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220266" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220269" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220270" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220271" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220274" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220275" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220276" item-id="182215905" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220279" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220280" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220281" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220284" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220285" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220286" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220289" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220290" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220291" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220294" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220295" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="220296" item-id="182215906" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+  </metadata>
+</quest-definition>

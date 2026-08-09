@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="50095" version="1">
+  <metadata name="[Event/Daily] Doharinerk's Secret Proposal" display-name-id="1803755" min-level="45" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="10" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
+    <items>
+      <item id="188600355" count="2" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="1400000000" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

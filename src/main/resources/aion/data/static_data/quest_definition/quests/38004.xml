@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="38004" version="1">
+  <metadata name="Radiant Ops Recruitment" display-name-id="1126125" min-level="45" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="421740" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="unfinished" quest-id="38001" />
+        <condition type="noacquired" quest-id="38001" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

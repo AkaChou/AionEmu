@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="15312" version="1">
+  <metadata name="Kaisinel's Daevanion Gloves" display-name-id="1801449" min-level="65" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="182215832" count="70" />
+    </items>
+    <work-items>
+      <item id="182215866" count="1" />
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="2412587" />
+        <reward kind="SELECTABLE_ITEM" id="111101734" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="111301850" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="111301851" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="111501810" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="111501811" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="111501826" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="111601672" amount="1" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="15307" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="80883" version="1">
+  <metadata name="[Event] Dungeon Master" display-name-id="1802784" min-level="65" max-level="2147483647" category="EVENT">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="182216128" count="6" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="ITEM" id="188100379" amount="1" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

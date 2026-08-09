@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="50065" version="1">
+  <metadata name="[Event] Premium Alchemy of Growth for High Daevas" display-name-id="1803156" min-level="66" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="186000432" count="3" />
+      <item id="162001071" count="2" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="750000000" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="29051" version="1">
+  <metadata name="Running The Tables" display-name-id="1130018" min-level="25" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <work-items>
+      <item id="182212229" count="1" />
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="30970" />
+        <reward kind="EXP" id="0" amount="155871" />
+        <reward kind="AP" id="0" amount="550" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="6556" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>

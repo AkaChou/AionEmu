@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="25608" version="1">
+  <metadata name="[Group] Oh, Bother" display-name-id="1802271" min-level="68" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <items>
+      <item id="182216007" count="1" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="465480" />
+        <reward kind="EXP" id="0" amount="46547274" />
+        <reward kind="SELECTABLE_ITEM" id="114601705" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114601706" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114501898" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114501899" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114501900" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114301971" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114301972" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114101827" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="114101828" amount="1" />
+        <reward kind="ITEM" id="188055318" amount="1" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="241234" item-id="182216007" chance="100" each-member="true" collecting-step="8" scope="GROUP" />
+    </drops>
+  </metadata>
+</quest-definition>

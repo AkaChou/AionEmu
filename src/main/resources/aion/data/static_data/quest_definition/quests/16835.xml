@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="16835" version="1">
+  <metadata name="[Instanced Dungeon/Group] How to get to the Trials of Eternity" display-name-id="1803205" min-level="66" max-level="2147483647" category="SIGNIFICANT">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="310320" />
+        <reward kind="EXP" id="0" amount="17736250" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

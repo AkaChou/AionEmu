@@ -4,7 +4,7 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.dao.LimitedQuestDAO;
-import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,7 +37,12 @@ public final class LimitedQuestService {
 
 	/** Whether starting this quest requires the global, transaction-external quota mutation. */
 	public static boolean requiresAcquisition(QuestTemplate template) {
-		return Holder.INSTANCE.requiresAcquisition(template.getId(), template.getMaxCountLimitedQuest());
+		return requiresAcquisitionByMetadata(template.getId(), template.getMaxCountLimitedQuest());
+	}
+
+	/** Canonical metadata entry point used by typed quest-start eligibility. */
+	public static boolean requiresAcquisitionByMetadata(int questId, int maxCount) {
+		return Holder.INSTANCE.requiresAcquisition(questId, maxCount);
 	}
 
 	/** 真端 AI 的 charge_limitedquest：恢复默认数量或直接充满。 */
@@ -59,10 +64,10 @@ public final class LimitedQuestService {
 
 	boolean chargeConfigured(int questId, boolean chargeMaxCount) {
 		Limit limit = limits.get(questId);
-		if (limit == null && DataManager.QUEST_DATA != null) {
-			QuestTemplate template = DataManager.QUEST_DATA.getQuestById(questId);
-			if (template != null && template.getMaxCountLimitedQuest() > 1) {
-				limit = new Limit(template.getMaxCountLimitedQuest(), template.getCountRecoverLimitedQuest());
+		if (limit == null) {
+			var metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null);
+			if (metadata != null && metadata.maxCountLimitedQuest() > 1) {
+				limit = new Limit(metadata.maxCountLimitedQuest(), metadata.countRecoverLimitedQuest());
 			}
 		}
 		if (limit == null) {

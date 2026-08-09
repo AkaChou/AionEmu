@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="1848" version="1">
+  <metadata name="Rift Stones" display-name-id="1104648" min-level="45" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ELYOS" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="182202186" count="3" />
+      <item id="182202187" count="3" />
+      <item id="182202188" count="3" />
+    </items>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="2068277" />
+        <reward kind="ITEM" id="188100335" amount="222" />
+      </group>
+    </reward-groups>
+    <drops>
+      <drop npc-id="215104" item-id="182202186" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="215147" item-id="182202186" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="215189" item-id="182202186" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="215116" item-id="182202187" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="215159" item-id="182202187" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="215200" item-id="182202187" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="215128" item-id="182202188" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="215172" item-id="182202188" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="215214" item-id="182202188" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+    </drops>
+    <bonuses>
+      <bonus type="ISLAND" level="1" />
+    </bonuses>
+  </metadata>
+</quest-definition>

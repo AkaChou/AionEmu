@@ -8,10 +8,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.Objects;
+import java.util.function.IntFunction;
 
-import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.dataholders.QuestsData;
-import com.aionemu.gameserver.model.templates.quest.QuestCategory;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
@@ -26,13 +27,18 @@ public class QuestStateList {
 
 
 	private final SortedMap<Integer, QuestState> _quests;
-	private QuestsData _questData = DataManager.QUEST_DATA;
+	private final IntFunction<QuestMetadata> metadata;
 
 	/**
 	 * 创建空 quests 列表。 / Creates an empty quests list
 	 */
 	public QuestStateList() {
+		this(questId -> GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null));
+	}
+
+	QuestStateList(IntFunction<QuestMetadata> metadata) {
 		_quests = new TreeMap<Integer, QuestState>();
+		this.metadata = Objects.requireNonNull(metadata, "metadata");
 	}
 
 	/** 添加任务。 / Adds quest. */
@@ -94,11 +100,11 @@ public class QuestStateList {
 		Collection<QuestState> l = new ArrayList<QuestState>();
 
 		for (QuestState qs : this.getAllQuestState()) {
-			QuestCategory qc = _questData.getQuestById(qs.getQuestId()).getCategory();
+			QuestMetadata questMetadata = metadata.apply(qs.getQuestId());
 			QuestStatus s = qs.getStatus();
 
 			if (s != QuestStatus.COMPLETE && s != QuestStatus.LOCKED && s != QuestStatus.NONE
-					&& qc == QuestCategory.QUEST) {
+					&& questMetadata != null && "QUEST".equals(questMetadata.category())) {
 				l.add(qs);
 			}
 		}

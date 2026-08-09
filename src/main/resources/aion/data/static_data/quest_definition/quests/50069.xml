@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="50069" version="1">
+  <metadata name="[Event] Eliminate the Great Golden Saam" display-name-id="1803384" min-level="51" max-level="2147483647" category="EVENT" cannot-share="true">
+    <races>
+      <race id="PC_ALL" />
+    </races>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="55000000" />
+        <reward kind="ITEM" id="186000473" amount="60" />
+      </group>
+    </reward-groups>
+  </metadata>
+</quest-definition>

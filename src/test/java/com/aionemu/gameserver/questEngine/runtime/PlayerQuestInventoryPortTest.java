@@ -190,7 +190,8 @@ class PlayerQuestInventoryPortTest {
 			.then(removeItem(ITEM_A, 2)).then(setVariable("step", 1)).goTo("reward").compile();
 		List<String> jdbc = new ArrayList<>();
 
-		assertThrows(SQLException.class, () -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
+		QuestExecutionFailureException failure = assertThrows(QuestExecutionFailureException.class,
+			() -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
 			commitFailingConnection(jdbc), PLAYER_ID, definition, talkToNpc(700001),
 			definition.definition().transitions().get(0),
 			(connection, playerId, questId, event) -> snapshotWith(ITEM_A, 5), actions,
@@ -204,6 +205,9 @@ class PlayerQuestInventoryPortTest {
 				throw new AssertionError("afterCommit must not run after failed commit");
 			}));
 
+		assertEquals(QuestFailureStage.COMMIT, failure.stage());
+		assertEquals(false, failure.committed());
+		assertTrue(failure.getCause() instanceof SQLException);
 		assertEquals(List.of("commit", "rollback"), jdbc);
 		assertEquals(5, player.getInventory().getItemCountByItemId(ITEM_A));
 		assertTrue(player.getInventory().getDeletedItems().isEmpty());

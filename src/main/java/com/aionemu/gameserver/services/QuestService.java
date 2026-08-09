@@ -52,16 +52,12 @@ import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.quest.CollectItem;
 import com.aionemu.gameserver.model.templates.quest.CollectItems;
-import com.aionemu.gameserver.model.templates.quest.HandlerSideDrop;
 import com.aionemu.gameserver.model.templates.quest.InventoryItem;
 import com.aionemu.gameserver.model.templates.quest.InventoryItems;
 import com.aionemu.gameserver.model.templates.quest.QuestBonuses;
 import com.aionemu.gameserver.model.templates.quest.QuestCategory;
-import com.aionemu.gameserver.model.templates.quest.QuestDrop;
 import com.aionemu.gameserver.model.templates.quest.QuestItems;
-import com.aionemu.gameserver.model.templates.quest.QuestMentorType;
 import com.aionemu.gameserver.model.templates.quest.QuestRepeatCycle;
-import com.aionemu.gameserver.model.templates.quest.QuestTargetType;
 import com.aionemu.gameserver.model.templates.quest.QuestWorkItems;
 import com.aionemu.gameserver.model.templates.quest.Rewards;
 import com.aionemu.gameserver.model.templates.quest.XMLStartCondition;
@@ -71,10 +67,10 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.definition.QuestCatalogDrop;
+import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestTimerPolicy;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
-import com.aionemu.gameserver.questEngine.handlers.models.WorkOrdersData;
-import com.aionemu.gameserver.questEngine.handlers.models.XMLQuest;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -87,8 +83,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 /**
  * 任务服务，处理任务开始/完成、掉落、计时器与放弃等核心流程。
  * Quest service handling start/finish, drops, timers, abandon, and related core flows.
@@ -98,8 +92,8 @@ public final class QuestService {
 
 	/** 任务静态数据。 / Quest static data. */
 	static QuestsData questsData = DataManager.QUEST_DATA;
-	/** NPC ID 到任务掉落条目的 Multimap / Multimap of NPC id to quest drop entries */
-	private static Multimap<Integer, QuestDrop> questDrop = ArrayListMultimap.create();
+	/** Supplemental drops declared by the remaining legacy handlers. Canonical catalog drops live in the dispatcher. */
+	private static final ConcurrentMap<Integer, List<QuestCatalogDrop>> handlerSideQuestDrops = new ConcurrentHashMap<>();
 	private static final ConcurrentMap<QuestTimerKey, ManagedQuestTimer> questTimers = new ConcurrentHashMap<>();
 	private static final Object questTimerLock = new Object();
 
@@ -108,7 +102,7 @@ public final class QuestService {
 	 * Clears all quest-drop cache entries.
 	 */
 	public static void clearQuestDrops() {
-		questDrop.clear();
+		handlerSideQuestDrops.clear();
 	}
 
 	/**
@@ -991,18 +985,18 @@ public final class QuestService {
 	 * next index
 	 */
 	public static int getQuestDrop(Set<DropItem> dropItems, int index, Npc npc, Collection<Player> players, Player player) {
-		Collection<QuestDrop> drops = getQuestDrop(npc.getNpcId());
+		Collection<QuestCatalogDrop> drops = getQuestDrop(npc.getNpcId());
 		if (drops.isEmpty()) {
 			return index;
 		}
 		DropNpc dropNpc = GameWorldServices.dropRegistrationService().getDropRegistrationMap().get(npc.getObjectId());
-		for (QuestDrop drop : drops) {
-			if (Rnd.get() * 100 > drop.getChance()) {
+		for (QuestCatalogDrop drop : drops) {
+			if (Rnd.get() * 100 > drop.chance()) {
 				continue;
 			}
 			if (players != null && player.isInGroup2()) {
 				List<Player> pls = new ArrayList<Player>();
-				if (drop.isDropEachMemberGroup()) {
+				if (drop.dropEachGroupMember()) {
 					for (Player member : players) {
 						if (isQuestDrop(member, drop)) {
 							pls.add(member);
@@ -1018,7 +1012,7 @@ public final class QuestService {
 					}
 				}
 				if (pls.size() > 0) {
-					if (!drop.isDropEachMemberGroup()) {
+					if (!drop.dropEachGroupMember()) {
 						dropItems.add(regQuestDropItem(drop, index++, 0));
 					}
 					for (Player p : pls) {
@@ -1031,7 +1025,7 @@ public final class QuestService {
 				}
 			} else if (players != null && player.isInAlliance2()) {
 				List<Player> pls = new ArrayList<Player>();
-				if (drop.isDropEachMemberAlliance()) {
+				if (drop.dropEachAllianceMember()) {
 					for (Player member : players) {
 						if (isQuestDrop(member, drop)) {
 							pls.add(member);
@@ -1047,7 +1041,7 @@ public final class QuestService {
 					}
 				}
 				if (pls.size() > 0) {
-					if (!drop.isDropEachMemberAlliance()) {
+					if (!drop.dropEachAllianceMember()) {
 						dropItems.add(regQuestDropItem(drop, index++, 0));
 					}
 					for (Player p : pls) {
@@ -1067,8 +1061,8 @@ public final class QuestService {
 		return index;
 	}
 
-	private static DropItem regQuestDropItem(QuestDrop drop, int index, Integer winner) {
-		DropItem item = new DropItem(new Drop(drop.getItemId(), 1, 1, drop.getChance(), false, false));
+	private static DropItem regQuestDropItem(QuestCatalogDrop drop, int index, Integer winner) {
+		DropItem item = new DropItem(new Drop(drop.itemId(), 1, 1, drop.chance(), false, false));
 		item.setPlayerObjId(winner);
 		item.setIndex(index);
 		item.setCount(1);
@@ -1084,9 +1078,9 @@ public final class QuestService {
 	 * @param drop
 	 * @return 是否允许掉落 / Whether dropping is allowed
 	 */
-	private static boolean isQuestDrop(Player player, QuestDrop drop) {
+	static boolean isQuestDrop(Player player, QuestCatalogDrop drop) {
 		// 获取任务 ID / Get quest ID
-		int questId = drop.getQuestId();
+		int questId = drop.questId();
 		// 获取玩家的任务状态 / Get player's quest state
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
 		// 检查任务是否处于进行状态 / Check if quest is in progress
@@ -1095,24 +1089,24 @@ public final class QuestService {
 		}
 		
 		// 检查收集步骤是否匹配 / Check if collecting step matches
-		if (drop.getCollectingStep() != 0) {
-			if (drop.getCollectingStep() != qs.getQuestVarById(0)) {
+		if (drop.collectingStep() != 0) {
+			if (drop.collectingStep() != qs.getQuestVarById(0)) {
 				return false;
 			}
 		}
-		
-		// 获取任务模板 / Get quest template
-		QuestTemplate qt = DataManager.QUEST_DATA.getQuestById(questId);
-		
+
+		QuestMetadata metadata = drop.metadata().orElse(null);
+		if (metadata == null) {
+			return false;
+		}
+
 		// 检查联盟任务限制 / Check alliance quest restrictions
-		if (player.isInAlliance2()) {
-			if (!qt.getTargetType().equals(QuestTargetType.UNION)) { // League.
-				return false;
-			}
+		if (player.isInAlliance2() && !"UNION".equals(metadata.targetType())) {
+			return false;
 		}
-		
+
 		// 检查导师任务限制 / Check mentor quest restrictions
-		if (qt.getMentorType() == QuestMentorType.MENTE) {
+		if ("MENTE".equals(metadata.mentorType())) {
 			if (!player.isInGroup2()) {
 				return false;
 			}
@@ -1131,16 +1125,15 @@ public final class QuestService {
 		}
 		
 		// 处理特殊掉落物品 / Handle special drop items
-		if (drop instanceof HandlerSideDrop) {
-			return ((HandlerSideDrop) drop).getNeededAmount() > player.getInventory().getItemCountByItemId(drop.getItemId());
+		if (drop.neededAmount() > 0) {
+			return drop.neededAmount() > player.getInventory().getItemCountByItemId(drop.itemId());
 		}
-		
+
 		// 获取当前掉落物品的 ID / Get current drop item ID
-		int dropItemId = drop.getItemId();
-		
+		int dropItemId = drop.itemId();
+
 		// 检查是否是任务工作物品 / Check if it's a quest work item
-		QuestWorkItems workItems = qt.getQuestWorkItems();
-		if (workItems != null && workItems.getQuestWorkItem().stream().anyMatch(workItem -> workItem != null && workItem.getItemId() == dropItemId)) {
+		if (metadata.questWorkItems().stream().anyMatch(workItem -> workItem.itemId() == dropItemId)) {
 			// 检查玩家背包中是否已有该工作物品 / Check if player already has this work item
 			long count = player.getInventory().getItemCountByItemId(dropItemId);
 			// 如果已有工作物品则不再掉落 / Don't drop if player already has the work item
@@ -1148,32 +1141,23 @@ public final class QuestService {
 				return false;
 			}
 			
-			// 检查玩家是否已经完成了相关任务 / Check if player has completed the related quest
-			for (QuestItems workItem : workItems.getQuestWorkItem()) {
-				QuestState questState = player.getQuestStateList().getQuestState(qt.getId());
-				if (questState != null && questState.getStatus() == QuestStatus.COMPLETE) {
-					// 如果任务已完成，则不再掉落工作物品 / Don't drop work item if quest is complete
-					return false;
-				}
-			}
 		}
-		
+
 		// 检查是否是任务收集物品 / Check if it's a quest collect item
-		CollectItems collectItems = qt.getCollectItems();
-		if (collectItems == null) {
+		if (metadata.itemRequirements().isEmpty()) {
 			return true;
 		}
-		
+
 		// 检查当前掉落物品是否达到收集上限 / Check if current drop item has reached collection limit
-		for (CollectItem collectItem : collectItems.getCollectItem()) {
-			if (collectItem.getItemId() == dropItemId) {
+		for (var collectItem : metadata.itemRequirements()) {
+			if (collectItem.itemId() == dropItemId) {
 				// 获取玩家当前收集的数量 / Get current collected amount
 				long count = player.getInventory().getItemCountByItemId(dropItemId);
 				// 如果未达到所需数量则允许掉落 / Allow drop if required amount not reached
-				return collectItem.getCount() > count;
+				return collectItem.count() > count;
 			}
 		}
-		
+
 		// 如果不是收集物品则允许掉落 / Allow drop if not a collect item
 		return true;
 	}
@@ -1187,7 +1171,8 @@ public final class QuestService {
 	 * whether met
 	 */
 	public static boolean checkLevelRequirement(int questId, int playerLevel) {
-		return playerLevel >= questsData.getQuestById(questId).getMinlevelPermitted();
+		QuestMetadata metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null);
+		return metadata != null && playerLevel >= metadata.minLevel() && playerLevel <= metadata.maxLevel();
 	}
 
 	/**
@@ -1199,14 +1184,14 @@ public final class QuestService {
 	 * level difference
 	 */
 	public static int getLevelRequirement(int questId, int playerLevel) {
-		QuestTemplate template = questsData.getQuestById(questId);
-		if (template == null) {
+		QuestMetadata metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null);
+		if (metadata == null) {
 			return 999;
 		}
-		if (questsData.getQuestById(questId).getMinlevelPermitted() == 999) {
+		if (metadata.minLevel() == 999) {
 			return 0;
 		}
-		return questsData.getQuestById(questId).getMinlevelPermitted() - playerLevel;
+		return metadata.minLevel() - playerLevel;
 	}
 
 	/*
@@ -1434,19 +1419,12 @@ public final class QuestService {
 	 * whether successful
 	 */
 	public static boolean abandonQuest(Player player, int questId) {
-		QuestTemplate template = questsData.getQuestById(questId);
-		if (template == null) {
-			return false;
-		}
-		
-		if (template.isCannotGiveup()) {
-			return false;
-		}
-		QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (qs == null) {
-			return false;
-		}
 		QuestEngine questEngine = GameEngineServices.questEngine();
+		QuestMetadata metadata = questEngine.questCatalog().findMetadata(questId).orElse(null);
+		QuestState qs = player.getQuestStateList().getQuestState(questId);
+		if (!canAbandon(metadata, qs)) {
+			return false;
+		}
 		if (questEngine.isProductionOwner(questId) && questEngine.hasProductionAbandonRoute(questId)) {
 			if (!questEngine.onAbandon(player, questId)) {
 				return false;
@@ -1455,39 +1433,26 @@ public final class QuestService {
 			return true;
 		}
  
-		if (template.getNpcFactionId() != 0) {
-			player.getNpcFactions().abortQuest(template);
+		if (metadata.npcFactionId() != 0) {
+			player.getNpcFactions().abortQuest(metadata.npcFactionId());
 		}
 		qs.setStatus(QuestStatus.NONE);
 		qs.setQuestVar(0);
-		QuestWorkItems qwi = template.getQuestWorkItems();
-		if (qwi != null) {
-			long count = 0;
-			for (QuestItems qi : qwi.getQuestWorkItem()) {
-				if (qi != null) {
-					count = player.getInventory().getItemCountByItemId(qi.getItemId());
-					if (count > 0) {
-						player.getInventory().decreaseByItemId(qi.getItemId(), count);
-					}
-				}
+		for (var workItem : metadata.questWorkItems()) {
+			long count = player.getInventory().getItemCountByItemId(workItem.itemId());
+			if (count > 0) {
+				player.getInventory().decreaseByItemId(workItem.itemId(), count);
 			}
 		}
-		if (template.getCategory() == QuestCategory.TASK) {
-			WorkOrdersData wod = null;
-			for (XMLQuest xmlQuest : DataManager.XML_QUESTS.getQuest()) {
-				if (xmlQuest.getId() == questId) {
-					if (xmlQuest instanceof WorkOrdersData) {
-						wod = (WorkOrdersData) xmlQuest;
-						break;
-					}
-				}
-			}
-			if (wod != null) {
-				player.getRecipeList().deleteRecipe(player, wod.getRecipeId());
-			}
+		for (int recipeId : questEngine.legacyQuestOwnedRecipes(questId)) {
+			player.getRecipeList().deleteRecipe(player, recipeId);
 		}
 		finishAbandon(player, questId);
 		return true;
+	}
+
+	static boolean canAbandon(QuestMetadata metadata, QuestState state) {
+		return metadata != null && !metadata.cannotGiveup() && state != null;
 	}
 
 	private static void finishAbandon(Player player, int questId) {
@@ -1507,11 +1472,19 @@ public final class QuestService {
 	 * NPC 模板 ID / NPC template id
 	 * drop collection
 	 */
-	public static Collection<QuestDrop> getQuestDrop(int npcId) {
-		if (questDrop.containsKey(npcId)) {
-			return questDrop.get(npcId);
+	public static Collection<QuestCatalogDrop> getQuestDrop(int npcId) {
+		List<QuestCatalogDrop> catalogDrops = GameEngineServices.questEngine().questDrops(npcId);
+		List<QuestCatalogDrop> handlerDrops = handlerSideQuestDrops.getOrDefault(npcId, List.of());
+		if (catalogDrops.isEmpty()) {
+			return handlerDrops;
 		}
-		return Collections.<QuestDrop>emptyList();
+		if (handlerDrops.isEmpty()) {
+			return catalogDrops;
+		}
+		List<QuestCatalogDrop> combined = new ArrayList<>(catalogDrops.size() + handlerDrops.size());
+		combined.addAll(catalogDrops);
+		combined.addAll(handlerDrops);
+		return List.copyOf(combined);
 	}
 
 	/**
@@ -1521,12 +1494,12 @@ public final class QuestService {
 	 * NPC 模板 ID / NPC template id
 	 * @param drop 掉落配置 / drop entry
 	 */
-	public static void addQuestDrop(int npcId, QuestDrop drop) {
-		if (!questDrop.containsKey(npcId)) {
-			questDrop.put(npcId, drop);
-		} else {
-			questDrop.get(npcId).add(drop);
-		}
+	public static void addHandlerSideQuestDrop(QuestCatalogDrop drop) {
+		handlerSideQuestDrops.compute(drop.npcId(), (npcId, current) -> {
+			List<QuestCatalogDrop> updated = new ArrayList<>(current == null ? List.of() : current);
+			updated.add(drop);
+			return List.copyOf(updated);
+		});
 	}
 
 	/**
@@ -1540,8 +1513,8 @@ public final class QuestService {
 	 */
 	public static List<Player> getEachDropMembersGroup(PlayerGroup group, int npcId, int questId) {
 		List<Player> players = new ArrayList<Player>();
-		for (QuestDrop qd : getQuestDrop(npcId)) {
-			if (qd.isDropEachMemberGroup()) {
+		for (QuestCatalogDrop qd : getQuestDrop(npcId)) {
+			if (qd.questId() == questId && qd.dropEachGroupMember()) {
 				for (Player player : group.getMembers()) {
 					QuestState qstel = player.getQuestStateList().getQuestState(questId);
 					if (qstel != null && qstel.getStatus() == QuestStatus.START) {
@@ -1565,8 +1538,8 @@ public final class QuestService {
 	 */
 	public static List<Player> getEachDropMembersAlliance(PlayerAlliance alliance, int npcId, int questId) {
 		List<Player> players = new ArrayList<Player>();
-		for (QuestDrop qd : getQuestDrop(npcId)) {
-			if (qd.isDropEachMemberGroup()) {
+		for (QuestCatalogDrop qd : getQuestDrop(npcId)) {
+			if (qd.questId() == questId && qd.dropEachAllianceMember()) {
 				for (Player player : alliance.getMembers()) {
 					QuestState qstel = player.getQuestStateList().getQuestState(questId);
 					if (qstel != null && qstel.getStatus() == QuestStatus.START) {

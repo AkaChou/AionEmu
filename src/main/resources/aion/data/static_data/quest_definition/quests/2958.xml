@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest-definition id="2958" version="1">
+  <metadata name="Last Minute Worries" display-name-id="1104158" min-level="21" max-level="2147483647" category="QUEST" cannot-share="true">
+    <races>
+      <race id="ASMODIANS" />
+    </races>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="64755" />
+        <reward kind="SELECTABLE_ITEM" id="100200606" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="100000642" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="100100497" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="101300480" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="101700517" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="101500499" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="100600534" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="100500501" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="101800507" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="101900494" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="102000525" amount="1" />
+        <reward kind="SELECTABLE_ITEM" id="102100490" amount="1" />
+      </group>
+    </reward-groups>
+    <start-condition-groups>
+      <group>
+        <condition type="finished" quest-id="2957" />
+      </group>
+    </start-condition-groups>
+  </metadata>
+</quest-definition>
