@@ -10,6 +10,7 @@ import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.NpcFaction;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.NpcFactions;
+import com.aionemu.gameserver.model.gameobjects.player.title.TitleList;
 import com.aionemu.gameserver.model.items.storage.PlayerStorage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
@@ -73,6 +74,37 @@ class PlayerQuestStartEligibilityPortTest {
 			new QuestState(10500, QuestStatus.COMPLETE, 0, 1, null, 0, null));
 		assertTrue(prerequisitePort.snapshot(PLAYER_ID, 10501, new QuestEvent.LevelUp()).eligible());
 		assertTrue(prerequisitePort.snapshot(PLAYER_ID, 10501, new QuestEvent.ZoneMissionEnd()).eligible());
+	}
+
+	@Test
+	void quest10521RejectsLevelTenAndRequiresQuest10520AtLevelSixtyFive() throws Exception {
+		QuestMetadata quest10521 = metadata(10521);
+		Map<Integer, QuestMetadata> metadata = Map.of(10521, quest10521);
+
+		Player levelTen = player(10);
+		PlayerQuestStartEligibilityPort earlyPort = port(levelTen, metadata);
+		assertRejected(earlyPort, 10521, new QuestEvent.LevelUp(), "MIN_LEVEL_NOT_MET");
+		assertRejected(earlyPort, 10521, new QuestEvent.ZoneMissionEnd(), "MIN_LEVEL_NOT_MET");
+
+		Player levelSixtyFive = player(65);
+		PlayerQuestStartEligibilityPort prerequisitePort = port(levelSixtyFive, metadata);
+		assertRejected(prerequisitePort, 10521, new QuestEvent.LevelUp(), "TITLE_MISSING");
+		setField(Player.class, levelSixtyFive, "titleList", titleListWith(306));
+		assertRejected(prerequisitePort, 10521, new QuestEvent.LevelUp(), "START_CONDITION_REJECTED");
+		assertRejected(prerequisitePort, 10521, new QuestEvent.ZoneMissionEnd(), "START_CONDITION_REJECTED");
+		levelSixtyFive.getQuestStateList().addQuest(10520,
+			new QuestState(10520, QuestStatus.COMPLETE, 0, 1, null, 0, null));
+		assertTrue(prerequisitePort.snapshot(PLAYER_ID, 10521, new QuestEvent.LevelUp()).eligible());
+		assertTrue(prerequisitePort.snapshot(PLAYER_ID, 10521, new QuestEvent.ZoneMissionEnd()).eligible());
+	}
+
+	private static TitleList titleListWith(int requiredTitleId) {
+		return new TitleList() {
+			@Override
+			public boolean contains(int titleId) {
+				return titleId == requiredTitleId;
+			}
+		};
 	}
 
 	@Test

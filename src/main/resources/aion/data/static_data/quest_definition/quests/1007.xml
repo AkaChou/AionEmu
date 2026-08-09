@@ -142,6 +142,7 @@
       </event>
       <after-commit>
         <play-movie movie-id="92"/>
+        <show-quest-dialog dialog-id="1353"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s2">
@@ -169,6 +170,7 @@
       </event>
       <after-commit>
         <play-movie movie-id="91"/>
+        <show-quest-dialog dialog-id="1694"/>
       </after-commit>
     </transition>
     <transition source="s2" target="reward10" priority="1">
