@@ -39,7 +39,9 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.statusIs;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.talkToNpc;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestDefinitionCompilerTest {
 	@Test
@@ -326,6 +328,51 @@ class QuestDefinitionCompilerTest {
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
 
 		assertEquals(fromDsl.definition(), fromXml.definition());
+	}
+
+	@Test
+	void rewardCompletionRestoresLegacyPreviewDialogs() {
+		CompiledQuestDefinition compiled = quest(1001)
+			.node("reward", project(QuestStatus.REWARD, Map.of()))
+			.node("complete", project(QuestStatus.COMPLETE, Map.of()))
+			.on(new QuestEvent.TalkToNpc(700001, 8)).from("reward")
+			.then(completeQuest(2)).goTo("complete")
+			.afterCommit(syncQuestState(QuestStateSyncMode.COMPLETION))
+			.compile();
+
+		List<QuestTransition> previews = compiled.definition().transitions().stream()
+			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == 700001 && Set.of(-1, 1009).contains(talk.dialogId()))
+			.toList();
+		assertEquals(Set.of(-1, 1009), previews.stream()
+			.map(QuestTransition::event).map(QuestEvent.TalkToNpc.class::cast)
+			.map(QuestEvent.TalkToNpc::dialogId).collect(java.util.stream.Collectors.toSet()));
+		assertTrue(previews.stream().allMatch(transition ->
+			transition.sourceNode().equals("reward")
+				&& transition.targetNode().equals("reward")
+				&& transition.afterCommit().equals(List.of(new AfterCommitAction.ShowQuestDialog(7)))));
+	}
+
+	@Test
+	void explicitWildcardRewardPreviewIsPreserved() {
+		var builder = quest(1001)
+			.node("reward", project(QuestStatus.REWARD, Map.of()))
+			.node("complete", project(QuestStatus.COMPLETE, Map.of()));
+		builder.on(new QuestEvent.TalkToNpc(700001, 1009))
+			.when(statusIs(QuestStatus.REWARD)).goTo("reward")
+			.afterCommit(showQuestDialog(42));
+		builder.on(new QuestEvent.TalkToNpc(700001, 8)).from("reward")
+			.then(completeQuest(0)).goTo("complete")
+			.afterCommit(syncQuestState(QuestStateSyncMode.COMPLETION));
+
+		CompiledQuestDefinition compiled = builder.compile();
+		List<QuestTransition> selectRewardRoutes = compiled.definition().transitions().stream()
+			.filter(transition -> transition.event().equals(new QuestEvent.TalkToNpc(700001, 1009)))
+			.toList();
+		assertEquals(1, selectRewardRoutes.size());
+		assertNull(selectRewardRoutes.get(0).sourceNode());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(42)),
+			selectRewardRoutes.get(0).afterCommit());
 	}
 
 	@Test

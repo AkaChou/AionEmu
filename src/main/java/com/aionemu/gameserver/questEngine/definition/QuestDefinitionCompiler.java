@@ -2,8 +2,10 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -15,7 +17,7 @@ public final class QuestDefinitionCompiler {
 	}
 
 	public static CompiledQuestDefinition compile(QuestDefinition definition) {
-		Objects.requireNonNull(definition, "definition");
+		definition = restoreRewardPreviewContract(Objects.requireNonNull(definition, "definition"));
 		if (definition.nodes().isEmpty()) {
 			fail("NO_NODES", "executable definition has no nodes");
 		}
@@ -179,6 +181,98 @@ public final class QuestDefinitionCompiler {
 		}
 		validateTransitionConflicts(definition.transitions(), nodes);
 		return new CompiledQuestDefinition(definition);
+	}
+
+	/**
+	 * Restores the legacy turn-in handshake for definitions that spell out reward
+	 * confirmation routes but omit the initial {@code -1}/{@code 1009} preview.
+	 * The old quest engine handled this uniformly for every REWARD-state end NPC;
+	 * keeping the lowering here makes XML and Java DSL owners behave identically.
+	 */
+	private static QuestDefinition restoreRewardPreviewContract(QuestDefinition definition) {
+		Map<String, QuestStatus> statuses = new HashMap<>();
+		for (QuestNode node : definition.nodes()) {
+			statuses.put(node.label(), node.projection().status());
+		}
+		Map<RewardPreviewKey, Set<Integer>> completionRewardIndexes = new LinkedHashMap<>();
+		for (QuestTransition transition : definition.transitions()) {
+			Set<String> sources = rewardSourceLabels(definition, statuses, transition);
+			if (sources.isEmpty() || !(transition.event() instanceof QuestEvent.TalkToNpc talk)) {
+				continue;
+			}
+			Integer dialogId = talk.dialogId();
+			for (String source : sources) {
+				RewardPreviewKey key = new RewardPreviewKey(source, talk.npcId());
+				if (dialogId != null && dialogId >= 8 && dialogId <= 23
+						&& transition.targetNode() != null
+						&& statuses.get(transition.targetNode()) == QuestStatus.COMPLETE) {
+					for (QuestAction action : transition.actions()) {
+						if (action instanceof QuestAction.CompleteQuest complete) {
+							completionRewardIndexes.computeIfAbsent(key, ignored -> new HashSet<>())
+								.add(complete.rewardIndex());
+						}
+					}
+				}
+			}
+		}
+
+		List<QuestTransition> normalized = new ArrayList<>(definition.transitions());
+		for (Map.Entry<RewardPreviewKey, Set<Integer>> entry : completionRewardIndexes.entrySet()) {
+			RewardPreviewKey key = entry.getKey();
+			Set<Integer> indexes = entry.getValue();
+			if (indexes.size() != 1) {
+				continue;
+			}
+			int rewardIndex = indexes.iterator().next();
+			if (rewardIndex > Integer.MAX_VALUE - 5) {
+				continue;
+			}
+			int rewardPage = 5 + rewardIndex;
+			for (int dialogId : List.of(-1, 1009)) {
+				if (hasRewardPreview(definition, statuses, key, dialogId)) {
+					continue;
+				}
+				normalized.add(new QuestTransition(new QuestEvent.TalkToNpc(key.npcId(), dialogId),
+					List.of(), List.of(), key.source(),
+					List.of(new AfterCommitAction.ShowQuestDialog(rewardPage)), null, key.source()));
+			}
+		}
+		if (normalized.size() == definition.transitions().size()) {
+			return definition;
+		}
+		return new QuestDefinition(definition.id(), definition.version(), definition.metadata(),
+			definition.progressLayout(), definition.nodes(), normalized);
+	}
+
+	private static Set<String> rewardSourceLabels(QuestDefinition definition, Map<String, QuestStatus> statuses,
+		QuestTransition transition) {
+		if (transition.sourceNode() != null) {
+			return statuses.get(transition.sourceNode()) == QuestStatus.REWARD
+				? Set.of(transition.sourceNode()) : Set.of();
+		}
+		boolean rewardBound = transition.conditions().stream()
+			.anyMatch(condition -> condition instanceof QuestCondition.StatusIs status
+				&& status.status() == QuestStatus.REWARD);
+		if (!rewardBound) {
+			return Set.of();
+		}
+		return definition.nodes().stream()
+			.filter(node -> node.projection().status() == QuestStatus.REWARD)
+			.map(QuestNode::label)
+			.sorted()
+			.collect(java.util.stream.Collectors.toCollection(java.util.LinkedHashSet::new));
+	}
+
+	private static boolean hasRewardPreview(QuestDefinition definition, Map<String, QuestStatus> statuses,
+		RewardPreviewKey key, int dialogId) {
+		return definition.transitions().stream().anyMatch(transition ->
+			rewardSourceLabels(definition, statuses, transition).contains(key.source())
+				&& transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == key.npcId()
+				&& Integer.valueOf(dialogId).equals(talk.dialogId()));
+	}
+
+	private record RewardPreviewKey(String source, int npcId) {
 	}
 
 	private static void validateProgressField(QuestDefinition definition, String field, String context) {

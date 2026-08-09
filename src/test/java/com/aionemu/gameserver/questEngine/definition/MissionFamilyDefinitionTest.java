@@ -184,6 +184,11 @@ class MissionFamilyDefinitionTest {
 		assertTrue(transitions.stream().anyMatch(t -> t.sourceNode().equals("v10")
 			&& t.targetNode().equals("reward")
 			&& t.event().equals(new QuestEvent.KillNpc(210160))));
+		for (int dialogId : List.of(-1, 1009)) {
+			QuestTransition preview = talk(transitions, "reward", 203081, dialogId, "reward");
+			assertTrue(preview.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(5)),
+				"Ozzz must expose reward preview dialog " + dialogId);
+		}
 
 		List<QuestAction> completions = transitions.stream()
 			.filter(t -> t.sourceNode().equals("reward") && t.targetNode().equals("complete"))
@@ -192,6 +197,19 @@ class MissionFamilyDefinitionTest {
 		assertTrue(completions.contains(new QuestAction.GrantReward("ITEM", 114100807, 1)));
 		assertTrue(completions.contains(new QuestAction.GrantReward("ITEM", 114300817, 1)));
 		assertTrue(completions.contains(new QuestAction.GrantReward("ITEM", 114500779, 1)));
+	}
+
+	@Test
+	void neutralizingOdiumReturnsToKalioForRewardAfterTula() throws Exception {
+		CompiledQuestDefinition compiled = definition("1004.xml");
+		List<QuestTransition> transitions = compiled.definition().transitions();
+		QuestTransition report = talk(transitions, "v5", 203082, 10002, "reward");
+		assertTrue(report.afterCommit().contains(new AfterCommitAction.CloseDialog()));
+		for (int dialogId : List.of(-1, 1009)) {
+			QuestTransition preview = talk(transitions, "reward", 203067, dialogId, "reward");
+			assertTrue(preview.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(5)),
+				"Kalio must expose reward preview dialog " + dialogId);
+		}
 	}
 
 	@Test
