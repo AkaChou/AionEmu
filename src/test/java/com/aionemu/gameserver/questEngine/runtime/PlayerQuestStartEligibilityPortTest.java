@@ -92,6 +92,17 @@ class PlayerQuestStartEligibilityPortTest {
 	}
 
 	@Test
+	void pcAllMetadataAllowsBothPlayerRacesToStart() throws Exception {
+		QuestMetadata metadata = metadata(80787);
+		for (Race race : List.of(Race.ELYOS, Race.ASMODIANS)) {
+			QuestStartEligibility result = port(player(1, race), Map.of(80787, metadata))
+				.snapshot(PLAYER_ID, 80787, new QuestEvent.TalkToNpc(833671, 1002));
+
+			assertTrue(result.eligible(), () -> race + " was rejected: " + result.reason());
+		}
+	}
+
+	@Test
 	void groupedStartConditionsUseAndInsideAGroupAndOrAcrossGroups() throws Exception {
 		QuestMetadata grouped = metadataFromXml("""
 			<metadata name="grouped" display-name-id="1" min-level="1" max-level="99" category="QUEST">

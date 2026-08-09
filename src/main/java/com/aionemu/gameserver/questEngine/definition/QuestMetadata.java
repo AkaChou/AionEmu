@@ -133,6 +133,12 @@ public record QuestMetadata(
 		startConditionGroups = normalizeStartConditionGroups(startConditions, startConditionGroups);
 	}
 
+	/** Returns whether the actual player race is permitted; empty and PC_ALL are wildcards. */
+	public boolean permitsRace(String race) {
+		return permittedRaces.isEmpty() || permittedRaces.contains("PC_ALL")
+			|| race != null && permittedRaces.contains(race);
+	}
+
 	public static QuestMetadata minimal(String name, int displayNameId, String category) {
 		return new QuestMetadata(name, displayNameId, 0, Integer.MAX_VALUE, Set.of(), category,
 			RepeatPolicy.once(), Set.of(), List.of(), List.of(), List.of());

@@ -27,7 +27,7 @@ class EventServiceCanonicalMetadataTest {
 
 	@Test
 	void eventQuestUsesCanonicalRaceClassGenderAndGroupedStartConditions() throws Exception {
-		QuestMetadata metadata = metadata();
+		QuestMetadata metadata = metadata("ELYOS");
 		Player eligible = player(Race.ELYOS, PlayerClass.WARRIOR, Gender.MALE);
 		eligible.getQuestStateList().addQuest(9003,
 			new QuestState(9003, QuestStatus.COMPLETE, 0, 1, null, 0, null));
@@ -38,17 +38,29 @@ class EventServiceCanonicalMetadataTest {
 		assertFalse(matches(player(Race.ELYOS, PlayerClass.WARRIOR, Gender.FEMALE), metadata));
 	}
 
+	@Test
+	void pcAllEventQuestMatchesBothPlayerRaces() throws Exception {
+		QuestMetadata metadata = metadata("PC_ALL");
+		for (Race race : new Race[] { Race.ELYOS, Race.ASMODIANS }) {
+			Player player = player(race, PlayerClass.WARRIOR, Gender.MALE);
+			player.getQuestStateList().addQuest(9003,
+				new QuestState(9003, QuestStatus.COMPLETE, 0, 1, null, 0, null));
+
+			assertTrue(matches(player, metadata));
+		}
+	}
+
 	private static boolean matches(Player player, QuestMetadata metadata) {
 		Map<Integer, QuestMetadata> catalog = Map.of(990301, metadata);
 		return EventService.matchesEventQuestMetadata(player, metadata,
 			new PlayerQuestStartEligibilityPort(playerId -> player, catalog::get));
 	}
 
-	private static QuestMetadata metadata() {
+	private static QuestMetadata metadata(String race) {
 		String xml = """
 			<quest-definition id="990301" version="1">
 			  <metadata name="event" display-name-id="1" min-level="10" max-level="20" category="EVENT">
-			    <races><race id="ELYOS"/></races>
+			    <races><race id="%s"/></races>
 			    <classes><class id="WARRIOR"/></classes>
 			    <gender id="MALE"/>
 			    <start-condition-groups>
@@ -59,7 +71,7 @@ class EventServiceCanonicalMetadataTest {
 			  <nodes><node label="start"><project status="START"/></node></nodes>
 			  <transitions><transition source="start" target="start"><event><level-up/></event></transition></transitions>
 			</quest-definition>
-			""";
+			""".formatted(race);
 		return QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))).definition().metadata();
 	}

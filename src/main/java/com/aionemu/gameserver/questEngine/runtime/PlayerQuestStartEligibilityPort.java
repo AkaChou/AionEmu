@@ -102,8 +102,7 @@ public final class PlayerQuestStartEligibilityPort implements QuestStartEligibil
 		if (player.getLevel() > metadata.maxLevel()) {
 			return QuestStartEligibility.rejected("MAX_LEVEL_EXCEEDED");
 		}
-		if (!metadata.permittedRaces().isEmpty()
-				&& (player.getRace() == null || !metadata.permittedRaces().contains(player.getRace().name()))) {
+		if (!metadata.permitsRace(player.getRace() == null ? null : player.getRace().name())) {
 			return QuestStartEligibility.rejected("RACE_NOT_PERMITTED");
 		}
 		PlayerClass playerClass = player.getCommonData() == null ? null : player.getCommonData().getPlayerClass();

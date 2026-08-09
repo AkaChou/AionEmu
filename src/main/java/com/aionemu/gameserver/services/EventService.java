@@ -193,8 +193,7 @@ public class EventService {
 				|| player.getLevel() > metadata.maxLevel()) {
 			return false;
 		}
-		if (!metadata.permittedRaces().isEmpty()
-				&& (player.getRace() == null || !metadata.permittedRaces().contains(player.getRace().name()))) {
+		if (!metadata.permitsRace(player.getRace() == null ? null : player.getRace().name())) {
 			return false;
 		}
 		if (!metadata.permittedClasses().isEmpty()
