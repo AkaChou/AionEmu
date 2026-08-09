@@ -237,11 +237,15 @@ class RetailAiDefinitionLoaderTest {
 			Path.of("src/main/resources/aion/definitions/compact/ai/ai-waypoints.xml").toFile(),
 			Path.of("src/main/resources/aion/definitions/schemas/ai-waypoints.xsd").toFile());
 
-		assertEquals(3042, data.size());
+		assertEquals(3206, data.size());
 		var rudra = data.getWalkerTemplate("retail:300170000:npcpathpath_rudrawindc1");
 		assertNotNull(rudra);
 		assertEquals(557.167297f, rudra.getRouteSteps().get(0).getX());
 		assertEquals(1358.827271f, rudra.getRouteSteps().get(0).getY());
+		var altgardPatrol = data.getWalkerTemplate("retail:220030000:df1a_12_mobpath_gfp_lycanfigs_19");
+		assertNotNull(altgardPatrol);
+		assertEquals(2442.02686f, altgardPatrol.getRouteSteps().get(0).getX());
+		assertEquals(20000, altgardPatrol.getRouteSteps().get(0).getRestTime());
 		assertNotNull(data.getWalkerTemplate("retail:220020000:df2_e4_lycanwizardmboss_pet_7"));
 		assertNull(data.getWalkerTemplate("retail:210050000:e3_cheru3_1"));
 	}

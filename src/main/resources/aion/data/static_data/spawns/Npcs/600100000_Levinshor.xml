@@ -2421,10 +2421,10 @@
             <spot x="945.29" y="1328.4261" z="287.375" h="16"/>
 		</spawn>
 		<spawn npc_id="234966" respawn_time="180">
-		  <spot x="443.962799" y="1590.621216" z="237.70653" h="15"/>
-		  <spot x="1414.294800" y="342.599609" z="247.55527" h="15"/>
-		  <spot x="1384.145874" y="338.859833" z="245.24088" h="15"/>
-		  <spot x="420.864471" y="1573.388672" z="237.82642" h="15"/>
+		  <spot x="443.962799" y="1590.621216" z="237.70653" h="15" walker_id="retail:600100000:npcpath_ldf4_advance_v01_estriker_dr_fi_65_ae2"/>
+		  <spot x="1414.294800" y="342.599609" z="247.55527" h="15" walker_id="retail:600100000:npcpath_ldf4_advance_v01_estriker_dr_fi_65_ae4"/>
+		  <spot x="1384.145874" y="338.859833" z="245.24088" h="15" walker_id="retail:600100000:npcpath_ldf4_advance_v01_estriker_dr_fi_65_ae3"/>
+		  <spot x="420.864471" y="1573.388672" z="237.82642" h="15" walker_id="retail:600100000:npcpath_ldf4_advance_v01_estriker_dr_fi_65_ae1"/>
 		</spawn>
 		<spawn npc_id="234967" respawn_time="180">
 		  <spot x="1058.814087" y="955.897583" z="337.32852"/>

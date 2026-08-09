@@ -17,9 +17,9 @@ class NormalBalaureaSpawnDataTest {
 	void keepsRestoredOpenWorldMovement() throws Exception {
 		SpawnsData2.load(NPCS.toFile(), null);
 		assertEquals(2526, movingSpots("210050000_Inggison.xml"));
-		assertEquals(477, movingSpots("220070000_Gelkmaros.xml"));
+		assertEquals(486, movingSpots("220070000_Gelkmaros.xml"));
 		assertEquals(168, movingSpots("600010000_Silentera_Canyon.xml"));
-		assertEquals(148, movingSpots("400010000_Reshanta.xml"));
+		assertEquals(167, movingSpots("400010000_Reshanta.xml"));
 		assertEquals(239, movingSpots("400020000_Belus.xml"));
 		assertEquals(240, movingSpots("400040000_Aspida.xml"));
 		assertEquals(239, movingSpots("400050000_Atanatos.xml"));
