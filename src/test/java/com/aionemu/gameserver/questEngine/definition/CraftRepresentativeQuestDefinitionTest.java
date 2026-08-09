@@ -45,6 +45,23 @@ class CraftRepresentativeQuestDefinitionTest {
 	}
 
 	@Test
+	void asmodianCookPotential29038RestoresTheRetiredLegacyOwner() throws Exception {
+		CompiledQuestDefinition definition = definition(29038);
+		QuestNode s11 = definition.definition().nodes().stream()
+			.filter(node -> "s11".equals(node.label())).findFirst().orElseThrow();
+		assertEquals(11, s11.projection().variables().get("var0"));
+		assertEquals(4, definition.definition().transitions().stream()
+			.filter(transition -> transition.event() instanceof QuestEvent.FailCraft).count());
+		assertEquals(8, definition.definition().transitions().stream()
+			.filter(transition -> transition.actions().stream()
+				.anyMatch(action -> action instanceof QuestAction.DecreaseCurrency)).count());
+		assertEquals(8, definition.definition().transitions().stream()
+			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == 204100
+				&& Set.of(10010, 10020, 10030, 10040).contains(talk.dialogId())).count());
+	}
+
+	@Test
 	void workOrder5000DslAndXmlCompileToSameLifecycleSafeIr() {
 		CompiledQuestDefinition dsl = workOrder5000Dsl();
 		CompiledQuestDefinition xml = QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
@@ -126,6 +143,16 @@ class CraftRepresentativeQuestDefinitionTest {
 
 		assertEquals(to, QuestMutationPlanner.plan(definition, snapshot, failCraft(itemId),
 			definition.definition().transitions().get(0)).orElseThrow().nextPackedVariables());
+	}
+
+	private static CompiledQuestDefinition definition(int questId) throws Exception {
+		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
+		try (var input = CraftRepresentativeQuestDefinitionTest.class.getResourceAsStream(resource)) {
+			if (input == null) {
+				throw new IllegalStateException("missing resource " + resource);
+			}
+			return QuestDefinitionXmlCompiler.compile(input);
+		}
 	}
 
 	private static CompiledQuestDefinition workOrder5000Dsl() {

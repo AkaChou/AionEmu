@@ -4510,7 +4510,7 @@
   <definition id="29032" resource="aion/data/static_data/quest_definition/quests/29032.xml" mode="EXECUTABLE" />
   <definition id="29033" resource="aion/data/static_data/quest_definition/quests/29033.xml" mode="EXECUTABLE" />
   <definition id="29034" resource="aion/data/static_data/quest_definition/quests/29034.xml" mode="EXECUTABLE" />
-  <definition id="29038" resource="aion/data/static_data/quest_definition/quests/29038.xml" mode="METADATA_ONLY" />
+  <definition id="29038" resource="aion/data/static_data/quest_definition/quests/29038.xml" mode="EXECUTABLE" />
   <definition id="29039" resource="aion/data/static_data/quest_definition/quests/29039.xml" mode="EXECUTABLE" />
   <definition id="29040" resource="aion/data/static_data/quest_definition/quests/29040.xml" mode="EXECUTABLE" />
   <definition id="29041" resource="aion/data/static_data/quest_definition/quests/29041.xml" mode="EXECUTABLE" />
