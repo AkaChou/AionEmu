@@ -140,6 +140,17 @@
         <close-dialog/>
       </after-commit>
     </transition>
+    <transition source="complete" target="complete">
+      <event>
+        <talk-to-npc npc-id="799780" dialog-id="31"/>
+      </event>
+      <conditions>
+        <has-item item-id="164002017" count="5"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
     <!-- 完成状态交收集物：重复领奖 / complete turn-in: repeat reward -->
     <transition source="complete" target="reward">
       <event>

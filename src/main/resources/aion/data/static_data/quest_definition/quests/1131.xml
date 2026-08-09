@@ -89,6 +89,14 @@
         <show-quest-dialog dialog-id="1353"/>
       </after-commit>
     </transition>
+    <transition source="shugo" target="shugo">
+      <event>
+        <talk-to-npc npc-id="203101" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
     <transition source="shugo" target="reward">
       <event>
         <talk-to-npc npc-id="203101" dialog-id="1009"/>

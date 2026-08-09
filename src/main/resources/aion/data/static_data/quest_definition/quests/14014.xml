@@ -218,6 +218,17 @@
         <close-dialog/>
       </after-commit>
     </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <talk-to-npc npc-id="802045" dialog-id="31"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <after-commit>
+        <show-quest-dialog dialog-id="2034"/>
+      </after-commit>
+    </transition>
     <transition source="s3" target="s5" priority="0">
       <event>
         <talk-to-npc npc-id="802045" dialog-id="39"/>

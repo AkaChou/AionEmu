@@ -32,7 +32,7 @@
         <give-item item-id="182207829" count="1" />
       </accept-actions>
     </npc-start>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="799256" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="204734" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
     <!-- 中间对话 Horu(204734):交还矿石袋(182207829)换取净化剂(182207830) -->
     <transition source="started" target="started"><event><talk-to-npc npc-id="204734" dialog-id="10001"/></event><conditions><has-item item-id="182207829" count="1"/></conditions><actions><give-item item-id="182207830" count="1"/><remove-item item-id="182207829" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
     <transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="799256" dialog-id="1009"/></event><conditions><has-item item-id="182207830" count="1"/></conditions><actions><remove-item item-id="182207830" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
