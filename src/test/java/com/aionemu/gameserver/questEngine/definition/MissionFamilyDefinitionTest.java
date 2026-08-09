@@ -222,6 +222,9 @@ class MissionFamilyDefinitionTest {
 			assertTrue(transition.afterCommit().contains(new AfterCommitAction.ShowQuestSelectionDialog(10)),
 				transition::toString);
 		}
+		// Kalio's reward preview accepts both the legacy -1 and SELECT_REWARD (1009) pages.
+		QuestTransition rewardPreview = talk(transitions, "reward", 203067, 1009, "reward");
+		assertTrue(rewardPreview.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(5)));
 		assertTrue(talk(transitions, "s5", 730007, 31, "s5").afterCommit()
 			.contains(new AfterCommitAction.ShowQuestDialog(1693)));
 		assertTrue(talk(transitions, "s6", 730007, 31, "s6").afterCommit()
