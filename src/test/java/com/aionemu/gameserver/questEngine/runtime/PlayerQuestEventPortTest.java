@@ -105,6 +105,18 @@ class PlayerQuestEventPortTest {
 	}
 
 	@Test
+	void levelUpSnapshotKeepsAutomaticQuestDialogTargetless() throws Exception {
+		Player player = emptyPlayer();
+		PlayerQuestEventPort port = new PlayerQuestEventPort(playerId -> player);
+
+		QuestSnapshot snapshot = port.snapshot(connection(), PLAYER_ID, QUEST_ID,
+			new QuestEvent.LevelUp());
+
+		assertEquals(0, snapshot.interactionObjectId());
+		assertTrue(snapshot.targetlessDialog());
+	}
+
+	@Test
 	void productionEventBoundaryOnlyFreezesStartEligibilityWhenRequestedByTransition() throws Exception {
 		Player player = emptyPlayer();
 		AtomicInteger calls = new AtomicInteger();

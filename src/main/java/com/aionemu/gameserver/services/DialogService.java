@@ -9,6 +9,7 @@ import com.aionemu.gameserver.lifecycle.GameCraftServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
+import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
@@ -493,21 +494,17 @@ public class DialogService {
             }
             case 31: {
                 // 任务。 / Quest.
+                int pageId = 0;
                 if (questId != 0) {
+                    pageId = 10;
                     QuestState qs = player.getQuestStateList().getQuestState(questId);
-                    if (qs != null) {
-                        if (qs.getStatus() == QuestStatus.START || qs.getStatus() == QuestStatus.REWARD) {
-                            if (!"useitem".equals(npc.getAi2().getName())) {
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 10));
-                            } else {
-                                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 0));
-                            }
-                        }
+                    if (qs != null
+                            && (qs.getStatus() == QuestStatus.START || qs.getStatus() == QuestStatus.REWARD)
+                            && npc.getAi2() instanceof ActionItemNpcAI2) {
+                        pageId = 0;
                     }
-                    PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 10));
-                } else {
-                    PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 0));
                 }
+                PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, pageId));
                 break;
             }
             case 33: {

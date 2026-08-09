@@ -101,6 +101,7 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 			case QuestEvent.TalkToNpc talk -> snapshot.withInteractionObjectId(talk.interactionObjectId());
 			case QuestEvent.UseItem _ -> snapshot.withTargetlessDialog();
 			case QuestEvent.QuestDialog _ -> snapshot.withTargetlessDialog();
+			case QuestEvent.LevelUp _ -> snapshot.withTargetlessDialog();
 			default -> snapshot;
 		};
 	}
