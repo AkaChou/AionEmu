@@ -1,13 +1,8 @@
 package com.aionemu.gameserver.model.account;
 
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.TimeZone;
 
-import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerAppearance;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
@@ -69,28 +64,16 @@ public class PlayerAccountData {
 	}
 
 	/**
-	 * 获取时间 secondswhen 玩家 bedeleted0 玩家 wasbedeleted。
-	 * Get time in seconds when this player will be deleted ( 0 if player was not set to be deleted ). Время возвращается с учетом временной зоны сервера
+	 * 获取角色删除时间的 Unix 秒级时间戳。
+	 * Returns the character deletion time as Unix epoch seconds.
 	 *
-	 * @return deletion time in seconds
+	 * @return 删除时间戳；未设置时返回 0 / deletion timestamp, or 0 when not scheduled
 	 */
 	public int getDeletionTimeInSeconds() {
 		if (deletionDate == null) {
 			return 0;
 		}
-		
-		int timezoneOffset = 0;
-		try {
-			if (GSConfig.TIME_ZONE_ID != null && !GSConfig.TIME_ZONE_ID.isEmpty()) {
-				TimeZone tz = TimeZone.getTimeZone(GSConfig.TIME_ZONE_ID);
-				timezoneOffset = tz.getRawOffset() / 1000;
-			}
-		} catch (Exception e) {
-			timezoneOffset = TimeZone.getDefault().getRawOffset() / 1000;
-		}
-		
-		long localTimeSeconds = (deletionDate.getTime() / 1000) + timezoneOffset;
-		return (int) localTimeSeconds;
+		return (int) (deletionDate.getTime() / 1000L);
 	}
 
 	/**

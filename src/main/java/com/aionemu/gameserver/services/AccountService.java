@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
 
@@ -93,14 +94,13 @@ public class AccountService {
 	 *
 	 * @param account 账号 / account
 	 */
-	private static void removeDeletedCharacters(Account account) {
+	static void removeDeletedCharacters(Account account) {
 		/* Removes chars that should be removed */
 		Iterator<PlayerAccountData> it = account.iterator();
 		while (it.hasNext()) {
 			PlayerAccountData pad = it.next();
 			Race race = pad.getPlayerCommonData().getRace();
-			int deletionTime = pad.getDeletionTimeInSeconds() * 1000;
-			if (deletionTime != 0 && deletionTime <= System.currentTimeMillis()) {
+			if (isDeletionDue(pad.getDeletionDate(), System.currentTimeMillis())) {
 				it.remove();
 				account.decrementCountOf(race);
 				PlayerService.deletePlayerFromDB(pad.getPlayerCommonData().getPlayerObjId());
@@ -112,6 +112,10 @@ public class AccountService {
 				}
 			}
 		}
+	}
+
+	static boolean isDeletionDue(Timestamp deletionDate, long currentTimeMillis) {
+		return deletionDate != null && deletionDate.getTime() <= currentTimeMillis;
 	}
 
 	/**
