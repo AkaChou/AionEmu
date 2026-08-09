@@ -209,7 +209,19 @@ class MissionFamilyDefinitionTest {
 			&& t.conditions().contains(new QuestCondition.StartEligible())));
 
 		// Ampeis advances to s1.
-		assertTrue(talk(transitions, "s0", 203076, 10000, "s1") != null);
+		QuestTransition ampeis = talk(transitions, "s0", 203076, 10000, "s1");
+		assertTrue(ampeis.afterCommit().contains(new AfterCommitAction.ShowQuestSelectionDialog(10)));
+
+		// Legacy defaultCloseDialog returned to the NPC quest-selection page after each step.
+		for (QuestTransition transition : List.of(
+			ampeis,
+			talk(transitions, "s1", 730007, 10001, "s2"),
+			talk(transitions, "s5", 730007, 10002, "s6"),
+			talk(transitions, "s12", 730007, 10003, "s13"),
+			talk(transitions, "s14", 730008, 10005, "reward"))) {
+			assertTrue(transition.afterCommit().contains(new AfterCommitAction.ShowQuestSelectionDialog(10)),
+				transition::toString);
+		}
 
 		// Noah's collect check requires the three samples and removes them.
 		QuestTransition collect = talk(transitions, "s6", 730007, 39, "s12");
