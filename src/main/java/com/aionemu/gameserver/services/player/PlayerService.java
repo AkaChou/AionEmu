@@ -8,10 +8,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.configs.main.CacheConfig;
+import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.controllers.FlyController;
 import com.aionemu.gameserver.controllers.PlayerController;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -399,8 +401,12 @@ public class PlayerService {
 		if (accData.getDeletionDate() != null) {
 			return;
 		}
-		accData.setDeletionDate(new Timestamp(System.currentTimeMillis() + 5 * 60 * 1000));
+		accData.setDeletionDate(new Timestamp(System.currentTimeMillis() + getCharacterDeletionDelayMillis()));
 		storeDeletionTime(accData);
+	}
+
+	static long getCharacterDeletionDelayMillis() {
+		return TimeUnit.MINUTES.toMillis(Math.max(0, GSConfig.CHARACTER_DELETE_DELAY_MINUTES));
 	}
 
 	/**

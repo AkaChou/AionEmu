@@ -91,6 +91,12 @@ public class GSConfig {
 	@Property(key = "gameserver.character.limit.count", defaultValue = "8")
 	public static int CHARACTER_LIMIT_COUNT;
 	/**
+	 * 角色删除倒计时（分钟）。
+	 * Character deletion countdown in minutes.
+	 */
+	@Property(key = "gameserver.character.delete.delay.minutes", defaultValue = "10")
+	public static int CHARACTER_DELETE_DELAY_MINUTES;
+	/**
 	 * 角色阵营限制模式。
 	 * Character faction limitation mode.
 	 */
