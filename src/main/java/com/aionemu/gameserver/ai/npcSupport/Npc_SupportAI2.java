@@ -77,7 +77,7 @@ public class Npc_SupportAI2 extends GeneralNpcAI2
 					}
 				break;
 			}
-			GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 1, player).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 1, player).useWithoutPropSkill();
 		} else if (dialogId == 1011 && questId != 0) {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));
 		}

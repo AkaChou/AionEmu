@@ -5,6 +5,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
 /**
@@ -33,6 +34,10 @@ public class MpCondition extends Condition {
 	 */
 	@Override
 	public boolean validate(Skill skill) {
+		// NPC MP is not modeled as a casting resource, so NPC skill costs must not block casts.
+		if (skill.getEffector() instanceof Npc) {
+			return true;
+		}
 		int valueWithDelta = value + delta * skill.getSkillLevel();
 		if (ratio) {
 			valueWithDelta = (int) ((skill.getEffector().getLifeStats().getMaxMp() * valueWithDelta) / 100);
