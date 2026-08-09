@@ -60,11 +60,9 @@ class Quest50019RetailAlignmentTest {
 	void hasOneProductionOwnerAndNoLegacyOwner() throws Exception {
 		String catalog = Files.readString(Path.of(
 			"src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml"));
-		String legacy = Files.readString(Path.of(
-			"src/main/resources/aion/data/static_data/quest_script_data/event.xml"));
+		assertFalse(legacyScriptDataExists(), "quest_script_data directory must be fully removed");
 
 		assertEquals(1, occurrences(catalog, "id=\"50019\""));
-		assertFalse(legacy.contains("id=\"50019\""));
 	}
 
 	private static boolean hasStartRoute(QuestDefinition definition, int dialogId) {
@@ -90,4 +88,9 @@ class Quest50019RetailAlignmentTest {
 	private static int occurrences(String text, String token) {
 		return text.split(java.util.regex.Pattern.quote(token), -1).length - 1;
 	}
+	private static boolean legacyScriptDataExists() {
+		return java.nio.file.Files.exists(
+			java.nio.file.Path.of("src/main/resources/aion/data/static_data/quest_script_data"));
+	}
+
 }

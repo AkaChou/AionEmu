@@ -87,9 +87,6 @@
 	</pet_feed>
 	<import file="quest_data/quest_data.xml"/>
 	<import file="quest_random_rewards.xml"/>
-	<quest_scripts>
-		<import file="quest_script_data" skipRoot="true"/>
-	</quest_scripts>
 	<import file="recipe/recipe_templates.xml"/>
 	<import file="luna/luna_templates.xml"/>
 	<import file="roads/roads.xml"/>

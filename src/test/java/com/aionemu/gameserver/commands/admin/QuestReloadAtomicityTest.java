@@ -16,14 +16,13 @@ class QuestReloadAtomicityTest {
 	void questCatalogIsPreparedBeforeTheLiveEngineIsCleared() throws Exception {
 		String source = Files.readString(SOURCE);
 		String execute = methodBody(source, "public void execute(Player admin, String... params)");
-		String reload = methodBody(source, "private void reloadQuests(List<QuestTemplate> quests, List<XMLQuest> scripts,");
+		String reload = methodBody(source,
+			"private void reloadQuests(List<QuestTemplate> quests,\n\t\t\tQuestEngine.PreparedProductionDefinitions prepared)");
 
 		int prepare = execute.indexOf("questEngine.prepareProductionDefinitions()");
-		int conflictValidation = execute.indexOf("questEngine.validateLegacyOwnerConflicts", prepare);
-		int invokeReload = execute.indexOf("reloadQuests(", conflictValidation);
+		int invokeReload = execute.indexOf("reloadQuests(", prepare);
 		assertTrue(prepare >= 0);
-		assertTrue(conflictValidation > prepare);
-		assertTrue(invokeReload > conflictValidation);
+		assertTrue(invokeReload > prepare);
 
 		int previous = reload.indexOf("questEngine.currentProductionDefinitions()");
 		int shutdown = reload.indexOf("questEngine.shutdown()", previous);

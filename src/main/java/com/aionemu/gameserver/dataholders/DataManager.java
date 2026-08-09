@@ -37,7 +37,6 @@ public final class DataManager {
     public static WarehouseExpandData WAREHOUSEEXPANDER_DATA;
     public static BindPointData BIND_POINT_DATA;
     public static QuestsData QUEST_DATA;
-    public static XMLQuests XML_QUESTS;
     public static QuestRandomRewardsData QUEST_RANDOM_REWARDS;
     public static PlayerStatsData PLAYER_STATS_DATA;
     public static SummonStatsData SUMMON_STATS_DATA;
@@ -231,7 +230,6 @@ public final class DataManager {
             WAREHOUSEEXPANDER_DATA = data.warehouseExpandData;
             BIND_POINT_DATA = data.bindPointData;
             QUEST_DATA = data.questData;
-            XML_QUESTS = data.questsScriptData;
             QUEST_RANDOM_REWARDS = data.questRandomRewardsData;
             ZONE_DATA = data.zoneData;
             WALKER_DATA = data.walkerData;

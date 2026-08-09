@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<quest_scripts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="quest_script_data.xsd">
-<!--
-    Book Quest
-	Make By (Encom)
- -->
-	<!-- 90001-90070 are private-server (Encom) book quests with no client/retail record; removed. -->
-</quest_scripts>

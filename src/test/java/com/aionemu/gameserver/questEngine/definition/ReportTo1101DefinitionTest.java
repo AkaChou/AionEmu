@@ -67,12 +67,7 @@ class ReportTo1101DefinitionTest {
 
 	@Test
 	void productionCatalogDoesNotRetainTheLegacy1101Owner() throws Exception {
-		String legacy;
-		try (InputStream input = resource(
-				"/aion/data/static_data/quest_script_data/poeta.xml")) {
-			legacy = new String(input.readAllBytes(), StandardCharsets.UTF_8);
-		}
-		assertFalse(legacy.contains("id=\"1101\""));
+		assertFalse(legacyScriptDataExists(), "quest_script_data directory must be fully removed");
 		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
 		assertTrue(catalog.find(1101).isPresent());
 		assertTrue(catalog.find(1102).isPresent());
@@ -179,4 +174,9 @@ class ReportTo1101DefinitionTest {
 		if (input == null) throw new IllegalStateException("missing resource " + path);
 		return input;
 	}
+	private static boolean legacyScriptDataExists() {
+		return java.nio.file.Files.exists(
+			java.nio.file.Path.of("src/main/resources/aion/data/static_data/quest_script_data"));
+	}
+
 }

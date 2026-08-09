@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<quest_scripts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="quest_script_data.xsd">
-<!--
-    Quest Ophidan Warpath 5.1
-	Make By (Encom)
- -->
-	<!-- [Instance/Group] Combat On The Ophidan Warpath (Elyos Only) -->
-	<!-- [Instance/Group] Battle On The Ophidan Warpath (Asmodians Only) -->
-</quest_scripts>

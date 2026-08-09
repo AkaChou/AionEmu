@@ -26,7 +26,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import com.aionemu.commons.utils.collections.IntProcedure;
 import com.aionemu.gameserver.GameServerError;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.dataholders.XMLQuests;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -51,7 +50,6 @@ import com.aionemu.gameserver.questEngine.definition.QuestPvpCreditSource;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandlerLoader;
-import com.aionemu.gameserver.questEngine.handlers.models.XMLQuest;
 import com.aionemu.gameserver.questEngine.model.QuestActionType;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
@@ -2540,16 +2538,6 @@ public class QuestEngine implements GameEngine {
 		return new PreparedProductionDefinitions(dispatcher.catalogRegistry(), dispatcher);
 	}
 
-	/** Rejects XML owners that would collide with a prepared typed owner before runtime state is cleared. */
-	public void validateLegacyOwnerConflicts(PreparedProductionDefinitions prepared, List<XMLQuest> scripts) {
-		for (XMLQuest script : scripts) {
-			if (prepared.dispatcher().owns(script.getId())) {
-				throw new GameServerError("Quest " + script.getId()
-					+ " is owned by both the typed catalog and an XML quest script.");
-			}
-		}
-	}
-
 	/**
 	 * 注册处理器：调用其 {@link QuestHandler#register()} 并放入映射。
 	 * Register a handler: invoke {@link QuestHandler#register()} and store it.
@@ -2627,10 +2615,6 @@ public class QuestEngine implements GameEngine {
 		try {
 			installProductionDefinitions(prepared == null ? prepareProductionDefinitions(loadProductionCatalog()) : prepared);
 			acl.postLoad(CompiledScriptLoader.load("com.aionemu.gameserver.quest.handlers"));
-			XMLQuests xmlQuests = DataManager.XML_QUESTS;
-			for (XMLQuest xmlQuest : xmlQuests.getQuest()) {
-				xmlQuest.register(this);
-			}
 			log.info(I18n.get("log.490b5f534bb2", questHandlers.size()));
 			log.info(I18n.get("log.quest_engine.typed_owners_loaded", productionDispatcher.owners().size()));
 		} catch (Exception e) {
