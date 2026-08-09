@@ -132,6 +132,7 @@
       </conditions>
       <after-commit>
         <play-movie movie-id="361"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="step1" target="step2">

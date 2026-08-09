@@ -75,6 +75,7 @@
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
     <transition source="v1" target="v1">
@@ -91,6 +92,7 @@
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
     <npc-report npc-id="203591" source="v2" target="reward" page="2375"/>

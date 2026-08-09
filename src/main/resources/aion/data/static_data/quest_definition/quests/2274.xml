@@ -93,6 +93,7 @@
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <npc-report npc-id="203560" source="step1" target="reward" page="2375"/>

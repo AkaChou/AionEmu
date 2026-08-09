@@ -139,6 +139,7 @@
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="v1" target="v1">
@@ -155,6 +156,7 @@
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="v2" target="v2">
@@ -179,6 +181,7 @@
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="v3" target="v3">
@@ -195,6 +198,7 @@
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="v4" target="v4">
@@ -211,6 +215,7 @@
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="v5" target="v6">

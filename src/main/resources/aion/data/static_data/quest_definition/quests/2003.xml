@@ -104,6 +104,7 @@
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="v1" target="v1">

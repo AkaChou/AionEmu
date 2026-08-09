@@ -127,6 +127,7 @@
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
     <transition source="v1" target="v1">
@@ -182,6 +183,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
     <kill-routes source="k1" target="k2" npc-ids="210402 210403"/>

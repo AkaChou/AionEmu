@@ -322,6 +322,7 @@
       <after-commit>
         <teleport-player-next-available-instance world-id="320010000" x="457.65" y="426.8" z="230.4" heading="0"/>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="s99" target="s13">

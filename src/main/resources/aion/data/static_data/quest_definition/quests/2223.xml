@@ -74,6 +74,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
     <transition source="step1" target="step1" priority="0">

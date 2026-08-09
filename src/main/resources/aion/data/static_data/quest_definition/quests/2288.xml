@@ -89,6 +89,7 @@
       <after-commit>
         <start-quest-timer seconds="600" timer-id="countdown" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <kill-routes source="k1" target="k2" npc-ids="210564 210584 210581 210436 201047 210437 210440"/>

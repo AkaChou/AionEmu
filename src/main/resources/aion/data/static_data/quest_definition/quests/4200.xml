@@ -137,6 +137,7 @@
       <after-commit>
         <teleport-player-next-available-instance world-id="300100000" x="403.55" y="508.11" z="885.77" heading="0"/>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <!-- Haorunerk 对话与过场动画。 Dialog and cutscene with Haorunerk. -->

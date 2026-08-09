@@ -94,6 +94,7 @@
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
     <transition source="v1" target="v1">
