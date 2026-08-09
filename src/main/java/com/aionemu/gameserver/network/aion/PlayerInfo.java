@@ -134,7 +134,7 @@ public abstract class PlayerInfo extends AionServerPacket {
 		}
 		writeH(accPlData.isLegionMember() ? 0x01 : 0x00);
 		Timestamp lastOnline = pbd.getLastOnline();
-		writeD(lastOnline == null ? 0 : (int) lastOnline.getTime());
+		writeD(getLastOnlineTimeInSeconds(lastOnline));
 		int itemsDataSize = 0;
 		List<Item> items = accPlData.getEquipment();
 		for (Item item : items) {
@@ -165,5 +165,9 @@ public abstract class PlayerInfo extends AionServerPacket {
 		writeB(stupidNc);
 		writeB(new byte[92]);// NA 5.0.2.7 protocol
 		writeD(accPlData.getDeletionTimeInSeconds());
+	}
+
+	static int getLastOnlineTimeInSeconds(Timestamp lastOnline) {
+		return lastOnline == null ? 0 : (int) (lastOnline.getTime() / 1000L);
 	}
 }
