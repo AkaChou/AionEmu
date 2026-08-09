@@ -68,6 +68,11 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700001" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <transition source="v1" target="v1">
       <event>
         <talk-to-npc npc-id="798008" dialog-id="31"/>

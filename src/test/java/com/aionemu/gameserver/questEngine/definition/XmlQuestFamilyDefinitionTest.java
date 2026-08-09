@@ -42,6 +42,13 @@ class XmlQuestFamilyDefinitionTest {
 		CompiledQuestDefinition compiled = definition("1127.xml");
 		List<QuestTransition> transitions = compiled.definition().transitions();
 
+		// quest_use_item must pass ACTION_ITEM_USE eligibility before the use-object event can fire.
+		assertTrue(transitions.stream().anyMatch(t -> t.sourceNode().equals("started")
+			&& t.targetNode().equals("started")
+			&& t.event() instanceof QuestEvent.CanAct canAct
+			&& canAct.templateId() == 700001
+			&& "ACTION_ITEM_USE".equals(canAct.actionType())));
+
 		// Use-object on 700001 grants the cube and advances to v1.
 		QuestTransition give = talk(transitions, "started", 700001, -1, "v1");
 		assertTrue(give.actions().contains(new QuestAction.GiveItem(182200215, 1)));
