@@ -197,6 +197,15 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
+
+    <transition source="s5" target="s5">
+      <event>
+        <talk-to-npc npc-id="730007" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1693"/>
+      </after-commit>
+    </transition>
     <transition source="s5" target="s6">
       <event>
         <talk-to-npc npc-id="730007" dialog-id="10002"/>
@@ -207,6 +216,15 @@
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <show-quest-selection-dialog dialog-id="10"/>
+      </after-commit>
+    </transition>
+
+    <transition source="s6" target="s6">
+      <event>
+        <talk-to-npc npc-id="730007" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="2034"/>
       </after-commit>
     </transition>
     <transition source="s6" target="s12" priority="0">

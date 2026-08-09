@@ -222,6 +222,10 @@ class MissionFamilyDefinitionTest {
 			assertTrue(transition.afterCommit().contains(new AfterCommitAction.ShowQuestSelectionDialog(10)),
 				transition::toString);
 		}
+		assertTrue(talk(transitions, "s5", 730007, 31, "s5").afterCommit()
+			.contains(new AfterCommitAction.ShowQuestDialog(1693)));
+		assertTrue(talk(transitions, "s6", 730007, 31, "s6").afterCommit()
+			.contains(new AfterCommitAction.ShowQuestDialog(2034)));
 
 		// Noah's collect check requires the three samples and removes them.
 		QuestTransition collect = talk(transitions, "s6", 730007, 39, "s12");
