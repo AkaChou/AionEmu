@@ -20,6 +20,7 @@ import com.aionemu.gameserver.questEngine.task.QuestTasks;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Future;
 
@@ -185,14 +186,10 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 		this.coordinateFollow = Objects.requireNonNull(coordinateFollow, "coordinateFollow");
 		this.targetNpcFollow = (player, npc, target, questId) -> QuestTasks.newFollowingToTargetCheckTask(
 			new QuestEnv(null, player, questId, 0), npc, target);
-		this.targetNpcResolver = (player, templateId) -> player.getPosition() == null
-			|| player.getPosition().getWorldMapInstance() == null ? null
-			: player.getPosition().getWorldMapInstance().getNpc(templateId);
+		this.targetNpcResolver = (player, templateId) -> findLivingNpc(player, templateId);
 		this.taskRegistrar = Objects.requireNonNull(taskRegistrar, "taskRegistrar");
 		this.npcInfo = Objects.requireNonNull(npcInfo, "npcInfo");
-		this.worldNpcResolver = (player, templateId) -> player.getPosition() == null
-			|| player.getPosition().getWorldMapInstance() == null ? null
-			: player.getPosition().getWorldMapInstance().getNpc(templateId);
+		this.worldNpcResolver = (player, templateId) -> findLivingNpc(player, templateId);
 	}
 
 	PlayerQuestAiPort(QuestPlayerPort players, QuestSpawnRegistry registry, AiCall ai,
@@ -400,5 +397,20 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 			}
 		}
 		return ai.apply(npc, player, target, command, argument);
+	}
+
+	/** 在当前地图实例中选择第一个已生成且存活的目标 NPC。 */
+	private static Npc findLivingNpc(Player player, int templateId) {
+		if (player == null || player.getPosition() == null || player.getPosition().getWorldMapInstance() == null) {
+			return null;
+		}
+		List<Npc> npcs = player.getPosition().getWorldMapInstance().getNpcs(templateId);
+		for (Npc npc : npcs) {
+			if (npc != null && npc.isSpawned()
+				&& (npc.getLifeStats() == null || !npc.getLifeStats().isAlreadyDead())) {
+				return npc;
+			}
+		}
+		return null;
 	}
 }

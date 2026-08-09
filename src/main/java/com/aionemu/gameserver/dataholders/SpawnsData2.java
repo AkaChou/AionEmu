@@ -1158,24 +1158,38 @@ public class SpawnsData2 {
 	 * @return 搜索结果，未找到则为 null / search result or null
 	 */
 	public SpawnSearchResult getFirstSpawnByNpcId(int worldId, int npcId) {
-		Spawn spawns = DataManager.SPAWNS_DATA2.getSpawnsForNpc(worldId, npcId);
+		return getSpawnLocationsByNpcId(worldId, npcId).stream().findFirst().orElse(null);
+	}
 
-		if (spawns == null) {
-			for (WorldMapTemplate template : DataManager.WORLD_MAPS_DATA) {
-				if (template.getMapId() == worldId) {
-					continue;
-				}
-				spawns = DataManager.SPAWNS_DATA2.getSpawnsForNpc(template.getMapId(), npcId);
-				if (spawns != null) {
-					worldId = template.getMapId();
-					break;
-				}
-			}
-			if (spawns == null) {
-				return null;
+	/**
+	 * 按地图优先顺序返回 NPC 的全部有效刷怪点。
+	 * Returns all non-empty spawn spots for an NPC, preferring the requested world.
+	 *
+	 * @param worldId 优先搜索的世界 ID / preferred world id
+	 * @param npcId NPC 模板 ID / NPC template id
+	 * @return 有序刷怪点 / ordered spawn locations
+	 */
+	public List<SpawnSearchResult> getSpawnLocationsByNpcId(int worldId, int npcId) {
+		List<SpawnSearchResult> results = new ArrayList<>();
+		appendSpawnLocations(results, worldId, npcId);
+		for (WorldMapTemplate template : DataManager.WORLD_MAPS_DATA) {
+			if (template.getMapId() != worldId) {
+				appendSpawnLocations(results, template.getMapId(), npcId);
 			}
 		}
-		return new SpawnSearchResult(worldId, spawns.getSpawnSpotTemplates().get(0));
+		return results;
+	}
+
+	private void appendSpawnLocations(List<SpawnSearchResult> results, int worldId, int npcId) {
+		Spawn spawns = getSpawnsForNpc(worldId, npcId);
+		if (spawns == null) {
+			return;
+		}
+		for (SpawnSpotTemplate spot : spawns.getSpawnSpotTemplates()) {
+			if (spot != null) {
+				results.add(new SpawnSearchResult(worldId, spot));
+			}
+		}
 	}
 
 	/**

@@ -665,6 +665,14 @@ public class TeleportService2 {
 			log.warn(I18n.get("log.02aebd9dc714", npcId));
 			return;
 		}
+		teleportToNpc(player, searchResult);
+	}
+
+	/** 将玩家传送到已解析的 NPC 刷新点，确保地图标记与 GM 传送目标一致。 */
+	public static void teleportToNpc(Player player, SpawnSearchResult searchResult) {
+		if (player == null || searchResult == null || searchResult.getSpot() == null) {
+			return;
+		}
 
 		SpawnSpotTemplate spot = searchResult.getSpot();
 		WorldMapTemplate worldTemplate = DataManager.WORLD_MAPS_DATA.getTemplate(searchResult.getWorldId());

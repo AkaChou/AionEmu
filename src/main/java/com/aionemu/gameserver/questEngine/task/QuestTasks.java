@@ -33,24 +33,40 @@ public class QuestTasks {
 	}
 
 	/**
-	 * 调度跟随至指定 NPC 模板首个刷新点坐标的周期检查任务。
-	 * Schedules a periodic follow-check task toward the first spawn coordinates of an NPC template.
+	 * 调度跟随至指定 NPC 模板存活目标或刷新点的周期检查任务。
+	 * Schedules a periodic follow-check task toward a living NPC or its spawn point.
 	 *
 	 * @param env 任务环境 / Quest environment
 	 * Following NPC
 	 * Target NPC template id
 	 * Scheduled future
-	 * if the target NPC has no spawn in the map。
+	 * if the target NPC has no spawn in the map
 	 */
 	public static final Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, int npcTargetId) {
+		Npc target = findLivingTarget(npc, npcTargetId);
+		if (target != null) {
+			return newFollowingToTargetCheckTask(env, npc, target);
+		}
 		SpawnSearchResult searchResult = DataManager.SPAWNS_DATA2.getFirstSpawnByNpcId(npc.getWorldId(), npcTargetId);
 		if (searchResult == null) {
 			throw new IllegalArgumentException("Supplied npc doesn't exist: " + npcTargetId);
 		}
 		return GameThreadPoolServices.threadPoolManager()
 				.scheduleAtFixedRate(new FollowingNpcCheckTask(env, new CoordinateDestinationChecker(npc,
-						searchResult.getSpot().getX(), searchResult.getSpot().getY(), searchResult.getSpot().getZ())),
-						1000, 1000);
+					searchResult.getSpot().getX(), searchResult.getSpot().getY(), searchResult.getSpot().getZ())), 1000, 1000);
+	}
+
+	private static Npc findLivingTarget(Npc follower, int npcTargetId) {
+		if (follower == null || follower.getPosition() == null || follower.getPosition().getWorldMapInstance() == null) {
+			return null;
+		}
+		for (Npc target : follower.getPosition().getWorldMapInstance().getNpcs(npcTargetId)) {
+			if (target != null && target.isSpawned()
+				&& (target.getLifeStats() == null || !target.getLifeStats().isAlreadyDead())) {
+				return target;
+			}
+		}
+		return null;
 	}
 
 	/**
