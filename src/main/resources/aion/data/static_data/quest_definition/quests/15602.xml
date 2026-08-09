@@ -108,5 +108,6 @@
         <grant-reward kind="ITEM" id="113101794" amount="1"/>
         <grant-reward kind="ITEM" id="188055318" amount="1"/>
         <complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="s4" target="s4"><event><can-act template-id="703136" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

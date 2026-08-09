@@ -3,7 +3,9 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
+import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogDrop;
+import com.aionemu.gameserver.questEngine.definition.QuestDefinitionCatalogManifest;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDrop;
 import com.aionemu.gameserver.questEngine.definition.QuestDropScope;
@@ -11,6 +13,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.RepeatPolicy;
+import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
@@ -20,8 +23,10 @@ import java.io.InputStream;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
@@ -33,6 +38,42 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestInteractionObjectCatalogTest {
+	@Test
+	void productionQuestUseItemTalkRoutesDeclareActionEligibility() throws Exception {
+		QuestCatalog catalog;
+		try (InputStream input = resource(
+				"aion/data/static_data/quest_definition/quest_definition_catalog.xml")) {
+			catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
+		}
+		Set<Integer> questUseItemNpcs = questUseItemNpcIds();
+		List<String> missing = new ArrayList<>();
+		for (CompiledQuestDefinition definition : catalog.executables()) {
+			List<QuestTransition> transitions = definition.definition().transitions();
+			for (var transition : transitions) {
+				if (!(transition.event() instanceof QuestEvent.TalkToNpc talk)
+						|| (talk.dialogId() != null && talk.dialogId() != -1)
+						|| !questUseItemNpcs.contains(talk.npcId())) {
+					continue;
+				}
+				boolean started = definition.definition().nodes().stream()
+					.anyMatch(node -> node.label().equals(transition.sourceNode())
+						&& node.projection().status() == QuestStatus.START);
+				if (!started) {
+					continue;
+				}
+				boolean eligible = transitions.stream().anyMatch(candidate ->
+					Objects.equals(candidate.sourceNode(), transition.sourceNode())
+						&& candidate.event() instanceof QuestEvent.CanAct canAct
+						&& canAct.templateId() == talk.npcId()
+						&& "ACTION_ITEM_USE".equals(canAct.actionType()));
+				if (!eligible) {
+					missing.add(definition.id() + ":" + transition.sourceNode() + ":" + talk.npcId());
+				}
+			}
+		}
+		assertEquals(List.of(), missing);
+	}
+
 	@Test
 	void wineBarrel1109UsesCatalogDropTalkAndActionObjectRoutes() throws Exception {
 		CompiledQuestDefinition definition;
@@ -135,6 +176,22 @@ class QuestInteractionObjectCatalogTest {
 			}
 		}
 		throw new IllegalStateException("missing NPC template " + npcId);
+	}
+
+	private static Set<Integer> questUseItemNpcIds() throws Exception {
+		Set<Integer> result = new HashSet<>();
+		XMLInputFactory factory = XMLInputFactory.newFactory();
+		try (InputStream input = resource("aion/data/static_data/npcs/npc_template.xml")) {
+			var reader = factory.createXMLStreamReader(input);
+			while (reader.hasNext()) {
+				if (reader.next() == XMLStreamConstants.START_ELEMENT
+						&& "npc_template".equals(reader.getLocalName())
+						&& "quest_use_item".equals(reader.getAttributeValue(null, "ai"))) {
+					result.add(Integer.parseInt(reader.getAttributeValue(null, "npc_id")));
+				}
+			}
+		}
+		return Set.copyOf(result);
 	}
 
 	private static InputStream resource(String path) {

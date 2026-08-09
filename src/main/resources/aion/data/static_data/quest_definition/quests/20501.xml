@@ -68,5 +68,8 @@
       <choice dialog-id="12" reward-index="5"/>
       <choice dialog-id="13" reward-index="6"/>
     </npc-complete>
+    <transition source="s3" target="s3"><event><can-act template-id="731538" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s4" target="s4"><event><can-act template-id="731539" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s5" target="s5"><event><can-act template-id="731540" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

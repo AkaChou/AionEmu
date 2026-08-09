@@ -54,5 +54,7 @@
       <choice dialog-id="9" reward-index="2"/>
       <fallback dialog-ids="10..23"/>
     </npc-complete>
+    <transition source="s2" target="s2"><event><can-act template-id="730243" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s6" target="s6"><event><can-act template-id="700706" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

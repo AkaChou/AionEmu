@@ -135,5 +135,9 @@
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
         <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="s2" target="s2"><event><can-act template-id="703388" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s6" target="s6"><event><can-act template-id="703395" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s7" target="s7"><event><can-act template-id="703391" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s7" target="s7"><event><can-act template-id="703389" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

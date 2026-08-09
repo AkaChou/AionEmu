@@ -71,5 +71,8 @@
       <choice dialog-id="19" reward-index="14"/>
       <choice dialog-id="20" reward-index="15"/>
     </npc-complete>
+    <transition source="s2" target="s2"><event><can-act template-id="700140" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s4" target="s4"><event><can-act template-id="700140" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s4" target="s4"><event><can-act template-id="700184" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

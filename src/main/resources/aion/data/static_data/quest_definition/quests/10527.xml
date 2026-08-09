@@ -86,5 +86,10 @@
     <transition source="s14" target="reward"><event><use-item item-id="182216075"/></event><conditions><variable-is field="var0" value="14"/></conditions><actions><remove-item item-id="182216075" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="806075" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
     <npc-complete npc-id="806075" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <transition source="s4" target="s4"><event><can-act template-id="703313" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s5" target="s5"><event><can-act template-id="731705" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s7" target="s7"><event><can-act template-id="703314" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s8" target="s8"><event><can-act template-id="731706" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s10" target="s10"><event><can-act template-id="703315" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

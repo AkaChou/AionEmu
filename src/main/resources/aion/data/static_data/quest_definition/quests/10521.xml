@@ -157,5 +157,10 @@
     <transition source="s11" target="started"><event><log-out/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="s12" target="started"><event><log-out/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="s13" target="started"><event><log-out/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s2" target="s2"><event><can-act template-id="703164" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s5" target="s5"><event><can-act template-id="731667" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s6" target="s6"><event><can-act template-id="731668" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s9" target="s9"><event><can-act template-id="731669" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s12" target="s12"><event><can-act template-id="703130" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

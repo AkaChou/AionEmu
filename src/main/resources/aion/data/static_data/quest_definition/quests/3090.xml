@@ -155,5 +155,8 @@
       </actions>
       <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit>
     </transition>
+    <transition source="s1" target="s1"><event><can-act template-id="700420" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s1-zone" target="s1-zone"><event><can-act template-id="700420" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s3" target="s3"><event><can-act template-id="700421" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

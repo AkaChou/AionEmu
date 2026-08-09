@@ -147,5 +147,6 @@
       </after-commit>
     </transition>
     <npc-complete npc-id="806114" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+    <transition source="started" target="started"><event><can-act template-id="703438" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

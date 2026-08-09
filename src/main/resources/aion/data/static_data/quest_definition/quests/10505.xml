@@ -75,5 +75,6 @@
       <choice dialog-id="12" reward-index="5"/>
       <choice dialog-id="13" reward-index="6"/>
     </npc-complete>
+    <transition source="s2" target="s2"><event><can-act template-id="702672" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

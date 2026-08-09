@@ -318,5 +318,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
+    <transition source="s2" target="s2"><event><can-act template-id="700939" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

@@ -531,5 +531,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
+    <transition source="s5" target="s5"><event><can-act template-id="700551" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

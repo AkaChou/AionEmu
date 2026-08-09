@@ -172,5 +172,6 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
+    <transition source="step1" target="step1"><event><can-act template-id="700134" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

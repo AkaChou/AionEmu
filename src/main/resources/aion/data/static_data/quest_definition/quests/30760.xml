@@ -36,5 +36,6 @@
       <choice dialog-id="9" reward-index="2"/>
       <choice dialog-id="10" reward-index="3"/>
     </npc-complete>
+    <transition source="started" target="started"><event><can-act template-id="701499" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

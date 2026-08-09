@@ -187,5 +187,6 @@
       <choice dialog-id="12" reward-index="6"/>
       <choice dialog-id="13" reward-index="7"/>
     </npc-complete>
+    <transition source="v1" target="v1"><event><can-act template-id="700157" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

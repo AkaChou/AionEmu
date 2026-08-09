@@ -320,5 +320,8 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
+    <transition source="v5" target="v5"><event><can-act template-id="700085" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="v6" target="v6"><event><can-act template-id="700086" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="v7" target="v7"><event><can-act template-id="700087" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

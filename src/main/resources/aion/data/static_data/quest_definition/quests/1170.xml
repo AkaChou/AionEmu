@@ -95,5 +95,6 @@
         <sync-quest-state mode="COMPLETION"/>
       </after-commit>
     </transition>
+    <transition source="started" target="started"><event><can-act template-id="700033" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

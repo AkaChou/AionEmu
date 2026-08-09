@@ -2017,5 +2017,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
+    <transition source="s4" target="s4"><event><can-act template-id="700551" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s56" target="s56"><event><can-act template-id="700552" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

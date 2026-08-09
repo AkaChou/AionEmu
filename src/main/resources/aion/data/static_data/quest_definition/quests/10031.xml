@@ -498,5 +498,7 @@
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
+    <transition source="s7" target="s7"><event><can-act template-id="730224" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s8" target="s8"><event><can-act template-id="702662" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

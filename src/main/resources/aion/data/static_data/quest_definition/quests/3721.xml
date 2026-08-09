@@ -211,5 +211,8 @@
       </after-commit>
     </transition>
     <npc-complete npc-id="798928" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+    <transition source="started" target="started"><event><can-act template-id="700948" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s1" target="s1"><event><can-act template-id="700948" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s2" target="s2"><event><can-act template-id="700948" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

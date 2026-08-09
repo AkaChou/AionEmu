@@ -63,5 +63,8 @@
     <transition source="s8" target="reward"><event><talk-to-npc npc-id="806598" dialog-id="10255"/></event><actions><set-variable field="var0" value="9"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="806079" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
     <npc-complete npc-id="806079" source="reward" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <transition source="s1" target="s1"><event><can-act template-id="731788" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s2" target="s2"><event><can-act template-id="731789" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s3" target="s3"><event><can-act template-id="731790" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>

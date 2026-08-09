@@ -82,5 +82,7 @@
     <transition source="s9" target="s8"><event><log-out/></event><conditions><variable-at-least field="var0" value="9"/><variable-below field="var0" value="11"/></conditions><actions><set-variable field="var0" value="8"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="s10" target="s8"><event><die/></event><conditions><variable-at-least field="var0" value="9"/><variable-below field="var0" value="11"/></conditions><actions><set-variable field="var0" value="8"/></actions><after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="s10" target="s8"><event><log-out/></event><conditions><variable-at-least field="var0" value="9"/><variable-below field="var0" value="11"/></conditions><actions><set-variable field="var0" value="8"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s10" target="s10"><event><can-act template-id="730888" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s11" target="s11"><event><can-act template-id="730898" action-type="ACTION_ITEM_USE"/></event></transition>
   </transitions>
 </quest-definition>
