@@ -10,6 +10,9 @@ import com.aionemu.chatserver.common.netty.PacketWriter;
 import com.aionemu.chatserver.network.aion.AbstractServerPacket;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -22,6 +25,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 
 class Netty4ChatClientServerAdapterTest {
 
@@ -72,6 +76,29 @@ class Netty4ChatClientServerAdapterTest {
         handler.close();
 
         assertTrue(closed.get());
+    }
+
+    @Test
+    void nettyExceptionCaughtPreservesThrowable() {
+        Logger logger = (Logger) LoggerFactory.getLogger(ClientChannelHandler.class);
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        boolean additive = logger.isAdditive();
+        logger.setAdditive(false);
+        logger.addAppender(appender);
+        try {
+            ClientChannelHandler handler = new ClientChannelHandler(new ClientPacketHandler());
+            handler.nettyExceptionCaught(new IllegalStateException("boom"));
+        } finally {
+            logger.detachAppender(appender);
+            logger.setAdditive(additive);
+            appender.stop();
+        }
+
+        assertEquals(1, appender.list.size());
+        assertNotNull(appender.list.getFirst().getThrowableProxy());
+        assertEquals(IllegalStateException.class.getName(), appender.list.getFirst().getThrowableProxy().getClassName());
+        assertEquals("boom", appender.list.getFirst().getThrowableProxy().getMessage());
     }
 
     private static ChannelHandler newNetty4ClientChannelHandler(ClientChannelHandler delegate) throws Exception {

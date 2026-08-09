@@ -64,7 +64,7 @@ public class ClientChannelHandler {
      */
     public void nettyExceptionCaught(Throwable cause) {
         if (!(cause instanceof java.io.IOException)) {
-            log.error(I18n.get("log.68d65b13fd02", cause));
+            log.error(I18n.get("log.68d65b13fd02"), cause);
         }
     }
 
