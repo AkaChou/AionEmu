@@ -175,7 +175,7 @@
       </after-commit>
     </transition>
     <!-- REWARD 完成：gold/exp/物品奖励 -->
-    <npc-complete npc-id="799763" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="799763" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
     <!-- MOVIE bonus：REWARD 状态随机播放 103/104（等概率，对应旧 handler Rnd 50%） -->
     <transition source="reward" target="reward">
       <event>

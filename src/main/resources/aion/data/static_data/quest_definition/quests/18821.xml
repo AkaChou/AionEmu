@@ -281,7 +281,23 @@
     </transition>
     <transition source="reward" target="reward">
       <event>
+        <talk-to-npc npc-id="810017" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
         <talk-to-npc npc-id="810018" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="810018" dialog-id="1009"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="5"/>
@@ -297,6 +313,14 @@
     </transition>
     <transition source="reward" target="reward">
       <event>
+        <talk-to-npc npc-id="810019" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
         <talk-to-npc npc-id="810020" dialog-id="-1"/>
       </event>
       <after-commit>
@@ -305,7 +329,23 @@
     </transition>
     <transition source="reward" target="reward">
       <event>
+        <talk-to-npc npc-id="810020" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
         <talk-to-npc npc-id="810021" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="810021" dialog-id="1009"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="5"/>

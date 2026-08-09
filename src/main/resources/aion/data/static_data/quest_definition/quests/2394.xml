@@ -189,7 +189,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="204343" source="reward" target="complete" fixed-reward-indices="0 1 2" complete-reward-index="0" preview-dialog-ids="-1" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="204343" source="reward" target="complete" fixed-reward-indices="0 1 2" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
       <choice dialog-id="8" reward-index="3"/>
       <choice dialog-id="9" reward-index="4"/>
       <choice dialog-id="10" reward-index="5"/>

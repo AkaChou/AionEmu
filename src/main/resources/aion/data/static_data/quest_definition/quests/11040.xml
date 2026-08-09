@@ -158,6 +158,14 @@
         <show-quest-dialog dialog-id="10002"/>
       </after-commit>
     </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <talk-to-npc npc-id="799035" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
     <!-- 领取奖励并完成；经验为 quest_data 总量，可选奖励按 24053 先例全部发放。 Claim rewards and complete; EXP is the quest_data total, selectable rewards granted in full per the 24053 precedent. -->
     <transition source="reward" target="complete">
       <event>

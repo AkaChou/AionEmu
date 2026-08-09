@@ -116,7 +116,7 @@
       </after-commit>
     </transition>
     <!-- REWARD 状态：USE_OBJECT(-1) 显示奖励对话框，8..23 完成（奖励由 LUNAR bonus 系统下发，quest_data rewards 为空） -->
-    <npc-complete npc-id="799765" source="reward" target="complete" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="799765" source="reward" target="complete" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
     <!-- LUNAR bonus：START 状态保持（旧 handler 对两状态消费 bonus；COMPLETE 保持被编译器拒绝，任务完成后 bonus 不再消费） -->
     <transition source="started" target="started">
       <event>

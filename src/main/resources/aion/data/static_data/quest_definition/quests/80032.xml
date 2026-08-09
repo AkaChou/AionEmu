@@ -110,7 +110,7 @@
       </after-commit>
     </transition>
     <!-- REWARD 完成（兜底 sendQuestRewardDialog 路径） -->
-    <npc-complete npc-id="799781" source="reward" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="799781" source="reward" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
     <!-- onLvlUp 弃任：事件不激活且已接取（回到未接取, 投影与 unaccepted 合并） -->
     <transition source="started" target="unaccepted">
       <event>
