@@ -25,36 +25,57 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /** Strict XML front end for the canonical definition IR. */
 public final class QuestDefinitionXmlCompiler {
-	/** 类加载时编译一次 XSD，供所有任务共享；Schema 线程安全可并发解析。Compiled once per class load; Schemas are thread-safe. */
-	private static final Schema SCHEMA = buildSchema();
-
 	private QuestDefinitionXmlCompiler() {
 	}
 
-	private static Schema buildSchema() {
+	private static Schema classpathSchema() {
+		return ClasspathSchemaHolder.SCHEMA;
+	}
+
+	private static Schema buildClasspathSchema() {
 		try (InputStream schemaStream = QuestDefinitionXmlCompiler.class.getResourceAsStream(
 				"/aion/data/static_data/quest_definition/quest_definition.xsd")) {
 			if (schemaStream == null) {
 				throw new QuestCompilationException("SCHEMA_MISSING", "quest definition schema is not packaged");
 			}
-			return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-					.newSchema(new StreamSource(schemaStream));
-		} catch (IOException | SAXException e) {
+			return loadSchema(schemaStream);
+		} catch (IOException e) {
 			throw new QuestCompilationException("SCHEMA_MISSING", e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage());
 		}
 	}
 
+	static Schema loadSchema(InputStream schemaStream) {
+		Objects.requireNonNull(schemaStream, "schemaStream");
+		try {
+			return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+				.newSchema(new StreamSource(schemaStream));
+		} catch (SAXException e) {
+			throw new QuestCompilationException("SCHEMA_MISSING",
+				e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage());
+		}
+	}
+
 	public static CompiledQuestDefinition compile(InputStream input) {
-		return QuestDefinitionCompiler.compile(parse(input));
+		return compile(input, classpathSchema());
+	}
+
+	static CompiledQuestDefinition compile(InputStream input, Schema schema) {
+		return QuestDefinitionCompiler.compile(parse(input, schema));
 	}
 
 	/** Parses and validates XML without requiring executable nodes or transitions. */
 	public static QuestDefinition parse(InputStream input) {
+		return parse(input, classpathSchema());
+	}
+
+	static QuestDefinition parse(InputStream input, Schema schema) {
+		Objects.requireNonNull(schema, "schema");
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setNamespaceAware(false);
@@ -62,7 +83,7 @@ public final class QuestDefinitionXmlCompiler {
 			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-			factory.setSchema(SCHEMA);
+			factory.setSchema(schema);
 			var builder = factory.newDocumentBuilder();
 			builder.setErrorHandler(new DefaultHandler() {
 				@Override
@@ -87,6 +108,12 @@ public final class QuestDefinitionXmlCompiler {
 		} catch (Exception e) {
 			throw new QuestCompilationException("INVALID_XML", e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage());
 		}
+	}
+
+	/** 按需初始化 classpath XSD，使外部数据加载不依赖 JAR 内资源。 */
+	private static final class ClasspathSchemaHolder {
+		/** Schema 线程安全，可供并行任务编译共享。 */
+		private static final Schema SCHEMA = buildClasspathSchema();
 	}
 
 	private static QuestDefinition parseDefinition(Element root) {

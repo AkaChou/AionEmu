@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.questEngine;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -19,6 +18,7 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.utils.collections.IntArrayList;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import com.aionemu.gameserver.GameServerError;
+import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.GameEngine;
@@ -1752,14 +1752,8 @@ public class QuestEngine implements GameEngine {
 
 	/** 从显式 production catalog 加载已通过 owner 审核的 typed 定义。 */
 	private QuestCatalog loadProductionCatalog() throws Exception {
-		ClassLoader loader = QuestEngine.class.getClassLoader();
-		try (InputStream input = loader.getResourceAsStream(
-				"aion/data/static_data/quest_definition/quest_definition_catalog.xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing typed production catalog");
-			}
-			return QuestDefinitionCatalogManifest.compile(input, loader);
-		}
+		return QuestDefinitionCatalogManifest.compile(
+			Config.dataFile("./data/static_data/quest_definition").toPath());
 	}
 
 	/**
