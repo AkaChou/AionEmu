@@ -54,7 +54,7 @@ class PlayerQuestDialogPortTest {
 
 		assertEquals(true, port.closeDialog(snapshot, plan()));
 		SM_DIALOG_WINDOW packet = assertOnlyDialog(player);
-		assertEquals(204160, intField(SM_DIALOG_WINDOW.class, packet, "targetObjectId"));
+		assertEquals(0, intField(SM_DIALOG_WINDOW.class, packet, "targetObjectId"));
 		assertEquals(0, intField(SM_DIALOG_WINDOW.class, packet, "dialogID"));
 		assertEquals(0, intField(SM_DIALOG_WINDOW.class, packet, "questId"));
 	}
@@ -72,11 +72,15 @@ class PlayerQuestDialogPortTest {
 	}
 
 	@Test
-	void closeDialogFailsClosedWithoutAuthoritativeObjectId() throws Exception {
+	void closeDialogDoesNotRequireAuthoritativeObjectId() throws Exception {
 		Player player = emptyPlayer();
 		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> player);
 
-		assertThrows(IllegalStateException.class, () -> port.closeDialog(snapshot(), plan()));
+		assertEquals(true, port.closeDialog(snapshot(), plan()));
+		SM_DIALOG_WINDOW packet = assertOnlyDialog(player);
+		assertEquals(0, intField(SM_DIALOG_WINDOW.class, packet, "targetObjectId"));
+		assertEquals(0, intField(SM_DIALOG_WINDOW.class, packet, "dialogID"));
+		assertEquals(0, intField(SM_DIALOG_WINDOW.class, packet, "questId"));
 	}
 
 	@Test
