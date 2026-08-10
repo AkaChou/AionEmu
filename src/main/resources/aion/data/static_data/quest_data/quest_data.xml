@@ -4895,10 +4895,11 @@
     <rewards />
     <bonus level="1" type="MEDAL" />
   </quest>
-  <quest id="1718" name="Trading Down" nameId="1104518" minlevel_permitted="25" max_repeat_count="255" cannot_share="true" race_permitted="ELYOS" category="QUEST">
+  <quest id="1718" name="Trading Down" nameId="1104518" minlevel_permitted="25" max_repeat_count="255" reward_repeat_count="5" cannot_share="true" race_permitted="ELYOS" category="QUEST">
     <rewards exp="1476088" ap="50">
       <reward_item item_id="182005204" count="1" />
     </rewards>
+    <extended_rewards title="45" />
     <quest_work_items>
       <quest_work_item item_id="182202156" count="1" />
       <quest_work_item item_id="182202157" count="1" />
@@ -8108,9 +8109,9 @@
       <quest_work_item item_id="182204147" count="1" />
     </quest_work_items>
   </quest>
-  <quest id="2368" name="A Quota Of Creatures" nameId="1103568" minlevel_permitted="30" max_repeat_count="2" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
+  <quest id="2368" name="A Quota Of Creatures" nameId="1103568" minlevel_permitted="30" max_repeat_count="2" reward_repeat_count="2" cannot_share="true" race_permitted="ASMODIANS" category="IMPORTANT">
     <rewards gold="9200" exp="593431" />
-    <extended_rewards>
+    <extended_rewards title="77">
       <reward_item item_id="188050584" count="3" />
     </extended_rewards>
   </quest>
@@ -9652,7 +9653,7 @@
       <collect_item item_id="182204409" count="1" />
       <collect_item item_id="182204410" count="1" />
     </collect_items>
-    <rewards gold="57000" exp="806224">
+    <rewards gold="57000" exp="806224" title="75">
       <reward_item item_id="186000008" count="2" />
     </rewards>
     <quest_drop npc_id="213914" item_id="182204407" chance="100" drop_each_member="1" />
@@ -11455,10 +11456,11 @@
     <rewards />
     <bonus level="1" type="MEDAL" />
   </quest>
-  <quest id="2718" name="Trading Down" nameId="1104818" minlevel_permitted="25" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
-    <rewards exp="1476088" ap="50" title="95">
+  <quest id="2718" name="Trading Down" nameId="1104818" minlevel_permitted="25" max_repeat_count="255" reward_repeat_count="5" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
+    <rewards exp="1476088" ap="50">
       <reward_item item_id="182005204" count="1" />
     </rewards>
+    <extended_rewards title="95" />
     <quest_work_items>
       <quest_work_item item_id="182205668" count="1" />
       <quest_work_item item_id="182205669" count="1" />
@@ -15223,7 +15225,7 @@
     </start_conditions>
   </quest>
   <quest id="3743" name="First news of victory after the battle against the Asmodian soldiers from the 1st Army" nameId="1803063" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="SEEN_MARKER">
-    <rewards gold="62640" exp="1110037">
+    <rewards gold="62640" exp="1110037" title="32">
       <reward_item item_id="169610373" count="1" />
       <reward_item item_id="188100335" count="500" />
     </rewards>
@@ -15232,7 +15234,7 @@
     </start_conditions>
   </quest>
   <quest id="3744" name="First news of victory after the battle against an Asmodian Officer" nameId="1803064" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ELYOS" category="SEEN_MARKER">
-    <rewards gold="62640" exp="1110037">
+    <rewards gold="62640" exp="1110037" title="33">
       <reward_item item_id="169610374" count="1" />
       <reward_item item_id="188055829" count="1" />
     </rewards>
@@ -18464,7 +18466,7 @@
     </start_conditions>
   </quest>
   <quest id="4743" name="First news of victory after the battle against the Elyos soldiers from the 1st Army" nameId="1803074" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="SEEN_MARKER">
-    <rewards gold="62640" exp="1110037">
+    <rewards gold="62640" exp="1110037" title="82">
       <reward_item item_id="169610384" count="1" />
       <reward_item item_id="188100335" count="500" />
     </rewards>
@@ -18473,7 +18475,7 @@
     </start_conditions>
   </quest>
   <quest id="4744" name="First news of victory after the battle against an Elyos Officer" nameId="1803075" minlevel_permitted="45" max_repeat_count="1" cannot_share="true" race_permitted="ASMODIANS" category="SEEN_MARKER">
-    <rewards gold="62640" exp="1110037">
+    <rewards gold="62640" exp="1110037" title="83">
       <reward_item item_id="169610385" count="1" />
       <reward_item item_id="188055829" count="1" />
     </rewards>
@@ -32431,7 +32433,7 @@
     <quest_drop npc_id="217206" item_id="182216159" chance="100" drop_each_member="1" collecting_step="4" />
   </quest>
   <quest id="17541" name="[Instance/Group] The Drana Farm" nameId="1802927" minlevel_permitted="50" max_repeat_count="255" race_permitted="ELYOS" category="QUEST">
-    <rewards exp="2814541" ap="450" title="174">
+    <rewards exp="2814541" ap="450">
       <reward_item item_id="162000050" count="10" />
       <reward_item item_id="164000070" count="10" />
     </rewards>
@@ -38409,7 +38411,7 @@
     <collect_items>
       <collect_item item_id="182215391" count="1" />
     </collect_items>
-    <rewards exp="8755085">
+    <rewards exp="8755085" title="99">
       <selectable_reward_item item_id="120000892" count="1" />
       <selectable_reward_item item_id="120000893" count="1" />
       <reward_item item_id="188052797" count="1" />
@@ -42304,12 +42306,12 @@
     <collect_items>
       <collect_item item_id="182216160" count="1" />
     </collect_items>
-    <rewards exp="4020773" ap="450" title="174" />
+    <rewards exp="4020773" ap="450" title="175" />
     <quest_drop npc_id="217204" item_id="182216160" chance="100" drop_each_member="1" collecting_step="4" />
     <quest_drop npc_id="217206" item_id="182216160" chance="100" drop_each_member="1" collecting_step="4" />
   </quest>
   <quest id="27541" name="[Instance/Group] Reclaiming Esoterrace[Instance/Group] Reclaiming Esoterrace" nameId="1802929" minlevel_permitted="50" max_repeat_count="255" race_permitted="ASMODIANS" category="QUEST">
-    <rewards exp="2814541" title="174">
+    <rewards exp="2814541">
       <reward_item item_id="162000050" count="10" />
       <reward_item item_id="164000070" count="10" />
     </rewards>

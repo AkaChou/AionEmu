@@ -9,6 +9,7 @@
     </classes>
     <rewards>
       <reward kind="EXP" id="0" amount="633457"/>
+      <reward kind="TITLE" id="88" amount="1"/>
     </rewards>
   </metadata>
   <progress>

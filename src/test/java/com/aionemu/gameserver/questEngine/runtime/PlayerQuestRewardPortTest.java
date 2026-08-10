@@ -1,7 +1,10 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.commons.network.AConnection;
+import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerTitleListDAO;
@@ -25,10 +28,15 @@ import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.templates.TitleTemplate;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.quest.QuestItems;
+import com.aionemu.gameserver.network.aion.AionConnection;
+import com.aionemu.gameserver.network.aion.AionServerPacket;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_TITLE_INFO;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
@@ -69,6 +77,14 @@ class PlayerQuestRewardPortTest {
 	private static final int TITLE_ID = 7;
 
 	private static TitleData originalTitleData;
+
+	@BeforeAll
+	static void configurePacketProcessor() {
+		NetworkConfig.PACKET_PROCESSOR_MIN_THREADS = 1;
+		NetworkConfig.PACKET_PROCESSOR_MAX_THREADS = 1;
+		NetworkConfig.PACKET_PROCESSOR_THREAD_SPAWN_THRESHOLD = 1;
+		NetworkConfig.PACKET_PROCESSOR_THREAD_KILL_THRESHOLD = 1;
+	}
 
 	@BeforeEach
 	void setUpTitleData() throws Exception {
@@ -159,6 +175,24 @@ class PlayerQuestRewardPortTest {
 		assertEquals(1, titleListDao.calls.size());
 		assertSame(connection, titleListDao.calls.get(0));
 		assertEquals(TITLE_ID, titleListDao.lastTitleId);
+	}
+
+	@Test
+	void titleRewardNotificationIsSentOnlyAfterCommit() throws Exception {
+		com.aionemu.gameserver.dataholders.DataManager.TITLE_DATA = titleDataWith(TITLE_ID);
+		Player player = emptyPlayer();
+		player.getTitleList().setOwner(player);
+		setField(Player.class, player, "clientConnection", packetConnection());
+		PlayerQuestRewardPort port = port(playerId -> player, new RecordingInventoryDao(),
+			new RecordingPlayerDao(), (p, items) -> true);
+
+		QuestTransactionParticipant participant = port.apply(connection(), snapshot(),
+			List.of(reward("TITLE", TITLE_ID, 1)));
+
+		assertTrue(packetQueue(player.getClientConnection()).isEmpty());
+		participant.afterCommit();
+		assertEquals(List.of(SM_SYSTEM_MESSAGE.class, SM_TITLE_INFO.class),
+			packetQueue(player.getClientConnection()).stream().map(Object::getClass).toList());
 	}
 
 	@Test
@@ -590,6 +624,48 @@ class PlayerQuestRewardPortTest {
 			return '\0';
 		}
 		return null;
+	}
+
+	private static AionConnection packetConnection() throws Exception {
+		AionConnection connection = new ObjenesisStd().newInstance(AionConnection.class);
+		RecordingTransport transport = new RecordingTransport();
+		transport.connection = connection;
+		setField(AConnection.class, connection, "transport", transport);
+		setField(AConnection.class, connection, "guard", new Object());
+		setField(AionConnection.class, connection, "sendMsgQueue", new ArrayList<AionServerPacket>());
+		return connection;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static List<AionServerPacket> packetQueue(AionConnection connection) {
+		try {
+			return (List<AionServerPacket>) getField(AionConnection.class, connection, "sendMsgQueue");
+		} catch (Exception e) {
+			throw new AssertionError(e);
+		}
+	}
+
+	private static final class RecordingTransport implements ConnectionTransport {
+		private AionConnection connection;
+
+		@Override
+		public String getIP() {
+			return "127.0.0.1";
+		}
+
+		@Override
+		public void enableWriteInterest() {
+			packetQueue(connection).getLast();
+		}
+
+		@Override
+		public void close(boolean forced) {
+		}
+
+		@Override
+		public boolean onlyClose() {
+			return true;
+		}
 	}
 
 	private static final class RecordingInventoryDao extends InventoryDAO {

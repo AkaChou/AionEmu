@@ -21,6 +21,7 @@
       <reward kind="SELECTABLE_ITEM" id="101900501" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="102000898" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="102100493" amount="1"/>
+      <reward kind="TITLE" id="78" amount="1"/>
     </rewards>
     <drops>
       <drop npc-id="214028" item-id="182204514" chance="100" each-member="true" collecting-step="0"/>
@@ -161,6 +162,7 @@
       <actions>
         <grant-reward kind="EXP" id="0" amount="2954681"/>
         <grant-reward kind="ITEM" id="100200611" amount="1"/>
+        <grant-reward kind="TITLE" id="78" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
@@ -176,6 +178,7 @@
       <actions>
         <grant-reward kind="EXP" id="0" amount="2954681"/>
         <grant-reward kind="ITEM" id="100900493" amount="1"/>
+        <grant-reward kind="TITLE" id="78" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
@@ -191,6 +194,7 @@
       <actions>
         <grant-reward kind="EXP" id="0" amount="2954681"/>
         <grant-reward kind="ITEM" id="101700524" amount="1"/>
+        <grant-reward kind="TITLE" id="78" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
@@ -206,6 +210,7 @@
       <actions>
         <grant-reward kind="EXP" id="0" amount="2954681"/>
         <grant-reward kind="ITEM" id="100500506" amount="1"/>
+        <grant-reward kind="TITLE" id="78" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
@@ -221,6 +226,7 @@
       <actions>
         <grant-reward kind="EXP" id="0" amount="2954681"/>
         <grant-reward kind="ITEM" id="115000776" amount="1"/>
+        <grant-reward kind="TITLE" id="78" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
@@ -236,6 +242,7 @@
       <actions>
         <grant-reward kind="EXP" id="0" amount="2954681"/>
         <grant-reward kind="ITEM" id="101800512" amount="1"/>
+        <grant-reward kind="TITLE" id="78" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
@@ -251,6 +258,7 @@
       <actions>
         <grant-reward kind="EXP" id="0" amount="2954681"/>
         <grant-reward kind="ITEM" id="101900501" amount="1"/>
+        <grant-reward kind="TITLE" id="78" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
@@ -266,6 +274,7 @@
       <actions>
         <grant-reward kind="EXP" id="0" amount="2954681"/>
         <grant-reward kind="ITEM" id="102000898" amount="1"/>
+        <grant-reward kind="TITLE" id="78" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>
@@ -281,6 +290,7 @@
       <actions>
         <grant-reward kind="EXP" id="0" amount="2954681"/>
         <grant-reward kind="ITEM" id="102100493" amount="1"/>
+        <grant-reward kind="TITLE" id="78" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

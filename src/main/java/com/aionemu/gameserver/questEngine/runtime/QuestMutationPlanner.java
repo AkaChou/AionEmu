@@ -245,8 +245,8 @@ public final class QuestMutationPlanner {
 			return;
 		}
 		var repeat = definition.definition().metadata().repeatPolicy();
-		if (repeat.maxRepeatCount() >= 255
-				|| snapshot.completeCount() != repeat.maxRepeatCount() - 1) {
+		if (repeat.rewardRepeatCount() == 0
+				|| snapshot.completeCount() != repeat.rewardRepeatCount() - 1) {
 			return;
 		}
 		for (QuestReward reward : definition.definition().metadata().extendedRewards()) {

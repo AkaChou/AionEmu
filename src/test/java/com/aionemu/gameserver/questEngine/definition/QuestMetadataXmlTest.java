@@ -21,7 +21,7 @@ class QuestMetadataXmlTest {
 				    <races><race id="ELYOS"/></races>
 				    <classes><class id="FIGHTER"/></classes>
 				    <gender id="FEMALE"/>
-				    <repeat max-repeat-count="3" cooldown-seconds="60" daily="false" weekly="true" cycles="MON WED"/>
+				    <repeat max-repeat-count="255" reward-repeat-count="3" cooldown-seconds="60" daily="false" weekly="true" cycles="MON WED"/>
 				    <prerequisites><quest id="1000" reward-mode="1"/></prerequisites>
 				    <items><item id="182400001" count="5"/></items>
 				    <inventory-items><item id="182400002" count="1"/></inventory-items>
@@ -47,7 +47,8 @@ class QuestMetadataXmlTest {
 		assertEquals("ELYOS", metadata.permittedRaces().iterator().next());
 		assertEquals("FIGHTER", metadata.permittedClasses().iterator().next());
 		assertEquals("FEMALE", metadata.permittedGender());
-		assertEquals(3, metadata.repeatPolicy().maxRepeatCount());
+		assertEquals(255, metadata.repeatPolicy().maxRepeatCount());
+		assertEquals(3, metadata.repeatPolicy().rewardRepeatCount());
 		assertEquals(1, metadata.maxCountLimitedQuest());
 		assertTrue(metadata.cannotShare());
 		assertEquals(399, metadata.combineSkillPoint());

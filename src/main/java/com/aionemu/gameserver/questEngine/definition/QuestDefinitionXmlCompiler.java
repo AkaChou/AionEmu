@@ -140,7 +140,10 @@ public final class QuestDefinitionXmlCompiler {
 		Set<String> repeatCycles = Set.of();
 		Element repeatElement = child(element, "repeat");
 		if (repeatElement != null) {
-			repeat = new RepeatPolicy(integer(repeatElement, "max-repeat-count"),
+			int maxRepeatCount = integer(repeatElement, "max-repeat-count");
+			repeat = new RepeatPolicy(maxRepeatCount,
+				integerOrDefault(repeatElement, "reward-repeat-count",
+					maxRepeatCount < 255 ? maxRepeatCount : 0),
 				longInteger(repeatElement, "cooldown-seconds"), bool(repeatElement, "daily"), bool(repeatElement, "weekly"));
 			repeatCycles = parseWhitespaceSet(attributeOrDefault(repeatElement, "cycles", ""));
 		}

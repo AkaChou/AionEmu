@@ -10,7 +10,7 @@
     <rewards>
       <reward kind="GOLD" id="0" amount="1807920"/>
       <reward kind="EXP" id="0" amount="8961038"/>
-      <reward kind="TITLE" id="295" amount="1"/>
+      <reward kind="TITLE" id="301" amount="1"/>
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="15306"/>

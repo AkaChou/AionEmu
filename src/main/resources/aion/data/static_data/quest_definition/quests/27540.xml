@@ -7,7 +7,7 @@
     <rewards>
       <reward kind="EXP" id="0" amount="4020773"/>
       <reward kind="AP" id="0" amount="450"/>
-      <reward kind="TITLE" id="174" amount="1"/>
+      <reward kind="TITLE" id="175" amount="1"/>
     </rewards>
     <drops>
       <drop npc-id="217204" item-id="182216160" chance="100" each-member="true" collecting-step="4"/>

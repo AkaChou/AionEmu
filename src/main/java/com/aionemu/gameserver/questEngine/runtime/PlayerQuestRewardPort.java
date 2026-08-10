@@ -38,8 +38,7 @@ import java.util.function.IntPredicate;
  *
  * <p>TITLE 奖励在调用方连接上经 {@link PlayerTitleListDAO#storeInTransaction} 持久化，
  * 与任务状态同事务；重复领取幂等（已拥有则不重复发放）。
- * TITLE 奖励只更新内存 TitleList，不发 SM_TITLE_INFO 表现包（与其他 durable 奖励一致，
- * 表现层刷新留待统一处理）。</p>
+ * 获得称号消息和 TitleList 刷新仅在事务提交后发送。</p>
  */
 public final class PlayerQuestRewardPort implements QuestRewardPort {
 	private final QuestPlayerPort players;
@@ -169,8 +168,12 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 				playerDao.storeInTransaction(connection, snapshot.playerId(), player.getCommonData());
 			}
 			final QuestInventoryPersistenceStage committedInventoryStage = inventoryStage;
+			List<Integer> committedTitles = List.copyOf(grantedTitles);
 			return QuestTransactionParticipant.of(() -> {
 				committedInventoryStage.afterCommit();
+				for (int titleId : committedTitles) {
+					player.getTitleList().notifyQuestReward(titleId);
+				}
 			}, () -> {
 				committedInventoryStage.afterRollback();
 				rollbackTitles(player, grantedTitles);

@@ -194,6 +194,37 @@ class QuestMutationPlannerTest {
 	}
 
 	@Test
+	void extendedTitleIsGrantedAtItsRewardRepeatCountWithoutLimitingFurtherRepeats() {
+		String xml = """
+				<quest-definition id="1307" version="1">
+				  <metadata name="repeat-title" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+				    <repeat max-repeat-count="255" reward-repeat-count="5" cooldown-seconds="0" daily="false" weekly="false"/>
+				    <extended-rewards><reward kind="TITLE" id="45" amount="1"/></extended-rewards>
+				  </metadata>
+				  <nodes><node label="reward"><project status="REWARD"/></node><node label="complete"><project status="COMPLETE"/></node></nodes>
+				  <transitions><transition source="reward" target="complete">
+				    <event><talk-to-npc npc-id="700001"/></event>
+				    <actions><complete-quest reward-index="0"/></actions>
+				    <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
+				  </transition></transitions>
+				</quest-definition>
+				""";
+		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
+			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+		var transition = definition.definition().transitions().getFirst();
+		QuestEvent event = new QuestEvent.TalkToNpc(700001);
+		QuestSnapshot snapshot = new QuestSnapshot(7, 1307, QuestStatus.REWARD, 0, Map.of());
+
+		assertFalse(QuestMutationPlanner.plan(definition, snapshot.withCompleteCount(3), event, transition)
+			.orElseThrow().requiredActions().stream().anyMatch(QuestAction.GrantReward.class::isInstance));
+		assertTrue(QuestMutationPlanner.plan(definition, snapshot.withCompleteCount(4), event, transition)
+			.orElseThrow().requiredActions().contains(new QuestAction.GrantReward("TITLE", 45, 1,
+				com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.EXACT)));
+		assertFalse(QuestMutationPlanner.plan(definition, snapshot.withCompleteCount(5), event, transition)
+			.orElseThrow().requiredActions().stream().anyMatch(QuestAction.GrantReward.class::isInstance));
+	}
+
+	@Test
 	void startConditionGroupsAreAndInsideAndOrAcrossGroups() {
 		String xml = """
 				<quest-definition id="1306" version="1">

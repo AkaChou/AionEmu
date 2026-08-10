@@ -93,6 +93,8 @@ public class QuestTemplate {
 	protected int maxlevelPermitted;
 	@XmlAttribute(name = "max_repeat_count")
 	protected Integer maxRepeatCount;
+	@XmlAttribute(name = "reward_repeat_count")
+	protected Integer rewardRepeatCount;
 	@XmlAttribute(name = "quest_cooltime")
 	protected int questCooltime;
 	@XmlAttribute(name = "rank")
@@ -390,6 +392,14 @@ public class QuestTemplate {
 			return 1;
 		}
 		return maxRepeatCount;
+	}
+
+	/** 返回达到扩展奖励所需的完成次数。 / Returns the completion count required for extended rewards. */
+	public int getRewardRepeatCount() {
+		if (rewardRepeatCount != null) {
+			return rewardRepeatCount;
+		}
+		return getMaxRepeatCount();
 	}
 
 	 /**

@@ -139,7 +139,8 @@ public final class QuestService {
 		}
 		List<QuestItems> questItems = new ArrayList<QuestItems>();
 		if (!template.getExtendedRewards().isEmpty()) {
-			if (qs.getCompleteCount() == template.getMaxRepeatCount() - 1) {
+			if (template.getRewardRepeatCount() > 0
+					&& qs.getCompleteCount() == template.getRewardRepeatCount() - 1) {
 				questItems.addAll(getRewardItems(env, template, true, reward));
 				extendedRewards = template.getExtendedRewards().get(0);
 			}

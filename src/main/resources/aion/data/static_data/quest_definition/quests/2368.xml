@@ -4,13 +4,14 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="2" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="2" reward-repeat-count="2" cooldown-seconds="0" daily="false" weekly="false"/>
     <rewards>
       <reward kind="GOLD" id="0" amount="9200"/>
       <reward kind="EXP" id="0" amount="593431"/>
     </rewards>
     <extended-rewards>
       <reward kind="ITEM" id="188050584" amount="3"/>
+      <reward kind="TITLE" id="77" amount="1"/>
     </extended-rewards>
   </metadata>
   <progress>

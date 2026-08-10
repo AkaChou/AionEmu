@@ -9,6 +9,7 @@
     </classes>
     <rewards>
       <reward kind="EXP" id="0" amount="633457"/>
+      <reward kind="TITLE" id="88" amount="1"/>
     </rewards>
   </metadata>
   <progress>
@@ -37,6 +38,6 @@
     <transition source="started" target="started"><event><talk-to-npc npc-id="204056" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
 
     <!-- 领奖:204056 发放固定奖励 (exp + 头衔 88)。 -->
-    <npc-complete npc-id="204056" source="reward" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="204056" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

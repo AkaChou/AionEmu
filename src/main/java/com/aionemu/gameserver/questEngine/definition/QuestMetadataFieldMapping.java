@@ -16,6 +16,7 @@ public final class QuestMetadataFieldMapping {
 		fields.put("maxlevel_permitted", "QuestMetadata.maxLevel");
 		fields.put("rank", "QuestMetadata.rank");
 		fields.put("max_repeat_count", "QuestMetadata.repeatPolicy.maxRepeatCount");
+		fields.put("reward_repeat_count", "QuestMetadata.repeatPolicy.rewardRepeatCount");
 		fields.put("max_count_limited_quest", "QuestMetadata.maxCountLimitedQuest");
 		fields.put("count_recover_limited_quest", "QuestMetadata.countRecoverLimitedQuest");
 		fields.put("cannot_share", "QuestMetadata.cannotShare");

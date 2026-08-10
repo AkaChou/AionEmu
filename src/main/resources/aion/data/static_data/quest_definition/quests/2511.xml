@@ -17,6 +17,7 @@
       <reward kind="GOLD" id="0" amount="57000"/>
       <reward kind="EXP" id="0" amount="806224"/>
       <reward kind="ITEM" id="186000008" amount="2"/>
+      <reward kind="TITLE" id="75" amount="1"/>
     </rewards>
     <drops>
       <drop npc-id="213914" item-id="182204407" chance="100" each-member="true" collecting-step="0"/>
@@ -202,6 +203,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="204711" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="204711" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

@@ -44,6 +44,7 @@
 		<xs:attribute name="maxlevel_permitted" type="xs:int" default="0"/>
 		<xs:attribute name="rank" type="xs:int" default="0"/>
 		<xs:attribute name="max_repeat_count" type="xs:int" default="1"/>
+		<xs:attribute name="reward_repeat_count" type="xs:int" use="optional"/>
 		<xs:attribute name="max_count_limited_quest" type="xs:int" default="1"/>
 		<xs:attribute name="count_recover_limited_quest" type="xs:int" default="1"/>
 		<xs:attribute name="cannot_share" type="xs:boolean" default="false"/>

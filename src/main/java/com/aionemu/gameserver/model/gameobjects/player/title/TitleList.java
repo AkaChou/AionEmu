@@ -57,6 +57,20 @@ public class TitleList {
 		titles.put(titleId, new Title(tt, titleId, remaining));
 	}
 
+	/**
+	 * 提交任务称号奖励后的在线通知；称号已由任务事务加入列表并写库。
+	 * Notifies the online client after a quest title commits.
+	 */
+	public void notifyQuestReward(int titleId) {
+		Title title = titles.get(titleId);
+		if (owner == null || title == null) {
+			return;
+		}
+		PacketSendUtility.sendPacket(owner,
+			SM_SYSTEM_MESSAGE.STR_QUEST_GET_REWARD_TITLE(title.getTemplate().getNameId()));
+		PacketSendUtility.sendPacket(owner, new SM_TITLE_INFO(owner));
+	}
+
 	/** 添加称号。 / Adds title. */
 	public boolean addTitle(int titleId, boolean questReward, int time) {
 		TitleTemplate tt = DataManager.TITLE_DATA.getTitleTemplate(titleId);

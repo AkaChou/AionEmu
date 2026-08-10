@@ -10,6 +10,7 @@
     </classes>
     <rewards>
       <reward kind="EXP" id="0" amount="633457"/>
+      <reward kind="TITLE" id="38" amount="1"/>
     </rewards>
   </metadata>
   <progress>
@@ -74,6 +75,6 @@
     </transition>
 
     <!-- 领奖:203704 发放固定奖励 (exp)。 -->
-    <npc-complete npc-id="203704" source="reward" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="203704" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

@@ -17,6 +17,7 @@
       <reward kind="GOLD" id="0" amount="145780"/>
       <reward kind="EXP" id="0" amount="6454760"/>
       <reward kind="ITEM" id="186000018" amount="6"/>
+      <reward kind="TITLE" id="107" amount="1"/>
     </rewards>
     <drops>
       <drop npc-id="215532" item-id="182206727" chance="80" each-member="true" collecting-step="0"/>
@@ -195,6 +196,7 @@
         <grant-reward kind="GOLD" id="0" amount="145780"/>
         <grant-reward kind="EXP" id="0" amount="6454760"/>
         <grant-reward kind="ITEM" id="186000018" amount="6"/>
+        <grant-reward kind="TITLE" id="107" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

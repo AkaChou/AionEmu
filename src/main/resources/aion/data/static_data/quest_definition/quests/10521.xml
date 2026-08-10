@@ -21,6 +21,7 @@
       <reward kind="SELECTABLE_ITEM" id="102101170" amount="1"/>
       <reward kind="ITEM" id="187000186" amount="1"/>
       <reward kind="ITEM" id="166100009" amount="10"/>
+      <reward kind="TITLE" id="306" amount="1"/>
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="10520"/>
@@ -130,6 +131,7 @@
         <grant-reward kind="SELECTABLE_ITEM" id="102101170" amount="1"/>
         <grant-reward kind="ITEM" id="187000186" amount="1"/>
         <grant-reward kind="ITEM" id="166100009" amount="10"/>
+        <grant-reward kind="TITLE" id="306" amount="1"/>
         <complete-quest reward-index="0"/></actions><after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
