@@ -241,9 +241,9 @@ public final class QuestDefinitionCompiler {
 						&& transition.targetNode() != null
 						&& statuses.get(transition.targetNode()) == QuestStatus.COMPLETE) {
 					for (QuestAction action : transition.actions()) {
-						if (action instanceof QuestAction.CompleteQuest complete) {
+						if (action instanceof QuestAction.CompleteQuest(int rewardIndex)) {
 							completionRewardIndexes.computeIfAbsent(key, ignored -> new HashSet<>())
-								.add(complete.rewardIndex());
+								.add(rewardIndex);
 						}
 					}
 				}
