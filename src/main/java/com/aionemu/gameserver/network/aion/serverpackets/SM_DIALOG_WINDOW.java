@@ -27,7 +27,7 @@ public class SM_DIALOG_WINDOW extends AionServerPacket {
 	 * @param dlgID          对话框页 ID / dialog page id
 	 */
 	public SM_DIALOG_WINDOW(int targetObjectId, int dlgID) {
-		this.targetObjectId = targetObjectId;
+		this.targetObjectId = dlgID == DialogPage.NULL.id() ? 0 : targetObjectId;
 		this.dialogID = dlgID;
 	}
 
@@ -37,9 +37,8 @@ public class SM_DIALOG_WINDOW extends AionServerPacket {
 	 * related quest id
 	 */
 	public SM_DIALOG_WINDOW(int targetObjectId, int dlgID, int questId) {
-		this.targetObjectId = targetObjectId;
-		this.dialogID = dlgID;
-		this.questId = questId;
+		this(targetObjectId, dlgID);
+		this.questId = dlgID == DialogPage.NULL.id() ? 0 : questId;
 	}
 
 	@Override

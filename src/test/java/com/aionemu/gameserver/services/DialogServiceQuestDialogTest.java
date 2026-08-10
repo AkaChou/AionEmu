@@ -66,7 +66,7 @@ class DialogServiceQuestDialogTest {
 
 		DialogService.onDialogSelect(31, player, npc(new NamedAi("normal")), QUEST_ID, 0);
 
-		assertOnlyDialog(player, 10);
+		assertOnlyDialog(player, NPC_OBJECT_ID, 10);
 	}
 
 	@Test
@@ -75,7 +75,7 @@ class DialogServiceQuestDialogTest {
 
 		DialogService.onDialogSelect(31, player, npc(new ActionItemNpcAI2()), QUEST_ID, 0);
 
-		assertOnlyDialog(player, 0);
+		assertOnlyDialog(player, 0, 0);
 	}
 
 	@Test
@@ -84,7 +84,7 @@ class DialogServiceQuestDialogTest {
 
 		DialogService.onDialogSelect(31, player, npc(new QuestItemNpcAI2()), QUEST_ID, 0);
 
-		assertOnlyDialog(player, 0);
+		assertOnlyDialog(player, 0, 0);
 	}
 
 	private static Player playerWithQuest(QuestStatus status) throws Exception {
@@ -116,11 +116,11 @@ class DialogServiceQuestDialogTest {
 		return connection;
 	}
 
-	private static void assertOnlyDialog(Player player, int expectedPage) throws Exception {
+	private static void assertOnlyDialog(Player player, int expectedTargetObjectId, int expectedPage) throws Exception {
 		List<AionServerPacket> packets = packetQueue(player.getClientConnection());
 		assertEquals(1, packets.size());
 		SM_DIALOG_WINDOW dialog = assertInstanceOf(SM_DIALOG_WINDOW.class, packets.getFirst());
-		assertEquals(NPC_OBJECT_ID, intField(SM_DIALOG_WINDOW.class, dialog, "targetObjectId"));
+		assertEquals(expectedTargetObjectId, intField(SM_DIALOG_WINDOW.class, dialog, "targetObjectId"));
 		assertEquals(expectedPage, intField(SM_DIALOG_WINDOW.class, dialog, "dialogID"));
 		assertEquals(0, intField(SM_DIALOG_WINDOW.class, dialog, "questId"));
 	}
