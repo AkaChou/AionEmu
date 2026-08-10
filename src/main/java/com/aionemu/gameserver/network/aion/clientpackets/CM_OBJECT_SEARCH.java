@@ -42,57 +42,83 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
-		SpawnSearchResult searchResult = findSearchResult(npcId);
-		if (searchResult != null) {
-			sendPacket(new SM_SHOW_NPC_ON_MAP(npcId, searchResult.getWorldId(), searchResult.getSpot().getX(),
-					searchResult.getSpot().getY(), searchResult.getSpot().getZ()));
-			if (player.isGM()) {
-				TeleportService2.teleportToNpc(player, searchResult);
-			}
+		boolean gm = player != null && player.isGM();
+		int preferredWorldId = player == null ? 0 : player.getWorldId();
+		SearchTarget target = findSearchTarget(npcId, preferredWorldId, gm);
+		if (target == null) {
+			return;
 		}
+		if (gm) {
+			if (target.npc() != null) {
+				TeleportService2.teleportToNpc(player, target.npc());
+			} else {
+				TeleportService2.teleportToNpc(player, target.location());
+			}
+			return;
+		}
+		SpawnSearchResult searchResult = target.location();
+		if (searchResult == null) {
+			return;
+		}
+		sendPacket(new SM_SHOW_NPC_ON_MAP(npcId, searchResult.getWorldId(), searchResult.getSpot().getX(),
+				searchResult.getSpot().getY(), searchResult.getSpot().getZ()));
 	}
 
-	private static SpawnSearchResult findSearchResult(int npcId) {
-		List<SpawnSearchResult> locations = DataManager.SPAWNS_DATA2.getSpawnLocationsByNpcId(0, npcId);
-		if (locations.isEmpty()) {
+	private static SearchTarget findSearchTarget(int npcId, int preferredWorldId, boolean allowStaticFallback) {
+		List<SpawnSearchResult> locations = DataManager.SPAWNS_DATA2
+				.getSpawnLocationsByNpcId(preferredWorldId, npcId);
+		return selectSearchTarget(npcId, locations, GameWorldBootstrapServices.world().getNpcs(),
+				allowStaticFallback);
+	}
+
+	static SearchTarget selectSearchTarget(int npcId, List<SpawnSearchResult> locations,
+			Collection<? extends Npc> npcs,
+			boolean allowStaticFallback) {
+		for (SpawnSearchResult location : locations) {
+			Npc npc = findLivingNpcAtLocation(npcs, npcId, location);
+			if (npc != null) {
+				return new SearchTarget(location, npc);
+			}
+		}
+		if (!allowStaticFallback) {
 			return null;
 		}
-		Collection<Npc> npcs = GameWorldBootstrapServices.world().getNpcs();
-		for (SpawnSearchResult location : locations) {
-			if (hasNpcAtLocation(npcs, npcId, location, true)) {
-				return location;
-			}
-			// 没有运行时对象时无法证明该刷怪点已死亡，保留静态点作为搜索回退。
-			if (!hasNpcAtLocation(npcs, npcId, location, false)) {
-				return location;
+		for (Npc npc : npcs) {
+			if (isLivingNpc(npc, npcId)) {
+				return new SearchTarget(null, npc);
 			}
 		}
-		return locations.getFirst();
+		return locations.isEmpty() ? null : new SearchTarget(locations.getFirst(), null);
 	}
 
-	private static boolean hasNpcAtLocation(Collection<Npc> npcs, int npcId, SpawnSearchResult location,
-		boolean aliveOnly) {
+	private static Npc findLivingNpcAtLocation(Collection<? extends Npc> npcs, int npcId,
+			SpawnSearchResult location) {
 		for (Npc npc : npcs) {
-			if (npc == null || npc.getNpcId() != npcId || !npc.isSpawned()
+			if (!isLivingNpc(npc, npcId)
 				|| npc.getWorldId() != location.getWorldId() || npc.getSpawn() == null
 				|| !sameLocation(npc, location.getSpot())) {
 				continue;
 			}
-			boolean dead = npc.getLifeStats() != null && npc.getLifeStats().isAlreadyDead();
-			if (!aliveOnly || !dead) {
-				return true;
-			}
+			return npc;
 		}
-		return false;
+		return null;
+	}
+
+	private static boolean isLivingNpc(Npc npc, int npcId) {
+		return npc != null && npc.getNpcId() == npcId && npc.isSpawned()
+				&& (npc.getLifeStats() == null || !npc.getLifeStats().isAlreadyDead());
 	}
 
 	private static boolean sameLocation(Npc npc, SpawnSpotTemplate spot) {
 		return sameCoordinates(npc.getSpawn().getX(), npc.getSpawn().getY(), npc.getSpawn().getZ(), spot)
-			|| sameCoordinates(npc.getX(), npc.getY(), npc.getZ(), spot);
+				|| (npc.getPosition() != null && sameCoordinates(npc.getX(), npc.getY(), npc.getZ(), spot));
 	}
 
 	private static boolean sameCoordinates(float x, float y, float z, SpawnSpotTemplate spot) {
 		return Math.abs(x - spot.getX()) < 0.01f && Math.abs(y - spot.getY()) < 0.01f
 			&& Math.abs(z - spot.getZ()) < 0.01f;
+	}
+
+	static record SearchTarget(SpawnSearchResult location, Npc npc) {
 	}
 }

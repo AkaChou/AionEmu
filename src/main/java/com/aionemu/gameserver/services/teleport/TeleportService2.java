@@ -668,6 +668,16 @@ public class TeleportService2 {
 		teleportToNpc(player, searchResult);
 	}
 
+	/** 将 GM 传送到存活 NPC 当前坐标，避免移动 NPC 的静态刷怪点不可达。 */
+	public static void teleportToNpc(Player player, Npc npc) {
+		if (player == null || npc == null || !npc.isSpawned()
+				|| (npc.getLifeStats() != null && npc.getLifeStats().isAlreadyDead())) {
+			return;
+		}
+		teleportTo(player, npc.getWorldId(), npc.getInstanceId(), npc.getX(), npc.getY(), npc.getZ(),
+				npc.getHeading());
+	}
+
 	/** 将玩家传送到已解析的 NPC 刷新点，确保地图标记与 GM 传送目标一致。 */
 	public static void teleportToNpc(Player player, SpawnSearchResult searchResult) {
 		if (player == null || searchResult == null || searchResult.getSpot() == null) {
