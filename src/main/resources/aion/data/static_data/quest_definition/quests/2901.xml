@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2901" version="1">
-  <metadata name="Dispatch to Altgard" display-name-id="1104101" min-level="10" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Dispatch to Altgard" display-name-id="1104101" min-level="10" max-level="2147483647" category="IMPORTANT" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
+    <classes>
+      <class id="GLADIATOR"/>
+      <class id="TEMPLAR"/>
+    </classes>
     <work-items>
       <item id="182207001" count="1"/>
     </work-items>
@@ -11,6 +15,9 @@
       <reward kind="EXP" id="0" amount="14046"/>
       <reward kind="ITEM" id="160002273" amount="5"/>
     </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="2009" reward-mode="0"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
@@ -18,6 +25,7 @@
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
     <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
     <node label="reward"><project status="REWARD"><vars><var name="var0" value="1"/></vars></project></node>
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
   </nodes>
@@ -25,11 +33,10 @@
     <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="204191" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="204191" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="204191" dialog-id="1009"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <npc-complete npc-id="204191" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="203559" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="203559" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="203559" dialog-id="1009"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="started" target="started1"><event><talk-to-npc npc-id="204191" dialog-id="10000"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><teleport-player-current-or-default world-id="220030000" x="1748" y="1807" z="255" heading="0"/><close-dialog/></after-commit></transition>
+    <transition source="started1" target="started1"><event><talk-to-npc npc-id="203559" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="started1" target="started1"><event><talk-to-npc npc-id="203559" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
+    <transition source="started1" target="reward"><event><talk-to-npc npc-id="203559" dialog-id="1009"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <npc-complete npc-id="203559" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>
