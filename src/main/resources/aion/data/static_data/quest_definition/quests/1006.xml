@@ -156,9 +156,19 @@
       <event><talk-to-npc npc-id="790001" dialog-id="31"/></event>
       <after-commit><show-quest-dialog dialog-id="1693"/></after-commit>
     </transition>
-    <transition source="s3" target="s99">
+    <transition source="s3" target="s99" priority="0">
       <event><talk-to-npc npc-id="790001" dialog-id="10002"/></event>
+      <conditions><has-item item-id="182200009" count="1"/></conditions>
       <actions><remove-item item-id="182200009" count="1"/></actions>
+      <after-commit>
+        <teleport-player-next-available-instance world-id="310010000" x="52" y="174" z="229" heading="0"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s99" priority="1">
+      <event><talk-to-npc npc-id="790001" dialog-id="10002"/></event>
+      <conditions><has-item item-id="182200009" count="1" expected="false"/></conditions>
       <after-commit>
         <teleport-player-next-available-instance world-id="310010000" x="52" y="174" z="229" heading="0"/>
         <sync-quest-state mode="PACKET_ONLY"/>
