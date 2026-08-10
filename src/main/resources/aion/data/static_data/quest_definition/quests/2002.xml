@@ -325,6 +325,12 @@
         <close-dialog/>
       </after-commit>
     </transition>
+    <transition source="s99" target="s12">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="320010000" expected="false"/></conditions>
+      <actions><set-variable field="var0" value="12"/></actions>
+      <after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
     <transition source="s99" target="s13">
       <event>
         <talk-to-npc npc-id="205020" dialog-id="31"/>

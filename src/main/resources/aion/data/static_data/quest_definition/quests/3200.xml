@@ -225,6 +225,18 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <transition source="s1" target="started">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="300100000" expected="false"/></conditions>
+      <actions><set-variable field="var0" value="0"/></actions>
+      <after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="s2" target="started">
+      <event><enter-world/></event>
+      <conditions><world-is world-id="300100000" expected="false"/></conditions>
+      <actions><set-variable field="var0" value="0"/></actions>
+      <after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
     <!-- 与库罗奇内克（804601）对话获取提示。 Talk to Kurochinerk (804601) for a hint. -->
     <transition source="s3" target="s3">
       <event>
