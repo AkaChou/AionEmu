@@ -98,6 +98,35 @@ class PlayerQuestStartEligibilityPortTest {
 		assertTrue(prerequisitePort.snapshot(PLAYER_ID, 10521, new QuestEvent.ZoneMissionEnd()).eligible());
 	}
 
+	@Test
+	void quest1913RequiresTheWarriorBranchAndRewardZeroFromQuest1007() throws Exception {
+		QuestMetadata quest1913 = metadata(1913);
+		Map<Integer, QuestMetadata> metadata = Map.of(1913, quest1913);
+
+		for (PlayerClass permittedClass : List.of(PlayerClass.GLADIATOR, PlayerClass.TEMPLAR)) {
+			Player permitted = player(10);
+			setField(PlayerCommonData.class, permitted.getCommonData(), "playerClass", permittedClass);
+			permitted.getQuestStateList().addQuest(1007,
+				new QuestState(1007, QuestStatus.COMPLETE, 0, 1, null, 0, null));
+			assertTrue(port(permitted, metadata)
+				.snapshot(PLAYER_ID, 1913, new QuestEvent.TalkToNpc(203758, 1002)).eligible());
+		}
+
+		Player wrongReward = player(10);
+		setField(PlayerCommonData.class, wrongReward.getCommonData(), "playerClass", PlayerClass.GLADIATOR);
+		wrongReward.getQuestStateList().addQuest(1007,
+			new QuestState(1007, QuestStatus.COMPLETE, 0, 1, null, 1, null));
+		assertRejected(port(wrongReward, metadata), 1913,
+			new QuestEvent.TalkToNpc(203758, 1002), "START_CONDITION_REJECTED");
+
+		Player wrongClass = player(10);
+		setField(PlayerCommonData.class, wrongClass.getCommonData(), "playerClass", PlayerClass.RANGER);
+		wrongClass.getQuestStateList().addQuest(1007,
+			new QuestState(1007, QuestStatus.COMPLETE, 0, 1, null, 0, null));
+		assertRejected(port(wrongClass, metadata), 1913,
+			new QuestEvent.TalkToNpc(203758, 1002), "CLASS_NOT_PERMITTED");
+	}
+
 	private static TitleList titleListWith(int requiredTitleId) {
 		return new TitleList() {
 			@Override
