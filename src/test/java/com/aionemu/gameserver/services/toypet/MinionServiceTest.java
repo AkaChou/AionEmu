@@ -15,12 +15,14 @@ import org.objenesis.ObjenesisStd;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.MinionData;
+import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.MinionCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.minion.MinionBuff;
 import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
 import com.aionemu.gameserver.model.stats.container.PlayerGameStats;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
+import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.minion.MinionTemplate;
 
 class MinionServiceTest {
@@ -128,12 +130,69 @@ class MinionServiceTest {
 	}
 
 	@Test
+	void recognizesTheQuestContractAndUsesItsRetailPool() {
+		Item contract = new Item(1, new QuestContractTemplate());
+
+		assertTrue(MinionService.isMinionContract(contract));
+		assertEquals(980020, MinionService.questContractMinionId(true));
+		assertEquals(980030, MinionService.questContractMinionId(false));
+	}
+
+	@Test
+	void recognizesBothLevelTenTutorialTicketsAsMinionContracts() {
+		assertTrue(MinionService.isMinionContract(new Item(1, new QuestContractTemplate(190080020))));
+		assertTrue(MinionService.isMinionContract(new Item(2, new QuestContractTemplate(190080021))));
+	}
+
+	@Test
 	void acceptsOnlyImplementedMinionContracts() {
 		assertTrue(MinionService.isSupportedMinionContract(190080005));
+		assertTrue(MinionService.isSupportedMinionContract(190080012));
 		assertTrue(MinionService.isSupportedMinionContract(190080013));
+		assertTrue(MinionService.isSupportedMinionContract(190080020));
+		assertTrue(MinionService.isSupportedMinionContract(190080021));
 		assertTrue(MinionService.isSupportedMinionContract(190089999));
 		assertFalse(MinionService.isSupportedMinionContract(190080004));
 		assertFalse(MinionService.isSupportedMinionContract(190080014));
+	}
+
+	@Test
+	void advancesTypedItemPlayOnlyAfterTheMinionWasCreated() throws Exception {
+		String service = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/toypet/MinionService.java"));
+		int addMinion = service.indexOf("addNewMinion(player, minionId");
+		int failedCreation = service.indexOf("if (addNewMinion == null)", addMinion);
+		int questEvent = service.indexOf("onItemPlayCompletedEvent(player, item.getItemId())", failedCreation);
+
+		assertTrue(addMinion >= 0);
+		assertTrue(failedCreation > addMinion);
+		assertTrue(questEvent > failedCreation);
+	}
+
+	private static final class QuestContractTemplate extends ItemTemplate {
+		private final int templateId;
+
+		private QuestContractTemplate() {
+			this(190080012);
+		}
+
+		private QuestContractTemplate(int templateId) {
+			this.templateId = templateId;
+		}
+
+		@Override
+		public int getTemplateId() {
+			return templateId;
+		}
+
+		@Override
+		public boolean getMinionTicket() {
+			return true;
+		}
+
+		@Override
+		public boolean isMinionCashContract() {
+			return true;
+		}
 	}
 
 	@Test

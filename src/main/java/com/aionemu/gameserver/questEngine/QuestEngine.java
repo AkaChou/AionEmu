@@ -660,9 +660,39 @@ public class QuestEngine implements GameEngine {
 					|| current.getItemCount() <= 0) {
 				return;
 			}
-			productionDispatcher.dispatch(new QuestEvent.ItemPlay(itemId, animationMillis), playerId, 0,
-				QuestDispatchContract.FIRST_NON_UNKNOWN);
+			onItemPlayCompletedEvent(player, itemId);
 		}, animationMillis);
+	}
+
+	/**
+	 * 分发已由调用方成功完成动画和物品效果的 typed item-play 事件。
+	 * Dispatches a typed item-play event after the caller has successfully completed the animation and item effect.
+	 *
+	 * @param player 使用物品的玩家 / player using the item
+	 * @param itemId 物品模板 ID / item template ID
+	 * @return 任务处理结果 / quest handling result
+	 */
+	public HandlerResult onItemPlayCompletedEvent(Player player, int itemId) {
+		if (player == null || itemId <= 0) {
+			return HandlerResult.FAILED;
+		}
+		try {
+			OptionalInt animationMillis = productionDispatcher.itemPlayAnimationMillis(itemId);
+			if (animationMillis.isEmpty()) {
+				return HandlerResult.UNKNOWN;
+			}
+			var typedResult = productionDispatcher.dispatch(
+				new QuestEvent.ItemPlay(itemId, animationMillis.getAsInt()), player.getObjectId(), 0,
+				QuestDispatchContract.FIRST_NON_UNKNOWN);
+			if (typedResult.owners().stream().anyMatch(owner -> owner.result() == QuestRouteResult.FAILED
+					|| owner.result() == QuestRouteResult.BLOCKED)) {
+				return HandlerResult.FAILED;
+			}
+			return typedResult.consumed() ? HandlerResult.SUCCESS : HandlerResult.UNKNOWN;
+		} catch (Exception ex) {
+			// log.error(I18n.get("log.882dbd53a6cc", ex));
+			return HandlerResult.FAILED;
+		}
 	}
 
 	/**

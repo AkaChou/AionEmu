@@ -1,10 +1,13 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
+import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -18,9 +21,11 @@ class QuestMinionTutorialRetailAlignmentTest {
 	}
 
 	private static void assertTutorial(int questId, int workItemId, int npcId) {
-		QuestDefinition definition = load(questId).definition();
+		CompiledQuestDefinition compiled = load(questId);
+		QuestDefinition definition = compiled.definition();
 
 		assertTrue(definition.metadata().itemRequirements().isEmpty());
+		assertEquals(List.of(new QuestReward("ITEM", 190080012, 1)), definition.metadata().rewards());
 		assertEquals(List.of(new QuestItemRequirement(workItemId, 1)),
 			definition.metadata().questWorkItems());
 
@@ -36,7 +41,12 @@ class QuestMinionTutorialRetailAlignmentTest {
 				&& play.itemId() == workItemId)
 			.findFirst().orElseThrow();
 		assertEquals(1500, ((QuestEvent.ItemPlay) itemPlay.event()).animationMillis());
-		assertEquals(List.of(new QuestAction.RemoveItem(workItemId, 1)), itemPlay.actions());
+		assertTrue(itemPlay.actions().isEmpty());
+		var completedContractPlan = QuestMutationPlanner.plan(compiled,
+			new QuestSnapshot(7, questId, QuestStatus.START, 0, Map.of()), itemPlay.event(), itemPlay)
+			.orElseThrow();
+		assertEquals(QuestStatus.REWARD, completedContractPlan.nextStatus());
+		assertTrue(completedContractPlan.requiredActions().isEmpty());
 		assertFalse(definition.transitions().stream().anyMatch(t ->
 			t.event() instanceof QuestEvent.UseItem use && use.itemId() == workItemId));
 

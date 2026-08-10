@@ -50,7 +50,7 @@
     </node>
   </nodes>
   <transitions>
-    <!-- 接取:升级达到 10 级(Asmodian)自动接取,并发放守护灵契约 190080011。 -->
+    <!-- 接取:升级达到 10 级(Asmodian)自动接取,并发放守护灵契约 190080021。 -->
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>
@@ -92,9 +92,6 @@
       <conditions>
         <variable-is field="var0" value="0"/>
       </conditions>
-      <actions>
-        <remove-item item-id="190080021" count="1"/>
-      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>

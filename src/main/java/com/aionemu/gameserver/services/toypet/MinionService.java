@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services.toypet;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
@@ -133,8 +134,7 @@ public class MinionService {
 		}
 
 		final Item item = player.getInventory().getItemByObjId(itemObjId);
-		if (item == null || !item.getItemTemplate().getMinionTicket() || !item.getItemTemplate().isMinionCashContract()
-				|| !isSupportedMinionContract(item.getItemId())) {
+		if (!isMinionContract(item)) {
 			return;
 		}
 		PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, item.getItemId(), 1500, 0), true);
@@ -177,8 +177,12 @@ public class MinionService {
 						minionId = minionId(rnd);
 						break;
 
-					case 190080006:
 					case 190080012:
+						// Retail Contract04: one-star Seiren or Steel Rose (50/50).
+						minionId = questContractMinionId(Rnd.nextBoolean());
+						break;
+
+					case 190080006:
 						rnd = Rnd.get(0, 910);
 						minionId = minionId(rnd);
 						MinionTemplate mediumTemplate = DataManager.MINION_DATA.getMinionTemplate(minionId);
@@ -201,6 +205,8 @@ public class MinionService {
 					case 190080009:
 					case 190080010:
 					case 190080011:
+					case 190080020:
+					case 190080021:
 					case 190089999:
 						rnd = Rnd.get(0, 210);
 						minionId = minionId(rnd);
@@ -244,13 +250,31 @@ public class MinionService {
 					return;
 				}
 				PacketSendUtility.sendPacket(player, new SM_MINIONS(1, addNewMinion, 0));
+				GameEngineServices.questEngine().onItemPlayCompletedEvent(player, item.getItemId());
 				checkQuest(player, item);
 			}
 		}, 1500));
 	}
 
 	static boolean isSupportedMinionContract(int itemId) {
-		return itemId >= 190080005 && itemId <= 190080013 || itemId == 190089999;
+		return itemId >= 190080005 && itemId <= 190080013
+				|| itemId == 190080020 || itemId == 190080021 || itemId == 190089999;
+	}
+
+	/**
+	 * 判断物品是否应由 Familiar 契约包处理。
+	 * Whether an item belongs to the Familiar contract packet path.
+	 *
+	 * @param item 物品 / item
+	 * @return 是否为已支持的契约 / whether it is a supported contract
+	 */
+	public static boolean isMinionContract(Item item) {
+		return item != null && item.getItemTemplate() != null && item.getItemTemplate().getMinionTicket()
+				&& item.getItemTemplate().isMinionCashContract() && isSupportedMinionContract(item.getItemId());
+	}
+
+	static int questContractMinionId(boolean seiren) {
+		return seiren ? 980020 : 980030;
 	}
 
 	/**

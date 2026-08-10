@@ -91,9 +91,6 @@
       <conditions>
         <variable-is field="var0" value="0"/>
       </conditions>
-      <actions>
-        <remove-item item-id="190080020" count="1"/>
-      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
