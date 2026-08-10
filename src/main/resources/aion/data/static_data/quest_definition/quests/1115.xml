@@ -73,7 +73,7 @@
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="1352"/>
+        <show-dialog-window dialog-id="1352"/>
       </after-commit>
     </transition>
     <npc-report npc-id="203058" source="v1" target="reward" page="2375"/>

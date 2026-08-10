@@ -78,7 +78,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="1353"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="shugo" target="shugo">
