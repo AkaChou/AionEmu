@@ -77,7 +77,7 @@
         <talk-to-npc npc-id="204500" dialog-id="31"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <show-quest-dialog dialog-id="10002"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward">

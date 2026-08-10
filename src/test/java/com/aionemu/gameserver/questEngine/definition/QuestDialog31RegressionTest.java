@@ -11,10 +11,18 @@ class QuestDialog31RegressionTest {
 	@Test
 	void migratedQuestHandlersKeepLegacyStartDialogRoutes() throws Exception {
 		assertDialog("1131.xml", "shugo", "shugo", 203101, 2375);
+		assertDialog("14010.xml", "started", "started", 203098, 1011);
+		assertDialog("14020.xml", "started", "started", 203901, 1011);
+		assertDialog("14040.xml", "started", "started", 278501, 10002);
+		assertDialog("14050.xml", "started", "started", 204500, 10002);
 		assertDialog("14014.xml", "s3", "s3", 802045, 2034,
 			new QuestCondition.QuestVariableIs("var0", 3));
 		assertDialog("21033.xml", "started", "started", 204734, 1352);
 		assertDialog("21455.xml", "started", "started", 799240, 1352);
+		assertDialog("24010.xml", "started", "started", 203557, 1011);
+		assertDialog("24020.xml", "started", "started", 204301, 1011);
+		assertDialog("24040.xml", "started", "started", 278001, 10002);
+		assertDialog("24050.xml", "started", "started", 204702, 10002);
 		assertDialog("26823.xml", "s2", "s2", 806289, 1694);
 		assertDialog("30565.xml", "started", "started", 804879, 1011);
 		assertDialog("30565.xml", "s1", "s1", 804879, 2375);
