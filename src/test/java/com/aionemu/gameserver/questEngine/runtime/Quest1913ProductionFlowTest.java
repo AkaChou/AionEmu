@@ -55,6 +55,55 @@ class Quest1913ProductionFlowTest {
 			new AfterCommitAction.ShowQuestDialog(1003)), afterCommit);
 	}
 
+	@Test
+	void stepToOneDialogAlsoStartsTheQuestThroughTheClientSpecificRoute() throws Exception {
+		CompiledQuestDefinition definition = definition();
+		AtomicReference<QuestStatus> status = new AtomicReference<>(QuestStatus.NONE);
+		List<QuestMutationPlan> plans = new ArrayList<>();
+		List<AfterCommitAction> afterCommit = new ArrayList<>();
+		QuestProductionDispatcher dispatcher = dispatcher(definition, status, plans, afterCommit);
+
+		QuestEventRouter.DispatchResult accept = dispatch(dispatcher, 10000);
+
+		assertHandled(accept);
+		assertEquals(QuestStatus.START, status.get());
+		assertEquals(QuestStatus.START, plans.getLast().nextStatus());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
+			new AfterCommitAction.CloseDialog()), afterCommit);
+	}
+
+	@Test
+	void relatedClassBranchesExposeTheSameClientStartProtocol() throws Exception {
+		for (Map.Entry<Integer, Integer> branch : Map.of(
+			1914, 203759,
+			1915, 203760,
+			1916, 203761).entrySet()) {
+			AtomicReference<QuestStatus> status = new AtomicReference<>(QuestStatus.NONE);
+			List<QuestMutationPlan> plans = new ArrayList<>();
+			List<AfterCommitAction> afterCommit = new ArrayList<>();
+			QuestProductionDispatcher dispatcher = dispatcher(
+				definition(branch.getKey()), status, plans, afterCommit);
+
+			QuestEventRouter.DispatchResult offer = dispatch(
+				dispatcher, branch.getKey(), branch.getValue(), 31);
+			assertHandled(offer);
+			assertEquals(QuestStatus.NONE, status.get());
+			assertTrue(plans.isEmpty());
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1011)), afterCommit);
+
+			afterCommit.clear();
+			QuestEventRouter.DispatchResult accept = dispatch(
+				dispatcher, branch.getKey(), branch.getValue(), 10000);
+			assertHandled(accept);
+			assertEquals(QuestStatus.START, status.get());
+			assertEquals(QuestStatus.START, plans.getLast().nextStatus());
+			assertEquals(List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
+				new AfterCommitAction.CloseDialog()), afterCommit);
+		}
+	}
+
 	private static QuestProductionDispatcher dispatcher(CompiledQuestDefinition definition,
 			AtomicReference<QuestStatus> status, List<QuestMutationPlan> plans,
 			List<AfterCommitAction> afterCommit) {
@@ -83,12 +132,21 @@ class Quest1913ProductionFlowTest {
 	}
 
 	private static QuestEventRouter.DispatchResult dispatch(QuestProductionDispatcher dispatcher, int dialogId) {
-		return dispatcher.dispatch(new QuestEvent.TalkToNpc(NPC_ID, dialogId, NPC_OBJECT_ID),
-			PLAYER_ID, QUEST_ID, QuestDispatchContract.EXCLUSIVE);
+		return dispatch(dispatcher, QUEST_ID, NPC_ID, dialogId);
+	}
+
+	private static QuestEventRouter.DispatchResult dispatch(QuestProductionDispatcher dispatcher,
+			int questId, int npcId, int dialogId) {
+		return dispatcher.dispatch(new QuestEvent.TalkToNpc(npcId, dialogId, NPC_OBJECT_ID),
+			PLAYER_ID, questId, QuestDispatchContract.EXCLUSIVE);
 	}
 
 	private static CompiledQuestDefinition definition() throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/1913.xml";
+		return definition(QUEST_ID);
+	}
+
+	private static CompiledQuestDefinition definition(int questId) throws Exception {
+		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
 		try (InputStream input = Quest1913ProductionFlowTest.class.getResourceAsStream(resource)) {
 			if (input == null) {
 				throw new IllegalStateException("missing resource " + resource);

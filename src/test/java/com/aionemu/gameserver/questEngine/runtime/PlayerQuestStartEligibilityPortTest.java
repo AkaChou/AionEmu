@@ -99,32 +99,44 @@ class PlayerQuestStartEligibilityPortTest {
 	}
 
 	@Test
-	void quest1913RequiresTheWarriorBranchAndRewardZeroFromQuest1007() throws Exception {
-		QuestMetadata quest1913 = metadata(1913);
-		Map<Integer, QuestMetadata> metadata = Map.of(1913, quest1913);
+	void dispatchToVerteronRequiresTheMatchingClassAndQuest1007RewardBranch() throws Exception {
+		List<DispatchBranch> branches = List.of(
+			new DispatchBranch(1913, 203758, 0, List.of(PlayerClass.GLADIATOR, PlayerClass.TEMPLAR)),
+			new DispatchBranch(1914, 203759, 1, List.of(PlayerClass.ASSASSIN, PlayerClass.RANGER)),
+			new DispatchBranch(1915, 203760, 2, List.of(PlayerClass.SORCERER, PlayerClass.SPIRIT_MASTER)),
+			new DispatchBranch(1916, 203761, 3, List.of(PlayerClass.CHANTER, PlayerClass.CLERIC)));
 
-		for (PlayerClass permittedClass : List.of(PlayerClass.GLADIATOR, PlayerClass.TEMPLAR)) {
-			Player permitted = player(10);
-			setField(PlayerCommonData.class, permitted.getCommonData(), "playerClass", permittedClass);
-			permitted.getQuestStateList().addQuest(1007,
-				new QuestState(1007, QuestStatus.COMPLETE, 0, 1, null, 0, null));
-			assertTrue(port(permitted, metadata)
-				.snapshot(PLAYER_ID, 1913, new QuestEvent.TalkToNpc(203758, 1002)).eligible());
+		for (DispatchBranch branch : branches) {
+			QuestMetadata questMetadata = metadata(branch.questId());
+			Map<Integer, QuestMetadata> metadata = Map.of(branch.questId(), questMetadata);
+			QuestEvent event = new QuestEvent.TalkToNpc(branch.npcId(), 1002);
+
+			for (PlayerClass permittedClass : branch.permittedClasses()) {
+				Player permitted = player(10);
+				setField(PlayerCommonData.class, permitted.getCommonData(), "playerClass", permittedClass);
+				permitted.getQuestStateList().addQuest(1007,
+					new QuestState(1007, QuestStatus.COMPLETE, 0, 1, null, branch.rewardMode(), null));
+				assertTrue(port(permitted, metadata).snapshot(PLAYER_ID, branch.questId(), event).eligible());
+			}
+
+			Player wrongReward = player(10);
+			setField(PlayerCommonData.class, wrongReward.getCommonData(), "playerClass",
+				branch.permittedClasses().getFirst());
+			wrongReward.getQuestStateList().addQuest(1007,
+				new QuestState(1007, QuestStatus.COMPLETE, 0, 1, null,
+					(branch.rewardMode() + 1) % branches.size(), null));
+			assertRejected(port(wrongReward, metadata), branch.questId(), event, "START_CONDITION_REJECTED");
+
+			Player wrongClass = player(10);
+			setField(PlayerCommonData.class, wrongClass.getCommonData(), "playerClass", PlayerClass.GUNSLINGER);
+			wrongClass.getQuestStateList().addQuest(1007,
+				new QuestState(1007, QuestStatus.COMPLETE, 0, 1, null, branch.rewardMode(), null));
+			assertRejected(port(wrongClass, metadata), branch.questId(), event, "CLASS_NOT_PERMITTED");
 		}
+	}
 
-		Player wrongReward = player(10);
-		setField(PlayerCommonData.class, wrongReward.getCommonData(), "playerClass", PlayerClass.GLADIATOR);
-		wrongReward.getQuestStateList().addQuest(1007,
-			new QuestState(1007, QuestStatus.COMPLETE, 0, 1, null, 1, null));
-		assertRejected(port(wrongReward, metadata), 1913,
-			new QuestEvent.TalkToNpc(203758, 1002), "START_CONDITION_REJECTED");
-
-		Player wrongClass = player(10);
-		setField(PlayerCommonData.class, wrongClass.getCommonData(), "playerClass", PlayerClass.RANGER);
-		wrongClass.getQuestStateList().addQuest(1007,
-			new QuestState(1007, QuestStatus.COMPLETE, 0, 1, null, 0, null));
-		assertRejected(port(wrongClass, metadata), 1913,
-			new QuestEvent.TalkToNpc(203758, 1002), "CLASS_NOT_PERMITTED");
+	private record DispatchBranch(int questId, int npcId, int rewardMode,
+			List<PlayerClass> permittedClasses) {
 	}
 
 	private static TitleList titleListWith(int requiredTitleId) {
