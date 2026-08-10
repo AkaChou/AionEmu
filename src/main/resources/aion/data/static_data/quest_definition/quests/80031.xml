@@ -48,31 +48,8 @@
     </node>
   </nodes>
   <transitions>
-    <!-- 799781 接取（sendQuestStartDialog 标准路径） -->
-    <transition source="unaccepted" target="started">
-      <event>
-        <talk-to-npc npc-id="799781" dialog-id="1002"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <talk-to-npc npc-id="799781" dialog-id="20000"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
+    <!-- 799781 接取（sendQuestStartDialog 标准路径；npc-start 展开 31/1007/1002/20000 与拒绝路由） -->
+    <npc-start npc-id="799781" source="unaccepted" target="started"/>
     <!-- START 状态说明对话 -->
     <transition source="started" target="started">
       <event>

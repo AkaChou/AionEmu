@@ -26,7 +26,7 @@
     <node label="complete"><project status="COMPLETE"><vars/></project></node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="started"><event><enter-world/></event><conditions><world-is world-id="110010000"/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><enter-world/></event><conditions><world-is world-id="110010000"/><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="203752" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="203752" dialog-id="1012"/></event><after-commit><show-quest-dialog dialog-id="1012"/></after-commit></transition>
     <transition source="started" target="s1"><event><talk-to-npc npc-id="203752" dialog-id="10000"/></event><actions><set-variable field="var0" value="1"/><give-item item-id="182215973" count="1"/></actions><after-commit><teleport-player-current-or-default world-id="210100000" x="1456.6283" y="1299.3306" z="336.49023" heading="8"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
