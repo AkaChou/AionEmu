@@ -8,7 +8,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import java.util.Objects;
 
 /**
- * Real {@link QuestMoviePort}: after commit, sends {@code SM_PLAY_MOVIE(0, movieId)}.
+ * Real {@link QuestMoviePort}: after commit, sends {@link SM_PLAY_MOVIE} with the requested client resource type.
  * The movie-end callback ({@code MovieEnd(movieId)}) is the authoritative client
  * event; this port never estimates movie duration with a local timer.
  */
@@ -27,8 +27,8 @@ public final class PlayerQuestMoviePort implements QuestMoviePort {
 	private final TypedMovieCall play;
 
 	public PlayerQuestMoviePort(QuestPlayerPort players) {
-		this(players, (player, movieId) -> {
-			PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(QuestMovieType.CUTSCENE.wireValue(), movieId));
+		this(players, (player, movieId, type) -> {
+			PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(type.wireValue(), movieId));
 			return true;
 		});
 	}

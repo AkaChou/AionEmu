@@ -40,7 +40,7 @@
         <enter-zone zone="AKARIOS_PLAINS_210010000"/>
       </event>
       <after-commit>
-        <play-movie movie-id="1"/>
+        <play-movie movie-id="1" type="CUTSCENE_MOVIE"/>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
@@ -49,7 +49,7 @@
         <enter-zone zone="AKARIOS_PLAINS_210010000"/>
       </event>
       <after-commit>
-        <play-movie movie-id="1"/>
+        <play-movie movie-id="1" type="CUTSCENE_MOVIE"/>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>

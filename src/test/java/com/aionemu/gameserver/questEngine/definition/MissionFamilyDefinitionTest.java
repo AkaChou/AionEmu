@@ -71,7 +71,7 @@ class MissionFamilyDefinitionTest {
 			.filter(t -> t.sourceNode().equals("unaccepted") && t.targetNode().equals("started"))
 			.findFirst().orElseThrow();
 		assertEquals(new QuestEvent.EnterZone("AKARIOS_PLAINS_210010000"), start.event());
-		assertEquals(List.of(new AfterCommitAction.PlayMovie(1),
+		assertEquals(List.of(new AfterCommitAction.PlayMovie(1, QuestMovieType.CUTSCENE_MOVIE),
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH)), start.afterCommit());
 
 		QuestTransition done = transitions.stream()
@@ -80,6 +80,12 @@ class MissionFamilyDefinitionTest {
 		assertEquals(new QuestEvent.MovieEnd(1), done.event());
 		assertTrue(done.actions().contains(new QuestAction.GrantReward("EXP", 0, 1, QuestRewardAmountMode.QUEST_BASE)));
 		assertTrue(done.actions().contains(new QuestAction.CompleteQuest(0)));
+	}
+
+	@Test
+	void bothProloguesUseTheCutsceneMovieResourceFamily() throws Exception {
+		assertPrologueMovieType("1000.xml", 1);
+		assertPrologueMovieType("2000.xml", 2);
 	}
 
 	@Test
@@ -328,5 +334,16 @@ class MissionFamilyDefinitionTest {
 		InputStream input = getClass().getResourceAsStream(path);
 		if (input == null) throw new IllegalStateException("missing resource " + path);
 		return input;
+	}
+
+	private void assertPrologueMovieType(String file, int movieId) throws Exception {
+		List<AfterCommitAction.PlayMovie> movies = definition(file).definition().transitions().stream()
+			.flatMap(transition -> transition.afterCommit().stream())
+			.filter(AfterCommitAction.PlayMovie.class::isInstance)
+			.map(AfterCommitAction.PlayMovie.class::cast)
+			.toList();
+		assertEquals(List.of(
+			new AfterCommitAction.PlayMovie(movieId, QuestMovieType.CUTSCENE_MOVIE),
+			new AfterCommitAction.PlayMovie(movieId, QuestMovieType.CUTSCENE_MOVIE)), movies);
 	}
 }
