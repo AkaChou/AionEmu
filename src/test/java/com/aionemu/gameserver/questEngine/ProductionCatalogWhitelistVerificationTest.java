@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine;
 
+import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionCatalogManifest;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
@@ -60,6 +61,10 @@ public class ProductionCatalogWhitelistVerificationTest {
 					violations.add(entry.id() + ":ID_MISMATCH:" + d.id());
 				}
 				for (var t : d.definition().transitions()) {
+					if (t.event() instanceof QuestEvent.EnterZone
+							&& t.afterCommit().stream().anyMatch(AfterCommitAction.ShowQuestDialog.class::isInstance)) {
+						violations.add(d.id() + ":ENTER_ZONE_QUEST_DIALOG");
+					}
 					if (!(t.event() instanceof QuestEvent.TalkToNpc)
 							&& !(t.event() instanceof QuestEvent.KillNpc)
 							&& !(t.event() instanceof QuestEvent.KillNpcSet)
