@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,18 +26,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class Quest1913ProductionFlowTest {
 	private static final int PLAYER_ID = 7;
 	private static final int QUEST_ID = 1913;
-	private static final int NPC_ID = 203758;
+	private static final int START_NPC_ID = 203758;
+	private static final int TRANSPORT_NPC_ID = 203726;
+	private static final int REWARD_NPC_ID = 203097;
 	private static final int NPC_OBJECT_ID = 900_007;
 
 	@Test
 	void startDialogKeepsTheQuestUnacceptedAndAcceptDialogStartsIt() throws Exception {
 		CompiledQuestDefinition definition = definition();
 		AtomicReference<QuestStatus> status = new AtomicReference<>(QuestStatus.NONE);
+		AtomicInteger packedVariables = new AtomicInteger();
 		List<QuestMutationPlan> plans = new ArrayList<>();
 		List<AfterCommitAction> afterCommit = new ArrayList<>();
-		QuestProductionDispatcher dispatcher = dispatcher(definition, status, plans, afterCommit);
+		QuestProductionDispatcher dispatcher = dispatcher(definition, status, packedVariables, plans, afterCommit);
 
-		QuestEventRouter.DispatchResult offer = dispatch(dispatcher, 31);
+		QuestEventRouter.DispatchResult offer = dispatch(dispatcher, START_NPC_ID, 31);
 
 		assertHandled(offer);
 		assertEquals(QuestStatus.NONE, status.get());
@@ -45,10 +49,11 @@ class Quest1913ProductionFlowTest {
 
 		plans.clear();
 		afterCommit.clear();
-		QuestEventRouter.DispatchResult accept = dispatch(dispatcher, 1002);
+		QuestEventRouter.DispatchResult accept = dispatch(dispatcher, START_NPC_ID, 1002);
 
 		assertHandled(accept);
 		assertEquals(QuestStatus.START, status.get());
+		assertEquals(0, packedVariables.get());
 		assertEquals(QuestStatus.START, plans.getLast().nextStatus());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
@@ -56,59 +61,73 @@ class Quest1913ProductionFlowTest {
 	}
 
 	@Test
-	void stepToOneDialogAlsoStartsTheQuestThroughTheClientSpecificRoute() throws Exception {
+	void stepToOneDialogAdvancesTheStartedQuestAndTeleportsToVerteron() throws Exception {
 		CompiledQuestDefinition definition = definition();
-		AtomicReference<QuestStatus> status = new AtomicReference<>(QuestStatus.NONE);
+		AtomicReference<QuestStatus> status = new AtomicReference<>(QuestStatus.START);
+		AtomicInteger packedVariables = new AtomicInteger();
 		List<QuestMutationPlan> plans = new ArrayList<>();
 		List<AfterCommitAction> afterCommit = new ArrayList<>();
-		QuestProductionDispatcher dispatcher = dispatcher(definition, status, plans, afterCommit);
+		QuestProductionDispatcher dispatcher = dispatcher(definition, status, packedVariables, plans, afterCommit);
 
-		QuestEventRouter.DispatchResult accept = dispatch(dispatcher, 10000);
+		QuestEventRouter.DispatchResult offer = dispatch(dispatcher, TRANSPORT_NPC_ID, 31);
 
-		assertHandled(accept);
+		assertHandled(offer);
 		assertEquals(QuestStatus.START, status.get());
+		assertEquals(0, packedVariables.get());
+		assertTrue(plans.isEmpty());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1352)), afterCommit);
+
+		afterCommit.clear();
+		QuestEventRouter.DispatchResult teleport = dispatch(dispatcher, TRANSPORT_NPC_ID, 10000);
+
+		assertHandled(teleport);
+		assertEquals(QuestStatus.START, status.get());
+		assertEquals(1, packedVariables.get());
 		assertEquals(QuestStatus.START, plans.getLast().nextStatus());
+		assertEquals(1, plans.getLast().nextPackedVariables());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), plans.getLast().requiredActions());
 		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.TeleportPlayer(210030000, 1643f, 1500f, 120f, (byte) 0),
 			new AfterCommitAction.CloseDialog()), afterCommit);
 	}
 
 	@Test
-	void relatedClassBranchesExposeTheSameClientStartProtocol() throws Exception {
-		for (Map.Entry<Integer, Integer> branch : Map.of(
-			1914, 203759,
-			1915, 203760,
-			1916, 203761).entrySet()) {
-			AtomicReference<QuestStatus> status = new AtomicReference<>(QuestStatus.NONE);
-			List<QuestMutationPlan> plans = new ArrayList<>();
-			List<AfterCommitAction> afterCommit = new ArrayList<>();
-			QuestProductionDispatcher dispatcher = dispatcher(
-				definition(branch.getKey()), status, plans, afterCommit);
+	void rewardDialogIsAvailableOnlyAfterTheVerteronTransfer() throws Exception {
+		CompiledQuestDefinition definition = definition();
+		AtomicReference<QuestStatus> status = new AtomicReference<>(QuestStatus.START);
+		AtomicInteger packedVariables = new AtomicInteger(1);
+		List<QuestMutationPlan> plans = new ArrayList<>();
+		List<AfterCommitAction> afterCommit = new ArrayList<>();
+		QuestProductionDispatcher dispatcher = dispatcher(definition, status, packedVariables, plans, afterCommit);
 
-			QuestEventRouter.DispatchResult offer = dispatch(
-				dispatcher, branch.getKey(), branch.getValue(), 31);
-			assertHandled(offer);
-			assertEquals(QuestStatus.NONE, status.get());
-			assertTrue(plans.isEmpty());
-			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1011)), afterCommit);
+		QuestEventRouter.DispatchResult offer = dispatch(dispatcher, REWARD_NPC_ID, 31);
 
-			afterCommit.clear();
-			QuestEventRouter.DispatchResult accept = dispatch(
-				dispatcher, branch.getKey(), branch.getValue(), 10000);
-			assertHandled(accept);
-			assertEquals(QuestStatus.START, status.get());
-			assertEquals(QuestStatus.START, plans.getLast().nextStatus());
-			assertEquals(List.of(
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-				new AfterCommitAction.CloseDialog()), afterCommit);
-		}
+		assertHandled(offer);
+		assertEquals(QuestStatus.START, status.get());
+		assertEquals(1, packedVariables.get());
+		assertTrue(plans.isEmpty());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)), afterCommit);
+
+		afterCommit.clear();
+		QuestEventRouter.DispatchResult reward = dispatch(dispatcher, REWARD_NPC_ID, 1009);
+
+		assertHandled(reward);
+		assertEquals(QuestStatus.REWARD, status.get());
+		assertEquals(1, packedVariables.get());
+		assertEquals(QuestStatus.REWARD, plans.getLast().nextStatus());
+		assertEquals(1, plans.getLast().nextPackedVariables());
+		assertTrue(plans.getLast().requiredActions().isEmpty());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.ShowQuestDialog(5)), afterCommit);
 	}
 
 	private static QuestProductionDispatcher dispatcher(CompiledQuestDefinition definition,
-			AtomicReference<QuestStatus> status, List<QuestMutationPlan> plans,
+			AtomicReference<QuestStatus> status, AtomicInteger packedVariables, List<QuestMutationPlan> plans,
 			List<AfterCommitAction> afterCommit) {
 		QuestEventPort eventPort = (connection, playerId, questId, event) ->
-			new QuestSnapshot(playerId, questId, status.get(), 0, Map.of())
+			new QuestSnapshot(playerId, questId, status.get(), packedVariables.get(), Map.of())
 				.withStartEligibility(QuestStartEligibility.allowed())
 				.withCompletedQuestIds(Set.of(1007));
 		QuestStatePort statePort = new QuestStatePort() {
@@ -116,6 +135,7 @@ class Quest1913ProductionFlowTest {
 			public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
 				plans.add(plan);
 				status.set(plan.nextStatus());
+				packedVariables.set(plan.nextPackedVariables());
 			}
 
 			@Override
@@ -131,22 +151,14 @@ class Quest1913ProductionFlowTest {
 			new QuestRuntimeMetricsCollector());
 	}
 
-	private static QuestEventRouter.DispatchResult dispatch(QuestProductionDispatcher dispatcher, int dialogId) {
-		return dispatch(dispatcher, QUEST_ID, NPC_ID, dialogId);
-	}
-
 	private static QuestEventRouter.DispatchResult dispatch(QuestProductionDispatcher dispatcher,
-			int questId, int npcId, int dialogId) {
+			int npcId, int dialogId) {
 		return dispatcher.dispatch(new QuestEvent.TalkToNpc(npcId, dialogId, NPC_OBJECT_ID),
-			PLAYER_ID, questId, QuestDispatchContract.EXCLUSIVE);
+			PLAYER_ID, QUEST_ID, QuestDispatchContract.EXCLUSIVE);
 	}
 
 	private static CompiledQuestDefinition definition() throws Exception {
-		return definition(QUEST_ID);
-	}
-
-	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
+		String resource = "/aion/data/static_data/quest_definition/quests/1913.xml";
 		try (InputStream input = Quest1913ProductionFlowTest.class.getResourceAsStream(resource)) {
 			if (input == null) {
 				throw new IllegalStateException("missing resource " + resource);

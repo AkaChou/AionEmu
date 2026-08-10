@@ -117,6 +117,30 @@ class PlayerQuestEventPortTest {
 	}
 
 	@Test
+	void enterZoneSnapshotKeepsAutomaticQuestDialogTargetless() throws Exception {
+		Player player = emptyPlayer();
+		PlayerQuestEventPort port = new PlayerQuestEventPort(playerId -> player);
+
+		QuestSnapshot snapshot = port.snapshot(connection(), PLAYER_ID, QUEST_ID,
+			new QuestEvent.EnterZone("VERTERON_CITADEL_210030000"));
+
+		assertEquals(0, snapshot.interactionObjectId());
+		assertTrue(snapshot.targetlessDialog());
+	}
+
+	@Test
+	void zoneMissionEndSnapshotKeepsAutomaticQuestDialogTargetless() throws Exception {
+		Player player = emptyPlayer();
+		PlayerQuestEventPort port = new PlayerQuestEventPort(playerId -> player);
+
+		QuestSnapshot snapshot = port.snapshot(connection(), PLAYER_ID, QUEST_ID,
+			new QuestEvent.ZoneMissionEnd());
+
+		assertEquals(0, snapshot.interactionObjectId());
+		assertTrue(snapshot.targetlessDialog());
+	}
+
+	@Test
 	void productionEventBoundaryOnlyFreezesStartEligibilityWhenRequestedByTransition() throws Exception {
 		Player player = emptyPlayer();
 		AtomicInteger calls = new AtomicInteger();

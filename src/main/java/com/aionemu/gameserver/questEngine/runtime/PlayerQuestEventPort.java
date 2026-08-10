@@ -102,6 +102,8 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 			case QuestEvent.UseItem _ -> snapshot.withTargetlessDialog();
 			case QuestEvent.QuestDialog _ -> snapshot.withTargetlessDialog();
 			case QuestEvent.LevelUp _ -> snapshot.withTargetlessDialog();
+			case QuestEvent.EnterZone _ -> snapshot.withTargetlessDialog();
+			case QuestEvent.ZoneMissionEnd _ -> snapshot.withTargetlessDialog();
 			default -> snapshot;
 		};
 	}
