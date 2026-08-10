@@ -478,6 +478,32 @@ class QuestDefinitionCompilerTest {
 	}
 
 	@Test
+	void dialogOpenActionsRejectNullPage() {
+		assertThrows(IllegalArgumentException.class, () -> new AfterCommitAction.ShowQuestDialog(0));
+		assertThrows(IllegalArgumentException.class, () -> new AfterCommitAction.ShowDialogWindow(0));
+
+		for (String tag : List.of("show-quest-dialog", "show-quest-selection-dialog", "show-dialog-window")) {
+			String xml = xmlWithTransition("<event><talk-to-npc npc-id=\"700001\"/></event>",
+				"<after-commit><" + tag + " dialog-id=\"0\"/></after-commit>");
+			assertEquals("INVALID_DIALOG_PAGE", assertThrows(QuestCompilationException.class,
+				() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+					xml.getBytes(StandardCharsets.UTF_8)))).code());
+		}
+	}
+
+	@Test
+	void duplicateDialogCloseIsRejected() {
+		assertEquals("DUPLICATE_DIALOG_CLOSE", assertThrows(QuestCompilationException.class,
+			() -> quest(1001)
+				.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))
+				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
+				.node("start", project(QuestStatus.START, vars("var1", 0)))
+				.on(talkToNpc(700001)).from("start").goTo("start")
+				.afterCommit(closeDialog()).afterCommit(closeDialog())
+				.compile()).code());
+	}
+
+	@Test
 	void playMovieCompilesIdenticallyThroughXmlAndDsl() {
 		CompiledQuestDefinition fromDsl = quest(1001)
 				.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))

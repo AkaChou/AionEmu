@@ -271,7 +271,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="0"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="s8" target="s8">
@@ -297,7 +297,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="0"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="s9" target="s9">

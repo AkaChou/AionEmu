@@ -184,10 +184,9 @@
     <transition source="s4" target="s99">
       <event><talk-to-npc npc-id="203550" dialog-id="10002"/></event>
       <after-commit>
-        <show-dialog-window dialog-id="0"/>
+        <close-dialog/>
         <teleport-player-next-available-instance world-id="320020000" x="457.65" y="426.8" z="230.4" heading="0"/>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <close-dialog/>
       </after-commit>
     </transition>
 

@@ -683,10 +683,10 @@ public final class QuestDefinitionXmlCompiler {
 			case "sync-quest-state" -> new AfterCommitAction.SyncQuestState(
 				enumValue(QuestStateSyncMode.class, action, "mode"));
 			case "refresh-player-stats" -> new AfterCommitAction.RefreshPlayerStats();
-			case "show-quest-dialog" -> new AfterCommitAction.ShowQuestDialog(integer(action, "dialog-id"));
+			case "show-quest-dialog" -> new AfterCommitAction.ShowQuestDialog(dialogPage(action));
 			case "show-quest-selection-dialog" -> new AfterCommitAction.ShowQuestSelectionDialog(
-				integer(action, "dialog-id"));
-			case "show-dialog-window" -> new AfterCommitAction.ShowDialogWindow(integer(action, "dialog-id"));
+				dialogPage(action));
+			case "show-dialog-window" -> new AfterCommitAction.ShowDialogWindow(dialogPage(action));
 			case "teleport-player-current-or-default" -> new AfterCommitAction.TeleportPlayer(
 				QuestInstanceTarget.currentOrDefault(), integer(action, "world-id"),
 				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
@@ -903,6 +903,14 @@ public final class QuestDefinitionXmlCompiler {
 			fail("INVALID_INTEGER", element.getTagName() + "." + name);
 			return 0;
 		}
+	}
+
+	private static int dialogPage(Element element) {
+		int dialogId = integer(element, "dialog-id");
+		if (dialogId <= 0) {
+			fail("INVALID_DIALOG_PAGE", element.getTagName() + ".dialog-id must be positive");
+		}
+		return dialogId;
 	}
 
 	private static int integerOrDefault(Element element, String name, int defaultValue) {

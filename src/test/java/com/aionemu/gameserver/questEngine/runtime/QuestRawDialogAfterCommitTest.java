@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class QuestRawDialogAfterCommitTest {
 	@Test
@@ -41,8 +42,12 @@ class QuestRawDialogAfterCommitTest {
 		QuestMutationPlan plan = new QuestMutationPlan(20034, QuestStatus.START, 0, List.of(), List.of());
 
 		afterCommit.execute(new AfterCommitAction.ShowDialogWindow(10009), snapshot, plan);
-		afterCommit.execute(new AfterCommitAction.ShowDialogWindow(0), snapshot, plan);
 
-		assertEquals(List.of(10009, 0), dialogs);
+		assertEquals(List.of(10009), dialogs);
+	}
+
+	@Test
+	void rejectsNullPageAsRawDialogWindow() {
+		assertThrows(IllegalArgumentException.class, () -> new AfterCommitAction.ShowDialogWindow(0));
 	}
 }

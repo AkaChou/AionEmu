@@ -229,7 +229,7 @@
         <set-variable field="var0" value="4"/>
       </actions>
       <after-commit>
-        <show-dialog-window dialog-id="0"/>
+        <close-dialog/>
         <flight-teleport flight-teleport-id="71001"/>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
@@ -333,7 +333,7 @@
         <set-variable field="var0" value="5"/>
       </actions>
       <after-commit>
-        <show-dialog-window dialog-id="0"/>
+        <close-dialog/>
         <flight-teleport flight-teleport-id="72001"/>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>

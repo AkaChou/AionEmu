@@ -148,6 +148,11 @@ public final class QuestDefinitionCompiler {
 			if (stateSyncs.size() > 1) {
 				fail("DUPLICATE_QUEST_STATE_SYNC", "a transition may synchronize quest state only once");
 			}
+			long dialogCloses = transition.afterCommit().stream()
+				.filter(AfterCommitAction.CloseDialog.class::isInstance).count();
+			if (dialogCloses > 1) {
+				fail("DUPLICATE_DIALOG_CLOSE", "a transition may close the dialog only once");
+			}
 			boolean completionSync = stateSyncs.size() == 1
 				&& stateSyncs.get(0).mode() == QuestStateSyncMode.COMPLETION;
 			if (effectiveStatus == QuestStatus.COMPLETE && !completionSync && !preservesCompletedProjection) {

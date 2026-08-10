@@ -47,8 +47,8 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 	/** 打开指定 dialogId 的任务对话页。objectId 由执行上下文的权威交互对象提供。 */
 	record ShowQuestDialog(int dialogId) implements AfterCommitAction {
 		public ShowQuestDialog {
-			if (dialogId < 0) {
-				throw new IllegalArgumentException("dialogId must be non-negative");
+			if (dialogId <= 0) {
+				throw new IllegalArgumentException("dialogId must be positive");
 			}
 		}
 	}
@@ -65,8 +65,8 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 	/** Sends a raw SM_DIALOG_WINDOW page without attaching the quest id. */
 	record ShowDialogWindow(int dialogId) implements AfterCommitAction {
 		public ShowDialogWindow {
-			if (dialogId < 0) {
-				throw new IllegalArgumentException("dialogId must be non-negative");
+			if (dialogId <= 0) {
+				throw new IllegalArgumentException("dialogId must be positive");
 			}
 		}
 	}
