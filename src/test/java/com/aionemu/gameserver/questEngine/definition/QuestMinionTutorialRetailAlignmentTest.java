@@ -46,6 +46,7 @@ class QuestMinionTutorialRetailAlignmentTest {
 			new QuestSnapshot(7, questId, QuestStatus.START, 0, Map.of()), itemPlay.event(), itemPlay)
 			.orElseThrow();
 		assertEquals(QuestStatus.REWARD, completedContractPlan.nextStatus());
+		assertEquals(1, completedContractPlan.nextPackedVariables());
 		assertTrue(completedContractPlan.requiredActions().isEmpty());
 		assertFalse(definition.transitions().stream().anyMatch(t ->
 			t.event() instanceof QuestEvent.UseItem use && use.itemId() == workItemId));
@@ -55,7 +56,10 @@ class QuestMinionTutorialRetailAlignmentTest {
 				&& talk.npcId() == npcId && Integer.valueOf(31).equals(talk.dialogId())));
 		assertTrue(definition.nodes().stream()
 			.filter(n -> n.label().equals("reward") || n.label().equals("complete"))
-			.allMatch(n -> n.projection().variables().get("var0") == 0));
+			.allMatch(n -> n.projection().variables().get("var0") == 1));
+		assertEquals(0, definition.nodes().stream()
+			.filter(n -> n.label().equals("legacy-reward"))
+			.findFirst().orElseThrow().projection().variables().get("var0"));
 		assertEquals(QuestStatus.REWARD, definition.nodes().stream()
 			.filter(n -> n.label().equals("reward"))
 			.findFirst().orElseThrow().projection().status());

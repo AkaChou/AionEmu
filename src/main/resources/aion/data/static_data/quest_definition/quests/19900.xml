@@ -36,6 +36,14 @@
     <node label="reward">
       <project status="REWARD">
         <vars>
+          <var name="var0" value="1"/>
+        </vars>
+      </project>
+    </node>
+    <!-- 兼容已按旧迁移定义写入 REWARD(var0=0) 的角色；登录时规范化到奖励步骤。 -->
+    <node label="legacy-reward">
+      <project status="REWARD">
+        <vars>
           <var name="var0" value="0"/>
         </vars>
       </project>
@@ -43,7 +51,7 @@
     <node label="complete">
       <project status="COMPLETE">
         <vars>
-          <var name="var0" value="0"/>
+          <var name="var0" value="1"/>
         </vars>
       </project>
     </node>
@@ -92,7 +100,27 @@
         <variable-is field="var0" value="0"/>
       </conditions>
       <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 结构性兼容边：canonical reward(var0=1) 不会满足 var0=0，因此只让旧投影通过登录恢复边进入。 -->
+    <transition source="reward" target="legacy-reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="legacy-reward" target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">

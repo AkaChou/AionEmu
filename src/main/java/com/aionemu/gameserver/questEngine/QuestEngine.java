@@ -690,7 +690,7 @@ public class QuestEngine implements GameEngine {
 			}
 			return typedResult.consumed() ? HandlerResult.SUCCESS : HandlerResult.UNKNOWN;
 		} catch (Exception ex) {
-			// log.error(I18n.get("log.882dbd53a6cc", ex));
+			log.error(I18n.get("log.quest_engine.item_play_failed", player.getObjectId(), itemId), ex);
 			return HandlerResult.FAILED;
 		}
 	}
