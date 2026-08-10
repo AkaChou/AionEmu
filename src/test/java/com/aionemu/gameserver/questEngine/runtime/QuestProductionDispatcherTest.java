@@ -238,7 +238,8 @@ class QuestProductionDispatcherTest {
 		List<String> calls = new ArrayList<>();
 		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition), calls,
 			(connection, playerId, questId, event) ->
-				new QuestSnapshot(playerId, questId, QuestStatus.NONE, 0, Map.of(182201728, 1)));
+				new QuestSnapshot(playerId, questId, QuestStatus.NONE, 0, Map.of(182201728, 1))
+					.withStartEligibility(QuestStartEligibility.allowed()));
 
 		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
 			new QuestEvent.ItemPlay(182201728, 3000), 7, 0, QuestDispatchContract.FIRST_NON_UNKNOWN);

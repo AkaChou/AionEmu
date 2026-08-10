@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
+import com.aionemu.gameserver.questEngine.runtime.QuestStartEligibility;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -30,7 +31,8 @@ class ProximityRepresentativeQuestDefinitionTest {
 		QuestEvent.AtDistance event = new QuestEvent.AtDistance(NPC,
 			new QuestProximityFacts(7, 20, NPC, 110010000, 110010000, 0, 0, 4d, 20d));
 		var plan = QuestMutationPlanner.plan(definition,
-			new QuestSnapshot(7, 29600, QuestStatus.NONE, 0, Map.of()), event,
+			new QuestSnapshot(7, 29600, QuestStatus.NONE, 0, Map.of())
+				.withStartEligibility(QuestStartEligibility.allowed()), event,
 			definition.definition().transitions().get(0));
 
 		assertTrue(plan.isPresent());

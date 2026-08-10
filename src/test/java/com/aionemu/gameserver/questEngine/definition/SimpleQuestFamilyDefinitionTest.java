@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
+import com.aionemu.gameserver.questEngine.runtime.QuestStartEligibility;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -51,7 +52,8 @@ class SimpleQuestFamilyDefinitionTest {
 	void simpleUseItem1107XmlAndDslMatchTheResolvedQuestItemAndRewardNpc() throws Exception {
 		CompiledQuestDefinition definition = assertEquivalent("simpleuseitem-1107.xml", simpleUseItem1107().compile());
 		var plan = QuestMutationPlanner.plan(definition,
-			new QuestSnapshot(7, 1107, QuestStatus.NONE, 0, Map.of()),
+			new QuestSnapshot(7, 1107, QuestStatus.NONE, 0, Map.of())
+				.withStartEligibility(QuestStartEligibility.allowed()),
 			useItem(182200501), definition.definition().transitions().get(0));
 		assertTrue(plan.isPresent());
 		assertEquals(QuestStatus.START, plan.orElseThrow().nextStatus());

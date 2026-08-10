@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
+import com.aionemu.gameserver.questEngine.runtime.QuestStartEligibility;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -43,7 +44,8 @@ class SimpleTalk1115DefinitionTest {
 		CompiledQuestDefinition definition = simpleTalk1115().compile();
 
 		var acquisition = QuestMutationPlanner.plan(definition,
-			new QuestSnapshot(7, 1115, QuestStatus.NONE, 0, Map.of()),
+			new QuestSnapshot(7, 1115, QuestStatus.NONE, 0, Map.of())
+				.withStartEligibility(QuestStartEligibility.allowed()),
 			talkToNpc(203075), definition.definition().transitions().get(0));
 		assertTrue(acquisition.isPresent());
 		assertEquals(QuestStatus.START, acquisition.orElseThrow().nextStatus());

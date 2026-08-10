@@ -244,14 +244,17 @@ class QuestMutationPlannerTest {
 		QuestEvent event = new QuestEvent.TalkToNpc(700001);
 
 		assertTrue(QuestMutationPlanner.plan(definition,
-			new QuestSnapshot(7, 1306, QuestStatus.NONE, 0, Map.of()).withCompletedQuestIds(Set.of(9003)),
+			new QuestSnapshot(7, 1306, QuestStatus.NONE, 0, Map.of())
+				.withStartEligibility(QuestStartEligibility.allowed()).withCompletedQuestIds(Set.of(9003)),
 			event, transition).isPresent());
 		assertTrue(QuestMutationPlanner.plan(definition,
 			new QuestSnapshot(7, 1306, QuestStatus.NONE, 0, Map.of())
-				.withCompletedQuestIds(Set.of(9001)).withActiveQuestIds(Set.of(9002)),
+				.withStartEligibility(QuestStartEligibility.allowed()).withCompletedQuestIds(Set.of(9001))
+				.withActiveQuestIds(Set.of(9002)),
 			event, transition).isPresent());
 		assertTrue(QuestMutationPlanner.plan(definition,
-			new QuestSnapshot(7, 1306, QuestStatus.NONE, 0, Map.of()).withCompletedQuestIds(Set.of(9001)),
+			new QuestSnapshot(7, 1306, QuestStatus.NONE, 0, Map.of())
+				.withStartEligibility(QuestStartEligibility.allowed()).withCompletedQuestIds(Set.of(9001)),
 			event, transition).isEmpty());
 	}
 

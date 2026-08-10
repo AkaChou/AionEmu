@@ -17,7 +17,8 @@ public final class QuestDefinitionCompiler {
 	}
 
 	public static CompiledQuestDefinition compile(QuestDefinition definition) {
-		definition = restoreRewardPreviewContract(Objects.requireNonNull(definition, "definition"));
+		definition = restoreStartEligibilityContract(Objects.requireNonNull(definition, "definition"));
+		definition = restoreRewardPreviewContract(definition);
 		if (definition.nodes().isEmpty()) {
 			fail("NO_NODES", "executable definition has no nodes");
 		}
@@ -181,6 +182,39 @@ public final class QuestDefinitionCompiler {
 		}
 		validateTransitionConflicts(definition.transitions(), nodes);
 		return new CompiledQuestDefinition(definition);
+	}
+
+	/** Restores the legacy {@code QuestService.startQuest} eligibility gate on every acquisition route. */
+	private static QuestDefinition restoreStartEligibilityContract(QuestDefinition definition) {
+		Map<String, QuestStatus> statuses = new HashMap<>();
+		for (QuestNode node : definition.nodes()) {
+			statuses.put(node.label(), node.projection().status());
+		}
+		List<QuestTransition> normalized = new ArrayList<>(definition.transitions().size());
+		boolean changed = false;
+		for (QuestTransition transition : definition.transitions()) {
+			QuestStatus targetStatus = statuses.get(transition.targetNode());
+			boolean startsFromNone = transition.sourceNode() == null
+				? transition.conditions().stream().anyMatch(condition -> condition instanceof QuestCondition.StatusIs status
+					&& status.status() == QuestStatus.NONE)
+				: statuses.get(transition.sourceNode()) == QuestStatus.NONE;
+			boolean hasEligibility = transition.conditions().stream()
+				.anyMatch(QuestCondition.StartEligible.class::isInstance);
+			if (!startsFromNone || targetStatus == null || targetStatus == QuestStatus.NONE || hasEligibility) {
+				normalized.add(transition);
+				continue;
+			}
+			List<QuestCondition> conditions = new ArrayList<>(transition.conditions());
+			conditions.add(new QuestCondition.StartEligible());
+			normalized.add(new QuestTransition(transition.event(), conditions, transition.actions(),
+				transition.targetNode(), transition.afterCommit(), transition.priority(), transition.sourceNode()));
+			changed = true;
+		}
+		if (!changed) {
+			return definition;
+		}
+		return new QuestDefinition(definition.id(), definition.version(), definition.metadata(),
+			definition.progressLayout(), definition.nodes(), normalized);
 	}
 
 	/**
