@@ -3,6 +3,7 @@ package com.aionemu.gameserver.controllers.movement;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -10,27 +11,52 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.objenesis.ObjenesisStd;
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.commons.network.AConnection;
+import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
+import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.VisibleObject;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.geometry.Point3D;
+import com.aionemu.gameserver.model.stats.container.NpcGameStats;
+import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import com.aionemu.gameserver.model.templates.stats.NpcStatsTemplate;
 import com.aionemu.gameserver.model.templates.walker.RouteStep;
+import com.aionemu.gameserver.network.aion.AionConnection;
+import com.aionemu.gameserver.network.aion.AionServerPacket;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.taskmanager.tasks.MoveTaskManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.geo.GeoService;
+import com.aionemu.gameserver.world.knownlist.KnownList;
+import com.aionemu.gameserver.world.knownlist.Visitor;
 
 class NpcMoveControllerPathTest {
+
+	@BeforeAll
+	static void configurePacketProcessor() {
+		NetworkConfig.PACKET_PROCESSOR_MIN_THREADS = 1;
+		NetworkConfig.PACKET_PROCESSOR_MAX_THREADS = 1;
+		NetworkConfig.PACKET_PROCESSOR_THREAD_SPAWN_THRESHOLD = 1;
+		NetworkConfig.PACKET_PROCESSOR_THREAD_KILL_THRESHOLD = 1;
+	}
 
 	@Test
 	void homeReturnReplacesAnAlreadyStartedPointMove() throws ReflectiveOperationException {
@@ -247,15 +273,33 @@ class NpcMoveControllerPathTest {
 
 	@Test
 	void pathMovePacketStartsAtThePreviousServerStep() throws Exception {
-		String source = Files.readString(Path.of(
-				"src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java"));
-		String method = source.substring(source.indexOf("private void moveToLocation"),
-				source.indexOf("void sampleStuckShadow"));
-		String compact = method.replaceAll("\\s+", " ");
+		float startX = 10;
+		float startY = 20;
+		float startZ = 30;
+		Player observer = new ObjenesisStd().newInstance(Player.class);
+		observer.setClientConnection(packetConnection());
+		Npc owner = movingNpc(startX, startY, startZ, observer);
+		NpcMoveController controller = new NpcMoveController(owner);
+		controller.lastMoveUpdate = System.currentTimeMillis() - 1_000;
+		boolean oldGeoEnable = GeoDataConfig.GEO_ENABLE;
+		World oldWorld = setWorld(new ObjenesisStd().newInstance(PositionUpdatingWorld.class));
 
-		assertTrue(compact.contains("new SM_MOVE(owner.getObjectId(), ownerX, ownerY, ownerZ, "
-				+ "targetDestX, targetDestY, targetDestZ, heading, movementMask)"));
-		assertFalse(method.contains("new SM_MOVE((Creature)this.owner)"));
+		try {
+			GeoDataConfig.GEO_ENABLE = false;
+			controller.moveToLocation(20, startY, startZ, 0);
+
+			assertTrue(owner.getX() > startX);
+			List<AionServerPacket> packets = packetQueue(observer.getClientConnection());
+			assertEquals(1, packets.size());
+			SM_MOVE packet = assertInstanceOf(SM_MOVE.class, packets.getFirst());
+			assertEquals(startX, floatField(packet, "_sX"));
+			assertEquals(startY, floatField(packet, "_sY"));
+			assertEquals(startZ, floatField(packet, "_sZ"));
+			assertEquals(20, floatField(packet, "_tX"));
+		} finally {
+			GeoDataConfig.GEO_ENABLE = oldGeoEnable;
+			setWorld(oldWorld);
+		}
 	}
 
 	@Test
@@ -572,6 +616,102 @@ class NpcMoveControllerPathTest {
 		assertFalse(NpcMoveController.canReuseReachCheck(1_101, 1_000, 1, 2, 3, 1, 2, 3, 4, 5, 6, 4, 5, 6));
 		assertFalse(NpcMoveController.canReuseReachCheck(1_050, 1_000, 1.2f, 2, 3, 1, 2, 3, 4, 5, 6, 4, 5, 6));
 		assertFalse(NpcMoveController.canReuseReachCheck(1_050, 1_000, 1, 2, 3, 1, 2, 3, 4.2f, 5, 6, 4, 5, 6));
+	}
+
+	private static Npc movingNpc(float x, float y, float z, Player observer) throws ReflectiveOperationException {
+		Npc owner = new ObjenesisStd().newInstance(Npc.class);
+		setField(AionObject.class, owner, "objectId", 210667);
+		WorldPosition position = new WorldPosition(210010000);
+		position.setXYZH(x, y, z, (byte) 0);
+		owner.setPosition(position);
+		owner.setSpawn(new SpawnTemplate(new SpawnGroup2(210010000, 210667), x, y, z, (byte) 0, 2, null, 0, 0));
+		NpcStatsTemplate stats = new NpcStatsTemplate();
+		stats.setRunSpeed(5);
+		NpcTemplate template = new NpcTemplate();
+		template.setStatsTemplate(stats);
+		owner.setObjectTemplate(template);
+		owner.setAi2(new NpcAI2());
+		owner.setGameStats(new NpcGameStats(owner));
+		owner.setKnownlist(new SinglePlayerKnownList(owner, observer));
+		return owner;
+	}
+
+	private static AionConnection packetConnection() throws ReflectiveOperationException {
+		AionConnection connection = new ObjenesisStd().newInstance(AionConnection.class);
+		setField(AConnection.class, connection, "transport", new RecordingTransport());
+		setField(AConnection.class, connection, "guard", new Object());
+		setField(AionConnection.class, connection, "sendMsgQueue", new ArrayList<AionServerPacket>());
+		return connection;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static List<AionServerPacket> packetQueue(AionConnection connection) throws ReflectiveOperationException {
+		Field field = AionConnection.class.getDeclaredField("sendMsgQueue");
+		field.setAccessible(true);
+		return (List<AionServerPacket>) field.get(connection);
+	}
+
+	private static float floatField(Object target, String name) throws ReflectiveOperationException {
+		Field field = target.getClass().getDeclaredField(name);
+		field.setAccessible(true);
+		return field.getFloat(target);
+	}
+
+	private static World setWorld(World world) throws ReflectiveOperationException {
+		Field field = GameWorldBootstrapServices.class.getDeclaredField("resolvedWorld");
+		field.setAccessible(true);
+		World oldWorld = (World) field.get(null);
+		field.set(null, world);
+		return oldWorld;
+	}
+
+	private static void setField(Class<?> declaringClass, Object target, String name, Object value)
+			throws ReflectiveOperationException {
+		Field field = declaringClass.getDeclaredField(name);
+		field.setAccessible(true);
+		field.set(target, value);
+	}
+
+	private static final class SinglePlayerKnownList extends KnownList {
+		private final Player player;
+
+		private SinglePlayerKnownList(Npc owner, Player player) {
+			super(owner);
+			this.player = player;
+		}
+
+		@Override
+		public void doOnAllPlayers(Visitor<Player> visitor) {
+			visitor.visit(player);
+		}
+	}
+
+	private static final class PositionUpdatingWorld extends World {
+		@Override
+		public void updatePosition(VisibleObject object, float newX, float newY, float newZ, byte newHeading,
+				boolean updateKnownList) {
+			object.setXYZH(newX, newY, newZ, newHeading);
+		}
+	}
+
+	private static final class RecordingTransport implements ConnectionTransport {
+		@Override
+		public String getIP() {
+			return "127.0.0.1";
+		}
+
+		@Override
+		public void enableWriteInterest() {
+		}
+
+		@Override
+		public void close(boolean forced) {
+		}
+
+		@Override
+		public boolean onlyClose() {
+			return true;
+		}
 	}
 
 }
