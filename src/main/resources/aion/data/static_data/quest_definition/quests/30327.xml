@@ -202,7 +202,7 @@
         <set-status status="REWARD"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 奖励状态与凯伦对话：打开结算窗口。 Reward dialog with Kaluen. -->

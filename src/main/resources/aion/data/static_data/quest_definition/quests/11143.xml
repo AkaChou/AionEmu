@@ -166,7 +166,7 @@
         <talk-to-npc npc-id="798976" dialog-id="10002"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>

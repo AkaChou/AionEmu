@@ -181,7 +181,7 @@
         <player-class-is starting-class="WARRIOR"/>
       </conditions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
@@ -193,7 +193,7 @@
         <player-class-is starting-class="SCOUT"/>
       </conditions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
@@ -205,7 +205,7 @@
         <player-class-is starting-class="MAGE"/>
       </conditions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
@@ -217,7 +217,7 @@
         <player-class-is starting-class="PRIEST"/>
       </conditions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
@@ -229,7 +229,7 @@
         <player-class-is starting-class="TECHNIST"/>
       </conditions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
@@ -241,7 +241,7 @@
         <player-class-is starting-class="MUSE"/>
       </conditions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>

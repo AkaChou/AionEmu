@@ -85,7 +85,7 @@
         <set-status status="REWARD"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 已持有任务物品的玩家进入圣天城时不重复发放（旧 handler 的 <1 检查）。

@@ -119,7 +119,7 @@ class Quest1913ProductionFlowTest {
 		assertEquals(1, plans.getLast().nextPackedVariables());
 		assertTrue(plans.getLast().requiredActions().isEmpty());
 		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestDialog(5)), afterCommit);
 	}
 

@@ -176,7 +176,7 @@
         <remove-item item-id="182208041" count="1"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>

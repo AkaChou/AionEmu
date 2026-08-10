@@ -96,7 +96,7 @@
       <event><talk-to-npc npc-id="799952" dialog-id="1011"/></event>
       <conditions><has-item item-id="186000054" count="1"/></conditions>
       <actions><remove-item item-id="186000054" count="1"/><set-variable field="var0" value="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event><talk-to-npc npc-id="799952" dialog-id="1011"/></event>
@@ -106,7 +106,7 @@
       <event><talk-to-npc npc-id="799952" dialog-id="1352"/></event>
       <conditions><has-item item-id="186000053" count="1"/></conditions>
       <actions><remove-item item-id="186000053" count="1"/><set-variable field="var0" value="2"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="6"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="6"/></after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event><talk-to-npc npc-id="799952" dialog-id="1352"/></event>
@@ -116,7 +116,7 @@
       <event><talk-to-npc npc-id="799952" dialog-id="1693"/></event>
       <conditions><has-item item-id="186000052" count="1"/></conditions>
       <actions><remove-item item-id="186000052" count="1"/><set-variable field="var0" value="3"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="7"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="7"/></after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event><talk-to-npc npc-id="799952" dialog-id="1693"/></event>
@@ -126,7 +126,7 @@
       <event><talk-to-npc npc-id="799952" dialog-id="2034"/></event>
       <conditions><has-item item-id="186000051" count="1"/></conditions>
       <actions><remove-item item-id="186000051" count="1"/><set-variable field="var0" value="4"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="8"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="8"/></after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event><talk-to-npc npc-id="799952" dialog-id="2034"/></event>
@@ -142,7 +142,7 @@
       <event><talk-to-npc npc-id="205637" dialog-id="1011"/></event>
       <conditions><has-item item-id="186000054" count="1"/></conditions>
       <actions><remove-item item-id="186000054" count="1"/><set-variable field="var0" value="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event><talk-to-npc npc-id="205637" dialog-id="1011"/></event>
@@ -152,7 +152,7 @@
       <event><talk-to-npc npc-id="205637" dialog-id="1352"/></event>
       <conditions><has-item item-id="186000053" count="1"/></conditions>
       <actions><remove-item item-id="186000053" count="1"/><set-variable field="var0" value="2"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="6"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="6"/></after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event><talk-to-npc npc-id="205637" dialog-id="1352"/></event>
@@ -162,7 +162,7 @@
       <event><talk-to-npc npc-id="205637" dialog-id="1693"/></event>
       <conditions><has-item item-id="186000052" count="1"/></conditions>
       <actions><remove-item item-id="186000052" count="1"/><set-variable field="var0" value="3"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="7"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="7"/></after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event><talk-to-npc npc-id="205637" dialog-id="1693"/></event>
@@ -172,7 +172,7 @@
       <event><talk-to-npc npc-id="205637" dialog-id="2034"/></event>
       <conditions><has-item item-id="186000051" count="1"/></conditions>
       <actions><remove-item item-id="186000051" count="1"/><set-variable field="var0" value="4"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="8"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="8"/></after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event><talk-to-npc npc-id="205637" dialog-id="2034"/></event>

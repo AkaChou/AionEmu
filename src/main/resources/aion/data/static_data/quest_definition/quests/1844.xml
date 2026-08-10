@@ -50,7 +50,7 @@
       <event><kill-npc npc-id="215220"/></event>
       <conditions><variable-at-least field="var1" value="1"/></conditions>
       <actions><set-variable field="var1" value="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
 
     <!-- 奖励:Poeas (270165) 领取固定奖励 (exp/ap)。 -->

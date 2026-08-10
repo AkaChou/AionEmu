@@ -286,7 +286,7 @@
       </actions>
       <after-commit>
         <teleport-player-current-or-default world-id="210040000" x="2772.3306" y="1876.4788" z="153.75" heading="102"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>

@@ -53,7 +53,7 @@
       <event><kill-npc npc-ids="230452 230453 230476 230477"/></event>
       <conditions><variable-at-least field="var0" value="10"/></conditions>
       <actions><set-variable field="var0" value="10"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
 
     <!-- 奖励：Minggiling (800925) 领取固定奖励。 -->

@@ -129,7 +129,7 @@
       <event><kill-npc npc-ids="230359 233010"/></event>
       <conditions><variable-at-least field="var0" value="10"/></conditions>
       <actions><set-variable field="var0" value="10"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
 
     <!-- 结算奖励:800934。 -->

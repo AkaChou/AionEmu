@@ -61,7 +61,7 @@
     </transition>
     <transition source="v1" target="reward">
       <event><npc-reach-target/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
     <transition source="v1" target="started">
       <event><npc-lost-target/></event>

@@ -102,7 +102,7 @@ final class QuestXmlBlockExpander {
 		String source = attribute(block, "source");
 		String target = attribute(block, "target");
 		requireNode(context, "kill-routes", "source", source);
-		requireNode(context, "kill-routes", "target", target);
+		QuestNode targetNode = requireNode(context, "kill-routes", "target", target);
 		List<Integer> npcIds = positiveIntegerTokens(context, block, "kill-routes", "npc-ids");
 		if (npcIds.size() < 2) {
 			return fail("KILL_ROUTES_TOO_SHORT", context, "kill-routes", "npc-ids",
@@ -118,7 +118,7 @@ final class QuestXmlBlockExpander {
 		List<QuestTransition> result = new ArrayList<>(npcIds.size());
 		for (int npcId : npcIds) {
 			result.add(new QuestTransition(new QuestEvent.KillNpc(npcId), List.of(), List.of(), target,
-				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)), null, source));
+				List.of(syncQuestState(targetNode)), null, source));
 		}
 		return result;
 	}
@@ -146,7 +146,7 @@ final class QuestXmlBlockExpander {
 			talk(npcId, 31, List.of(), List.of(), source, source, null,
 				List.of(new AfterCommitAction.ShowQuestDialog(page))),
 			talk(npcId, 1009, List.of(), List.of(), source, target, null,
-				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+				List.of(syncQuestState(targetNode),
 					new AfterCommitAction.ShowQuestDialog(5))));
 	}
 
@@ -170,7 +170,7 @@ final class QuestXmlBlockExpander {
 		List<QuestCondition> hasItem = List.of(new QuestCondition.HasItem(itemId, required));
 		List<QuestAction> removeItem = List.of(new QuestAction.RemoveItem(itemId, removeCount));
 		List<AfterCommitAction> successAfterCommit = List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			syncQuestState(targetNode),
 			new AfterCommitAction.ShowQuestDialog(5));
 		return List.of(
 			talk(npcId, 39, hasItem, removeItem, source, target, 0, successAfterCommit),
@@ -403,7 +403,7 @@ final class QuestXmlBlockExpander {
 			completing.add(new QuestCondition.QuestVariableIs(fieldName, required - 1));
 			result.add(new QuestTransition(event, completing,
 				List.of(new QuestAction.IncrementVariable(fieldName, 1)), target,
-				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)), 0, source));
+				List.of(syncQuestState(targetNode)), 0, source));
 		}
 		return result;
 	}
@@ -448,15 +448,23 @@ final class QuestXmlBlockExpander {
 		}
 
 		List<QuestTransition> result = new ArrayList<>();
-		List<AfterCommitAction> afterCommit = List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY));
 		for (int index = 0; index < nodes.size() - 1; index++) {
+			QuestNode targetNode = context.nodes().get(nodes.get(index + 1));
+			List<AfterCommitAction> afterCommit = List.of(syncQuestState(targetNode));
 			for (QuestEvent event : events) {
 				result.add(new QuestTransition(event, conditions, List.of(), nodes.get(index + 1),
 					afterCommit, null, nodes.get(index)));
 			}
 		}
 		return result;
+	}
+
+	private static AfterCommitAction.SyncQuestState syncQuestState(QuestNode targetNode) {
+		QuestStatus status = targetNode.projection().status();
+		QuestStateSyncMode mode = status == QuestStatus.REWARD || status == QuestStatus.COMPLETE
+			? QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH
+			: QuestStateSyncMode.PACKET_ONLY;
+		return new AfterCommitAction.SyncQuestState(mode);
 	}
 
 	private static List<QuestTransition> expandNpcComplete(Context context, Element block) {

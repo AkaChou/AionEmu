@@ -224,7 +224,7 @@
         <variable-is field="var0" value="1"/>
       </conditions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 与 830651 对话：var0=0 时仅展示完成提示不推进；var0=1 时置 REWARD。 Talk to 830651: at var0=0 only shows hint without advancing; at var0=1 sets REWARD. -->
@@ -247,7 +247,7 @@
         <variable-is field="var0" value="1"/>
       </conditions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <show-quest-dialog dialog-id="2375"/>
       </after-commit>
     </transition>

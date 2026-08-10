@@ -437,7 +437,7 @@
       <after-commit>
         <delete-interaction-npc schedule-respawn="false"/>
         <teleport-player-current-or-default world-id="120010000" x="1275.116" y="1173.6276" z="215.21492" heading="91"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 击杀阶段死亡回退 / Die during kill phase reverts to var0=8 -->

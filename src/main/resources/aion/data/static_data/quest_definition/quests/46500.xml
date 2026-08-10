@@ -130,7 +130,7 @@
       <event><kill-npc npc-id="216624"/></event>
       <conditions><variable-at-least field="var0" value="1"/></conditions>
       <actions><set-variable field="var0" value="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
 
     <!-- 奖励:魔族军团任务管理员 (799882/799883) 领取固定奖励 (exp/物品)。 -->

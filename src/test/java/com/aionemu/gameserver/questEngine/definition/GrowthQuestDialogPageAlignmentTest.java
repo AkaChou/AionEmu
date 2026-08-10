@@ -55,7 +55,7 @@ class GrowthQuestDialogPageAlignmentTest {
 				.toList();
 			assertEquals(1, killRoutes.size(), "quest " + questId + " kill route");
 			assertEquals("reward", killRoutes.getFirst().targetNode(), "quest " + questId + " kill target");
-			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
+			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
 				killRoutes.getFirst().afterCommit(), "quest " + questId + " kill sync");
 			QuestNode rewardNode = definition.nodes().stream()
 				.filter(node -> "reward".equals(node.label()))
@@ -86,7 +86,7 @@ class GrowthQuestDialogPageAlignmentTest {
 			assertEquals(List.of(new QuestAction.RemoveItem(186000476, quest.count())),
 				success.actions(), "quest " + quest.id() + " item removal");
 			assertEquals(List.of(
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 				new AfterCommitAction.ShowQuestDialog(10000)),
 				success.afterCommit(), "quest " + quest.id() + " successful check page");
 
@@ -111,7 +111,7 @@ class GrowthQuestDialogPageAlignmentTest {
 		QuestTransition reward = singleTalkRoute(definition, "started", 806701, 10255);
 		assertEquals("reward", reward.targetNode());
 		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), reward.afterCommit());
 		assertTrue(talkRoutes(definition, "unaccepted", 806701, 31).isEmpty());
 	}

@@ -108,7 +108,7 @@
       </event>
       <after-commit>
         <play-movie movie-id="12"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 护送失败(丢失目标或登出)回退到步骤 0。 -->

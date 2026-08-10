@@ -130,7 +130,7 @@
         <variable-is field="var0" value="1"/>
       </conditions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">

@@ -23,7 +23,12 @@ public final class PlayerQuestDialogPort implements QuestDialogPort {
 			// 提交已成功但玩家已登出:无可发送对象,best-effort 关闭。
 			return false;
 		}
-		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
+		int objectId = snapshot.targetlessDialog() ? 0 : snapshot.interactionObjectId();
+		if (objectId == 0 && !snapshot.targetlessDialog()) {
+			throw new IllegalStateException("closeDialog requires an authoritative interaction objectId "
+				+ "from the execution context for quest " + snapshot.questId());
+		}
+		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, 0));
 		return true;
 	}
 

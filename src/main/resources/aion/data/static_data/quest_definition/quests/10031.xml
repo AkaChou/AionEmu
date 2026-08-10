@@ -409,7 +409,7 @@
         <set-status status="REWARD"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s9" target="reward" priority="2">
@@ -427,7 +427,7 @@
         <set-status status="REWARD"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 奖励结算：向 798927 领奖并广播区域任务结束。 Reward: claim from 798927 and broadcast zone mission end. -->

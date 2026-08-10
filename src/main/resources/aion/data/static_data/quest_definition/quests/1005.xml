@@ -239,7 +239,7 @@
       </event>
       <after-commit>
         <play-movie movie-id="21"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">

@@ -51,7 +51,7 @@
     <transition source="k8" target="k9"><event><kill-in-world world-id="210100000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="k9" target="k10"><event><kill-in-world world-id="210100000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="k10" target="k11"><event><kill-in-world world-id="210100000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k11" target="reward"><event><kill-in-world world-id="210100000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k11" target="reward"><event><kill-in-world world-id="210100000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
     <transition source="started" target="k1"><event><enter-zone zone="LF6_SensoryArea_Q25673"/></event><conditions><variable-is field="var0" value="0"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
   </transitions>
 </quest-definition>

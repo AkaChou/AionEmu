@@ -193,7 +193,7 @@
         <set-status status="REWARD"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 失败重置：var0=1..3 时死亡或离开副本世界 → var0=0 回到 started。 -->

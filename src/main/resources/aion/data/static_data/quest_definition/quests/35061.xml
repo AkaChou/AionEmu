@@ -39,7 +39,7 @@
       <event><kill-npc npc-ids="235874 235875"/></event>
       <conditions><variable-at-least field="var0" value="10"/></conditions>
       <actions><set-variable field="var0" value="10"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
     <!-- 领奖：804943 发放经验与 Progress Token。 -->
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="804943" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>

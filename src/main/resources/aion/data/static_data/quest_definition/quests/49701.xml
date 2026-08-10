@@ -131,13 +131,13 @@
     <npc-item-report npc-id="800934" source="started" target="reward" item-id="182215268" required="6"/>
     <transition source="started" target="reward">
       <event><talk-to-npc npc-id="800934" dialog-id="10255"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit>
     </transition>
     <!-- 交付 800935: 收集齐 6 个后提交。 -->
     <npc-item-report npc-id="800935" source="started" target="reward" item-id="182215268" required="6"/>
     <transition source="started" target="reward">
       <event><talk-to-npc npc-id="800935" dialog-id="10255"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit>
     </transition>
 
     <!-- 结算奖励:800934。 -->

@@ -48,7 +48,7 @@
       <event><kill-npc npc-id="231284"/></event>
       <conditions><variable-at-least field="var0" value="10"/></conditions>
       <actions><set-variable field="var0" value="10"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event><kill-npc npc-id="231285"/></event>
@@ -60,7 +60,7 @@
       <event><kill-npc npc-id="231285"/></event>
       <conditions><variable-at-least field="var0" value="10"/></conditions>
       <actions><set-variable field="var0" value="10"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event><kill-npc npc-id="231286"/></event>
@@ -72,7 +72,7 @@
       <event><kill-npc npc-id="231286"/></event>
       <conditions><variable-at-least field="var0" value="10"/></conditions>
       <actions><set-variable field="var0" value="10"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event><kill-npc npc-id="231287"/></event>
@@ -84,7 +84,7 @@
       <event><kill-npc npc-id="231287"/></event>
       <conditions><variable-at-least field="var0" value="10"/></conditions>
       <actions><set-variable field="var0" value="10"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event><kill-npc npc-id="231288"/></event>
@@ -96,7 +96,7 @@
       <event><kill-npc npc-id="231288"/></event>
       <conditions><variable-at-least field="var0" value="10"/></conditions>
       <actions><set-variable field="var0" value="10"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event><kill-npc npc-id="231289"/></event>
@@ -108,7 +108,7 @@
       <event><kill-npc npc-id="231289"/></event>
       <conditions><variable-at-least field="var0" value="10"/></conditions>
       <actions><set-variable field="var0" value="10"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
 
     <!-- 进行中：派系 NPC (800934/800935) 对话查看任务详情。 -->

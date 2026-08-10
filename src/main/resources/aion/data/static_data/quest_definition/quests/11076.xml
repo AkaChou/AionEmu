@@ -190,7 +190,7 @@
       </conditions>
       <after-commit>
         <teleport-player-current-or-default world-id="210130000" x="1338.6" y="279.6" z="590" heading="80"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>

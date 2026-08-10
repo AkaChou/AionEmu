@@ -33,7 +33,7 @@
     <transition source="started" target="started1"><event><talk-to-npc npc-id="203726" dialog-id="10000"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><teleport-player-current-or-default world-id="210030000" x="1643" y="1500" z="120" heading="0"/><close-dialog/></after-commit></transition>
     <transition source="started1" target="started1"><event><talk-to-npc npc-id="203097" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started1" target="started1"><event><talk-to-npc npc-id="203097" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
-    <transition source="started1" target="reward"><event><talk-to-npc npc-id="203097" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="started1" target="reward"><event><talk-to-npc npc-id="203097" dialog-id="1009"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <npc-complete npc-id="203097" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

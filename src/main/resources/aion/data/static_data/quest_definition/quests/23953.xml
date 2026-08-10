@@ -124,7 +124,7 @@
         <world-is world-id="400010000"/>
       </conditions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 奖励：与 NPC 806591 结算。 Reward: settle with NPC 806591. -->

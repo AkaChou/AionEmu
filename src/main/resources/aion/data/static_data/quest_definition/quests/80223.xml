@@ -34,7 +34,7 @@
       <event><kill-npc npc-ids="211574 211575 211595 211596 211598 211599 211601 211608 211609 211610 211611 211612 212724 212725 212726 212727 212729 212730 212731 212732 212733 212734 212735 212736 212737 212738 212739 212740 212741 212742 212743 212744 212809 212979 212981 212982"/></event>
       <conditions><variable-at-least field="var0" value="100"/></conditions>
       <actions><set-variable field="var0" value="100"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
     <!-- 领奖：831028 发放经验与二选一可选奖励并完成。 -->
     <npc-complete npc-id="831028" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">

@@ -26,9 +26,9 @@
   <transitions>
     <npc-start npc-id="806107" source="unaccepted" target="started" selection-sources="unaccepted started"/>
     <transition source="started" target="started"><event><talk-to-npc npc-id="806107" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="806107" dialog-id="1009"/></event><conditions><variable-at-least field="var1" value="10"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="started" target="reward"><event><talk-to-npc npc-id="806107" dialog-id="1009"/></event><conditions><variable-at-least field="var1" value="10"/></conditions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <npc-complete npc-id="806107" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
     <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="703080"/></event><conditions><variable-below field="var1" value="9"/></conditions><actions><increment-variable field="var1" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started" target="reward" priority="0"><event><kill-npc npc-ids="703080"/></event><conditions><variable-at-least field="var1" value="9"/></conditions><actions><set-variable field="var1" value="10"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="reward" priority="0"><event><kill-npc npc-ids="703080"/></event><conditions><variable-at-least field="var1" value="9"/></conditions><actions><set-variable field="var1" value="10"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
   </transitions>
 </quest-definition>

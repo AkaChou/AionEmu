@@ -214,7 +214,7 @@
       </conditions>
       <after-commit>
         <cancel-quest-timer timer-id="11467-queen" scope="PLAYER_QUEST"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s1" target="reward1">
@@ -226,7 +226,7 @@
       </conditions>
       <after-commit>
         <cancel-quest-timer timer-id="11467-queen" scope="PLAYER_QUEST"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s2" target="reward2">
@@ -238,7 +238,7 @@
       </conditions>
       <after-commit>
         <cancel-quest-timer timer-id="11467-queen" scope="PLAYER_QUEST"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s3" target="reward3">
@@ -250,7 +250,7 @@
       </conditions>
       <after-commit>
         <cancel-quest-timer timer-id="11467-queen" scope="PLAYER_QUEST"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 死亡或登出：任务重置为未接取（旧 handler 的 QUEST_FAILED 系统消息 DSL 无法表达，已标注）。 Die or logout: reset quest to unaccepted (old QUEST_FAILED system message not expressible in DSL, noted). -->

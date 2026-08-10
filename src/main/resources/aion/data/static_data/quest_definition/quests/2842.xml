@@ -127,7 +127,7 @@
         <increment-variable field="var0" delta="1"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 结算奖励。 Claim rewards. -->

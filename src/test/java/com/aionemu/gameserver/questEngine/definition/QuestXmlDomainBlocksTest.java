@@ -59,7 +59,7 @@ class QuestXmlDomainBlocksTest {
 			  <event><kill-npc npc-ids="210001 210002"/></event>
 			  <conditions><world-is world-id="210010000"/><variable-is field="var0" value="2"/></conditions>
 			  <actions><increment-variable field="var0" delta="1"/></actions>
-			  <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+			  <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
 			</transition>
 			""";
 
@@ -116,7 +116,7 @@ class QuestXmlDomainBlocksTest {
 			<transition source="v3" target="v4">
 			  <event><kill-npc npc-ids="210001 210002"/></event>
 			  <conditions><world-is world-id="210010000"/></conditions>
-			  <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+			  <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
 			</transition>
 			""";
 
@@ -322,13 +322,24 @@ class QuestXmlDomainBlocksTest {
 	}
 
 	@Test
+	void killRoutesUsesFullRefreshWhenTargetBecomesReward() {
+		String definition = killRoutesDefinition(
+			"<kill-routes source=\"started\" target=\"k1\" npc-ids=\"215468 215469\"/>")
+			.replace("label=\"k1\"><project status=\"START\"", "label=\"k1\"><project status=\"REWARD\"");
+		CompiledQuestDefinition compiled = compile(definition);
+
+		assertTrue(compiled.definition().transitions().stream().allMatch(transition -> transition.afterCommit().equals(
+			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)))));
+	}
+
+	@Test
 	void npcReportEqualsSupportedPagesAndPreservesAfterCommitOrder() {
 		for (int page : List.of(1352, 2375, 10002)) {
 			String block = "<npc-report npc-id=\"203941\" source=\"started\" target=\"reward\" page=\""
 				+ page + "\"/>";
 			String expanded = """
 				<transition source="started" target="started"><event><talk-to-npc npc-id="203941" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="%d"/></after-commit></transition>
-				<transition source="started" target="reward"><event><talk-to-npc npc-id="203941" dialog-id="1009"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+				<transition source="started" target="reward"><event><talk-to-npc npc-id="203941" dialog-id="1009"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
 				""".formatted(page);
 			assertEquals(compile(reportDefinition(block)).definition(), compile(reportDefinition(expanded)).definition());
 		}
@@ -352,9 +363,9 @@ class QuestXmlDomainBlocksTest {
 				item-id="182215285" required="1"/>
 			""";
 		String expanded = """
-			<transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="800937" dialog-id="39"/></event><conditions><has-item item-id="182215285" count="1"/></conditions><actions><remove-item item-id="182215285" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+			<transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="800937" dialog-id="39"/></event><conditions><has-item item-id="182215285" count="1"/></conditions><actions><remove-item item-id="182215285" count="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
 			<transition source="started" target="started" priority="1"><event><talk-to-npc npc-id="800937" dialog-id="39"/></event><after-commit><show-quest-dialog dialog-id="2716"/></after-commit></transition>
-			<transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="800937" dialog-id="20002"/></event><conditions><has-item item-id="182215285" count="1"/></conditions><actions><remove-item item-id="182215285" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+			<transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="800937" dialog-id="20002"/></event><conditions><has-item item-id="182215285" count="1"/></conditions><actions><remove-item item-id="182215285" count="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
 			<transition source="started" target="started" priority="1"><event><talk-to-npc npc-id="800937" dialog-id="20002"/></event><after-commit><close-dialog/></after-commit></transition>
 			""";
 		assertEquals(compile(itemReportDefinition(block)).definition(), compile(itemReportDefinition(expanded)).definition());
@@ -565,7 +576,7 @@ class QuestXmlDomainBlocksTest {
 			    <node label="v1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
 			    <node label="v2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
 			    <node label="v3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
-			    <node label="v4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
+			    <node label="v4"><project status="REWARD"><vars><var name="var0" value="4"/></vars></project></node>
 			  </nodes>
 			  <transitions>%s</transitions>
 			</quest-definition>

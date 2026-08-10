@@ -180,7 +180,7 @@
         <use-item item-id="182213205"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 管家 810022：领奖对话；USE_OBJECT 展示提示，1009/23 移除物品并完成任务。 Butler 810022: reward dialog; USE_OBJECT shows hint, 1009/23 removes item and completes. -->

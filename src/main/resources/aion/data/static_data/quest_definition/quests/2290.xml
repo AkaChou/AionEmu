@@ -188,7 +188,7 @@
         <talk-to-npc npc-id="203607" dialog-id="1009"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
 

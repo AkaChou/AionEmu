@@ -55,7 +55,7 @@
       <event><kill-npc npc-id="701676"/></event>
       <conditions><variable-at-least field="var0" value="6"/></conditions>
       <actions><set-variable field="var0" value="6"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
 
     <!-- 进行中：派系 NPC (800936/800937/800938) 对话查看任务详情。 -->

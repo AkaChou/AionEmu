@@ -131,7 +131,7 @@
       <event><kill-npc npc-id="216610"/></event>
       <conditions><variable-at-least field="var0" value="1"/></conditions>
       <actions><set-variable field="var0" value="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event><talk-to-npc npc-id="799837" dialog-ids="-1 1009"/></event>

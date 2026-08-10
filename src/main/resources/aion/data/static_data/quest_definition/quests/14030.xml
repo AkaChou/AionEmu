@@ -1961,7 +1961,7 @@
       </event>
       <after-commit>
         <teleport-player-current-or-default world-id="110010000" x="1322.1934" y="1511.148" z="567.909" heading="0"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>

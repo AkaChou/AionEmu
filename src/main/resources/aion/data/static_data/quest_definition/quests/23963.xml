@@ -113,7 +113,7 @@
         <set-status status="REWARD"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 奖励：与 835220 结算。 Reward: settle with 835220. -->

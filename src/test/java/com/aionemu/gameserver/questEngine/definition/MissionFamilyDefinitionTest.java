@@ -152,7 +152,7 @@ class MissionFamilyDefinitionTest {
 				&& t.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 700080)
 			.findFirst().orElseThrow();
 		assertEquals(List.of(new AfterCommitAction.PlayMovie(21),
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)), gate.afterCommit());
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), gate.afterCommit());
 
 		List<QuestAction> completions = transitions.stream()
 			.filter(t -> t.sourceNode().equals("reward") && t.targetNode().equals("complete"))

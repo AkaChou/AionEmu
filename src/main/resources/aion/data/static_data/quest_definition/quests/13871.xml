@@ -35,7 +35,7 @@
     <transition source="k2" target="k3"><event><kill-in-world world-id="400010000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="k3" target="k4"><event><kill-in-world world-id="400010000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="k4" target="k5"><event><kill-in-world world-id="400010000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k5" target="reward"><event><kill-in-world world-id="400010000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k5" target="reward"><event><kill-in-world world-id="400010000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
     <npc-complete npc-id="805380" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

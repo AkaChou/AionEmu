@@ -127,7 +127,7 @@
       </event>
       <after-commit>
         <despawn-npc slot="squamp"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 护送失败（丢失目标）：回退到 var0=0 并回收克隆。 Escort failed (target lost): revert to var0=0 and reclaim the clone. -->

@@ -112,7 +112,7 @@
       <event><talk-to-npc npc-id="800338" dialog-id="10255"/></event>
       <conditions><variable-is field="var0" value="5"/></conditions>
       <actions><set-variable field="var0" value="6"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit>
     </transition>
 
     <!-- 离开副本:步骤 1-5 重置回 1 并提示任务失败（仅提示,不改变状态）。

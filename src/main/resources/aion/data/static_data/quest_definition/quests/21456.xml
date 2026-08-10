@@ -37,7 +37,7 @@
       <event><kill-npc npc-ids="215454 215455 215456 215457 215458 215459 215460 215461 215462 215463 215464 215465 215466 215467 215482 216133 216134 216135 216136 216137 216138 216139 216140 216141 216142 216143 216144 216145 216146 216459 216460"/></event>
       <conditions><variable-at-least field="var0" value="100"/></conditions>
       <actions><set-variable field="var0" value="100"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
 
     <!-- 奖励:NPC (799247) 领取固定奖励 (金币/经验),scroll 卷轴二选一 (dialog 8/9)。 -->

@@ -92,7 +92,7 @@
         <use-item item-id="182216120"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 领奖：与 Miriya (203711) 对话打开任务结束窗口。 -->

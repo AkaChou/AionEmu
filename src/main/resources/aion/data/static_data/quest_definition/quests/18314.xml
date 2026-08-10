@@ -35,7 +35,7 @@
       <event><kill-npc npc-ids="702656 730373"/></event>
       <conditions><variable-at-least field="var0" value="7"/></conditions>
       <actions><set-variable field="var0" value="7"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
     <npc-complete npc-id="799530" source="reward" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>

@@ -233,7 +233,7 @@
         <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 领奖阶段对话显示领取提示。Reward-stage dialog shows the claim prompt. -->

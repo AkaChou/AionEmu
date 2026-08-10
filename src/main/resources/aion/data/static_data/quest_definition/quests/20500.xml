@@ -30,7 +30,7 @@
     <transition source="unaccepted" target="started"><event><enter-world/></event><conditions><world-is world-id="220080000"/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="804718" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="804718" dialog-id="1012"/></event><after-commit><show-quest-dialog dialog-id="1012"/></after-commit></transition>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="804718" dialog-id="10255"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><play-movie movie-id="32" type="CUTSCENE_MOVIE"/><close-dialog/></after-commit></transition>
+    <transition source="started" target="reward"><event><talk-to-npc npc-id="804718" dialog-id="10255"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><play-movie movie-id="32" type="CUTSCENE_MOVIE"/><close-dialog/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="804719" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="10002"/><broadcast-zone-mission-end quest-ids="20501 20502 20503 20504 20505 20506 20507"/></after-commit></transition>
     <npc-complete npc-id="804719" source="reward" target="complete" fixed-reward-indices="0 1 2 3" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG">
       <choice dialog-id="8" reward-index="4"/>

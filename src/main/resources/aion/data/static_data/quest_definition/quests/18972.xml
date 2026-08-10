@@ -31,7 +31,7 @@
       <event><kill-npc npc-ids="235824 235825"/></event>
       <conditions><variable-at-least field="var0" value="6"/></conditions>
       <actions><set-variable field="var0" value="6"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
     <npc-start npc-id="804865" source="unaccepted" target="started" selection-sources="unaccepted started"/>
     <transition source="started" target="started"><event><talk-to-npc npc-id="804865" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>

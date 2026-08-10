@@ -106,7 +106,7 @@ class JavaHandlerFamilyDefinitionTest {
 		assertEquals(QuestEvent.EnterZone.class, zone.event().getClass());
 		assertEquals("LF1_SENSORY_AREA_Q1123_210010000", ((QuestEvent.EnterZone) zone.event()).zone());
 		assertEquals(List.of(new AfterCommitAction.PlayMovie(11),
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)), zone.afterCommit());
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), zone.afterCommit());
 
 		List<QuestAction> completion = completions(transitions, "reward");
 		assertTrue(completion.contains(new QuestAction.GrantReward("EXP", 0, 4565, QuestRewardAmountMode.QUEST_BASE)));

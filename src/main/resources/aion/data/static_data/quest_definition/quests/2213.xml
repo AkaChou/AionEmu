@@ -78,7 +78,7 @@
         <remove-item item-id="182203208" count="1"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>

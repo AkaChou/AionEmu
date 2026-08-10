@@ -247,7 +247,7 @@
         <variable-is field="var0" value="3"/>
       </conditions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <teleport-player-current-or-default world-id="210020000" x="1610" y="1528" z="318" heading="2"/>
         <close-dialog/>
       </after-commit>

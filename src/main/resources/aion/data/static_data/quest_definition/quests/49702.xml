@@ -129,14 +129,14 @@
       <event><kill-npc npc-id="701568"/></event>
       <conditions><variable-at-least field="var0" value="6"/></conditions>
       <actions><set-variable field="var0" value="6"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
 
     <!-- 终态报告 800934:var0 达 6 报告进入奖励,否则进行中提示。 -->
     <transition source="started" target="reward" priority="0">
       <event><talk-to-npc npc-id="800934" dialog-id="1009"/></event>
       <conditions><variable-at-least field="var0" value="6"/></conditions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event><talk-to-npc npc-id="800934" dialog-id="1009"/></event>
@@ -147,7 +147,7 @@
     <transition source="started" target="reward" priority="0">
       <event><talk-to-npc npc-id="800935" dialog-id="1009"/></event>
       <conditions><variable-at-least field="var0" value="6"/></conditions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event><talk-to-npc npc-id="800935" dialog-id="1009"/></event>

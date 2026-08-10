@@ -112,7 +112,7 @@
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="1352"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="v1" target="unaccepted">

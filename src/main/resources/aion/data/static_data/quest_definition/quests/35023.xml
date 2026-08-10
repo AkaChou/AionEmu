@@ -106,7 +106,7 @@
       <event><kill-npc npc-id="700767"/></event>
       <conditions><variable-at-least field="var0" value="3"/></conditions>
       <actions><set-variable field="var0" value="3"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
 
     <!-- 奖励:799800/799801 领取固定奖励 (exp/物品)。 -->

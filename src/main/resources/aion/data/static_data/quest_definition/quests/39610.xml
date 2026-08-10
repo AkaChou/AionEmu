@@ -130,14 +130,14 @@
     <npc-item-report npc-id="800927" source="started" target="reward" item-id="182215280" required="6" remove-count="ALL"/>
     <transition source="started" target="reward">
       <event><talk-to-npc npc-id="800927" dialog-id="10255"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit>
     </transition>
 
     <!-- 交付：800928 报告，持有 182215280×6 进入奖励。 -->
     <npc-item-report npc-id="800928" source="started" target="reward" item-id="182215280" required="6" remove-count="ALL"/>
     <transition source="started" target="reward">
       <event><talk-to-npc npc-id="800928" dialog-id="10255"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit>
     </transition>
 
     <!-- 结算奖励：800927。 -->

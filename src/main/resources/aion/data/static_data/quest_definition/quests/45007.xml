@@ -64,7 +64,7 @@
     <npc-item-report npc-id="799848" source="started" target="reward" item-id="182211002" required="1"/>
     <transition source="started" target="reward">
       <event><talk-to-npc npc-id="799848" dialog-id="10255"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit>
     </transition>
 
     <!-- 奖励:799848 领取固定奖励 (exp/物品)。 -->

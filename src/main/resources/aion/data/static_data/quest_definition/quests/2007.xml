@@ -255,7 +255,7 @@
         <talk-to-npc npc-id="203554" dialog-id="10005"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
         <teleport-player-current-or-default world-id="220010000" x="590.01886" y="2453.0552" z="279.375" heading="79"/>
       </after-commit>

@@ -29,7 +29,7 @@
     <transition source="k2" target="k3"><event><kill-npc npc-id="237241"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="k3" target="k4"><event><kill-npc npc-id="237243"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="k4" target="k5"><event><kill-npc npc-id="237244"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k5" target="reward"><event><kill-npc npc-id="237239"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k5" target="reward"><event><kill-npc npc-id="237239"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
     <npc-complete npc-id="798155" source="reward" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

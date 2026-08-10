@@ -89,13 +89,13 @@
     </transition>
     <transition source="v2" target="reward">
       <event><talk-to-npc npc-id="203893" dialog-id="1009"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit>
     </transition>
 
     <!-- 跟随结算:到达 Sky Canal 进入奖励,丢失目标回退到 0,登出回退到 0。 -->
     <transition source="v2" target="reward">
       <event><npc-reach-target/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
     <transition source="v2" target="started">
       <event><npc-lost-target/></event>

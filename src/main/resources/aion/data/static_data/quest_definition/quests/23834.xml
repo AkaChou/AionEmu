@@ -97,7 +97,7 @@
         <variable-is field="var0" value="0"/>
       </conditions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 领奖 NPC Aud (204061)：任务信息窗口。 Reward NPC Aud (204061): quest info window. -->

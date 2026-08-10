@@ -115,7 +115,7 @@
     </transition>
     <transition source="step5" target="reward">
       <event><talk-to-npc npc-id="800338" dialog-id="10255"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit>
     </transition>
     <transition source="step5" target="step1">
       <event><enter-world/></event>

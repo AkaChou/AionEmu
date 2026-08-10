@@ -65,7 +65,7 @@
     <transition source="s6" target="s7"><event><talk-to-npc npc-id="702663" dialog-id="-1"/></event><conditions><variable-is field="var0" value="6"/></conditions><actions><remove-item item-id="182215629" count="1"/><set-variable field="var0" value="7"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
     <!-- 回到 798928，var0=7 显示 3399 并可进入奖励。 Return to Kahrun for reward. -->
     <transition source="s7" target="s7"><event><talk-to-npc npc-id="798928" dialog-id="31"/></event><conditions><variable-is field="var0" value="7"/></conditions><after-commit><show-quest-dialog dialog-id="3399"/></after-commit></transition>
-    <transition source="s7" target="reward"><event><talk-to-npc npc-id="798928" dialog-id="10255"/></event><conditions><variable-is field="var0" value="7"/></conditions><actions><set-variable field="var0" value="8"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s7" target="reward"><event><talk-to-npc npc-id="798928" dialog-id="10255"/></event><conditions><variable-is field="var0" value="7"/></conditions><actions><set-variable field="var0" value="8"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
     <!-- 798926 奖励结算。 Reward NPC Tolbas. -->
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="798926" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="798926" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>

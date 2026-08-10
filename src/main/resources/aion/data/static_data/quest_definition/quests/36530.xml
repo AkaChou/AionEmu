@@ -69,7 +69,7 @@
     <npc-item-report npc-id="804948" source="started" target="reward" item-id="182215741" required="1" remove-count="ALL"/>
     <transition source="started" target="reward">
       <event><talk-to-npc npc-id="804948" dialog-id="10255"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit>
     </transition>
 
     <!-- 结算奖励:Cynthor (804948)。 -->

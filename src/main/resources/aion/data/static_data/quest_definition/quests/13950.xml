@@ -62,7 +62,7 @@
     <transition source="step2" target="reward">
       <event><enter-world/></event>
       <conditions><world-is world-id="302340000"/></conditions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
 
     <!-- 奖励:Start Bastiel (806583) 领取。 -->

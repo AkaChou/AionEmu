@@ -165,7 +165,7 @@
       <event><kill-npc npc-id="230510"/></event>
       <conditions><variable-at-least field="var0" value="10"/></conditions>
       <actions><set-variable field="var0" value="10"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
 
     <!-- 奖励:绿帽团任务管理员 (800936/800937/800938) 领取固定奖励 (exp/物品)。 -->

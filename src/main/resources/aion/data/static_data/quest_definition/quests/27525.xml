@@ -45,7 +45,7 @@
     <!-- 进入区域 B 推进。 Entering zone B advances. -->
     <transition source="s3" target="s4"><event><enter-zone zone="IDABRE_CORE_03_Q17525_B_301720000"/></event><actions><set-variable field="var0" value="4"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <!-- 击杀 248013 进入领奖。 Killing 248013 enters reward state. -->
-    <transition source="s4" target="reward"><event><kill-npc npc-id="248013"/></event><actions><set-variable field="var0" value="5"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s4" target="reward"><event><kill-npc npc-id="248013"/></event><actions><set-variable field="var0" value="5"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="805356" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
     <npc-complete npc-id="805356" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
       <choice dialog-id="8" reward-index="2"/>

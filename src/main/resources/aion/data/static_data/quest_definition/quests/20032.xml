@@ -393,7 +393,7 @@
         <set-status status="REWARD"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 实例内死亡/登出：回收任务物品并回退到 var0=2。 Death/logout inside the instance removes quest items and resets to var0=2. -->

@@ -252,7 +252,7 @@
         <kill-npc npc-ids="884009 884010 884011 884012 884013 884014 884015 884016 884017 884018 884019 884020 884021 884022 884023 884024 884025 884026"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 领奖阶段对话显示领取提示。Reward-stage dialog shows the claim prompt. -->

@@ -133,7 +133,7 @@
     <transition source="s1" target="reward">
       <event><kill-npc npc-id="216616"/></event>
       <actions><set-variable field="var0" value="2"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
 
     <transition source="reward" target="reward">

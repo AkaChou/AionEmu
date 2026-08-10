@@ -71,7 +71,7 @@
       <event><kill-npc npc-id="220593"/></event>
       <conditions><variable-is field="var0" value="4"/></conditions>
       <actions><set-variable field="var0" value="5"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><play-movie movie-id="942"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><play-movie movie-id="942"/></after-commit>
     </transition>
     <transition source="s2" target="s2">
       <event><talk-to-npc npc-id="806289" dialog-id="31"/></event>

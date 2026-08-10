@@ -47,10 +47,10 @@
     <transition source="started" target="started"><event><can-act template-id="701567" action-type="ACTION_ITEM_USE"/></event></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="800925" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
     <npc-item-report npc-id="800925" source="started" target="reward" item-id="182215267" required="6" remove-count="ALL"/>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="800925" dialog-id="10255"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="started" target="reward"><event><talk-to-npc npc-id="800925" dialog-id="10255"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="800926" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
     <npc-item-report npc-id="800926" source="started" target="reward" item-id="182215267" required="6" remove-count="ALL"/>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="800926" dialog-id="10255"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="started" target="reward"><event><talk-to-npc npc-id="800926" dialog-id="10255"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
 
     <!-- 奖励：Bialinlin (800925) / Dunaling (800926) 领取固定奖励。 -->
     <npc-complete npc-id="800925" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>

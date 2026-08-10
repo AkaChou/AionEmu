@@ -179,7 +179,7 @@
       </actions>
       <after-commit>
         <show-quest-dialog dialog-id="10002"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">

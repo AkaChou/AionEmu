@@ -137,7 +137,7 @@
     <transition source="postFight8" target="postFight8"><event><talk-to-npc npc-id="203164" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="3057"/></after-commit></transition>
     <transition source="postFight8" target="started9"><event><talk-to-npc npc-id="203164" dialog-id="10006"/></event><actions><set-variable field="step" value="9"/></actions><after-commit><teleport-player-current-or-default world-id="110010000" x="1878.27" y="1513.74" z="812.675" heading="25"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
     <transition source="started9" target="started9"><event><talk-to-npc npc-id="203701" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="3398"/></after-commit></transition>
-    <transition source="started9" target="reward"><event><talk-to-npc npc-id="203701" dialog-id="10007"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="started9" target="reward"><event><talk-to-npc npc-id="203701" dialog-id="10007"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
 
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="203711" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
     <npc-complete npc-id="203711" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>

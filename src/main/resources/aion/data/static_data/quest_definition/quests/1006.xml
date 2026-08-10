@@ -208,7 +208,7 @@
       <after-commit>
         <set-class class="GLADIATOR"/>
         <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s5" target="reward">
@@ -217,7 +217,7 @@
       <after-commit>
         <set-class class="TEMPLAR"/>
         <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s5" target="reward">
@@ -226,7 +226,7 @@
       <after-commit>
         <set-class class="ASSASSIN"/>
         <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s5" target="reward">
@@ -235,7 +235,7 @@
       <after-commit>
         <set-class class="RANGER"/>
         <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s5" target="reward">
@@ -244,7 +244,7 @@
       <after-commit>
         <set-class class="SORCERER"/>
         <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s5" target="reward">
@@ -253,7 +253,7 @@
       <after-commit>
         <set-class class="SPIRIT_MASTER"/>
         <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s5" target="reward">
@@ -262,7 +262,7 @@
       <after-commit>
         <set-class class="CLERIC"/>
         <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s5" target="reward">
@@ -271,7 +271,7 @@
       <after-commit>
         <set-class class="CHANTER"/>
         <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s5" target="reward">
@@ -280,7 +280,7 @@
       <after-commit>
         <set-class class="GUNSLINGER"/>
         <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s5" target="reward">
@@ -289,7 +289,7 @@
       <after-commit>
         <set-class class="SONGWEAVER"/>
         <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s5" target="reward">
@@ -298,7 +298,7 @@
       <after-commit>
         <set-class class="AETHERTECH"/>
         <teleport-player-current-or-default world-id="210010000" x="245.14868" y="1639.1372" z="100.35713" heading="60"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
 

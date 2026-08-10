@@ -134,7 +134,7 @@
         <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 奖励 NPC 打开奖励页。 Reward NPC opens the reward page. -->

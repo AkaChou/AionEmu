@@ -25,7 +25,7 @@
   <transitions>
     <npc-start npc-id="805401" source="unaccepted" target="started" selection-sources="unaccepted started"/>
     <transition source="started" target="started"><event><talk-to-npc npc-id="805401" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="h2" target="reward"><event><talk-to-npc npc-id="805401" dialog-id="1009"/></event><conditions><variable-at-least field="var1" value="4"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="h2" target="reward"><event><talk-to-npc npc-id="805401" dialog-id="1009"/></event><conditions><variable-at-least field="var1" value="4"/></conditions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <npc-complete npc-id="805401" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
     <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="883909"/></event><conditions><variable-below field="var1" value="3"/></conditions><actions><increment-variable field="var1" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="started" target="h1" priority="0"><event><kill-npc npc-ids="883909"/></event><conditions><variable-at-least field="var1" value="3"/></conditions><actions><set-variable field="var0" value="1"/><set-variable field="var1" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>

@@ -55,7 +55,7 @@
       <event><kill-npc npc-id="230593"/></event>
       <conditions><variable-at-least field="var0" value="10"/></conditions>
       <actions><set-variable field="var0" value="10"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
 
     <!-- 进行中：行政官 Gnoje (800929) / 派系 NPC (800928/800927) 对话查看任务详情。 -->

@@ -99,12 +99,10 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 		snapshot = snapshot.withTeamFacts(new QuestTeamFacts(player.isInGroup2(), player.isInAlliance2()));
 		return switch (event) {
 			case QuestEvent.TalkToNpc talk -> snapshot.withInteractionObjectId(talk.interactionObjectId());
-			case QuestEvent.UseItem _ -> snapshot.withTargetlessDialog();
-			case QuestEvent.QuestDialog _ -> snapshot.withTargetlessDialog();
-			case QuestEvent.LevelUp _ -> snapshot.withTargetlessDialog();
-			case QuestEvent.EnterZone _ -> snapshot.withTargetlessDialog();
-			case QuestEvent.ZoneMissionEnd _ -> snapshot.withTargetlessDialog();
-			default -> snapshot;
+			// Only TalkToNpc carries an authoritative dialog owner. Every other
+			// event must use object 0 for dialog actions rather than guessing from
+			// the player's current target or an item/NPC template id.
+			default -> snapshot.withTargetlessDialog();
 		};
 	}
 

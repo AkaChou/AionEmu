@@ -141,6 +141,19 @@ class PlayerQuestEventPortTest {
 	}
 
 	@Test
+	void nonNpcEventsWithDialogActionsRemainTargetless() throws Exception {
+		Player player = emptyPlayer();
+		PlayerQuestEventPort port = new PlayerQuestEventPort(playerId -> player);
+
+		for (QuestEvent event : List.of(new QuestEvent.AtDistance(203700), new QuestEvent.EquipItem(140000001))) {
+			QuestSnapshot snapshot = port.snapshot(connection(), PLAYER_ID, QUEST_ID, event);
+
+			assertEquals(0, snapshot.interactionObjectId(), event.type());
+			assertTrue(snapshot.targetlessDialog(), event.type());
+		}
+	}
+
+	@Test
 	void productionEventBoundaryOnlyFreezesStartEligibilityWhenRequestedByTransition() throws Exception {
 		Player player = emptyPlayer();
 		AtomicInteger calls = new AtomicInteger();

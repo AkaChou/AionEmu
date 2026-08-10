@@ -179,7 +179,7 @@
         <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 领奖阶段与管家对话：USE_OBJECT 展示提示 2375；SELECT_REWARD(1009) 移除物品并完成；SELECT_NO_REWARD(23) 完成。

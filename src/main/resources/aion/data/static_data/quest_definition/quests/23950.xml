@@ -167,7 +167,7 @@
         <world-is world-id="302340000"/>
       </conditions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 奖励：与 Start Vatiskhan 806592 结算。 Reward: settle with Start Vatiskhan 806592. -->

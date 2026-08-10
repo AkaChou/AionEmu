@@ -44,15 +44,15 @@
     </transition>
     <transition source="started" target="reward">
       <event><talk-to-npc npc-id="204028" dialog-id="1009"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit>
     </transition>
     <transition source="v1" target="reward">
       <event><talk-to-npc npc-id="204028" dialog-id="1009"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit>
     </transition>
     <transition source="v2" target="reward">
       <event><talk-to-npc npc-id="204028" dialog-id="1009"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit>
     </transition>
 
     <!-- 护送:Griffo (204029,世界 NPC,ai=following)。START_DIALOG 显示 1352,STEP_TO_1(10000) 生成跟随实例并启动跟随至 KURIULLU_MOUNTAIN。 -->

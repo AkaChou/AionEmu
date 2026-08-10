@@ -62,8 +62,8 @@
     <!-- NPC 204787: var 4 dialog / movie 252 / enter reward (SET_REWARD 10255; dialog 10000 branch is the old-handler fallthrough) -->
     <transition source="step4" target="step4"><event><talk-to-npc npc-id="204787" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
     <transition source="step4" target="step4"><event><talk-to-npc npc-id="204787" dialog-id="1012"/></event><after-commit><play-movie movie-id="252"/></after-commit></transition>
-    <transition source="step4" target="reward"><event><talk-to-npc npc-id="204787" dialog-id="10255"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
-    <transition source="step4" target="reward"><event><talk-to-npc npc-id="204787" dialog-id="10000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="step4" target="reward"><event><talk-to-npc npc-id="204787" dialog-id="10255"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="step4" target="reward"><event><talk-to-npc npc-id="204787" dialog-id="10000"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
     <!-- 领奖 NPC 204700：打开汇报对话 10002 / 奖励选择界面 5 / 8..23 领取并完成 -->
     <!-- Reward NPC 204700: report dialog 10002 / reward selection 5 / 8..23 claim and complete -->
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="204700" dialog-ids="-1"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>

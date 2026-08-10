@@ -165,7 +165,7 @@
       <event><kill-npc npc-ids="231284 231285 231286 231287 231288 231289"/></event>
       <conditions><variable-at-least field="var0" value="10"/></conditions>
       <actions><set-variable field="var0" value="10"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
 
     <!-- 奖励:银线团任务管理员 (800929/800928/800927) 领取固定奖励 (exp/物品)。 -->

@@ -34,7 +34,7 @@
       <event><talk-to-npc npc-id="203700" dialog-id="1009"/></event>
       <conditions><can-grant-craft-skill skill-id="40002" target-level="400"/></conditions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <play-movie movie-id="93"/>
         <show-quest-dialog dialog-id="5"/>
       </after-commit>

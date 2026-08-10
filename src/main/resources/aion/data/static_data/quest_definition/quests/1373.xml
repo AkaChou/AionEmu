@@ -122,7 +122,7 @@
       </actions>
       <after-commit>
         <cancel-quest-timer timer-id="countdown" scope="PLAYER_QUEST"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="v2" target="unaccepted">

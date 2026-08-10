@@ -98,7 +98,7 @@
     <transition source="started" target="reward">
       <event><talk-to-npc npc-id="204388" dialog-id="1009"/></event>
       <conditions><variable-at-least field="var0" value="4"/><variable-at-least field="var1" value="6"/><variable-at-least field="var2" value="4"/><variable-at-least field="var3" value="6"/><variable-at-least field="var4" value="4"/></conditions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit>
     </transition>
     <!-- 奖励:Chaikata (204388) 领取;4 选 1 鞋子 (114100801/114300811/114500773/114600732)。 -->
     <npc-complete npc-id="204388" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">

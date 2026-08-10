@@ -193,7 +193,7 @@
         <has-item item-id="182215321" count="1"/>
       </conditions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <show-quest-dialog dialog-id="10000"/>
       </after-commit>
     </transition>

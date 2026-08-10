@@ -37,6 +37,6 @@
     <transition source="k3" target="k4"><event><kill-in-world world-id="600110000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="k4" target="k5"><event><kill-in-world world-id="600110000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="k5" target="k6"><event><kill-in-world world-id="600110000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k6" target="reward"><event><kill-in-world world-id="600110000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k6" target="reward"><event><kill-in-world world-id="600110000"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
   </transitions>
 </quest-definition>

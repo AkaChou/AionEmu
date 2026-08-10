@@ -140,7 +140,7 @@
     <transition source="defense-done" target="reward">
       <event><talk-to-npc npc-id="204432" dialog-id="10003"/></event>
       <actions><remove-item item-id="182215371" count="1"/></actions>
-      <after-commit><teleport-player-current-or-default world-id="220020000" x="248.52255" y="2398.9722" z="452.81012" heading="48"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+      <after-commit><teleport-player-current-or-default world-id="220020000" x="248.52255" y="2398.9722" z="452.81012" heading="48"/><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit>
     </transition>
 
     <transition source="reward" target="reward">

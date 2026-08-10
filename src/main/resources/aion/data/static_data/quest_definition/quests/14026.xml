@@ -249,7 +249,7 @@
       </actions>
       <after-commit>
         <teleport-player-current-or-default world-id="210020000" x="271.69" y="2787.04" z="272.47" heading="50"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>

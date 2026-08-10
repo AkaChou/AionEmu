@@ -63,6 +63,6 @@
     <transition source="k16" target="k17"><event><kill-in-world world-id="302350000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="k17" target="k18"><event><kill-in-world world-id="302350000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="k18" target="k19"><event><kill-in-world world-id="302350000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k19" target="reward"><event><kill-in-world world-id="302350000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="k19" target="reward"><event><kill-in-world world-id="302350000"/></event><conditions><pvp-victim-level-delta minimum="-5" maximum="9"/></conditions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
   </transitions>
 </quest-definition>

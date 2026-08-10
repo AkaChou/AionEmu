@@ -146,7 +146,7 @@
       </event>
       <after-commit>
         <cancel-quest-timer timer-id="21467-timer" scope="PLAYER_QUEST"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s1" target="r0">
@@ -155,7 +155,7 @@
       </event>
       <after-commit>
         <cancel-quest-timer timer-id="21467-timer" scope="PLAYER_QUEST"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="s2" target="r0">
@@ -164,7 +164,7 @@
       </event>
       <after-commit>
         <cancel-quest-timer timer-id="21467-timer" scope="PLAYER_QUEST"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <!-- 死亡失败：重置为未接取。 Death fail: reset to unaccepted. -->

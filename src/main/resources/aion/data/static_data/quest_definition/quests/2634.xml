@@ -69,7 +69,7 @@
     <transition source="following" target="reward">
       <event><npc-reach-target/></event>
       <conditions><status-is status="START"/><variable-is field="var0" value="1"/></conditions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
     <transition source="following" target="started">
       <event><npc-lost-target/></event>

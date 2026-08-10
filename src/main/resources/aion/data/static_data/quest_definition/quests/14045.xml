@@ -192,7 +192,7 @@
         <set-variable field="var0" value="12"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <flight-teleport flight-teleport-id="58001"/>
         <close-dialog/>
       </after-commit>
