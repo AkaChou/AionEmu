@@ -147,6 +147,15 @@
     </transition>
     <transition source="v2" target="v3">
       <event>
+        <talk-to-npc npc-id="203075" dialog-id="2375"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <show-quest-dialog dialog-id="2375"/>
+      </after-commit>
+    </transition>
+    <transition source="v2" target="v3">
+      <event>
         <talk-to-npc npc-id="203075" dialog-id="10001"/>
       </event>
       <after-commit>

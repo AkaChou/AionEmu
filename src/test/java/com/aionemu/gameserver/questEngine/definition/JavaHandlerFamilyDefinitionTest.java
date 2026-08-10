@@ -83,6 +83,32 @@ class JavaHandlerFamilyDefinitionTest {
 		assertTrue(dress.actions().contains(new QuestAction.GiveItem(182200217, 1)));
 		assertTrue(dress.afterCommit().contains(new AfterCommitAction.AddNpcAggro(203175, 50)));
 
+		QuestEvent directHandoff = new QuestEvent.TalkToNpc(203075, 2375);
+		QuestTransition handoffPage = transitions.stream()
+			.filter(t -> t.sourceNode().equals("v2") && t.targetNode().equals("v3")
+				&& t.event().equals(directHandoff))
+			.findFirst().orElseThrow();
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.ShowQuestDialog(2375)), handoffPage.afterCommit());
+		QuestMutationPlan handoffPlan = QuestMutationPlanner.plan(compiled,
+			new QuestSnapshot(7, 1114, QuestStatus.START, 2, Map.of(182200217, 1)),
+			directHandoff, handoffPage).orElseThrow();
+		assertEquals(QuestStatus.START, handoffPlan.nextStatus());
+		assertEquals(3, handoffPlan.nextPackedVariables());
+
+		QuestEvent selectReward = new QuestEvent.TalkToNpc(203075, 1009);
+		QuestTransition namusReward = transitions.stream()
+			.filter(t -> t.sourceNode().equals("v3") && t.targetNode().equals("reward4")
+				&& t.event().equals(selectReward))
+			.findFirst().orElseThrow();
+		QuestMutationPlan rewardPlan = QuestMutationPlanner.plan(compiled,
+			new QuestSnapshot(7, 1114, QuestStatus.START, handoffPlan.nextPackedVariables(),
+				Map.of(182200217, 1)), selectReward, namusReward).orElseThrow();
+		assertEquals(QuestStatus.REWARD, rewardPlan.nextStatus());
+		assertEquals(4, rewardPlan.nextPackedVariables());
+		assertTrue(rewardPlan.requiredActions().contains(new QuestAction.RemoveItem(182200217, 1)));
+		assertTrue(rewardPlan.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(6)));
+
 		List<QuestAction> reward4 = transitions.stream()
 			.filter(t -> t.sourceNode().equals("reward4") && t.targetNode().equals("complete"))
 			.flatMap(t -> t.actions().stream()).toList();
