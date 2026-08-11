@@ -25,9 +25,13 @@ class CMQuestShareCanonicalMetadataTest {
 		assertFalse(CM_QUEST_SHARE.canShare(null, started));
 		assertFalse(CM_QUEST_SHARE.canShare(metadata(true, RepeatPolicy.once()), started));
 		assertTrue(CM_QUEST_SHARE.canShare(once, started));
+		assertTrue(CM_QUEST_SHARE.canShare(once, state(QuestStatus.REWARD)));
+		assertFalse(CM_QUEST_SHARE.canShare(once, state(QuestStatus.NONE)));
+		assertFalse(CM_QUEST_SHARE.canShare(once, state(QuestStatus.COMPLETE)));
 		assertFalse(CM_QUEST_SHARE.canReceiveByState(once, state(QuestStatus.COMPLETE)));
 		assertTrue(CM_QUEST_SHARE.canReceiveByState(repeatable, state(QuestStatus.COMPLETE)));
 		assertFalse(CM_QUEST_SHARE.canReceiveByState(repeatable, state(QuestStatus.REWARD)));
+		assertFalse(CM_QUEST_SHARE.canReceiveByState(repeatable, state(QuestStatus.LOCKED)));
 		assertFalse(CM_QUEST_SHARE.canReceiveByLevel(once, 9));
 		assertTrue(CM_QUEST_SHARE.canReceiveByLevel(once, 10));
 		assertTrue(CM_QUEST_SHARE.canReceiveByLevel(once, 20));

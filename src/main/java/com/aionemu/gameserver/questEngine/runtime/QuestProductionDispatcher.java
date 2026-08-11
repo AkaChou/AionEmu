@@ -8,12 +8,18 @@ import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogDrop;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogRegistry;
+import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestNode;
+import com.aionemu.gameserver.questEngine.definition.QuestTransition;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.OptionalInt;
 
@@ -164,18 +170,74 @@ public final class QuestProductionDispatcher {
 		}
 	}
 
+	/** Executes a server-authorized, targetless share acceptance through the owner's typed acquisition route. */
+	public boolean dispatchSharedQuestAccept(int playerId, int questId, int dialogId) {
+		if (playerId <= 0 || questId <= 0 || (dialogId != 1002 && dialogId != 20000)) {
+			return false;
+		}
+		CompiledQuestDefinition definition = catalog.findExecutable(questId).orElse(null);
+		if (definition == null || definition.definition().metadata().cannotShare()) {
+			return false;
+		}
+		Map<String, QuestStatus> statuses = new HashMap<>();
+		for (QuestNode node : definition.definition().nodes()) {
+			statuses.put(node.label(), node.projection().status());
+		}
+		List<QuestTransition> candidates = definition.definition().transitions().stream()
+			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.dialogId() != null && talk.dialogId() == dialogId)
+			.filter(transition -> startsFromShareableState(transition, statuses))
+			.filter(transition -> statuses.get(transition.targetNode()) == QuestStatus.START)
+			.toList();
+		if (candidates.isEmpty()) {
+			return false;
+		}
+		QuestEvent.QuestDialog event = new QuestEvent.QuestDialog(dialogId);
+		try (LazyConnection connection = new LazyConnection(connections)) {
+			for (QuestTransition transition : candidates) {
+				QuestRouteResult result = execute(connection, playerId, event,
+					new QuestEventIndex.Route(questId, transition), QuestDispatchContract.EXCLUSIVE, true);
+				if (result == QuestRouteResult.HANDLED || result == QuestRouteResult.BLOCKED) {
+					return true;
+				}
+				if (result == QuestRouteResult.FAILED) {
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+
+	private static boolean startsFromShareableState(QuestTransition transition, Map<String, QuestStatus> statuses) {
+		if (transition.sourceNode() != null) {
+			QuestStatus status = statuses.get(transition.sourceNode());
+			return status == QuestStatus.NONE || status == QuestStatus.COMPLETE;
+		}
+		return transition.conditions().stream().anyMatch(condition ->
+			condition instanceof QuestCondition.StatusIs status
+				&& (status.status() == QuestStatus.NONE || status.status() == QuestStatus.COMPLETE));
+	}
+
 	private QuestRouteResult execute(LazyConnection connection, int playerId, QuestEvent event,
 		QuestEventIndex.Route route, QuestDispatchContract contract) {
+		return execute(connection, playerId, event, route, contract, false);
+	}
+
+	private QuestRouteResult execute(LazyConnection connection, int playerId, QuestEvent event,
+		QuestEventIndex.Route route, QuestDispatchContract contract, boolean sharedQuestAccept) {
 		// The index deliberately routes all dialogs for one NPC through one broad key.
 		// A candidate with another dialog is an ordinary non-match, not an execution
 		// failure; keep it non-conclusive so the router can try the next transition.
-		if (!QuestEvent.matches(route.transition().event(), event)) {
+		if (!sharedQuestAccept && !QuestEvent.matches(route.transition().event(), event)) {
 			return QuestRouteResult.UNKNOWN;
 		}
 		CompiledQuestDefinition definition = catalog.findExecutable(route.questId()).orElseThrow();
 		try {
-			QuestExecutionResult result = coordinator.execute(connection.get(), playerId, definition, event,
-				route.transition(), eventPort, actionPort, statePort, afterCommitPort);
+			QuestExecutionResult result = sharedQuestAccept
+				? coordinator.executeSharedQuestAccept(connection.get(), playerId, definition,
+					(QuestEvent.QuestDialog) event, route.transition(), eventPort, actionPort, statePort, afterCommitPort)
+				: coordinator.execute(connection.get(), playerId, definition, event,
+					route.transition(), eventPort, actionPort, statePort, afterCommitPort);
 			if (!result.afterCommitFailures().isEmpty()) {
 				log.warn(I18n.get("log.quest_engine.typed_after_commit_failures",
 					definition.id(), result.afterCommitFailures().size()));

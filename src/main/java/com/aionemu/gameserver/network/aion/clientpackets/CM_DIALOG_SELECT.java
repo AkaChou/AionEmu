@@ -66,13 +66,20 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 		}
 		if (targetObjectId == 0 || targetObjectId == player.getObjectId()) {
 			if (metadata != null && !metadata.cannotShare() && (dialogId == 1002 || dialogId == 20000)) {
-				QuestService.startQuest(env);
-				return;
+				if (player.consumePendingQuestShare(questId)) {
+					QuestEngine questEngine = GameEngineServices.questEngine();
+					if (questEngine.questCatalog().findExecutable(questId).isPresent()) {
+						questEngine.onSharedQuestDialog(new QuestEnv(null, player, questId, dialogId));
+					} else {
+						QuestService.startQuest(env);
+					}
+					return;
+				}
 			}
 			if (GameEngineServices.questEngine().onDialog(new QuestEnv(null, player, questId, dialogId))) {
 				return;
 			}
-			ClassChangeService.changeClassToSelection(player, dialogId);
+			ClassChangeService.changeClassToSelection(player, questId, dialogId);
 			return;
 		}
 		VisibleObject obj = player.getKnownList().getObject(targetObjectId);

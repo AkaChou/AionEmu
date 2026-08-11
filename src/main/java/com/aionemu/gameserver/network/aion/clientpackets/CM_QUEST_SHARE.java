@@ -69,7 +69,8 @@ public class CM_QUEST_SHARE extends AionClientPacket {
 					PacketSendUtility.sendPacket(member, new SM_SYSTEM_MESSAGE(1100003, player.getName()));
 					continue;
 				}
-				PacketSendUtility.sendPacket(member, new SM_QUEST_ACTION(this.questId, member.getObjectId(), true));
+					member.addPendingQuestShare(questId);
+					PacketSendUtility.sendPacket(member, new SM_QUEST_ACTION(this.questId, member.getObjectId(), true));
 			}
 		} else if (player.isInAlliance2()) {
 			for (Player member : player.getPlayerAllianceGroup2().getOnlineMembers()) {
@@ -95,7 +96,8 @@ public class CM_QUEST_SHARE extends AionClientPacket {
 					PacketSendUtility.sendPacket(member, new SM_SYSTEM_MESSAGE(1100003, player.getName()));
 					continue;
 				}
-				PacketSendUtility.sendPacket(member, new SM_QUEST_ACTION(this.questId, member.getObjectId(), true));
+					member.addPendingQuestShare(questId);
+					PacketSendUtility.sendPacket(member, new SM_QUEST_ACTION(this.questId, member.getObjectId(), true));
 			}
 		} else {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1100000));
@@ -105,7 +107,7 @@ public class CM_QUEST_SHARE extends AionClientPacket {
 
 	static boolean canShare(QuestMetadata metadata, QuestState ownerState) {
 		return metadata != null && !metadata.cannotShare() && ownerState != null
-			&& ownerState.getStatus() != QuestStatus.COMPLETE;
+			&& (ownerState.getStatus() == QuestStatus.START || ownerState.getStatus() == QuestStatus.REWARD);
 	}
 
 	static boolean canReceiveByState(QuestMetadata metadata, QuestState state) {
@@ -115,7 +117,7 @@ public class CM_QUEST_SHARE extends AionClientPacket {
 		if (metadata.repeatPolicy().maxRepeatCount() == 1) {
 			return state.getStatus() == QuestStatus.NONE;
 		}
-		return state.getStatus() != QuestStatus.START && state.getStatus() != QuestStatus.REWARD;
+		return state.getStatus() == QuestStatus.NONE || state.getStatus() == QuestStatus.COMPLETE;
 	}
 
 	static boolean canReceiveByLevel(QuestMetadata metadata, int level) {

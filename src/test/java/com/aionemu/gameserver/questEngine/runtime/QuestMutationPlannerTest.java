@@ -50,6 +50,26 @@ class QuestMutationPlannerTest {
 	}
 
 	@Test
+	void sharedQuestAcceptMatchesOnlyTheSameTargetlessDialogWithoutRelaxingOrdinaryEvents() {
+		CompiledQuestDefinition definition = QuestDsl.quest(QUEST_ID + 10)
+			.progress(bitField("step", 0, 2, PersistenceMode.PERSISTENT))
+			.node("unaccepted", project(QuestStatus.NONE, vars("step", 0)))
+			.node("started", project(QuestStatus.START, vars("step", 0)))
+			.on(new QuestEvent.TalkToNpc(700001, 1002)).from("unaccepted").goTo("started")
+			.compile();
+		QuestSnapshot snapshot = new QuestSnapshot(7, QUEST_ID + 10, QuestStatus.NONE, 0, Map.of())
+			.withStartEligibility(QuestStartEligibility.allowed());
+		var transition = definition.definition().transitions().get(0);
+
+		assertFalse(QuestMutationPlanner.plan(definition, snapshot,
+			new QuestEvent.QuestDialog(1002), transition).isPresent());
+		assertTrue(QuestMutationPlanner.planSharedQuestAccept(definition, snapshot,
+			new QuestEvent.QuestDialog(1002), transition).isPresent());
+		assertFalse(QuestMutationPlanner.planSharedQuestAccept(definition, snapshot,
+			new QuestEvent.QuestDialog(20000), transition).isPresent());
+	}
+
+	@Test
 	void worldNpcConditionUsesCapturedCurrentInstanceFactsAndFailsClosedWhenUnknown() {
 		CompiledQuestDefinition definition = QuestDsl.quest(QUEST_ID + 1)
 			.progress(bitField("step", 0, 6, PersistenceMode.PERSISTENT))

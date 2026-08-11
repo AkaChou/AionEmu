@@ -39,6 +39,20 @@ public final class QuestMutationPlanner {
 		if (!QuestEvent.matches(transition.event(), event)) {
 			return Optional.empty();
 		}
+		return planMatched(definition, snapshot, event, transition);
+	}
+
+	static Optional<QuestMutationPlan> planSharedQuestAccept(CompiledQuestDefinition definition,
+			QuestSnapshot snapshot, QuestEvent.QuestDialog event, QuestTransition transition) {
+		if (!(transition.event() instanceof QuestEvent.TalkToNpc talk)
+				|| talk.dialogId() == null || talk.dialogId() != event.dialogId()) {
+			return Optional.empty();
+		}
+		return planMatched(definition, snapshot, event, transition);
+	}
+
+	private static Optional<QuestMutationPlan> planMatched(CompiledQuestDefinition definition,
+			QuestSnapshot snapshot, QuestEvent event, QuestTransition transition) {
 		if (definition.id() != snapshot.questId()) {
 			return Optional.empty();
 		}

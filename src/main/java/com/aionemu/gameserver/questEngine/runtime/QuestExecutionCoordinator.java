@@ -38,6 +38,24 @@ public final class QuestExecutionCoordinator {
 			CompiledQuestDefinition definition, QuestEvent event, QuestTransition transition,
 			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
 			QuestAfterCommitPort afterCommitPort) throws Exception {
+		return executeValidated(connection, playerId, definition, event, transition, eventPort, actionPort,
+			statePort, afterCommitPort, QuestEvent.matches(transition.event(), event), false);
+	}
+
+	QuestExecutionResult executeSharedQuestAccept(Connection connection, int playerId,
+			CompiledQuestDefinition definition, QuestEvent.QuestDialog event, QuestTransition transition,
+			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
+			QuestAfterCommitPort afterCommitPort) throws Exception {
+		boolean matchesSharedAccept = transition.event() instanceof QuestEvent.TalkToNpc talk
+			&& talk.dialogId() != null && talk.dialogId() == event.dialogId();
+		return executeValidated(connection, playerId, definition, event, transition, eventPort, actionPort,
+			statePort, afterCommitPort, matchesSharedAccept, true);
+	}
+
+	private QuestExecutionResult executeValidated(Connection connection, int playerId,
+			CompiledQuestDefinition definition, QuestEvent event, QuestTransition transition,
+			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
+			QuestAfterCommitPort afterCommitPort, boolean eventMatches, boolean sharedQuestAccept) throws Exception {
 		// 统一入口保证所有正式 owner 使用同一执行顺序。
 		// The single entry point guarantees one execution order for every production owner.
 		Objects.requireNonNull(connection, "connection");
@@ -50,7 +68,7 @@ public final class QuestExecutionCoordinator {
 		if (!definition.definition().transitions().contains(transition)) {
 			throw new IllegalArgumentException("transition does not belong to definition " + definition.id());
 		}
-		if (!QuestEvent.matches(transition.event(), event)) {
+		if (!eventMatches) {
 			throw new IllegalArgumentException("event does not match transition");
 		}
 		Objects.requireNonNull(eventPort, "eventPort");
@@ -58,13 +76,13 @@ public final class QuestExecutionCoordinator {
 		Objects.requireNonNull(statePort, "statePort");
 		Objects.requireNonNull(afterCommitPort, "afterCommitPort");
 		return serialExecutor.execute(playerId, () -> executeSerialized(connection, playerId, definition, event,
-				transition, eventPort, actionPort, statePort, afterCommitPort));
+				transition, eventPort, actionPort, statePort, afterCommitPort, sharedQuestAccept));
 	}
 
 	private QuestExecutionResult executeSerialized(Connection connection, int playerId,
 			CompiledQuestDefinition definition, QuestEvent event, QuestTransition transition,
 			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
-			QuestAfterCommitPort afterCommitPort) throws Exception {
+			QuestAfterCommitPort afterCommitPort, boolean sharedQuestAccept) throws Exception {
 		QuestTransactionParticipant participant = QuestTransactionParticipant.none();
 		QuestMutationPlan appliedPlan = null;
 		boolean committed = false;
@@ -88,7 +106,10 @@ public final class QuestExecutionCoordinator {
 				throw new IllegalStateException("event snapshot does not belong to player/quest");
 			}
 			stage = QuestFailureStage.PLAN;
-			Optional<QuestMutationPlan> plan = QuestMutationPlanner.plan(definition, snapshot, event, transition);
+			Optional<QuestMutationPlan> plan = sharedQuestAccept
+				? QuestMutationPlanner.planSharedQuestAccept(definition, snapshot,
+					(QuestEvent.QuestDialog) event, transition)
+				: QuestMutationPlanner.plan(definition, snapshot, event, transition);
 			if (plan.isEmpty()) {
 				unit.rollback();
 				return new QuestExecutionResult(QuestExecutionStatus.NO_MATCH, null, unit.afterCommitFailures());

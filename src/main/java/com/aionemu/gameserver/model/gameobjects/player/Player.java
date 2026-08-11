@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
@@ -156,6 +158,7 @@ public class Player extends Creature {
 	private PrivateStore store;
 	private TitleList titleList;
 	private QuestStateList questStateList;
+	private final Set<Integer> pendingQuestShares = ConcurrentHashMap.newKeySet();
 	private RecipeList recipeList;
 	private List<House> houses;
 	private ResponseRequester requester;
@@ -738,6 +741,19 @@ public class Player extends Creature {
 	 */
 	public void setQuestStateList(QuestStateList questStateList) {
 		this.questStateList = questStateList;
+	}
+
+	/** Records a server-issued quest-share offer for this session. */
+	public void addPendingQuestShare(int questId) {
+		if (questId <= 0) {
+			throw new IllegalArgumentException("questId must be positive");
+		}
+		pendingQuestShares.add(questId);
+	}
+
+	/** Consumes a server-issued quest-share offer exactly once. */
+	public boolean consumePendingQuestShare(int questId) {
+		return questId > 0 && pendingQuestShares.remove(questId);
 	}
 
 	/**

@@ -186,6 +186,34 @@ class QuestProductionDispatcherTest {
 	}
 
 	@Test
+	void sharedQuestAcceptRunsTheTypedAcquisitionActionsWithoutAnNpcTarget() {
+		CompiledQuestDefinition definition = QuestDsl.quest(28738)
+			.progress(bitField("var0", 0, 2, PersistenceMode.PERSISTENT))
+			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.on(new QuestEvent.TalkToNpc(206395, 1002)).from("unaccepted")
+			.then(QuestDsl.giveItem(164000342, 10)).goTo("started")
+			.compile();
+		List<String> calls = new ArrayList<>();
+		List<QuestEvent> events = new ArrayList<>();
+		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition), calls,
+			(connection, playerId, questId, event) -> {
+				events.add(event);
+				return new QuestSnapshot(playerId, questId, QuestStatus.NONE, 0, Map.of())
+					.withStartEligibility(QuestStartEligibility.allowed());
+			});
+
+		assertFalse(dispatcher.dispatchSharedQuestAccept(7, 28738, 20000));
+		assertFalse(dispatcher.dispatchSharedQuestAccept(7, 28738, 31));
+		assertTrue(calls.isEmpty());
+		assertTrue(dispatcher.dispatchSharedQuestAccept(7, 28738, 1002));
+
+		assertEquals(List.of(new QuestEvent.QuestDialog(1002)), events);
+		assertEquals(List.of("setAutoCommit:false", "preflight", "apply", "state", "commit", "publish", "close"),
+			calls);
+	}
+
+	@Test
 	void firstNonUnknownContinuesPastAnUnmatchedTransitionOfTheSameOwner() {
 		CompiledQuestDefinition definition = QuestDsl.quest(1107)
 			.progress(bitField("step", 0, 6, PersistenceMode.PERSISTENT))

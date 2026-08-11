@@ -277,6 +277,18 @@ public class QuestEngine implements GameEngine {
 		return false;
 	}
 
+	/** Dispatches an accepted server-issued quest share without inventing an NPC interaction object. */
+	public boolean onSharedQuestDialog(QuestEnv env) {
+		if (env == null || env.getPlayer() == null || env.getQuestId() <= 0) {
+			return false;
+		}
+		QuestProductionDispatcher typed = productionDispatcher;
+		if (!typed.owns(env.getQuestId())) {
+			return false;
+		}
+		return typed.dispatchSharedQuestAccept(env.getPlayer().getObjectId(), env.getQuestId(), env.getDialogId());
+	}
+
 	/**
 	 * 分发击杀事件。
 	 * Dispatch a kill event.
