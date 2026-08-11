@@ -12,6 +12,7 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
@@ -21,6 +22,8 @@
   </nodes>
   <transitions>
     <npc-start npc-id="835578" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="241547 241548 241549 241550 241551 241552 243269 243270 243271 241947 241951 241955 241959 241963 241967 241971 241975 241979 241983 241987 241991 241995 241999 242003 241580 241581 241582 241583 241584 241585 241212 243380 243381 243382 243383 243384 243385 243386 243387 243388 242087 242091 242095 242099 242103 242107 242111 242115 242119 242123 242127 242131 242135 242139 242143 241610 241611 241612 241613 241614 241615 241616 241617 241618 242287 242291 242295 242299 242303 242307 242311 242315 242319 242323 242327 242331 242335 242339 242343 243281 243282 243283 241646 241647 241648 241649 241650 241651 242487 242491 242495 242499 242503 242507 242511 242515 242519 242523 242527 242531 242535 242539 242543"/></event><conditions><variable-below field="var1" value="30"/></conditions><actions><increment-variable field="var1" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="reward" priority="0"><event><kill-npc npc-ids="241547 241548 241549 241550 241551 241552 243269 243270 243271 241947 241951 241955 241959 241963 241967 241971 241975 241979 241983 241987 241991 241995 241999 242003 241580 241581 241582 241583 241584 241585 241212 243380 243381 243382 243383 243384 243385 243386 243387 243388 242087 242091 242095 242099 242103 242107 242111 242115 242119 242123 242127 242131 242135 242139 242143 241610 241611 241612 241613 241614 241615 241616 241617 241618 242287 242291 242295 242299 242303 242307 242311 242315 242319 242323 242327 242331 242335 242339 242343 243281 243282 243283 241646 241647 241648 241649 241650 241651 242487 242491 242495 242499 242503 242507 242511 242515 242519 242523 242527 242531 242535 242539 242543"/></event><conditions><variable-is field="var1" value="29"/></conditions><actions><set-variable field="var1" value="30"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
     <npc-report npc-id="835578" source="started" target="reward" page="1352"/>
     <npc-complete npc-id="835578" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>

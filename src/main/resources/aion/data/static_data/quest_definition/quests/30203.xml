@@ -15,6 +15,10 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="7" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var3" offset="8" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var4" offset="9" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
@@ -24,6 +28,11 @@
   </nodes>
   <transitions>
     <npc-start npc-id="798926" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <transition source="started" target="started"><event><kill-npc npc-id="216175"/></event><conditions><variable-is field="var1" value="0"/></conditions><actions><set-variable field="var1" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started"><event><kill-npc npc-id="216177"/></event><conditions><variable-is field="var2" value="0"/></conditions><actions><set-variable field="var2" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started"><event><kill-npc npc-id="216179"/></event><conditions><variable-is field="var3" value="0"/></conditions><actions><set-variable field="var3" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started"><event><kill-npc npc-id="216181"/></event><conditions><variable-is field="var4" value="0"/></conditions><actions><set-variable field="var4" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="reward"><event><kill-npc npc-id="216263"/></event><conditions><variable-is field="var1" value="1"/><variable-is field="var2" value="1"/><variable-is field="var3" value="1"/><variable-is field="var4" value="1"/></conditions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><play-movie movie-id="443"/></after-commit></transition>
     <npc-report npc-id="798926" source="started" target="reward" page="1352"/>
     <npc-complete npc-id="798926" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
       <choice dialog-id="8" reward-index="1"/>

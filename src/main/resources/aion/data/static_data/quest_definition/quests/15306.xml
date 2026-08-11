@@ -39,6 +39,11 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="59" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="12" width="6" min="0" max="59" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var3" offset="18" width="5" min="0" max="29" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var4" offset="23" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var5" offset="24" width="3" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
@@ -48,6 +53,12 @@
   </nodes>
   <transitions>
     <npc-start npc-id="805327" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="233939 233940 233941 233942 233900 234312 234313 234692"/></event><conditions><variable-below field="var1" value="59"/></conditions><actions><increment-variable field="var1" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="234292 234294 234295 234296 234298 234529"/></event><conditions><variable-below field="var2" value="59"/></conditions><actions><increment-variable field="var2" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="883301 883302 883303 883304 883305 883306 883307 883308"/></event><conditions><variable-below field="var3" value="29"/></conditions><actions><increment-variable field="var3" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="232853 233491 234190 233544"/></event><conditions><variable-below field="var4" value="1"/></conditions><actions><increment-variable field="var4" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="236277 231073 231130"/></event><conditions><variable-below field="var5" value="5"/></conditions><actions><increment-variable field="var5" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="reward" priority="0"><event><kill-npc npc-ids="233939 233940 233941 233942 233900 234312 234313 234692 234292 234294 234295 234296 234298 234529 883301 883302 883303 883304 883305 883306 883307 883308 232853 233491 234190 233544 236277 231073 231130"/></event><conditions><variable-at-least field="var1" value="59"/><variable-at-least field="var2" value="59"/><variable-at-least field="var3" value="29"/><variable-at-least field="var4" value="1"/><variable-at-least field="var5" value="5"/></conditions><actions><set-variable field="var1" value="59"/><set-variable field="var2" value="59"/><set-variable field="var3" value="29"/><set-variable field="var4" value="1"/><set-variable field="var5" value="5"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
     <npc-report npc-id="805327" source="started" target="reward" page="1352"/>
     <npc-complete npc-id="805327" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
       <choice dialog-id="8" reward-index="2"/>

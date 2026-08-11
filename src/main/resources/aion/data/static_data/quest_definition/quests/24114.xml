@@ -43,7 +43,8 @@
   </nodes>
   <transitions>
     <npc-start npc-id="203649" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="203649" source="started" target="reward" page="1352"/>
+        <transition source="started" target="reward"><event><kill-npc npc-ids="210752"/></event><conditions><variable-is field="var0" value="4"/></conditions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
+<npc-report npc-id="203649" source="started" target="reward" page="1352"/>
     <npc-complete npc-id="203649" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
     <npc-start npc-id="700097" source="unaccepted" target="started" selection-sources="unaccepted started"/>
     <npc-report npc-id="700097" source="started" target="reward" page="1352"/>

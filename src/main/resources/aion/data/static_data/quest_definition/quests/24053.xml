@@ -35,7 +35,7 @@
   <transitions>
     <!-- 自动接取：无 24050/24040 完成门控（客户端无依赖），由 start-conditions 2061 约束。 -->
     <!-- Auto-accept: no 24050/24040 completion gate (client has none); start-conditions 2061 applies. -->
-    <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/><quests-finished quest-ids="24050"/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
     <transition source="unaccepted" target="started"><event><zone-mission-end/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
     <!-- NPC 204787：var 0 起始对话 / 影片 252 / 推进到 var 1 -->
     <!-- NPC 204787: var 0 intro dialog / movie 252 / advance to var 1 -->

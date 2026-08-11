@@ -37,7 +37,7 @@
   </nodes>
   <transitions>
     <npc-start npc-id="806148" source="unaccepted" target="started" selection-sources="unaccepted"/>
-    <transition source="unaccepted" target="started"><event><enter-world/></event><conditions><world-is world-id="301540000"/><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><enter-world/></event><conditions><world-is world-id="301540000"/><start-eligible/><quests-finished quest-ids="16801"/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="806148" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="806148" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
     <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="220306 220309 220312 220315 220318 220324 220327 220330"/></event><conditions><variable-is field="var0" value="0"/><variable-below field="var1" value="29"/></conditions><actions><increment-variable field="var1" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>

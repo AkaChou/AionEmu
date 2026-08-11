@@ -14,6 +14,8 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="8" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
@@ -23,6 +25,9 @@
   </nodes>
   <transitions>
     <npc-start npc-id="802339" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="233937"/></event><conditions><variable-below field="var1" value="2"/></conditions><actions><increment-variable field="var1" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="233938"/></event><conditions><variable-below field="var2" value="2"/></conditions><actions><increment-variable field="var2" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="reward" priority="0"><event><kill-npc npc-ids="233937 233938"/></event><conditions><variable-at-least field="var1" value="2"/><variable-at-least field="var2" value="2"/></conditions><actions><set-variable field="var1" value="2"/><set-variable field="var2" value="2"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
     <npc-report npc-id="802339" source="started" target="reward" page="1352"/>
     <npc-complete npc-id="802339" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
     <npc-start npc-id="802345" source="unaccepted" target="started" selection-sources="unaccepted started"/>

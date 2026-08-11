@@ -85,6 +85,10 @@
         <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="203098" source="reward" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="203098" source="reward" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
+      <after-commit>
+        <broadcast-zone-mission-end quest-ids="14011 14012 14013 14014 14015 14016"/>
+      </after-commit>
+    </npc-complete>
   </transitions>
 </quest-definition>

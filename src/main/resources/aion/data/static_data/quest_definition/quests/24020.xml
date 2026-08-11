@@ -39,6 +39,9 @@
       <choice dialog-id="11" reward-index="4"/>
       <choice dialog-id="12" reward-index="5"/>
       <choice dialog-id="13" reward-index="6"/>
+      <after-commit>
+        <broadcast-zone-mission-end quest-ids="24021 24022 24023 24024 24025 24026"/>
+      </after-commit>
     </npc-complete>
   </transitions>
 </quest-definition>

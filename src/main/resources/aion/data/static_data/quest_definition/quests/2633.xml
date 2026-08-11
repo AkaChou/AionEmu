@@ -24,6 +24,7 @@
   </nodes>
   <transitions>
     <npc-start npc-id="204700" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <transition source="started" target="reward"><event><kill-npc npc-ids="213933"/></event><conditions><variable-is field="var0" value="0"/></conditions><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
     <npc-report npc-id="204700" source="started" target="reward" page="1352"/>
     <npc-complete npc-id="204700" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
       <choice dialog-id="8" reward-index="1"/>

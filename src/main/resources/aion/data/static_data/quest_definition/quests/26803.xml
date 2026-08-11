@@ -20,8 +20,11 @@
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/><var name="var1" value="0"/></vars></project></node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/><quests-finished quest-ids="26802"/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="started"><event><zone-mission-end/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
+
     <transition source="started" target="started"><event><talk-to-npc npc-id="806149" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+
     <transition source="started" target="started"><event><talk-to-npc npc-id="806149" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
     <!-- 击杀 70 级图书馆管理员累积计数(共 30 个)。Killing 70lvl librarians accumulates the kill count (30 total). -->
     <transition source="started" target="started" priority="1">
@@ -33,6 +36,7 @@
       <actions><increment-variable field="var1" delta="1"/></actions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
     </transition>
+
     <transition source="started" target="reward" priority="0">
       <event><kill-npc npc-ids="220307 220310 220313 220316 220319 220325 220328 220411 220331"/></event>
       <conditions>

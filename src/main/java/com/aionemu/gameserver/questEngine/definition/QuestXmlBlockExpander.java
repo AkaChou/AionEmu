@@ -506,6 +506,18 @@ final class QuestXmlBlockExpander {
 
 		DialogIds dialogs = new DialogIds(context, "npc-complete");
 		List<Integer> previewDialogIds = dialogs.add(block, "preview-dialog-ids");
+		List<AfterCommitAction> extraAfterCommit = new ArrayList<>();
+		Element afterCommitElement = child(block, "after-commit");
+		if (afterCommitElement != null) {
+			for (Element action : children(afterCommitElement)) {
+				try {
+					extraAfterCommit.add(QuestDefinitionXmlCompiler.parseAfterCommitAction(action));
+				} catch (RuntimeException e) {
+					return fail("NPC_COMPLETE_AFTER_COMMIT_INVALID", context, "npc-complete", "after-commit",
+						action.getTagName() + ": " + e.getMessage());
+				}
+			}
+		}
 		List<CompletionRoute> routes = new ArrayList<>();
 		if (block.hasAttribute("dialog-ids")) {
 			for (int dialogId : dialogs.add(block, "dialog-ids")) {
@@ -556,6 +568,7 @@ final class QuestXmlBlockExpander {
 			List<AfterCommitAction> afterCommit = new ArrayList<>();
 			afterCommit.add(new AfterCommitAction.RefreshPlayerStats());
 			afterCommit.add(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION));
+			afterCommit.addAll(extraAfterCommit);
 			switch (finish) {
 				case SELECTION_DIALOG -> afterCommit.add(new AfterCommitAction.ShowQuestSelectionDialog(10));
 				case CLOSE_DIALOG -> afterCommit.add(new AfterCommitAction.CloseDialog());

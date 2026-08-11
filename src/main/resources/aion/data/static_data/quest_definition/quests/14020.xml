@@ -90,6 +90,9 @@
     <npc-complete npc-id="203901" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
       <choice dialog-id="8" reward-index="1"/>
       <choice dialog-id="9" reward-index="2"/>
+      <after-commit>
+        <broadcast-zone-mission-end quest-ids="14021 14022 14023 14024 14025 14026"/>
+      </after-commit>
     </npc-complete>
   </transitions>
 </quest-definition>

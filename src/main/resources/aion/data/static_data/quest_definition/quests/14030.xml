@@ -1996,6 +1996,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
+        <broadcast-zone-mission-end quest-ids="14031"/>
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>
@@ -2014,6 +2015,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
+        <broadcast-zone-mission-end quest-ids="14031"/>
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>

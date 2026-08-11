@@ -677,7 +677,7 @@ public final class QuestDefinitionXmlCompiler {
 		};
 	}
 
-	private static AfterCommitAction parseAfterCommitAction(Element action) {
+	static AfterCommitAction parseAfterCommitAction(Element action) {
 		return switch (action.getTagName()) {
 			case "close-dialog" -> new AfterCommitAction.CloseDialog();
 			case "sync-quest-state" -> new AfterCommitAction.SyncQuestState(

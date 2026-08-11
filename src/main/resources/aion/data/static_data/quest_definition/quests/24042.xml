@@ -38,7 +38,7 @@
     </transition>
     <transition source="unaccepted" target="started">
       <event><level-up/></event>
-      <conditions><start-eligible/></conditions>
+      <conditions><start-eligible/><quests-finished quest-ids="24041"/></conditions>
       <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit>
     </transition>
 

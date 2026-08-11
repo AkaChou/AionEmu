@@ -96,6 +96,9 @@
       <choice dialog-id="9" reward-index="4"/>
       <choice dialog-id="10" reward-index="5"/>
       <choice dialog-id="11" reward-index="6"/>
+      <after-commit>
+        <broadcast-zone-mission-end quest-ids="14051 14052 14053 14054"/>
+      </after-commit>
     </npc-complete>
   </transitions>
 </quest-definition>
