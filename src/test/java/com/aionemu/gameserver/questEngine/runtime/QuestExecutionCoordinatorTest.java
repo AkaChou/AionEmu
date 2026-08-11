@@ -246,6 +246,31 @@ class QuestExecutionCoordinatorTest {
 	}
 
 	@Test
+	void afterCommitPortExceptionPreservesActionAndRootCause() throws Exception {
+		CompiledQuestDefinition definition = definition();
+		QuestExecutionResult result = new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
+			connection(new ArrayList<>()), 7, definition, talkToNpc(700001),
+			definition.definition().transitions().get(0), snapshotPort(), new RecordingActionPort(new ArrayList<>()),
+			new NoOpStatePort(), (action, snapshot, plan) -> {
+				throw new IllegalStateException("dialog service unavailable");
+			});
+
+		QuestPostCommitFailure failure = assertInstanceOf(QuestPostCommitFailure.class,
+			result.afterCommitFailures().getFirst());
+		QuestAfterCommitException actionFailure = assertInstanceOf(QuestAfterCommitException.class,
+			failure.getCause());
+		assertEquals("CloseDialog", actionFailure.actionType());
+		assertEquals("dialog service unavailable", actionFailure.getCause().getMessage());
+
+		QuestAuditEvent audit = new QuestAuditEvent(1001, "TALK_TO_NPC", QuestDispatchContract.EXCLUSIVE,
+			QuestRouteResult.HANDLED, "start", "reward", 700001, -1,
+			QuestFailureStage.AFTER_COMMIT, true, failure);
+		assertEquals("CloseDialog", audit.actionType());
+		assertEquals(IllegalStateException.class.getName(), audit.rootFailureType());
+		assertEquals("dialog service unavailable", audit.rootFailureMessage());
+	}
+
+	@Test
 	void terminalCleanupRunsLastAndItsFailureIsReported() throws Exception {
 		List<String> calls = new ArrayList<>();
 		CompiledQuestDefinition definition = terminalDefinition();

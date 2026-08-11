@@ -11,9 +11,13 @@ public final class QuestAfterCommitException extends IllegalStateException {
 	private final String actionType;
 
 	public QuestAfterCommitException(AfterCommitAction action, QuestSnapshot snapshot) {
+		this(action, snapshot, null);
+	}
+
+	public QuestAfterCommitException(AfterCommitAction action, QuestSnapshot snapshot, Throwable cause) {
 		super("after-commit action " + Objects.requireNonNull(action, "action").getClass().getSimpleName()
 			+ " failed for player " + Objects.requireNonNull(snapshot, "snapshot").playerId()
-			+ " quest " + snapshot.questId());
+			+ " quest " + snapshot.questId(), cause);
 		this.playerId = snapshot.playerId();
 		this.questId = snapshot.questId();
 		this.actionType = action.getClass().getSimpleName();

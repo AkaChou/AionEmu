@@ -139,7 +139,9 @@ public final class QuestExecutionCoordinator {
 					try {
 						afterCommitPort.execute(action, snapshot, resolved);
 					} catch (RuntimeException failure) {
-						throw new QuestPostCommitFailure(QuestFailureStage.AFTER_COMMIT, failure);
+						RuntimeException actionFailure = failure instanceof QuestAfterCommitException
+							? failure : new QuestAfterCommitException(action, snapshot, failure);
+						throw new QuestPostCommitFailure(QuestFailureStage.AFTER_COMMIT, actionFailure);
 					}
 				});
 			}
