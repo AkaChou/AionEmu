@@ -86,6 +86,12 @@
       <event>
         <talk-to-npc npc-id="203079" dialog-id="1009"/>
       </event>
+      <conditions>
+        <has-item item-id="182200224" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182200224" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <show-quest-dialog dialog-id="5"/>

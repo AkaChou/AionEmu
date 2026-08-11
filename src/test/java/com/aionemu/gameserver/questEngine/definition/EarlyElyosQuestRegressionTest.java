@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EarlyElyosQuestRegressionTest {
@@ -32,6 +33,24 @@ class EarlyElyosQuestRegressionTest {
 				new QuestEvent.TalkToNpc(203059, dialogId), route).orElseThrow();
 			assertEquals(QuestStatus.START, plan.nextStatus());
 		}
+	}
+
+	@Test
+	void ointmentDeliveryRequiresAndConsumesTheWorkItem() {
+		CompiledQuestDefinition definition = load(1118);
+		QuestEvent event = new QuestEvent.TalkToNpc(203079, 1009);
+		QuestTransition delivery = route(definition, "v1", "reward", event);
+
+		assertTrue(delivery.conditions().contains(new QuestCondition.HasItem(182200224, 1)));
+		assertTrue(delivery.actions().contains(new QuestAction.RemoveItem(182200224, 1)));
+		QuestSnapshot missingOintment = new QuestSnapshot(7, 1118, QuestStatus.START, 1, Map.of());
+		assertFalse(QuestMutationPlanner.plan(definition, missingOintment, event, delivery).isPresent());
+
+		QuestMutationPlan plan = QuestMutationPlanner.plan(definition,
+			new QuestSnapshot(7, 1118, QuestStatus.START, 1, Map.of(182200224, 1)),
+			event, delivery).orElseThrow();
+		assertEquals(QuestStatus.REWARD, plan.nextStatus());
+		assertEquals(List.of(new QuestAction.RemoveItem(182200224, 1)), plan.requiredActions());
 	}
 
 	@Test
