@@ -305,6 +305,7 @@ public final class PathData {
 		private static final int HIERARCHICAL_MIN_BLOCK_DISTANCE = 8;
 		private static final int HIERARCHICAL_MAX_ABSTRACT_NODES = 2_048;
 		private static final int HIERARCHICAL_FINE_MAX_NODES = 8_192;
+		private static final float MAX_ADJACENT_HEIGHT_DELTA = 1.5f;
 		private static final float MAX_STRAIGHT_HEIGHT_DEVIATION = 0.10f;
 		private static final int[] DX = {1, 0, -1, 0};
 		private static final int[] DY = {0, 1, 0, -1};
@@ -916,7 +917,8 @@ public final class PathData {
 		private Node step(Node source, int direction, HeightProvider terrain, EdgePassability passability) {
 			Node next = direction < 4 ? neighbor(source, direction, terrain)
 					: diagonalNeighbor(source, direction - 4, terrain, passability);
-			if (next == null || distance(source, next) >= 20) {
+			if (next == null || Math.abs(source.z() - next.z()) > MAX_ADJACENT_HEIGHT_DELTA
+					|| distance(source, next) >= 20) {
 				return null;
 			}
 			return direction < 4 && !edgeAllowed(source, next, passability) ? null : next;
