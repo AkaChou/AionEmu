@@ -67,13 +67,17 @@
     </start-conditions>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="1" width="3" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="4" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted">
       <project status="NONE">
         <vars>
           <var name="var0" value="0"/>
+          <var name="var1" value="0"/>
+          <var name="var2" value="0"/>
         </vars>
       </project>
     </node>
@@ -81,104 +85,24 @@
       <project status="START">
         <vars>
           <var name="var0" value="0"/>
+          <var name="var1" value="0"/>
+          <var name="var2" value="0"/>
         </vars>
       </project>
     </node>
-    <node label="k1">
+    <node label="hunting">
       <project status="START">
         <vars>
           <var name="var0" value="1"/>
         </vars>
       </project>
     </node>
-    <node label="k2">
-      <project status="START">
-        <vars>
-          <var name="var0" value="2"/>
-        </vars>
-      </project>
-    </node>
-    <node label="k3">
-      <project status="START">
-        <vars>
-          <var name="var0" value="3"/>
-        </vars>
-      </project>
-    </node>
-    <node label="k4">
-      <project status="START">
-        <vars>
-          <var name="var0" value="4"/>
-        </vars>
-      </project>
-    </node>
-    <node label="k5">
-      <project status="START">
-        <vars>
-          <var name="var0" value="5"/>
-        </vars>
-      </project>
-    </node>
-    <node label="k6">
-      <project status="START">
-        <vars>
-          <var name="var0" value="6"/>
-        </vars>
-      </project>
-    </node>
-    <node label="k7">
-      <project status="START">
-        <vars>
-          <var name="var0" value="7"/>
-        </vars>
-      </project>
-    </node>
-    <node label="k8">
-      <project status="START">
-        <vars>
-          <var name="var0" value="8"/>
-        </vars>
-      </project>
-    </node>
-    <node label="k9">
-      <project status="START">
-        <vars>
-          <var name="var0" value="9"/>
-        </vars>
-      </project>
-    </node>
-    <node label="k10">
-      <project status="START">
-        <vars>
-          <var name="var0" value="10"/>
-        </vars>
-      </project>
-    </node>
-    <node label="k11">
-      <project status="START">
-        <vars>
-          <var name="var0" value="11"/>
-        </vars>
-      </project>
-    </node>
-    <node label="k12">
-      <project status="START">
-        <vars>
-          <var name="var0" value="12"/>
-        </vars>
-      </project>
-    </node>
-    <node label="k13">
-      <project status="START">
-        <vars>
-          <var name="var0" value="13"/>
-        </vars>
-      </project>
-    </node>
     <node label="reward">
       <project status="REWARD">
         <vars>
-          <var name="var0" value="13"/>
+          <var name="var0" value="1"/>
+          <var name="var1" value="5"/>
+          <var name="var2" value="7"/>
         </vars>
       </project>
     </node>
@@ -191,27 +115,9 @@
     </node>
   </nodes>
   <transitions>
-    <kill-chain nodes="started k1 k2 k3 k4 k5">
-      <event><kill-npc npc-id="210126" /></event>
-    </kill-chain>
-    <kill-routes source="k5" target="k6" npc-ids="210200 210201"/>
-    <kill-routes source="k6" target="k7" npc-ids="210200 210201"/>
-    <kill-routes source="k7" target="k8" npc-ids="210200 210201"/>
-    <kill-routes source="k8" target="k9" npc-ids="210200 210201"/>
-    <kill-routes source="k9" target="k10" npc-ids="210200 210201"/>
-    <kill-routes source="k10" target="k11" npc-ids="210200 210201"/>
-    <kill-routes source="k11" target="k12" npc-ids="210200 210201"/>
-    <transition source="k12" target="k13">
-      <event>
-        <kill-npc npc-id="210202"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <level-up/>
+        <zone-mission-end/>
       </event>
       <conditions>
         <start-eligible/>
@@ -221,32 +127,86 @@
         <show-quest-dialog dialog-id="4"/>
       </after-commit>
     </transition>
-    <transition source="k13" target="k13">
+    <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="203129" dialog-id="1008"/>
+        <level-up/>
       </event>
+      <conditions>
+        <start-eligible/>
+        <quests-finished quest-ids="14010"/>
+      </conditions>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="4"/>
       </after-commit>
     </transition>
-    <transition source="k13" target="k13">
+    <transition source="started" target="started">
       <event>
         <talk-to-npc npc-id="203129" dialog-id="31"/>
       </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <show-quest-dialog dialog-id="1011"/>
       </after-commit>
     </transition>
-    <transition source="k13" target="reward">
+    <transition source="started" target="hunting">
       <event>
-        <talk-to-npc npc-id="203129" dialog-id="1009"/>
+        <talk-to-npc npc-id="203129" dialog-id="10000"/>
       </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
       <actions>
         <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="hunting" target="hunting">
+      <event>
+        <kill-npc npc-id="210126"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+        <variable-below field="var1" value="5"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="hunting" target="hunting">
+      <event>
+        <kill-npc npc-ids="210200 210201"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+        <variable-below field="var2" value="7"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var2" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="hunting" target="reward">
+      <event>
+        <kill-npc npc-id="210202"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+        <variable-is field="var1" value="5"/>
+        <variable-is field="var2" value="7"/>
+      </conditions>
+      <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="5"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="203129" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">

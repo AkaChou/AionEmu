@@ -8,10 +8,12 @@ import com.aionemu.gameserver.questEngine.runtime.QuestStartEligibility;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -43,6 +45,16 @@ class CompletedQuestPrerequisiteRegressionTest {
 	}
 
 	@Test
+	void startsAFrillOfAFussWhenTheZoneMissionUnlocksAtLevelFourteen() throws Exception {
+		CompiledQuestDefinition definition = load(14013);
+		QuestMutationPlan plan = plan(definition, new QuestEvent.ZoneMissionEnd(), Set.of()).orElseThrow();
+		assertEquals(QuestStatus.START, plan.nextStatus());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(4)), plan.afterCommit());
+	}
+
+	@Test
 	void gatesOtherCompletedAutomaticOwnersOnTheirLegacyPrerequisites() throws Exception {
 		assertAutomaticStart(2007, new QuestEvent.LevelUp(),
 			Set.of(2100, 2001, 2002, 2003, 2004, 2005, 2006));
@@ -50,6 +62,7 @@ class CompletedQuestPrerequisiteRegressionTest {
 			Set.of(2100, 2001, 2002, 2003, 2004, 2005, 2006));
 		assertAutomaticStart(10032, new QuestEvent.LevelUp(), Set.of(10031));
 		assertAutomaticStart(14012, new QuestEvent.LevelUp(), Set.of(14010));
+		assertAutomaticStart(14013, new QuestEvent.LevelUp(), Set.of(14010));
 		assertAutomaticStart(14014, new QuestEvent.LevelUp(), Set.of(14010));
 		assertAutomaticStart(14016, new QuestEvent.LevelUp(), Set.of(14010, 14011, 14012, 14013, 14014, 14015));
 		assertAutomaticStart(14016, new QuestEvent.ZoneMissionEnd(), Set.of(14010, 14011, 14012, 14013, 14014, 14015));
