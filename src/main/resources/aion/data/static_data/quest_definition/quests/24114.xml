@@ -37,20 +37,22 @@
   </progress>
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars/></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="4"/></vars></project></node>
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
   </nodes>
   <transitions>
     <npc-start npc-id="203649" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-        <transition source="started" target="reward"><event><kill-npc npc-ids="210752"/></event><conditions><variable-is field="var0" value="4"/></conditions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
-<npc-report npc-id="203649" source="started" target="reward" page="1352"/>
+    <transition source="started" target="started"><event><kill-npc npc-ids="210722 210588"/></event><conditions><variable-below field="var0" value="3"/></conditions><actions><increment-variable field="var0" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="203649" dialog-id="31"/></event><conditions><variable-is field="var0" value="3"/></conditions><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="203649" dialog-id="10000"/></event><conditions><variable-is field="var0" value="3"/></conditions><actions><set-variable field="var0" value="4"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="700097" dialog-id="-1"/></event><conditions><variable-is field="var0" value="4"/><has-item item-id="182215475" count="1" expected="false"/></conditions><actions><give-item item-id="182215475" count="1"/></actions><after-commit><close-dialog/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="700098" dialog-id="-1"/></event><conditions><variable-is field="var0" value="4"/></conditions><after-commit><show-quest-dialog dialog-id="1693"/></after-commit></transition>
+    <transition source="started" target="started"><event><can-act template-id="700097" action-type="ACTION_ITEM_USE"/></event><conditions><variable-is field="var0" value="4"/><has-item item-id="182215475" count="1" expected="false"/></conditions></transition>
+    <transition source="started" target="started"><event><can-act template-id="700098" action-type="ACTION_ITEM_USE"/></event><conditions><variable-is field="var0" value="4"/></conditions></transition>
+    <transition source="started" target="started" priority="0"><event><talk-to-npc npc-id="700098" dialog-id="39"/></event><conditions><variable-is field="var0" value="4"/><has-item item-id="182215474" count="1"/><has-item item-id="182215475" count="1"/><has-item item-id="182215476" count="1"/></conditions><after-commit><spawn-npc-current-or-default slot="umkata" template-id="210752" world-id="220030000" x="2889.9834" y="1741.3108" z="254.75" heading="0"/><close-dialog/></after-commit></transition>
+    <transition source="started" target="started" priority="1"><event><talk-to-npc npc-id="700098" dialog-id="39"/></event><conditions><variable-is field="var0" value="4"/></conditions><after-commit><show-quest-dialog dialog-id="1779"/></after-commit></transition>
+    <transition source="started" target="reward"><event><kill-npc npc-id="210752"/></event><conditions><variable-is field="var0" value="4"/><has-item item-id="182215474" count="1"/><has-item item-id="182215475" count="1"/><has-item item-id="182215476" count="1"/></conditions><actions><remove-item item-id="182215474" count="1"/><remove-item item-id="182215475" count="1"/><remove-item item-id="182215476" count="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
     <npc-complete npc-id="203649" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
-    <npc-start npc-id="700097" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="700097" source="started" target="reward" page="1352"/>
-    <npc-complete npc-id="700097" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
-    <npc-start npc-id="700098" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="700098" source="started" target="reward" page="1352"/>
-    <npc-complete npc-id="700098" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

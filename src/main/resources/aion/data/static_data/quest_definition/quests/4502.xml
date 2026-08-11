@@ -35,39 +35,30 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="6" width="4" min="0" max="15" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="7" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var3" offset="8" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="k1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="s0"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="s1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="s2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="2"/></vars></project></node>
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
   </nodes>
   <transitions>
-    <transition source="started" target="k1"><event><kill-npc npc-id="214894"/></event><conditions><variable-is field="var0" value="0"/></conditions><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k1" target="k1" priority="1"><event><kill-npc npc-ids="214895 214896 214897"/></event><conditions><variable-is field="var0" value="1"/><variable-below field="var1" value="2"/></conditions><actions><increment-variable field="var1" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k1" target="reward" priority="0"><event><kill-npc npc-ids="214895 214896 214897"/></event><conditions><variable-is field="var0" value="1"/><variable-at-least field="var1" value="2"/></conditions><actions><increment-variable field="var1" delta="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
-    <npc-start npc-id="204837" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="204837" source="started" target="reward" page="1352"/>
+    <npc-start npc-id="204837" source="unaccepted" target="s0" selection-sources="unaccepted s0 s1 s2"/>
+    <transition source="s0" target="s0"><event><talk-to-npc npc-id="730192" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="s0" target="s1"><event><talk-to-npc npc-id="730192" dialog-id="10000"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s1" target="s2"><event><kill-npc npc-id="214894"/></event><actions><set-variable field="var0" value="2"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s2" target="s2"><event><kill-npc npc-id="214895"/></event><conditions><variable-is field="var1" value="0"/></conditions><actions><set-variable field="var1" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s2" target="s2"><event><kill-npc npc-id="214896"/></event><conditions><variable-is field="var2" value="0"/></conditions><actions><set-variable field="var2" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s2" target="s2"><event><kill-npc npc-id="214897"/></event><conditions><variable-is field="var3" value="0"/></conditions><actions><set-variable field="var3" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s2" target="s2"><event><talk-to-npc npc-id="204837" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="s2" target="reward" priority="0"><event><talk-to-npc npc-id="204837" dialog-id="39"/></event><conditions><has-item item-id="182204534" count="1"/></conditions><actions><remove-item item-id="182204534" count="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="s2" target="s2" priority="1"><event><talk-to-npc npc-id="204837" dialog-id="39"/></event><after-commit><show-quest-dialog dialog-id="10001"/></after-commit></transition>
     <npc-complete npc-id="204837" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4 5 6" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="7"/>
-      <choice dialog-id="9" reward-index="8"/>
-      <choice dialog-id="10" reward-index="9"/>
-      <choice dialog-id="11" reward-index="10"/>
-      <choice dialog-id="12" reward-index="11"/>
-      <choice dialog-id="13" reward-index="12"/>
-      <choice dialog-id="14" reward-index="13"/>
-      <choice dialog-id="15" reward-index="14"/>
-      <choice dialog-id="16" reward-index="15"/>
-      <choice dialog-id="17" reward-index="16"/>
-      <choice dialog-id="18" reward-index="17"/>
-      <choice dialog-id="19" reward-index="18"/>
-      <choice dialog-id="20" reward-index="19"/>
-    </npc-complete>
-    <npc-start npc-id="730192" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="730192" source="started" target="reward" page="1352"/>
-    <npc-complete npc-id="730192" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4 5 6" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
       <choice dialog-id="8" reward-index="7"/>
       <choice dialog-id="9" reward-index="8"/>
       <choice dialog-id="10" reward-index="9"/>

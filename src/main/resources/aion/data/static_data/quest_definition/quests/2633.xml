@@ -18,14 +18,19 @@
   </progress>
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="s0"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="s1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="s2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="2"/></vars></project></node>
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="204700" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <transition source="started" target="reward"><event><kill-npc npc-ids="213933"/></event><conditions><variable-is field="var0" value="0"/></conditions><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
-    <npc-report npc-id="204700" source="started" target="reward" page="1352"/>
+    <npc-start npc-id="204700" source="unaccepted" target="s0" selection-sources="unaccepted s0 s1 s2"/>
+    <transition source="s0" target="s0"><event><talk-to-npc npc-id="204807" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="s0" target="s1"><event><talk-to-npc npc-id="204807" dialog-id="10000"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s1" target="s2"><event><talk-to-npc npc-id="700296" dialog-id="-1"/></event><actions><set-variable field="var0" value="2"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s1" target="s1"><event><can-act template-id="700296" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s2" target="reward"><event><kill-npc npc-id="213933"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
     <npc-complete npc-id="204700" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
       <choice dialog-id="8" reward-index="1"/>
       <choice dialog-id="9" reward-index="2"/>

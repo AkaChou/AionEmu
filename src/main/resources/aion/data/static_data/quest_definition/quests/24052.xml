@@ -25,38 +25,36 @@
     </start-conditions>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="s0"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="s1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="s2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="s3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
+    <node label="s4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="4"/></vars></project></node>
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/><quests-finished quest-ids="24050"/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><zone-mission-end/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
-
-    <transition source="started" target="started"><event><talk-to-npc npc-id="204753" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-
-    <transition source="started" target="started"><event><talk-to-npc npc-id="204753" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-
-        <transition source="started" target="reward"><event><kill-npc npc-id="233864"/></event><conditions><variable-is field="var0" value="0"/></conditions><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
-<transition source="started" target="reward"><event><talk-to-npc npc-id="204753" dialog-id="1009"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="unaccepted" target="s0"><event><level-up/></event><conditions><start-eligible/><quests-finished quest-ids="24050"/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="unaccepted" target="s0"><event><zone-mission-end/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
+    <transition source="s0" target="s0"><event><talk-to-npc npc-id="204753" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="s0" target="s0"><event><talk-to-npc npc-id="204753" dialog-id="1012"/></event><after-commit><play-movie movie-id="242"/></after-commit></transition>
+    <transition source="s0" target="s1"><event><talk-to-npc npc-id="204753" dialog-id="10000"/></event><actions><give-item item-id="182215378" count="1"/><give-item item-id="182215379" count="1"/><give-item item-id="182215380" count="1"/><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s1" target="s2"><event><use-item item-id="182215378"/></event><conditions><zone-is zone="DF3_ITEMUSEAREA_Q2056"/><has-item item-id="182215378" count="1"/></conditions><actions><block-default-item-use/><remove-item item-id="182215378" count="1"/><set-variable field="var0" value="2"/></actions><after-commit><play-movie movie-id="243"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s1" target="s2"><event><use-item item-id="182215379"/></event><conditions><zone-is zone="DF3_ITEMUSEAREA_Q2056"/><has-item item-id="182215379" count="1"/></conditions><actions><block-default-item-use/><remove-item item-id="182215379" count="1"/><set-variable field="var0" value="2"/></actions><after-commit><play-movie movie-id="243"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s1" target="s2"><event><use-item item-id="182215380"/></event><conditions><zone-is zone="DF3_ITEMUSEAREA_Q2056"/><has-item item-id="182215380" count="1"/></conditions><actions><block-default-item-use/><remove-item item-id="182215380" count="1"/><set-variable field="var0" value="2"/></actions><after-commit><play-movie movie-id="243"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s2" target="s3"><event><use-item item-id="182215378"/></event><conditions><zone-is zone="DF3_ITEMUSEAREA_Q2056"/><has-item item-id="182215378" count="1"/></conditions><actions><block-default-item-use/><remove-item item-id="182215378" count="1"/><set-variable field="var0" value="3"/></actions><after-commit><play-movie movie-id="244"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s2" target="s3"><event><use-item item-id="182215379"/></event><conditions><zone-is zone="DF3_ITEMUSEAREA_Q2056"/><has-item item-id="182215379" count="1"/></conditions><actions><block-default-item-use/><remove-item item-id="182215379" count="1"/><set-variable field="var0" value="3"/></actions><after-commit><play-movie movie-id="244"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s2" target="s3"><event><use-item item-id="182215380"/></event><conditions><zone-is zone="DF3_ITEMUSEAREA_Q2056"/><has-item item-id="182215380" count="1"/></conditions><actions><block-default-item-use/><remove-item item-id="182215380" count="1"/><set-variable field="var0" value="3"/></actions><after-commit><play-movie movie-id="244"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s3" target="s4"><event><use-item item-id="182215378"/></event><conditions><zone-is zone="DF3_ITEMUSEAREA_Q2056"/><has-item item-id="182215378" count="1"/></conditions><actions><block-default-item-use/><remove-item item-id="182215378" count="1"/><set-variable field="var0" value="4"/></actions><after-commit><play-movie movie-id="245"/><spawn-npc-current-or-default slot="parasitic-ice-spirit" template-id="233864" world-id="220040000" x="2085" y="120" z="372" heading="60"/><start-quest-timer seconds="180" timer-id="24052-spirit" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s3" target="s4"><event><use-item item-id="182215379"/></event><conditions><zone-is zone="DF3_ITEMUSEAREA_Q2056"/><has-item item-id="182215379" count="1"/></conditions><actions><block-default-item-use/><remove-item item-id="182215379" count="1"/><set-variable field="var0" value="4"/></actions><after-commit><play-movie movie-id="245"/><spawn-npc-current-or-default slot="parasitic-ice-spirit" template-id="233864" world-id="220040000" x="2085" y="120" z="372" heading="60"/><start-quest-timer seconds="180" timer-id="24052-spirit" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s3" target="s4"><event><use-item item-id="182215380"/></event><conditions><zone-is zone="DF3_ITEMUSEAREA_Q2056"/><has-item item-id="182215380" count="1"/></conditions><actions><block-default-item-use/><remove-item item-id="182215380" count="1"/><set-variable field="var0" value="4"/></actions><after-commit><play-movie movie-id="245"/><spawn-npc-current-or-default slot="parasitic-ice-spirit" template-id="233864" world-id="220040000" x="2085" y="120" z="372" heading="60"/><start-quest-timer seconds="180" timer-id="24052-spirit" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s4" target="reward"><event><kill-npc npc-id="233864"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
+    <transition source="s4" target="s0"><event><quest-timer-end/></event><actions><set-variable field="var0" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <npc-complete npc-id="204753" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="2"/>
-      <choice dialog-id="9" reward-index="3"/>
-      <choice dialog-id="10" reward-index="4"/>
-      <choice dialog-id="11" reward-index="5"/>
-      <choice dialog-id="12" reward-index="6"/>
-      <choice dialog-id="13" reward-index="7"/>
-    </npc-complete>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="233864" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-
-    <transition source="started" target="started"><event><talk-to-npc npc-id="233864" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="233864" dialog-id="1009"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <npc-complete npc-id="233864" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
       <choice dialog-id="8" reward-index="2"/>
       <choice dialog-id="9" reward-index="3"/>
       <choice dialog-id="10" reward-index="4"/>

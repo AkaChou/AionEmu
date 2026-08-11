@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2252" version="1">
-  <metadata name="Chasing The Legend" display-name-id="1103352" min-level="14" max-level="2147483647" category="QUEST" cannot-share="true">
+<metadata name="Chasing The Legend" display-name-id="1103352" min-level="14" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -18,16 +18,19 @@
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
     <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="killed"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="reported"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="2"/></vars></project></node>
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
   </nodes>
   <transitions>
     <npc-start npc-id="203646" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <transition source="started" target="reward"><event><kill-npc npc-ids="210634"/></event><conditions><variable-is field="var0" value="0"/></conditions><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
-    <npc-report npc-id="203646" source="started" target="reward" page="1352"/>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="700060" dialog-id="-1"/></event><after-commit><spawn-npc-at-player slot="minusha-spirit" template-id="210634" heading="0"/><close-dialog/></after-commit></transition>
+    <transition source="started" target="started"><event><can-act template-id="700060" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="started" target="killed"><event><kill-npc npc-id="210634"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="killed" target="reported"><event><talk-to-npc npc-id="203646" dialog-id="31"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="reported" target="reward"><event><talk-to-npc npc-id="203646" dialog-id="1009"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <npc-complete npc-id="203646" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
-    <npc-start npc-id="700060" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="700060" source="started" target="reward" page="1352"/>
-    <npc-complete npc-id="700060" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
+
 </quest-definition>

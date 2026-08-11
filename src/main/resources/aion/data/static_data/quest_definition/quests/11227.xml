@@ -16,18 +16,17 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="6" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars/></project></node>
+    <node label="reward"><project status="REWARD"><vars/></project></node>
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
   </nodes>
   <transitions>
     <npc-start npc-id="799076" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="217069 217070 217071"/></event><conditions><variable-below field="var1" value="2"/></conditions><actions><increment-variable field="var1" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started" target="reward" priority="0"><event><kill-npc npc-id="217068"/></event><conditions><variable-at-least field="var1" value="2"/></conditions><actions><set-variable field="var1" value="2"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
+    <transition source="started" target="started"><event><kill-npc npc-ids="217069 217070 217071"/></event><actions><increment-variable field="var0" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="reward"><event><kill-npc npc-id="217068"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
     <npc-report npc-id="799076" source="started" target="reward" page="1352"/>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="799076" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
     <transition source="reward" target="complete"><event><talk-to-npc npc-id="799076" dialog-ids="8..23"/></event><actions>        <grant-reward kind="GOLD" id="0" amount="10000" amount-mode="QUEST_BASE"/>        <grant-reward kind="EXP" id="0" amount="4368661" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="186000109" amount="1"/>        <grant-reward kind="ITEM" id="188050587" amount="1"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>

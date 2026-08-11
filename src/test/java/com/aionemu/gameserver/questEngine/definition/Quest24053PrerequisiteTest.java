@@ -18,9 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class Quest24053PrerequisiteTest {
 	@Test
 	void gatesAutomaticStartsOnUnfinishedAndUnacquired2061() throws Exception {
-		// 客户端证据:24053 的 start-conditions 为 unfinished+noacquired Q2061,
-		// 两条自动接取转移无 24050/24040 完成依赖(照 24051 先例);快照含 Q2061
-		// 的 START/COMPLETE 均拒,从未接取(且事实已采集)时可接,未采集失败关闭。
+		// 旧 handler 语义：level-up 入口还需完成 24050；zone-mission-end 入口仅由
+		// 2061 的 unfinished+noacquired start-conditions 约束。两条入口均拒绝
+		// Q2061 的 START/COMPLETE，未采集事实时 fail closed。
 		CompiledQuestDefinition definition = load(24053);
 		QuestTransition levelUp = definition.definition().transitions().stream()
 			.filter(transition -> transition.event() instanceof QuestEvent.LevelUp)
@@ -35,7 +35,7 @@ class Quest24053PrerequisiteTest {
 			new QuestEvent.LevelUp(), levelUp).isPresent());
 		assertFalse(QuestMutationPlanner.plan(definition, snapshot(Set.of(), Set.of(2061)),
 			new QuestEvent.LevelUp(), levelUp).isPresent());
-		assertTrue(QuestMutationPlanner.plan(definition, snapshot(Set.of(), Set.of()),
+		assertTrue(QuestMutationPlanner.plan(definition, snapshot(Set.of(24050), Set.of()),
 			new QuestEvent.LevelUp(), levelUp).isPresent());
 		assertFalse(QuestMutationPlanner.plan(definition, snapshotUncaptured(),
 			new QuestEvent.ZoneMissionEnd(), zoneMissionEnd).isPresent());

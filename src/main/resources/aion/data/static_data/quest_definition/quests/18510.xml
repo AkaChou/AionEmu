@@ -4,6 +4,9 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <work-items>
+      <item id="182212009" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="GOLD" id="0" amount="13390"/>
       <reward kind="EXP" id="0" amount="75359"/>
@@ -18,21 +21,21 @@
   </progress>
   <nodes>
     <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="started"><project status="START"><vars/></project></node>
+    <node label="reward"><project status="REWARD"><vars><var name="var0" value="5"/></vars></project></node>
     <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="799522" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-        <transition source="started" target="started" priority="1"><event><kill-npc npc-id="700950"/></event><conditions><variable-is field="var0" value="0"/></conditions><actions><increment-variable field="var0" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started" target="reward" priority="0"><event><kill-npc npc-id="700950"/></event><conditions><variable-is field="var0" value="2"/></conditions><actions><increment-variable field="var0" delta="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
-<npc-report npc-id="799522" source="started" target="reward" page="1352"/>
-    <npc-complete npc-id="799522" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
-    <npc-start npc-id="700953" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="700953" source="started" target="reward" page="1352"/>
-    <npc-complete npc-id="700953" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
-    <npc-start npc-id="203166" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="203166" source="started" target="reward" page="1352"/>
+    <npc-start npc-id="799522" source="unaccepted" target="started" selection-sources="unaccepted started">
+      <accept-actions><give-item item-id="182212009" count="1"/></accept-actions>
+    </npc-start>
+    <transition source="started" target="started"><event><kill-npc npc-id="700950"/></event><conditions><variable-below field="var0" value="3"/></conditions><actions><increment-variable field="var0" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="700953" dialog-id="-1"/></event><conditions><variable-is field="var0" value="3"/></conditions><actions><set-variable field="var0" value="4"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="700953" dialog-id="-1"/></event><conditions><variable-is field="var0" value="4"/></conditions><actions><set-variable field="var0" value="5"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="started" target="reward"><event><talk-to-npc npc-id="700953" dialog-id="-1"/></event><conditions><variable-is field="var0" value="5"/></conditions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <transition source="started" target="started"><event><can-act template-id="700953" action-type="ACTION_ITEM_USE"/></event><conditions><variable-is field="var0" value="3"/></conditions></transition>
+    <transition source="started" target="started"><event><can-act template-id="700953" action-type="ACTION_ITEM_USE"/></event><conditions><variable-is field="var0" value="4"/></conditions></transition>
+    <transition source="started" target="started"><event><can-act template-id="700953" action-type="ACTION_ITEM_USE"/></event><conditions><variable-is field="var0" value="5"/></conditions></transition>
     <npc-complete npc-id="203166" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>
