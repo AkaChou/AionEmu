@@ -50,6 +50,12 @@ class QuestRepeatLifecycleTest {
 		assertEquals(QuestStatus.COMPLETE, reopenPlan.nextStatus());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1011)), reopen.afterCommit());
 
+		QuestEvent descriptionEvent = new QuestEvent.TalkToNpc(203726, 1007);
+		QuestTransition description = route(definition, "complete", descriptionEvent);
+		var descriptionPlan = QuestMutationPlanner.plan(definition, completed, descriptionEvent, description).orElseThrow();
+		assertEquals(QuestStatus.COMPLETE, descriptionPlan.nextStatus());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(4)), description.afterCommit());
+
 		QuestEvent acceptEvent = new QuestEvent.TalkToNpc(203726, 1002);
 		QuestTransition accept = route(definition, "unaccepted", acceptEvent);
 		var acceptPlan = QuestMutationPlanner.plan(definition, completed, acceptEvent, accept).orElseThrow();
@@ -58,6 +64,7 @@ class QuestRepeatLifecycleTest {
 
 		QuestSnapshot rejected = completed.withStartEligibility(QuestStartEligibility.rejected("REPEAT_LIMIT"));
 		assertFalse(QuestMutationPlanner.plan(definition, rejected, reopenEvent, reopen).isPresent());
+		assertFalse(QuestMutationPlanner.plan(definition, rejected, descriptionEvent, description).isPresent());
 		assertFalse(QuestMutationPlanner.plan(definition, rejected, acceptEvent, accept).isPresent());
 	}
 
