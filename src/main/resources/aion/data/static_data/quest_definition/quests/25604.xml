@@ -24,12 +24,54 @@
       </group>
     </reward-groups>
     <drops>
-      <drop npc-id="243380" item-id="182216003" chance="100" each-member="true" collecting-step="4" scope="GROUP" />
-      <drop npc-id="243381" item-id="182216003" chance="100" each-member="true" collecting-step="4" scope="GROUP" />
-      <drop npc-id="243382" item-id="182216003" chance="100" each-member="true" collecting-step="4" scope="GROUP" />
-      <drop npc-id="243383" item-id="182216003" chance="100" each-member="true" collecting-step="4" scope="GROUP" />
-      <drop npc-id="243384" item-id="182216003" chance="100" each-member="true" collecting-step="4" scope="GROUP" />
-      <drop npc-id="243385" item-id="182216003" chance="100" each-member="true" collecting-step="4" scope="GROUP" />
+      <drop npc-id="703125" item-id="182216003" chance="100" each-member="true" collecting-step="4" scope="GROUP" />
     </drops>
   </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="started" status="START"><var name="var0" value="0"/></node>
+    <node label="s1" status="START"><var name="var0" value="1"/></node>
+    <node label="s2" status="START"><var name="var0" value="2"/></node>
+    <node label="s3" status="START"><var name="var0" value="3"/></node>
+    <node label="s4" status="START"><var name="var0" value="4"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="0"/></node>
+    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+  </nodes>
+  <transitions>
+    <!-- 接取:806115 Svanhild,31 显示 4762,1002 接取。 -->
+    <npc-start npc-id="806115" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
+    <!-- 806173 Groma:var0=0,31 显示 1011,SELECT_ACTION_1012(1012) 显示 1012,STEP_TO_1(10000) 播片 874+传送+var0=1。 -->
+    <transition source="started" target="started"><event><talk-to-npc npc-id="806173" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="806173" dialog-id="1012"/></event><after-commit><show-quest-dialog dialog-id="1012"/></after-commit></transition>
+    <transition source="started" target="s1"><event><talk-to-npc npc-id="806173" dialog-id="10000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><play-movie movie-id="874"/><teleport-player-current-or-default world-id="220110000" x="1254.2067" y="2899.5266" z="251.91998" heading="118"/><close-dialog/></after-commit></transition>
+    <!-- 进入 DF6 感官区:var0=1→2。 -->
+    <transition source="s1" target="s2"><event><enter-zone zone="DF6_SENSORY_AREA_Q25604_A_DYNAMIC_ENV_220110000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <!-- 击杀 703125×3(var1):var0=2→3。 -->
+    <counter source="s2" target="s3" field="var1" required="3"><event><kill-npc npc-id="703125"/></event></counter>
+    <!-- 806173 Groma:var0=3,31 显示 2034,STEP_TO_4(10003) 传送+var0=4。 -->
+    <transition source="s3" target="s3"><event><talk-to-npc npc-id="806173" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2034"/></after-commit></transition>
+    <transition source="s3" target="s4"><event><talk-to-npc npc-id="806173" dialog-id="10003"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><teleport-player-current-or-default world-id="220110000" x="1254.2067" y="2899.5266" z="251.91998" heading="118"/><close-dialog/></after-commit></transition>
+    <!-- 806173 Groma:var0=4,31 显示 2375,CHECK_COLLECTED_ITEMS(39) 收 182216003×5,var0=5+REWARD。 -->
+    <transition source="s4" target="s4"><event><talk-to-npc npc-id="806173" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
+    <transition source="s4" target="reward"><event><talk-to-npc npc-id="806173" dialog-id="39"/></event><conditions><has-item item-id="182216003" count="5" expected="true"/></conditions><actions><remove-item item-id="182216003" count="5"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="10000"/></after-commit></transition>
+    <transition source="s4" target="s4"><event><talk-to-npc npc-id="806173" dialog-id="39"/></event><conditions><has-item item-id="182216003" count="5" expected="false"/></conditions><after-commit><show-quest-dialog dialog-id="10001"/></after-commit></transition>
+    <!-- 完成:806115 Svanhild REWARD→COMPLETE,31 显示 10002,1009 显示 5,8..16 可选奖励,17..23 默认完成。 -->
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="806115" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
+    <npc-complete npc-id="806115" source="reward" target="complete" fixed-reward-indices="0 1 11" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG">
+      <choice dialog-id="8" reward-index="2"/>
+      <choice dialog-id="9" reward-index="3"/>
+      <choice dialog-id="10" reward-index="4"/>
+      <choice dialog-id="11" reward-index="5"/>
+      <choice dialog-id="12" reward-index="6"/>
+      <choice dialog-id="13" reward-index="7"/>
+      <choice dialog-id="14" reward-index="8"/>
+      <choice dialog-id="15" reward-index="9"/>
+      <choice dialog-id="16" reward-index="10"/>
+      <fallback dialog-ids="17 18 19 20 21 22 23"/>
+    </npc-complete>
+  </transitions>
 </quest-definition>

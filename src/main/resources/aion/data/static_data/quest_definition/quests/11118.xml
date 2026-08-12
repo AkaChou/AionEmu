@@ -25,12 +25,26 @@
   <nodes>
     <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
     <node label="started" status="START"><var name="var0" value="0"/></node>
+    <node label="s1" status="START"><var name="var0" value="1"/></node>
+    <node label="s2" status="START"><var name="var0" value="2"/></node>
     <node label="reward" status="REWARD"><var name="var0" value="0"/></node>
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
+    <!-- 接取:798985,31 显示 4762,1002 接取。 -->
     <npc-start npc-id="798985" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
-    <npc-report npc-id="798985" source="started" target="reward" page="1352"/>
-    <npc-complete npc-id="798985" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <!-- 798963:var0=0,31 显示 1011,STEP_TO_1(10000) 推进 var0=1。 -->
+    <transition source="started" target="started"><event><talk-to-npc npc-id="798963" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="started" target="s1"><event><talk-to-npc npc-id="798963" dialog-id="10000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <!-- 798963:var0=1,31 显示 1352,CHECK_COLLECTED_ITEMS(39) 收 182206794×20 换 182206795,var0=2。 -->
+    <transition source="s1" target="s1"><event><talk-to-npc npc-id="798963" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="s1" target="s2"><event><talk-to-npc npc-id="798963" dialog-id="39"/></event><conditions><has-item item-id="182206794" count="20" expected="true"/></conditions><actions><remove-item item-id="182206794" count="20"/><give-item item-id="182206795" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="10000"/></after-commit></transition>
+    <transition source="s1" target="s1"><event><talk-to-npc npc-id="798963" dialog-id="39"/></event><conditions><has-item item-id="182206794" count="20" expected="false"/></conditions><after-commit><show-quest-dialog dialog-id="10001"/></after-commit></transition>
+    <!-- 798984:var0=2,31 显示 2034,SET_REWARD(10255) 推进 var0=3+REWARD。 -->
+    <transition source="s2" target="s2"><event><talk-to-npc npc-id="798984" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2034"/></after-commit></transition>
+    <transition source="s2" target="reward"><event><talk-to-npc npc-id="798984" dialog-id="10255"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+    <!-- 完成:798985 REWARD→COMPLETE,-1 显示 10002,1009 显示 5,8..23 完成。 -->
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="798985" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
+    <npc-complete npc-id="798985" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>
