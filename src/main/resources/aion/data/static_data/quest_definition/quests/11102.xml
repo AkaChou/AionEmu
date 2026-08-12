@@ -51,42 +51,22 @@
     <bit-field name="var3" offset="6" width="2" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
           <var name="var1" value="0"/>
           <var name="var2" value="0"/>
           <var name="var3" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="started">
-      <project status="START">
-        <vars>
+    <node label="started" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="k3">
-      <project status="START">
-        <vars>
+    <node label="k3" status="START">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars/>
-      </project>
-    </node>
+    <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <!-- 接取:Inggison 的 Esterra (798981) 提供任务。 -->

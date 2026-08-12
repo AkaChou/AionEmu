@@ -15,82 +15,38 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="started">
-      <project status="START">
-        <vars>
+    <node label="started" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="s1">
-      <project status="START">
-        <vars>
+    <node label="s1" status="START">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="s2">
-      <project status="START">
-        <vars>
+    <node label="s2" status="START">
           <var name="var0" value="2"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward10">
-      <project status="REWARD">
-        <vars>
+    <node label="reward10" status="REWARD">
           <var name="var0" value="10"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward20">
-      <project status="REWARD">
-        <vars>
+    <node label="reward20" status="REWARD">
           <var name="var0" value="20"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward30">
-      <project status="REWARD">
-        <vars>
+    <node label="reward30" status="REWARD">
           <var name="var0" value="30"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward40">
-      <project status="REWARD">
-        <vars>
+    <node label="reward40" status="REWARD">
           <var name="var0" value="40"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward50">
-      <project status="REWARD">
-        <vars>
+    <node label="reward50" status="REWARD">
           <var name="var0" value="50"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward60">
-      <project status="REWARD">
-        <vars>
+    <node label="reward60" status="REWARD">
           <var name="var0" value="60"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>

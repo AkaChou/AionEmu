@@ -17,10 +17,10 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="10"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="started" status="START"><var name="var0" value="0"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="10"/></node>
+    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
     <transition source="started" target="started"><event><kill-npc npc-ids="214419 214420 214433 214434"/></event><conditions><variable-below field="var0" value="9"/></conditions><actions><increment-variable field="var0" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>

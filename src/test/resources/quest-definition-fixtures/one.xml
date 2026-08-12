@@ -2,7 +2,7 @@
 <quest-definition id="1" version="1">
   <metadata name="one" display-name-id="1" min-level="0" max-level="55" category="QUEST"/>
   <nodes>
-    <node label="start"><project status="START"/></node>
+    <node label="start" status="START"/>
   </nodes>
   <transitions>
     <transition source="start" target="start">

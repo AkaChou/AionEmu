@@ -35,11 +35,56 @@ final class QuestXmlBlockExpander {
 					case "npc-item-report" -> transitions.addAll(expandNpcItemReport(context, element));
 					case "npc-report" -> transitions.addAll(expandNpcReport(context, element));
 					case "npc-complete" -> transitions.addAll(expandNpcComplete(context, element));
+					case "npc-dialog" -> transitions.addAll(expandNpcDialog(context, element));
 					default -> fail("UNKNOWN_XML_BLOCK", context, element.getTagName(), "element",
 						"unsupported transitions child");
 			}
 		}
 		return List.copyOf(transitions);
+	}
+
+	private static List<QuestTransition> expandNpcDialog(Context context, Element block) {
+		String source = attribute(block, "source");
+		requireNode(context, "npc-dialog", "source", source);
+		List<Integer> npcIds = positiveIntegerTokens(context, block, "npc-dialog", "npc-ids");
+		if (npcIds.size() < 2) {
+			return fail("NPC_DIALOG_TOO_FEW_NPCS", context, "npc-dialog", "npc-ids",
+				"must contain at least two NPC ids");
+		}
+		Set<Integer> uniqueNpcIds = new LinkedHashSet<>();
+		for (int npcId : npcIds) {
+			if (!uniqueNpcIds.add(npcId)) {
+				return fail("NPC_DIALOG_DUPLICATE_NPC_ID", context, "npc-dialog", "npc-ids",
+					"duplicate NPC id " + npcId);
+			}
+		}
+		List<Integer> dialogIds = QuestDefinitionXmlCompiler.dialogIds(block, "dialog-ids");
+		List<Element> responses = children(block, null);
+		if (responses.size() != 1) {
+			return fail("NPC_DIALOG_RESPONSE_COUNT", context, "npc-dialog", "element",
+				"exactly one response child is required, found " + responses.size());
+		}
+		Element response = responses.getFirst();
+		String responseTag = response.getTagName();
+		if (!Set.of("show-quest-dialog", "show-quest-selection-dialog", "close-dialog").contains(responseTag)) {
+			return fail("NPC_DIALOG_RESPONSE_INVALID", context, "npc-dialog", responseTag,
+				"must be show-quest-dialog, show-quest-selection-dialog, or close-dialog");
+		}
+		AfterCommitAction afterCommit;
+		try {
+			afterCommit = QuestDefinitionXmlCompiler.parseAfterCommitAction(response);
+		} catch (RuntimeException e) {
+			return fail("NPC_DIALOG_RESPONSE_INVALID", context, "npc-dialog", responseTag,
+				responseTag + ": " + e.getMessage());
+		}
+		List<QuestTransition> result = new ArrayList<>(npcIds.size() * dialogIds.size());
+		for (int npcId : npcIds) {
+			for (int dialogId : dialogIds) {
+				result.add(new QuestTransition(new QuestEvent.TalkToNpc(npcId, dialogId), List.of(), List.of(),
+					source, List.of(afterCommit), null, source));
+			}
+		}
+		return result;
 	}
 
 	private static List<QuestTransition> expandNpcStart(Context context, Element block) {

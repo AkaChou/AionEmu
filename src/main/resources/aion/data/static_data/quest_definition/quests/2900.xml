@@ -26,21 +26,21 @@
     <bit-field name="step" offset="0" width="7" min="0" max="99" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="step" value="0"/></vars></project></node>
-    <node label="started0"><project status="START"><vars><var name="step" value="0"/></vars></project></node>
-    <node label="started1"><project status="START"><vars><var name="step" value="1"/></vars></project></node>
-    <node label="started2"><project status="START"><vars><var name="step" value="2"/></vars></project></node>
-    <node label="started3"><project status="START"><vars><var name="step" value="3"/></vars></project></node>
-    <node label="started4"><project status="START"><vars><var name="step" value="4"/></vars></project></node>
-    <node label="instance95"><project status="START"><vars><var name="step" value="95"/></vars></project></node>
-    <node label="movie96"><project status="START"><vars><var name="step" value="96"/></vars></project></node>
-    <node label="equipped99"><project status="START"><vars><var name="step" value="99"/></vars></project></node>
-    <node label="equipped97"><project status="START"><vars><var name="step" value="97"/></vars></project></node>
-    <node label="fight98"><project status="START"><vars><var name="step" value="98"/></vars></project></node>
-    <node label="postFight9"><project status="START"><vars><var name="step" value="9"/></vars></project></node>
-    <node label="started10"><project status="START"><vars><var name="step" value="10"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="step" value="10"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars/></project></node>
+    <node label="unaccepted" status="NONE"><var name="step" value="0"/></node>
+    <node label="started0" status="START"><var name="step" value="0"/></node>
+    <node label="started1" status="START"><var name="step" value="1"/></node>
+    <node label="started2" status="START"><var name="step" value="2"/></node>
+    <node label="started3" status="START"><var name="step" value="3"/></node>
+    <node label="started4" status="START"><var name="step" value="4"/></node>
+    <node label="instance95" status="START"><var name="step" value="95"/></node>
+    <node label="movie96" status="START"><var name="step" value="96"/></node>
+    <node label="equipped99" status="START"><var name="step" value="99"/></node>
+    <node label="equipped97" status="START"><var name="step" value="97"/></node>
+    <node label="fight98" status="START"><var name="step" value="98"/></node>
+    <node label="postFight9" status="START"><var name="step" value="9"/></node>
+    <node label="started10" status="START"><var name="step" value="10"/></node>
+    <node label="reward" status="REWARD"><var name="step" value="10"/></node>
+    <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <!-- A member skips the normal quest immediately on the same level-up that would accept it. -->

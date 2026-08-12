@@ -26,19 +26,19 @@
     <bit-field name="step" offset="0" width="7" min="0" max="98" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="step" value="0"/></vars></project></node>
-    <node label="started0"><project status="START"><vars><var name="step" value="0"/></vars></project></node>
-    <node label="started1"><project status="START"><vars><var name="step" value="1"/></vars></project></node>
-    <node label="started2"><project status="START"><vars><var name="step" value="2"/></vars></project></node>
-    <node label="instance93"><project status="START"><vars><var name="step" value="93"/></vars></project></node>
-    <node label="flight94"><project status="START"><vars><var name="step" value="94"/></vars></project></node>
-    <node label="spawned98"><project status="START"><vars><var name="step" value="98"/></vars></project></node>
-    <node label="equipped96"><project status="START"><vars><var name="step" value="96"/></vars></project></node>
-    <node label="fight97"><project status="START"><vars><var name="step" value="97"/></vars></project></node>
-    <node label="postFight8"><project status="START"><vars><var name="step" value="8"/></vars></project></node>
-    <node label="started9"><project status="START"><vars><var name="step" value="9"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="step" value="9"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars/></project></node>
+    <node label="unaccepted" status="NONE"><var name="step" value="0"/></node>
+    <node label="started0" status="START"><var name="step" value="0"/></node>
+    <node label="started1" status="START"><var name="step" value="1"/></node>
+    <node label="started2" status="START"><var name="step" value="2"/></node>
+    <node label="instance93" status="START"><var name="step" value="93"/></node>
+    <node label="flight94" status="START"><var name="step" value="94"/></node>
+    <node label="spawned98" status="START"><var name="step" value="98"/></node>
+    <node label="equipped96" status="START"><var name="step" value="96"/></node>
+    <node label="fight97" status="START"><var name="step" value="97"/></node>
+    <node label="postFight8" status="START"><var name="step" value="8"/></node>
+    <node label="started9" status="START"><var name="step" value="9"/></node>
+    <node label="reward" status="REWARD"><var name="step" value="9"/></node>
+    <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <transition source="unaccepted" target="complete"><event><level-up/></event><conditions><start-eligible/><membership-permission permission="STIGMA_SLOT_QUEST"/></conditions><actions><grant-reward kind="EXP" id="0" amount="457760" amount-mode="QUEST_BASE"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/></after-commit></transition>

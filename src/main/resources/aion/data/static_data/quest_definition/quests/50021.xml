@@ -30,60 +30,32 @@
   </progress>
   <nodes>
     <!-- 未接取状态 / Unaccepted state -->
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
     <!-- 已接取, 击杀 0/15 / Accepted, 0/15 kills -->
-    <node label="a0">
-      <project status="START">
-        <vars>
+    <node label="a0" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
     <!-- 击杀 1/15 / 1/15 kills -->
-    <node label="a1">
-      <project status="START">
-        <vars>
+    <node label="a1" status="START">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
     <!-- 击杀 2/15 / 2/15 kills -->
-    <node label="a2">
-      <project status="START">
-        <vars>
+    <node label="a2" status="START">
           <var name="var0" value="2"/>
-        </vars>
-      </project>
     </node>
     <!-- 击杀 3/15 / 3/15 kills -->
-    <node label="a3">
-      <project status="START">
-        <vars>
+    <node label="a3" status="START">
           <var name="var0" value="3"/>
-        </vars>
-      </project>
     </node>
     <!-- 奖励结算 / Reward settlement -->
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="15"/>
-        </vars>
-      </project>
     </node>
     <!-- 完成 / Complete -->
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>

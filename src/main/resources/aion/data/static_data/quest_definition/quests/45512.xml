@@ -14,14 +14,14 @@
     <bit-field name="var0" offset="0" width="3" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="k1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
-    <node label="k2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
-    <node label="k3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
-    <node label="k4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="5"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="started" status="START"><var name="var0" value="0"/></node>
+    <node label="k1" status="START"><var name="var0" value="1"/></node>
+    <node label="k2" status="START"><var name="var0" value="2"/></node>
+    <node label="k3" status="START"><var name="var0" value="3"/></node>
+    <node label="k4" status="START"><var name="var0" value="4"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="5"/></node>
+    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
     <!-- 接取:FACTION 派系任务旧节点无 start NPC(start_npc_ids 缺省),由血之十字军军官 (804962) 对话接取。 -->

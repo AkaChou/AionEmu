@@ -128,12 +128,14 @@ class IncrementVariableDefinitionTest {
 	@Test
 	void variableBelowCompilesFromXmlAndUnknownFieldsFailClosed() {
 		String xml = """
-				<quest-definition id="990035" version="1">
-				  <metadata name="below-xml" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
-				  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
-				  <nodes><node label="start"><project status="START"><vars><var name="var0" value="0"/></vars></project></node><node label="done"><project status="REWARD"><vars><var name="var0" value="1"/></vars></project></node></nodes>
-				  <transitions><transition source="start" target="done"><event><talk-to-npc npc-id="203057" dialog-id="31"/></event><conditions><variable-below field="var0" value="1"/></conditions></transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="990035" version="1">
+						  <metadata name="below-xml" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+						  <nodes><node label="start" status="START"><var name="var0" value="0"/></node><node label="done" status="REWARD"><var name="var0" value="1"/></node></nodes>
+						  <transitions><transition source="start" target="done"><event><talk-to-npc npc-id="203057" dialog-id="31"/></event><conditions><variable-below field="var0" value="1"/></conditions></transition></transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));

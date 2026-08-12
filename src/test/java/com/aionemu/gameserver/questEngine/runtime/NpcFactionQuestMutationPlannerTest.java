@@ -54,32 +54,34 @@ class NpcFactionQuestMutationPlannerTest {
 	private static CompiledQuestDefinition compile(boolean timeBased) {
 		String repeat = timeBased ? "<repeat max-repeat-count=\"255\" cooldown-seconds=\"0\" daily=\"true\" weekly=\"false\" cycles=\"ALL\"/>" : "";
 		String xml = """
-				<quest-definition id="9001" version="1">
-				  <metadata name="faction" display-name-id="0" min-level="1" max-level="55" category="FACTION" npc-faction-id="4">
-				    %s
-				    <rewards><reward kind="EXP" id="0" amount="1"/></rewards>
-				  </metadata>
-				  <nodes>
-				    <node label="unaccepted"><project status="NONE"/></node>
-				    <node label="started"><project status="START"/></node>
-				    <node label="reward"><project status="REWARD"/></node>
-				    <node label="complete"><project status="COMPLETE"/></node>
-				  </nodes>
-				  <transitions>
-				    <transition source="unaccepted" target="started">
-				      <event><talk-to-npc npc-id="700001" dialog-id="1002"/></event>
-				      <conditions><start-eligible/></conditions>
-				    </transition>
-				    <transition source="started" target="reward">
-				      <event><talk-to-npc npc-id="700001" dialog-id="1"/></event>
-				    </transition>
-				    <transition source="reward" target="complete">
-				      <event><talk-to-npc npc-id="700001" dialog-id="8"/></event>
-				      <actions><complete-quest reward-index="0"/></actions>
-				      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
-				    </transition>
-				  </transitions>
-				</quest-definition>
+
+						<quest-definition id="9001" version="1">
+						  <metadata name="faction" display-name-id="0" min-level="1" max-level="55" category="FACTION" npc-faction-id="4">
+						    %s
+						    <rewards><reward kind="EXP" id="0" amount="1"/></rewards>
+						  </metadata>
+						  <nodes>
+						    <node label="unaccepted" status="NONE"/>
+						    <node label="started" status="START"/>
+						    <node label="reward" status="REWARD"/>
+						    <node label="complete" status="COMPLETE"/>
+						  </nodes>
+						  <transitions>
+						    <transition source="unaccepted" target="started">
+						      <event><talk-to-npc npc-id="700001" dialog-id="1002"/></event>
+						      <conditions><start-eligible/></conditions>
+						    </transition>
+						    <transition source="started" target="reward">
+						      <event><talk-to-npc npc-id="700001" dialog-id="1"/></event>
+						    </transition>
+						    <transition source="reward" target="complete">
+						      <event><talk-to-npc npc-id="700001" dialog-id="8"/></event>
+						      <actions><complete-quest reward-index="0"/></actions>
+						      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
+						    </transition>
+						  </transitions>
+						</quest-definition>
+
 				""".formatted(repeat);
 		return QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));

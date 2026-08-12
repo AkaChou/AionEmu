@@ -3,9 +3,9 @@
   <metadata name="SimpleUseItem 1107" display-name-id="0" min-level="0" max-level="2147483647" category="QUEST"/>
   <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="item-used"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
-    <node label="reward-npc"><project status="REWARD"><vars><var name="var0" value="1"/></vars></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="item-used" status="START"><var name="var0" value="1"/></node>
+    <node label="reward-npc" status="REWARD"><var name="var0" value="1"/></node>
   </nodes>
   <transitions>
     <transition source="unaccepted" target="item-used"><event><use-item item-id="182200501"/></event><actions><set-variable field="var0" value="1"/></actions></transition>

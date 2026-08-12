@@ -22,18 +22,18 @@
     <bit-field name="var1" offset="4" width="3" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/><var name="var1" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="s1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
-    <node label="s2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
-    <node label="s3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
-    <node label="s4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
-    <node label="s5"><project status="START"><vars><var name="var0" value="5"/></vars></project></node>
-    <node label="s6"><project status="START"><vars><var name="var0" value="6"/></vars></project></node>
-    <node label="s7"><project status="START"><vars><var name="var0" value="7"/></vars></project></node>
-    <node label="s8"><project status="START"><vars><var name="var0" value="8"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="9"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars/></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/><var name="var1" value="0"/></node>
+    <node label="started" status="START"><var name="var0" value="0"/></node>
+    <node label="s1" status="START"><var name="var0" value="1"/></node>
+    <node label="s2" status="START"><var name="var0" value="2"/></node>
+    <node label="s3" status="START"><var name="var0" value="3"/></node>
+    <node label="s4" status="START"><var name="var0" value="4"/></node>
+    <node label="s5" status="START"><var name="var0" value="5"/></node>
+    <node label="s6" status="START"><var name="var0" value="6"/></node>
+    <node label="s7" status="START"><var name="var0" value="7"/></node>
+    <node label="s8" status="START"><var name="var0" value="8"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="9"/></node>
+    <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>

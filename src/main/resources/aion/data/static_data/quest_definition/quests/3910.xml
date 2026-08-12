@@ -13,10 +13,10 @@
     <bit-field name="var0" offset="0" width="7" min="0" max="100" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="20"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="20"/></vars></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="started" status="START"><var name="var0" value="0"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="20"/></node>
+    <node label="complete" status="COMPLETE"><var name="var0" value="20"/></node>
   </nodes>
   <transitions>
     <!-- 接取:圣天界生命之神庙的特拉希梅德斯 (203707) 提供任务。 -->

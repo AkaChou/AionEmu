@@ -365,16 +365,12 @@ public final class QuestDefinitionXmlCompiler {
 		}
 		List<QuestNode> nodes = new ArrayList<>();
 		for (Element node : children(element, "node")) {
-			Element projection = requiredChild(node, "project");
 			java.util.Map<String, Integer> variables = new java.util.LinkedHashMap<>();
-			Element vars = child(projection, "vars");
-			if (vars != null) {
-				for (Element value : children(vars, "var")) {
-					variables.put(attribute(value, "name"), integer(value, "value"));
-				}
+			for (Element value : children(node, "var")) {
+				variables.put(attribute(value, "name"), integer(value, "value"));
 			}
 			nodes.add(new QuestNode(attribute(node, "label"), new NodeProjection(
-				enumValue(QuestStatus.class, projection, "status"), variables)));
+				enumValue(QuestStatus.class, node, "status"), variables)));
 		}
 		return nodes;
 	}
@@ -422,11 +418,21 @@ public final class QuestDefinitionXmlCompiler {
 		}
 		int npcId = integer(element, "npc-id");
 		List<QuestEvent> events = new ArrayList<>();
-		Set<Integer> dialogIds = new java.util.LinkedHashSet<>();
-		for (String token : attribute(element, "dialog-ids").trim().split("[\\s,]+")) {
+		for (int dialogId : dialogIds(element, "dialog-ids")) {
+			events.add(new QuestEvent.TalkToNpc(npcId, dialogId));
+		}
+		return List.copyOf(events);
+	}
+
+	/** Shared strict dialog-id list/range parser used by talk-to-npc.dialog-ids and npc-dialog.dialog-ids. */
+	static List<Integer> dialogIds(Element element, String attributeName) {
+		String raw = attribute(element, attributeName);
+		List<Integer> dialogIds = new ArrayList<>();
+		Set<Integer> seen = new java.util.LinkedHashSet<>();
+		for (String token : raw.trim().split("[\\s,]+")) {
 			int delimiter = token.indexOf("..");
 			if (delimiter < 0) {
-				addDialogId(dialogIds, parseDialogId(token));
+					addDialogId(seen, parseDialogId(token), element, attributeName);
 				continue;
 			}
 			if (delimiter == 0 || delimiter + 2 == token.length()
@@ -439,19 +445,19 @@ public final class QuestDefinitionXmlCompiler {
 				return fail("INVALID_DIALOG_ID_RANGE", token);
 			}
 			for (int dialogId = first; ; dialogId++) {
-				addDialogId(dialogIds, dialogId);
+					addDialogId(seen, dialogId, element, attributeName);
 				if (dialogId == last) {
 					break;
 				}
 			}
 		}
-		if (dialogIds.isEmpty()) {
-			return fail("EMPTY_DIALOG_ID_SET", "talk-to-npc.dialog-ids");
+		if (seen.isEmpty()) {
+			return fail("EMPTY_DIALOG_ID_SET", element.getTagName() + "." + attributeName);
 		}
-		for (int dialogId : dialogIds) {
-			events.add(new QuestEvent.TalkToNpc(npcId, dialogId));
+		for (int dialogId : seen) {
+			dialogIds.add(dialogId);
 		}
-		return List.copyOf(events);
+		return List.copyOf(dialogIds);
 	}
 
 	private static int parseDialogId(String token) {
@@ -462,12 +468,12 @@ public final class QuestDefinitionXmlCompiler {
 		}
 	}
 
-	private static void addDialogId(Set<Integer> dialogIds, int dialogId) {
+	private static void addDialogId(Set<Integer> dialogIds, int dialogId, Element element, String attributeName) {
 		if (!dialogIds.contains(dialogId) && dialogIds.size() >= 256) {
-			fail("TOO_MANY_DIALOG_IDS", "talk-to-npc.dialog-ids");
+			fail("TOO_MANY_DIALOG_IDS", element.getTagName() + "." + attributeName + " must contain at most 256 ids");
 		}
 		if (!dialogIds.add(dialogId)) {
-			fail("DUPLICATE_DIALOG_ID", Integer.toString(dialogId));
+			fail("DUPLICATE_DIALOG_ID", element.getTagName() + "." + attributeName + " contains " + dialogId + " more than once");
 		}
 	}
 

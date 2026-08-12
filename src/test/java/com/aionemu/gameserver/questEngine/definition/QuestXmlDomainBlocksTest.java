@@ -202,18 +202,20 @@ class QuestXmlDomainBlocksTest {
 	@Test
 	void npcCompleteSelectsFixedRewardsInsideThePersistedRewardGroup() {
 		String xml = """
-			<quest-definition id="990069" version="1">
-			  <metadata name="group-complete" display-name-id="1" min-level="0" max-level="99" category="QUEST">
-			    <reward-groups>
-			      <group><reward kind="ITEM" id="188000001" amount="1"/></group>
-			      <group><reward kind="ITEM" id="188000002" amount="2"/></group>
-			    </reward-groups>
-			  </metadata>
-			  <nodes><node label="reward"><project status="REWARD"/></node><node label="complete"><project status="COMPLETE"/></node></nodes>
-			  <transitions><npc-complete npc-id="203123" source="reward" target="complete"
-			      fixed-reward-indices="0" dialog-ids="8" complete-reward-index="1"
-			      preview-dialog-ids="1009" finish="CLOSE_DIALOG"/></transitions>
-			</quest-definition>
+
+					<quest-definition id="990069" version="1">
+					  <metadata name="group-complete" display-name-id="1" min-level="0" max-level="99" category="QUEST">
+					    <reward-groups>
+					      <group><reward kind="ITEM" id="188000001" amount="1"/></group>
+					      <group><reward kind="ITEM" id="188000002" amount="2"/></group>
+					    </reward-groups>
+					  </metadata>
+					  <nodes><node label="reward" status="REWARD"/><node label="complete" status="COMPLETE"/></nodes>
+					  <transitions><npc-complete npc-id="203123" source="reward" target="complete"
+					      fixed-reward-indices="0" dialog-ids="8" complete-reward-index="1"
+					      preview-dialog-ids="1009" finish="CLOSE_DIALOG"/></transitions>
+					</quest-definition>
+
 			""";
 		QuestTransition completion = compile(xml).definition().transitions().stream()
 			.filter(transition -> "complete".equals(transition.targetNode())).findFirst().orElseThrow();
@@ -226,12 +228,14 @@ class QuestXmlDomainBlocksTest {
 	@Test
 	void npcCompleteAllowsRewardlessQuestToPersistCompletionRewardIndex() {
 		String xml = """
-			<quest-definition id="990070" version="1">
-			  <metadata name="rewardless-complete" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
-			  <nodes><node label="reward"><project status="REWARD"/></node><node label="complete"><project status="COMPLETE"/></node></nodes>
-			  <transitions><npc-complete npc-id="203123" source="reward" target="complete"
-			      dialog-ids="8" complete-reward-index="0" preview-dialog-ids="1009" finish="CLOSE_DIALOG"/></transitions>
-			</quest-definition>
+
+					<quest-definition id="990070" version="1">
+					  <metadata name="rewardless-complete" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+					  <nodes><node label="reward" status="REWARD"/><node label="complete" status="COMPLETE"/></nodes>
+					  <transitions><npc-complete npc-id="203123" source="reward" target="complete"
+					      dialog-ids="8" complete-reward-index="0" preview-dialog-ids="1009" finish="CLOSE_DIALOG"/></transitions>
+					</quest-definition>
+
 			""";
 		QuestTransition completion = compile(xml).definition().transitions().stream()
 			.filter(transition -> "complete".equals(transition.targetNode())).findFirst().orElseThrow();
@@ -242,23 +246,25 @@ class QuestXmlDomainBlocksTest {
 	@Test
 	void blocksAndOrdinaryTransitionsKeepDocumentOrder() {
 		String xml = """
-			<quest-definition id="990063" version="1">
-			  <metadata name="mixed" display-name-id="1" min-level="0" max-level="99" category="QUEST">
-			    <rewards><reward kind="EXP" id="0" amount="100"/></rewards>
-			  </metadata>
-			  <nodes>
-			    <node label="unaccepted"><project status="NONE"/></node>
-			    <node label="started"><project status="START"/></node>
-			    <node label="reward"><project status="REWARD"/></node>
-			    <node label="complete"><project status="COMPLETE"/></node>
-			  </nodes>
-			  <transitions>
-			    <npc-start npc-id="203110" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-			    <transition source="started" target="reward"><event><talk-to-npc npc-id="203120" dialog-id="1009"/></event></transition>
-			    <npc-complete npc-id="203123" source="reward" target="complete" fixed-reward-indices="0"
-			        dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="NONE"/>
-			  </transitions>
-			</quest-definition>
+
+					<quest-definition id="990063" version="1">
+					  <metadata name="mixed" display-name-id="1" min-level="0" max-level="99" category="QUEST">
+					    <rewards><reward kind="EXP" id="0" amount="100"/></rewards>
+					  </metadata>
+					  <nodes>
+					    <node label="unaccepted" status="NONE"/>
+					    <node label="started" status="START"/>
+					    <node label="reward" status="REWARD"/>
+					    <node label="complete" status="COMPLETE"/>
+					  </nodes>
+					  <transitions>
+					    <npc-start npc-id="203110" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+					    <transition source="started" target="reward"><event><talk-to-npc npc-id="203120" dialog-id="1009"/></event></transition>
+					    <npc-complete npc-id="203123" source="reward" target="complete" fixed-reward-indices="0"
+					        dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="NONE"/>
+					  </transitions>
+					</quest-definition>
+
 			""";
 		List<QuestTransition> transitions = compile(xml).definition().transitions();
 		assertEquals(9, transitions.stream().takeWhile(t -> talkNpcId(t) == 203110).count());
@@ -270,8 +276,8 @@ class QuestXmlDomainBlocksTest {
 	void npcStartAndCounterRejectInvalidContext() {
 		assertCode("NPC_START_SOURCE_STATUS", startDefinition("""
 			<npc-start npc-id="203110" source="unaccepted" target="started" selection-sources="unaccepted"/>
-			""").replace("label=\"unaccepted\"><project status=\"NONE\"",
-			"label=\"unaccepted\"><project status=\"START\""));
+			""").replace("label=\"unaccepted\" status=\"NONE\"",
+			"label=\"unaccepted\" status=\"START\""));
 		assertCode("NPC_START_ACCEPT_ACTION_INVALID", startDefinition("""
 			<npc-start npc-id="203110" source="unaccepted" target="started" selection-sources="unaccepted">
 			  <accept-actions><give-item item-id="-1" count="1"/></accept-actions>
@@ -287,8 +293,8 @@ class QuestXmlDomainBlocksTest {
 		assertCode("COUNTER_INVALID_REQUIRED", valid.replace("required=\"3\"", "required=\"0\""));
 		assertCode("COUNTER_FIELD_TOO_NARROW", valid.replace("required=\"3\"", "required=\"8\""));
 		assertCode("COUNTER_SOURCE_PROJECTION_CONFLICT", valid.replace(
-			"label=\"started\"><project status=\"START\"/>",
-			"label=\"started\"><project status=\"START\"><vars><var name=\"var0\" value=\"0\"/></vars></project>"));
+			"label=\"started\" status=\"START\"/>",
+			"label=\"started\" status=\"START\"><var name=\"var0\" value=\"0\"/></node>"));
 		assertCode("COUNTER_TARGET_PROJECTION_CONFLICT", valid.replace("value=\"3\"", "value=\"2\""));
 	}
 
@@ -325,7 +331,7 @@ class QuestXmlDomainBlocksTest {
 	void killRoutesUsesFullRefreshWhenTargetBecomesReward() {
 		String definition = killRoutesDefinition(
 			"<kill-routes source=\"started\" target=\"k1\" npc-ids=\"215468 215469\"/>")
-			.replace("label=\"k1\"><project status=\"START\"", "label=\"k1\"><project status=\"REWARD\"");
+			.replace("label=\"k1\" status=\"START\"", "label=\"k1\" status=\"REWARD\"");
 		CompiledQuestDefinition compiled = compile(definition);
 
 		assertTrue(compiled.definition().transitions().stream().allMatch(transition -> transition.afterCommit().equals(
@@ -350,10 +356,10 @@ class QuestXmlDomainBlocksTest {
 		String valid = reportDefinition(
 			"<npc-report npc-id=\"203941\" source=\"started\" target=\"reward\" page=\"1352\"/>");
 		assertCode("NPC_REPORT_INVALID_PAGE", valid.replace("page=\"1352\"", "page=\"2716\""));
-		assertCode("NPC_REPORT_SOURCE_STATUS", valid.replace("label=\"started\"><project status=\"START\"",
-			"label=\"started\"><project status=\"REWARD\""));
-		assertCode("NPC_REPORT_TARGET_STATUS", valid.replace("label=\"reward\"><project status=\"REWARD\"",
-			"label=\"reward\"><project status=\"START\""));
+		assertCode("NPC_REPORT_SOURCE_STATUS", valid.replace("label=\"started\" status=\"START\"",
+			"label=\"started\" status=\"REWARD\""));
+		assertCode("NPC_REPORT_TARGET_STATUS", valid.replace("label=\"reward\" status=\"REWARD\"",
+			"label=\"reward\" status=\"START\""));
 	}
 
 	@Test
@@ -382,10 +388,10 @@ class QuestXmlDomainBlocksTest {
 	void npcItemReportRejectsBadStatusesAndRemovalCount() {
 		String valid = itemReportDefinition(
 			"<npc-item-report npc-id=\"800937\" source=\"started\" target=\"reward\" item-id=\"182215285\" required=\"2\"/>");
-		assertCode("NPC_ITEM_REPORT_SOURCE_STATUS", valid.replace("label=\"started\"><project status=\"START\"",
-			"label=\"started\"><project status=\"REWARD\""));
-		assertCode("NPC_ITEM_REPORT_TARGET_STATUS", valid.replace("label=\"reward\"><project status=\"REWARD\"",
-			"label=\"reward\"><project status=\"START\""));
+		assertCode("NPC_ITEM_REPORT_SOURCE_STATUS", valid.replace("label=\"started\" status=\"START\"",
+			"label=\"started\" status=\"REWARD\""));
+		assertCode("NPC_ITEM_REPORT_TARGET_STATUS", valid.replace("label=\"reward\" status=\"REWARD\"",
+			"label=\"reward\" status=\"START\""));
 		assertCode("NPC_ITEM_REPORT_REMOVE_COUNT_MISMATCH", valid.replace("required=\"2\"/>",
 			"required=\"2\" remove-count=\"1\"/>"));
 	}
@@ -439,28 +445,30 @@ class QuestXmlDomainBlocksTest {
 		assertCode("COUNTER_GRID_NODE_FIELDS_MISMATCH", valid.replace(
 			"<var name=\"var0\" value=\"0\"/><var name=\"var1\" value=\"0\"/>",
 			"<var name=\"var0\" value=\"0\"/><var name=\"var1\" value=\"0\"/><var name=\"extra\" value=\"0\"/>"));
-		assertCode("COUNTER_GRID_NODE_VALUE_OUT_OF_RANGE", valid.replace("label=\"v11\"><project status=\"START\"><vars><var name=\"var0\" value=\"1\"/><var name=\"var1\" value=\"1\"/>",
-			"label=\"v11\"><project status=\"START\"><vars><var name=\"var0\" value=\"2\"/><var name=\"var1\" value=\"1\"/>"));
-		assertCode("COUNTER_GRID_INCOMPLETE_PRODUCT", valid.replace("<node label=\"v11\"><project status=\"START\"><vars><var name=\"var0\" value=\"1\"/><var name=\"var1\" value=\"1\"/></vars></project></node>", ""));
+		assertCode("COUNTER_GRID_NODE_VALUE_OUT_OF_RANGE", valid.replace("label=\"v11\" status=\"START\"><var name=\"var0\" value=\"1\"/><var name=\"var1\" value=\"1\"/>",
+			"label=\"v11\" status=\"START\"><var name=\"var0\" value=\"2\"/><var name=\"var1\" value=\"1\"/>"));
+		assertCode("COUNTER_GRID_INCOMPLETE_PRODUCT", valid.replace("<node label=\"v11\" status=\"START\"><var name=\"var0\" value=\"1\"/><var name=\"var1\" value=\"1\"/></node>", ""));
 	}
 
 	@Test
 	void newBlocksAndOrdinaryTransitionsKeepDocumentOrder() {
 		String xml = """
-			<quest-definition id="990067" version="1">
-			  <metadata name="mixed second-stage blocks" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
-			  <progress><bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/></progress>
-			  <nodes>
-			    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-			    <node label="k1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
-			    <node label="reward"><project status="REWARD"/></node>
-			  </nodes>
-			  <transitions>
-			    <kill-routes source="started" target="k1" npc-ids="215468 215469"/>
-			    <transition source="k1" target="reward"><event><talk-to-npc npc-id="203941" dialog-id="1009"/></event></transition>
-			    <npc-report npc-id="203941" source="started" target="reward" page="1352"/>
-			  </transitions>
-			</quest-definition>
+
+					<quest-definition id="990067" version="1">
+					  <metadata name="mixed second-stage blocks" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+					  <progress><bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/></progress>
+					  <nodes>
+					    <node label="started" status="START"><var name="var0" value="0"/></node>
+					    <node label="k1" status="START"><var name="var0" value="1"/></node>
+					    <node label="reward" status="REWARD"/>
+					  </nodes>
+					  <transitions>
+					    <kill-routes source="started" target="k1" npc-ids="215468 215469"/>
+					    <transition source="k1" target="reward"><event><talk-to-npc npc-id="203941" dialog-id="1009"/></event></transition>
+					    <npc-report npc-id="203941" source="started" target="reward" page="1352"/>
+					  </transitions>
+					</quest-definition>
+
 			""";
 		List<QuestTransition> transitions = compile(xml).definition().transitions();
 		assertEquals(215468, assertInstanceOf(QuestEvent.KillNpc.class, transitions.getFirst().event()).npcId());
@@ -489,16 +497,170 @@ class QuestXmlDomainBlocksTest {
 		assertCode("NPC_COMPLETE_INVALID_COMPLETE_REWARD_INDEX",
 			valid.replace("complete-reward-index=\"0\"", "complete-reward-index=\"-1\""));
 		assertCode("NPC_COMPLETE_SOURCE_STATUS",
-			valid.replace("label=\"reward\"><project status=\"REWARD\"",
-				"label=\"reward\"><project status=\"START\""));
+			valid.replace("label=\"reward\" status=\"REWARD\"",
+				"label=\"reward\" status=\"START\""));
 		assertCode("NPC_COMPLETE_TARGET_STATUS",
-			valid.replace("label=\"complete\"><project status=\"COMPLETE\"",
-				"label=\"complete\"><project status=\"REWARD\""));
+			valid.replace("label=\"complete\" status=\"COMPLETE\"",
+				"label=\"complete\" status=\"REWARD\""));
 
 		QuestCompilationException error = assertThrows(QuestCompilationException.class,
 			() -> compile(valid.replace("source=\"reward\"", "source=\"missing\"")));
 		assertEquals("XML_BLOCK_BAD_NODE_REFERENCE", error.code());
 		assertTrue(error.getMessage().contains("quest 990062 npc-complete attribute 'source'"));
+	}
+
+	@Test
+	void npcDialogEqualsNpcMajorDialogMinorExpandedTransitions() {
+		String block = """
+			<npc-dialog source="started"
+			    npc-ids="203097 799093"
+			    dialog-ids="31">
+			  <show-quest-dialog dialog-id="1352"/>
+			</npc-dialog>
+			""";
+		String expanded = """
+			<transition source="started" target="started"><event><talk-to-npc npc-id="203097" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+			<transition source="started" target="started"><event><talk-to-npc npc-id="799093" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+			""";
+
+		assertEquals(compile(npcDialogDefinition(block)).definition(),
+			compile(npcDialogDefinition(expanded)).definition());
+	}
+
+	@Test
+	void npcDialogSupportsAllThreeResponsesAndDialogIdForms() {
+		CompiledQuestDefinition definition = compile(npcDialogDefinition("""
+			<npc-dialog source="started" npc-ids="203097 799093" dialog-ids="31">
+			  <show-quest-dialog dialog-id="1352"/>
+			</npc-dialog>
+			"""));
+		assertEquals(List.of(
+			new QuestEvent.TalkToNpc(203097, 31), new QuestEvent.TalkToNpc(799093, 31)),
+			definition.definition().transitions().stream().map(QuestTransition::event).toList());
+		assertTrue(definition.definition().transitions().stream().allMatch(transition ->
+			transition.afterCommit().equals(List.of(new AfterCommitAction.ShowQuestDialog(1352)))
+				&& transition.sourceNode().equals("started")
+				&& transition.targetNode().equals("started")
+				&& transition.priority() == null
+				&& transition.conditions().isEmpty()
+				&& transition.actions().isEmpty()));
+
+		CompiledQuestDefinition selection = compile(npcDialogDefinition("""
+			<npc-dialog source="started" npc-ids="203097 799093" dialog-ids="31,32">
+			  <show-quest-selection-dialog dialog-id="10"/>
+			</npc-dialog>
+			"""));
+		assertEquals(List.of(new QuestEvent.TalkToNpc(203097, 31), new QuestEvent.TalkToNpc(203097, 32),
+			new QuestEvent.TalkToNpc(799093, 31), new QuestEvent.TalkToNpc(799093, 32)),
+			selection.definition().transitions().stream().map(QuestTransition::event).toList());
+		assertTrue(selection.definition().transitions().stream().allMatch(transition ->
+			transition.afterCommit().equals(List.of(new AfterCommitAction.ShowQuestSelectionDialog(10)))));
+
+		CompiledQuestDefinition close = compile(npcDialogDefinition("""
+			<npc-dialog source="started" npc-ids="203097 799093" dialog-ids="1..3">
+			  <close-dialog/>
+			</npc-dialog>
+			"""));
+		assertEquals(List.of(new QuestEvent.TalkToNpc(203097, 1), new QuestEvent.TalkToNpc(203097, 2),
+			new QuestEvent.TalkToNpc(203097, 3), new QuestEvent.TalkToNpc(799093, 1),
+			new QuestEvent.TalkToNpc(799093, 2), new QuestEvent.TalkToNpc(799093, 3)),
+			close.definition().transitions().stream().map(QuestTransition::event).toList());
+		assertTrue(close.definition().transitions().stream().allMatch(transition ->
+			transition.afterCommit().equals(List.of(new AfterCommitAction.CloseDialog()))));
+	}
+
+	@Test
+	void npcDialogKeepsDocumentOrderWhenMixedWithOtherBlocks() {
+		String xml = """
+			<quest-definition id="990071" version="1">
+			  <metadata name="npc-dialog mixed" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+			  <nodes>
+			    <node label="started" status="START"/>
+			    <node label="reward" status="REWARD"/>
+			  </nodes>
+			  <transitions>
+			    <transition source="started" target="started"><event><talk-to-npc npc-id="203097" dialog-id="9"/></event></transition>
+			    <npc-dialog source="started" npc-ids="203097 799093" dialog-ids="31">
+			      <show-quest-dialog dialog-id="1352"/>
+			    </npc-dialog>
+			    <npc-report npc-id="800001" source="started" target="reward" page="1352"/>
+			  </transitions>
+			</quest-definition>
+			""";
+		List<QuestTransition> transitions = compile(xml).definition().transitions();
+		assertEquals(5, transitions.size());
+		assertEquals(9, assertInstanceOf(QuestEvent.TalkToNpc.class, transitions.get(0).event()).dialogId());
+		assertEquals(31, assertInstanceOf(QuestEvent.TalkToNpc.class, transitions.get(1).event()).dialogId());
+		assertEquals(203097, assertInstanceOf(QuestEvent.TalkToNpc.class, transitions.get(1).event()).npcId());
+		assertEquals(31, assertInstanceOf(QuestEvent.TalkToNpc.class, transitions.get(2).event()).dialogId());
+		assertEquals(799093, assertInstanceOf(QuestEvent.TalkToNpc.class, transitions.get(2).event()).npcId());
+		assertEquals(31, assertInstanceOf(QuestEvent.TalkToNpc.class, transitions.get(3).event()).dialogId());
+		assertEquals(800001, assertInstanceOf(QuestEvent.TalkToNpc.class, transitions.get(3).event()).npcId());
+		assertEquals(1009, assertInstanceOf(QuestEvent.TalkToNpc.class, transitions.get(4).event()).dialogId());
+		assertEquals(800001, assertInstanceOf(QuestEvent.TalkToNpc.class, transitions.get(4).event()).npcId());
+	}
+
+	@Test
+	void npcDialogRejectsInvalidStructureAndContent() {
+		String valid = npcDialogDefinition("""
+			<npc-dialog source="started" npc-ids="203097 799093" dialog-ids="31">
+			  <show-quest-dialog dialog-id="1352"/>
+			</npc-dialog>
+			""");
+		assertCode("XML_BLOCK_BAD_NODE_REFERENCE", valid.replace("source=\"started\"", "source=\"missing\""));
+		assertCode("NPC_DIALOG_TOO_FEW_NPCS", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097\""));
+		assertCode("NPC_DIALOG_DUPLICATE_NPC_ID", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 203097\""));
+		assertCode("XML_BLOCK_INVALID_INTEGER_SET", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 x\""));
+		assertCode("XML_BLOCK_INVALID_POSITIVE_INTEGER", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 0\""));
+		assertCode("XML_BLOCK_INVALID_POSITIVE_INTEGER", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 -1\""));
+		assertCode("INVALID_DIALOG_ID_RANGE", valid.replace("dialog-ids=\"31\"", "dialog-ids=\"10..8\""));
+		assertCode("DUPLICATE_DIALOG_ID", valid.replace("dialog-ids=\"31\"", "dialog-ids=\"31 31\""));
+		assertCode("INVALID_DIALOG_ID_SET", valid.replace("dialog-ids=\"31\"", "dialog-ids=\"x\""));
+		assertCode("TOO_MANY_DIALOG_IDS", valid.replace("dialog-ids=\"31\"", "dialog-ids=\"1..256 257\""));
+		assertCode("MISSING_ATTRIBUTE", valid.replace("dialog-ids=\"31\"", "dialog-ids=\"\""));
+		assertCode("INVALID_XML", valid.replace("source=\"started\" ", ""));
+		assertCode("INVALID_XML", valid.replace("npc-ids=\"203097 799093\" ", ""));
+		assertCode("INVALID_XML", valid.replace("dialog-ids=\"31\"", ""));
+		assertCode("INVALID_XML", valid.replace("<show-quest-dialog dialog-id=\"1352\"/>", ""));
+		assertCode("INVALID_XML", valid.replace("<show-quest-dialog dialog-id=\"1352\"/>", "<show-quest-dialog/>"));
+		assertCode("NPC_DIALOG_RESPONSE_INVALID", valid.replace("dialog-id=\"1352\"", "dialog-id=\"-1\""));
+		assertCode("INVALID_XML", valid.replace("<show-quest-dialog dialog-id=\"1352\"/>",
+			"<show-quest-dialog dialog-id=\"1352\"/><close-dialog/>"));
+		assertCode("INVALID_XML", valid.replace("<show-quest-dialog dialog-id=\"1352\"/>",
+			"<show-dialog-window dialog-id=\"1352\"/>"));
+		assertCode("INVALID_XML", valid.replace("<show-quest-dialog dialog-id=\"1352\"/>",
+			"<sync-quest-state mode=\"PACKET_ONLY\"/>"));
+	}
+
+	@Test
+	void npcDialogRejectsForbiddenAttributesAndNestedWrappers() {
+		String valid = npcDialogDefinition("""
+			<npc-dialog source="started" npc-ids="203097 799093" dialog-ids="31">
+			  <show-quest-dialog dialog-id="1352"/>
+			</npc-dialog>
+			""");
+		assertCode("INVALID_XML", valid.replace("<show-quest-dialog dialog-id=\"1352\"/>",
+			"<after-commit><show-quest-dialog dialog-id=\"1352\"/></after-commit>"));
+		assertCode("INVALID_XML", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 799093\" target=\"started\""));
+		assertCode("INVALID_XML", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 799093\" priority=\"1\""));
+		assertCode("INVALID_XML", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 799093\" conditions=\"x\""));
+		assertCode("INVALID_XML", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 799093\" actions=\"x\""));
+		assertCode("INVALID_XML", valid.replace("</npc-dialog>", "<conditions/></npc-dialog>"));
+		assertCode("INVALID_XML", valid.replace("</npc-dialog>", "<actions/></npc-dialog>"));
+		assertCode("INVALID_XML", valid.replace("dialog-ids=\"31\"", "dialog-ids=\"31\" arbitrary=\"x\""));
+		assertCode("INVALID_XML", valid.replace("dialog-id=\"1352\"", "dialog-id=\"1352\" arbitrary=\"x\""));
+	}
+
+	private static String npcDialogDefinition(String transitions) {
+		return """
+			<quest-definition id="990071" version="1">
+			  <metadata name="npc-dialog-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+			  <nodes>
+			    <node label="started" status="START"/>
+			  </nodes>
+			  <transitions>%s</transitions>
+			</quest-definition>
+			""".formatted(transitions);
 	}
 
 	private static QuestTransition completionTransition(String finish) {
@@ -541,140 +703,158 @@ class QuestXmlDomainBlocksTest {
 
 	private static String startDefinition(String transitions) {
 		return """
-			<quest-definition id="990060" version="1">
-			  <metadata name="start-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
-			  <progress><bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/></progress>
-			  <nodes>
-			    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-			    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-			  </nodes>
-			  <transitions>%s</transitions>
-			</quest-definition>
+
+					<quest-definition id="990060" version="1">
+					  <metadata name="start-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+					  <progress><bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/></progress>
+					  <nodes>
+					    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+					    <node label="started" status="START"><var name="var0" value="0"/></node>
+					  </nodes>
+					  <transitions>%s</transitions>
+					</quest-definition>
+
 			""".formatted(transitions);
 	}
 
 	private static String counterDefinition(String transitions) {
 		return """
-			<quest-definition id="990061" version="1">
-			  <metadata name="counter-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
-			  <progress><bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/></progress>
-			  <nodes>
-			    <node label="started"><project status="START"/></node>
-			    <node label="reward"><project status="REWARD"><vars><var name="var0" value="3"/></vars></project></node>
-			  </nodes>
-			  <transitions>%s</transitions>
-			</quest-definition>
+
+					<quest-definition id="990061" version="1">
+					  <metadata name="counter-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+					  <progress><bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/></progress>
+					  <nodes>
+					    <node label="started" status="START"/>
+					    <node label="reward" status="REWARD"><var name="var0" value="3"/></node>
+					  </nodes>
+					  <transitions>%s</transitions>
+					</quest-definition>
+
 			""".formatted(transitions);
 	}
 
 	private static String killChainDefinition(String transitions) {
 		return """
-			<quest-definition id="990064" version="1">
-			  <metadata name="kill-chain-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
-			  <progress><bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/></progress>
-			  <nodes>
-			    <node label="v1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
-			    <node label="v2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
-			    <node label="v3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
-			    <node label="v4"><project status="REWARD"><vars><var name="var0" value="4"/></vars></project></node>
-			  </nodes>
-			  <transitions>%s</transitions>
-			</quest-definition>
+
+					<quest-definition id="990064" version="1">
+					  <metadata name="kill-chain-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+					  <progress><bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/></progress>
+					  <nodes>
+					    <node label="v1" status="START"><var name="var0" value="1"/></node>
+					    <node label="v2" status="START"><var name="var0" value="2"/></node>
+					    <node label="v3" status="START"><var name="var0" value="3"/></node>
+					    <node label="v4" status="REWARD"><var name="var0" value="4"/></node>
+					  </nodes>
+					  <transitions>%s</transitions>
+					</quest-definition>
+
 			""".formatted(transitions);
 	}
 
 	private static String completionDefinition(String transitions) {
 		return """
-			<quest-definition id="990062" version="1">
-			  <metadata name="complete-block" display-name-id="1" min-level="0" max-level="99" category="QUEST">
-			    <rewards>
-			      <reward kind="EXP" id="0" amount="100"/>
-			      <reward kind="ITEM" id="188000001" amount="2"/>
-			      <reward kind="SELECTABLE_ITEM" id="100000001" amount="1"/>
-			      <reward kind="SELECTABLE_ITEM" id="100000002" amount="1"/>
-			    </rewards>
-			  </metadata>
-			  <progress><bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/></progress>
-			  <nodes>
-			    <node label="reward"><project status="REWARD"><vars><var name="var0" value="3"/></vars></project></node>
-			    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
-			  </nodes>
-			  <transitions>%s</transitions>
-			</quest-definition>
+
+					<quest-definition id="990062" version="1">
+					  <metadata name="complete-block" display-name-id="1" min-level="0" max-level="99" category="QUEST">
+					    <rewards>
+					      <reward kind="EXP" id="0" amount="100"/>
+					      <reward kind="ITEM" id="188000001" amount="2"/>
+					      <reward kind="SELECTABLE_ITEM" id="100000001" amount="1"/>
+					      <reward kind="SELECTABLE_ITEM" id="100000002" amount="1"/>
+					    </rewards>
+					  </metadata>
+					  <progress><bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/></progress>
+					  <nodes>
+					    <node label="reward" status="REWARD"><var name="var0" value="3"/></node>
+					    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+					  </nodes>
+					  <transitions>%s</transitions>
+					</quest-definition>
+
 			""".formatted(transitions);
 	}
 
 	private static String killRoutesDefinition(String transitions) {
 		return """
-			<quest-definition id="990065" version="1">
-			  <metadata name="kill-routes-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
-			  <progress><bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/></progress>
-			  <nodes>
-			    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-			    <node label="k1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
-			  </nodes>
-			  <transitions>%s</transitions>
-			</quest-definition>
+
+					<quest-definition id="990065" version="1">
+					  <metadata name="kill-routes-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+					  <progress><bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/></progress>
+					  <nodes>
+					    <node label="started" status="START"><var name="var0" value="0"/></node>
+					    <node label="k1" status="START"><var name="var0" value="1"/></node>
+					  </nodes>
+					  <transitions>%s</transitions>
+					</quest-definition>
+
 			""".formatted(transitions);
 	}
 
 	private static String reportDefinition(String transitions) {
 		return """
-			<quest-definition id="990066" version="1">
-			  <metadata name="npc-report-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
-			  <nodes>
-			    <node label="started"><project status="START"/></node>
-			    <node label="reward"><project status="REWARD"/></node>
-			  </nodes>
-			  <transitions>%s</transitions>
-			</quest-definition>
+
+					<quest-definition id="990066" version="1">
+					  <metadata name="npc-report-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+					  <nodes>
+					    <node label="started" status="START"/>
+					    <node label="reward" status="REWARD"/>
+					  </nodes>
+					  <transitions>%s</transitions>
+					</quest-definition>
+
 			""".formatted(transitions);
 	}
 
 	private static String itemReportDefinition(String transitions) {
 		return """
-			<quest-definition id="990068" version="1">
-			  <metadata name="npc-item-report-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
-			  <nodes>
-			    <node label="started"><project status="START"/></node>
-			    <node label="reward"><project status="REWARD"/></node>
-			  </nodes>
-			  <transitions>%s</transitions>
-			</quest-definition>
+
+					<quest-definition id="990068" version="1">
+					  <metadata name="npc-item-report-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+					  <nodes>
+					    <node label="started" status="START"/>
+					    <node label="reward" status="REWARD"/>
+					  </nodes>
+					  <transitions>%s</transitions>
+					</quest-definition>
+
 			""".formatted(transitions);
 	}
 
 	private static String counterGridDefinition(String transitions) {
 		return """
-			<quest-definition id="990069" version="1">
-			  <metadata name="counter-grid-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
-			  <progress><bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/></progress>
-			  <nodes>
-			    <node label="v0"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-			    <node label="v1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
-			    <node label="v2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
-			  </nodes>
-			  <transitions>%s</transitions>
-			</quest-definition>
+
+					<quest-definition id="990069" version="1">
+					  <metadata name="counter-grid-block" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+					  <progress><bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/></progress>
+					  <nodes>
+					    <node label="v0" status="START"><var name="var0" value="0"/></node>
+					    <node label="v1" status="START"><var name="var0" value="1"/></node>
+					    <node label="v2" status="START"><var name="var0" value="2"/></node>
+					  </nodes>
+					  <transitions>%s</transitions>
+					</quest-definition>
+
 			""".formatted(transitions);
 	}
 
 	private static String counterGrid2dDefinition(String transitions) {
 		return """
-			<quest-definition id="990070" version="1">
-			  <metadata name="two-dimensional counter grid" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
-			  <progress>
-			    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
-			    <bit-field name="var1" offset="2" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
-			  </progress>
-			  <nodes>
-			    <node label="v00"><project status="START"><vars><var name="var0" value="0"/><var name="var1" value="0"/></vars></project></node>
-			    <node label="v10"><project status="START"><vars><var name="var0" value="1"/><var name="var1" value="0"/></vars></project></node>
-			    <node label="v01"><project status="START"><vars><var name="var0" value="0"/><var name="var1" value="1"/></vars></project></node>
-			    <node label="v11"><project status="START"><vars><var name="var0" value="1"/><var name="var1" value="1"/></vars></project></node>
-			  </nodes>
-			  <transitions>%s</transitions>
-			</quest-definition>
+
+					<quest-definition id="990070" version="1">
+					  <metadata name="two-dimensional counter grid" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
+					  <progress>
+					    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+					    <bit-field name="var1" offset="2" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+					  </progress>
+					  <nodes>
+					    <node label="v00" status="START"><var name="var0" value="0"/><var name="var1" value="0"/></node>
+					    <node label="v10" status="START"><var name="var0" value="1"/><var name="var1" value="0"/></node>
+					    <node label="v01" status="START"><var name="var0" value="0"/><var name="var1" value="1"/></node>
+					    <node label="v11" status="START"><var name="var0" value="1"/><var name="var1" value="1"/></node>
+					  </nodes>
+					  <transitions>%s</transitions>
+					</quest-definition>
+
 			""".formatted(transitions);
 	}
 }

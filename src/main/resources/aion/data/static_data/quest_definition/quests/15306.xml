@@ -42,19 +42,19 @@
     <bit-field name="var1" offset="6" width="6" min="0" max="59" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="s0"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="s1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
-    <node label="s2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
-    <node label="s3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
-    <node label="s4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
-    <node label="s5"><project status="START"><vars><var name="var0" value="5"/></vars></project></node>
-    <node label="s6"><project status="START"><vars><var name="var0" value="6"/></vars></project></node>
-    <node label="s7"><project status="START"><vars><var name="var0" value="7"/></vars></project></node>
-    <node label="s8"><project status="START"><vars><var name="var0" value="8"/></vars></project></node>
-    <node label="s9"><project status="START"><vars><var name="var0" value="9"/><var name="var1" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="10"/><var name="var1" value="0"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="s0" status="START"><var name="var0" value="0"/></node>
+    <node label="s1" status="START"><var name="var0" value="1"/></node>
+    <node label="s2" status="START"><var name="var0" value="2"/></node>
+    <node label="s3" status="START"><var name="var0" value="3"/></node>
+    <node label="s4" status="START"><var name="var0" value="4"/></node>
+    <node label="s5" status="START"><var name="var0" value="5"/></node>
+    <node label="s6" status="START"><var name="var0" value="6"/></node>
+    <node label="s7" status="START"><var name="var0" value="7"/></node>
+    <node label="s8" status="START"><var name="var0" value="8"/></node>
+    <node label="s9" status="START"><var name="var0" value="9"/><var name="var1" value="0"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="10"/><var name="var1" value="0"/></node>
+    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
     <npc-start npc-id="805327" source="unaccepted" target="s0" selection-sources="unaccepted s0 s1 s2 s3 s4 s5 s6 s7 s8 s9"/>
@@ -63,8 +63,9 @@
     <transition source="s1" target="s1"><event><talk-to-npc npc-id="805328" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
     <transition source="s1" target="s2" priority="0"><event><talk-to-npc npc-id="805328" dialog-id="39"/></event><conditions><has-item item-id="182215836" count="150"/><has-item item-id="182215837" count="10"/><has-item item-id="182215921" count="10"/><has-item item-id="182215838" count="3"/></conditions><actions><set-variable field="var0" value="2"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="10000"/></after-commit></transition>
     <transition source="s1" target="s1" priority="1"><event><talk-to-npc npc-id="805328" dialog-id="39"/></event><after-commit><show-quest-dialog dialog-id="10001"/></after-commit></transition>
-    <transition source="s1" target="s1"><event><talk-to-npc npc-id="702829" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
-    <transition source="s1" target="s1"><event><talk-to-npc npc-id="702862" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
+    <npc-dialog source="s1" npc-ids="702829 702862" dialog-ids="-1">
+      <close-dialog />
+    </npc-dialog>
     <transition source="s1" target="s1"><event><can-act template-id="702829" action-type="ACTION_ITEM_USE"/></event></transition>
     <transition source="s1" target="s1"><event><can-act template-id="702862" action-type="ACTION_ITEM_USE"/></event></transition>
     <transition source="s2" target="s2"><event><talk-to-npc npc-id="805328" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1693"/></after-commit></transition>

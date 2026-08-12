@@ -15,33 +15,17 @@
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="started">
-      <project status="START">
-        <vars>
+    <node label="started" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>
@@ -121,22 +105,9 @@
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
-      <event>
-        <talk-to-npc npc-id="799800" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <talk-to-npc npc-id="799801" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
-      </after-commit>
-    </transition>
+    <npc-dialog source="started" npc-ids="799800 799801" dialog-ids="31">
+      <show-quest-dialog dialog-id="2375" />
+    </npc-dialog>
     <transition source="started" target="reward">
       <event>
         <talk-to-npc npc-id="799800" dialog-id="1009"/>

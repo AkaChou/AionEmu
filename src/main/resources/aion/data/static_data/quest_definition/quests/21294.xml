@@ -18,53 +18,28 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="started">
-      <project status="START">
-        <vars>
+    <node label="started" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="k1">
-      <project status="START">
-        <vars>
+    <node label="k1" status="START">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>
     <npc-start npc-id="799444" source="unaccepted" target="started" selection-sources="unaccepted started"/>
     <!-- 击杀：每杀一只 var0+1 / kills: +1 var0 per 218756 -->
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="218756"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
+    <counter-grid>
+      <dimension field="var0" required="1" npc-ids="218756"/>
+    </counter-grid>
     <!-- 终态：报告 / terminal: report to 799444 -->
     <npc-report npc-id="799444" source="k1" target="reward" page="1352"/>
     <!-- 奖励：发放并完成 / reward: grant and complete -->

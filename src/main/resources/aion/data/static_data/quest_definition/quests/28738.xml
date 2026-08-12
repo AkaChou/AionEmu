@@ -15,15 +15,15 @@
     <bit-field name="var1" offset="4" width="4" min="0" max="9" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="1"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars/></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="started" status="START"><var name="var0" value="0"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="1"/></node>
+    <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="206395" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="4762"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="206396" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="4762"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="206397" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="4762"/></after-commit></transition>
+    <npc-dialog source="unaccepted" npc-ids="206395 206396 206397" dialog-ids="31">
+      <show-quest-dialog dialog-id="4762" />
+    </npc-dialog>
     <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="206395" dialog-id="1002"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="164000342" count="10"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
     <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="206396" dialog-id="1002"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="164000342" count="10"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
     <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="206397" dialog-id="1002"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="164000342" count="10"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>

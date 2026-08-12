@@ -32,61 +32,29 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="w_reward">
-      <project status="REWARD">
-        <vars>
+    <node label="w_reward" status="REWARD">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="s_reward">
-      <project status="REWARD">
-        <vars>
+    <node label="s_reward" status="REWARD">
           <var name="var0" value="2"/>
-        </vars>
-      </project>
     </node>
-    <node label="m_reward">
-      <project status="REWARD">
-        <vars>
+    <node label="m_reward" status="REWARD">
           <var name="var0" value="3"/>
-        </vars>
-      </project>
     </node>
-    <node label="p_reward">
-      <project status="REWARD">
-        <vars>
+    <node label="p_reward" status="REWARD">
           <var name="var0" value="4"/>
-        </vars>
-      </project>
     </node>
-    <node label="t_reward">
-      <project status="REWARD">
-        <vars>
+    <node label="t_reward" status="REWARD">
           <var name="var0" value="5"/>
-        </vars>
-      </project>
     </node>
-    <node label="u_reward">
-      <project status="REWARD">
-        <vars>
+    <node label="u_reward" status="REWARD">
           <var name="var0" value="6"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>

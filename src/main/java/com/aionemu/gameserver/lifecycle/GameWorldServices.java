@@ -111,6 +111,12 @@ public final class GameWorldServices implements DisposableBean {
         return resolved;
     }
 
+    static void clearResolvedServices() {
+        resolvedGeoService = null;
+        resolvedPathService = null;
+        resolvedDropRegistrationService = null;
+    }
+
     /**
      * 销毁时清空静态提供者与单例注册。
      * Clear static providers and singleton registrations on destroy.
@@ -120,9 +126,7 @@ public final class GameWorldServices implements DisposableBean {
         geoServiceProvider = null;
         pathServiceProvider = null;
         dropRegistrationServiceProvider = null;
-        resolvedGeoService = null;
-        resolvedPathService = null;
-        resolvedDropRegistrationService = null;
+        clearResolvedServices();
         GeoService.setInstanceProvider(null);
         PathService.setInstanceProvider(null);
         DropRegistrationService.setInstanceProvider(null);

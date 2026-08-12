@@ -174,41 +174,45 @@ class CraftRepresentativeQuestDefinitionTest {
 
 	private static String workOrder5000Xml() {
 		return """
-			<quest-definition id="5000" version="1">
-			  <metadata name="Steel Chisel Supplies" display-name-id="1190000" min-level="0" max-level="2147483647" category="TASK"/>
-			  <nodes>
-			    <node label="none"><project status="NONE"/></node>
-			    <node label="start"><project status="START"/></node>
-			    <node label="complete"><project status="COMPLETE"/></node>
-			  </nodes>
-			  <transitions>
-			    <transition source="none" target="start"><event><talk-to-npc npc-id="203788" dialog="ACCEPT_QUEST"/></event>
-			      <conditions><recipe-known recipe-id="155004001" expected="false"/></conditions>
-			      <actions><grant-reward kind="ITEM" id="182290000" amount="4"/><learn-recipe recipe-id="155004001" ownership="QUEST_OWNED"/></actions>
-			    </transition>
-			    <transition source="start" target="none"><event><abandon/></event><actions><forget-recipe recipe-id="155004001"/></actions></transition>
-			    <transition source="start" target="complete"><event><talk-to-npc npc-id="203788" dialog="SELECT_REWARD"/></event><actions><forget-recipe recipe-id="155004001"/><complete-quest reward-index="0"/></actions><after-commit><sync-quest-state mode="COMPLETION"/></after-commit></transition>
-			  </transitions>
-			</quest-definition>
+
+					<quest-definition id="5000" version="1">
+					  <metadata name="Steel Chisel Supplies" display-name-id="1190000" min-level="0" max-level="2147483647" category="TASK"/>
+					  <nodes>
+					    <node label="none" status="NONE"/>
+					    <node label="start" status="START"/>
+					    <node label="complete" status="COMPLETE"/>
+					  </nodes>
+					  <transitions>
+					    <transition source="none" target="start"><event><talk-to-npc npc-id="203788" dialog="ACCEPT_QUEST"/></event>
+					      <conditions><recipe-known recipe-id="155004001" expected="false"/></conditions>
+					      <actions><grant-reward kind="ITEM" id="182290000" amount="4"/><learn-recipe recipe-id="155004001" ownership="QUEST_OWNED"/></actions>
+					    </transition>
+					    <transition source="start" target="none"><event><abandon/></event><actions><forget-recipe recipe-id="155004001"/></actions></transition>
+					    <transition source="start" target="complete"><event><talk-to-npc npc-id="203788" dialog="SELECT_REWARD"/></event><actions><forget-recipe recipe-id="155004001"/><complete-quest reward-index="0"/></actions><after-commit><sync-quest-state mode="COMPLETION"/></after-commit></transition>
+					  </transitions>
+					</quest-definition>
+
 			""";
 	}
 
 	private static String craftReward1941Xml() {
 		return """
-			<quest-definition id="1941" version="1">
-			  <metadata name="quest-1941" display-name-id="0" min-level="0" max-level="2147483647" category="QUEST"/>
-			  <nodes><node label="start"><project status="START"/></node><node label="reward"><project status="REWARD"/></node></nodes>
-			  <transitions>
-			    <transition source="start" target="reward"><event><talk-to-npc npc-id="203700" dialog="SELECT_REWARD"/></event>
-			      <conditions><can-grant-craft-skill skill-id="40002" target-level="400"/></conditions>
-			      <after-commit><play-movie movie-id="93"/></after-commit>
-			    </transition>
-			    <transition source="reward" target="reward"><event><movie-end movie-id="93"/></event>
-			      <conditions><can-grant-craft-skill skill-id="40002" target-level="400"/></conditions>
-			      <actions><grant-craft-skill skill-id="40002" target-level="400" auto-learn-recipes="true"/></actions>
-			    </transition>
-			  </transitions>
-			</quest-definition>
+
+					<quest-definition id="1941" version="1">
+					  <metadata name="quest-1941" display-name-id="0" min-level="0" max-level="2147483647" category="QUEST"/>
+					  <nodes><node label="start" status="START"/><node label="reward" status="REWARD"/></nodes>
+					  <transitions>
+					    <transition source="start" target="reward"><event><talk-to-npc npc-id="203700" dialog="SELECT_REWARD"/></event>
+					      <conditions><can-grant-craft-skill skill-id="40002" target-level="400"/></conditions>
+					      <after-commit><play-movie movie-id="93"/></after-commit>
+					    </transition>
+					    <transition source="reward" target="reward"><event><movie-end movie-id="93"/></event>
+					      <conditions><can-grant-craft-skill skill-id="40002" target-level="400"/></conditions>
+					      <actions><grant-craft-skill skill-id="40002" target-level="400" auto-learn-recipes="true"/></actions>
+					    </transition>
+					  </transitions>
+					</quest-definition>
+
 			""";
 	}
 }

@@ -535,6 +535,7 @@ class GameServiceProviderCompatibilityTest {
             GeoService.setInstanceProvider(null);
             PathService.setInstanceProvider(null);
             DropRegistrationService.setInstanceProvider(null);
+            GameWorldServices.clearResolvedServices();
             LandingUpdateService.setInstanceProvider(null);
             AbyssLandingSpecialService.setInstanceProvider(null);
             DisputeLandService.setInstanceProvider(null);

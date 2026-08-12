@@ -22,11 +22,11 @@
     <bit-field name="var2" offset="9" width="3" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="s0"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="s1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="1"/><var name="var1" value="5"/><var name="var2" value="5"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="s0" status="START"><var name="var0" value="0"/></node>
+    <node label="s1" status="START"><var name="var0" value="1"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="1"/><var name="var1" value="5"/><var name="var2" value="5"/></node>
+    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
     <npc-start npc-id="204787" source="unaccepted" target="s0" selection-sources="unaccepted s0 s1">

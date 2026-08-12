@@ -55,8 +55,7 @@ class PvpRepresentativeQuestDefinitionTest {
 			.compile();
 		CompiledQuestDefinition xml = QuestDefinitionXmlCompiler.compile(xml(15204,
 			"<progress><bit-field name=\"var0\" offset=\"0\" width=\"6\" min=\"0\" max=\"63\" persistence=\"PERSISTENT\" scope=\"LOCAL\"/></progress>",
-			"<node label=\"start\"><project status=\"START\"><vars><var name=\"var0\" value=\"4\"/></vars></project></node>"
-				+ "<node label=\"reward\"><project status=\"REWARD\"><vars><var name=\"var0\" value=\"5\"/></vars></project></node>",
+"<node label=\"start\" status=\"START\"><var name=\"var0\" value=\"4\"/></node><node label=\"reward\" status=\"REWARD\"><var name=\"var0\" value=\"5\"/></node>",
 			"<event><kill-in-world world-id=\"210070000\"/></event><conditions><status-is status=\"START\"/><variable-is field=\"var0\" value=\"4\"/></conditions>"));
 		assertEquals(dsl.definition(), xml.definition());
 	}
@@ -110,14 +109,16 @@ class PvpRepresentativeQuestDefinitionTest {
 	@Test
 	void xmlCompilerReadsPvpFactsConditionsAsTypedIr() {
 		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(("""
-			<quest-definition id="23851" version="1">
-			  <metadata name="pvp-23851" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
-			  <nodes><node label="start"><project status="START"/></node><node label="reward"><project status="REWARD"/></node></nodes>
-			  <transitions><transition source="start" target="reward">
-			    <event><kill-in-world world-id="400010000"/></event>
-			    <conditions><pvp-victim-level-delta minimum="-5" maximum="9"/><pvp-recipient-in-zone zone="SULFUR_FORTRESS_400010000"/></conditions>
-			  </transition></transitions>
-			</quest-definition>
+
+					<quest-definition id="23851" version="1">
+					  <metadata name="pvp-23851" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
+					  <nodes><node label="start" status="START"/><node label="reward" status="REWARD"/></nodes>
+					  <transitions><transition source="start" target="reward">
+					    <event><kill-in-world world-id="400010000"/></event>
+					    <conditions><pvp-victim-level-delta minimum="-5" maximum="9"/><pvp-recipient-in-zone zone="SULFUR_FORTRESS_400010000"/></conditions>
+					  </transition></transitions>
+					</quest-definition>
+
 			""").getBytes(StandardCharsets.UTF_8)));
 		assertEquals(List.of(new QuestCondition.PvpVictimLevelDelta(-5, 9),
 			new QuestCondition.PvpRecipientInZone("SULFUR_FORTRESS_400010000")),

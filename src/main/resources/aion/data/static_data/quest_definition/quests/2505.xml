@@ -21,10 +21,10 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="started" status="START"><var name="var0" value="0"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="0"/></node>
+    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
     <npc-start npc-id="204720" source="unaccepted" target="started" selection-sources="unaccepted started"/>

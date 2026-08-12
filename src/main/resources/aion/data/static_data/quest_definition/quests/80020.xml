@@ -22,12 +22,12 @@
   </metadata>
   <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="s0"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="s1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
-    <node label="s2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="2"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="s0" status="START"><var name="var0" value="0"/></node>
+    <node label="s1" status="START"><var name="var0" value="1"/></node>
+    <node label="s2" status="START"><var name="var0" value="2"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="2"/></node>
+    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799769" dialog-ids="-1 31"/></event><conditions><start-eligible/><event-active expected="true"/></conditions><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>

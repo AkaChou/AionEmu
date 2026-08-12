@@ -15,10 +15,10 @@
     <bit-field name="var0" offset="0" width="3" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="5"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="5"/></vars></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="started" status="START"><var name="var0" value="0"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="5"/></node>
+    <node label="complete" status="COMPLETE"><var name="var0" value="5"/></node>
   </nodes>
   <transitions>
     <!-- 接取:Spy 派系任务旧节点无 start NPC,由军队补给官 Meletos (799825) / Molinos (799826) 对话接取。 -->
@@ -76,24 +76,14 @@
       <event><talk-to-npc npc-id="799826" dialog-ids="1003 1004 20001"/></event>
       <after-commit><close-dialog/></after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="799825" dialog-id="1008"/></event>
-      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="799826" dialog-id="1008"/></event>
-      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
-    </transition>
+    <npc-dialog source="unaccepted" npc-ids="799825 799826" dialog-ids="1008">
+      <show-quest-selection-dialog dialog-id="10" />
+    </npc-dialog>
 
     <!-- 进行中:Meletos (799825) / Molinos (799826) 对话查看任务详情。 -->
-    <transition source="started" target="started">
-      <event><talk-to-npc npc-id="799825" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="2375"/></after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event><talk-to-npc npc-id="799826" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="2375"/></after-commit>
-    </transition>
+    <npc-dialog source="started" npc-ids="799825 799826" dialog-ids="31">
+      <show-quest-dialog dialog-id="2375" />
+    </npc-dialog>
 
     <!-- 在格尔克马罗斯 (220140000) 击杀敌对目标 5 个:var0 计数 0→5,priority 1 计数、0 完成进入奖励。 -->
     <transition source="started" target="started" priority="1">

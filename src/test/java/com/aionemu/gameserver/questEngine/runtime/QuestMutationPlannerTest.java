@@ -160,21 +160,23 @@ class QuestMutationPlannerTest {
 	@Test
 	void abandonQuestLowersQuestWorkItemsToTransactionalRemoveAllActions() {
 		String xml = """
-				<quest-definition id="1302" version="1">
-				  <metadata name="abandon" display-name-id="0" min-level="1" max-level="55" category="QUEST">
-				    <work-items><item id="182400003" count="1"/></work-items>
-				  </metadata>
-				  <nodes>
-				    <node label="started"><project status="START"/></node>
-				    <node label="unaccepted"><project status="NONE"/></node>
-				  </nodes>
-				  <transitions>
-				    <transition source="started" target="unaccepted">
-				      <event><abandon/></event>
-				      <actions><abandon-quest/></actions>
-				    </transition>
-				  </transitions>
-				</quest-definition>
+
+						<quest-definition id="1302" version="1">
+						  <metadata name="abandon" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+						    <work-items><item id="182400003" count="1"/></work-items>
+						  </metadata>
+						  <nodes>
+						    <node label="started" status="START"/>
+						    <node label="unaccepted" status="NONE"/>
+						  </nodes>
+						  <transitions>
+						    <transition source="started" target="unaccepted">
+						      <event><abandon/></event>
+						      <actions><abandon-quest/></actions>
+						    </transition>
+						  </transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
 			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
@@ -190,16 +192,18 @@ class QuestMutationPlannerTest {
 	@Test
 	void lowersSelectedMetadataRewardToQuestBaseCurrencyReward() {
 		String xml = """
-				<quest-definition id="1303" version="1">
-				  <metadata name="selected" display-name-id="0" min-level="1" max-level="55" category="QUEST">
-				    <rewards><reward kind="AP" id="0" amount="300"/><reward kind="AP" id="0" amount="600"/></rewards>
-				  </metadata>
-				  <nodes><node label="started"><project status="START"/></node></nodes>
-				  <transitions><transition source="started" target="started">
-				    <event><talk-to-npc npc-id="700001"/></event>
-				    <actions><grant-selected-reward reward-index="1"/></actions>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="1303" version="1">
+						  <metadata name="selected" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+						    <rewards><reward kind="AP" id="0" amount="300"/><reward kind="AP" id="0" amount="600"/></rewards>
+						  </metadata>
+						  <nodes><node label="started" status="START"/></nodes>
+						  <transitions><transition source="started" target="started">
+						    <event><talk-to-npc npc-id="700001"/></event>
+						    <actions><grant-selected-reward reward-index="1"/></actions>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
 			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
@@ -216,18 +220,20 @@ class QuestMutationPlannerTest {
 	@Test
 	void extendedTitleIsGrantedAtItsRewardRepeatCountWithoutLimitingFurtherRepeats() {
 		String xml = """
-				<quest-definition id="1307" version="1">
-				  <metadata name="repeat-title" display-name-id="0" min-level="1" max-level="55" category="QUEST">
-				    <repeat max-repeat-count="255" reward-repeat-count="5" cooldown-seconds="0" daily="false" weekly="false"/>
-				    <extended-rewards><reward kind="TITLE" id="45" amount="1"/></extended-rewards>
-				  </metadata>
-				  <nodes><node label="reward"><project status="REWARD"/></node><node label="complete"><project status="COMPLETE"/></node></nodes>
-				  <transitions><transition source="reward" target="complete">
-				    <event><talk-to-npc npc-id="700001"/></event>
-				    <actions><complete-quest reward-index="0"/></actions>
-				    <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="1307" version="1">
+						  <metadata name="repeat-title" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+						    <repeat max-repeat-count="255" reward-repeat-count="5" cooldown-seconds="0" daily="false" weekly="false"/>
+						    <extended-rewards><reward kind="TITLE" id="45" amount="1"/></extended-rewards>
+						  </metadata>
+						  <nodes><node label="reward" status="REWARD"/><node label="complete" status="COMPLETE"/></nodes>
+						  <transitions><transition source="reward" target="complete">
+						    <event><talk-to-npc npc-id="700001"/></event>
+						    <actions><complete-quest reward-index="0"/></actions>
+						    <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
 			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
@@ -247,16 +253,18 @@ class QuestMutationPlannerTest {
 	@Test
 	void startConditionGroupsAreAndInsideAndOrAcrossGroups() {
 		String xml = """
-				<quest-definition id="1306" version="1">
-				  <metadata name="grouped-start" display-name-id="0" min-level="1" max-level="55" category="QUEST">
-				    <start-condition-groups>
-				      <group><condition type="finished" quest-id="9001"/><condition type="acquired" quest-id="9002"/></group>
-				      <group><condition type="finished" quest-id="9003"/></group>
-				    </start-condition-groups>
-				  </metadata>
-				  <nodes><node label="none"><project status="NONE"/></node><node label="started"><project status="START"/></node></nodes>
-				  <transitions><transition source="none" target="started"><event><talk-to-npc npc-id="700001"/></event></transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="1306" version="1">
+						  <metadata name="grouped-start" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+						    <start-condition-groups>
+						      <group><condition type="finished" quest-id="9001"/><condition type="acquired" quest-id="9002"/></group>
+						      <group><condition type="finished" quest-id="9003"/></group>
+						    </start-condition-groups>
+						  </metadata>
+						  <nodes><node label="none" status="NONE"/><node label="started" status="START"/></nodes>
+						  <transitions><transition source="none" target="started"><event><talk-to-npc npc-id="700001"/></event></transition></transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
 			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));

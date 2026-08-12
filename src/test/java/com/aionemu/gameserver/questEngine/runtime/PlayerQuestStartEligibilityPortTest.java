@@ -265,7 +265,7 @@ class PlayerQuestStartEligibilityPortTest {
 
 	private static QuestMetadata metadataFromXml(String metadata) {
 		String xml = "<quest-definition id=\"990001\" version=\"1\">" + metadata
-			+ "<nodes><node label=\"start\"><project status=\"START\"/></node></nodes>"
+			+ "<nodes><node label=\"start\" status=\"START\"/></nodes>"
 			+ "<transitions><transition source=\"start\" target=\"start\"><event><level-up/></event>"
 			+ "</transition></transitions></quest-definition>";
 		return QuestDefinitionXmlCompiler.compile(

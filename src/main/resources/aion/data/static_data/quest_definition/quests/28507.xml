@@ -18,54 +18,29 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="started">
-      <project status="START">
-        <vars>
+    <node label="started" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="k1">
-      <project status="START">
-        <vars>
+    <node label="k1" status="START">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>
     <!-- 接取：任务介绍（起始 NPC）/ start: quest intro dialogs (start NPC) -->
     <npc-start npc-id="799524" source="unaccepted" target="started" selection-sources="unaccepted started"/>
     <!-- 击杀：推进 var0 / kill: advance var0 -->
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="216922"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
+    <counter-grid>
+      <dimension field="var0" required="1" npc-ids="216922"/>
+    </counter-grid>
     <!-- 回报：击杀完成，向结束 NPC 提交 / report: hunt done, turn in to end NPC -->
     <npc-report npc-id="804605" source="k1" target="reward" page="1352"/>
     <npc-complete npc-id="804605" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">

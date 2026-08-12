@@ -58,19 +58,21 @@ class EventServiceCanonicalMetadataTest {
 
 	private static QuestMetadata metadata(String race) {
 		String xml = """
-			<quest-definition id="990301" version="1">
-			  <metadata name="event" display-name-id="1" min-level="10" max-level="20" category="EVENT">
-			    <races><race id="%s"/></races>
-			    <classes><class id="WARRIOR"/></classes>
-			    <gender id="MALE"/>
-			    <start-condition-groups>
-			      <group><condition type="finished" quest-id="9001"/><condition type="acquired" quest-id="9002"/></group>
-			      <group><condition type="finished" quest-id="9003"/></group>
-			    </start-condition-groups>
-			  </metadata>
-			  <nodes><node label="start"><project status="START"/></node></nodes>
-			  <transitions><transition source="start" target="start"><event><level-up/></event></transition></transitions>
-			</quest-definition>
+
+					<quest-definition id="990301" version="1">
+					  <metadata name="event" display-name-id="1" min-level="10" max-level="20" category="EVENT">
+					    <races><race id="%s"/></races>
+					    <classes><class id="WARRIOR"/></classes>
+					    <gender id="MALE"/>
+					    <start-condition-groups>
+					      <group><condition type="finished" quest-id="9001"/><condition type="acquired" quest-id="9002"/></group>
+					      <group><condition type="finished" quest-id="9003"/></group>
+					    </start-condition-groups>
+					  </metadata>
+					  <nodes><node label="start" status="START"/></nodes>
+					  <transitions><transition source="start" target="start"><event><level-up/></event></transition></transitions>
+					</quest-definition>
+
 			""".formatted(race);
 		return QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))).definition().metadata();

@@ -15,33 +15,17 @@
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="started">
-      <project status="START">
-        <vars>
+    <node label="started" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>
@@ -61,8 +45,9 @@
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799838" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="799838" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
     <!-- 进行中:与 Fortuneers NPC 对话查看任务详情。 -->
-    <transition source="started" target="started"><event><talk-to-npc npc-id="799837" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="799838" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
+    <npc-dialog source="started" npc-ids="799837 799838" dialog-ids="31">
+      <show-quest-dialog dialog-id="2375" />
+    </npc-dialog>
     <!-- 击杀任务刷出的瓦斯兽 (216620) 1 只:var0 计数 0→1,priority 1 计数、0 完成进入奖励。 -->
     <transition source="started" target="started" priority="1">
       <event><kill-npc npc-id="216620"/></event>

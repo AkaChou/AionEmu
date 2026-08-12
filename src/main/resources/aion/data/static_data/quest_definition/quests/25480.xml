@@ -27,70 +27,25 @@
     <bit-field name="var1" offset="2" width="4" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="started">
-      <project status="START">
-        <vars>
+    <node label="started" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="0"/>
           <var name="var1" value="0"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>
     <!-- 未接取时接取 NPC 805822 的对话提示。Unaccepted dialog prompt at starter NPC 805822. -->
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="805822" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="4762"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="805823" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="4762"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="805824" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="4762"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="805825" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="4762"/>
-      </after-commit>
-    </transition>
+    <npc-dialog source="unaccepted" npc-ids="805822 805823 805824 805825" dialog-ids="31">
+      <show-quest-dialog dialog-id="4762" />
+    </npc-dialog>
     <!-- 确认接取并显示接受对话框。Accept via the confirm button and show the acceptance dialog. -->
     <transition source="unaccepted" target="started">
       <event>
@@ -190,38 +145,9 @@
       </after-commit>
     </transition>
     <!-- 拒绝接取时关闭窗口。Refusing closes the dialog and stays unaccepted. -->
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="805822" dialog-id="20001"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="805823" dialog-id="20001"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="805824" dialog-id="20001"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="805825" dialog-id="20001"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
+    <npc-dialog source="unaccepted" npc-ids="805822 805823 805824 805825" dialog-ids="20001">
+      <close-dialog />
+    </npc-dialog>
     <!-- 击杀 18 个目标中任意 1 个：var1 置 1、var0 置 1 并进入领奖状态（与旧 handler 顺序 if 语义一致）。
          Killing any one of the 18 targets sets var1=1 and var0=1 and moves to the reward stage (matches the legacy sequential-if semantics). -->
     <transition source="started" target="reward">
@@ -237,38 +163,9 @@
       </after-commit>
     </transition>
     <!-- 领奖阶段对话显示领取提示。Reward-stage dialog shows the claim prompt. -->
-    <transition source="reward" target="reward">
-      <event>
-        <talk-to-npc npc-id="805822" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <talk-to-npc npc-id="805823" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <talk-to-npc npc-id="805824" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <talk-to-npc npc-id="805825" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
-      </after-commit>
-    </transition>
+    <npc-dialog source="reward" npc-ids="805822 805823 805824 805825" dialog-ids="31">
+      <show-quest-dialog dialog-id="10002" />
+    </npc-dialog>
     <!-- 打开奖励列表。Open the reward list. -->
     <transition source="reward" target="reward">
       <event>

@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.lifecycle;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -77,6 +78,26 @@ class GameWorldServicesRuntimeBridgeTest {
             assertSame(GameWorldServices.dropRegistrationService(), GameWorldServices.dropRegistrationService());
         } finally {
             worldServices.destroy();
+        }
+    }
+
+    @Test
+    void pathFallbackDoesNotRetainAProviderInstanceAfterTheProviderIsCleared() {
+        PathService providerInstance = instance(PathService.class);
+
+        try {
+            PathService.setInstanceProvider(provider(PathService.class, providerInstance));
+            GameWorldServices.clearResolvedServices();
+
+            assertSame(providerInstance, GameWorldServices.pathService());
+
+            PathService.setInstanceProvider(null);
+            GameWorldServices.clearResolvedServices();
+
+            assertNotSame(providerInstance, GameWorldServices.pathService());
+        } finally {
+            PathService.setInstanceProvider(null);
+            GameWorldServices.clearResolvedServices();
         }
     }
 

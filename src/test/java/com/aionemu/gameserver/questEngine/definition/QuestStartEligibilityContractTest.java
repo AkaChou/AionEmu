@@ -23,16 +23,18 @@ class QuestStartEligibilityContractTest {
 	@Test
 	void compilerRestoresMissingEligibilityWithoutDuplicatingExplicitCondition() {
 		String missing = """
-			<quest-definition id="900001" version="1">
-			  <metadata name="test" display-name-id="0" min-level="65" max-level="2147483647" category="MISSION"/>
-			  <nodes>
-			    <node label="unaccepted"><project status="NONE"/></node>
-			    <node label="started"><project status="START"/></node>
-			  </nodes>
-			  <transitions>
-			    <transition source="unaccepted" target="started"><event><enter-world/></event><conditions><world-is world-id="110010000"/></conditions></transition>
-			  </transitions>
-			</quest-definition>
+
+					<quest-definition id="900001" version="1">
+					  <metadata name="test" display-name-id="0" min-level="65" max-level="2147483647" category="MISSION"/>
+					  <nodes>
+					    <node label="unaccepted" status="NONE"/>
+					    <node label="started" status="START"/>
+					  </nodes>
+					  <transitions>
+					    <transition source="unaccepted" target="started"><event><enter-world/></event><conditions><world-is world-id="110010000"/></conditions></transition>
+					  </transitions>
+					</quest-definition>
+
 			""";
 		String explicit = missing.replace("<world-is world-id=\"110010000\"/>",
 			"<world-is world-id=\"110010000\"/><start-eligible/>");

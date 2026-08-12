@@ -59,12 +59,14 @@ class ProximityRepresentativeQuestDefinitionTest {
 
 	private static String xml() {
 		return """
-			<quest-definition id="29600" version="1">
-			  <metadata name="proximity-29600" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
-			  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
-			  <nodes><node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node><node label="started"><project status="START"><vars><var name="var0" value="1"/></vars></project></node></nodes>
-			  <transitions><transition source="unaccepted" target="started"><event><at-distance npc-id="806700"/></event><conditions><status-is status="NONE"/></conditions><actions><set-variable field="var0" value="1"/><set-status status="START"/></actions></transition></transitions>
-			</quest-definition>
+
+					<quest-definition id="29600" version="1">
+					  <metadata name="proximity-29600" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
+					  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+					  <nodes><node label="unaccepted" status="NONE"><var name="var0" value="0"/></node><node label="started" status="START"><var name="var0" value="1"/></node></nodes>
+					  <transitions><transition source="unaccepted" target="started"><event><at-distance npc-id="806700"/></event><conditions><status-is status="NONE"/></conditions><actions><set-variable field="var0" value="1"/><set-status status="START"/></actions></transition></transitions>
+					</quest-definition>
+
 			""";
 	}
 }

@@ -34,21 +34,22 @@ class BroadcastZoneMissionEndDefinitionTest {
 	@Test
 	void xmlBroadcastZoneMissionEndParsesQuestIds() {
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(new java.io.ByteArrayInputStream(
-			("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-				+ "<quest-definition id=\"990052\" version=\"1\">\n"
-				+ "  <metadata name=\"xml-broadcast\" display-name-id=\"990052\" min-level=\"1\" max-level=\"99\" category=\"QUEST\"/>\n"
-				+ "  <progress><bit-field name=\"var0\" offset=\"0\" width=\"3\" min=\"0\" max=\"3\" persistence=\"PERSISTENT\" scope=\"LOCAL\"/></progress>\n"
-				+ "  <nodes>\n"
-				+ "    <node label=\"unaccepted\"><project status=\"NONE\"><vars><var name=\"var0\" value=\"0\"/></vars></project></node>\n"
-				+ "    <node label=\"started\"><project status=\"START\"><vars><var name=\"var0\" value=\"0\"/></vars></project></node>\n"
-				+ "    <node label=\"done\"><project status=\"REWARD\"><vars><var name=\"var0\" value=\"1\"/></vars></project></node>\n"
-				+ "  </nodes>\n"
-				+ "  <transitions>\n"
-				+ "    <transition source=\"unaccepted\" target=\"started\"><event><enter-world/></event></transition>\n"
-				+ "    <transition source=\"started\" target=\"done\"><event><kill-npc npc-id=\"210133\"/></event>\n"
-				+ "      <after-commit><broadcast-zone-mission-end quest-ids=\"10521 10522 10523\"/></after-commit></transition>\n"
-				+ "  </transitions>\n"
-				+ "</quest-definition>\n").getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
++ "<quest-definition id=\"990052\" version=\"1\">\n"
++ "  <metadata name=\"xml-broadcast\" display-name-id=\"990052\" min-level=\"1\" max-level=\"99\" category=\"QUEST\"/>\n"
++ "  <progress><bit-field name=\"var0\" offset=\"0\" width=\"3\" min=\"0\" max=\"3\" persistence=\"PERSISTENT\" scope=\"LOCAL\"/></progress>\n"
++ "  <nodes>\n"
++ "    <node label=\"unaccepted\" status=\"NONE\"><var name=\"var0\" value=\"0\"/></node>\n"
++ "    <node label=\"started\" status=\"START\"><var name=\"var0\" value=\"0\"/></node>\n"
++ "    <node label=\"done\" status=\"REWARD\"><var name=\"var0\" value=\"1\"/></node>\n"
++ "  </nodes>\n"
++ "  <transitions>\n"
++ "    <transition source=\"unaccepted\" target=\"started\"><event><enter-world/></event></transition>\n"
++ "    <transition source=\"started\" target=\"done\"><event><kill-npc npc-id=\"210133\"/></event>\n"
++ "      <after-commit><broadcast-zone-mission-end quest-ids=\"10521 10522 10523\"/></after-commit></transition>\n"
++ "  </transitions>\n"
++ "</quest-definition>\n"
++ "").getBytes(java.nio.charset.StandardCharsets.UTF_8)));
 
 		AfterCommitAction action = compiled.definition().transitions().get(1).afterCommit().stream()
 			.filter(AfterCommitAction.BroadcastZoneMissionEnd.class::isInstance).findFirst().orElseThrow();
@@ -78,18 +79,19 @@ class BroadcastZoneMissionEndDefinitionTest {
 	@Test
 	void npcCompleteAppendsCustomActionsBetweenCompletionSyncAndFinishDialog() {
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(new java.io.ByteArrayInputStream(
-			("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-				+ "<quest-definition id=\"990054\" version=\"1\">\n"
-				+ "  <metadata name=\"npc-complete-broadcast\" display-name-id=\"990054\" min-level=\"1\" max-level=\"99\" category=\"QUEST\"/>\n"
-				+ "  <progress><bit-field name=\"var0\" offset=\"0\" width=\"1\" min=\"0\" max=\"1\" persistence=\"PERSISTENT\" scope=\"LOCAL\"/></progress>\n"
-				+ "  <nodes>\n"
-				+ "    <node label=\"reward\"><project status=\"REWARD\"><vars><var name=\"var0\" value=\"1\"/></vars></project></node>\n"
-				+ "    <node label=\"complete\"><project status=\"COMPLETE\"><vars><var name=\"var0\" value=\"0\"/></vars></project></node>\n"
-				+ "  </nodes>\n"
-				+ "  <transitions><npc-complete npc-id=\"203057\" source=\"reward\" target=\"complete\" dialog-ids=\"8\" preview-dialog-ids=\"-1 1009\" complete-reward-index=\"0\" finish=\"SELECTION_DIALOG\">\n"
-				+ "    <after-commit><broadcast-zone-mission-end quest-ids=\"10521 10522\"/></after-commit>\n"
-				+ "  </npc-complete></transitions>\n"
-				+ "</quest-definition>\n").getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
++ "<quest-definition id=\"990054\" version=\"1\">\n"
++ "  <metadata name=\"npc-complete-broadcast\" display-name-id=\"990054\" min-level=\"1\" max-level=\"99\" category=\"QUEST\"/>\n"
++ "  <progress><bit-field name=\"var0\" offset=\"0\" width=\"1\" min=\"0\" max=\"1\" persistence=\"PERSISTENT\" scope=\"LOCAL\"/></progress>\n"
++ "  <nodes>\n"
++ "    <node label=\"reward\" status=\"REWARD\"><var name=\"var0\" value=\"1\"/></node>\n"
++ "    <node label=\"complete\" status=\"COMPLETE\"><var name=\"var0\" value=\"0\"/></node>\n"
++ "  </nodes>\n"
++ "  <transitions><npc-complete npc-id=\"203057\" source=\"reward\" target=\"complete\" dialog-ids=\"8\" preview-dialog-ids=\"-1 1009\" complete-reward-index=\"0\" finish=\"SELECTION_DIALOG\">\n"
++ "    <after-commit><broadcast-zone-mission-end quest-ids=\"10521 10522\"/></after-commit>\n"
++ "  </npc-complete></transitions>\n"
++ "</quest-definition>\n"
++ "").getBytes(java.nio.charset.StandardCharsets.UTF_8)));
 
 		QuestTransition completion = compiled.definition().transitions().stream()
 			.filter(transition -> "complete".equals(transition.targetNode()))
@@ -107,18 +109,19 @@ class BroadcastZoneMissionEndDefinitionTest {
 	void npcCompleteRejectsInvalidCustomAfterCommitAction() {
 		QuestCompilationException failure = assertThrows(QuestCompilationException.class,
 			() -> QuestDefinitionXmlCompiler.compile(new java.io.ByteArrayInputStream(
-				("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-					+ "<quest-definition id=\"990055\" version=\"1\">\n"
-					+ "  <metadata name=\"invalid-npc-complete-action\" display-name-id=\"990055\" min-level=\"1\" max-level=\"99\" category=\"QUEST\"/>\n"
-					+ "  <progress><bit-field name=\"var0\" offset=\"0\" width=\"1\" min=\"0\" max=\"1\" persistence=\"PERSISTENT\" scope=\"LOCAL\"/></progress>\n"
-					+ "  <nodes>\n"
-					+ "    <node label=\"reward\"><project status=\"REWARD\"><vars><var name=\"var0\" value=\"1\"/></vars></project></node>\n"
-					+ "    <node label=\"complete\"><project status=\"COMPLETE\"><vars><var name=\"var0\" value=\"0\"/></vars></project></node>\n"
-					+ "  </nodes>\n"
-					+ "  <transitions><npc-complete npc-id=\"203057\" source=\"reward\" target=\"complete\" dialog-ids=\"8\" preview-dialog-ids=\"-1 1009\" complete-reward-index=\"0\" finish=\"NONE\">\n"
-					+ "    <after-commit><broadcast-zone-mission-end quest-ids=\"not-a-quest-id\"/></after-commit>\n"
-					+ "  </npc-complete></transitions>\n"
-					+ "</quest-definition>\n").getBytes(java.nio.charset.StandardCharsets.UTF_8))));
+("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
++ "<quest-definition id=\"990055\" version=\"1\">\n"
++ "  <metadata name=\"invalid-npc-complete-action\" display-name-id=\"990055\" min-level=\"1\" max-level=\"99\" category=\"QUEST\"/>\n"
++ "  <progress><bit-field name=\"var0\" offset=\"0\" width=\"1\" min=\"0\" max=\"1\" persistence=\"PERSISTENT\" scope=\"LOCAL\"/></progress>\n"
++ "  <nodes>\n"
++ "    <node label=\"reward\" status=\"REWARD\"><var name=\"var0\" value=\"1\"/></node>\n"
++ "    <node label=\"complete\" status=\"COMPLETE\"><var name=\"var0\" value=\"0\"/></node>\n"
++ "  </nodes>\n"
++ "  <transitions><npc-complete npc-id=\"203057\" source=\"reward\" target=\"complete\" dialog-ids=\"8\" preview-dialog-ids=\"-1 1009\" complete-reward-index=\"0\" finish=\"NONE\">\n"
++ "    <after-commit><broadcast-zone-mission-end quest-ids=\"not-a-quest-id\"/></after-commit>\n"
++ "  </npc-complete></transitions>\n"
++ "</quest-definition>\n"
++ "").getBytes(java.nio.charset.StandardCharsets.UTF_8))));
 
 		assertEquals("NPC_COMPLETE_AFTER_COMMIT_INVALID", failure.code());
 	}
