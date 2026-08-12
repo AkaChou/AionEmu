@@ -226,10 +226,10 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 步骤 5：与废弃的入侵发生器 731645 对话，领取维护电路 182215800。 Step 5: talk ruined invasion generator 731645, receive maintained circuit 182215800. -->
+    <!-- 步骤 5：与受损的入侵发生器 731643 对话，领取维护电路 182215800。 Step 5: talk damaged invasion generator 731643, receive maintained circuit 182215800. -->
     <transition source="s5" target="s5">
       <event>
-        <talk-to-npc npc-id="731645" dialog-id="31"/>
+        <talk-to-npc npc-id="731643" dialog-id="31"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="2716"/>
@@ -237,7 +237,7 @@
     </transition>
     <transition source="s5" target="s6">
       <event>
-        <talk-to-npc npc-id="731645" dialog-id="10005"/>
+        <talk-to-npc npc-id="731643" dialog-id="10005"/>
       </event>
       <actions>
         <give-item item-id="182215800" count="1"/>
@@ -248,10 +248,10 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 步骤 6：与失灵入侵发生器 731646 对话，领取无损电路并进入 REWARD。 Step 6: talk malfunctioning generator 731646, receive undamaged circuit and enter REWARD. -->
+    <!-- 步骤 6：与无法运行的入侵发生器 731644 对话，领取无损电路并进入 REWARD。 Step 6: talk inoperable invasion generator 731644, receive undamaged circuit and enter REWARD. -->
     <transition source="s6" target="s6">
       <event>
-        <talk-to-npc npc-id="731646" dialog-id="31"/>
+        <talk-to-npc npc-id="731644" dialog-id="31"/>
       </event>
       <after-commit>
         <show-quest-dialog dialog-id="3057"/>
@@ -259,7 +259,7 @@
     </transition>
     <transition source="s6" target="reward">
       <event>
-        <talk-to-npc npc-id="731646" dialog-id="10255"/>
+        <talk-to-npc npc-id="731644" dialog-id="10255"/>
       </event>
       <actions>
         <give-item item-id="182215801" count="1"/>

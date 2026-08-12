@@ -24,16 +24,70 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="805833" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="805833" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="k1"><event><kill-npc npc-id="215056"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k1" target="k2"><event><kill-npc npc-id="215080"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k2" target="reward"><event><talk-to-npc npc-id="798331" dialog-id="1009"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <npc-start npc-id="798331" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="798331" source="started" target="reward" page="1352"/>
+    <!-- 未接取状态与 798318 对话接取，起始页 4762。 Pre-start dialog with 798318. -->
+    <npc-start npc-id="798318" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
+    <!-- 798332:var0=0,USE_OBJECT(-1) 显示 1011,SELECT_ACTION_1012 显示 1012,STEP_TO_1(10000) 推进 var0=1。 -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="798332" dialog-id="-1"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="798332" dialog-id="1012"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1012"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="k1">
+      <event>
+        <talk-to-npc npc-id="798332" dialog-id="10000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 击杀 215056 或 215080 推进 var0=2。 -->
+    <transition source="k1" target="k2">
+      <event>
+        <kill-npc npc-id="215056"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k1" target="k2">
+      <event>
+        <kill-npc npc-id="215080"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 798331:var0=2,31 显示 10002,SELECT_REWARD(1009) 进奖励阶段。 -->
+    <transition source="k2" target="k2">
+      <event>
+        <talk-to-npc npc-id="798331" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="10002"/>
+      </after-commit>
+    </transition>
+    <transition source="k2" target="reward">
+      <event>
+        <talk-to-npc npc-id="798331" dialog-id="1009"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <show-quest-dialog dialog-id="5"/>
+      </after-commit>
+    </transition>
+    <!-- 完成:798331 REWARD→COMPLETE。 -->
     <npc-complete npc-id="798331" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
-    <npc-start npc-id="798332" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="798332" source="started" target="reward" page="1352"/>
-    <npc-complete npc-id="798332" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>
