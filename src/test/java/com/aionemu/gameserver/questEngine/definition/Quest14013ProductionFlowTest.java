@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.model.QuestVars;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlan;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
@@ -30,6 +31,7 @@ class Quest14013ProductionFlowTest {
 		QuestMutationPlan accepted = plan(definition, started, new QuestEvent.TalkToNpc(203129, 10000));
 		assertEquals(Map.of("var0", 1, "var1", 0, "var2", 0),
 			definition.definition().progressLayout().unpack(accepted.nextPackedVariables()));
+		assertEquals(1, new QuestVars(accepted.nextPackedVariables()).getVarById(0));
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
 			new AfterCommitAction.CloseDialog()), accepted.afterCommit());
@@ -40,10 +42,12 @@ class Quest14013ProductionFlowTest {
 		for (int i = 0; i < 5; i++) {
 			QuestMutationPlan kill = plan(definition, hunting, new QuestEvent.KillNpc(210126));
 			hunting = snapshot(kill.nextStatus(), kill.nextPackedVariables());
+			assertEquals(i + 1, new QuestVars(hunting.packedVariables()).getVarById(1));
 		}
 		for (int i = 0; i < 7; i++) {
 			QuestMutationPlan kill = plan(definition, hunting, new QuestEvent.KillNpc(210200));
 			hunting = snapshot(kill.nextStatus(), kill.nextPackedVariables());
+			assertEquals(i + 1, new QuestVars(hunting.packedVariables()).getVarById(2));
 		}
 		assertEquals(Map.of("var0", 1, "var1", 5, "var2", 7),
 			definition.definition().progressLayout().unpack(hunting.packedVariables()));
@@ -52,6 +56,19 @@ class Quest14013ProductionFlowTest {
 		assertEquals(QuestStatus.REWARD, finalKill.nextStatus());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
 			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), finalKill.afterCommit());
+	}
+
+	@Test
+	void firstKillNormalizesThePreviouslyDeployedCompactLayout() throws Exception {
+		CompiledQuestDefinition definition = load();
+		QuestSnapshot legacyFirstKill = snapshot(QuestStatus.START, 3);
+
+		QuestMutationPlan recovered = plan(definition, legacyFirstKill, new QuestEvent.KillNpc(210126));
+
+		QuestVars clientVars = new QuestVars(recovered.nextPackedVariables());
+		assertEquals(1, clientVars.getVarById(0));
+		assertEquals(1, clientVars.getVarById(1));
+		assertEquals(0, clientVars.getVarById(2));
 	}
 
 	private static QuestMutationPlan plan(CompiledQuestDefinition definition, QuestSnapshot snapshot,

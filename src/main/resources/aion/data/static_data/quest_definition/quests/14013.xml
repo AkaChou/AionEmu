@@ -68,8 +68,8 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="1" width="3" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var2" offset="4" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="12" width="6" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
