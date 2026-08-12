@@ -14,21 +14,19 @@
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
-  <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="0"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
-  </nodes>
-  <transitions>
-    <npc-start npc-id="278501" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
-    <npc-report npc-id="278501" source="started" target="reward" page="1352"/>
-    <npc-complete npc-id="278501" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
-    <npc-start npc-id="278502" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="278502" source="started" target="reward" page="1352"/>
-    <npc-complete npc-id="278502" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
-    <npc-start npc-id="278503" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="278503" source="started" target="reward" page="1352"/>
-    <npc-complete npc-id="278503" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
-  </transitions>
+    <nodes>
+      <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+      <node label="started" status="START"><var name="var0" value="0"/></node>
+      <node label="s1" status="START"><var name="var0" value="1"/></node>
+      <node label="reward" status="REWARD"><var name="var0" value="1"/></node>
+      <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    </nodes>
+    <transitions>
+      <npc-start npc-id="278501" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
+      <transition source="started" target="started"><event><talk-to-npc npc-id="278502" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+      <transition source="started" target="s1"><event><talk-to-npc npc-id="278502" dialog-id="10000"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+      <transition source="s1" target="s1"><event><talk-to-npc npc-id="278503" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1693"/></after-commit></transition>
+      <transition source="s1" target="reward"><event><talk-to-npc npc-id="278503" dialog-id="10255"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+      <npc-complete npc-id="278501" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    </transitions>
 </quest-definition>

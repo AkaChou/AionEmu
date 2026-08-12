@@ -109,7 +109,7 @@
         <show-quest-dialog dialog-id="1352"/>
       </after-commit>
     </transition>
-    <transition source="started" target="s1">
+      <transition source="started" target="s1">
       <event>
         <talk-to-npc npc-id="804709" dialog-id="10000"/>
       </event>
@@ -120,7 +120,19 @@
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
-    </transition>
+      </transition>
+      <transition source="started" target="s1">
+        <event>
+          <talk-to-npc npc-id="804709" dialog-id="10255"/>
+        </event>
+        <actions>
+          <set-variable field="var0" value="1"/>
+        </actions>
+        <after-commit>
+          <sync-quest-state mode="PACKET_ONLY"/>
+          <close-dialog/>
+        </after-commit>
+      </transition>
     <!-- s1: 回到 804944 领取奖励。 -->
     <npc-report npc-id="804944" source="s1" target="reward" page="2375"/>
     <npc-complete npc-id="804944" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>

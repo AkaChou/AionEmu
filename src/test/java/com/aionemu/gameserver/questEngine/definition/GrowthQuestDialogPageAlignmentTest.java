@@ -20,8 +20,21 @@ class GrowthQuestDialogPageAlignmentTest {
 		new ItemQuest(19672, 806698, 186000476, 10),
 		new ItemQuest(19677, 806698, 186000476, 50),
 		new ItemQuest(19684, 806698, 186000477, 3),
+		new ItemQuest(19685, 806698, 186000477, 5),
+		new ItemQuest(19686, 806698, 186000477, 10),
+		new ItemQuest(19687, 806698, 186000477, 15),
+		new ItemQuest(19688, 806698, 186000477, 20),
+		new ItemQuest(19689, 806698, 186000477, 50),
+		new ItemQuest(19694, 806698, 186000477, 50),
 		new ItemQuest(29672, 806700, 186000476, 10),
-		new ItemQuest(29677, 806700, 186000476, 50));
+		new ItemQuest(29677, 806700, 186000476, 50),
+		new ItemQuest(29684, 806700, 186000477, 3),
+		new ItemQuest(29685, 806700, 186000477, 5),
+		new ItemQuest(29686, 806700, 186000477, 10),
+		new ItemQuest(29687, 806700, 186000477, 15),
+		new ItemQuest(29688, 806700, 186000477, 20),
+		new ItemQuest(29689, 806700, 186000477, 50),
+		new ItemQuest(29694, 806700, 186000477, 50));
 	private static final List<WelcomeQuest> ABBEY_WELCOME_QUESTS = List.of(
 		new WelcomeQuest(19671, 806698, 806699),
 		new WelcomeQuest(19683, 806698, 806708),
@@ -105,6 +118,11 @@ class GrowthQuestDialogPageAlignmentTest {
 			assertTrue(failure.actions().isEmpty(), "quest " + quest.id() + " failed check actions");
 			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(10001)),
 				failure.afterCommit(), "quest " + quest.id() + " failed check page");
+			assertTrue(definition.transitions().stream()
+				.filter(transition -> "reward".equals(transition.sourceNode()))
+				.flatMap(transition -> transition.actions().stream())
+				.noneMatch(QuestAction.RemoveItem.class::isInstance),
+				"quest " + quest.id() + " must not remove the checked item twice");
 		}
 	}
 

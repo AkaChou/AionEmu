@@ -30,12 +30,18 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="started" target="started"><event><talk-to-npc npc-id="833623" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="833623" dialog-id="39"/></event><conditions><has-item item-id="182007395" count="10"/></conditions><actions><remove-item item-id="182007395" count="10"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="10000"/></after-commit></transition>
+    <transition source="started" target="started" priority="1"><event><talk-to-npc npc-id="833623" dialog-id="39"/></event><after-commit><show-quest-dialog dialog-id="10001"/></after-commit></transition>
+    <transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="833623" dialog-id="20002"/></event><conditions><has-item item-id="182007395" count="10"/></conditions><actions><remove-item item-id="182007395" count="10"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="started" target="started" priority="1"><event><talk-to-npc npc-id="833623" dialog-id="20002"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="833623" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <talk-to-npc npc-id="833623" dialog-id="31"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <show-quest-dialog dialog-id="4762"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
@@ -96,24 +102,6 @@
       </event>
       <after-commit>
         <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <talk-to-npc npc-id="833623" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
-      </after-commit>
-    </transition>
-    <npc-item-report npc-id="833623" source="started" target="reward" item-id="182007395" required="10"/>
-    <transition source="started" target="reward">
-      <event>
-        <talk-to-npc npc-id="833623" dialog-id="10255"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
       </after-commit>
     </transition>
     <npc-complete npc-id="833623" source="reward" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>

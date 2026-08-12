@@ -81,7 +81,7 @@
         <has-item item-id="182007419" count="3"/>
       </conditions>
       <actions>
-        <set-status status="REWARD"/>
+        <remove-item item-id="182007419" count="3"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
