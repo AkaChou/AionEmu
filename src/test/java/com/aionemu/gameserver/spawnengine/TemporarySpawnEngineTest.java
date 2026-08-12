@@ -48,6 +48,21 @@ class TemporarySpawnEngineTest {
 	}
 
 	@Test
+	void despawnLeavesObjectsAloneWhenStillInsideSpawnWindow() throws Exception {
+		SpawnGroup2 spawn = new SpawnGroup2(1, 1);
+		TestSpawnTemplate template = new TestSpawnTemplate(spawn, new InsideWindowTemporarySpawn());
+		TestVisibleObject object = new TestVisibleObject(1);
+		template.addVisibleObject(object);
+		template.setVisibleObject(object);
+		spawn.addSpawnTemplate(template);
+		TemporarySpawnEngine.addSpawnGroup(spawn, 1);
+
+		despawn();
+
+		assertTrue(!object.deleted);
+	}
+
+	@Test
 	void addSpawnGroupTracksEachTemporarySpawnOnlyOnceAcrossInstances() throws Exception {
 		SpawnGroup2 spawn = new SpawnGroup2(1, 1);
 
@@ -106,13 +121,15 @@ class TemporarySpawnEngineTest {
 
 	private static final class TestTemporarySpawn extends TemporarySpawn {
 		@Override
-		public boolean canDespawn() {
-			return true;
-		}
-
-		@Override
-		public boolean canSpawn() {
+		public boolean isInSpawnTime() {
 			return false;
+		}
+	}
+
+	private static final class InsideWindowTemporarySpawn extends TemporarySpawn {
+		@Override
+		public boolean isInSpawnTime() {
+			return true;
 		}
 	}
 
@@ -124,13 +141,8 @@ class TemporarySpawnEngineTest {
 		}
 
 		@Override
-		public boolean canDespawn() {
+		public boolean isInSpawnTime() {
 			TemporarySpawnEngine.addSpawnGroup(lateSpawn, 1);
-			return true;
-		}
-
-		@Override
-		public boolean canSpawn() {
 			return false;
 		}
 	}

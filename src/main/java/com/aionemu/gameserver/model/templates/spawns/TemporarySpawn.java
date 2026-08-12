@@ -58,6 +58,9 @@ public class TemporarySpawn {
 	}
 
 	private Integer getTime(String time, int type) {
+		if (time == null) {
+			return null;
+		}
 		String result = time.split("\\.")[type];
 		if (result.equals("*")) {
 			return null;

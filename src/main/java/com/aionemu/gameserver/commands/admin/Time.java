@@ -2,6 +2,7 @@ package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_GAME_TIME;
+import com.aionemu.gameserver.spawnengine.TemporarySpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
@@ -62,6 +63,7 @@ public class Time extends AdminCommand
 		time = GameTimeManager.getGameTime().getTime() + (60 * time) - min;
 		GameTimeManager.reloadTime(time);
 		GameTimeManager.getGameTime().calculateDayTime();
+		TemporarySpawnEngine.onHourChange();
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {

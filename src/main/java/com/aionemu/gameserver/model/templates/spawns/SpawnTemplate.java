@@ -451,9 +451,25 @@ public class SpawnTemplate {
 		this.master = master;
 	}
 
-	/** 获取可见对象。 / Returns the visible object. */
+	/** 返回可见对象。 / Returns the visible object. */
 	public VisibleObject getVisibleObject() {
 		return visibleObject;
+	}
+
+	/** 该模板在指定实例中是否有已刷出的对象。 / Whether this template has an object spawned in the given instance. */
+	public boolean isInWorld(int instanceId) {
+		if (visibleObject != null && visibleObject.getInstanceId() == instanceId && visibleObject.isSpawned()) {
+			return true;
+		}
+		List<VisibleObject> objects = visibleObjects;
+		if (objects != null) {
+			for (VisibleObject object : objects) {
+				if (object.getInstanceId() == instanceId && object.isSpawned()) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/** 设置可见对象。 / Sets the visible object. */

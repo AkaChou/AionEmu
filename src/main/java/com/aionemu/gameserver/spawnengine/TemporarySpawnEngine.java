@@ -44,26 +44,26 @@ public class TemporarySpawnEngine {
 	 * Spawns all temporary objects currently inside their spawn window (startup pass).
 	 */
 	public static void spawnAll() {
-		spawn(true);
+		spawn();
 	}
 
 	/**
-	 * 整点变化时先回收再按新时间窗刷出。
-	 * On hour change: despawn then spawn for the new window.
+	 * 整点变化或游戏时间被重载时先回收再按新时间窗刷出。
+	 * On hour change or game-time reload: despawn then spawn for the new window.
 	 */
 	public static void onHourChange() {
 		despawn();
-		spawn(false);
+		spawn();
 	}
 
 	/**
-	 * 回收所有已过期的临时刷怪对象。
-	 * Despawns all temporary objects that may leave the world now.
+	 * 回收所有已离开刷怪时间窗的临时对象。
+	 * Despawns all temporary objects that are outside their spawn window now.
 	 */
 	private static void despawn() {
 		for (SpawnGroup2 spawn : temporarySpawnsSnapshot()) {
 			for (SpawnTemplate template : spawn.getSpawnTemplates()) {
-				if (template.getTemporarySpawn().canDespawn()) {
+				if (!template.getTemporarySpawn().isInSpawnTime()) {
 					List<VisibleObject> objects = template.getVisibleObjects();
 					if (objects == null || objects.isEmpty()) {
 						VisibleObject object = template.getVisibleObject();
@@ -95,33 +95,37 @@ public class TemporarySpawnEngine {
 	}
 
 	/**
-	 * 按时间窗刷出临时对象；启动检查时还会考虑重生配置。
-	 * Spawns temporary objects for the active window; startup also respects respawn settings.
-	 *
-	 * @param startCheck 是否为启动时检查 / whether this is the startup check
+	 * 按时间窗刷出临时对象；池组补齐缺额，其余仅补未在场的。
+	 * Spawns temporary objects inside their spawn window; pools fill the gap, others spawn only when absent.
 	 */
-	private static void spawn(boolean startCheck) {
+	private static void spawn() {
 		for (SpawnGroup2 spawn : temporarySpawnsSnapshot()) {
 			Set<Integer> instances = instancesSnapshot(spawn);
 			if (spawn.hasPool()) {
-				TemporarySpawn temporarySpawn = spawn.geTemporarySpawn();
-				if (temporarySpawn.canSpawn()
-						|| (startCheck && spawn.getRespawnTime() != 0 && temporarySpawn.isInSpawnTime())) {
-					for (Integer instanceId : instances) {
-						spawn.resetTemplates(instanceId);
-						for (int pool = 0; pool < spawn.getPool(); pool++) {
-							SpawnTemplate template = spawn.getRndTemplate(instanceId);
-							SpawnEngine.spawnObject(template, instanceId);
+				if (!spawn.geTemporarySpawn().isInSpawnTime()) {
+					continue;
+				}
+				for (Integer instanceId : instances) {
+					spawn.resetTemplates(instanceId);
+					int spawned = 0;
+					for (SpawnTemplate template : spawn.getSpawnTemplates()) {
+						if (template.isInWorld(instanceId)) {
+							spawned++;
 						}
+					}
+					for (int pool = spawned; pool < spawn.getPool(); pool++) {
+						SpawnTemplate template = spawn.getRndTemplate(instanceId);
+						SpawnEngine.spawnObject(template, instanceId);
 					}
 				}
 			} else {
 				for (SpawnTemplate template : spawn.getSpawnTemplates()) {
-					TemporarySpawn temporarySpawn = template.getTemporarySpawn();
-					if (temporarySpawn.canSpawn()
-							|| (startCheck && !template.isNoRespawn() && temporarySpawn.isInSpawnTime())) {
-						for (Integer instanceId : instances)
-							SpawnEngine.spawnObject(template, instanceId);
+					if (template.getTemporarySpawn().isInSpawnTime()) {
+						for (Integer instanceId : instances) {
+							if (!template.isInWorld(instanceId)) {
+								SpawnEngine.spawnObject(template, instanceId);
+							}
+						}
 					}
 				}
 			}
