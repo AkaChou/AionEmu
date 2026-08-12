@@ -65,7 +65,9 @@ class Quest1118ProductionFlowTest {
 		assertHandled(dispatch(dispatcher, 203070, 10000));
 		assertEquals(QuestStatus.START, status.get());
 		assertEquals(1, packedVariables.get());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestSelectionDialog(10)), afterCommit);
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.ShowQuestSelectionDialog(10)), afterCommit);
 
 		afterCommit.clear();
 		assertHandled(dispatch(dispatcher, 203079, 31));

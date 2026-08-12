@@ -68,10 +68,14 @@
     <transition source="spawned98" target="spawned98"><event><talk-to-npc npc-id="205111" dialog-id="2546"/></event><conditions><advanced-class-is class="GUNSLINGER"/></conditions><actions><give-item item-id="140000004" count="1"/></actions><after-commit><show-dialog-window dialog-id="1"/></after-commit></transition>
     <transition source="spawned98" target="spawned98"><event><talk-to-npc npc-id="205111" dialog-id="2546"/></event><conditions><advanced-class-is class="SONGWEAVER"/></conditions><actions><give-item item-id="140000004" count="1"/></actions><after-commit><show-dialog-window dialog-id="1"/></after-commit></transition>
     <transition source="spawned98" target="spawned98"><event><talk-to-npc npc-id="205111" dialog-id="2546"/></event><conditions><advanced-class-is class="AETHERTECH"/></conditions><actions><give-item item-id="140000004" count="1"/></actions><after-commit><show-dialog-window dialog-id="1"/></after-commit></transition>
-    <transition source="spawned98" target="equipped96"><event><equip-item item-id="140000001"/></event><actions><set-variable field="step" value="96"/></actions><after-commit><close-dialog/></after-commit></transition>
-    <transition source="spawned98" target="equipped96"><event><equip-item item-id="140000002"/></event><actions><set-variable field="step" value="96"/></actions><after-commit><close-dialog/></after-commit></transition>
-    <transition source="spawned98" target="equipped96"><event><equip-item item-id="140000003"/></event><actions><set-variable field="step" value="96"/></actions><after-commit><close-dialog/></after-commit></transition>
-    <transition source="spawned98" target="equipped96"><event><equip-item item-id="140000004"/></event><actions><set-variable field="step" value="96"/></actions><after-commit><close-dialog/></after-commit></transition>
+    <transition source="spawned98" target="equipped96"><event><equip-item item-id="140000001"/></event><actions><set-variable field="step" value="96"/></actions><after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="spawned98" target="equipped96"><event><equip-item item-id="140000002"/></event><actions><set-variable field="step" value="96"/></actions><after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="spawned98" target="equipped96"><event><equip-item item-id="140000003"/></event><actions><set-variable field="step" value="96"/></actions><after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="spawned98" target="equipped96"><event><equip-item item-id="140000004"/></event><actions><set-variable field="step" value="96"/></actions><after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
 
     <transition source="equipped96" target="equipped96"><event><talk-to-npc npc-id="205111" dialog-id="-1"/></event><conditions><equipped-item item-id="140000003"/><advanced-class-is class="GLADIATOR"/></conditions><after-commit><show-quest-dialog dialog-id="2716"/></after-commit></transition>
     <transition source="equipped96" target="equipped96"><event><talk-to-npc npc-id="205111" dialog-id="-1"/></event><conditions><equipped-item item-id="140000003"/><advanced-class-is class="TEMPLAR"/></conditions><after-commit><show-quest-dialog dialog-id="2716"/></after-commit></transition>

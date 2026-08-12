@@ -51,6 +51,7 @@
         <talk-to-npc npc-id="203070" dialog-id="10000"/>
       </event>
       <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <show-quest-selection-dialog dialog-id="10"/>
       </after-commit>
     </transition>

@@ -90,6 +90,7 @@
         <talk-to-npc npc-id="203148" dialog-id="10000"/>
       </event>
       <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
