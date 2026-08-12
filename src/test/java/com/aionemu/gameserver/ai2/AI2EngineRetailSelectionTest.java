@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class AI2EngineRetailSelectionTest {
 
 	@Test
-	void selectsCompleteRetailPatternsButPreservesQuestUseItemProtocol() {
+	void selectsCompleteRetailPatternsButPreservesScriptedActionItemProtocols() {
 		var previous = DataManager.RETAIL_AI_DATA;
 		try {
 			DataManager.RETAIL_AI_DATA = null;
@@ -29,6 +29,7 @@ class AI2EngineRetailSelectionTest {
 				Map.of(), Map.of(), Map.of());
 			assertEquals("retail_pattern", AI2Engine.selectNpcAi("general", 200000, null));
 			assertEquals("quest_use_item", AI2Engine.selectNpcAi("quest_use_item", 200000, null));
+			assertEquals("empyrean_blessing", AI2Engine.selectNpcAi("empyrean_blessing", 883959, null));
 		} finally {
 			DataManager.RETAIL_AI_DATA = previous;
 		}
