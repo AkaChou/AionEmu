@@ -32,6 +32,14 @@ class QuestDialog31RegressionTest {
 			new QuestCondition.HasItem(164002018, 1));
 		assertDialog("1963.xml", "started", "started", 203851, 1352);
 		assertDialog("1963.xml", "s1", "s1", 203726, 2375);
+		assertDialog("1964.xml", "started", "started", 203776, 1352);
+		assertDialog("1964.xml", "s1", "s1", 203726, 2375);
+		assertDialog("1900.xml", "started", "started", 203739, 1352);
+		assertDialog("1900.xml", "s1", "s1", 203766, 1693);
+		assertDialog("1900.xml", "s2", "s2", 203797, 2034);
+		assertDialog("1900.xml", "s3", "s3", 203795, 2375);
+		assertDialog("11106.xml", "started", "started", 798978, 1352);
+		assertDialog("11106.xml", "s1", "s1", 798979, 1693);
 	}
 
 	private static void assertDialog(String file, String source, String target, int npcId, int page,
