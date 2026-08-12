@@ -37,9 +37,11 @@
     <transition source="started" target="s1"><event><talk-to-npc npc-id="203649" dialog-id="10000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
     <!-- 730306:var1=1,USE_OBJECT(-1) 显示 1352,STEP_TO_2(10001) 推进 var2。 -->
     <transition source="s1" target="s1"><event><talk-to-npc npc-id="730306" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="s1" target="s1"><event><can-act template-id="730306" action-type="ACTION_ITEM_USE"/></event></transition>
     <transition source="s1" target="s2"><event><talk-to-npc npc-id="730306" dialog-id="10001"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
     <!-- 730307:var2=2,USE_OBJECT(-1) 显示 1693,STEP_TO_3(10002) 播放电影 217 推进 var3。 -->
     <transition source="s2" target="s2"><event><talk-to-npc npc-id="730307" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="1693"/></after-commit></transition>
+    <transition source="s2" target="s2"><event><can-act template-id="730307" action-type="ACTION_ITEM_USE"/></event></transition>
     <transition source="s2" target="s3"><event><talk-to-npc npc-id="730307" dialog-id="10002"/></event><after-commit><play-movie movie-id="217"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
     <!-- 进入 HARAMEL 区域 (var3) 播放电影 456 进 REWARD。 -->
     <transition source="s3" target="reward">

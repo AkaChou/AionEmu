@@ -47,6 +47,7 @@
     <transition source="s1" target="s1" priority="1"><event><talk-to-npc npc-id="204097" dialog-id="1354"/></event><after-commit><show-quest-dialog dialog-id="1438"/></after-commit></transition>
     <!-- 700538 幸运盒:var0=2 时点击(USE_OBJECT)关闭对话框,掉落 182207124。 -->
     <transition source="s2" target="s2"><event><talk-to-npc npc-id="700538" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="s2" target="s2"><event><can-act template-id="700538" action-type="ACTION_ITEM_USE"/></event></transition>
     <!-- 204096:var0=2,31 显示 1693;CHECK_COLLECTED_ITEMS(39) 有 182207124 x10 且 182207123 则收走推进 var0=3,否则 10001。 -->
     <transition source="s2" target="s2"><event><talk-to-npc npc-id="204096" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1693"/></after-commit></transition>
     <transition source="s2" target="s3" priority="0"><event><talk-to-npc npc-id="204096" dialog-id="39"/></event><conditions><has-item item-id="182207124" count="10"/><has-item item-id="182207123" count="1"/></conditions><actions><remove-item item-id="182207124" count="10"/><remove-item item-id="182207123" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="10000"/></after-commit></transition>

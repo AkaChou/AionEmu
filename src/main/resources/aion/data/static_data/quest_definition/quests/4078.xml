@@ -53,18 +53,21 @@
       <after-commit><show-quest-dialog dialog-id="10001"/></after-commit>
     </transition>
     <!-- 700428:var1=1,USE_OBJECT(-1) 且有 182209050 推进 var2。 -->
+    <transition source="s1" target="s1"><event><can-act template-id="700428" action-type="ACTION_ITEM_USE"/></event></transition>
     <transition source="s1" target="s2">
       <event><talk-to-npc npc-id="700428" dialog-id="-1"/></event>
       <conditions><has-item item-id="182209050" count="1"/></conditions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
     </transition>
     <!-- 700427:var2=2,USE_OBJECT(-1) 且有 182209050 推进 var3。 -->
+    <transition source="s2" target="s2"><event><can-act template-id="700427" action-type="ACTION_ITEM_USE"/></event></transition>
     <transition source="s2" target="s3">
       <event><talk-to-npc npc-id="700427" dialog-id="-1"/></event>
       <conditions><has-item item-id="182209050" count="1"/></conditions>
       <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
     </transition>
     <!-- 700429:var3=3,USE_OBJECT(-1) 且有 182209050 进 REWARD。 -->
+    <transition source="s3" target="s3"><event><can-act template-id="700429" action-type="ACTION_ITEM_USE"/></event></transition>
     <transition source="s3" target="reward">
       <event><talk-to-npc npc-id="700429" dialog-id="-1"/></event>
       <conditions><has-item item-id="182209050" count="1"/></conditions>

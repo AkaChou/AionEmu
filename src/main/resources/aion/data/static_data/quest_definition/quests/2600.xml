@@ -38,6 +38,7 @@
     <!-- 204734:var0=0,31 显示 2716。 -->
     <transition source="started" target="started"><event><talk-to-npc npc-id="204734" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2716"/></after-commit></transition>
     <!-- 700512:var0=1 使用,移除 182204528 并召唤 215383。 -->
+    <transition source="s1" target="s1"><event><can-act template-id="700512" action-type="ACTION_ITEM_USE"/></event></transition>
     <transition source="s1" target="s1"><event><talk-to-npc npc-id="700512" dialog-id="-1"/></event><conditions><has-item item-id="182204528" count="1"/></conditions><actions><remove-item item-id="182204528" count="1"/></actions><after-commit><spawn-npc-current-or-default slot="humongous-malek" template-id="215383" world-id="220040000" x="1140.78" y="432.85" z="341.0825" heading="0"/><close-dialog/></after-commit></transition>
     <!-- 204734:var0=1,有 182204529 显示 2375,否则 2716;SELECT_REWARD(1009) 进 REWARD。 -->
     <transition source="s1" target="s1"><event><talk-to-npc npc-id="204734" dialog-id="31"/></event><conditions><has-item item-id="182204529" count="1"/></conditions><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>

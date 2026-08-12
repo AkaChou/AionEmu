@@ -98,11 +98,13 @@
     <!-- 703378 (Remirunrunerk's Footlocker) 旧 handler 仅 USE_OBJECT 关窗, 不参与接取/汇报/领奖 -->
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="703378" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="703378" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="started" target="started"><event><can-act template-id="703378" action-type="ACTION_ITEM_USE"/></event></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="703378" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
     <transition source="complete" target="complete"><event><talk-to-npc npc-id="703378" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
     <!-- 703379 (Bomirunrunerk's Footlocker) 旧 handler 仅 USE_OBJECT 关窗, 不参与接取/汇报/领奖 -->
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="703379" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="703379" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="started" target="started"><event><can-act template-id="703379" action-type="ACTION_ITEM_USE"/></event></transition>
     <transition source="reward" target="reward"><event><talk-to-npc npc-id="703379" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
     <transition source="complete" target="complete"><event><talk-to-npc npc-id="703379" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
   </transitions>
