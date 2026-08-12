@@ -458,13 +458,13 @@ public class SpawnTemplate {
 
 	/** 该模板在指定实例中是否有已刷出的对象。 / Whether this template has an object spawned in the given instance. */
 	public boolean isInWorld(int instanceId) {
-		if (visibleObject != null && visibleObject.getInstanceId() == instanceId && visibleObject.isSpawned()) {
+		if (visibleObject != null && visibleObject.isSpawned() && visibleObject.getInstanceId() == instanceId) {
 			return true;
 		}
 		List<VisibleObject> objects = visibleObjects;
 		if (objects != null) {
 			for (VisibleObject object : objects) {
-				if (object.getInstanceId() == instanceId && object.isSpawned()) {
+				if (object.isSpawned() && object.getInstanceId() == instanceId) {
 					return true;
 				}
 			}

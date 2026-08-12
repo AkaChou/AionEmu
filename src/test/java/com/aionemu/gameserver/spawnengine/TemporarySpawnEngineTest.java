@@ -2,6 +2,7 @@ package com.aionemu.gameserver.spawnengine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
@@ -19,6 +20,7 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.TemporarySpawn;
+import com.aionemu.gameserver.world.WorldPosition;
 
 class TemporarySpawnEngineTest {
 
@@ -60,6 +62,24 @@ class TemporarySpawnEngineTest {
 		despawn();
 
 		assertTrue(!object.deleted);
+	}
+
+	@Test
+	void inWorldIgnoresUnspawnedObjectsWithoutAMapRegion() {
+		SpawnGroup2 spawn = new SpawnGroup2(1, 1);
+		TestSpawnTemplate template = new TestSpawnTemplate(spawn);
+		VisibleObject object = new VisibleObject(1, new TestVisibleObjectController(), null, null, new WorldPosition(1)) {
+			@Override
+			public String getName() {
+				return "unspawned";
+			}
+		};
+		template.setVisibleObject(object);
+		template.addVisibleObject(object);
+
+		assertFalse(template.isInWorld(1));
+		template.setVisibleObject(null);
+		assertFalse(template.isInWorld(1));
 	}
 
 	@Test
