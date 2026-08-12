@@ -19,8 +19,10 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="806790" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="806790" source="started" target="reward" page="1352"/>
+    <!-- 接取:806135(DF6_Conrto_E)。 -->
+    <npc-start npc-id="806135" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
+    <!-- 报告:806790(Ab1_Webenk_E),31 显示 10002,1009 进 REWARD。 -->
+    <npc-report npc-id="806790" source="started" target="reward" page="10002"/>
     <npc-complete npc-id="806790" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

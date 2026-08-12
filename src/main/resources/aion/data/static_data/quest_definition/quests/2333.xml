@@ -118,6 +118,15 @@
         <give-item item-id="182204131" count="1"/>
       </actions>
     </transition>
+    <!-- 中间:701147(frozen reian),31 显示任务说明页。 -->
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="701147" dialog-id="31"/>
+      </event>
+      <after-commit>
+        <show-quest-dialog dialog-id="1011"/>
+      </after-commit>
+    </transition>
     <transition source="started" target="started">
       <event>
         <talk-to-npc npc-id="798084" dialog-id="31"/>

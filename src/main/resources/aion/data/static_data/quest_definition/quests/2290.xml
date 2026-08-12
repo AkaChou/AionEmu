@@ -120,10 +120,10 @@
       </after-commit>
     </transition>
 
-    <!-- 护送到达帆船,播放电影并推进到 v3。 -->
+    <!-- 护送到达帆船(700178),播放电影并推进到 v3。 -->
     <transition source="v1" target="v3">
       <event>
-        <npc-reach-target/>
+        <at-distance npc-id="700178"/>
       </event>
       <after-commit>
         <play-movie movie-id="69"/>
