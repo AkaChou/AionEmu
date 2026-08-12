@@ -21,7 +21,7 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/><var name="var1" value="0"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="801954" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <npc-start npc-id="801954" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
     <transition source="started" target="started"><event><talk-to-npc npc-id="801954" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
     <!-- 击杀远征队成员累积计数(共 5 个)。Killing expedition members accumulates the kill count (5 total). -->
     <transition source="started" target="started" priority="1">

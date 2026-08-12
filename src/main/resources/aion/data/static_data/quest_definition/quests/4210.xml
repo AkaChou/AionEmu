@@ -24,7 +24,7 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="204283" source="unaccepted" target="s0" selection-sources="unaccepted s0 s1"/>
+    <npc-start npc-id="204283" source="unaccepted" target="s0" selection-sources="unaccepted s0 s1" start-dialog-id="4762"/>
     <transition source="s0" target="s0"><event><talk-to-npc npc-id="798332" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
     <transition source="s0" target="s1"><event><talk-to-npc npc-id="798332" dialog-id="10000"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
     <transition source="s1" target="s1"><event><kill-npc npc-id="215056"/></event><conditions><variable-is field="var1" value="0"/></conditions><actions><set-variable field="var1" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>

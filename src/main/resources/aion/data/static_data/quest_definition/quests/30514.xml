@@ -23,7 +23,7 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="2"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="799592" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <npc-start npc-id="799592" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
     <transition source="started" target="started"><event><talk-to-npc npc-id="799592" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
 
     <!-- 阶段 1:击杀 4Named 指挥官 217310/236526 任一 1 个(var0 0→1)。Stage 1: kill a 4Named captain 217310/236526 (var0 0→1). -->

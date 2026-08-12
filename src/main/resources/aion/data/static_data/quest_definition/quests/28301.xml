@@ -34,7 +34,7 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="799530" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <npc-start npc-id="799530" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
     <transition source="started" target="started"><event><talk-to-npc npc-id="799530" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
     <kill-chain nodes="started k1 k2 k3 k4 k5 k6 k7">
       <event><kill-npc npc-id="702656" /></event>

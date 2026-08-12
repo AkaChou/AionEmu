@@ -24,7 +24,7 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="799076" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <npc-start npc-id="799076" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
     <transition source="started" target="started"><event><kill-npc npc-ids="217069 217070 217071"/></event><actions><increment-variable field="var0" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="started" target="reward"><event><kill-npc npc-id="217068"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
     <npc-report npc-id="799076" source="started" target="reward" page="1352"/>

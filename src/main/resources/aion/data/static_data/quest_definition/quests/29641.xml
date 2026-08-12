@@ -30,7 +30,7 @@
     <transition source="started" target="started"><event><kill-npc npc-ids="216045 216046 215942"/></event><conditions><variable-below field="var0" value="9"/></conditions><actions><increment-variable field="var0" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="started" target="reward"><event><kill-npc npc-ids="216045 216046 215942"/></event><conditions><variable-at-least field="var0" value="9"/></conditions><actions><increment-variable field="var0" delta="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
 
-    <npc-start npc-id="799248" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <npc-start npc-id="799248" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
     <npc-report npc-id="799248" source="started" target="reward" page="1352"/>
     <npc-complete npc-id="799248" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
       <choice dialog-id="8" reward-index="1"/>

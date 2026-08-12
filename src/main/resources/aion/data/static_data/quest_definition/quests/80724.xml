@@ -26,7 +26,7 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="833545" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <npc-start npc-id="833545" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
     <transition source="started" target="started"><event><talk-to-npc npc-id="833545" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
         <npc-item-report npc-id="833545" source="started" target="reward" item-id="182215807" required="8"/>
     <transition source="started" target="reward">

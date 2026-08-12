@@ -23,7 +23,7 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="1"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="804868" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <npc-start npc-id="804868" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
     <transition source="started" target="started"><event><talk-to-npc npc-id="804868" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
 
     <!-- 击杀濒死的龙帝 219362 完成(var0 0→1)。Kill the dying dragon lord 219362 (var0 0→1). -->

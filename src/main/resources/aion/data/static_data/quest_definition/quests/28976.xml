@@ -40,7 +40,7 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="805218" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <npc-start npc-id="805218" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
     <transition source="started" target="started"><event><collect-item item-id="182215821" count="1"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <npc-report npc-id="805218" source="started" target="reward" page="1352"/>
     <npc-complete npc-id="805218" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>

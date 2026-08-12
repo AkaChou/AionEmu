@@ -37,7 +37,7 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="802353" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <npc-start npc-id="802353" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
     <transition source="started" target="started"><event><kill-npc npc-id="234704"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="started" target="started"><event><collect-item item-id="182215822" count="1"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <npc-report npc-id="802353" source="started" target="reward" page="1352"/>

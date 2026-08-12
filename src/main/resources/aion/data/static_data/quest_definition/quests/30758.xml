@@ -19,7 +19,7 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="7"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="800369" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <npc-start npc-id="800369" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
     <transition source="started" target="started"><event><talk-to-npc npc-id="800369" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
 
     <!-- 进入感官区域 IDTIamat_SensoryArea_Q30708A(var0 0→1)。Enter the sensory area (var0 0→1). -->

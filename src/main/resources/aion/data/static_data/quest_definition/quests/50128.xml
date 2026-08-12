@@ -19,7 +19,7 @@
   </nodes>
   <transitions>
     <!-- 接取:836452 LC1_Yuritos_E 对话接取(原 enter-zone 接取改回 talk-to-npc)。 -->
-    <npc-start npc-id="836452" source="unaccepted" target="started" selection-sources="unaccepted"/>
+    <npc-start npc-id="836452" source="unaccepted" target="started" selection-sources="unaccepted" start-dialog-id="4762"/>
 
     <!-- 目标:进入 600040000 转 REWARD。 -->
     <transition source="started" target="reward"><event><enter-world/></event><conditions><world-is world-id="600040000"/></conditions><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>

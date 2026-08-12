@@ -88,7 +88,7 @@
     <counter-grid>
       <dimension field="var0" required="8" npc-ids="214337 214338"/>
     </counter-grid>
-    <npc-start npc-id="798201" source="unaccepted" target="started" selection-sources="unaccepted k8"/>
+    <npc-start npc-id="798201" source="unaccepted" target="started" selection-sources="unaccepted k8" start-dialog-id="4762"/>
     <npc-report npc-id="798201" source="k8" target="reward" page="1352"/>
     <npc-complete npc-id="798201" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>

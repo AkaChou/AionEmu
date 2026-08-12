@@ -27,7 +27,7 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="799530" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <npc-start npc-id="799530" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
     <npc-report npc-id="799530" source="started" target="reward" page="1352"/>
     <npc-complete npc-id="799530" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
       <choice dialog-id="8" reward-index="1"/>

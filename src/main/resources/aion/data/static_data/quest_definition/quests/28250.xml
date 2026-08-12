@@ -20,7 +20,7 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="806135" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <npc-start npc-id="806135" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
     <npc-dialog source="started" npc-ids="806135 798804" dialog-ids="31">
       <show-quest-dialog dialog-id="1352" />
     </npc-dialog>

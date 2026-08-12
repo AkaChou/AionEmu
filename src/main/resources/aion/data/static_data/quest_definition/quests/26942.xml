@@ -30,7 +30,7 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="802353" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <npc-start npc-id="802353" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
     <transition source="started" target="started"><event><talk-to-npc npc-id="802353" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
     <!-- 收集任务物品(3+1)后进入领奖。Collecting quest items enters reward. -->
     <transition source="started" target="reward"><event><collect-item item-id="182215787" count="3"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>

@@ -32,7 +32,7 @@
   <transitions>
     <!-- 洒孢子液:使用 Fungie Spore Liquid(182207862)推进到交付步骤 -->
     <transition source="started" target="started"><event><use-item item-id="182207862"/></event><conditions><has-item item-id="182207862" count="1"/><variable-below field="var0" value="1"/></conditions><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <npc-start npc-id="799282" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <npc-start npc-id="799282" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
     <transition source="started" target="started"><event><talk-to-npc npc-id="799282" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
         <transition source="started" target="reward"><event><kill-npc npc-ids="216563"/></event><conditions><variable-is field="var0" value="4"/></conditions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
 <transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="799282" dialog-id="1009"/></event><conditions><variable-is field="var0" value="1"/><has-item item-id="182207862" count="1"/></conditions><actions><remove-item item-id="182207862" count="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>

@@ -39,7 +39,7 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="203793" source="unaccepted" target="started" selection-sources="unaccepted started">
+    <npc-start npc-id="203793" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762">
       <accept-actions>
         <give-item item-id="152201962" count="1" />
         <give-item item-id="152201963" count="1" />

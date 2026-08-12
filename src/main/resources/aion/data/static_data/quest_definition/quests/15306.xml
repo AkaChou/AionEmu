@@ -57,7 +57,7 @@
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="805327" source="unaccepted" target="s0" selection-sources="unaccepted s0 s1 s2 s3 s4 s5 s6 s7 s8 s9"/>
+    <npc-start npc-id="805327" source="unaccepted" target="s0" selection-sources="unaccepted s0 s1 s2 s3 s4 s5 s6 s7 s8 s9" start-dialog-id="4762"/>
     <transition source="s0" target="s0"><event><talk-to-npc npc-id="805328" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
     <transition source="s0" target="s1"><event><talk-to-npc npc-id="805328" dialog-id="10000"/></event><actions><give-item item-id="152222052" count="1"/><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
     <transition source="s1" target="s1"><event><talk-to-npc npc-id="805328" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
