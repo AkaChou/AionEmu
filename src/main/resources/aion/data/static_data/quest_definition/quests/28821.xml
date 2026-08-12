@@ -18,43 +18,206 @@
     <bit-field name="var0" offset="0" width="1" min="0" max="0" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="0"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
   </nodes>
   <transitions>
     <!-- 房屋管家任务：玩家须在自宅与自己的管家对话；house.getButler() 归属防御由自宅实例保证，DSL 不另设条件（同 18830）。 Housing quest: player must talk to their own butler at home; the house.getButler() ownership guard is implied by the private-house instance (same as 18830). -->
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="810022" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="810022" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="810022" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
-    <npc-report npc-id="810022" source="started" target="reward" page="2375"/>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810022" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810022" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810022" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_REPORT" npc-id="810022" source="started" target="reward" page="SELECT5"/>
     <!-- START 状态点"无奖励结束"：旧 handler 调 sendQuestEndDialog 因非 REWARD 无副作用，仅认领事件。 SELECT_NO_REWARD in START: sendQuestEndDialog is a no-op outside REWARD; the event is claimed without side effects. -->
-    <transition source="started" target="started"><event><talk-to-npc npc-id="810022" dialog-id="23"/></event></transition>
-    <npc-complete npc-id="810022" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="23" complete-reward-index="0" preview-dialog-ids="-1" finish="SELECTION_DIALOG"/>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="810023" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="810023" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="810023" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
-    <npc-report npc-id="810023" source="started" target="reward" page="2375"/>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="810023" dialog-id="23"/></event></transition>
-    <npc-complete npc-id="810023" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="23" complete-reward-index="0" preview-dialog-ids="-1" finish="SELECTION_DIALOG"/>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="810024" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="810024" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="810024" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
-    <npc-report npc-id="810024" source="started" target="reward" page="2375"/>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="810024" dialog-id="23"/></event></transition>
-    <npc-complete npc-id="810024" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="23" complete-reward-index="0" preview-dialog-ids="-1" finish="SELECTION_DIALOG"/>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="810025" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="810025" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="810025" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
-    <npc-report npc-id="810025" source="started" target="reward" page="2375"/>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="810025" dialog-id="23"/></event></transition>
-    <npc-complete npc-id="810025" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="23" complete-reward-index="0" preview-dialog-ids="-1" finish="SELECTION_DIALOG"/>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="810026" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="810026" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="810026" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
-    <npc-report npc-id="810026" source="started" target="reward" page="2375"/>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="810026" dialog-id="23"/></event></transition>
-    <npc-complete npc-id="810026" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="23" complete-reward-index="0" preview-dialog-ids="-1" finish="SELECTION_DIALOG"/>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810022" action="SELECTED_QUEST_NOREWARD"/>
+      </event>
+    </transition>
+    <npc-complete npc-id="810022" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT"/>
+    </npc-complete>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810023" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810023" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810023" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_REPORT" npc-id="810023" source="started" target="reward" page="SELECT5"/>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810023" action="SELECTED_QUEST_NOREWARD"/>
+      </event>
+    </transition>
+    <npc-complete npc-id="810023" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT"/>
+    </npc-complete>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810024" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810024" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810024" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_REPORT" npc-id="810024" source="started" target="reward" page="SELECT5"/>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810024" action="SELECTED_QUEST_NOREWARD"/>
+      </event>
+    </transition>
+    <npc-complete npc-id="810024" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT"/>
+    </npc-complete>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810025" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810025" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810025" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_REPORT" npc-id="810025" source="started" target="reward" page="SELECT5"/>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810025" action="SELECTED_QUEST_NOREWARD"/>
+      </event>
+    </transition>
+    <npc-complete npc-id="810025" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT"/>
+    </npc-complete>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810026" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810026" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810026" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_REPORT" npc-id="810026" source="started" target="reward" page="SELECT5"/>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="810026" action="SELECTED_QUEST_NOREWARD"/>
+      </event>
+    </transition>
+    <npc-complete npc-id="810026" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

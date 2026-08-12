@@ -17,23 +17,77 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="0"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="203701" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
-    <npc-report npc-id="203701" source="started" target="reward" page="1352"/>
-    <npc-complete npc-id="203701" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="1"/>
-      <choice dialog-id="9" reward-index="2"/>
-      <choice dialog-id="10" reward-index="3"/>
-      <choice dialog-id="11" reward-index="4"/>
-      <choice dialog-id="12" reward-index="5"/>
+    <dialog type="NPC_START" npc-id="203701" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <dialog type="NPC_REPORT" npc-id="203701" source="started" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="203701" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <npc-dialog source="started" npc-ids="203704 203706 203707 801214 801215 203752" dialog-ids="31">
-      <show-quest-dialog dialog-id="1352" />
-    </npc-dialog>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203704" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203706" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203707" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801214" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="801215" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

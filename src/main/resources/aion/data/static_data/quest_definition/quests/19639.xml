@@ -19,7 +19,6 @@
         <npc id="215526"/>
       </kill>
     </kills>
-
     <start-conditions>
       <condition type="finished" quest-id="19638"/>
     </start-conditions>
@@ -28,32 +27,76 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="k1" status="START"><var name="var0" value="1"/></node>
-    <node label="k2" status="START"><var name="var0" value="2"/></node>
-    <node label="k3" status="START"><var name="var0" value="3"/></node>
-    <node label="k4" status="START"><var name="var0" value="4"/></node>
-    <node label="k5" status="START"><var name="var0" value="5"/></node>
-    <node label="k6" status="START"><var name="var0" value="6"/></node>
-    <node label="k7" status="START"><var name="var0" value="7"/></node>
-    <node label="k8" status="START"><var name="var0" value="8"/></node>
-    <node label="k9" status="START"><var name="var0" value="9"/></node>
-    <node label="k10" status="START"><var name="var0" value="10"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="0"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="k1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="k2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="k3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="k4" status="START">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="k5" status="START">
+      <var name="var0" value="5"/>
+    </node>
+    <node label="k6" status="START">
+      <var name="var0" value="6"/>
+    </node>
+    <node label="k7" status="START">
+      <var name="var0" value="7"/>
+    </node>
+    <node label="k8" status="START">
+      <var name="var0" value="8"/>
+    </node>
+    <node label="k9" status="START">
+      <var name="var0" value="9"/>
+    </node>
+    <node label="k10" status="START">
+      <var name="var0" value="10"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="799022" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="799022" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="k10" target="reward"><event><talk-to-npc npc-id="799022" dialog-id="1009"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <npc-complete npc-id="799022" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="1"/>
-      <choice dialog-id="9" reward-index="2"/>
-      <choice dialog-id="10" reward-index="3"/>
-      <choice dialog-id="11" reward-index="4"/>
-      <choice dialog-id="12" reward-index="5"/>
-      <choice dialog-id="13" reward-index="6"/>
+    <dialog type="NPC_START" npc-id="799022" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799022" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="k10" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799022" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="799022" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
+      <choice action="SELECTED_QUEST_REWARD6" reward-index="6"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <counter-grid>
       <dimension field="var0" required="10" npc-ids="215524 215526"/>

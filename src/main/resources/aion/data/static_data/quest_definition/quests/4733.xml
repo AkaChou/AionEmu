@@ -2,150 +2,152 @@
 <!-- 击杀任务：从 800519 接取，依次击杀 256690/256689/256692/256691 各 1 次后向同一 NPC 报告领奖。
      Monster-hunt quest: accept from 800519, kill 256690/256689/256692/256691 x1 each, report to the same NPC for reward. -->
 <quest-definition id="4733" version="1">
-<metadata name="[Instance/Group] Dangerous Lesson" display-name-id="1199485" min-level="25" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="[Instance/Group] Dangerous Lesson" display-name-id="1199485" min-level="25" max-level="2147483647" category="IMPORTANT" cannot-share="true">
     <races>
-        <race id="ASMODIANS"/>
+      <race id="ASMODIANS"/>
     </races>
     <repeat max-repeat-count="5" cooldown-seconds="0" daily="false" weekly="false"/>
     <rewards>
-        <reward kind="EXP" id="0" amount="285255"/>
-        <reward kind="ITEM" id="186000007" amount="2"/>
+      <reward kind="EXP" id="0" amount="285255"/>
+      <reward kind="ITEM" id="186000007" amount="2"/>
     </rewards>
-</metadata>
-    <progress>
-        <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-        <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-        <bit-field name="var2" offset="12" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-        <bit-field name="var3" offset="18" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-    </progress>
-    <nodes>
-        <node label="unaccepted" status="NONE">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="0"/>
-                    <var name="var2" value="0"/>
-                    <var name="var3" value="0"/>
-        </node>
-        <node label="a0b0c0d0" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="0"/>
-                    <var name="var2" value="0"/>
-                    <var name="var3" value="0"/>
-        </node>
-        <node label="a0b0c0d1" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="0"/>
-                    <var name="var2" value="0"/>
-                    <var name="var3" value="1"/>
-        </node>
-        <node label="a0b0c1d0" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="0"/>
-                    <var name="var2" value="1"/>
-                    <var name="var3" value="0"/>
-        </node>
-        <node label="a0b0c1d1" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="0"/>
-                    <var name="var2" value="1"/>
-                    <var name="var3" value="1"/>
-        </node>
-        <node label="a0b1c0d0" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="1"/>
-                    <var name="var2" value="0"/>
-                    <var name="var3" value="0"/>
-        </node>
-        <node label="a0b1c0d1" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="1"/>
-                    <var name="var2" value="0"/>
-                    <var name="var3" value="1"/>
-        </node>
-        <node label="a0b1c1d0" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="1"/>
-                    <var name="var2" value="1"/>
-                    <var name="var3" value="0"/>
-        </node>
-        <node label="a0b1c1d1" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="1"/>
-                    <var name="var2" value="1"/>
-                    <var name="var3" value="1"/>
-        </node>
-        <node label="a1b0c0d0" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="0"/>
-                    <var name="var2" value="0"/>
-                    <var name="var3" value="0"/>
-        </node>
-        <node label="a1b0c0d1" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="0"/>
-                    <var name="var2" value="0"/>
-                    <var name="var3" value="1"/>
-        </node>
-        <node label="a1b0c1d0" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="0"/>
-                    <var name="var2" value="1"/>
-                    <var name="var3" value="0"/>
-        </node>
-        <node label="a1b0c1d1" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="0"/>
-                    <var name="var2" value="1"/>
-                    <var name="var3" value="1"/>
-        </node>
-        <node label="a1b1c0d0" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="1"/>
-                    <var name="var2" value="0"/>
-                    <var name="var3" value="0"/>
-        </node>
-        <node label="a1b1c0d1" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="1"/>
-                    <var name="var2" value="0"/>
-                    <var name="var3" value="1"/>
-        </node>
-        <node label="a1b1c1d0" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="1"/>
-                    <var name="var2" value="1"/>
-                    <var name="var3" value="0"/>
-        </node>
-        <node label="a1b1c1d1" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="1"/>
-                    <var name="var2" value="1"/>
-                    <var name="var3" value="1"/>
-        </node>
-        <node label="reward" status="REWARD">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="1"/>
-                    <var name="var2" value="1"/>
-                    <var name="var3" value="1"/>
-        </node>
-        <node label="complete" status="COMPLETE">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="0"/>
-                    <var name="var2" value="0"/>
-                    <var name="var3" value="0"/>
-        </node>
-    </nodes>
-    <transitions>
-        <!-- 接取：预览、拒绝与选择对话 / Accept: preview, decline and selection dialogs -->
-        <npc-start npc-id="800519" source="unaccepted" target="a0b0c0d0" selection-sources="unaccepted a0b0c0d0"/>
-        <!-- 击杀进度：四组各 1 次，var0/var1/var2/var3 独立递增 / Kill progress: four independent groups -->
-        <counter-grid>
-          <dimension field="var0" required="1" npc-ids="256690"/>
-          <dimension field="var1" required="1" npc-ids="256689"/>
-          <dimension field="var2" required="1" npc-ids="256692"/>
-          <dimension field="var3" required="1" npc-ids="256691"/>
-        </counter-grid>
-        <!-- 终态报告与领奖 / Final report and reward -->
-        <npc-report npc-id="800519" source="a1b1c1d1" target="reward" page="1352"/>
-        <npc-complete npc-id="800519" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
-    </transitions>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="12" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var3" offset="18" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
+      <var name="var3" value="0"/>
+    </node>
+    <node label="a0b0c0d0" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
+      <var name="var3" value="0"/>
+    </node>
+    <node label="a0b0c0d1" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
+      <var name="var3" value="1"/>
+    </node>
+    <node label="a0b0c1d0" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="1"/>
+      <var name="var3" value="0"/>
+    </node>
+    <node label="a0b0c1d1" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="1"/>
+      <var name="var3" value="1"/>
+    </node>
+    <node label="a0b1c0d0" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="0"/>
+      <var name="var3" value="0"/>
+    </node>
+    <node label="a0b1c0d1" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="0"/>
+      <var name="var3" value="1"/>
+    </node>
+    <node label="a0b1c1d0" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="1"/>
+      <var name="var3" value="0"/>
+    </node>
+    <node label="a0b1c1d1" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="1"/>
+      <var name="var3" value="1"/>
+    </node>
+    <node label="a1b0c0d0" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
+      <var name="var3" value="0"/>
+    </node>
+    <node label="a1b0c0d1" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
+      <var name="var3" value="1"/>
+    </node>
+    <node label="a1b0c1d0" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="1"/>
+      <var name="var3" value="0"/>
+    </node>
+    <node label="a1b0c1d1" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="1"/>
+      <var name="var3" value="1"/>
+    </node>
+    <node label="a1b1c0d0" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="0"/>
+      <var name="var3" value="0"/>
+    </node>
+    <node label="a1b1c0d1" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="0"/>
+      <var name="var3" value="1"/>
+    </node>
+    <node label="a1b1c1d0" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="1"/>
+      <var name="var3" value="0"/>
+    </node>
+    <node label="a1b1c1d1" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="1"/>
+      <var name="var3" value="1"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="1"/>
+      <var name="var3" value="1"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
+      <var name="var3" value="0"/>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 接取：预览、拒绝与选择对话 / Accept: preview, decline and selection dialogs -->
+    <dialog type="NPC_START" npc-id="800519" source="unaccepted" target="a0b0c0d0" selection-sources="unaccepted a0b0c0d0" start-page="SELECT1"/>
+    <!-- 击杀进度：四组各 1 次，var0/var1/var2/var3 独立递增 / Kill progress: four independent groups -->
+    <counter-grid>
+      <dimension field="var0" required="1" npc-ids="256690"/>
+      <dimension field="var1" required="1" npc-ids="256689"/>
+      <dimension field="var2" required="1" npc-ids="256692"/>
+      <dimension field="var3" required="1" npc-ids="256691"/>
+    </counter-grid>
+    <!-- 终态报告与领奖 / Final report and reward -->
+    <dialog type="NPC_REPORT" npc-id="800519" source="a1b1c1d1" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="800519" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+  </transitions>
 </quest-definition>

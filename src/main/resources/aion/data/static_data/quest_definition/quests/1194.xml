@@ -18,47 +18,47 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="z1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="z2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="z3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="z4" status="START">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="z5" status="START">
-          <var name="var0" value="5"/>
+      <var name="var0" value="5"/>
     </node>
     <node label="z6" status="START">
-          <var name="var0" value="6"/>
+      <var name="var0" value="6"/>
     </node>
     <node label="z7" status="START">
-          <var name="var0" value="7"/>
+      <var name="var0" value="7"/>
     </node>
     <node label="z8" status="START">
-          <var name="var0" value="8"/>
+      <var name="var0" value="8"/>
     </node>
     <node label="z9" status="START">
-          <var name="var0" value="9"/>
+      <var name="var0" value="9"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="9"/>
+      <var name="var0" value="9"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="9"/>
+      <var name="var0" value="9"/>
     </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="203098" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <dialog type="NPC_START" npc-id="203098" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
     <transition source="started" target="z1">
       <event>
         <enter-zone zone="LF1A_SENSORY_AREA_Q1194_210030000"/>
@@ -78,15 +78,16 @@
     <kill-routes source="z9" target="reward" npc-ids="210185 210186"/>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="203098" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203098" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="203098" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="1"/>
-      <choice dialog-id="9" reward-index="2"/>
+    <npc-complete npc-id="203098" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

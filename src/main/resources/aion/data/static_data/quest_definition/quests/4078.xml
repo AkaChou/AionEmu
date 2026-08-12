@@ -28,63 +28,138 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="s1" status="START"><var name="var0" value="1"/></node>
-    <node label="s2" status="START"><var name="var0" value="2"/></node>
-    <node label="s3" status="START"><var name="var0" value="3"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="4"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="s2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="s3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
   </nodes>
   <transitions>
     <!-- 接取:205157 起始。 -->
-    <npc-start npc-id="205157" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
+    <dialog type="NPC_START" npc-id="205157" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <!-- 205157:var0=0,31 显示 1011,CHECK_COLLECTED_ITEMS(39) 用 182209049 x9 换 182209050 推进 var1。 -->
-    <transition source="started" target="started"><event><talk-to-npc npc-id="205157" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205157" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
     <transition source="started" target="s1">
-      <event><talk-to-npc npc-id="205157" dialog-id="39"/></event>
-      <conditions><has-item item-id="182209049" count="9"/></conditions>
-      <actions><remove-item item-id="182209049" count="9"/><give-item item-id="182209050" count="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="10000"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205157" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="182209049" count="9"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182209049" count="9"/>
+        <give-item item-id="182209050" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
+      </after-commit>
     </transition>
     <transition source="started" target="started">
-      <event><talk-to-npc npc-id="205157" dialog-id="39"/></event>
-      <conditions><has-item item-id="182209049" count="9" expected="false"/></conditions>
-      <after-commit><show-quest-dialog dialog-id="10001"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205157" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="182209049" count="9" expected="false"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
     </transition>
     <!-- 700428:var1=1,USE_OBJECT(-1) 且有 182209050 推进 var2。 -->
-    <transition source="s1" target="s1"><event><can-act template-id="700428" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s1" target="s1">
+      <event>
+        <can-act template-id="700428" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <transition source="s1" target="s2">
-      <event><talk-to-npc npc-id="700428" dialog-id="-1"/></event>
-      <conditions><has-item item-id="182209050" count="1"/></conditions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700428" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182209050" count="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
     </transition>
     <!-- 700427:var2=2,USE_OBJECT(-1) 且有 182209050 推进 var3。 -->
-    <transition source="s2" target="s2"><event><can-act template-id="700427" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s2" target="s2">
+      <event>
+        <can-act template-id="700427" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <transition source="s2" target="s3">
-      <event><talk-to-npc npc-id="700427" dialog-id="-1"/></event>
-      <conditions><has-item item-id="182209050" count="1"/></conditions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700427" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182209050" count="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
     </transition>
     <!-- 700429:var3=3,USE_OBJECT(-1) 且有 182209050 进 REWARD。 -->
-    <transition source="s3" target="s3"><event><can-act template-id="700429" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s3" target="s3">
+      <event>
+        <can-act template-id="700429" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <transition source="s3" target="reward">
-      <event><talk-to-npc npc-id="700429" dialog-id="-1"/></event>
-      <conditions><has-item item-id="182209050" count="1"/></conditions>
-      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700429" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182209050" count="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
     </transition>
     <!-- 205157:REWARD 状态 USE_OBJECT(-1) 显示 10002。 -->
     <transition source="reward" target="reward">
-      <event><talk-to-npc npc-id="205157" dialog-id="-1"/></event>
-      <after-commit><show-quest-dialog dialog-id="10002"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205157" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
     </transition>
-    <npc-complete npc-id="205157" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="2"/>
-      <choice dialog-id="9" reward-index="3"/>
-      <choice dialog-id="10" reward-index="4"/>
-      <choice dialog-id="11" reward-index="5"/>
-      <choice dialog-id="12" reward-index="6"/>
-      <fallback dialog-ids="13..23"/>
+    <npc-complete npc-id="205157" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="6"/>
+      <preview actions="SELECT_QUEST_REWARD"/>
+      <fallback actions="SELECTED_QUEST_REWARD6..SELECTED_QUEST_NOREWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

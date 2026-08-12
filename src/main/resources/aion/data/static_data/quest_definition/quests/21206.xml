@@ -17,237 +17,195 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
-
     <node label="a0b0" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
-
     <node label="a0b1" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
     </node>
-
     <node label="a0b2" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
     </node>
-
     <node label="a0b3" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
     </node>
-
     <node label="a0b4" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
     </node>
-
     <node label="a0b5" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
     </node>
-
     <node label="a1b0" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
     </node>
-
     <node label="a1b1" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
     </node>
-
     <node label="a1b2" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="2"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="2"/>
     </node>
-
     <node label="a1b3" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="3"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="3"/>
     </node>
-
     <node label="a1b4" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="4"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="4"/>
     </node>
-
     <node label="a1b5" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="5"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="5"/>
     </node>
-
     <node label="a2b0" status="START">
-          <var name="var0" value="2"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="0"/>
     </node>
-
     <node label="a2b1" status="START">
-          <var name="var0" value="2"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="1"/>
     </node>
-
     <node label="a2b2" status="START">
-          <var name="var0" value="2"/>
-          <var name="var1" value="2"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="2"/>
     </node>
-
     <node label="a2b3" status="START">
-          <var name="var0" value="2"/>
-          <var name="var1" value="3"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="3"/>
     </node>
-
     <node label="a2b4" status="START">
-          <var name="var0" value="2"/>
-          <var name="var1" value="4"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="4"/>
     </node>
-
     <node label="a2b5" status="START">
-          <var name="var0" value="2"/>
-          <var name="var1" value="5"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="5"/>
     </node>
-
     <node label="a3b0" status="START">
-          <var name="var0" value="3"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="3"/>
+      <var name="var1" value="0"/>
     </node>
-
     <node label="a3b1" status="START">
-          <var name="var0" value="3"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="3"/>
+      <var name="var1" value="1"/>
     </node>
-
     <node label="a3b2" status="START">
-          <var name="var0" value="3"/>
-          <var name="var1" value="2"/>
+      <var name="var0" value="3"/>
+      <var name="var1" value="2"/>
     </node>
-
     <node label="a3b3" status="START">
-          <var name="var0" value="3"/>
-          <var name="var1" value="3"/>
+      <var name="var0" value="3"/>
+      <var name="var1" value="3"/>
     </node>
-
     <node label="a3b4" status="START">
-          <var name="var0" value="3"/>
-          <var name="var1" value="4"/>
+      <var name="var0" value="3"/>
+      <var name="var1" value="4"/>
     </node>
-
     <node label="a3b5" status="START">
-          <var name="var0" value="3"/>
-          <var name="var1" value="5"/>
+      <var name="var0" value="3"/>
+      <var name="var1" value="5"/>
     </node>
-
     <node label="a4b0" status="START">
-          <var name="var0" value="4"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="4"/>
+      <var name="var1" value="0"/>
     </node>
-
     <node label="a4b1" status="START">
-          <var name="var0" value="4"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="4"/>
+      <var name="var1" value="1"/>
     </node>
-
     <node label="a4b2" status="START">
-          <var name="var0" value="4"/>
-          <var name="var1" value="2"/>
+      <var name="var0" value="4"/>
+      <var name="var1" value="2"/>
     </node>
-
     <node label="a4b3" status="START">
-          <var name="var0" value="4"/>
-          <var name="var1" value="3"/>
+      <var name="var0" value="4"/>
+      <var name="var1" value="3"/>
     </node>
-
     <node label="a4b4" status="START">
-          <var name="var0" value="4"/>
-          <var name="var1" value="4"/>
+      <var name="var0" value="4"/>
+      <var name="var1" value="4"/>
     </node>
-
     <node label="a4b5" status="START">
-          <var name="var0" value="4"/>
-          <var name="var1" value="5"/>
+      <var name="var0" value="4"/>
+      <var name="var1" value="5"/>
     </node>
-
     <node label="a5b0" status="START">
-          <var name="var0" value="5"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="5"/>
+      <var name="var1" value="0"/>
     </node>
-
     <node label="a5b1" status="START">
-          <var name="var0" value="5"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="5"/>
+      <var name="var1" value="1"/>
     </node>
-
     <node label="a5b2" status="START">
-          <var name="var0" value="5"/>
-          <var name="var1" value="2"/>
+      <var name="var0" value="5"/>
+      <var name="var1" value="2"/>
     </node>
-
     <node label="a5b3" status="START">
-          <var name="var0" value="5"/>
-          <var name="var1" value="3"/>
+      <var name="var0" value="5"/>
+      <var name="var1" value="3"/>
     </node>
-
     <node label="a5b4" status="START">
-          <var name="var0" value="5"/>
-          <var name="var1" value="4"/>
+      <var name="var0" value="5"/>
+      <var name="var1" value="4"/>
     </node>
-
     <node label="a5b5" status="START">
-          <var name="var0" value="5"/>
-          <var name="var1" value="5"/>
+      <var name="var0" value="5"/>
+      <var name="var1" value="5"/>
     </node>
-
     <node label="reward" status="REWARD">
-          <var name="var0" value="5"/>
-          <var name="var1" value="5"/>
+      <var name="var0" value="5"/>
+      <var name="var1" value="5"/>
     </node>
-
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
-
   </nodes>
   <transitions>
     <!-- 接取：预览、拒绝与选择对话 / Accept: preview, decline and selection dialogs -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799309" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="799309" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
-
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799309" dialog-id="1007"/>
+        <dialog type="TALK_TO_NPC" npc-id="799309" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
-
     <transition source="unaccepted" target="a0b0">
       <event>
-        <talk-to-npc npc-id="799309" dialog-id="1002"/>
+        <dialog type="TALK_TO_NPC" npc-id="799309" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
-
     <transition source="unaccepted" target="a0b0">
       <event>
-        <talk-to-npc npc-id="799309" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="799309" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -257,35 +215,31 @@
         <close-dialog/>
       </after-commit>
     </transition>
-
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799309" dialog-ids="1003 1004 20001"/>
+        <dialog type="TALK_TO_NPC" npc-id="799309" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
       </after-commit>
     </transition>
-
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799309" dialog-id="1008"/>
+        <dialog type="TALK_TO_NPC" npc-id="799309" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-
     <!-- 进行中：重选任务提示 / Started: quest-selection dialog while in progress -->
     <transition source="a0b0" target="a0b0">
       <event>
-        <talk-to-npc npc-id="799309" dialog-id="1008"/>
+        <dialog type="TALK_TO_NPC" npc-id="799309" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-
     <!-- 击杀：var0 组 216033/216034 推进 a / Kill: var0 group 216033/216034 advances a -->
     <transition source="a0b0" target="a1b0">
       <event>
@@ -295,7 +249,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b0" target="a1b0">
       <event>
         <kill-npc npc-id="216034"/>
@@ -304,7 +257,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b1" target="a1b1">
       <event>
         <kill-npc npc-id="216033"/>
@@ -313,7 +265,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b1" target="a1b1">
       <event>
         <kill-npc npc-id="216034"/>
@@ -322,7 +273,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b2" target="a1b2">
       <event>
         <kill-npc npc-id="216033"/>
@@ -331,7 +281,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b2" target="a1b2">
       <event>
         <kill-npc npc-id="216034"/>
@@ -340,7 +289,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b3" target="a1b3">
       <event>
         <kill-npc npc-id="216033"/>
@@ -349,7 +297,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b3" target="a1b3">
       <event>
         <kill-npc npc-id="216034"/>
@@ -358,7 +305,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b4" target="a1b4">
       <event>
         <kill-npc npc-id="216033"/>
@@ -367,7 +313,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b4" target="a1b4">
       <event>
         <kill-npc npc-id="216034"/>
@@ -376,7 +321,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b5" target="a1b5">
       <event>
         <kill-npc npc-id="216033"/>
@@ -385,7 +329,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b5" target="a1b5">
       <event>
         <kill-npc npc-id="216034"/>
@@ -394,7 +337,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b0" target="a2b0">
       <event>
         <kill-npc npc-id="216033"/>
@@ -403,7 +345,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b0" target="a2b0">
       <event>
         <kill-npc npc-id="216034"/>
@@ -412,7 +353,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b1" target="a2b1">
       <event>
         <kill-npc npc-id="216033"/>
@@ -421,7 +361,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b1" target="a2b1">
       <event>
         <kill-npc npc-id="216034"/>
@@ -430,7 +369,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b2" target="a2b2">
       <event>
         <kill-npc npc-id="216033"/>
@@ -439,7 +377,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b2" target="a2b2">
       <event>
         <kill-npc npc-id="216034"/>
@@ -448,7 +385,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b3" target="a2b3">
       <event>
         <kill-npc npc-id="216033"/>
@@ -457,7 +393,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b3" target="a2b3">
       <event>
         <kill-npc npc-id="216034"/>
@@ -466,7 +401,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b4" target="a2b4">
       <event>
         <kill-npc npc-id="216033"/>
@@ -475,7 +409,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b4" target="a2b4">
       <event>
         <kill-npc npc-id="216034"/>
@@ -484,7 +417,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b5" target="a2b5">
       <event>
         <kill-npc npc-id="216033"/>
@@ -493,7 +425,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b5" target="a2b5">
       <event>
         <kill-npc npc-id="216034"/>
@@ -502,7 +433,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b0" target="a3b0">
       <event>
         <kill-npc npc-id="216033"/>
@@ -511,7 +441,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b0" target="a3b0">
       <event>
         <kill-npc npc-id="216034"/>
@@ -520,7 +449,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b1" target="a3b1">
       <event>
         <kill-npc npc-id="216033"/>
@@ -529,7 +457,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b1" target="a3b1">
       <event>
         <kill-npc npc-id="216034"/>
@@ -538,7 +465,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b2" target="a3b2">
       <event>
         <kill-npc npc-id="216033"/>
@@ -547,7 +473,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b2" target="a3b2">
       <event>
         <kill-npc npc-id="216034"/>
@@ -556,7 +481,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b3" target="a3b3">
       <event>
         <kill-npc npc-id="216033"/>
@@ -565,7 +489,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b3" target="a3b3">
       <event>
         <kill-npc npc-id="216034"/>
@@ -574,7 +497,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b4" target="a3b4">
       <event>
         <kill-npc npc-id="216033"/>
@@ -583,7 +505,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b4" target="a3b4">
       <event>
         <kill-npc npc-id="216034"/>
@@ -592,7 +513,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b5" target="a3b5">
       <event>
         <kill-npc npc-id="216033"/>
@@ -601,7 +521,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b5" target="a3b5">
       <event>
         <kill-npc npc-id="216034"/>
@@ -610,7 +529,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b0" target="a4b0">
       <event>
         <kill-npc npc-id="216033"/>
@@ -619,7 +537,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b0" target="a4b0">
       <event>
         <kill-npc npc-id="216034"/>
@@ -628,7 +545,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b1" target="a4b1">
       <event>
         <kill-npc npc-id="216033"/>
@@ -637,7 +553,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b1" target="a4b1">
       <event>
         <kill-npc npc-id="216034"/>
@@ -646,7 +561,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b2" target="a4b2">
       <event>
         <kill-npc npc-id="216033"/>
@@ -655,7 +569,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b2" target="a4b2">
       <event>
         <kill-npc npc-id="216034"/>
@@ -664,7 +577,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b3" target="a4b3">
       <event>
         <kill-npc npc-id="216033"/>
@@ -673,7 +585,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b3" target="a4b3">
       <event>
         <kill-npc npc-id="216034"/>
@@ -682,7 +593,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b4" target="a4b4">
       <event>
         <kill-npc npc-id="216033"/>
@@ -691,7 +601,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b4" target="a4b4">
       <event>
         <kill-npc npc-id="216034"/>
@@ -700,7 +609,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b5" target="a4b5">
       <event>
         <kill-npc npc-id="216033"/>
@@ -709,7 +617,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b5" target="a4b5">
       <event>
         <kill-npc npc-id="216034"/>
@@ -718,7 +625,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b0" target="a5b0">
       <event>
         <kill-npc npc-id="216033"/>
@@ -727,7 +633,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b0" target="a5b0">
       <event>
         <kill-npc npc-id="216034"/>
@@ -736,7 +641,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b1" target="a5b1">
       <event>
         <kill-npc npc-id="216033"/>
@@ -745,7 +649,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b1" target="a5b1">
       <event>
         <kill-npc npc-id="216034"/>
@@ -754,7 +657,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b2" target="a5b2">
       <event>
         <kill-npc npc-id="216033"/>
@@ -763,7 +665,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b2" target="a5b2">
       <event>
         <kill-npc npc-id="216034"/>
@@ -772,7 +673,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b3" target="a5b3">
       <event>
         <kill-npc npc-id="216033"/>
@@ -781,7 +681,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b3" target="a5b3">
       <event>
         <kill-npc npc-id="216034"/>
@@ -790,7 +689,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b4" target="a5b4">
       <event>
         <kill-npc npc-id="216033"/>
@@ -799,7 +697,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b4" target="a5b4">
       <event>
         <kill-npc npc-id="216034"/>
@@ -808,7 +705,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b5" target="a5b5">
       <event>
         <kill-npc npc-id="216033"/>
@@ -817,7 +713,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b5" target="a5b5">
       <event>
         <kill-npc npc-id="216034"/>
@@ -826,7 +721,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <!-- 击杀：var1 组 216035/216036 推进 b / Kill: var1 group 216035/216036 advances b -->
     <transition source="a0b0" target="a0b1">
       <event>
@@ -836,7 +730,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b0" target="a0b1">
       <event>
         <kill-npc npc-id="216036"/>
@@ -845,7 +738,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b1" target="a0b2">
       <event>
         <kill-npc npc-id="216035"/>
@@ -854,7 +746,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b1" target="a0b2">
       <event>
         <kill-npc npc-id="216036"/>
@@ -863,7 +754,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b2" target="a0b3">
       <event>
         <kill-npc npc-id="216035"/>
@@ -872,7 +762,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b2" target="a0b3">
       <event>
         <kill-npc npc-id="216036"/>
@@ -881,7 +770,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b3" target="a0b4">
       <event>
         <kill-npc npc-id="216035"/>
@@ -890,7 +778,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b3" target="a0b4">
       <event>
         <kill-npc npc-id="216036"/>
@@ -899,7 +786,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b4" target="a0b5">
       <event>
         <kill-npc npc-id="216035"/>
@@ -908,7 +794,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a0b4" target="a0b5">
       <event>
         <kill-npc npc-id="216036"/>
@@ -917,7 +802,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b0" target="a1b1">
       <event>
         <kill-npc npc-id="216035"/>
@@ -926,7 +810,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b0" target="a1b1">
       <event>
         <kill-npc npc-id="216036"/>
@@ -935,7 +818,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b1" target="a1b2">
       <event>
         <kill-npc npc-id="216035"/>
@@ -944,7 +826,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b1" target="a1b2">
       <event>
         <kill-npc npc-id="216036"/>
@@ -953,7 +834,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b2" target="a1b3">
       <event>
         <kill-npc npc-id="216035"/>
@@ -962,7 +842,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b2" target="a1b3">
       <event>
         <kill-npc npc-id="216036"/>
@@ -971,7 +850,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b3" target="a1b4">
       <event>
         <kill-npc npc-id="216035"/>
@@ -980,7 +858,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b3" target="a1b4">
       <event>
         <kill-npc npc-id="216036"/>
@@ -989,7 +866,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b4" target="a1b5">
       <event>
         <kill-npc npc-id="216035"/>
@@ -998,7 +874,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a1b4" target="a1b5">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1007,7 +882,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b0" target="a2b1">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1016,7 +890,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b0" target="a2b1">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1025,7 +898,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b1" target="a2b2">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1034,7 +906,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b1" target="a2b2">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1043,7 +914,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b2" target="a2b3">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1052,7 +922,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b2" target="a2b3">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1061,7 +930,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b3" target="a2b4">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1070,7 +938,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b3" target="a2b4">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1079,7 +946,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b4" target="a2b5">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1088,7 +954,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a2b4" target="a2b5">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1097,7 +962,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b0" target="a3b1">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1106,7 +970,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b0" target="a3b1">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1115,7 +978,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b1" target="a3b2">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1124,7 +986,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b1" target="a3b2">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1133,7 +994,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b2" target="a3b3">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1142,7 +1002,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b2" target="a3b3">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1151,7 +1010,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b3" target="a3b4">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1160,7 +1018,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b3" target="a3b4">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1169,7 +1026,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b4" target="a3b5">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1178,7 +1034,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a3b4" target="a3b5">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1187,7 +1042,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b0" target="a4b1">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1196,7 +1050,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b0" target="a4b1">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1205,7 +1058,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b1" target="a4b2">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1214,7 +1066,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b1" target="a4b2">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1223,7 +1074,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b2" target="a4b3">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1232,7 +1082,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b2" target="a4b3">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1241,7 +1090,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b3" target="a4b4">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1250,7 +1098,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b3" target="a4b4">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1259,7 +1106,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b4" target="a4b5">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1268,7 +1114,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a4b4" target="a4b5">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1277,7 +1122,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a5b0" target="a5b1">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1286,7 +1130,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a5b0" target="a5b1">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1295,7 +1138,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a5b1" target="a5b2">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1304,7 +1146,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a5b1" target="a5b2">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1313,7 +1154,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a5b2" target="a5b3">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1322,7 +1162,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a5b2" target="a5b3">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1331,7 +1170,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a5b3" target="a5b4">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1340,7 +1178,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a5b3" target="a5b4">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1349,7 +1186,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a5b4" target="a5b5">
       <event>
         <kill-npc npc-id="216035"/>
@@ -1358,7 +1194,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <transition source="a5b4" target="a5b5">
       <event>
         <kill-npc npc-id="216036"/>
@@ -1367,11 +1202,10 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <!-- 领奖：确认后发放金币/经验并完成任务 / Reward: grant gold/exp and complete the quest -->
-    <npc-report npc-id="799309" source="a5b5" target="reward" page="1352"/>
-
-    <npc-complete npc-id="799309" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
-
+    <dialog type="NPC_REPORT" npc-id="799309" source="a5b5" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="799309" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

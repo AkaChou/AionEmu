@@ -14,17 +14,26 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="0"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="831434" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="831447" source="started" target="reward" page="2375"/>
-    <npc-complete npc-id="831447" source="reward" target="complete" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="0"/>
-      <choice dialog-id="9" reward-index="1"/>
+    <dialog type="NPC_START" npc-id="831434" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_REPORT" npc-id="831447" source="started" target="reward" page="SELECT5"/>
+    <npc-complete npc-id="831447" source="reward" target="complete" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="0"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="1"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

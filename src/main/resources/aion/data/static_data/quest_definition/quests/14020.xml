@@ -19,16 +19,16 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -45,35 +45,36 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="203901" dialog-id="1008"/>
+        <dialog type="TALK_TO_NPC" npc-id="203901" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="203901" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203901" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward">
       <event>
-        <talk-to-npc npc-id="203901" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="203901" action="SELECT_QUEST_REWARD"/>
       </event>
       <actions>
         <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="203901" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="1"/>
-      <choice dialog-id="9" reward-index="2"/>
+    <npc-complete npc-id="203901" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       <after-commit>
         <broadcast-zone-mission-end quest-ids="14021 14022 14023 14024 14025 14026"/>
       </after-commit>

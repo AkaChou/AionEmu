@@ -25,22 +25,22 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s0" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s4" status="START">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="s5" status="START">
-          <var name="var0" value="5"/>
+      <var name="var0" value="5"/>
     </node>
     <node label="s9" status="REWARD">
-          <var name="var0" value="9"/>
+      <var name="var0" value="9"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -59,19 +59,19 @@
     </transition>
     <transition source="s0" target="s0">
       <event>
-        <talk-to-npc npc-id="204053" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204053" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <!-- 选择前往（Kvasir STEP_TO_12）：var0 0→4；对应旧 defaultCloseDialog(0,4)。 Choose to proceed (Kvasir STEP_TO_12): var0 0→4; mirrors the old defaultCloseDialog(0,4). -->
     <transition source="s0" target="s4">
       <event>
-        <talk-to-npc npc-id="204053" dialog-id="10011"/>
+        <dialog type="TALK_TO_NPC" npc-id="204053" action="SETPRO12"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -83,18 +83,18 @@
     </transition>
     <transition source="s4" target="s4">
       <event>
-        <talk-to-npc npc-id="204053" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204053" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="4"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1019"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1_2"/>
       </after-commit>
     </transition>
     <transition source="s4" target="s4">
       <event>
-        <talk-to-npc npc-id="204053" dialog-id="10011"/>
+        <dialog type="TALK_TO_NPC" npc-id="204053" action="SETPRO12"/>
       </event>
       <conditions>
         <variable-is field="var0" value="4"/>
@@ -105,19 +105,19 @@
     </transition>
     <transition source="s4" target="s4">
       <event>
-        <talk-to-npc npc-id="204089" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204089" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="4"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1693"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
     <!-- 进入特里尼尔地下竞技场（Garm STEP_TO_3）：var0 4→5 并传送至下个可用实例。 Enter the Triniel Underground Arena (Garm STEP_TO_3): var0 4→5 and teleport to the next available instance. -->
     <transition source="s4" target="s5">
       <event>
-        <talk-to-npc npc-id="204089" dialog-id="10002"/>
+        <dialog type="TALK_TO_NPC" npc-id="204089" action="SETPRO3"/>
       </event>
       <conditions>
         <variable-is field="var0" value="4"/>
@@ -130,13 +130,13 @@
     </transition>
     <transition source="s5" target="s5">
       <event>
-        <talk-to-npc npc-id="204089" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204089" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var4" value="10"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="2034"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
     <!-- 竞技场内击杀 12 种怪累计 var4（0→9 递增）。 Kill the 12 arena mob types to accumulate var4 (0→9). -->
@@ -241,7 +241,7 @@
     <!-- 领取奖励（Garm STEP_TO_4）：进入领奖（var0=9）。 Claim reward (Garm STEP_TO_4): enter reward (var0=9). -->
     <transition source="s5" target="s9">
       <event>
-        <talk-to-npc npc-id="204089" dialog-id="10003"/>
+        <dialog type="TALK_TO_NPC" npc-id="204089" action="SETPRO4"/>
       </event>
       <conditions>
         <variable-is field="var4" value="10"/>
@@ -253,16 +253,16 @@
     </transition>
     <transition source="s9" target="s9">
       <event>
-        <talk-to-npc npc-id="204301" dialog-ids="-1 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="204301" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <!-- 领奖（Aegir）：旧 sendQuestEndDialog(env, choice=1) 以奖励索引 1 完成；经验/金币/物品为 quest_data 总量，职业武器按 13830 模式逐职业发放。 Reward (Aegir): the old sendQuestEndDialog(env, choice=1) completes with reward index 1; EXP/gold/items are the quest_data totals, class weapons granted per class per the 13830 pattern. -->
     <transition source="s9" target="complete" priority="0">
       <event>
-        <talk-to-npc npc-id="204301" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204301" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="GLADIATOR"/>
@@ -277,12 +277,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="s9" target="complete" priority="1">
       <event>
-        <talk-to-npc npc-id="204301" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204301" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="TEMPLAR"/>
@@ -297,12 +297,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="s9" target="complete" priority="2">
       <event>
-        <talk-to-npc npc-id="204301" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204301" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="RANGER"/>
@@ -317,12 +317,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="s9" target="complete" priority="3">
       <event>
-        <talk-to-npc npc-id="204301" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204301" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="ASSASSIN"/>
@@ -337,12 +337,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="s9" target="complete" priority="4">
       <event>
-        <talk-to-npc npc-id="204301" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204301" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="SORCERER"/>
@@ -357,12 +357,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="s9" target="complete" priority="5">
       <event>
-        <talk-to-npc npc-id="204301" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204301" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="SPIRIT_MASTER"/>
@@ -377,12 +377,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="s9" target="complete" priority="6">
       <event>
-        <talk-to-npc npc-id="204301" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204301" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="CLERIC"/>
@@ -397,12 +397,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="s9" target="complete" priority="7">
       <event>
-        <talk-to-npc npc-id="204301" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204301" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="CHANTER"/>
@@ -417,12 +417,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="s9" target="complete" priority="8">
       <event>
-        <talk-to-npc npc-id="204301" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204301" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="GUNSLINGER"/>
@@ -437,12 +437,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="s9" target="complete" priority="9">
       <event>
-        <talk-to-npc npc-id="204301" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204301" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="SONGWEAVER"/>
@@ -457,12 +457,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="s9" target="complete" priority="10">
       <event>
-        <talk-to-npc npc-id="204301" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204301" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="AETHERTECH"/>
@@ -477,7 +477,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

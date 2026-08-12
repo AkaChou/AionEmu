@@ -16,16 +16,16 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -87,25 +87,25 @@
     <!-- 领奖 NPC Aud (204061)：任务信息窗口。 Reward NPC Aud (204061): quest info window. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="204061" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <!-- 领奖 NPC Aud (204061)：选择奖励界面。 Reward NPC Aud (204061): select-reward window. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="204061" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <!-- 领奖：按职业发放可选择的职业奖励并完成（GLADIATOR / 战士）。 Reward: grants the class-selected reward per class and completes (GLADIATOR). -->
     <transition source="reward" target="complete" priority="0">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="GLADIATOR"/>
@@ -119,13 +119,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 领奖：按职业发放可选择的职业奖励并完成（TEMPLAR / 守护星）。 Reward: grants the class-selected reward per class and completes (TEMPLAR). -->
     <transition source="reward" target="complete" priority="1">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="TEMPLAR"/>
@@ -139,13 +139,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 领奖：按职业发放可选择的职业奖励并完成（RANGER / 弓星）。 Reward: grants the class-selected reward per class and completes (RANGER). -->
     <transition source="reward" target="complete" priority="2">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="RANGER"/>
@@ -159,13 +159,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 领奖：按职业发放可选择的职业奖励并完成（ASSASSIN / 杀星）。 Reward: grants the class-selected reward per class and completes (ASSASSIN). -->
     <transition source="reward" target="complete" priority="3">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="ASSASSIN"/>
@@ -179,13 +179,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 领奖：按职业发放可选择的职业奖励并完成（SORCERER / 魔道星）。 Reward: grants the class-selected reward per class and completes (SORCERER). -->
     <transition source="reward" target="complete" priority="4">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="SORCERER"/>
@@ -199,13 +199,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 领奖：按职业发放可选择的职业奖励并完成（SPIRIT_MASTER / 精灵星）。 Reward: grants the class-selected reward per class and completes (SPIRIT_MASTER). -->
     <transition source="reward" target="complete" priority="5">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="SPIRIT_MASTER"/>
@@ -219,13 +219,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 领奖：按职业发放可选择的职业奖励并完成（CLERIC / 治愈星）。 Reward: grants the class-selected reward per class and completes (CLERIC). -->
     <transition source="reward" target="complete" priority="6">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="CLERIC"/>
@@ -239,13 +239,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 领奖：按职业发放可选择的职业奖励并完成（CHANTER / 护法星）。 Reward: grants the class-selected reward per class and completes (CHANTER). -->
     <transition source="reward" target="complete" priority="7">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="CHANTER"/>
@@ -259,13 +259,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 领奖：按职业发放可选择的职业奖励并完成（GUNSLINGER / 枪星）。 Reward: grants the class-selected reward per class and completes (GUNSLINGER). -->
     <transition source="reward" target="complete" priority="8">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="GUNSLINGER"/>
@@ -279,13 +279,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 领奖：按职业发放可选择的职业奖励并完成（SONGWEAVER / 吟游星）。 Reward: grants the class-selected reward per class and completes (SONGWEAVER). -->
     <transition source="reward" target="complete" priority="9">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="SONGWEAVER"/>
@@ -299,13 +299,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 领奖：按职业发放可选择的职业奖励并完成（AETHERTECH / 机甲星）。 Reward: grants the class-selected reward per class and completes (AETHERTECH). -->
     <transition source="reward" target="complete" priority="10">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="AETHERTECH"/>
@@ -319,13 +319,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 无条件回退完成：仅发经验，作为职业条件转移的安全网（所有 11 个进阶职业均已有专属转移）。 Unconditional fallback completion: EXP only, safety net below the per-class transitions (all 11 advanced classes already have dedicated transitions). -->
     <transition source="reward" target="complete" priority="11">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="1005193" amount-mode="QUEST_BASE"/>
@@ -335,7 +335,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

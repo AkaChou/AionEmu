@@ -14,20 +14,20 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="790001" source="unaccepted" target="started" selection-sources="unaccepted"/>
+    <dialog type="NPC_START" npc-id="790001" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
     <transition source="started" target="reward">
       <event>
         <enter-zone zone="LF1_SENSORY_AREA_Q1123_210010000"/>
@@ -39,12 +39,14 @@
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="790001" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="790001" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="790001" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_REWARD2 SELECTED_QUEST_REWARD3 SELECTED_QUEST_REWARD4 SELECTED_QUEST_REWARD5 SELECTED_QUEST_REWARD6 SELECTED_QUEST_REWARD7 SELECTED_QUEST_REWARD8 SELECTED_QUEST_REWARD9 SELECTED_QUEST_REWARD10 SELECTED_QUEST_REWARD11 SELECTED_QUEST_REWARD12 SELECTED_QUEST_REWARD13 SELECTED_QUEST_REWARD14 SELECTED_QUEST_REWARD15 SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

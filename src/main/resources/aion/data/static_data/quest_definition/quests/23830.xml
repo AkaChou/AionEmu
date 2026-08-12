@@ -16,16 +16,16 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -44,7 +44,6 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-
     <!-- 进入万魔城时，持有工作物品则无事发生；缺失则补发（旧 handler 的 onEnterWorldEvent 修复）。 -->
     <!-- On entering Pandaemonium, do nothing when holding the work item; re-grant it when missing (old onEnterWorldEvent fix). -->
     <transition source="started" target="started" priority="0">
@@ -73,7 +72,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <!-- 使用工作物品后进入奖励阶段。Using the work item enters the reward stage. -->
     <transition source="started" target="reward">
       <event>
@@ -86,37 +84,35 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-
     <!-- Aud (204061)：奖励对话。Aud (204061): reward dialogs. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="204061" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="204061" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="204061" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-
     <!-- 完成并发放职业奖励武器（每职业一件，条件互斥）。Complete and grant the class reward weapon (one per class, mutually exclusive). -->
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="GLADIATOR"/>
@@ -130,12 +126,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="TEMPLAR"/>
@@ -149,12 +145,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="RANGER"/>
@@ -168,12 +164,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="ASSASSIN"/>
@@ -187,12 +183,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="SORCERER"/>
@@ -206,12 +202,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="SPIRIT_MASTER"/>
@@ -225,12 +221,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="CLERIC"/>
@@ -244,12 +240,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="CHANTER"/>
@@ -263,12 +259,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="GUNSLINGER"/>
@@ -282,12 +278,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="SONGWEAVER"/>
@@ -301,12 +297,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204061" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="204061" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="AETHERTECH"/>
@@ -320,7 +316,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

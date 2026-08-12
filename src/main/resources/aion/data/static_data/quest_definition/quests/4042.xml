@@ -18,22 +18,22 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="s2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -43,12 +43,12 @@
         <use-item item-id="182209024"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <quest-dialog dialog-id="1002"/>
+        <dialog type="QUEST_ACTION" action="QUEST_ACCEPT_1"/>
       </event>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
@@ -56,25 +56,24 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <quest-dialog dialog-id="1003"/>
+        <dialog type="QUEST_ACTION" action="QUEST_REFUSE_1"/>
       </event>
       <after-commit>
         <close-dialog/>
       </after-commit>
     </transition>
-
     <!-- 步骤 0:Sahnu (205192) 收下湿信,转交 Ntuamu 的信。 -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="205192" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="205192" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="started" target="s1">
       <event>
-        <talk-to-npc npc-id="205192" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="205192" action="SETPRO1"/>
       </event>
       <actions>
         <remove-item item-id="182209024" count="1"/>
@@ -85,19 +84,18 @@
         <close-dialog/>
       </after-commit>
     </transition>
-
     <!-- 步骤 1:Gunter (204225) 收信,任务推进。 -->
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="204225" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204225" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1693"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s2">
       <event>
-        <talk-to-npc npc-id="204225" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="204225" action="SETPRO2"/>
       </event>
       <actions>
         <remove-item item-id="182209025" count="1"/>
@@ -107,26 +105,26 @@
         <close-dialog/>
       </after-commit>
     </transition>
-
     <!-- 步骤 2:Sahnu (205192) 交付完成,进入奖励。 -->
     <transition source="s2" target="s2">
       <event>
-        <talk-to-npc npc-id="205192" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="205192" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="s2" target="reward">
       <event>
-        <talk-to-npc npc-id="205192" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="205192" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-
     <!-- 奖励:Sahnu (205192) 领取。 -->
-    <npc-complete npc-id="205192" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="205192" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

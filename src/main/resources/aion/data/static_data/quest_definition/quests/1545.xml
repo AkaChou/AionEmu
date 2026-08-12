@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1545" version="1">
   <metadata name="Collecting The Essence Of Earth" display-name-id="1102745" min-level="36" max-level="2147483647" category="QUEST" cannot-share="true">
-<races>
+    <races>
       <race id="ELYOS"/>
     </races>
-<prerequisites>
+    <prerequisites>
       <quest id="1544"/>
     </prerequisites>
-<items>
+    <items>
       <item id="182201720" count="3"/>
     </items>
-<rewards>
+    <rewards>
       <reward kind="GOLD" id="0" amount="22590"/>
       <reward kind="EXP" id="0" amount="1301093"/>
       <reward kind="SELECTABLE_ITEM" id="110101185" amount="1"/>
@@ -20,7 +20,7 @@
       <reward kind="SELECTABLE_ITEM" id="110550972" amount="1"/>
       <reward kind="ITEM" id="164000054" amount="15"/>
     </rewards>
-<drops>
+    <drops>
       <drop npc-id="211144" item-id="182201720" chance="80" each-member="true" collecting-step="0"/>
       <drop npc-id="211159" item-id="182201720" chance="80" each-member="true" collecting-step="0"/>
     </drops>
@@ -30,70 +30,50 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
-
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
-
     <node label="reward" status="REWARD">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
-
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
-
   </nodes>
   <transitions>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="204586" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204586" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
-
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="204586" dialog-id="1007"/>
+        <dialog type="TALK_TO_NPC" npc-id="204586" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
-
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="204586" dialog-id="1002"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
-      </after-commit>
-    </transition>
-
-    <transition source="unaccepted" target="started">
-      <event>
-        <talk-to-npc npc-id="204586" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="204586" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <close-dialog/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
-
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="204586" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="204586" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -103,53 +83,59 @@
         <close-dialog/>
       </after-commit>
     </transition>
-
+    <transition source="unaccepted" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204586" action="SETPRO1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="204586" dialog-ids="1003 1004 20001"/>
+        <dialog type="TALK_TO_NPC" npc-id="204586" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
       </after-commit>
     </transition>
-
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="204586" dialog-id="1008"/>
+        <dialog type="TALK_TO_NPC" npc-id="204586" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="204586" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204586" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-
     <npc-item-report npc-id="204586" source="started" target="reward" item-id="182201720" required="3"/>
-
     <transition source="started" target="reward">
       <event>
-        <talk-to-npc npc-id="204586" dialog-id="10255"/>
+        <dialog type="TALK_TO_NPC" npc-id="204586" action="SET_SUCCEED"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
-
-    <npc-complete npc-id="204586" source="reward" target="complete" fixed-reward-indices="0 1 7" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="2"/>
-      <choice dialog-id="9" reward-index="3"/>
-      <choice dialog-id="10" reward-index="4"/>
-      <choice dialog-id="11" reward-index="5"/>
-      <choice dialog-id="12" reward-index="6"/>
+    <npc-complete npc-id="204586" source="reward" target="complete" fixed-reward-indices="0 1 7" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="6"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-
   </transitions>
 </quest-definition>

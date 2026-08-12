@@ -24,37 +24,37 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
     <!-- 接取：预览、拒绝与选择对话 / Accept: preview, decline and selection dialogs -->
-    <npc-start npc-id="204363" source="unaccepted" target="started" selection-sources="unaccepted started">
+    <dialog type="NPC_START" npc-id="204363" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
       <accept-actions>
-        <give-item item-id="182204190" count="1" />
+        <give-item item-id="182204190" count="1"/>
       </accept-actions>
-    </npc-start>
+    </dialog>
     <!-- 进行中：交回工作物品校验，未持有物品时重开任务列表 / Started: deliver work item check, reopen quest list when not held -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="204342" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204342" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
       <event>
-        <talk-to-npc npc-id="204342" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="204342" action="SELECT_QUEST_REWARD"/>
       </event>
       <conditions>
         <has-item item-id="182204190" count="1"/>
@@ -64,18 +64,20 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event>
-        <talk-to-npc npc-id="204342" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="204342" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 领奖：确认后发放金币/经验/物品并完成任务 / Reward: grant gold/exp/items and complete the quest -->
-    <npc-complete npc-id="204342" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="204342" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

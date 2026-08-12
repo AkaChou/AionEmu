@@ -19,148 +19,149 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="k1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="k2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="k3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="k4" status="START">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="k5" status="START">
-          <var name="var0" value="5"/>
+      <var name="var0" value="5"/>
     </node>
     <node label="k6" status="START">
-          <var name="var0" value="6"/>
+      <var name="var0" value="6"/>
     </node>
     <node label="k7" status="START">
-          <var name="var0" value="7"/>
+      <var name="var0" value="7"/>
     </node>
     <node label="k8" status="START">
-          <var name="var0" value="8"/>
+      <var name="var0" value="8"/>
     </node>
     <node label="k9" status="START">
-          <var name="var0" value="9"/>
+      <var name="var0" value="9"/>
     </node>
     <node label="k10" status="START">
-          <var name="var0" value="10"/>
+      <var name="var0" value="10"/>
     </node>
     <node label="k11" status="START">
-          <var name="var0" value="11"/>
+      <var name="var0" value="11"/>
     </node>
     <node label="k12" status="START">
-          <var name="var0" value="12"/>
+      <var name="var0" value="12"/>
     </node>
     <node label="k13" status="START">
-          <var name="var0" value="13"/>
+      <var name="var0" value="13"/>
     </node>
     <node label="k14" status="START">
-          <var name="var0" value="14"/>
+      <var name="var0" value="14"/>
     </node>
     <node label="k15" status="START">
-          <var name="var0" value="15"/>
+      <var name="var0" value="15"/>
     </node>
     <node label="k16" status="START">
-          <var name="var0" value="16"/>
+      <var name="var0" value="16"/>
     </node>
     <node label="k17" status="START">
-          <var name="var0" value="17"/>
+      <var name="var0" value="17"/>
     </node>
     <node label="k18" status="START">
-          <var name="var0" value="18"/>
+      <var name="var0" value="18"/>
     </node>
     <node label="k19" status="START">
-          <var name="var0" value="19"/>
+      <var name="var0" value="19"/>
     </node>
     <node label="k20" status="START">
-          <var name="var0" value="20"/>
+      <var name="var0" value="20"/>
     </node>
     <node label="k21" status="START">
-          <var name="var0" value="21"/>
+      <var name="var0" value="21"/>
     </node>
     <node label="k22" status="START">
-          <var name="var0" value="22"/>
+      <var name="var0" value="22"/>
     </node>
     <node label="k23" status="START">
-          <var name="var0" value="23"/>
+      <var name="var0" value="23"/>
     </node>
     <node label="k24" status="START">
-          <var name="var0" value="24"/>
+      <var name="var0" value="24"/>
     </node>
     <node label="k25" status="START">
-          <var name="var0" value="25"/>
+      <var name="var0" value="25"/>
     </node>
     <node label="k26" status="START">
-          <var name="var0" value="26"/>
+      <var name="var0" value="26"/>
     </node>
     <node label="k27" status="START">
-          <var name="var0" value="27"/>
+      <var name="var0" value="27"/>
     </node>
     <node label="k28" status="START">
-          <var name="var0" value="28"/>
+      <var name="var0" value="28"/>
     </node>
     <node label="k29" status="START">
-          <var name="var0" value="29"/>
+      <var name="var0" value="29"/>
     </node>
     <node label="k30" status="START">
-          <var name="var0" value="30"/>
+      <var name="var0" value="30"/>
     </node>
     <node label="k31" status="START">
-          <var name="var0" value="31"/>
+      <var name="var0" value="31"/>
     </node>
     <node label="k32" status="START">
-          <var name="var0" value="32"/>
+      <var name="var0" value="32"/>
     </node>
     <node label="k33" status="START">
-          <var name="var0" value="33"/>
+      <var name="var0" value="33"/>
     </node>
     <node label="k34" status="START">
-          <var name="var0" value="34"/>
+      <var name="var0" value="34"/>
     </node>
     <node label="k35" status="START">
-          <var name="var0" value="35"/>
+      <var name="var0" value="35"/>
     </node>
     <node label="k36" status="START">
-          <var name="var0" value="36"/>
+      <var name="var0" value="36"/>
     </node>
     <node label="k37" status="START">
-          <var name="var0" value="37"/>
+      <var name="var0" value="37"/>
     </node>
     <node label="k38" status="START">
-          <var name="var0" value="38"/>
+      <var name="var0" value="38"/>
     </node>
     <node label="k39" status="START">
-          <var name="var0" value="39"/>
+      <var name="var0" value="39"/>
     </node>
     <node label="k40" status="START">
-          <var name="var0" value="40"/>
+      <var name="var0" value="40"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="40"/>
+      <var name="var0" value="40"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="798952" source="unaccepted" target="started" selection-sources="unaccepted"/>
+    <dialog type="NPC_START" npc-id="798952" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
     <counter-grid>
       <dimension field="var0" required="40" npc-ids="215468 215469 215470 215471 215472 215473 215474 215475 215476 215477 215478 215479 215480"/>
     </counter-grid>
-    <npc-report npc-id="798952" source="k40" target="reward" page="1352"/>
-    <npc-complete npc-id="798952" source="reward" target="complete" fixed-reward-indices="0 1 2" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="3"/>
-      <choice dialog-id="9" reward-index="4"/>
-      <choice dialog-id="10" reward-index="5"/>
+    <dialog type="NPC_REPORT" npc-id="798952" source="k40" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="798952" source="reward" target="complete" fixed-reward-indices="0 1 2" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="5"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

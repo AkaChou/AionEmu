@@ -16,38 +16,69 @@
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="0"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
   </nodes>
   <transitions>
     <!-- 接取:使用任务物品 182209527(Mysterious Seed) 触发接取对话框(dialog 4)。 -->
     <transition source="unaccepted" target="unaccepted">
-      <event><use-item item-id="182209527"/></event>
-      <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
+      <event>
+        <use-item item-id="182209527"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><quest-dialog dialog-id="1002"/></event>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit>
+      <event>
+        <dialog type="QUEST_ACTION" action="QUEST_ACCEPT_1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><quest-dialog dialog-id="1003"/></event>
-      <after-commit><close-dialog/></after-commit>
+      <event>
+        <dialog type="QUEST_ACTION" action="QUEST_REFUSE_1"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
     </transition>
-
     <!-- 进行中:塔洛克空洞交互物(279000) 使用对象查看;选择奖励则交付种子并完成。 -->
     <transition source="started" target="started">
-      <event><talk-to-npc npc-id="279000" dialog-id="-1"/></event>
-      <after-commit><show-quest-dialog dialog-id="2375"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="279000" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
     </transition>
     <transition source="started" target="reward">
-      <event><talk-to-npc npc-id="279000" dialog-id="1009"/></event>
-      <actions><remove-item item-id="182209527" count="1"/></actions>
-      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="279000" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <actions>
+        <remove-item item-id="182209527" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
     </transition>
-
     <!-- 奖励:279000 领取。 -->
-    <npc-complete npc-id="279000" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="279000" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

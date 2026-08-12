@@ -31,22 +31,22 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="s2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="s3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
@@ -79,19 +79,19 @@
     <!-- NPC 204388 引导对话 / NPC 204388 guidance dialog -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="204388" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204388" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <!-- NPC 204388 推进 / NPC 204388 advance -->
     <transition source="started" target="s1">
       <event>
-        <talk-to-npc npc-id="204388" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="204388" action="SETPRO1"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -107,19 +107,19 @@
     <!-- NPC 204414 引导对话 / NPC 204414 guidance dialog -->
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="204414" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204414" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <!-- NPC 204414 推进 / NPC 204414 advance -->
     <transition source="s1" target="s2">
       <event>
-        <talk-to-npc npc-id="204414" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="204414" action="SETPRO2"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
@@ -135,19 +135,19 @@
     <!-- NPC 204388 收集物品引导 / NPC 204388 collect-item guidance -->
     <transition source="s2" target="s2">
       <event>
-        <talk-to-npc npc-id="204388" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204388" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="2"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1693"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
     <!-- NPC 204388 检查收集物品并推进 / NPC 204388 checks collected item and advances -->
     <transition source="s2" target="s3">
       <event>
-        <talk-to-npc npc-id="204388" dialog-id="39"/>
+        <dialog type="TALK_TO_NPC" npc-id="204388" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
         <variable-is field="var0" value="2"/>
@@ -165,19 +165,19 @@
     <!-- NPC 204345 引导对话 / NPC 204345 guidance dialog -->
     <transition source="s3" target="s3">
       <event>
-        <talk-to-npc npc-id="204345" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204345" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="3"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="2034"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
     <!-- NPC 204345 设置为领奖状态 / NPC 204345 sets reward state -->
     <transition source="s3" target="reward">
       <event>
-        <talk-to-npc npc-id="204345" dialog-id="10255"/>
+        <dialog type="TALK_TO_NPC" npc-id="204345" action="SET_SUCCEED"/>
       </event>
       <conditions>
         <variable-is field="var0" value="3"/>
@@ -190,24 +190,24 @@
     <!-- 领奖对话 / Reward dialog -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="204304" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="204304" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="204304" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="204304" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <!-- 选择奖励 1 / Select reward 1 -->
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204304" dialog-id="8"/>
+        <dialog type="TALK_TO_NPC" npc-id="204304" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="3504765" amount-mode="QUEST_BASE"/>
@@ -219,13 +219,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 选择奖励 2 / Select reward 2 -->
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204304" dialog-id="9"/>
+        <dialog type="TALK_TO_NPC" npc-id="204304" action="SELECTED_QUEST_REWARD2"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="3504765" amount-mode="QUEST_BASE"/>
@@ -237,13 +237,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 选择奖励 3 / Select reward 3 -->
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204304" dialog-id="10"/>
+        <dialog type="TALK_TO_NPC" npc-id="204304" action="SELECTED_QUEST_REWARD3"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="3504765" amount-mode="QUEST_BASE"/>
@@ -255,13 +255,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 选择奖励 4 / Select reward 4 -->
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204304" dialog-id="11"/>
+        <dialog type="TALK_TO_NPC" npc-id="204304" action="SELECTED_QUEST_REWARD4"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="3504765" amount-mode="QUEST_BASE"/>
@@ -273,13 +273,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 选择奖励 5 / Select reward 5 -->
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204304" dialog-id="12"/>
+        <dialog type="TALK_TO_NPC" npc-id="204304" action="SELECTED_QUEST_REWARD5"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="3504765" amount-mode="QUEST_BASE"/>
@@ -291,13 +291,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 选择奖励 6 / Select reward 6 -->
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="204304" dialog-id="13"/>
+        <dialog type="TALK_TO_NPC" npc-id="204304" action="SELECTED_QUEST_REWARD6"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="3504765" amount-mode="QUEST_BASE"/>
@@ -309,7 +309,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

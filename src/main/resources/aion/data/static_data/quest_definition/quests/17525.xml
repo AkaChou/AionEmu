@@ -21,29 +21,43 @@
     <bit-field name="var1" offset="6" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="s1" status="START"><var name="var0" value="1"/></node>
-    <node label="s2" status="START"><var name="var0" value="2"/></node>
-    <node label="s3" status="START"><var name="var0" value="3"/></node>
-    <node label="s4" status="START"><var name="var0" value="4"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="5"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="s2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="s3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="s4" status="START">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="5"/>
+    </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <!-- 未接取时对话显示提示。 Unaccepted dialog shows the prompt. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="805351" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="805351" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4762"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
     <!-- 接受接取。 Accept the quest. -->
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="805351" dialog-ids="1002 20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="805351" actions="QUEST_ACCEPT_1 QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -56,7 +70,7 @@
     <!-- 简单拒绝。 Simple refuse. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="805351" dialog-id="20001"/>
+        <dialog type="TALK_TO_NPC" npc-id="805351" action="QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -140,12 +154,14 @@
     <!-- 奖励 NPC 打开奖励页。 Reward NPC opens the reward page. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="805351" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="805351" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="805351" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="805351" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

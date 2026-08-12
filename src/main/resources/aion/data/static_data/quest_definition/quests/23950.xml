@@ -13,51 +13,51 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="s2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
   </nodes>
   <transitions>
     <!-- 接取对话：NPC 806079 Feregran 显示任务介绍。 Start dialog: NPC 806079 Feregran shows the quest intro. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="806079" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="806079" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4762"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
     <!-- 接受任务并开始。 Accept quest and start. -->
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="806079" dialog-id="1002"/>
+        <dialog type="TALK_TO_NPC" npc-id="806079" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <!-- 简化接受。 Simple accept. -->
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="806079" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="806079" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -70,7 +70,7 @@
     <!-- 拒绝任务：关闭对话框。 Refuse quest: close dialog. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="806079" dialog-ids="1003 1004 20001"/>
+        <dialog type="TALK_TO_NPC" npc-id="806079" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -79,23 +79,23 @@
     <!-- 步骤 0：与 Pontekane 805356 对话推进到步骤 1。 Step 0: talk Pontekane 805356, advance to step 1. -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="805356" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="805356" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="805356" dialog-id="1012"/>
+        <dialog type="TALK_TO_NPC" npc-id="805356" action="SELECT1_1"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1012"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
     <transition source="started" target="s1">
       <event>
-        <talk-to-npc npc-id="805356" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="805356" action="SETPRO1"/>
       </event>
       <actions>
         <set-variable field="var0" value="1"/>
@@ -108,23 +108,23 @@
     <!-- 步骤 1：与 Vatiskhan 806591 对话推进到步骤 2。 Step 1: talk Vatiskhan 806591, advance to step 2. -->
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="806591" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="806591" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="806591" dialog-id="1353"/>
+        <dialog type="TALK_TO_NPC" npc-id="806591" action="SELECT2_1"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1353"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s2">
       <event>
-        <talk-to-npc npc-id="806591" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="806591" action="SETPRO2"/>
       </event>
       <actions>
         <set-variable field="var0" value="2"/>
@@ -149,12 +149,14 @@
     <!-- 奖励：与 Start Vatiskhan 806592 结算。 Reward: settle with Start Vatiskhan 806592. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="806592" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="806592" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="806592" source="reward" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="806592" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

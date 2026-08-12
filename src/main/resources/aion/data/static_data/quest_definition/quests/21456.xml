@@ -15,33 +15,90 @@
     <bit-field name="var0" offset="0" width="7" min="0" max="100" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
     <node label="started" status="START"/>
-    <node label="reward" status="REWARD"><var name="var0" value="100"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="100"/></node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="100"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="100"/>
+    </node>
   </nodes>
   <transitions>
     <!-- 接取:Gelkmaros 的 NPC (799247) 提供任务。 -->
-    <npc-start npc-id="799247" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="799247" source="started" target="reward" page="1352"/>
-    <transition source="reward" target="reward"><event><talk-to-npc npc-id="799247" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
-
+    <dialog type="NPC_START" npc-id="799247" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_REPORT" npc-id="799247" source="started" target="reward" page="SELECT2"/>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799247" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
     <!-- 击杀 31 种变异昆虫共 100 只:var0 计数 0→100,priority 1 计数、0 完成。 -->
     <transition source="started" target="started" priority="1">
-      <event><kill-npc npc-ids="215454 215455 215456 215457 215458 215459 215460 215461 215462 215463 215464 215465 215466 215467 215482 216133 216134 216135 216136 216137 216138 216139 216140 216141 216142 216143 216144 216145 216146 216459 216460"/></event>
-      <conditions><variable-below field="var0" value="100"/></conditions>
-      <actions><increment-variable field="var0" delta="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <kill-npc npc-ids="215454 215455 215456 215457 215458 215459 215460 215461 215462 215463 215464 215465 215466 215467 215482 216133 216134 216135 216136 216137 216138 216139 216140 216141 216142 216143 216144 216145 216146 216459 216460"/>
+      </event>
+      <conditions>
+        <variable-below field="var0" value="100"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var0" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
-      <event><kill-npc npc-ids="215454 215455 215456 215457 215458 215459 215460 215461 215462 215463 215464 215465 215466 215467 215482 216133 216134 216135 216136 216137 216138 216139 216140 216141 216142 216143 216144 216145 216146 216459 216460"/></event>
-      <conditions><variable-at-least field="var0" value="100"/></conditions>
-      <actions><set-variable field="var0" value="100"/></actions>
-      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
+      <event>
+        <kill-npc npc-ids="215454 215455 215456 215457 215458 215459 215460 215461 215462 215463 215464 215465 215466 215467 215482 216133 216134 216135 216136 216137 216138 216139 216140 216141 216142 216143 216144 216145 216146 216459 216460"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="100"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="100"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
     </transition>
-
     <!-- 奖励:NPC (799247) 领取固定奖励 (金币/经验),scroll 卷轴二选一 (dialog 8/9)。 -->
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="799247" dialog-id="8"/></event><actions>        <grant-reward kind="GOLD" id="0" amount="88470" amount-mode="QUEST_BASE"/>        <grant-reward kind="EXP" id="0" amount="8614568" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="164000066" amount="18"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="799247" dialog-id="9"/></event><actions>        <grant-reward kind="GOLD" id="0" amount="88470" amount-mode="QUEST_BASE"/>        <grant-reward kind="EXP" id="0" amount="8614568" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="164000121" amount="18"/>        <complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799247" action="SELECTED_QUEST_REWARD1"/>
+      </event>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="88470" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="8614568" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="164000066" amount="18"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799247" action="SELECTED_QUEST_REWARD2"/>
+      </event>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="88470" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="8614568" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="164000121" amount="18"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

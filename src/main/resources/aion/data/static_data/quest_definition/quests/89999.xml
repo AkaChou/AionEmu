@@ -5,25 +5,132 @@
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
   </nodes>
   <transitions>
     <!-- Laylin (799702) / Ronya (799703): 对话打开页面 1011，选择 1012 领取果汁 (160009017)。 -->
-    <npc-dialog source="unaccepted" npc-ids="799702 799703" dialog-ids="-1">
-      <show-quest-dialog dialog-id="1011" />
-    </npc-dialog>
-    <transition source="unaccepted" target="unaccepted" priority="0"><event><talk-to-npc npc-id="799702" dialog-id="1012"/></event><conditions><has-item item-id="160009017" count="1"/></conditions><after-commit><show-quest-dialog dialog-id="1097"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted" priority="0"><event><talk-to-npc npc-id="799703" dialog-id="1012"/></event><conditions><has-item item-id="160009017" count="1"/></conditions><after-commit><show-quest-dialog dialog-id="1097"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted" priority="10"><event><talk-to-npc npc-id="799702" dialog-id="1012"/></event><actions><give-item item-id="160009017" count="1"/></actions><after-commit><show-quest-dialog dialog-id="1012"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted" priority="10"><event><talk-to-npc npc-id="799703" dialog-id="1012"/></event><actions><give-item item-id="160009017" count="1"/></actions><after-commit><show-quest-dialog dialog-id="1012"/></after-commit></transition>
-
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799702" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799703" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799702" action="SELECT1_1"/>
+      </event>
+      <conditions>
+        <has-item item-id="160009017" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799703" action="SELECT1_1"/>
+      </event>
+      <conditions>
+        <has-item item-id="160009017" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted" priority="10">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799702" action="SELECT1_1"/>
+      </event>
+      <actions>
+        <give-item item-id="160009017" count="1"/>
+      </actions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted" priority="10">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799703" action="SELECT1_1"/>
+      </event>
+      <actions>
+        <give-item item-id="160009017" count="1"/>
+      </actions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
     <!-- Brios (798414) / Bothen (798416): 对话打开页面 1011，选择 1012 领取蛋糕 (160010073)。 -->
-    <npc-dialog source="unaccepted" npc-ids="798414 798416" dialog-ids="-1">
-      <show-quest-dialog dialog-id="1011" />
-    </npc-dialog>
-    <transition source="unaccepted" target="unaccepted" priority="0"><event><talk-to-npc npc-id="798414" dialog-id="1012"/></event><conditions><has-item item-id="160010073" count="1"/></conditions><after-commit><show-quest-dialog dialog-id="1097"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted" priority="0"><event><talk-to-npc npc-id="798416" dialog-id="1012"/></event><conditions><has-item item-id="160010073" count="1"/></conditions><after-commit><show-quest-dialog dialog-id="1097"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted" priority="10"><event><talk-to-npc npc-id="798414" dialog-id="1012"/></event><actions><give-item item-id="160010073" count="1"/></actions><after-commit><show-quest-dialog dialog-id="1012"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted" priority="10"><event><talk-to-npc npc-id="798416" dialog-id="1012"/></event><actions><give-item item-id="160010073" count="1"/></actions><after-commit><show-quest-dialog dialog-id="1012"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798414" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798416" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798414" action="SELECT1_1"/>
+      </event>
+      <conditions>
+        <has-item item-id="160010073" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798416" action="SELECT1_1"/>
+      </event>
+      <conditions>
+        <has-item item-id="160010073" count="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted" priority="10">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798414" action="SELECT1_1"/>
+      </event>
+      <actions>
+        <give-item item-id="160010073" count="1"/>
+      </actions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted" priority="10">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798416" action="SELECT1_1"/>
+      </event>
+      <actions>
+        <give-item item-id="160010073" count="1"/>
+      </actions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

@@ -17,59 +17,118 @@
     <bit-field name="var0" offset="0" width="3" min="0" max="2" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="v1" status="START"><var name="var0" value="1"/></node>
-    <node label="v2" status="START"><var name="var0" value="2"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="2"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="2"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="v1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="v2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="2"/>
+    </node>
   </nodes>
   <transitions>
     <!-- 接取:Phuthollo (204519);START_DIALOG(31) 显示 4762,1002/20000 接取,1003/1004/20001 拒绝。 -->
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204519" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="4762"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204519" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="204519" dialog-id="1002"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204519" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="204519" dialog-id="20000"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204519" action="QUEST_ACCEPT_SIMPLE"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204519" dialog-ids="1003 1004 20001"/></event>
-      <after-commit><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204519" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204519" dialog-id="1008"/></event>
-      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204519" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
     </transition>
-
     <!-- 进行:Belbua (204645);START_DIALOG(31) 按 var0 分 1011/1352,STEP_TO_1(10000) 推进到 1。 -->
     <transition source="started" target="started" priority="0">
-      <event><talk-to-npc npc-id="204645" dialog-id="31"/></event>
-      <conditions><variable-is field="var0" value="0"/></conditions>
-      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204645" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
-      <event><talk-to-npc npc-id="204645" dialog-id="31"/></event>
-      <conditions><variable-is field="var0" value="1"/></conditions>
-      <after-commit><show-quest-dialog dialog-id="1352"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204645" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
     </transition>
     <transition source="started" target="v1">
-      <event><talk-to-npc npc-id="204645" dialog-id="10000"/></event>
-      <conditions><variable-is field="var0" value="0"/></conditions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204645" action="SETPRO1"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
     </transition>
-
     <!-- 护送:STEP_TO_2(10001) 让 Belbua 跟随玩家至 SALINTUS_RISE(目标坐标 376,529,133);原逻辑跟随世界 NPC,DSL 按 4051 模式用任务 spawn 克隆表达。 -->
     <transition source="v1" target="v2">
-      <event><talk-to-npc npc-id="204645" dialog-id="10001"/></event>
-      <conditions><variable-is field="var0" value="1"/></conditions>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204645" action="SETPRO2"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
       <after-commit>
         <spawn-npc-at-player slot="belbua" template-id="204645" heading="0"/>
         <start-follow slot="belbua"/>
@@ -79,23 +138,42 @@
       </after-commit>
     </transition>
     <transition source="v2" target="reward">
-      <event><npc-reach-target/></event>
-      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
+      <event>
+        <npc-reach-target/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
     </transition>
     <transition source="v2" target="v1">
-      <event><npc-lost-target/></event>
-      <after-commit><despawn-npc slot="belbua"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <npc-lost-target/>
+      </event>
+      <after-commit>
+        <despawn-npc slot="belbua"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="v2" target="v1">
-      <event><log-out/></event>
-      <after-commit><despawn-npc slot="belbua"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <log-out/>
+      </event>
+      <after-commit>
+        <despawn-npc slot="belbua"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
-
     <!-- 奖励:Phuthollo (204519);31 显示 10002,-1/1009 显示奖励选择,8..23 完成。 -->
     <transition source="reward" target="reward">
-      <event><talk-to-npc npc-id="204519" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="10002"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204519" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
     </transition>
-    <npc-complete npc-id="204519" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="204519" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

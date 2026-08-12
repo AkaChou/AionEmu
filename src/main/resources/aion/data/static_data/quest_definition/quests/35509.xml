@@ -15,115 +15,224 @@
     <bit-field name="var0" offset="0" width="3" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="5"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="5"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="5"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="5"/>
+    </node>
   </nodes>
   <transitions>
     <!-- 接取:Spy 派系任务旧节点无 start NPC,由军队补给官 Meletos (799825) / Molinos (799826) 对话接取。 -->
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="799825" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799825" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="799825" dialog-id="1007"/></event>
-      <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799825" action="ASK_QUEST_ACCEPT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="799826" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799826" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="799826" dialog-id="1007"/></event>
-      <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799826" action="ASK_QUEST_ACCEPT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="799825" dialog-id="1002"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799825" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="799825" dialog-id="20000"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799825" action="QUEST_ACCEPT_SIMPLE"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="799825" dialog-id="10000"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799825" action="SETPRO1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="799826" dialog-id="1002"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799826" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="799826" dialog-id="20000"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799826" action="QUEST_ACCEPT_SIMPLE"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="799826" dialog-id="10000"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799826" action="SETPRO1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="799825" dialog-ids="1003 1004 20001"/></event>
-      <after-commit><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799825" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="799826" dialog-ids="1003 1004 20001"/></event>
-      <after-commit><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799826" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
     </transition>
-    <npc-dialog source="unaccepted" npc-ids="799825 799826" dialog-ids="1008">
-      <show-quest-selection-dialog dialog-id="10" />
-    </npc-dialog>
-
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799825" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799826" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
     <!-- 进行中:Meletos (799825) / Molinos (799826) 对话查看任务详情。 -->
-    <npc-dialog source="started" npc-ids="799825 799826" dialog-ids="31">
-      <show-quest-dialog dialog-id="2375" />
-    </npc-dialog>
-
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799825" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799826" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
     <!-- 全地图击杀敌对目标 5 个:var0 计数 0→5,priority 1 计数、0 完成进入奖励。 -->
     <transition source="started" target="started" priority="1">
-      <event><kill-in-world world-id="0"/></event>
-      <conditions><variable-below field="var0" value="5"/></conditions>
-      <actions><increment-variable field="var0" delta="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
-    </transition>
-    <transition source="started" target="reward" priority="0">
-      <event><kill-in-world world-id="0"/></event>
-      <conditions><variable-at-least field="var0" value="5"/></conditions>
-      <actions><set-variable field="var0" value="5"/></actions>
-      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
-    </transition>
-
-    <!-- 奖励:Meletos (799825) / Molinos (799826) 领取固定奖励 (exp/物品)。 -->
-    <transition source="reward" target="reward">
-      <event><talk-to-npc npc-id="799825" dialog-ids="-1 1009"/></event>
-      <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
-    </transition>
-    <transition source="reward" target="reward">
-      <event><talk-to-npc npc-id="799826" dialog-ids="-1 1009"/></event>
-      <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event><talk-to-npc npc-id="799825" dialog-ids="8..23"/></event>
+      <event>
+        <kill-in-world world-id="0"/>
+      </event>
+      <conditions>
+        <variable-below field="var0" value="5"/>
+      </conditions>
       <actions>
-        <grant-reward kind="EXP" id="0" amount="3773237"/>
-        <grant-reward kind="ITEM" id="186000101" amount="3"/>
-        <grant-reward kind="ITEM" id="188050569" amount="1"/>
-        <complete-quest reward-index="0"/>
+        <increment-variable field="var0" delta="1"/>
       </actions>
       <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <kill-in-world world-id="0"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="5"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 奖励:Meletos (799825) / Molinos (799826) 领取固定奖励 (exp/物品)。 -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799825" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799826" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
-      <event><talk-to-npc npc-id="799826" dialog-ids="8..23"/></event>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799825" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
+      </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="3773237"/>
         <grant-reward kind="ITEM" id="186000101" amount="3"/>
@@ -133,7 +242,23 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799826" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
+      </event>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="3773237"/>
+        <grant-reward kind="ITEM" id="186000101" amount="3"/>
+        <grant-reward kind="ITEM" id="188050569" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

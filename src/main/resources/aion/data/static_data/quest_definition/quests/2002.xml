@@ -28,64 +28,64 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="s2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="s3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="s4" status="START">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="s5" status="START">
-          <var name="var0" value="5"/>
+      <var name="var0" value="5"/>
     </node>
     <node label="s6" status="START">
-          <var name="var0" value="6"/>
+      <var name="var0" value="6"/>
     </node>
     <node label="s7" status="START">
-          <var name="var0" value="7"/>
+      <var name="var0" value="7"/>
     </node>
     <node label="s8" status="START">
-          <var name="var0" value="8"/>
+      <var name="var0" value="8"/>
     </node>
     <node label="s9" status="START">
-          <var name="var0" value="9"/>
+      <var name="var0" value="9"/>
     </node>
     <node label="s10" status="START">
-          <var name="var0" value="10"/>
+      <var name="var0" value="10"/>
     </node>
     <node label="s11" status="START">
-          <var name="var0" value="11"/>
+      <var name="var0" value="11"/>
     </node>
     <node label="s12" status="START">
-          <var name="var0" value="12"/>
+      <var name="var0" value="12"/>
     </node>
     <node label="s13" status="START">
-          <var name="var0" value="13"/>
+      <var name="var0" value="13"/>
     </node>
     <node label="s14" status="START">
-          <var name="var0" value="14"/>
+      <var name="var0" value="14"/>
     </node>
     <node label="s15" status="START">
-          <var name="var0" value="15"/>
+      <var name="var0" value="15"/>
     </node>
     <node label="s99" status="START">
-          <var name="var0" value="99"/>
+      <var name="var0" value="99"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="15"/>
+      <var name="var0" value="15"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -112,38 +112,36 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-
     <!-- 步骤 0:Dernier (203519)。 -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="203519" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203519" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="s1">
       <event>
-        <talk-to-npc npc-id="203519" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="203519" action="SETPRO1"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
-
     <!-- 步骤 1:Ceberos (203534)。 -->
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="203534" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203534" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="203534" dialog-id="1353"/>
+        <dialog type="TALK_TO_NPC" npc-id="203534" action="SELECT2_1"/>
       </event>
       <after-commit>
         <play-movie movie-id="52"/>
@@ -151,33 +149,31 @@
     </transition>
     <transition source="s1" target="s2">
       <event>
-        <talk-to-npc npc-id="203534" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="203534" action="SETPRO2"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
-
     <!-- 步骤 2:Munin (790002) 接取后击杀任务怪。 -->
     <transition source="s2" target="s2">
       <event>
-        <talk-to-npc npc-id="790002" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1693"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
     <transition source="s2" target="s3">
       <event>
-        <talk-to-npc npc-id="790002" dialog-id="10002"/>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="SETPRO3"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
-
     <!-- 击杀 Ispy (210377/210378) 直接推进客户端 SECTION_0:3→10。 -->
     <kill-routes source="s3" target="s4" npc-ids="210377 210378"/>
     <kill-routes source="s4" target="s5" npc-ids="210377 210378"/>
@@ -186,19 +182,18 @@
     <kill-routes source="s7" target="s8" npc-ids="210377 210378"/>
     <kill-routes source="s8" target="s9" npc-ids="210377 210378"/>
     <kill-routes source="s9" target="s10" npc-ids="210377 210378"/>
-
     <!-- 步骤 10-15:Munin (790002) 收集/推进。 -->
     <transition source="s10" target="s10">
       <event>
-        <talk-to-npc npc-id="790002" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2034"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
     <transition source="s10" target="s11">
       <event>
-        <talk-to-npc npc-id="790002" dialog-id="10002"/>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="SETPRO3"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -207,43 +202,43 @@
     </transition>
     <transition source="s11" target="s11">
       <event>
-        <talk-to-npc npc-id="790002" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="s11" target="s12" priority="0">
       <event>
-        <talk-to-npc npc-id="790002" dialog-id="39"/>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
         <has-item item-id="182203003" count="1"/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="2461"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>
       </after-commit>
     </transition>
     <transition source="s11" target="s11" priority="10">
       <event>
-        <talk-to-npc npc-id="790002" dialog-id="39"/>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2376"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
       </after-commit>
     </transition>
     <transition source="s12" target="s12">
       <event>
-        <talk-to-npc npc-id="790002" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2462"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2_1"/>
       </after-commit>
     </transition>
     <transition source="s12" target="s99">
       <event>
-        <talk-to-npc npc-id="790002" dialog-id="10004"/>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="SETPRO5"/>
       </event>
       <after-commit>
         <teleport-player-next-available-instance world-id="320010000" x="457.65" y="426.8" z="230.4" heading="0"/>
@@ -252,14 +247,23 @@
       </after-commit>
     </transition>
     <transition source="s99" target="s12">
-      <event><enter-world/></event>
-      <conditions><world-is world-id="320010000" expected="false"/></conditions>
-      <actions><set-variable field="var0" value="12"/></actions>
-      <after-commit><system-message message="QUEST_FAILED"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="320010000" expected="false"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="12"/>
+      </actions>
+      <after-commit>
+        <system-message message="QUEST_FAILED"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="s99" target="s13">
       <event>
-        <talk-to-npc npc-id="205020" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="205020" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <flight-teleport flight-teleport-id="3001"/>
@@ -278,26 +282,25 @@
     </transition>
     <transition source="s13" target="s13">
       <event>
-        <talk-to-npc npc-id="790002" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2716"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
       </after-commit>
     </transition>
     <transition source="s13" target="s14">
       <event>
-        <talk-to-npc npc-id="790002" dialog-id="10005"/>
+        <dialog type="TALK_TO_NPC" npc-id="790002" action="SETPRO6"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
-
     <!-- 步骤 14:使用对象 (203538) 触发剧情。 -->
     <transition source="s14" target="s15">
       <event>
-        <talk-to-npc npc-id="203538" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203538" action="USE_OBJECT"/>
       </event>
       <after-commit>
         <play-movie movie-id="256"/>
@@ -305,62 +308,60 @@
         <close-dialog/>
       </after-commit>
     </transition>
-
     <!-- 步骤 15:Rae (203553) 对话完成进入奖励。 -->
     <transition source="s15" target="s15">
       <event>
-        <talk-to-npc npc-id="203553" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203553" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="3057"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT7"/>
       </after-commit>
     </transition>
     <transition source="s15" target="reward">
       <event>
-        <talk-to-npc npc-id="203553" dialog-id="10006"/>
+        <dialog type="TALK_TO_NPC" npc-id="203553" action="SETPRO7"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-
     <!-- 奖励:Seski (203516) 领取。 -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="203516" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203516" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="3398"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT8"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="203516" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203516" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="3398"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT8"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="203516" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="203516" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="203516" dialog-id="10007"/>
+        <dialog type="TALK_TO_NPC" npc-id="203516" action="SETPRO8"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="203516" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="203516" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="4895" amount-mode="QUEST_BASE"/>
@@ -370,7 +371,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

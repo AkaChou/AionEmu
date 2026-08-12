@@ -38,33 +38,35 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="k1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="k2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="k3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
     <counter-grid>
       <dimension field="var0" required="3" npc-ids="882641 882642 882643 882644 882645"/>
     </counter-grid>
-    <npc-start npc-id="805380" source="unaccepted" target="started" selection-sources="unaccepted k3"/>
-    <npc-report npc-id="805380" source="k3" target="reward" page="1352"/>
-    <npc-complete npc-id="805380" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <dialog type="NPC_START" npc-id="805380" source="unaccepted" target="started" selection-sources="unaccepted k3" start-page="SELECT1"/>
+    <dialog type="NPC_REPORT" npc-id="805380" source="k3" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="805380" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

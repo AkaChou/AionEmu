@@ -19,79 +19,79 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s0" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="a" status="START">
-          <var name="var0" value="16"/>
+      <var name="var0" value="16"/>
     </node>
     <node label="b" status="START">
-          <var name="var0" value="32"/>
+      <var name="var0" value="32"/>
     </node>
     <node label="c" status="START">
-          <var name="var0" value="64"/>
+      <var name="var0" value="64"/>
     </node>
     <node label="ab" status="START">
-          <var name="var0" value="48"/>
+      <var name="var0" value="48"/>
     </node>
     <node label="ac" status="START">
-          <var name="var0" value="80"/>
+      <var name="var0" value="80"/>
     </node>
     <node label="bc" status="START">
-          <var name="var0" value="96"/>
+      <var name="var0" value="96"/>
     </node>
     <node label="done" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
   </nodes>
   <transitions>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="204006" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204006" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="204006" dialog-id="1012"/>
+        <dialog type="TALK_TO_NPC" npc-id="204006" action="SELECT1_1"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1012"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="204006" dialog-id="1007"/>
+        <dialog type="TALK_TO_NPC" npc-id="204006" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="s0">
       <event>
-        <talk-to-npc npc-id="204006" dialog-id="1002"/>
+        <dialog type="TALK_TO_NPC" npc-id="204006" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="204006" dialog-id="1003"/>
+        <dialog type="TALK_TO_NPC" npc-id="204006" action="QUEST_REFUSE_1"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -291,15 +291,15 @@
     </transition>
     <transition source="done" target="done">
       <event>
-        <talk-to-npc npc-id="204006" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204006" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="done" target="reward">
       <event>
-        <talk-to-npc npc-id="204006" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="204006" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
@@ -307,18 +307,19 @@
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="204006" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="204006" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="204006" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="2"/>
-      <choice dialog-id="9" reward-index="3"/>
-      <choice dialog-id="10" reward-index="4"/>
-      <choice dialog-id="11" reward-index="5"/>
-      <choice dialog-id="12" reward-index="6"/>
+    <npc-complete npc-id="204006" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="6"/>
+      <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

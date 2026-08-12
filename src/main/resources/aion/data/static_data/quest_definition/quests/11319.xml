@@ -14,49 +14,83 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-  <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-  <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-  <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
-  <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
     <!-- Naerty starts the tour; the retail Handler uses the normal and simple accept paths. -->
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="800245" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="4762"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800245" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="800245" dialog-id="1002"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800245" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="800245" dialog-id="20000"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800245" action="QUEST_ACCEPT_SIMPLE"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="800245" dialog-ids="1003 1004 20001"/></event>
-      <after-commit><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800245" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
     </transition>
-
     <!-- Vernea presents the report dialog, then moves the quest into REWARD. -->
     <transition source="started" target="started">
-      <event><talk-to-npc npc-id="804782" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="10002"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804782" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
     </transition>
     <transition source="started" target="reward">
-      <event><talk-to-npc npc-id="804782" dialog-id="1009"/></event>
-      <actions><set-status status="REWARD"/></actions>
-      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804782" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <actions>
+        <set-status status="REWARD"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
     </transition>
-    <npc-complete npc-id="804782" source="reward" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="804782" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

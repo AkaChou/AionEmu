@@ -16,49 +16,49 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var1" value="0"/>
-          <var name="var2" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var1" value="0"/>
-          <var name="var2" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var1" value="6"/>
-          <var name="var2" value="15"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="15"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var1" value="6"/>
-          <var name="var2" value="15"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="15"/>
     </node>
   </nodes>
   <transitions>
     <!-- 未接取状态与雅尼斯（799069）对话。 Pre-start dialog with Yannis (799069). -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799069" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="799069" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4762"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
     <!-- 接受任务。 Accept the quest. -->
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="799069" dialog-id="1002"/>
+        <dialog type="TALK_TO_NPC" npc-id="799069" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <!-- 一键接受任务。 Accept the quest (simple). -->
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="799069" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="799069" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -71,7 +71,7 @@
     <!-- 拒绝任务。 Refuse the quest. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799069" dialog-ids="1003 1004 20001"/>
+        <dialog type="TALK_TO_NPC" npc-id="799069" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -80,10 +80,10 @@
     <!-- 未接取时查看任务详情。 Quest detail window while unaccepted. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799069" dialog-id="1008"/>
+        <dialog type="TALK_TO_NPC" npc-id="799069" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 击杀钱特拉军团长 216866 推进击杀计数。 Kill Chantra Legatus 216866 to advance the kill counter. -->
@@ -119,20 +119,20 @@
     <!-- 双条件达成后的完成提示。 Completion prompt once both counters are met. -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="798928" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="798928" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var1" value="6"/>
         <variable-is field="var2" value="15"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <!-- 双条件达成后进入奖励阶段。 Enter the reward stage once both counters are met. -->
     <transition source="started" target="reward">
       <event>
-        <talk-to-npc npc-id="798928" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="798928" action="SELECT_QUEST_REWARD"/>
       </event>
       <conditions>
         <variable-is field="var1" value="6"/>
@@ -140,30 +140,30 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <!-- 奖励阶段对话。 Reward-stage dialog. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="798928" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="798928" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="798928" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="798928" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <!-- 选择奖励并完成任务。 Choose reward and complete. -->
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="798928" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="798928" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="3953541" amount-mode="QUEST_BASE"/>
@@ -173,7 +173,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

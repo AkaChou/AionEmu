@@ -20,37 +20,78 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="5"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="5"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="5"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="5"/>
+    </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="800324" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="800324" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-
+    <dialog type="NPC_START" npc-id="800324" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800324" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
     <!-- 击杀 5 种德拉坎战斗兵 5 个:var0 计数 0→5,priority 1 计数、0 完成进入奖励。 -->
     <transition source="started" target="started" priority="1">
-      <event><kill-npc npc-ids="219240 219241 219242 219243 219244"/></event>
-      <conditions><variable-below field="var0" value="5"/></conditions>
-      <actions><increment-variable field="var0" delta="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <kill-npc npc-ids="219240 219241 219242 219243 219244"/>
+      </event>
+      <conditions>
+        <variable-below field="var0" value="5"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var0" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
-      <event><kill-npc npc-ids="219240 219241 219242 219243 219244"/></event>
-      <conditions><variable-at-least field="var0" value="5"/></conditions>
-      <actions><set-variable field="var0" value="5"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <kill-npc npc-ids="219240 219241 219242 219243 219244"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="5"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
-
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="800324" dialog-id="1009"/></event><conditions><variable-at-least field="var0" value="5"/></conditions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <npc-complete npc-id="800324" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="2"/>
-      <choice dialog-id="9" reward-index="3"/>
-      <choice dialog-id="10" reward-index="4"/>
-      <choice dialog-id="11" reward-index="5"/>
-      <choice dialog-id="12" reward-index="6"/>
-      <choice dialog-id="13" reward-index="7"/>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800324" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="5"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="800324" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="6"/>
+      <choice action="SELECTED_QUEST_REWARD6" reward-index="7"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

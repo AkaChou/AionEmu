@@ -46,20 +46,20 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="1"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="3"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="3"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
@@ -89,18 +89,18 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="203129" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203129" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="s1">
       <event>
-        <talk-to-npc npc-id="203129" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="203129" action="SETPRO1"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -115,7 +115,7 @@
     </transition>
     <transition source="s1" target="s1" priority="0">
       <event>
-        <talk-to-npc npc-id="203129" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203129" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
@@ -123,12 +123,12 @@
         <variable-is field="var2" value="3"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1693"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
     <transition source="s1" target="reward" priority="1">
       <event>
-        <talk-to-npc npc-id="203129" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203129" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
@@ -140,7 +140,7 @@
     </transition>
     <transition source="s1" target="reward">
       <event>
-        <talk-to-npc npc-id="203129" dialog-id="10002"/>
+        <dialog type="TALK_TO_NPC" npc-id="203129" action="SETPRO3"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
@@ -180,21 +180,22 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="203098" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="1"/>
-      <choice dialog-id="9" reward-index="2"/>
-      <choice dialog-id="10" reward-index="3"/>
-      <choice dialog-id="11" reward-index="4"/>
-      <choice dialog-id="12" reward-index="5"/>
-      <choice dialog-id="13" reward-index="6"/>
-      <choice dialog-id="14" reward-index="7"/>
-      <choice dialog-id="15" reward-index="8"/>
-      <choice dialog-id="16" reward-index="9"/>
-      <choice dialog-id="17" reward-index="10"/>
-      <choice dialog-id="18" reward-index="11"/>
-      <choice dialog-id="19" reward-index="12"/>
-      <choice dialog-id="20" reward-index="13"/>
-      <fallback dialog-ids="23"/>
+    <npc-complete npc-id="203098" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
+      <choice action="SELECTED_QUEST_REWARD6" reward-index="6"/>
+      <choice action="SELECTED_QUEST_REWARD7" reward-index="7"/>
+      <choice action="SELECTED_QUEST_REWARD8" reward-index="8"/>
+      <choice action="SELECTED_QUEST_REWARD9" reward-index="9"/>
+      <choice action="SELECTED_QUEST_REWARD10" reward-index="10"/>
+      <choice action="SELECTED_QUEST_REWARD11" reward-index="11"/>
+      <choice action="SELECTED_QUEST_REWARD12" reward-index="12"/>
+      <choice action="SELECTED_QUEST_REWARD13" reward-index="13"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <fallback actions="SELECTED_QUEST_NOREWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

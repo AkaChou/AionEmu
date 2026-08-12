@@ -38,25 +38,25 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="s2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="s3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="s4" status="START">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
@@ -86,18 +86,18 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="203109" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203109" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="s1">
       <event>
-        <talk-to-npc npc-id="203109" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="203109" action="SETPRO1"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -112,18 +112,18 @@
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="203122" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203122" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s2">
       <event>
-        <talk-to-npc npc-id="203122" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="203122" action="SETPRO2"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
@@ -178,20 +178,21 @@
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="203109" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203109" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1693"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="203109" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="2"/>
-      <choice dialog-id="9" reward-index="3"/>
-      <choice dialog-id="10" reward-index="4"/>
-      <choice dialog-id="11" reward-index="5"/>
-      <choice dialog-id="12" reward-index="6"/>
-      <choice dialog-id="13" reward-index="7"/>
-      <fallback dialog-ids="23"/>
+    <npc-complete npc-id="203109" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="6"/>
+      <choice action="SELECTED_QUEST_REWARD6" reward-index="7"/>
+      <preview actions="SELECT_QUEST_REWARD"/>
+      <fallback actions="SELECTED_QUEST_NOREWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

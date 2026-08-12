@@ -36,10 +36,10 @@ class ReportTo1101DefinitionTest {
 		CompiledQuestDefinition compiled = definition();
 		List<QuestTransition> transitions = compiled.definition().transitions();
 
-		assertEquals(29, transitions.size());
+		assertEquals(30, transitions.size());
 		assertTrue(transitions.stream().allMatch(t -> t.event() instanceof QuestEvent.TalkToNpc talk
 			&& talk.dialogId() != null));
-		assertEquals(Set.of(31, 1007, 1002, 20000, 1003, 1004, 20001, 1008),
+		assertEquals(Set.of(31, 1012, 1007, 1002, 20000, 1003, 1004, 20001, 1008),
 			dialogIds(transitions, "unaccepted", 203049));
 		assertEquals(Set.of(1008), dialogIds(transitions, "started", 203049));
 		assertEquals(Set.of(31, 1009), dialogIds(transitions, "started", 203057));
@@ -62,7 +62,7 @@ class ReportTo1101DefinitionTest {
 		}
 		assertFalse(xml.contains("<evidence"));
 		assertFalse(xml.contains("ownership="));
-		assertTrue(xml.contains("dialog-ids=\"8..23\""));
+		assertTrue(xml.contains("actions=\"SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD\""));
 	}
 
 	@Test

@@ -49,17 +49,57 @@
       <condition type="finished" quest-id="2989"/>
     </start-conditions>
     <class-rewards>
-      <class id="FIGHTER"><reward kind="ITEM" id="100200673" amount="1"/><reward kind="ITEM" id="100000723" amount="1"/><reward kind="ITEM" id="100100568" amount="1"/><reward kind="ITEM" id="100900554" amount="1"/><reward kind="ITEM" id="101300538" amount="1"/></class>
-      <class id="KNIGHT"><reward kind="ITEM" id="100000723" amount="1"/><reward kind="ITEM" id="100100568" amount="1"/><reward kind="ITEM" id="100900554" amount="1"/><reward kind="ITEM" id="115000826" amount="1"/></class>
-      <class id="RANGER"><reward kind="ITEM" id="100200673" amount="1"/><reward kind="ITEM" id="100000723" amount="1"/><reward kind="ITEM" id="101700594" amount="1"/></class>
-      <class id="ASSASSIN"><reward kind="ITEM" id="100200673" amount="1"/><reward kind="ITEM" id="100000723" amount="1"/><reward kind="ITEM" id="101700594" amount="1"/></class>
-      <class id="WIZARD"><reward kind="ITEM" id="100600608" amount="1"/><reward kind="ITEM" id="100500572" amount="1"/></class>
-      <class id="ELEMENTALIST"><reward kind="ITEM" id="100600608" amount="1"/><reward kind="ITEM" id="100500572" amount="1"/></class>
-      <class id="PRIEST"><reward kind="ITEM" id="100100568" amount="1"/><reward kind="ITEM" id="101500566" amount="1"/><reward kind="ITEM" id="115000826" amount="1"/></class>
-      <class id="CHANTER"><reward kind="ITEM" id="100100568" amount="1"/><reward kind="ITEM" id="101500566" amount="1"/><reward kind="ITEM" id="115000826" amount="1"/></class>
-      <class id="GUNSLINGER"><reward kind="ITEM" id="101800570" amount="1"/><reward kind="ITEM" id="101900563" amount="1"/></class>
-      <class id="SONGWEAVER"><reward kind="ITEM" id="102000593" amount="1"/></class>
-      <class id="AETHERTECH"><reward kind="ITEM" id="102100517" amount="1"/></class>
+      <class id="FIGHTER">
+        <reward kind="ITEM" id="100200673" amount="1"/>
+        <reward kind="ITEM" id="100000723" amount="1"/>
+        <reward kind="ITEM" id="100100568" amount="1"/>
+        <reward kind="ITEM" id="100900554" amount="1"/>
+        <reward kind="ITEM" id="101300538" amount="1"/>
+      </class>
+      <class id="KNIGHT">
+        <reward kind="ITEM" id="100000723" amount="1"/>
+        <reward kind="ITEM" id="100100568" amount="1"/>
+        <reward kind="ITEM" id="100900554" amount="1"/>
+        <reward kind="ITEM" id="115000826" amount="1"/>
+      </class>
+      <class id="RANGER">
+        <reward kind="ITEM" id="100200673" amount="1"/>
+        <reward kind="ITEM" id="100000723" amount="1"/>
+        <reward kind="ITEM" id="101700594" amount="1"/>
+      </class>
+      <class id="ASSASSIN">
+        <reward kind="ITEM" id="100200673" amount="1"/>
+        <reward kind="ITEM" id="100000723" amount="1"/>
+        <reward kind="ITEM" id="101700594" amount="1"/>
+      </class>
+      <class id="WIZARD">
+        <reward kind="ITEM" id="100600608" amount="1"/>
+        <reward kind="ITEM" id="100500572" amount="1"/>
+      </class>
+      <class id="ELEMENTALIST">
+        <reward kind="ITEM" id="100600608" amount="1"/>
+        <reward kind="ITEM" id="100500572" amount="1"/>
+      </class>
+      <class id="PRIEST">
+        <reward kind="ITEM" id="100100568" amount="1"/>
+        <reward kind="ITEM" id="101500566" amount="1"/>
+        <reward kind="ITEM" id="115000826" amount="1"/>
+      </class>
+      <class id="CHANTER">
+        <reward kind="ITEM" id="100100568" amount="1"/>
+        <reward kind="ITEM" id="101500566" amount="1"/>
+        <reward kind="ITEM" id="115000826" amount="1"/>
+      </class>
+      <class id="GUNSLINGER">
+        <reward kind="ITEM" id="101800570" amount="1"/>
+        <reward kind="ITEM" id="101900563" amount="1"/>
+      </class>
+      <class id="SONGWEAVER">
+        <reward kind="ITEM" id="102000593" amount="1"/>
+      </class>
+      <class id="AETHERTECH">
+        <reward kind="ITEM" id="102100517" amount="1"/>
+      </class>
     </class-rewards>
   </metadata>
   <progress>
@@ -70,76 +110,868 @@
     <bit-field name="hunt-complete" offset="18" width="6" min="0" max="60" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="step" value="0"/></node>
-    <node label="started0" status="START"><var name="step" value="0"/></node>
-    <node label="started1" status="START"><var name="step" value="1"/></node>
-    <node label="started2" status="START"><var name="step" value="2"/></node>
-    <node label="started2-complete" status="START"><var name="step" value="2"/><var name="crestlich" value="30"/><var name="monitor" value="30"/><var name="vespine" value="30"/><var name="hunt-complete" value="60"/></node>
-    <node label="started3" status="START"><var name="step" value="3"/><var name="crestlich" value="30"/><var name="monitor" value="30"/><var name="vespine" value="30"/><var name="hunt-complete" value="60"/></node>
-    <node label="reward" status="REWARD"><var name="step" value="3"/><var name="crestlich" value="30"/><var name="monitor" value="30"/><var name="vespine" value="30"/><var name="hunt-complete" value="60"/></node>
-    <node label="complete" status="COMPLETE"><var name="step" value="3"/><var name="crestlich" value="30"/><var name="monitor" value="30"/><var name="vespine" value="30"/><var name="hunt-complete" value="60"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="step" value="0"/>
+    </node>
+    <node label="started0" status="START">
+      <var name="step" value="0"/>
+    </node>
+    <node label="started1" status="START">
+      <var name="step" value="1"/>
+    </node>
+    <node label="started2" status="START">
+      <var name="step" value="2"/>
+    </node>
+    <node label="started2-complete" status="START">
+      <var name="step" value="2"/>
+      <var name="crestlich" value="30"/>
+      <var name="monitor" value="30"/>
+      <var name="vespine" value="30"/>
+      <var name="hunt-complete" value="60"/>
+    </node>
+    <node label="started3" status="START">
+      <var name="step" value="3"/>
+      <var name="crestlich" value="30"/>
+      <var name="monitor" value="30"/>
+      <var name="vespine" value="30"/>
+      <var name="hunt-complete" value="60"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="step" value="3"/>
+      <var name="crestlich" value="30"/>
+      <var name="monitor" value="30"/>
+      <var name="vespine" value="30"/>
+      <var name="hunt-complete" value="60"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="step" value="3"/>
+      <var name="crestlich" value="30"/>
+      <var name="monitor" value="30"/>
+      <var name="vespine" value="30"/>
+      <var name="hunt-complete" value="60"/>
+    </node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="204146" dialog-id="31"/></event><conditions><equipment-set-equipped set-ids="9 8 7 6 378" count="5" expected="true"/></conditions><after-commit><show-quest-dialog dialog-id="4762"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="204146" dialog-id="31"/></event><conditions><equipment-set-equipped set-ids="9 8 7 6 378" count="5" expected="false"/></conditions><after-commit><show-quest-dialog dialog-id="4848"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="204146" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
-    <transition source="unaccepted" target="started0"><event><talk-to-npc npc-id="204146" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-    <transition source="unaccepted" target="started0"><event><talk-to-npc npc-id="204146" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="204146" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
-    <transition source="started0" target="started0"><event><talk-to-npc npc-id="204146" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
-    <transition source="started0" target="started1" priority="0"><event><talk-to-npc npc-id="204146" dialog-id="39"/></event><conditions><has-item item-id="182207065" count="150"/></conditions><actions><remove-item item-id="182207065" count="150"/></actions><after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="10000"/></after-commit></transition>
-    <transition source="started0" target="started0" priority="1"><event><talk-to-npc npc-id="204146" dialog-id="39"/></event><after-commit><show-quest-dialog dialog-id="10001"/></after-commit></transition>
-    <transition source="started1" target="started2"><event><talk-to-npc npc-id="204146" dialog-id="10001"/></event><after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-
-    <transition source="started2" target="started2-complete" priority="0"><event><kill-npc npc-ids="213011 213012"/></event><conditions><variable-below field="crestlich" value="30"/><variable-at-least field="monitor" value="30"/><variable-at-least field="vespine" value="30"/></conditions><actions><increment-variable field="crestlich" delta="1"/><set-variable field="hunt-complete" value="60"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started2" target="started2-complete" priority="0"><event><kill-npc npc-ids="213009 213010"/></event><conditions><variable-at-least field="crestlich" value="30"/><variable-below field="monitor" value="30"/><variable-at-least field="vespine" value="30"/></conditions><actions><increment-variable field="monitor" delta="1"/><set-variable field="hunt-complete" value="60"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started2" target="started2-complete" priority="0"><event><kill-npc npc-ids="213007 213008"/></event><conditions><variable-at-least field="crestlich" value="30"/><variable-at-least field="monitor" value="30"/><variable-below field="vespine" value="30"/></conditions><actions><increment-variable field="vespine" delta="1"/><set-variable field="hunt-complete" value="60"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started2" target="started2" priority="1"><event><kill-npc npc-ids="213011 213012"/></event><conditions><variable-below field="crestlich" value="30"/></conditions><actions><increment-variable field="crestlich" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started2" target="started2" priority="1"><event><kill-npc npc-ids="213009 213010"/></event><conditions><variable-below field="monitor" value="30"/></conditions><actions><increment-variable field="monitor" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started2" target="started2" priority="1"><event><kill-npc npc-ids="213007 213008"/></event><conditions><variable-below field="vespine" value="30"/></conditions><actions><increment-variable field="vespine" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started2" target="started2-complete" priority="0"><event><kill-npc npc-ids="213011 213012"/></event><conditions><variable-at-least field="crestlich" value="30"/><variable-at-least field="monitor" value="30"/><variable-at-least field="vespine" value="30"/></conditions><actions><set-variable field="hunt-complete" value="60"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started2" target="started2-complete" priority="0"><event><kill-npc npc-ids="213009 213010"/></event><conditions><variable-at-least field="crestlich" value="30"/><variable-at-least field="monitor" value="30"/><variable-at-least field="vespine" value="30"/></conditions><actions><set-variable field="hunt-complete" value="60"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started2" target="started2-complete" priority="0"><event><kill-npc npc-ids="213007 213008"/></event><conditions><variable-at-least field="crestlich" value="30"/><variable-at-least field="monitor" value="30"/><variable-at-least field="vespine" value="30"/></conditions><actions><set-variable field="hunt-complete" value="60"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-
-    <transition source="started2-complete" target="started2-complete"><event><talk-to-npc npc-id="204146" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1693"/></after-commit></transition>
-    <transition source="started2-complete" target="started3"><event><talk-to-npc npc-id="204146" dialog-id="10002"/></event><actions><set-variable field="step" value="3"/></actions><after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="started3" target="started3"><event><talk-to-npc npc-id="204146" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2034"/></after-commit></transition>
-    <transition source="started3" target="reward" priority="0"><event><talk-to-npc npc-id="204146" dialog-id="2035"/></event><conditions><dp-at-max/><has-item item-id="186000040" count="1"/></conditions><actions><remove-item item-id="186000040" count="1"/><reset-currency kind="DP"/></actions><after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="started3" target="started3" priority="1"><event><talk-to-npc npc-id="204146" dialog-id="2035"/></event><after-commit><show-quest-dialog dialog-id="2120"/></after-commit></transition>
-
-    <npc-complete npc-id="204146" source="reward" target="complete" fixed-reward-indices="0" dialog-ids="23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="8"/></event><conditions><advanced-class-is class="GLADIATOR"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100200673" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="9"/></event><conditions><advanced-class-is class="GLADIATOR"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100000723" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="10"/></event><conditions><advanced-class-is class="GLADIATOR"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100100568" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="11"/></event><conditions><advanced-class-is class="GLADIATOR"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100900554" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="12"/></event><conditions><advanced-class-is class="GLADIATOR"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="101300538" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="8"/></event><conditions><advanced-class-is class="TEMPLAR"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100000723" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="9"/></event><conditions><advanced-class-is class="TEMPLAR"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100100568" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="10"/></event><conditions><advanced-class-is class="TEMPLAR"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100900554" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="11"/></event><conditions><advanced-class-is class="TEMPLAR"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="115000826" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="8"/></event><conditions><advanced-class-is class="RANGER"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100200673" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="9"/></event><conditions><advanced-class-is class="RANGER"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100000723" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="10"/></event><conditions><advanced-class-is class="RANGER"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="101700594" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="8"/></event><conditions><advanced-class-is class="ASSASSIN"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100200673" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="9"/></event><conditions><advanced-class-is class="ASSASSIN"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100000723" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="10"/></event><conditions><advanced-class-is class="ASSASSIN"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="101700594" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="8"/></event><conditions><advanced-class-is class="SORCERER"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100600608" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="9"/></event><conditions><advanced-class-is class="SORCERER"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100500572" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="8"/></event><conditions><advanced-class-is class="SPIRIT_MASTER"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100600608" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="9"/></event><conditions><advanced-class-is class="SPIRIT_MASTER"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100500572" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="8"/></event><conditions><advanced-class-is class="CLERIC"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100100568" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="9"/></event><conditions><advanced-class-is class="CLERIC"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="101500566" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="10"/></event><conditions><advanced-class-is class="CLERIC"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="115000826" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="8"/></event><conditions><advanced-class-is class="CHANTER"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="100100568" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="9"/></event><conditions><advanced-class-is class="CHANTER"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="101500566" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="10"/></event><conditions><advanced-class-is class="CHANTER"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="115000826" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="8"/></event><conditions><advanced-class-is class="GUNSLINGER"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="101800570" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="9"/></event><conditions><advanced-class-is class="GUNSLINGER"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="101900563" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="8"/></event><conditions><advanced-class-is class="SONGWEAVER"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="102000593" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="204146" dialog-id="8"/></event><conditions><advanced-class-is class="AETHERTECH"/></conditions><actions><grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/><grant-reward kind="ITEM" id="102100517" amount="1"/><complete-quest reward-index="0"/></actions><after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <equipment-set-equipped set-ids="9 8 7 6 378" count="5" expected="true"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <equipment-set-equipped set-ids="9 8 7 6 378" count="5" expected="false"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE_2"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="ASK_QUEST_ACCEPT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="QUEST_ACCEPT_SIMPLE"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="started0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="started1" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="182207065" count="150"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182207065" count="150"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="started0" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
+    </transition>
+    <transition source="started1" target="started2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2-complete" priority="0">
+      <event>
+        <kill-npc npc-ids="213011 213012"/>
+      </event>
+      <conditions>
+        <variable-below field="crestlich" value="30"/>
+        <variable-at-least field="monitor" value="30"/>
+        <variable-at-least field="vespine" value="30"/>
+      </conditions>
+      <actions>
+        <increment-variable field="crestlich" delta="1"/>
+        <set-variable field="hunt-complete" value="60"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2-complete" priority="0">
+      <event>
+        <kill-npc npc-ids="213009 213010"/>
+      </event>
+      <conditions>
+        <variable-at-least field="crestlich" value="30"/>
+        <variable-below field="monitor" value="30"/>
+        <variable-at-least field="vespine" value="30"/>
+      </conditions>
+      <actions>
+        <increment-variable field="monitor" delta="1"/>
+        <set-variable field="hunt-complete" value="60"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2-complete" priority="0">
+      <event>
+        <kill-npc npc-ids="213007 213008"/>
+      </event>
+      <conditions>
+        <variable-at-least field="crestlich" value="30"/>
+        <variable-at-least field="monitor" value="30"/>
+        <variable-below field="vespine" value="30"/>
+      </conditions>
+      <actions>
+        <increment-variable field="vespine" delta="1"/>
+        <set-variable field="hunt-complete" value="60"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2" priority="1">
+      <event>
+        <kill-npc npc-ids="213011 213012"/>
+      </event>
+      <conditions>
+        <variable-below field="crestlich" value="30"/>
+      </conditions>
+      <actions>
+        <increment-variable field="crestlich" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2" priority="1">
+      <event>
+        <kill-npc npc-ids="213009 213010"/>
+      </event>
+      <conditions>
+        <variable-below field="monitor" value="30"/>
+      </conditions>
+      <actions>
+        <increment-variable field="monitor" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2" priority="1">
+      <event>
+        <kill-npc npc-ids="213007 213008"/>
+      </event>
+      <conditions>
+        <variable-below field="vespine" value="30"/>
+      </conditions>
+      <actions>
+        <increment-variable field="vespine" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2-complete" priority="0">
+      <event>
+        <kill-npc npc-ids="213011 213012"/>
+      </event>
+      <conditions>
+        <variable-at-least field="crestlich" value="30"/>
+        <variable-at-least field="monitor" value="30"/>
+        <variable-at-least field="vespine" value="30"/>
+      </conditions>
+      <actions>
+        <set-variable field="hunt-complete" value="60"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2-complete" priority="0">
+      <event>
+        <kill-npc npc-ids="213009 213010"/>
+      </event>
+      <conditions>
+        <variable-at-least field="crestlich" value="30"/>
+        <variable-at-least field="monitor" value="30"/>
+        <variable-at-least field="vespine" value="30"/>
+      </conditions>
+      <actions>
+        <set-variable field="hunt-complete" value="60"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="started2-complete" priority="0">
+      <event>
+        <kill-npc npc-ids="213007 213008"/>
+      </event>
+      <conditions>
+        <variable-at-least field="crestlich" value="30"/>
+        <variable-at-least field="monitor" value="30"/>
+        <variable-at-least field="vespine" value="30"/>
+      </conditions>
+      <actions>
+        <set-variable field="hunt-complete" value="60"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started2-complete" target="started2-complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="started2-complete" target="started3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SETPRO3"/>
+      </event>
+      <actions>
+        <set-variable field="step" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="started3" target="started3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
+      </after-commit>
+    </transition>
+    <transition source="started3" target="reward" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECT4_1"/>
+      </event>
+      <conditions>
+        <dp-at-max/>
+        <has-item item-id="186000040" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="186000040" count="1"/>
+        <reset-currency kind="DP"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started3" target="started3" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECT4_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_2"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="204146" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GLADIATOR"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100200673" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GLADIATOR"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100000723" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD3"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GLADIATOR"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100100568" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD4"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GLADIATOR"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100900554" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD5"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GLADIATOR"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="101300538" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="TEMPLAR"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100000723" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="TEMPLAR"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100100568" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD3"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="TEMPLAR"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100900554" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD4"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="TEMPLAR"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="115000826" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="RANGER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100200673" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="RANGER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100000723" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD3"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="RANGER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="101700594" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="ASSASSIN"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100200673" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="ASSASSIN"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100000723" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD3"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="ASSASSIN"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="101700594" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SORCERER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100600608" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SORCERER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100500572" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SPIRIT_MASTER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100600608" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SPIRIT_MASTER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100500572" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CLERIC"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100100568" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CLERIC"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="101500566" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD3"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CLERIC"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="115000826" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CHANTER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="100100568" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CHANTER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="101500566" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD3"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CHANTER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="115000826" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GUNSLINGER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="101800570" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD2"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GUNSLINGER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="101900563" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SONGWEAVER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="102000593" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="SELECTED_QUEST_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="AETHERTECH"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="EXP" id="0" amount="874200" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="102100517" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

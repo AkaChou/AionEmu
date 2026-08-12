@@ -16,62 +16,62 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="k1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="k2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="k3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="k4" status="START">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="k5" status="START">
-          <var name="var0" value="5"/>
+      <var name="var0" value="5"/>
     </node>
     <node label="k6" status="START">
-          <var name="var0" value="6"/>
+      <var name="var0" value="6"/>
     </node>
     <node label="k7" status="START">
-          <var name="var0" value="7"/>
+      <var name="var0" value="7"/>
     </node>
     <node label="k8" status="START">
-          <var name="var0" value="8"/>
+      <var name="var0" value="8"/>
     </node>
     <node label="k9" status="START">
-          <var name="var0" value="9"/>
+      <var name="var0" value="9"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="9"/>
+      <var name="var0" value="9"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="203540" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <dialog type="NPC_START" npc-id="203540" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
     <counter-grid>
       <dimension field="var0" required="9" npc-ids="210389 210655"/>
     </counter-grid>
-    <npc-report npc-id="203540" source="k9" target="reward" page="1352"/>
+    <dialog type="NPC_REPORT" npc-id="203540" source="k9" target="reward" page="SELECT2"/>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="203540" dialog-ids="-1 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="203540" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="203540" dialog-id="8"/>
+        <dialog type="TALK_TO_NPC" npc-id="203540" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="1705" amount-mode="QUEST_BASE"/>
@@ -82,12 +82,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="203540" dialog-id="9"/>
+        <dialog type="TALK_TO_NPC" npc-id="203540" action="SELECTED_QUEST_REWARD2"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="1705" amount-mode="QUEST_BASE"/>
@@ -98,7 +98,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

@@ -33,28 +33,28 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="w_reward" status="REWARD">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="s_reward" status="REWARD">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="m_reward" status="REWARD">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="p_reward" status="REWARD">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="t_reward" status="REWARD">
-          <var name="var0" value="5"/>
+      <var name="var0" value="5"/>
     </node>
     <node label="u_reward" status="REWARD">
-          <var name="var0" value="6"/>
+      <var name="var0" value="6"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -132,32 +132,34 @@
     </transition>
     <transition source="w_reward" target="w_reward">
       <event>
-        <talk-to-npc npc-id="203527" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203527" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="203527" source="w_reward" target="complete" fixed-reward-indices="0" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="203527" source="w_reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
     <transition source="s_reward" target="s_reward">
       <event>
-        <talk-to-npc npc-id="203528" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203528" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="s_reward" target="s_reward">
       <event>
-        <talk-to-npc npc-id="203528" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="203528" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="6"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
       </after-commit>
     </transition>
     <transition source="s_reward" target="complete">
       <event>
-        <talk-to-npc npc-id="203528" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="203528" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="275" amount-mode="QUEST_BASE"/>
@@ -166,28 +168,28 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="m_reward" target="m_reward">
       <event>
-        <talk-to-npc npc-id="203529" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203529" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1693"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
     <transition source="m_reward" target="m_reward">
       <event>
-        <talk-to-npc npc-id="203529" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="203529" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="7"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW3"/>
       </after-commit>
     </transition>
     <transition source="m_reward" target="complete">
       <event>
-        <talk-to-npc npc-id="203529" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="203529" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="275" amount-mode="QUEST_BASE"/>
@@ -196,28 +198,28 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="p_reward" target="p_reward">
       <event>
-        <talk-to-npc npc-id="203530" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203530" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2034"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
     <transition source="p_reward" target="p_reward">
       <event>
-        <talk-to-npc npc-id="203530" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="203530" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="8"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW4"/>
       </after-commit>
     </transition>
     <transition source="p_reward" target="complete">
       <event>
-        <talk-to-npc npc-id="203530" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="203530" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="275" amount-mode="QUEST_BASE"/>
@@ -226,28 +228,28 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="t_reward" target="t_reward">
       <event>
-        <talk-to-npc npc-id="801218" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="801218" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="t_reward" target="t_reward">
       <event>
-        <talk-to-npc npc-id="801218" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="801218" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="45"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW5"/>
       </after-commit>
     </transition>
     <transition source="t_reward" target="complete">
       <event>
-        <talk-to-npc npc-id="801218" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="801218" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="275" amount-mode="QUEST_BASE"/>
@@ -256,28 +258,28 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="u_reward" target="u_reward">
       <event>
-        <talk-to-npc npc-id="801219" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="801219" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2716"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
       </after-commit>
     </transition>
     <transition source="u_reward" target="u_reward">
       <event>
-        <talk-to-npc npc-id="801219" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="801219" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="46"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW6"/>
       </after-commit>
     </transition>
     <transition source="u_reward" target="complete">
       <event>
-        <talk-to-npc npc-id="801219" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="801219" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="275" amount-mode="QUEST_BASE"/>
@@ -286,7 +288,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

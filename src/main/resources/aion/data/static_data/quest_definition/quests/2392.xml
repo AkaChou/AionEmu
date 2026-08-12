@@ -32,48 +32,48 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="r1" status="REWARD">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="r2" status="REWARD">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="r3" status="REWARD">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
   </nodes>
   <transitions>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="798085" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4762"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="798085" dialog-id="1002"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="798085" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -85,7 +85,7 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="798085" dialog-ids="1003 1004 20001"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -93,31 +93,31 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="798085" dialog-id="1008"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="798085" dialog-id="1008"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="798085" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="r1" priority="0">
       <event>
-        <talk-to-npc npc-id="798085" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" action="SETPRO1"/>
       </event>
       <conditions>
         <has-item item-id="182204159" count="1"/>
@@ -126,21 +126,21 @@
         <remove-item item-id="182204159" count="1"/>
       </actions>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event>
-        <talk-to-npc npc-id="798085" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" action="SETPRO1"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1097"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
       </after-commit>
     </transition>
     <transition source="started" target="r2" priority="0">
       <event>
-        <talk-to-npc npc-id="798085" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" action="SETPRO2"/>
       </event>
       <conditions>
         <has-item item-id="182204160" count="1"/>
@@ -149,21 +149,21 @@
         <remove-item item-id="182204160" count="1"/>
       </actions>
       <after-commit>
-        <show-quest-dialog dialog-id="6"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event>
-        <talk-to-npc npc-id="798085" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" action="SETPRO2"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1097"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
       </after-commit>
     </transition>
     <transition source="started" target="r3" priority="0">
       <event>
-        <talk-to-npc npc-id="798085" dialog-id="10002"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" action="SETPRO3"/>
       </event>
       <conditions>
         <has-item item-id="182204161" count="1"/>
@@ -172,21 +172,21 @@
         <remove-item item-id="182204161" count="1"/>
       </actions>
       <after-commit>
-        <show-quest-dialog dialog-id="7"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW3"/>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
       <event>
-        <talk-to-npc npc-id="798085" dialog-id="10002"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" action="SETPRO3"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1097"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
       </after-commit>
     </transition>
     <transition source="r1" target="complete">
       <event>
-        <talk-to-npc npc-id="798085" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <remove-item item-id="182204159" count="1"/>
@@ -200,12 +200,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="r1" target="r1">
       <event>
-        <talk-to-npc npc-id="798085" dialog-ids="-1 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <actions>
         <remove-item item-id="182204159" count="1"/>
@@ -213,12 +213,12 @@
         <remove-item item-id="182204161" count="1"/>
       </actions>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="r2" target="complete">
       <event>
-        <talk-to-npc npc-id="798085" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <remove-item item-id="182204159" count="1"/>
@@ -232,12 +232,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="r2" target="r2">
       <event>
-        <talk-to-npc npc-id="798085" dialog-ids="-1 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <actions>
         <remove-item item-id="182204159" count="1"/>
@@ -245,12 +245,12 @@
         <remove-item item-id="182204161" count="1"/>
       </actions>
       <after-commit>
-        <show-quest-dialog dialog-id="6"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
       </after-commit>
     </transition>
     <transition source="r3" target="complete">
       <event>
-        <talk-to-npc npc-id="798085" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <remove-item item-id="182204159" count="1"/>
@@ -264,12 +264,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="r3" target="r3">
       <event>
-        <talk-to-npc npc-id="798085" dialog-ids="-1 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="798085" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <actions>
         <remove-item item-id="182204159" count="1"/>
@@ -277,7 +277,7 @@
         <remove-item item-id="182204161" count="1"/>
       </actions>
       <after-commit>
-        <show-quest-dialog dialog-id="7"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW3"/>
       </after-commit>
     </transition>
   </transitions>

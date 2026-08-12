@@ -21,16 +21,16 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -58,18 +58,18 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <npc-start npc-id="802427" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <dialog type="NPC_START" npc-id="802427" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="802427" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="802427" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward">
       <event>
-        <talk-to-npc npc-id="802427" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="802427" action="SELECT_QUEST_REWARD"/>
       </event>
       <conditions>
         <has-item item-id="182215485" count="1"/>
@@ -83,30 +83,34 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="802427" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="2"/>
-      <choice dialog-id="9" reward-index="3"/>
+    <npc-complete npc-id="802427" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <npc-start npc-id="730969" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="730969" source="started" target="reward" page="1352"/>
-    <npc-complete npc-id="730969" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="2"/>
-      <choice dialog-id="9" reward-index="3"/>
+    <dialog type="NPC_START" npc-id="730969" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_REPORT" npc-id="730969" source="started" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="730969" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <npc-start npc-id="730970" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="730970" source="started" target="reward" page="1352"/>
-    <npc-complete npc-id="730970" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="2"/>
-      <choice dialog-id="9" reward-index="3"/>
+    <dialog type="NPC_START" npc-id="730970" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_REPORT" npc-id="730970" source="started" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="730970" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <npc-start npc-id="730971" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="730971" source="started" target="reward" page="1352"/>
-    <npc-complete npc-id="730971" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="2"/>
-      <choice dialog-id="9" reward-index="3"/>
+    <dialog type="NPC_START" npc-id="730971" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_REPORT" npc-id="730971" source="started" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="730971" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

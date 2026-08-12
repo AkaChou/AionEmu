@@ -16,36 +16,48 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="k1" status="START"><var name="var0" value="1"/></node>
-    <node label="k2" status="START"><var name="var0" value="2"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="0"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="k1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="k2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
   </nodes>
   <transitions>
     <!-- 未接取状态与 798318 对话接取，起始页 4762。 Pre-start dialog with 798318. -->
-    <npc-start npc-id="798318" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
+    <dialog type="NPC_START" npc-id="798318" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <!-- 798332:var0=0,USE_OBJECT(-1) 显示 1011,SELECT_ACTION_1012 显示 1012,STEP_TO_1(10000) 推进 var0=1。 -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="798332" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="798332" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="798332" dialog-id="1012"/>
+        <dialog type="TALK_TO_NPC" npc-id="798332" action="SELECT1_1"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1012"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
     <transition source="started" target="k1">
       <event>
-        <talk-to-npc npc-id="798332" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="798332" action="SETPRO1"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -72,22 +84,24 @@
     <!-- 798331:var0=2,31 显示 10002,SELECT_REWARD(1009) 进奖励阶段。 -->
     <transition source="k2" target="k2">
       <event>
-        <talk-to-npc npc-id="798331" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="798331" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="k2" target="reward">
       <event>
-        <talk-to-npc npc-id="798331" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="798331" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <!-- 完成:798331 REWARD→COMPLETE。 -->
-    <npc-complete npc-id="798331" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="798331" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

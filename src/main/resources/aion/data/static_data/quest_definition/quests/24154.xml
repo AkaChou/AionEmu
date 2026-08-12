@@ -24,46 +24,62 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-  <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-  <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="v1" status="START">
-  <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="v2" status="START">
-  <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="v3" status="START">
-  <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="v4" status="START">
-  <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="reward" status="REWARD">
-  <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="complete" status="COMPLETE">
-  <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
   </nodes>
   <transitions>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204774" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="4762"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204774" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204774" dialog-id="1007"/></event>
-      <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204774" action="ASK_QUEST_ACCEPT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204774" dialog-id="1003"/></event>
-      <after-commit><show-quest-dialog dialog-id="1004"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204774" action="QUEST_REFUSE_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_1"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="204774" dialog-id="1002"/></event>
-      <conditions><start-eligible/></conditions>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204774" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
       <after-commit>
         <play-movie movie-id="249"/>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
@@ -71,29 +87,51 @@
       </after-commit>
     </transition>
     <transition source="started" target="v1">
-      <event><movie-end movie-id="249"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <movie-end movie-id="249"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="started" target="started">
-      <event><talk-to-npc npc-id="204809" dialog-id="31"/></event>
-      <conditions><variable-is field="var0" value="0"/></conditions>
-      <after-commit><show-quest-dialog dialog-id="1352"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204809" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
     </transition>
     <transition source="v1" target="v1">
-      <event><talk-to-npc npc-id="204809" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="1352"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204809" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
     </transition>
     <transition source="v1" target="v1">
-      <event><talk-to-npc npc-id="204809" dialog-id="1353"/></event>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204809" action="SELECT2_1"/>
+      </event>
       <actions>
         <give-item item-id="182215463" count="1"/>
         <give-item item-id="185000006" count="1"/>
       </actions>
-      <after-commit><show-quest-dialog dialog-id="1353"/></after-commit>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
     </transition>
     <transition source="v1" target="v2">
-      <event><talk-to-npc npc-id="204809" dialog-id="10001"/></event>
-      <actions><set-variable field="var0" value="2"/></actions>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204809" action="SETPRO2"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <apply-effect skill-id="267" duration-ms="350000"/>
@@ -101,27 +139,49 @@
       </after-commit>
     </transition>
     <transition source="v2" target="v2">
-      <event><talk-to-npc npc-id="700359" dialog="USE_OBJECT"/></event>
-      <after-commit><play-movie movie-id="250"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700359" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <play-movie movie-id="250"/>
+      </after-commit>
     </transition>
     <transition source="v2" target="v3">
-      <event><movie-end movie-id="250"/></event>
-      <actions><set-variable field="var0" value="3"/></actions>
+      <event>
+        <movie-end movie-id="250"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="3"/>
+      </actions>
       <after-commit>
         <teleport-player-current-or-default world-id="220040000" x="2452" y="2471" z="673" heading="28"/>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
     <transition source="v3" target="v4">
-      <event><kill-npc npc-id="700349"/></event>
-      <conditions><variable-is field="var0" value="3"/></conditions>
-      <actions><set-variable field="var0" value="4"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <kill-npc npc-id="700349"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="v4" target="reward">
-      <event><item-play item-id="182215463" animation-millis="3000"/></event>
-      <conditions><zone-is zone="DF3_ITEMUSEAREA_Q2058"/></conditions>
-      <actions><remove-item item-id="182215463" count="1"/></actions>
+      <event>
+        <item-play item-id="182215463" animation-millis="3000"/>
+      </event>
+      <conditions>
+        <zone-is zone="DF3_ITEMUSEAREA_Q2058"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215463" count="1"/>
+      </actions>
       <after-commit>
         <remove-effect effect-id="267"/>
         <play-movie movie-id="251"/>
@@ -129,32 +189,59 @@
       </after-commit>
     </transition>
     <transition source="v2" target="v1">
-      <event><die/></event>
-      <conditions><variable-is field="var0" value="2"/></conditions>
-      <actions><set-variable field="var0" value="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <die/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="v2" target="v1">
-      <event><log-out/></event>
-      <conditions><variable-is field="var0" value="2"/></conditions>
-      <actions><set-variable field="var0" value="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <log-out/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="v3" target="v1">
-      <event><enter-world/></event>
+      <event>
+        <enter-world/>
+      </event>
       <conditions>
         <world-is world-id="320110000" expected="false"/>
         <variable-is field="var0" value="3"/>
       </conditions>
-      <actions><set-variable field="var0" value="1"/></actions>
-      <after-commit> <system-message message="QUEST_FAILED"/>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <system-message message="QUEST_FAILED"/>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
-      <event><talk-to-npc npc-id="204774" dialog="USE_OBJECT"/></event>
-      <after-commit><show-quest-dialog dialog-id="10002"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204774" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
     </transition>
-    <npc-complete npc-id="204774" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="204774" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_REWARD2 SELECTED_QUEST_REWARD3 SELECTED_QUEST_REWARD4 SELECTED_QUEST_REWARD5 SELECTED_QUEST_REWARD6 SELECTED_QUEST_REWARD7 SELECTED_QUEST_REWARD8 SELECTED_QUEST_REWARD9 SELECTED_QUEST_REWARD10 SELECTED_QUEST_REWARD11 SELECTED_QUEST_REWARD12 SELECTED_QUEST_REWARD13 SELECTED_QUEST_REWARD14 SELECTED_QUEST_REWARD15 SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

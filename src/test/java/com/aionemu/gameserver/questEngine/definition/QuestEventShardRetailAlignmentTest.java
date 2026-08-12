@@ -113,7 +113,9 @@ class QuestEventShardRetailAlignmentTest {
 
 			// 50073/50074 双 NPC 各展开 8..23 的 16 条完成路线，其余单 NPC 16 条。
 			List<List<QuestAction>> completions = transitions.stream()
+				.filter(t -> t.sourceNode().equals("reward"))
 				.filter(t -> t.targetNode().equals("complete"))
+				.filter(t -> t.event() instanceof QuestEvent.TalkToNpc)
 				.map(QuestTransition::actions).toList();
 			assertEquals(16 * REPORT_NPCS.get(questId).size(), completions.size(),
 				"completion route count of " + questId);

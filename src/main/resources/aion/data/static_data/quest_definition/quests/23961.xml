@@ -15,16 +15,16 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -44,32 +44,32 @@
     <!-- 步骤 0：与 835222 对话，播放电影 963 后进入 REWARD。 Step 0: talk 835222, play movie 963, then enter REWARD. -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="835222" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="835222" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="835222" dialog-id="1012"/>
+        <dialog type="TALK_TO_NPC" npc-id="835222" action="SELECT1_1"/>
       </event>
       <after-commit>
         <play-movie movie-id="963"/>
-        <show-quest-dialog dialog-id="1012"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="835222" dialog-id="1013"/>
+        <dialog type="TALK_TO_NPC" npc-id="835222" action="SELECT1_1_1"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1013"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward">
       <event>
-        <talk-to-npc npc-id="835222" dialog-id="10255"/>
+        <dialog type="TALK_TO_NPC" npc-id="835222" action="SET_SUCCEED"/>
       </event>
       <actions>
         <set-status status="REWARD"/>
@@ -82,12 +82,14 @@
     <!-- 奖励：与 835224 结算。 Reward: settle with 835224. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="835224" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="835224" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="835224" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="835224" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

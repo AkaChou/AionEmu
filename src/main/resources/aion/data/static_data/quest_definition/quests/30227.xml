@@ -3,7 +3,8 @@
   <metadata name="[Group] To Liberate Souls" display-name-id="1114327" min-level="53" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
-    </races><rewards>
+    </races>
+    <rewards>
       <reward kind="EXP" id="0" amount="6517414"/>
       <reward kind="ITEM" id="188050590" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="112101018" amount="1"/>
@@ -20,35 +21,152 @@
     <bit-field name="var0" offset="0" width="3" min="0" max="2" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="s1" status="START"><var name="var0" value="1"/></node>
-    <node label="s2" status="START"><var name="var0" value="2"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="2"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="s2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="2"/>
+    </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <!-- 接取前与 798946 对话。 Pre-accept dialog with 798946. -->
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="798946" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="4762"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="798946" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="798946" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="798946" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798946" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798946" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798946" action="QUEST_ACCEPT_SIMPLE"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798946" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <!-- 与 799521 对话启动 300 秒限时。 Talk to 799521 to start the 300-second timer. -->
-    <transition source="started" target="started"><event><talk-to-npc npc-id="799521" dialog-id="31"/></event><conditions><variable-is field="var0" value="0"/></conditions><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
-    <transition source="started" target="s1"><event><talk-to-npc npc-id="799521" dialog-id="10000"/></event><conditions><variable-is field="var0" value="0"/></conditions><actions><set-variable field="var0" value="1"/></actions><after-commit><start-quest-timer seconds="300" timer-id="30227-timer" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799521" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799521" action="SETPRO1"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <start-quest-timer seconds="300" timer-id="30227-timer" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <!-- 限时结束任务重置回起点。 Timer expiry resets the quest to start. -->
-    <transition source="s1" target="started"><event><quest-timer-end/></event><conditions><variable-is field="var0" value="1"/></conditions><actions><set-variable field="var0" value="0"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s1" target="started">
+      <event>
+        <quest-timer-end/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <!-- 击杀 216586 停止计时并推进。 Killing 216586 stops the timer and advances. -->
-    <transition source="s1" target="s2"><event><kill-npc npc-id="216586"/></event><conditions><variable-is field="var0" value="1"/></conditions><actions><set-variable field="var0" value="2"/></actions><after-commit><cancel-quest-timer timer-id="30227-timer" scope="PLAYER_QUEST"/><play-movie movie-id="445"/><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s1" target="s2">
+      <event>
+        <kill-npc npc-id="216586"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <cancel-quest-timer timer-id="30227-timer" scope="PLAYER_QUEST"/>
+        <play-movie movie-id="445"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <!-- 击杀 216245 进入领奖。 Killing 216245 enters reward. -->
-    <transition source="s2" target="reward"><event><kill-npc npc-id="216245"/></event><conditions><variable-is field="var0" value="2"/></conditions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
-    <transition source="reward" target="reward"><event><talk-to-npc npc-id="798946" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
-    <npc-complete npc-id="798946" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="2"/>
-      <choice dialog-id="9" reward-index="3"/>
-      <choice dialog-id="10" reward-index="4"/>
-      <choice dialog-id="11" reward-index="5"/>
-      <choice dialog-id="12" reward-index="6"/>
+    <transition source="s2" target="reward">
+      <event>
+        <kill-npc npc-id="216245"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798946" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="798946" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="6"/>
+      <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

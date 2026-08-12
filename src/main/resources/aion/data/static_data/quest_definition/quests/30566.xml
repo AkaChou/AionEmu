@@ -14,32 +14,46 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="1"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="1"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="1"/>
+    </node>
   </nodes>
   <transitions>
     <!-- 未接取状态与 804879 对话接取，起始页 4762。 Pre-start dialog with 804879. -->
-    <npc-start npc-id="804879" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
-
+    <dialog type="NPC_START" npc-id="804879" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <!-- 击杀 217313 或 236300 完成(var0 0→1 并进入奖励阶段)。Kill 217313 or 236300 to finish (var0 0→1, enter reward). -->
     <transition source="started" target="reward">
-      <event><kill-npc npc-ids="217313 236300"/></event>
-      <conditions><variable-below field="var0" value="1"/></conditions>
-      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
+      <event>
+        <kill-npc npc-ids="217313 236300"/>
+      </event>
+      <conditions>
+        <variable-below field="var0" value="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
     </transition>
-
     <!-- 奖励阶段与 805235 对话，dialog 1352 显示 5 页。 -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="805235" dialog-id="1352"/>
+        <dialog type="TALK_TO_NPC" npc-id="805235" action="SELECT2"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <!-- 完成:805235 REWARD→COMPLETE。 -->
-    <npc-complete npc-id="805235" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="805235" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

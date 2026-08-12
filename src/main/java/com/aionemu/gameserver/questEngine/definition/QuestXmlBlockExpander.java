@@ -22,11 +22,12 @@ final class QuestXmlBlockExpander {
 		if (transitionsElement == null) {
 			return List.of();
 		}
-		Context context = new Context(questId, metadata, progress, nodes);
+		Context context = new Context(questId, metadata, progress, nodes, explicitDialogRoutes(transitionsElement));
 		List<QuestTransition> transitions = new ArrayList<>();
 		for (Element element : children(transitionsElement)) {
-				switch (element.getTagName()) {
+			switch (element.getTagName()) {
 					case "transition" -> transitions.addAll(QuestDefinitionXmlCompiler.parseTransition(element));
+					case "dialog" -> transitions.addAll(expandDialog(context, element));
 					case "npc-start" -> transitions.addAll(expandNpcStart(context, element));
 					case "counter" -> transitions.addAll(expandCounter(context, element));
 					case "counter-grid" -> transitions.addAll(expandCounterGrid(context, element));
@@ -35,12 +36,41 @@ final class QuestXmlBlockExpander {
 					case "npc-item-report" -> transitions.addAll(expandNpcItemReport(context, element));
 					case "npc-report" -> transitions.addAll(expandNpcReport(context, element));
 					case "npc-complete" -> transitions.addAll(expandNpcComplete(context, element));
+					case "equipment-exchange" -> transitions.addAll(expandEquipmentExchange(context, element));
 					case "npc-dialog" -> transitions.addAll(expandNpcDialog(context, element));
 					default -> fail("UNKNOWN_XML_BLOCK", context, element.getTagName(), "element",
 						"unsupported transitions child");
 			}
 		}
 		return List.copyOf(transitions);
+	}
+
+	private static Set<DialogRouteKey> explicitDialogRoutes(Element transitionsElement) {
+		Set<DialogRouteKey> result = new LinkedHashSet<>();
+		for (Element transition : children(transitionsElement, "transition")) {
+			String source = attribute(transition, "source");
+			Element eventContainer = child(transition, "event");
+			if (source.isBlank() || eventContainer == null) {
+				continue;
+			}
+			for (QuestEvent event : QuestDefinitionXmlCompiler.parseEvents(onlyChild(eventContainer))) {
+				if (event instanceof QuestEvent.TalkToNpc talk && talk.dialogId() != null) {
+					result.add(new DialogRouteKey(source, talk.npcId(), talk.dialogId()));
+				}
+			}
+		}
+		return Set.copyOf(result);
+	}
+
+	private static List<QuestTransition> expandDialog(Context context, Element block) {
+		QuestDialogType type = QuestDefinitionXmlCompiler.dialogType(block);
+		return switch (type) {
+			case NPC_START, NPC_REPORT -> {
+				QuestDefinitionXmlCompiler.validateTransitionDialogShape(block, type);
+				yield type == QuestDialogType.NPC_START ? expandNpcStart(context, block) : expandNpcReport(context, block);
+			}
+			default -> fail("DIALOG_TYPE_NOT_ALLOWED_IN_TRANSITIONS", context, "dialog", "type", type.name());
+		};
 	}
 
 	private static List<QuestTransition> expandNpcDialog(Context context, Element block) {
@@ -103,9 +133,18 @@ final class QuestXmlBlockExpander {
 		int npcId = positiveInteger(context, block, "npc-start", "npc-id");
 		// NONE 状态首次开启对话时下发的页。默认 1011;部分 quest (如 luna 80875/80876) 旧版
 		// start_dialog_id 为 4762, 客户端只有该页的 html, 必须显式指定才能命中客户端资源。
-		String startDialogAttr = attribute(block, "start-dialog-id");
-		int startDialogId = startDialogAttr.isBlank() ? 1011
-			: positiveInteger(context, block, "npc-start", "start-dialog-id");
+		if (block.hasAttribute("start-page") && block.hasAttribute("start-dialog-id")) {
+			fail("DIALOG_LEGACY_ATTRIBUTE_CONFLICT", context, "dialog", "start-page",
+				"declare start-page or start-dialog-id, not both");
+		}
+		int startDialogId;
+		if (block.hasAttribute("start-page")) {
+			startDialogId = QuestDefinitionXmlCompiler.dialogPageSymbol(block, "start-page").id();
+		} else {
+			String startDialogAttr = attribute(block, "start-dialog-id");
+			startDialogId = startDialogAttr.isBlank() ? QuestDialogPage.SELECT1.id()
+				: positiveInteger(context, block, "npc-start", "start-dialog-id");
+		}
 		List<String> selectionSources = block.hasAttribute("selection-sources")
 			? tokens(context, block, "npc-start", "selection-sources", true) : List.of();
 		for (String selectionSource : selectionSources) {
@@ -126,26 +165,39 @@ final class QuestXmlBlockExpander {
 		}
 
 		List<QuestTransition> result = new ArrayList<>();
-		result.add(talk(npcId, 31, List.of(), List.of(), source, source, null,
+		result.add(talk(npcId, QuestDialogAction.QUEST_SELECT.id(), List.of(), List.of(), source, source, null,
 			List.of(new AfterCommitAction.ShowQuestDialog(startDialogId))));
-		result.add(talk(npcId, 1007, List.of(), List.of(), source, source, null,
-			List.of(new AfterCommitAction.ShowQuestDialog(4))));
+		if (startDialogId == QuestDialogPage.SELECT1.id()) {
+			result.add(talk(npcId, QuestDialogAction.SELECT1_1.id(), List.of(), List.of(), source, source, null,
+				List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1_1.id()))));
+		}
+		result.add(talk(npcId, QuestDialogAction.ASK_QUEST_ACCEPT.id(), List.of(), List.of(), source, source, null,
+			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id()))));
 		List<QuestCondition> acceptConditions = List.of(new QuestCondition.StartEligible());
-		result.add(talk(npcId, 1002, acceptConditions, acceptActions, source, target, null,
+		result.add(talk(npcId, QuestDialogAction.QUEST_ACCEPT_1.id(), acceptConditions, acceptActions, source, target, null,
 			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestDialog(1003))));
-		result.add(talk(npcId, 20000, acceptConditions, acceptActions, source, target, null,
+				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_ACCEPT_1.id()))));
+		result.add(talk(npcId, QuestDialogAction.QUEST_ACCEPT_SIMPLE.id(), acceptConditions, acceptActions, source, target, null,
 			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
 				new AfterCommitAction.CloseDialog())));
-		for (int dialogId : List.of(1003, 1004, 20001)) {
-			result.add(talk(npcId, dialogId, List.of(), List.of(), source, source, null,
+		result.add(talk(npcId, QuestDialogAction.QUEST_REFUSE_1.id(), List.of(), List.of(), source, source, null,
+			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_REFUSE_1.id()))));
+		for (QuestDialogAction action : List.of(QuestDialogAction.QUEST_REFUSE_2,
+				QuestDialogAction.QUEST_REFUSE_SIMPLE)) {
+			result.add(talk(npcId, action.id(), List.of(), List.of(), source, source, null,
 				List.of(new AfterCommitAction.CloseDialog())));
 		}
-		for (String selectionSource : selectionSources) {
-			result.add(talk(npcId, 1008, List.of(), List.of(), selectionSource, selectionSource, null,
-				List.of(new AfterCommitAction.ShowQuestSelectionDialog(10))));
+		Set<String> finishSources = new LinkedHashSet<>(List.of(source, target));
+		finishSources.addAll(selectionSources);
+		for (String selectionSource : finishSources) {
+			result.add(talk(npcId, QuestDialogAction.FINISH_DIALOG.id(), List.of(), List.of(), selectionSource, selectionSource, null,
+				List.of(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id()))));
 		}
-		return result;
+		return result.stream().filter(transition -> {
+			QuestEvent.TalkToNpc talk = (QuestEvent.TalkToNpc) transition.event();
+			return !context.explicitDialogRoutes().contains(
+				new DialogRouteKey(transition.sourceNode(), talk.npcId(), talk.dialogId()));
+		}).toList();
 	}
 
 	private static List<QuestTransition> expandKillRoutes(Context context, Element block) {
@@ -187,17 +239,20 @@ final class QuestXmlBlockExpander {
 				"node " + target + " must project REWARD");
 		}
 		int npcId = positiveInteger(context, block, "npc-report", "npc-id");
-		int page = integer(context, block, "npc-report", "page");
-		if (!Set.of(1352, 2375, 10002).contains(page)) {
+		int page = "dialog".equals(block.getTagName())
+			? QuestDefinitionXmlCompiler.dialogPageSymbol(block, "page").id()
+			: integer(context, block, "npc-report", "page");
+		if (!Set.of(QuestDialogPage.SELECT2.id(), QuestDialogPage.SELECT5.id(),
+				QuestDialogPage.DEFAULT_SUCCESS.id()).contains(page)) {
 			fail("NPC_REPORT_INVALID_PAGE", context, "npc-report", "page",
-				"must be one of 1352, 2375, or 10002");
+				"must be SELECT2, SELECT5, or DEFAULT_SUCCESS");
 		}
 		return List.of(
-			talk(npcId, 31, List.of(), List.of(), source, source, null,
+			talk(npcId, QuestDialogAction.QUEST_SELECT.id(), List.of(), List.of(), source, source, null,
 				List.of(new AfterCommitAction.ShowQuestDialog(page))),
-			talk(npcId, 1009, List.of(), List.of(), source, target, null,
+			talk(npcId, QuestDialogAction.SELECT_QUEST_REWARD.id(), List.of(), List.of(), source, target, null,
 				List.of(syncQuestState(targetNode),
-					new AfterCommitAction.ShowQuestDialog(5))));
+					new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()))));
 	}
 
 	private static List<QuestTransition> expandNpcItemReport(Context context, Element block) {
@@ -517,6 +572,241 @@ final class QuestXmlBlockExpander {
 		return new AfterCommitAction.SyncQuestState(mode);
 	}
 
+	private static List<QuestTransition> expandEquipmentExchange(Context context, Element block) {
+		String source = attribute(block, "source");
+		String started = attribute(block, "started");
+		String reward = attribute(block, "reward");
+		String complete = attribute(block, "complete");
+		QuestNode sourceNode = requireNode(context, "equipment-exchange", "source", source);
+		QuestNode startedNode = requireNode(context, "equipment-exchange", "started", started);
+		QuestNode rewardNode = requireNode(context, "equipment-exchange", "reward", reward);
+		QuestNode completeNode = requireNode(context, "equipment-exchange", "complete", complete);
+		if (sourceNode.projection().status() != QuestStatus.NONE
+				|| startedNode.projection().status() != QuestStatus.START
+				|| rewardNode.projection().status() != QuestStatus.REWARD
+				|| completeNode.projection().status() != QuestStatus.COMPLETE) {
+			return fail("EQUIPMENT_EXCHANGE_NODE_STATUS", context, "equipment-exchange", "nodes",
+				"source, started, reward, and complete must project NONE, START, REWARD, and COMPLETE");
+		}
+
+		int npcId = positiveInteger(context, block, "equipment-exchange", "npc-id");
+		int materialItemId = positiveInteger(context, block, "equipment-exchange", "material-item-id");
+		int materialCount = positiveInteger(context, block, "equipment-exchange", "material-count");
+		String selectionField = attribute(block, "selection-field");
+		String rewardField = attribute(block, "reward-field");
+		if (selectionField.equals(rewardField)) {
+			return fail("EQUIPMENT_EXCHANGE_FIELD_CONFLICT", context, "equipment-exchange", "reward-field",
+				"selection-field and reward-field must be different");
+		}
+
+		List<ExchangeCategory> categories = new ArrayList<>();
+		List<ExchangeEquipment> equipment = new ArrayList<>();
+		List<ExchangeRewardGroup> rewardGroups = new ArrayList<>();
+		Set<Integer> routeActions = new LinkedHashSet<>(Set.of(
+			QuestDialogAction.EXCHANGE_COIN.id(), QuestDialogAction.SELECT1.id()));
+		Set<Integer> equipmentItems = new LinkedHashSet<>();
+		Set<Integer> groupIndices = new LinkedHashSet<>();
+		for (Element child : children(block)) {
+			switch (child.getTagName()) {
+				case "category" -> {
+					int action = singleDialogAction(context, child, "equipment-exchange", "category");
+					addExchangeAction(context, routeActions, action, "category.action");
+					categories.add(new ExchangeCategory(action,
+						QuestDefinitionXmlCompiler.dialogPageSymbol(child, "page").id()));
+				}
+				case "equipment" -> {
+					int action = singleDialogAction(context, child, "equipment-exchange", "equipment");
+					addExchangeAction(context, routeActions, action, "equipment.action");
+					boolean singular = child.hasAttribute("item-id");
+					boolean plural = child.hasAttribute("item-ids");
+					if (singular == plural) {
+						return fail(singular ? "EQUIPMENT_EXCHANGE_ITEM_ATTRIBUTE_CONFLICT"
+							: "EQUIPMENT_EXCHANGE_ITEM_REQUIRED", context, "equipment-exchange", "equipment",
+							"declare item-id or item-ids");
+					}
+					List<Integer> itemIds = singular
+						? List.of(positiveInteger(context, child, "equipment-exchange", "item-id"))
+						: positiveIntegerTokens(context, child, "equipment-exchange", "item-ids");
+					for (int itemId : itemIds) {
+						if (!equipmentItems.add(itemId)) {
+							return fail("EQUIPMENT_EXCHANGE_DUPLICATE_ITEM", context, "equipment-exchange", "item-id",
+								"item " + itemId + " is declared more than once");
+						}
+					}
+					equipment.add(new ExchangeEquipment(action, itemIds, equipment.size() + 1));
+				}
+				case "reward-group" -> {
+					int action = singleDialogAction(context, child, "equipment-exchange", "reward-group");
+					addExchangeAction(context, routeActions, action, "reward-group.action");
+					int index = integer(context, child, "equipment-exchange", "index");
+					if (index < 0 || !groupIndices.add(index)) {
+						return fail("EQUIPMENT_EXCHANGE_INVALID_REWARD_GROUP", context, "equipment-exchange", "index",
+							"reward group indices must be unique and non-negative");
+					}
+					rewardGroups.add(new ExchangeRewardGroup(action, index,
+						QuestDefinitionXmlCompiler.dialogPageSymbol(child, "page").id()));
+				}
+				default -> fail("EQUIPMENT_EXCHANGE_UNKNOWN_CHILD", context, "equipment-exchange",
+					child.getTagName(), "unsupported child");
+			}
+		}
+		if (categories.isEmpty() || equipment.isEmpty() || rewardGroups.size() < 2) {
+			return fail("EQUIPMENT_EXCHANGE_INCOMPLETE", context, "equipment-exchange", "children",
+				"requires category, equipment, and at least two reward-group children");
+		}
+		BitField selection = context.progress().field(selectionField);
+		BitField selectedReward = context.progress().field(rewardField);
+		if (selection == null || selection.minValue() > 0 || selection.maxValue() < equipment.size()) {
+			return fail("EQUIPMENT_EXCHANGE_SELECTION_FIELD", context, "equipment-exchange", "selection-field",
+				"must represent 0.." + equipment.size());
+		}
+		if (selectedReward == null || selectedReward.minValue() > 0
+				|| selectedReward.maxValue() < rewardGroups.size()) {
+			return fail("EQUIPMENT_EXCHANGE_REWARD_FIELD", context, "equipment-exchange", "reward-field",
+				"must represent 0.." + rewardGroups.size());
+		}
+		if (context.metadata().rewardGroups().size() != rewardGroups.size()) {
+			return fail("EQUIPMENT_EXCHANGE_REWARD_GROUP_COUNT", context, "equipment-exchange", "reward-group",
+				"declares " + rewardGroups.size() + " routes for "
+					+ context.metadata().rewardGroups().size() + " metadata groups");
+		}
+		for (int index = 0; index < rewardGroups.size(); index++) {
+			if (!groupIndices.contains(index)) {
+				return fail("EQUIPMENT_EXCHANGE_INVALID_REWARD_GROUP", context, "equipment-exchange", "index",
+					"reward group indices must be contiguous from zero");
+			}
+		}
+
+		List<QuestTransition> result = new ArrayList<>();
+		List<QuestAction> resetSelection = List.of(new QuestAction.SetVariable(selectionField, 0),
+			new QuestAction.SetVariable(rewardField, 0));
+		result.add(talk(npcId, QuestDialogAction.EXCHANGE_COIN.id(), List.of(new QuestCondition.StartEligible()),
+			resetSelection, source, started, null,
+			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1.id()))));
+		for (int action : List.of(QuestDialogAction.EXCHANGE_COIN.id(), QuestDialogAction.SELECT1.id())) {
+			result.add(talk(npcId, action, List.of(), resetSelection, started, started, null,
+				List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1.id()))));
+		}
+		for (ExchangeCategory category : categories) {
+			result.add(talk(npcId, category.action(), List.of(), List.of(), started, started, null,
+				List.of(new AfterCommitAction.ShowQuestDialog(category.page()))));
+		}
+		for (ExchangeEquipment item : equipment) {
+			for (int option = 0; option < item.itemIds().size(); option++) {
+				result.add(talk(npcId, item.action(),
+					List.of(new QuestCondition.HasItem(item.itemIds().get(option), 1)),
+					List.of(new QuestAction.SetVariable(selectionField, item.selection())), started, started,
+					optionPriority(item, option),
+					List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+						new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1_1_1.id()))));
+			}
+			result.add(talk(npcId, item.action(), missingItems(item),
+				List.of(new QuestAction.SetVariable(selectionField, 0)), started, started, null,
+				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+					new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT2.id()))));
+		}
+
+		for (ExchangeRewardGroup group : rewardGroups) {
+			List<QuestReward> rewards = rewardGroup(context, group.index());
+			List<Integer> selectableIndices = new ArrayList<>();
+			List<QuestAction> fixedRewards = new ArrayList<>();
+			for (int rewardIndex = 0; rewardIndex < rewards.size(); rewardIndex++) {
+				QuestReward declared = rewards.get(rewardIndex);
+				if (rewardKind(context, "reward-group", rewardIndex, declared) == QuestRewardKind.SELECTABLE_ITEM) {
+					selectableIndices.add(rewardIndex);
+				} else {
+					fixedRewards.add(rewardAction(context, "reward-group", rewardIndex, declared));
+				}
+			}
+			if (selectableIndices.isEmpty() || selectableIndices.size() > 15) {
+				return fail("EQUIPMENT_EXCHANGE_SELECTABLE_REWARD_COUNT", context, "equipment-exchange",
+					"reward-group", "each group must contain 1..15 selectable rewards");
+			}
+			int groupValue = group.index() + 1;
+			for (ExchangeEquipment item : equipment) {
+				for (int option = 0; option < item.itemIds().size(); option++) {
+					int itemId = item.itemIds().get(option);
+					List<QuestCondition> selectedItem = List.of(
+						new QuestCondition.QuestVariableIs(selectionField, item.selection()),
+						new QuestCondition.HasItem(itemId, 1));
+					List<QuestCondition> success = new ArrayList<>(selectedItem);
+					success.add(new QuestCondition.HasItem(materialItemId, materialCount));
+					result.add(talk(npcId, group.action(), success,
+						List.of(new QuestAction.SetVariable(rewardField, groupValue)), started, reward,
+						optionPriority(item, option),
+						List.of(syncQuestState(rewardNode), new AfterCommitAction.ShowQuestDialog(group.page()))));
+					List<QuestCondition> noMaterial = new ArrayList<>(selectedItem);
+					noMaterial.add(new QuestCondition.HasItem(materialItemId, materialCount, false));
+					result.add(talk(npcId, group.action(), noMaterial, List.of(), started, started,
+						optionPriority(item, option),
+						List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_FAILED_1.id()))));
+				}
+				List<QuestCondition> missingItem = new ArrayList<>();
+				missingItem.add(new QuestCondition.QuestVariableIs(selectionField, item.selection()));
+				missingItem.addAll(missingItems(item));
+				result.add(talk(npcId, group.action(), missingItem, List.of(), started, started, null,
+					List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_FAILED_1.id()))));
+
+				for (int option = 0; option < item.itemIds().size(); option++) {
+					int itemId = item.itemIds().get(option);
+					for (int choice = 0; choice < selectableIndices.size(); choice++) {
+						int rewardIndex = selectableIndices.get(choice);
+						List<QuestAction> actions = new ArrayList<>();
+						actions.add(new QuestAction.RemoveItem(itemId, 1));
+						actions.add(new QuestAction.RemoveItem(materialItemId, materialCount));
+						actions.addAll(fixedRewards);
+						actions.add(rewardAction(context, "reward-group", rewardIndex, rewards.get(rewardIndex)));
+						actions.add(new QuestAction.CompleteQuest(group.index()));
+						result.add(talk(npcId, QuestDialogAction.SELECTED_QUEST_REWARD1.id() + choice,
+							List.of(new QuestCondition.QuestVariableIs(selectionField, item.selection()),
+								new QuestCondition.QuestVariableIs(rewardField, groupValue),
+								new QuestCondition.HasItem(itemId, 1)), actions,
+							reward, complete, optionPriority(item, option), completionAfterCommit()));
+					}
+				}
+			}
+			for (QuestDialogAction preview : List.of(QuestDialogAction.USE_OBJECT,
+					QuestDialogAction.SELECT_QUEST_REWARD)) {
+				result.add(talk(npcId, preview.id(),
+					List.of(new QuestCondition.QuestVariableIs(rewardField, groupValue)), List.of(),
+					reward, reward, null, List.of(new AfterCommitAction.ShowQuestDialog(group.page()))));
+			}
+		}
+		return result;
+	}
+
+	private static List<AfterCommitAction> completionAfterCommit() {
+		return List.of(new AfterCommitAction.RefreshPlayerStats(),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+			new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id()));
+	}
+
+	private static List<QuestCondition> missingItems(ExchangeEquipment equipment) {
+		return equipment.itemIds().stream()
+			.map(itemId -> (QuestCondition) new QuestCondition.HasItem(itemId, 1, false)).toList();
+	}
+
+	private static Integer optionPriority(ExchangeEquipment equipment, int option) {
+		return equipment.itemIds().size() == 1 ? null : option;
+	}
+
+	private static int singleDialogAction(Context context, Element element, String block, String attribute) {
+		List<QuestDialogAction> actions = QuestDefinitionXmlCompiler.dialogActions(element);
+		if (actions.size() != 1) {
+			return fail("EQUIPMENT_EXCHANGE_SINGLE_ACTION_REQUIRED", context, block, attribute,
+				"requires exactly one action");
+		}
+		return actions.getFirst().id();
+	}
+
+	private static void addExchangeAction(Context context, Set<Integer> seen, int action, String attribute) {
+		if (!seen.add(action)) {
+			fail("EQUIPMENT_EXCHANGE_DUPLICATE_ACTION", context, "equipment-exchange", attribute,
+				"action " + action + " is declared more than once");
+		}
+	}
+
 	private static List<QuestTransition> expandNpcComplete(Context context, Element block) {
 		String source = attribute(block, "source");
 		String target = attribute(block, "target");
@@ -555,7 +845,14 @@ final class QuestXmlBlockExpander {
 		}
 
 		DialogIds dialogs = new DialogIds(context, "npc-complete");
-		List<Integer> previewDialogIds = dialogs.add(block, "preview-dialog-ids");
+		boolean oldPreview = block.hasAttribute("preview-dialog-ids");
+		Element preview = child(block, "preview");
+		if (oldPreview && preview != null) {
+			fail("DIALOG_LEGACY_ATTRIBUTE_CONFLICT", context, "npc-complete", "preview",
+				"declare preview-dialog-ids or preview action/actions, not both");
+		}
+		List<Integer> previewDialogIds = oldPreview ? dialogs.add(block, "preview-dialog-ids")
+			: preview == null ? List.of() : dialogs.addActions(preview, "preview");
 		List<AfterCommitAction> extraAfterCommit = new ArrayList<>();
 		Element afterCommitElement = child(block, "after-commit");
 		if (afterCommitElement != null) {
@@ -569,26 +866,56 @@ final class QuestXmlBlockExpander {
 			}
 		}
 		List<CompletionRoute> routes = new ArrayList<>();
+		if (block.hasAttribute("dialog-ids") && block.hasAttribute("actions")) {
+			fail("DIALOG_LEGACY_ATTRIBUTE_CONFLICT", context, "npc-complete", "actions",
+				"declare dialog-ids or actions, not both");
+		}
 		if (block.hasAttribute("dialog-ids")) {
 			for (int dialogId : dialogs.add(block, "dialog-ids")) {
 				routes.add(new CompletionRoute(dialogId, null));
 			}
+		} else if (block.hasAttribute("actions")) {
+			for (int dialogId : dialogs.addActions(block, "actions")) {
+				routes.add(new CompletionRoute(dialogId, null));
+			}
 		}
 		for (Element choice : children(block, "choice")) {
-			int dialogId = integer(context, choice, "npc-complete", "dialog-id");
-			dialogs.addSingle(dialogId, "choice.dialog-id");
 			int rewardIndex = integer(context, choice, "npc-complete", "reward-index");
 			QuestReward reward = reward(context, selectedRewardGroup, "choice.reward-index", rewardIndex);
 			if (rewardKind(context, "choice.reward-index", rewardIndex, reward) != QuestRewardKind.SELECTABLE_ITEM) {
 				fail("NPC_COMPLETE_CHOICE_REWARD_TYPE", context, "npc-complete", "choice.reward-index",
 					"reward index " + rewardIndex + " is not SELECTABLE_ITEM");
 			}
-			routes.add(new CompletionRoute(dialogId,
-				rewardAction(context, "choice.reward-index", rewardIndex, reward)));
+			boolean oldChoice = choice.hasAttribute("dialog-id");
+			boolean newChoice = choice.hasAttribute("action") || choice.hasAttribute("actions");
+			if (oldChoice == newChoice) {
+				fail(oldChoice ? "DIALOG_LEGACY_ATTRIBUTE_CONFLICT" : "DIALOG_ACTION_REQUIRED", context,
+					"npc-complete", "choice", "declare dialog-id or action/actions");
+			}
+			List<Integer> choiceDialogIds;
+			if (oldChoice) {
+				int dialogId = integer(context, choice, "npc-complete", "dialog-id");
+				dialogs.addSingle(dialogId, "choice.dialog-id");
+				choiceDialogIds = List.of(dialogId);
+			} else {
+				choiceDialogIds = dialogs.addActions(choice, "choice");
+			}
+			for (int dialogId : choiceDialogIds) {
+				routes.add(new CompletionRoute(dialogId,
+					rewardAction(context, "choice.reward-index", rewardIndex, reward)));
+			}
 		}
 		Element fallback = child(block, "fallback");
 		if (fallback != null) {
-			for (int dialogId : dialogs.add(fallback, "dialog-ids")) {
+			boolean oldFallback = fallback.hasAttribute("dialog-ids");
+			boolean newFallback = fallback.hasAttribute("action") || fallback.hasAttribute("actions");
+			if (oldFallback == newFallback) {
+				fail(oldFallback ? "DIALOG_LEGACY_ATTRIBUTE_CONFLICT" : "DIALOG_ACTION_REQUIRED", context,
+					"npc-complete", "fallback", "declare dialog-ids or action/actions");
+			}
+			List<Integer> fallbackIds = oldFallback ? dialogs.add(fallback, "dialog-ids")
+				: dialogs.addActions(fallback, "fallback");
+			for (int dialogId : fallbackIds) {
 				routes.add(new CompletionRoute(dialogId, null));
 			}
 		}
@@ -804,9 +1131,10 @@ final class QuestXmlBlockExpander {
 	}
 
 	private record Context(int questId, QuestMetadata metadata, ProgressLayout progress,
-			Map<String, QuestNode> nodes) {
-		private Context(int questId, QuestMetadata metadata, ProgressLayout progress, List<QuestNode> nodes) {
-			this(questId, metadata, progress, index(nodes));
+			Map<String, QuestNode> nodes, Set<DialogRouteKey> explicitDialogRoutes) {
+		private Context(int questId, QuestMetadata metadata, ProgressLayout progress, List<QuestNode> nodes,
+				Set<DialogRouteKey> explicitDialogRoutes) {
+			this(questId, metadata, progress, index(nodes), explicitDialogRoutes);
 		}
 
 		private static Map<String, QuestNode> index(List<QuestNode> nodes) {
@@ -816,6 +1144,9 @@ final class QuestXmlBlockExpander {
 			}
 			return Collections.unmodifiableMap(result);
 		}
+	}
+
+	private record DialogRouteKey(String source, int npcId, int dialogId) {
 	}
 
 	private record CounterGridDimension(String field, int required, List<Integer> npcIds,
@@ -843,6 +1174,18 @@ final class QuestXmlBlockExpander {
 	}
 
 	private record CompletionRoute(int dialogId, QuestAction choiceReward) {
+	}
+
+	private record ExchangeCategory(int action, int page) {
+	}
+
+	private record ExchangeEquipment(int action, List<Integer> itemIds, int selection) {
+		private ExchangeEquipment {
+			itemIds = List.copyOf(itemIds);
+		}
+	}
+
+	private record ExchangeRewardGroup(int action, int index, int page) {
 	}
 
 	private enum Finish {
@@ -895,6 +1238,15 @@ final class QuestXmlBlockExpander {
 			if (result.size() > 256) {
 				return fail("NPC_COMPLETE_TOO_MANY_DIALOG_IDS", context, block, attribute,
 					"must contain at most 256 ids");
+			}
+			return List.copyOf(result);
+		}
+
+		private List<Integer> addActions(Element element, String attribute) {
+			List<Integer> result = new ArrayList<>();
+			for (QuestDialogAction action : QuestDefinitionXmlCompiler.dialogActions(element)) {
+				addSingle(action.id(), attribute);
+				result.add(action.id());
 			}
 			return List.copyOf(result);
 		}

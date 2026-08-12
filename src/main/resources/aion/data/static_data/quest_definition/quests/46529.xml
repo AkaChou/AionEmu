@@ -20,62 +20,117 @@
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="1"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
   </nodes>
   <transitions>
     <!-- 接取:FACTION 派系任务无 start NPC(start_npc_ids="0"),由悬赏告示板 NPC 804955 对话接取。 -->
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="804955" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804955" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="804955" dialog-id="1007"/></event>
-      <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804955" action="ASK_QUEST_ACCEPT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="804955" dialog-id="1002"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804955" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="804955" dialog-id="20000"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804955" action="QUEST_ACCEPT_SIMPLE"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="804955" dialog-id="10000"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804955" action="SETPRO1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="804955" dialog-ids="1003 1004 20001"/></event>
-      <after-commit><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804955" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="804955" dialog-id="1008"/></event>
-      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804955" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
     </transition>
     <transition source="started" target="started">
-      <event><talk-to-npc npc-id="804955" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="2375"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804955" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
     </transition>
     <transition source="started" target="started">
-      <event><can-act template-id="702756" action-type="ACTION_ITEM_USE"/></event>
+      <event>
+        <can-act template-id="702756" action-type="ACTION_ITEM_USE"/>
+      </event>
     </transition>
-
     <!-- 收集苔藓宝箱的赃物 (182215746) 1 个:集齐则交任务进入奖励。 -->
     <npc-item-report npc-id="804955" source="started" target="reward" item-id="182215746" required="1"/>
-
     <!-- 奖励:804955 领取固定奖励 (exp/物品)。 -->
     <transition source="reward" target="reward">
-      <event><talk-to-npc npc-id="804955" dialog-ids="-1 1009"/></event>
-      <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804955" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
     </transition>
     <transition source="reward" target="complete">
-      <event><talk-to-npc npc-id="804955" dialog-ids="8..23"/></event>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804955" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
+      </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="1477634"/>
         <grant-reward kind="ITEM" id="186000105" amount="3"/>
@@ -84,7 +139,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

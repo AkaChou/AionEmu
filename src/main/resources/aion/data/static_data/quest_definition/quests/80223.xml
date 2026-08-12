@@ -15,31 +15,56 @@
     <bit-field name="var0" offset="0" width="7" min="0" max="100" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="100"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="100"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="100"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="100"/>
+    </node>
   </nodes>
   <transitions>
     <!-- 接取：Mist Mane Village 的 NPC (831028) 提供任务。 -->
-    <npc-start npc-id="831028" source="unaccepted" target="started" selection-sources="unaccepted"/>
+    <dialog type="NPC_START" npc-id="831028" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
     <!-- 击杀 28 种怪累计 100 只：var0 计数 0→100，priority 1 计数、0 完成进入奖励。 -->
     <transition source="started" target="started" priority="1">
-      <event><kill-npc npc-ids="211574 211575 211595 211596 211598 211599 211601 211608 211609 211610 211611 211612 212724 212725 212726 212727 212729 212730 212731 212732 212733 212734 212735 212736 212737 212738 212739 212740 212741 212742 212743 212744 212809 212979 212981 212982"/></event>
-      <conditions><variable-below field="var0" value="100"/></conditions>
-      <actions><increment-variable field="var0" delta="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <kill-npc npc-ids="211574 211575 211595 211596 211598 211599 211601 211608 211609 211610 211611 211612 212724 212725 212726 212727 212729 212730 212731 212732 212733 212734 212735 212736 212737 212738 212739 212740 212741 212742 212743 212744 212809 212979 212981 212982"/>
+      </event>
+      <conditions>
+        <variable-below field="var0" value="100"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var0" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="started" target="reward" priority="0">
-      <event><kill-npc npc-ids="211574 211575 211595 211596 211598 211599 211601 211608 211609 211610 211611 211612 212724 212725 212726 212727 212729 212730 212731 212732 212733 212734 212735 212736 212737 212738 212739 212740 212741 212742 212743 212744 212809 212979 212981 212982"/></event>
-      <conditions><variable-at-least field="var0" value="100"/></conditions>
-      <actions><set-variable field="var0" value="100"/></actions>
-      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
+      <event>
+        <kill-npc npc-ids="211574 211575 211595 211596 211598 211599 211601 211608 211609 211610 211611 211612 212724 212725 212726 212727 212729 212730 212731 212732 212733 212734 212735 212736 212737 212738 212739 212740 212741 212742 212743 212744 212809 212979 212981 212982"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="100"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="100"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
     </transition>
     <!-- 领奖：831028 发放经验与二选一可选奖励并完成。 -->
-    <npc-complete npc-id="831028" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="1"/>
-      <choice dialog-id="9" reward-index="2"/>
+    <npc-complete npc-id="831028" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

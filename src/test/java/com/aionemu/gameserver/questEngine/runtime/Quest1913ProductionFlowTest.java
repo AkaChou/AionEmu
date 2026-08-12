@@ -123,6 +123,61 @@ class Quest1913ProductionFlowTest {
 			new AfterCommitAction.ShowQuestDialog(5)), afterCommit);
 	}
 
+	@Test
+	void completeClientDialogSequencePreservesStateAndRewardTiming() throws Exception {
+		CompiledQuestDefinition definition = definition();
+		AtomicReference<QuestStatus> status = new AtomicReference<>(QuestStatus.NONE);
+		AtomicInteger packedVariables = new AtomicInteger();
+		List<QuestMutationPlan> plans = new ArrayList<>();
+		List<AfterCommitAction> afterCommit = new ArrayList<>();
+		QuestProductionDispatcher dispatcher = dispatcher(definition, status, packedVariables, plans, afterCommit);
+
+		assertResponse(dispatch(dispatcher, START_NPC_ID, 31), afterCommit,
+			new AfterCommitAction.ShowQuestDialog(1011));
+		assertEquals(QuestStatus.NONE, status.get());
+
+		assertResponse(dispatch(dispatcher, START_NPC_ID, 1007), afterCommit,
+			new AfterCommitAction.ShowQuestDialog(4));
+		assertEquals(QuestStatus.NONE, status.get());
+
+		assertResponse(dispatch(dispatcher, START_NPC_ID, 1003), afterCommit,
+			new AfterCommitAction.ShowQuestDialog(1004));
+		assertEquals(QuestStatus.NONE, status.get());
+
+		assertResponse(dispatch(dispatcher, START_NPC_ID, 1002), afterCommit,
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(1003));
+		assertEquals(QuestStatus.START, status.get());
+
+		assertResponse(dispatch(dispatcher, TRANSPORT_NPC_ID, 31), afterCommit,
+			new AfterCommitAction.ShowQuestDialog(1352));
+		assertResponse(dispatch(dispatcher, TRANSPORT_NPC_ID, 10000), afterCommit,
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.TeleportPlayer(210030000, 1643f, 1500f, 120f, (byte) 0),
+			new AfterCommitAction.CloseDialog());
+		assertEquals(QuestStatus.START, status.get());
+		assertEquals(1, packedVariables.get());
+
+		assertResponse(dispatch(dispatcher, REWARD_NPC_ID, 31), afterCommit,
+			new AfterCommitAction.ShowQuestDialog(2375));
+		assertResponse(dispatch(dispatcher, REWARD_NPC_ID, 1009), afterCommit,
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(5));
+		assertEquals(QuestStatus.REWARD, status.get());
+
+		assertResponse(dispatch(dispatcher, REWARD_NPC_ID, 8), afterCommit,
+			new AfterCommitAction.RefreshPlayerStats(),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+			new AfterCommitAction.ShowQuestSelectionDialog(10));
+		assertEquals(QuestStatus.COMPLETE, status.get());
+		assertEquals(0, packedVariables.get());
+		QuestMutationPlan completion = plans.getLast();
+		assertEquals(List.of(
+			new QuestAction.GrantReward("EXP", 0, 14046, com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.QUEST_BASE),
+			new QuestAction.GrantReward("ITEM", 160001273, 5, com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode.EXACT),
+			new QuestAction.CompleteQuest(0)), completion.requiredActions());
+	}
+
 	private static QuestProductionDispatcher dispatcher(CompiledQuestDefinition definition,
 			AtomicReference<QuestStatus> status, AtomicInteger packedVariables, List<QuestMutationPlan> plans,
 			List<AfterCommitAction> afterCommit) {
@@ -196,5 +251,12 @@ class Quest1913ProductionFlowTest {
 				throw failure;
 			});
 		assertTrue(result.handled(), result::toString);
+	}
+
+	private static void assertResponse(QuestEventRouter.DispatchResult result,
+			List<AfterCommitAction> actual, AfterCommitAction... expected) {
+		assertHandled(result);
+		assertEquals(List.of(expected), actual);
+		actual.clear();
 	}
 }

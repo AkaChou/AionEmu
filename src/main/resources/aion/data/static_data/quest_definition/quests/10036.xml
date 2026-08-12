@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="10036" version="1">
   <metadata name="Inggison Support Order" display-name-id="1803757" min-level="50" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
-    <races><race id="ELYOS"/></races>
+    <races>
+      <race id="ELYOS"/>
+    </races>
     <work-items>
       <item id="182215615" count="1"/>
       <item id="182215616" count="1"/>
@@ -23,49 +25,374 @@
     <bit-field name="var2" offset="12" width="4" min="0" max="2" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/><var name="var1" value="0"/><var name="var2" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="s1" status="START"><var name="var0" value="1"/></node>
-    <node label="s2" status="START"><var name="var0" value="2"/></node>
-    <node label="s3" status="START"><var name="var0" value="3"/></node>
-    <node label="s4" status="START"><var name="var0" value="4"/></node>
-    <node label="s5" status="START"><var name="var0" value="5"/></node>
-    <node label="s6" status="START"><var name="var0" value="6"/></node>
-    <node label="s7" status="START"><var name="var0" value="7"/></node>
-    <node label="s8" status="START"><var name="var0" value="8"/></node>
-    <node label="s9" status="START"><var name="var0" value="9"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="10"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="s2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="s3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="s4" status="START">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="s5" status="START">
+      <var name="var0" value="5"/>
+    </node>
+    <node label="s6" status="START">
+      <var name="var0" value="6"/>
+    </node>
+    <node label="s7" status="START">
+      <var name="var0" value="7"/>
+    </node>
+    <node label="s8" status="START">
+      <var name="var0" value="8"/>
+    </node>
+    <node label="s9" status="START">
+      <var name="var0" value="9"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="10"/>
+    </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><enter-world/></event><conditions><world-is world-id="110010000"/><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="203700" dialog-id="31"/></event><conditions><variable-is field="var0" value="0"/></conditions><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
-    <transition source="started" target="s1"><event><talk-to-npc npc-id="203700" dialog-id="10000"/></event><conditions><variable-is field="var0" value="0"/></conditions><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
-    <transition source="s1" target="s1"><event><talk-to-npc npc-id="798600" dialog-id="31"/></event><conditions><variable-is field="var0" value="1"/></conditions><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="s1" target="s2"><event><talk-to-npc npc-id="798600" dialog-id="10001"/></event><conditions><variable-is field="var0" value="1"/></conditions><actions><give-item item-id="182215615" count="1"/><set-variable field="var0" value="2"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
-    <transition source="s2" target="s2"><event><talk-to-npc npc-id="798408" dialog-id="31"/></event><conditions><variable-is field="var0" value="2"/></conditions><after-commit><show-quest-dialog dialog-id="1693"/></after-commit></transition>
-    <transition source="s2" target="s3"><event><talk-to-npc npc-id="798408" dialog-id="10002"/></event><conditions><variable-is field="var0" value="2"/></conditions><actions><set-variable field="var0" value="3"/></actions><after-commit><teleport-player-current-or-default world-id="210130000" x="1440" y="408" z="553" heading="77"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
-    <transition source="s3" target="s4"><event><enter-world/></event><conditions><world-is world-id="210130000"/><variable-is field="var0" value="3"/></conditions><actions><set-variable field="var0" value="4"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><play-movie movie-id="501"/></after-commit></transition>
-    <transition source="s4" target="s4"><event><talk-to-npc npc-id="798926" dialog-id="31"/></event><conditions><variable-is field="var0" value="4"/></conditions><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
-    <transition source="s4" target="s5"><event><talk-to-npc npc-id="798926" dialog-id="10004"/></event><conditions><variable-is field="var0" value="4"/></conditions><actions><set-variable field="var0" value="5"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
-    <transition source="s5" target="s5"><event><talk-to-npc npc-id="799052" dialog-id="31"/></event><conditions><variable-is field="var0" value="5"/></conditions><after-commit><show-quest-dialog dialog-id="2716"/></after-commit></transition>
-    <transition source="s5" target="s6"><event><talk-to-npc npc-id="799052" dialog-id="10005"/></event><conditions><variable-is field="var0" value="5"/></conditions><actions><set-variable field="var0" value="6"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><play-movie movie-id="30" type="CUTSCENE_MOVIE"/><close-dialog/></after-commit></transition>
-    <transition source="s6" target="s6"><event><talk-to-npc npc-id="798927" dialog-id="31"/></event><conditions><variable-is field="var0" value="6"/></conditions><after-commit><show-quest-dialog dialog-id="3057"/></after-commit></transition>
-    <transition source="s6" target="s7"><event><talk-to-npc npc-id="798927" dialog-id="10006"/></event><conditions><variable-is field="var0" value="6"/></conditions><actions><give-item item-id="182215616" count="1"/><give-item item-id="182215617" count="1"/><set-variable field="var0" value="7"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><play-movie movie-id="516"/><close-dialog/></after-commit></transition>
-    <transition source="s7" target="s7"><event><talk-to-npc npc-id="730224" dialog-id="-1"/></event><conditions><variable-is field="var0" value="7"/></conditions><after-commit><show-quest-dialog dialog-id="3398"/></after-commit></transition>
-    <transition source="s7" target="s8"><event><talk-to-npc npc-id="730224" dialog-id="10007"/></event><conditions><variable-is field="var0" value="7"/><has-item item-id="182215616" count="1"/></conditions><actions><remove-item item-id="182215616" count="1"/><set-variable field="var0" value="8"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
-    <transition source="s8" target="s9"><event><talk-to-npc npc-id="702662" dialog-id="-1"/></event><conditions><variable-is field="var0" value="8"/><has-item item-id="182215617" count="1"/></conditions><actions><remove-item item-id="182215617" count="1"/><set-variable field="var0" value="9"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
-    <transition source="s9" target="s9" priority="1"><event><kill-npc npc-ids="215504 215505 215516 215517 215518 216463 216464 216647 216783 215519 216648 216691 216692"/></event><conditions><variable-is field="var0" value="9"/><variable-below field="var1" value="10"/></conditions><actions><increment-variable field="var1" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="s9" target="s9" priority="3"><event><kill-npc npc-ids="215508 215509"/></event><conditions><variable-is field="var0" value="9"/><variable-below field="var2" value="2"/></conditions><actions><increment-variable field="var2" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="s9" target="reward" priority="0"><event><kill-npc npc-ids="215504 215505 215516 215517 215518 216463 216464 216647 216783 215519 216648 216691 216692"/></event><conditions><variable-is field="var0" value="9"/><variable-is field="var1" value="9"/><variable-is field="var2" value="2"/></conditions><actions><set-variable field="var1" value="10"/><set-variable field="var0" value="10"/><set-status status="REWARD"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="s9" target="reward" priority="2"><event><kill-npc npc-ids="215508 215509"/></event><conditions><variable-is field="var0" value="9"/><variable-is field="var2" value="1"/><variable-is field="var1" value="10"/></conditions><actions><set-variable field="var2" value="2"/><set-variable field="var0" value="10"/><set-status status="REWARD"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <npc-complete npc-id="798927" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="1"/>
-      <choice dialog-id="9" reward-index="2"/>
-      <fallback dialog-ids="10..23"/>
+    <transition source="unaccepted" target="started">
+      <event>
+        <level-up/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="110010000"/>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203700" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203700" action="SETPRO1"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798600" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798600" action="SETPRO2"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <give-item item-id="182215615" count="1"/>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798408" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798408" action="SETPRO3"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+      </actions>
+      <after-commit>
+        <teleport-player-current-or-default world-id="210130000" x="1440" y="408" z="553" heading="77"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s4">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="210130000"/>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <play-movie movie-id="501"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798926" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="4"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798926" action="SETPRO5"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="4"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="5"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799052" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="5"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s6">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799052" action="SETPRO6"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="6"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <play-movie movie-id="30" type="CUTSCENE_MOVIE"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s6" target="s6">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798927" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="6"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT7"/>
+      </after-commit>
+    </transition>
+    <transition source="s6" target="s7">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798927" action="SETPRO7"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="6"/>
+      </conditions>
+      <actions>
+        <give-item item-id="182215616" count="1"/>
+        <give-item item-id="182215617" count="1"/>
+        <set-variable field="var0" value="7"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <play-movie movie-id="516"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s7" target="s7">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730224" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="7"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT8"/>
+      </after-commit>
+    </transition>
+    <transition source="s7" target="s8">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730224" action="SETPRO8"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="7"/>
+        <has-item item-id="182215616" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215616" count="1"/>
+        <set-variable field="var0" value="8"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s8" target="s9">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="702662" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="8"/>
+        <has-item item-id="182215617" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215617" count="1"/>
+        <set-variable field="var0" value="9"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s9" target="s9" priority="1">
+      <event>
+        <kill-npc npc-ids="215504 215505 215516 215517 215518 216463 216464 216647 216783 215519 216648 216691 216692"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="9"/>
+        <variable-below field="var1" value="10"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s9" target="s9" priority="3">
+      <event>
+        <kill-npc npc-ids="215508 215509"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="9"/>
+        <variable-below field="var2" value="2"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var2" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s9" target="reward" priority="0">
+      <event>
+        <kill-npc npc-ids="215504 215505 215516 215517 215518 216463 216464 216647 216783 215519 216648 216691 216692"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="9"/>
+        <variable-is field="var1" value="9"/>
+        <variable-is field="var2" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="10"/>
+        <set-variable field="var0" value="10"/>
+        <set-status status="REWARD"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s9" target="reward" priority="2">
+      <event>
+        <kill-npc npc-ids="215508 215509"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="9"/>
+        <variable-is field="var2" value="1"/>
+        <variable-is field="var1" value="10"/>
+      </conditions>
+      <actions>
+        <set-variable field="var2" value="2"/>
+        <set-variable field="var0" value="10"/>
+        <set-status status="REWARD"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="798927" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <fallback actions="SELECTED_QUEST_REWARD3..SELECTED_QUEST_NOREWARD"/>
     </npc-complete>
-    <transition source="s7" target="s7"><event><can-act template-id="730224" action-type="ACTION_ITEM_USE"/></event></transition>
-    <transition source="s8" target="s8"><event><can-act template-id="702662" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s7" target="s7">
+      <event>
+        <can-act template-id="730224" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="s8" target="s8">
+      <event>
+        <can-act template-id="702662" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
   </transitions>
 </quest-definition>

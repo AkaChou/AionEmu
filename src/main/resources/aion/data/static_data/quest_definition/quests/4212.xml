@@ -16,102 +16,186 @@
     <bit-field name="var0" offset="0" width="3" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="v1" status="START"><var name="var0" value="1"/></node>
-    <node label="v2" status="START"><var name="var0" value="2"/></node>
-    <node label="v3" status="START"><var name="var0" value="3"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="4"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="4"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="v1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="v2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="v3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="4"/>
+    </node>
   </nodes>
   <transitions>
     <!-- 接取:Steel Rake 上的 Krix (204283) 提供任务,前置 4204 完成才可接取。 -->
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204283" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="4762"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204283" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204283" dialog-id="1007"/></event>
-      <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204283" action="ASK_QUEST_ACCEPT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="204283" dialog-id="1002"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204283" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="204283" dialog-id="20000"/></event>
-      <conditions><start-eligible/></conditions>
-      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204283" action="QUEST_ACCEPT_SIMPLE"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="204283" dialog-ids="1003 1004 20001"/></event>
-      <after-commit><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204283" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
     </transition>
-
     <!-- 步骤 0:Seaman Winki (798065) 对话推进到 1。 -->
     <transition source="started" target="started">
-      <event><talk-to-npc npc-id="798065" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798065" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
     </transition>
     <transition source="started" target="v1">
-      <event><talk-to-npc npc-id="798065" dialog-id="10000"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798065" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
     </transition>
-
     <!-- 步骤 1:Seaman Kaluo (798058) 对话推进到 2。 -->
     <transition source="v1" target="v1">
-      <event><talk-to-npc npc-id="798058" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="1352"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798058" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
     </transition>
     <transition source="v1" target="v2">
-      <event><talk-to-npc npc-id="798058" dialog-id="10001"/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798058" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
     </transition>
-
     <!-- 步骤 2:囚犯 Krix (798337) 对话,玩家跟随其前往钢耙号舱内坐标 (505.69, 437.69, 885.18)。 -->
     <transition source="v2" target="v2">
-      <event><talk-to-npc npc-id="798337" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="1693"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798337" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
     </transition>
     <transition source="v2" target="v3">
-      <event><talk-to-npc npc-id="798337" dialog-id="10002"/></event>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798337" action="SETPRO3"/>
+      </event>
       <after-commit>
         <start-follow-current-target x="505.69427" y="437.69382" z="885.1844"/>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
-
     <!-- 步骤 3:与 Basement Door (730208) 对话时删除该交互 NPC。 -->
     <transition source="v3" target="v3">
-      <event><talk-to-npc npc-id="730208" dialog-id="31"/></event>
-      <after-commit><delete-interaction-npc schedule-respawn="true"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730208" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <delete-interaction-npc schedule-respawn="true"/>
+      </after-commit>
     </transition>
-
     <!-- 跟随结算:到达目标坐标进入奖励,丢失目标/登出/死亡回退到 2。 -->
     <transition source="v3" target="reward">
-      <event><npc-reach-target/></event>
-      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
+      <event>
+        <npc-reach-target/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
     </transition>
     <transition source="v3" target="v2">
-      <event><npc-lost-target/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <npc-lost-target/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="v3" target="v2">
-      <event><log-out/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <log-out/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="v3" target="v2">
-      <event><die/></event>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <die/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
-
     <!-- 奖励:Seaman Kaluo (798058) 领取固定奖励 (gold/exp)。 -->
     <transition source="reward" target="reward">
-      <event><talk-to-npc npc-id="798058" dialog-id="-1"/></event>
-      <after-commit><show-quest-dialog dialog-id="10002"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798058" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
     </transition>
-    <npc-complete npc-id="798058" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="798058" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

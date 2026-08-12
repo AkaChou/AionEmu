@@ -15,7 +15,8 @@
       <class id="CLERIC"/>
       <class id="GUNSLINGER"/>
       <class id="SONGWEAVER"/>
-    </classes><rewards>
+    </classes>
+    <rewards>
       <reward kind="EXP" id="0" amount="3244812"/>
       <reward kind="ITEM" id="186000109" amount="1"/>
     </rewards>
@@ -28,60 +29,60 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="s2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="s3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
     <!-- NPC 799025 接取对话与接受/拒绝分支。 NPC 799025 start dialog and accept/refuse branches. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799025" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="799025" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4762"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799025" dialog-id="1007"/>
+        <dialog type="TALK_TO_NPC" npc-id="799025" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="799025" dialog-id="1002"/>
+        <dialog type="TALK_TO_NPC" npc-id="799025" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="799025" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="799025" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -93,7 +94,7 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799025" dialog-ids="1003 1004 20001"/>
+        <dialog type="TALK_TO_NPC" npc-id="799025" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -101,10 +102,10 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799025" dialog-id="1008"/>
+        <dialog type="TALK_TO_NPC" npc-id="799025" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 依次穿过三条风道推进任务。 Traverse the three wind streams to advance. -->
@@ -144,18 +145,18 @@
     <!-- NPC 799084 结束对话并传送回城进入领奖。 NPC 799084 final dialog, teleport back, then reward. -->
     <transition source="s3" target="s3">
       <event>
-        <talk-to-npc npc-id="799084" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="799084" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="3"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="2034"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
     <transition source="s3" target="reward">
       <event>
-        <talk-to-npc npc-id="799084" dialog-id="10003"/>
+        <dialog type="TALK_TO_NPC" npc-id="799084" action="SETPRO4"/>
       </event>
       <conditions>
         <variable-is field="var0" value="3"/>
@@ -169,12 +170,14 @@
     <!-- 领奖阶段：回到 NPC 799025。 Reward phase: return to NPC 799025. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="799025" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="799025" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="799025" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="799025" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

@@ -17,16 +17,16 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -49,7 +49,7 @@
     <!-- 246845 巨大厄运：持有护符时使用，消耗 1 护符、获得 1 封印袋，NPC 删除并重刷。 -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="246845" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="246845" action="USE_OBJECT"/>
       </event>
       <conditions>
         <has-item item-id="182007418" count="1"/>
@@ -66,16 +66,16 @@
     <!-- 835303 进行中对话。 -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="835303" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="835303" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <!-- 集齐 3 个封印袋 → 进入 REWARD（对应 CHECK_COLLECTED_ITEMS 成功分支）。 -->
     <transition source="started" target="reward" priority="0">
       <event>
-        <talk-to-npc npc-id="835303" dialog-id="39"/>
+        <dialog type="TALK_TO_NPC" npc-id="835303" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
         <has-item item-id="182007420" count="3"/>
@@ -85,49 +85,49 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="10000"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
       </after-commit>
     </transition>
     <!-- 封印袋不足 → 提示继续收集（对应 CHECK_COLLECTED_ITEMS 失败分支）。 -->
     <transition source="started" target="started" priority="1">
       <event>
-        <talk-to-npc npc-id="835303" dialog-id="39"/>
+        <dialog type="TALK_TO_NPC" npc-id="835303" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10001"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>
     </transition>
     <!-- FINISH_DIALOG → 任务选择列表。 -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="835303" dialog-id="1008"/>
+        <dialog type="TALK_TO_NPC" npc-id="835303" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- REWARD 状态对话：START_DIALOG → 10002。 -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="835303" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="835303" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <!-- REWARD 状态：SELECT_REWARD / USE_OBJECT → 5（奖励列表）。 -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="835303" dialog-ids="-1 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="835303" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <!-- 领取奖励并完成任务。 -->
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="835303" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="835303" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="ITEM" id="188057142" amount="5"/>
@@ -136,9 +136,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started"><event><can-act template-id="246845" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="246845" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
   </transitions>
 </quest-definition>

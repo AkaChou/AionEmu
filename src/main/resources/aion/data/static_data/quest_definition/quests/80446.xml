@@ -20,79 +20,80 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="a0b0" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="a0b1" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="a0b2" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
     </node>
     <node label="a0b3" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
     </node>
     <node label="a1b0" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="a1b1" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="a1b2" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="2"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="2"/>
     </node>
     <node label="a1b3" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="3"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="3"/>
     </node>
     <node label="a2b0" status="START">
-          <var name="var0" value="2"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="a2b1" status="START">
-          <var name="var0" value="2"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="a2b2" status="START">
-          <var name="var0" value="2"/>
-          <var name="var1" value="2"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="2"/>
     </node>
     <node label="a2b3" status="START">
-          <var name="var0" value="2"/>
-          <var name="var1" value="3"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="3"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="2"/>
-          <var name="var1" value="3"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="831851" source="unaccepted" target="a0b0" selection-sources="unaccepted a0b0"/>
+    <dialog type="NPC_START" npc-id="831851" source="unaccepted" target="a0b0" selection-sources="unaccepted a0b0" start-page="SELECT1"/>
     <counter-grid>
       <dimension field="var0" required="2" npc-ids="213360"/>
       <dimension field="var1" required="3" npc-ids="213373 213374"/>
     </counter-grid>
-    <npc-report npc-id="831851" source="a2b3" target="reward" page="1352"/>
-    <npc-complete npc-id="831851" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="2"/>
-      <choice dialog-id="9" reward-index="3"/>
-      <choice dialog-id="10" reward-index="4"/>
-      <choice dialog-id="11" reward-index="5"/>
-      <choice dialog-id="12" reward-index="6"/>
+    <dialog type="NPC_REPORT" npc-id="831851" source="a2b3" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="831851" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="6"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

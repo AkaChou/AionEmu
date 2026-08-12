@@ -17,24 +17,25 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
     <!-- 接取：Gnalin (204732) 提供任务，前置 2513 完成才可接取。 -->
-    <npc-start npc-id="204732" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-
+    <dialog type="NPC_START" npc-id="204732" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
     <!-- 报告：Freki (204826) 对话报告完成。 -->
-    <npc-report npc-id="204826" source="started" target="reward" page="2375"/>
-    <npc-complete npc-id="204826" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <dialog type="NPC_REPORT" npc-id="204826" source="started" target="reward" page="SELECT5"/>
+    <npc-complete npc-id="204826" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

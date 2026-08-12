@@ -12,28 +12,133 @@
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
-    <nodes>
-      <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-      <node label="started" status="START"><var name="var0" value="0"/></node>
-      <node label="s1" status="START"><var name="var0" value="1"/></node>
-      <node label="s2" status="START"><var name="var0" value="2"/></node>
-      <node label="s3" status="START"><var name="var0" value="3"/></node>
-      <node label="s4" status="START"><var name="var0" value="4"/></node>
-      <node label="reward" status="REWARD"><var name="var0" value="4"/></node>
-      <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
-    </nodes>
-    <transitions>
-      <npc-start npc-id="799226" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
-      <transition source="started" target="started"><event><talk-to-npc npc-id="702726" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-      <transition source="started" target="s1"><event><talk-to-npc npc-id="702726" dialog-id="10000"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-      <transition source="s1" target="s1"><event><talk-to-npc npc-id="702746" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1693"/></after-commit></transition>
-      <transition source="s1" target="s2"><event><talk-to-npc npc-id="702746" dialog-id="10001"/></event><actions><set-variable field="var0" value="2"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-      <transition source="s2" target="s2"><event><talk-to-npc npc-id="702748" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2034"/></after-commit></transition>
-      <transition source="s2" target="s3"><event><talk-to-npc npc-id="702748" dialog-id="10002"/></event><actions><set-variable field="var0" value="3"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-      <transition source="s3" target="s3"><event><talk-to-npc npc-id="702747" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
-      <transition source="s3" target="s4"><event><talk-to-npc npc-id="702747" dialog-id="10003"/></event><actions><set-variable field="var0" value="4"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-      <transition source="s4" target="s4"><event><talk-to-npc npc-id="702728" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2716"/></after-commit></transition>
-      <transition source="s4" target="reward"><event><talk-to-npc npc-id="702728" dialog-id="10255"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-      <npc-complete npc-id="799226" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
-    </transitions>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="s2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="s3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="s4" status="START">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
+  </nodes>
+  <transitions>
+    <dialog type="NPC_START" npc-id="799226" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="702726" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="702726" action="SETPRO1"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="702746" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="702746" action="SETPRO2"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="702748" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="702748" action="SETPRO3"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="702747" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="702747" action="SETPRO4"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="702728" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="702728" action="SET_SUCCEED"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="799226" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+  </transitions>
 </quest-definition>

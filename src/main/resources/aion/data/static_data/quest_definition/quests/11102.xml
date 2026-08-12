@@ -51,27 +51,26 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="started" status="START"/>
     <node label="k3" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="1"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="1"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="1"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="1"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <!-- 接取:Inggison 的 Esterra (798981) 提供任务。 -->
-    <npc-start npc-id="798981" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-
+    <dialog type="NPC_START" npc-id="798981" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
     <!-- 击杀组 1:Stonedrake Explorer (216489) 1 只,var0 计数;三组全满进入 k3。 -->
     <transition source="started" target="k3" priority="1">
       <event>
@@ -104,7 +103,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <!-- 击杀组 2:Stonedrake Stalker (216490) 1 只,var1 计数。 -->
     <transition source="started" target="k3" priority="1">
       <event>
@@ -137,7 +135,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <!-- 击杀组 3:Stonedrake Slasher (216491) 1 只,var2 计数。 -->
     <transition source="started" target="k3" priority="1">
       <event>
@@ -170,32 +167,30 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <!-- 报告:Esterra (798981) 确认三组击杀完成。 -->
-    <npc-report npc-id="798981" source="k3" target="reward" page="1352"/>
+    <dialog type="NPC_REPORT" npc-id="798981" source="k3" target="reward" page="SELECT2"/>
     <transition source="k3" target="reward">
       <event>
-        <talk-to-npc npc-id="798981" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="798981" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-
     <!-- 奖励:Esterra (798981) 领取固定奖励 (exp + battery_60)。 -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="798981" dialog-ids="-1 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="798981" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <!-- 完成:剑星领取职业可选奖励。Complete: gladiator claims its class reward. -->
     <transition source="reward" target="complete" priority="0">
       <event>
-        <talk-to-npc npc-id="798981" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="798981" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="GLADIATOR"/>
@@ -209,13 +204,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 完成:守护星领取职业可选奖励。Complete: templar claims its class reward. -->
     <transition source="reward" target="complete" priority="1">
       <event>
-        <talk-to-npc npc-id="798981" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="798981" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="TEMPLAR"/>
@@ -229,13 +224,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 完成:弓星领取职业可选奖励。Complete: ranger claims its class reward. -->
     <transition source="reward" target="complete" priority="2">
       <event>
-        <talk-to-npc npc-id="798981" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="798981" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="RANGER"/>
@@ -249,13 +244,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 完成:杀星领取职业可选奖励。Complete: assassin claims its class reward. -->
     <transition source="reward" target="complete" priority="3">
       <event>
-        <talk-to-npc npc-id="798981" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="798981" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="ASSASSIN"/>
@@ -269,13 +264,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 完成:法师领取职业可选奖励。Complete: sorcerer claims its class reward. -->
     <transition source="reward" target="complete" priority="4">
       <event>
-        <talk-to-npc npc-id="798981" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="798981" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="SORCERER"/>
@@ -289,13 +284,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 完成:精灵星领取职业可选奖励。Complete: spirit master claims its class reward. -->
     <transition source="reward" target="complete" priority="5">
       <event>
-        <talk-to-npc npc-id="798981" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="798981" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="SPIRIT_MASTER"/>
@@ -309,13 +304,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 完成:治愈星领取职业可选奖励。Complete: cleric claims its class reward. -->
     <transition source="reward" target="complete" priority="6">
       <event>
-        <talk-to-npc npc-id="798981" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="798981" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="CLERIC"/>
@@ -329,13 +324,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 完成:护法星领取职业可选奖励。Complete: chanter claims its class reward. -->
     <transition source="reward" target="complete" priority="7">
       <event>
-        <talk-to-npc npc-id="798981" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="798981" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="CHANTER"/>
@@ -349,13 +344,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 完成:枪星领取职业可选奖励。Complete: gunslinger claims its class reward. -->
     <transition source="reward" target="complete" priority="8">
       <event>
-        <talk-to-npc npc-id="798981" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="798981" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="GUNSLINGER"/>
@@ -369,13 +364,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 完成:吟游星领取职业可选奖励。Complete: songweaver claims its class reward. -->
     <transition source="reward" target="complete" priority="9">
       <event>
-        <talk-to-npc npc-id="798981" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="798981" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="SONGWEAVER"/>
@@ -389,13 +384,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 完成:机甲星领取职业可选奖励。Complete: aethertech claims its class reward. -->
     <transition source="reward" target="complete" priority="10">
       <event>
-        <talk-to-npc npc-id="798981" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="798981" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <conditions>
         <advanced-class-is class="AETHERTECH"/>
@@ -409,7 +404,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

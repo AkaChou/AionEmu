@@ -5,65 +5,86 @@
       <race id="ELYOS"/>
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
-    <rewards>
-      <reward kind="EXP" id="0" amount="100000"/>
-      <reward kind="SELECTABLE_ITEM" id="100201267" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="100001449" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="100101106" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="100901122" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="101301058" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="115001477" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="100201267" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="100001451" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="101701157" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="100601194" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="100501113" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="100101106" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="101501139" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="115001477" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="101801053" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="101901003" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="102100953" amount="1"/>
-      <reward kind="SELECTABLE_ITEM" id="102001076" amount="1"/>
-    </rewards>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="100000"/>
+        <reward kind="SELECTABLE_ITEM" id="100201267" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="100001449" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="100101106" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="100901122" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="101301058" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="115001477" amount="1"/>
+      </group>
+      <group>
+        <reward kind="EXP" id="0" amount="100000"/>
+        <reward kind="SELECTABLE_ITEM" id="100201267" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="100001451" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="101701157" amount="1"/>
+      </group>
+      <group>
+        <reward kind="EXP" id="0" amount="100000"/>
+        <reward kind="SELECTABLE_ITEM" id="100601194" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="100501113" amount="1"/>
+      </group>
+      <group>
+        <reward kind="EXP" id="0" amount="100000"/>
+        <reward kind="SELECTABLE_ITEM" id="100101106" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="101501139" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="115001477" amount="1"/>
+      </group>
+      <group>
+        <reward kind="EXP" id="0" amount="100000"/>
+        <reward kind="SELECTABLE_ITEM" id="101801053" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="101901003" amount="1"/>
+        <reward kind="SELECTABLE_ITEM" id="102100953" amount="1"/>
+      </group>
+      <group>
+        <reward kind="EXP" id="0" amount="100000"/>
+        <reward kind="SELECTABLE_ITEM" id="102001076" amount="1"/>
+      </group>
+    </reward-groups>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="equipment" offset="0" width="4" min="0" max="15" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="rewardGroup" offset="4" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="1"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="equipment" value="0"/>
+      <var name="rewardGroup" value="0"/>
+    </node>
+    <node label="started" status="START"/>
+    <node label="reward" status="REWARD"/>
+    <node label="complete" status="COMPLETE">
+      <var name="equipment" value="0"/>
+      <var name="rewardGroup" value="0"/>
+    </node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="831384" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="831384" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="831384" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="831384" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="831384" dialog-id="10000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="831384" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="831384" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <npc-report npc-id="831384" source="started" target="reward" page="2375"/>
-    <npc-complete npc-id="831384" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="1"/>
-      <choice dialog-id="9" reward-index="2"/>
-      <choice dialog-id="10" reward-index="3"/>
-      <choice dialog-id="11" reward-index="4"/>
-      <choice dialog-id="12" reward-index="5"/>
-      <choice dialog-id="13" reward-index="6"/>
-      <choice dialog-id="14" reward-index="1"/>
-      <choice dialog-id="15" reward-index="8"/>
-      <choice dialog-id="16" reward-index="9"/>
-      <choice dialog-id="17" reward-index="10"/>
-      <choice dialog-id="18" reward-index="11"/>
-      <choice dialog-id="19" reward-index="3"/>
-      <choice dialog-id="20" reward-index="13"/>
-      <choice dialog-id="21" reward-index="6"/>
-      <choice dialog-id="22" reward-index="15"/>
-      <choice dialog-id="23" reward-index="16"/>
-      <choice dialog-id="24" reward-index="17"/>
-      <choice dialog-id="25" reward-index="18"/>
-    </npc-complete>
+    <equipment-exchange npc-id="831384" source="unaccepted" started="started" reward="reward" complete="complete" selection-field="equipment" reward-field="rewardGroup" material-item-id="186000041" material-count="20">
+      <category action="SELECT1_1" page="SELECT1_1"/>
+      <category action="SELECT1_2" page="SELECT1_2"/>
+      <category action="SELECT1_3" page="SELECT1_3"/>
+      <equipment action="SELECT1_1_1" item-ids="100001449 100001451"/>
+      <equipment action="SELECT1_1_2" item-id="100901122"/>
+      <equipment action="SELECT1_1_3" item-id="101301058"/>
+      <equipment action="SELECT1_1_4" item-id="100201267"/>
+      <equipment action="SELECT1_1_5" item-id="101701157"/>
+      <equipment action="SELECT1_2_1" item-id="100101106"/>
+      <equipment action="SELECT1_2_2" item-id="101501139"/>
+      <equipment action="SELECT1_2_3" item-id="100601194"/>
+      <equipment action="SELECT1_2_4" item-id="100501113"/>
+      <equipment action="SELECT1_3_2" item-id="101801053"/>
+      <equipment action="SELECT1_3_3" item-id="101901003"/>
+      <equipment action="SELECT1_3_4" item-id="102001076"/>
+      <equipment action="SELECT1_3_5" item-id="102100953"/>
+      <equipment action="SELECT1_3_1" item-id="115001477"/>
+      <reward-group action="SETPRO1" index="0" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      <reward-group action="SETPRO2" index="1" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
+      <reward-group action="SETPRO3" index="2" page="SHOW_SELECT_QUEST_REWARD_WINDOW3"/>
+      <reward-group action="SETPRO4" index="3" page="SHOW_SELECT_QUEST_REWARD_WINDOW4"/>
+      <reward-group action="SETPRO5" index="4" page="SHOW_SELECT_QUEST_REWARD_WINDOW5"/>
+      <reward-group action="SETPRO6" index="5" page="SHOW_SELECT_QUEST_REWARD_WINDOW6"/>
+    </equipment-exchange>
   </transitions>
 </quest-definition>

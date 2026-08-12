@@ -20,16 +20,16 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -37,15 +37,15 @@
          Housing quest: player must talk to own house butler to start and claim; the house.getButler() guard is implied by the private-house instance (same pattern as 18830). -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="810017" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="810017" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="810017" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="810017" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -60,15 +60,15 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="810018" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="810018" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="810018" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="810018" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -83,15 +83,15 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="810019" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="810019" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="810019" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="810019" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -106,15 +106,15 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="810020" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="810020" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="810020" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="810020" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -129,15 +129,15 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="810021" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="810021" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="810021" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="810021" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -172,15 +172,15 @@
          The original setFinishingState cleaned work items on completion; the DSL expresses the equivalent with an explicit remove-item. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="810017" dialog-ids="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="810017" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="810017" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="810017" action="SELECT_QUEST_REWARD"/>
       </event>
       <actions>
         <remove-item item-id="182213191" count="1"/>
@@ -191,12 +191,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="810017" dialog-id="23"/>
+        <dialog type="TALK_TO_NPC" npc-id="810017" action="SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <remove-item item-id="182213191" count="1"/>
@@ -207,20 +207,20 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="810018" dialog-ids="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="810018" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="810018" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="810018" action="SELECT_QUEST_REWARD"/>
       </event>
       <actions>
         <remove-item item-id="182213191" count="1"/>
@@ -231,12 +231,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="810018" dialog-id="23"/>
+        <dialog type="TALK_TO_NPC" npc-id="810018" action="SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <remove-item item-id="182213191" count="1"/>
@@ -247,20 +247,20 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="810019" dialog-ids="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="810019" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="810019" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="810019" action="SELECT_QUEST_REWARD"/>
       </event>
       <actions>
         <remove-item item-id="182213191" count="1"/>
@@ -271,12 +271,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="810019" dialog-id="23"/>
+        <dialog type="TALK_TO_NPC" npc-id="810019" action="SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <remove-item item-id="182213191" count="1"/>
@@ -287,20 +287,20 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="810020" dialog-ids="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="810020" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="810020" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="810020" action="SELECT_QUEST_REWARD"/>
       </event>
       <actions>
         <remove-item item-id="182213191" count="1"/>
@@ -311,12 +311,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="810020" dialog-id="23"/>
+        <dialog type="TALK_TO_NPC" npc-id="810020" action="SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <remove-item item-id="182213191" count="1"/>
@@ -327,20 +327,20 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="810021" dialog-ids="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="810021" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="810021" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="810021" action="SELECT_QUEST_REWARD"/>
       </event>
       <actions>
         <remove-item item-id="182213191" count="1"/>
@@ -351,12 +351,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="810021" dialog-id="23"/>
+        <dialog type="TALK_TO_NPC" npc-id="810021" action="SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <remove-item item-id="182213191" count="1"/>
@@ -367,7 +367,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

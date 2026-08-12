@@ -22,206 +22,194 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="a0b0" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="a1b0" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="a2b0" status="START">
-          <var name="var0" value="2"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="a3b0" status="START">
-          <var name="var0" value="3"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="3"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="a4b0" status="START">
-          <var name="var0" value="4"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="4"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="a5b0" status="START">
-          <var name="var0" value="5"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="5"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="a0b1" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="a1b1" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="a2b1" status="START">
-          <var name="var0" value="2"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="a3b1" status="START">
-          <var name="var0" value="3"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="3"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="a4b1" status="START">
-          <var name="var0" value="4"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="4"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="a5b1" status="START">
-          <var name="var0" value="5"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="5"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="a0b2" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
     </node>
     <node label="a1b2" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="2"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="2"/>
     </node>
     <node label="a2b2" status="START">
-          <var name="var0" value="2"/>
-          <var name="var1" value="2"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="2"/>
     </node>
     <node label="a3b2" status="START">
-          <var name="var0" value="3"/>
-          <var name="var1" value="2"/>
+      <var name="var0" value="3"/>
+      <var name="var1" value="2"/>
     </node>
     <node label="a4b2" status="START">
-          <var name="var0" value="4"/>
-          <var name="var1" value="2"/>
+      <var name="var0" value="4"/>
+      <var name="var1" value="2"/>
     </node>
     <node label="a5b2" status="START">
-          <var name="var0" value="5"/>
-          <var name="var1" value="2"/>
+      <var name="var0" value="5"/>
+      <var name="var1" value="2"/>
     </node>
     <node label="a0b3" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
     </node>
     <node label="a1b3" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="3"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="3"/>
     </node>
     <node label="a2b3" status="START">
-          <var name="var0" value="2"/>
-          <var name="var1" value="3"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="3"/>
     </node>
     <node label="a3b3" status="START">
-          <var name="var0" value="3"/>
-          <var name="var1" value="3"/>
+      <var name="var0" value="3"/>
+      <var name="var1" value="3"/>
     </node>
     <node label="a4b3" status="START">
-          <var name="var0" value="4"/>
-          <var name="var1" value="3"/>
+      <var name="var0" value="4"/>
+      <var name="var1" value="3"/>
     </node>
     <node label="a5b3" status="START">
-          <var name="var0" value="5"/>
-          <var name="var1" value="3"/>
+      <var name="var0" value="5"/>
+      <var name="var1" value="3"/>
     </node>
     <node label="a0b4" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
     </node>
     <node label="a1b4" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="4"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="4"/>
     </node>
     <node label="a2b4" status="START">
-          <var name="var0" value="2"/>
-          <var name="var1" value="4"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="4"/>
     </node>
     <node label="a3b4" status="START">
-          <var name="var0" value="3"/>
-          <var name="var1" value="4"/>
+      <var name="var0" value="3"/>
+      <var name="var1" value="4"/>
     </node>
     <node label="a4b4" status="START">
-          <var name="var0" value="4"/>
-          <var name="var1" value="4"/>
+      <var name="var0" value="4"/>
+      <var name="var1" value="4"/>
     </node>
     <node label="a5b4" status="START">
-          <var name="var0" value="5"/>
-          <var name="var1" value="4"/>
+      <var name="var0" value="5"/>
+      <var name="var1" value="4"/>
     </node>
     <node label="a0b5" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
     </node>
     <node label="a1b5" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="5"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="5"/>
     </node>
     <node label="a2b5" status="START">
-          <var name="var0" value="2"/>
-          <var name="var1" value="5"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="5"/>
     </node>
     <node label="a3b5" status="START">
-          <var name="var0" value="3"/>
-          <var name="var1" value="5"/>
+      <var name="var0" value="3"/>
+      <var name="var1" value="5"/>
     </node>
     <node label="a4b5" status="START">
-          <var name="var0" value="4"/>
-          <var name="var1" value="5"/>
+      <var name="var0" value="4"/>
+      <var name="var1" value="5"/>
     </node>
     <node label="a5b5" status="START">
-          <var name="var0" value="5"/>
-          <var name="var1" value="5"/>
+      <var name="var0" value="5"/>
+      <var name="var1" value="5"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="5"/>
-          <var name="var1" value="5"/>
+      <var name="var0" value="5"/>
+      <var name="var1" value="5"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
   </nodes>
   <transitions>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="203147" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203147" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="203147" dialog-id="1007"/>
+        <dialog type="TALK_TO_NPC" npc-id="203147" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="a0b0">
       <event>
-        <talk-to-npc npc-id="203147" dialog-id="1002"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="a0b0">
-      <event>
-        <talk-to-npc npc-id="203147" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="203147" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <close-dialog/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="a0b0">
       <event>
-        <talk-to-npc npc-id="203147" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="203147" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -231,9 +219,21 @@
         <close-dialog/>
       </after-commit>
     </transition>
+    <transition source="unaccepted" target="a0b0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203147" action="SETPRO1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="203147" dialog-ids="1003 1004 20001"/>
+        <dialog type="TALK_TO_NPC" npc-id="203147" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -241,29 +241,41 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="203147" dialog-id="1008"/>
+        <dialog type="TALK_TO_NPC" npc-id="203147" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <kill-chain nodes="a0b0 a1b0 a2b0 a3b0 a4b0 a5b0">
-      <event><kill-npc npc-id="210176" /></event>
+      <event>
+        <kill-npc npc-id="210176"/>
+      </event>
     </kill-chain>
     <kill-chain nodes="a0b1 a1b1 a2b1 a3b1 a4b1 a5b1">
-      <event><kill-npc npc-id="210176" /></event>
+      <event>
+        <kill-npc npc-id="210176"/>
+      </event>
     </kill-chain>
     <kill-chain nodes="a0b2 a1b2 a2b2 a3b2 a4b2 a5b2">
-      <event><kill-npc npc-id="210176" /></event>
+      <event>
+        <kill-npc npc-id="210176"/>
+      </event>
     </kill-chain>
     <kill-chain nodes="a0b3 a1b3 a2b3 a3b3 a4b3 a5b3">
-      <event><kill-npc npc-id="210176" /></event>
+      <event>
+        <kill-npc npc-id="210176"/>
+      </event>
     </kill-chain>
     <kill-chain nodes="a0b4 a1b4 a2b4 a3b4 a4b4 a5b4">
-      <event><kill-npc npc-id="210176" /></event>
+      <event>
+        <kill-npc npc-id="210176"/>
+      </event>
     </kill-chain>
     <kill-chain nodes="a0b5 a1b5 a2b5 a3b5 a4b5 a5b5">
-      <event><kill-npc npc-id="210176" /></event>
+      <event>
+        <kill-npc npc-id="210176"/>
+      </event>
     </kill-chain>
     <transition source="a0b0" target="a0b1">
       <event>
@@ -505,7 +517,9 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <npc-report npc-id="203147" source="a5b5" target="reward" page="1352"/>
-    <npc-complete npc-id="203147" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <dialog type="NPC_REPORT" npc-id="203147" source="a5b5" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="203147" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

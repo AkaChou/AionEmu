@@ -7,6 +7,7 @@ package com.aionemu.gameserver.questEngine.model;
  * 涵盖：奖励选择、接/拒任务、步骤推进、SELECT_ACTION_* 脚本分支、特殊操作等。
  * Covers: reward selection, accept/refuse, step progression, SELECT_ACTION_* script branches, special actions, etc.
  */
+@Deprecated(forRemoval = false)
 public enum QuestDialog {
 	/** 空/未知。 Null / unknown. */
 	NULL(0),

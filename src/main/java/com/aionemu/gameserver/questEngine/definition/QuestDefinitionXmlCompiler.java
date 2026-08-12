@@ -410,6 +410,9 @@ public final class QuestDefinitionXmlCompiler {
 	}
 
 	static List<QuestEvent> parseEvents(Element element) {
+		if ("dialog".equals(element.getTagName())) {
+			return parseDialogEvents(element);
+		}
 		if (!"talk-to-npc".equals(element.getTagName()) || !element.hasAttribute("dialog-ids")) {
 			return List.of(parseEvent(element));
 		}
@@ -422,6 +425,144 @@ public final class QuestDefinitionXmlCompiler {
 			events.add(new QuestEvent.TalkToNpc(npcId, dialogId));
 		}
 		return List.copyOf(events);
+	}
+
+	private static List<QuestEvent> parseDialogEvents(Element element) {
+		QuestDialogType type = dialogType(element);
+		if (type != QuestDialogType.TALK_TO_NPC && type != QuestDialogType.QUEST_ACTION) {
+			return fail("DIALOG_TYPE_NOT_ALLOWED_IN_EVENT", type.name());
+		}
+		validateDialogShape(element, type == QuestDialogType.TALK_TO_NPC
+			? Set.of("type", "npc-id", "action", "actions")
+			: Set.of("type", "action", "actions"), false);
+		List<QuestDialogAction> actions = dialogActions(element);
+		return switch (type) {
+			case TALK_TO_NPC -> {
+				if (!element.hasAttribute("npc-id")) {
+					yield fail("DIALOG_NPC_ID_REQUIRED", "event dialog TALK_TO_NPC requires npc-id");
+				}
+				int npcId = integer(element, "npc-id");
+				yield actions.stream().map(action -> (QuestEvent) new QuestEvent.TalkToNpc(npcId, action.id())).toList();
+			}
+			case QUEST_ACTION -> {
+				if (element.hasAttribute("npc-id")) {
+					yield fail("DIALOG_NPC_ID_NOT_ALLOWED", "event dialog QUEST_ACTION must not declare npc-id");
+				}
+				yield actions.stream().map(action -> (QuestEvent) new QuestEvent.QuestDialog(action.id())).toList();
+			}
+			default -> throw new AssertionError(type);
+		};
+	}
+
+	static QuestDialogType dialogType(Element element) {
+		String value = attribute(element, "type");
+		try {
+			return QuestDialogType.valueOf(value);
+		} catch (IllegalArgumentException e) {
+			return fail("UNKNOWN_DIALOG_TYPE", value);
+		}
+	}
+
+	static List<QuestDialogAction> dialogActions(Element element) {
+		boolean singular = element.hasAttribute("action");
+		boolean plural = element.hasAttribute("actions");
+		if (singular == plural) {
+			return fail(singular ? "DIALOG_ACTION_ATTRIBUTE_CONFLICT" : "DIALOG_ACTION_REQUIRED",
+				element.getTagName() + " must declare exactly one of action or actions");
+		}
+		String raw = element.getAttribute(singular ? "action" : "actions").trim();
+		if (raw.isEmpty()) {
+			return fail("DIALOG_ACTION_REQUIRED", element.getTagName() + " action must not be empty");
+		}
+		List<QuestDialogAction> result = new ArrayList<>();
+		Set<QuestDialogAction> seen = new java.util.LinkedHashSet<>();
+		for (String token : raw.split("\\s+")) {
+			int delimiter = token.indexOf("..");
+			if (delimiter < 0) {
+				addDialogAction(result, seen, dialogAction(token), element);
+				continue;
+			}
+			if (delimiter == 0 || delimiter + 2 == token.length() || token.indexOf("..", delimiter + 2) >= 0) {
+				return fail("INVALID_DIALOG_ACTION_RANGE", token);
+			}
+			QuestDialogAction first = dialogAction(token.substring(0, delimiter));
+			QuestDialogAction last = dialogAction(token.substring(delimiter + 2));
+			if (first.id() > last.id() || (long) last.id() - first.id() >= 256) {
+				return fail("INVALID_DIALOG_ACTION_RANGE", token);
+			}
+			for (int id = first.id(); ; id++) {
+				QuestDialogAction action;
+				try {
+					action = QuestDialogAction.fromId(id);
+				} catch (IllegalArgumentException e) {
+					return fail("NON_CONTIGUOUS_DIALOG_ACTION_RANGE", token + " misses client action id " + id);
+				}
+				addDialogAction(result, seen, action, element);
+				if (id == last.id()) {
+					break;
+				}
+			}
+		}
+		return List.copyOf(result);
+	}
+
+	private static QuestDialogAction dialogAction(String value) {
+		try {
+			return QuestDialogAction.valueOf(value);
+		} catch (IllegalArgumentException e) {
+			return fail("UNKNOWN_DIALOG_ACTION", value);
+		}
+	}
+
+	private static void addDialogAction(List<QuestDialogAction> result, Set<QuestDialogAction> seen,
+			QuestDialogAction action, Element element) {
+		if (!seen.add(action)) {
+			fail("DUPLICATE_DIALOG_ACTION", element.getTagName() + " contains " + action.name() + " more than once");
+		}
+		result.add(action);
+	}
+
+	static QuestDialogPage dialogPageSymbol(Element element, String attributeName) {
+		String value = attribute(element, attributeName);
+		try {
+			return QuestDialogPage.valueOf(value);
+		} catch (IllegalArgumentException e) {
+			return fail("UNKNOWN_DIALOG_PAGE", value);
+		}
+	}
+
+	static void validateTransitionDialogShape(Element element, QuestDialogType type) {
+		switch (type) {
+			case NPC_START -> {
+				validateDialogShape(element, Set.of("type", "npc-id", "source", "target",
+					"selection-sources", "start-page"), true);
+				if (!element.hasAttribute("start-page") || element.getAttribute("start-page").isBlank()) {
+					fail("DIALOG_START_PAGE_REQUIRED", "NPC_START dialog requires start-page");
+				}
+			}
+			case NPC_REPORT -> {
+				validateDialogShape(element, Set.of("type", "npc-id", "source", "target", "page"), false);
+				if (!element.hasAttribute("page") || element.getAttribute("page").isBlank()) {
+					fail("DIALOG_PAGE_REQUIRED", "NPC_REPORT dialog requires page");
+				}
+			}
+			default -> throw new IllegalArgumentException("not a transitions dialog type: " + type);
+		}
+	}
+
+	private static void validateDialogShape(Element element, Set<String> allowedAttributes,
+			boolean acceptActionsAllowed) {
+		for (int index = 0; index < element.getAttributes().getLength(); index++) {
+			String attributeName = element.getAttributes().item(index).getNodeName();
+			if (!allowedAttributes.contains(attributeName)) {
+				fail("DIALOG_ATTRIBUTE_NOT_ALLOWED", element.getTagName() + " attribute " + attributeName);
+			}
+		}
+		for (Element child : children(element, null)) {
+			if (!acceptActionsAllowed || !"accept-actions".equals(child.getTagName())) {
+				fail("DIALOG_CHILD_NOT_ALLOWED", element.getTagName() + " child " + child.getTagName());
+			}
+		}
 	}
 
 	/** Shared strict dialog-id list/range parser used by talk-to-npc.dialog-ids and npc-dialog.dialog-ids. */
@@ -479,6 +620,7 @@ public final class QuestDefinitionXmlCompiler {
 
 	private static QuestEvent parseEvent(Element element) {
 		return switch (element.getTagName()) {
+			case "dialog" -> onlyDialogEvent(element);
 			case "talk-to-npc" -> parseTalkEvent(element);
 			case "kill-npc" -> parseKillNpc(element);
 			case "attack-npc" -> new QuestEvent.AttackNpc(integer(element, "npc-id"));
@@ -523,6 +665,14 @@ public final class QuestDefinitionXmlCompiler {
 			case "npc-lost-target" -> new QuestEvent.NpcLostTarget();
 			default -> fail("UNKNOWN_EVENT", element.getTagName());
 		};
+	}
+
+	private static QuestEvent onlyDialogEvent(Element element) {
+		List<QuestEvent> events = parseDialogEvents(element);
+		if (events.size() != 1) {
+			return fail("DIALOG_SINGLE_ACTION_REQUIRED", "this context accepts one dialog action");
+		}
+		return events.getFirst();
 	}
 
 	/** Single {@code npc-id} or space-separated {@code npc-ids} both lower to a kill event. */
@@ -685,6 +835,7 @@ public final class QuestDefinitionXmlCompiler {
 
 	static AfterCommitAction parseAfterCommitAction(Element action) {
 		return switch (action.getTagName()) {
+			case "dialog" -> parseDialogAfterCommit(action);
 			case "close-dialog" -> new AfterCommitAction.CloseDialog();
 			case "sync-quest-state" -> new AfterCommitAction.SyncQuestState(
 				enumValue(QuestStateSyncMode.class, action, "mode"));
@@ -768,6 +919,23 @@ public final class QuestDefinitionXmlCompiler {
 					enumValue(QuestTimerPolicy.Scope.class, action, "scope")));
 			case "play-movie-random" -> parsePlayMovieRandom(action);
 			default -> fail("UNKNOWN_AFTER_COMMIT_ACTION", action.getTagName());
+		};
+	}
+
+	private static AfterCommitAction parseDialogAfterCommit(Element element) {
+		QuestDialogType type = dialogType(element);
+		if (type != QuestDialogType.SHOW_QUEST_PAGE && type != QuestDialogType.SHOW_SELECTION_PAGE) {
+			return fail("DIALOG_TYPE_NOT_ALLOWED_IN_AFTER_COMMIT", type.name());
+		}
+		validateDialogShape(element, Set.of("type", "page"), false);
+		if (!element.hasAttribute("page") || element.getAttribute("page").isBlank()) {
+			return fail("DIALOG_PAGE_REQUIRED", "after-commit dialog requires page");
+		}
+		int pageId = dialogPageSymbol(element, "page").id();
+		return switch (type) {
+			case SHOW_QUEST_PAGE -> new AfterCommitAction.ShowQuestDialog(pageId);
+			case SHOW_SELECTION_PAGE -> new AfterCommitAction.ShowQuestSelectionDialog(pageId);
+			default -> throw new AssertionError(type);
 		};
 	}
 

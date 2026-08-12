@@ -27,47 +27,50 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="k1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="k2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="k3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="831027" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <dialog type="NPC_START" npc-id="831027" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
     <kill-chain nodes="started k1 k2 k3">
-      <event><kill-npc npc-id="215081" /></event>
+      <event>
+        <kill-npc npc-id="215081"/>
+      </event>
     </kill-chain>
-    <npc-report npc-id="831027" source="k3" target="reward" page="1352"/>
-    <npc-complete npc-id="831027" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="1"/>
-      <choice dialog-id="9" reward-index="2"/>
-      <choice dialog-id="10" reward-index="3"/>
-      <choice dialog-id="11" reward-index="4"/>
-      <choice dialog-id="12" reward-index="5"/>
-      <choice dialog-id="13" reward-index="6"/>
-      <choice dialog-id="14" reward-index="7"/>
-      <choice dialog-id="15" reward-index="8"/>
-      <choice dialog-id="16" reward-index="9"/>
-      <choice dialog-id="17" reward-index="10"/>
-      <choice dialog-id="18" reward-index="11"/>
-      <choice dialog-id="19" reward-index="12"/>
-      <choice dialog-id="20" reward-index="13"/>
+    <dialog type="NPC_REPORT" npc-id="831027" source="k3" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="831027" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
+      <choice action="SELECTED_QUEST_REWARD6" reward-index="6"/>
+      <choice action="SELECTED_QUEST_REWARD7" reward-index="7"/>
+      <choice action="SELECTED_QUEST_REWARD8" reward-index="8"/>
+      <choice action="SELECTED_QUEST_REWARD9" reward-index="9"/>
+      <choice action="SELECTED_QUEST_REWARD10" reward-index="10"/>
+      <choice action="SELECTED_QUEST_REWARD11" reward-index="11"/>
+      <choice action="SELECTED_QUEST_REWARD12" reward-index="12"/>
+      <choice action="SELECTED_QUEST_REWARD13" reward-index="13"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

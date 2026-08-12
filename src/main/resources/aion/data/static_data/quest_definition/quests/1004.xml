@@ -22,34 +22,34 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="v0" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="v1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="v2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="v3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="v4" status="START">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="v5" status="START">
-          <var name="var0" value="5"/>
+      <var name="var0" value="5"/>
     </node>
     <node label="v11" status="START">
-          <var name="var0" value="11"/>
+      <var name="var0" value="11"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="5"/>
+      <var name="var0" value="5"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -78,24 +78,24 @@
     </transition>
     <transition source="v0" target="v0">
       <event>
-        <talk-to-npc npc-id="203082" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203082" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="v0" target="v0">
       <event>
-        <talk-to-npc npc-id="203082" dialog-id="1013"/>
+        <dialog type="TALK_TO_NPC" npc-id="203082" action="SELECT1_1_1"/>
       </event>
       <after-commit>
         <play-movie movie-id="19"/>
-        <show-quest-dialog dialog-id="1013"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
       </after-commit>
     </transition>
     <transition source="v0" target="v1">
       <event>
-        <talk-to-npc npc-id="203082" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="203082" action="SETPRO1"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -104,7 +104,7 @@
     </transition>
     <transition source="v1" target="v2">
       <event>
-        <talk-to-npc npc-id="700030" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="700030" action="USE_OBJECT"/>
       </event>
       <actions>
         <give-item item-id="182200005" count="1"/>
@@ -116,15 +116,15 @@
     </transition>
     <transition source="v2" target="v2">
       <event>
-        <talk-to-npc npc-id="790001" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="v2" target="v3">
       <event>
-        <talk-to-npc npc-id="790001" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="SETPRO2"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -133,15 +133,15 @@
     </transition>
     <transition source="v3" target="v3">
       <event>
-        <talk-to-npc npc-id="790001" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1693"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
     <transition source="v3" target="v11" priority="0">
       <event>
-        <talk-to-npc npc-id="790001" dialog-id="39"/>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
         <has-item item-id="182200004" count="3"/>
@@ -151,28 +151,28 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="1694"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
       </after-commit>
     </transition>
     <transition source="v3" target="v3" priority="10">
       <event>
-        <talk-to-npc npc-id="790001" dialog-id="39"/>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1779"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
       </after-commit>
     </transition>
     <transition source="v11" target="v11">
       <event>
-        <talk-to-npc npc-id="790001" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1694"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
       </after-commit>
     </transition>
     <transition source="v11" target="v4">
       <event>
-        <talk-to-npc npc-id="790001" dialog-id="10002"/>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="SETPRO3"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -181,7 +181,7 @@
     </transition>
     <transition source="v4" target="v5">
       <event>
-        <talk-to-npc npc-id="700030" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="700030" action="USE_OBJECT"/>
       </event>
       <actions>
         <remove-item item-id="182200005" count="1"/>
@@ -193,27 +193,36 @@
     </transition>
     <transition source="v5" target="v5">
       <event>
-        <talk-to-npc npc-id="203082" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203082" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2034"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
     <transition source="v5" target="reward">
       <event>
-        <talk-to-npc npc-id="203082" dialog-id="10002"/>
+        <dialog type="TALK_TO_NPC" npc-id="203082" action="SETPRO3"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="203067" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="1"/>
-      <choice dialog-id="9" reward-index="2"/>
-      <choice dialog-id="10" reward-index="3"/>
+    <npc-complete npc-id="203067" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <transition source="v1" target="v1"><event><can-act template-id="700030" action-type="ACTION_ITEM_USE"/></event></transition>
-    <transition source="v4" target="v4"><event><can-act template-id="700030" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="v1" target="v1">
+      <event>
+        <can-act template-id="700030" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="v4" target="v4">
+      <event>
+        <can-act template-id="700030" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
   </transitions>
 </quest-definition>

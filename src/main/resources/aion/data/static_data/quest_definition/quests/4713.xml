@@ -2,538 +2,539 @@
 <!-- 击杀任务：从 279042 接取，击杀 700497 1 次、10 种 Dredgion 怪物各 20 次后向同一 NPC 报告领奖。
      Monster-hunt quest: accept from 279042, kill 700497 x1 and 10 Dredgion mobs x20, report to the same NPC for reward. -->
 <quest-definition id="4713" version="1">
-<metadata name="[Group] Chaos On The Dredgion" display-name-id="1120006" min-level="46" max-level="50" category="QUEST" cannot-share="true">
+  <metadata name="[Group] Chaos On The Dredgion" display-name-id="1120006" min-level="46" max-level="50" category="QUEST" cannot-share="true">
     <races>
-        <race id="ASMODIANS"/>
+      <race id="ASMODIANS"/>
     </races>
     <repeat max-repeat-count="30" cooldown-seconds="0" daily="false" weekly="false"/>
     <rewards>
-        <reward kind="EXP" id="0" amount="2632651"/>
-        <reward kind="AP" id="0" amount="800"/>
-        <reward kind="ITEM" id="186000010" amount="1"/>
-        <reward kind="SELECTABLE_ITEM" id="186000010" amount="6"/>
-        <reward kind="SELECTABLE_ITEM" id="188050926" amount="1"/>
+      <reward kind="EXP" id="0" amount="2632651"/>
+      <reward kind="AP" id="0" amount="800"/>
+      <reward kind="ITEM" id="186000010" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="186000010" amount="6"/>
+      <reward kind="SELECTABLE_ITEM" id="188050926" amount="1"/>
     </rewards>
-</metadata>
-    <progress>
-        <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-        <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-    </progress>
-    <nodes>
-        <node label="unaccepted" status="NONE">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="0"/>
-        </node>
-        <node label="a0b0" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="0"/>
-        </node>
-        <node label="a0b1" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="1"/>
-        </node>
-        <node label="a0b2" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="2"/>
-        </node>
-        <node label="a0b3" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="3"/>
-        </node>
-        <node label="a0b4" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="4"/>
-        </node>
-        <node label="a0b5" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="5"/>
-        </node>
-        <node label="a0b6" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="6"/>
-        </node>
-        <node label="a0b7" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="7"/>
-        </node>
-        <node label="a0b8" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="8"/>
-        </node>
-        <node label="a0b9" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="9"/>
-        </node>
-        <node label="a0b10" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="10"/>
-        </node>
-        <node label="a0b11" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="11"/>
-        </node>
-        <node label="a0b12" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="12"/>
-        </node>
-        <node label="a0b13" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="13"/>
-        </node>
-        <node label="a0b14" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="14"/>
-        </node>
-        <node label="a0b15" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="15"/>
-        </node>
-        <node label="a0b16" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="16"/>
-        </node>
-        <node label="a0b17" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="17"/>
-        </node>
-        <node label="a0b18" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="18"/>
-        </node>
-        <node label="a0b19" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="19"/>
-        </node>
-        <node label="a0b20" status="START">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="20"/>
-        </node>
-        <node label="a1b0" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="0"/>
-        </node>
-        <node label="a1b1" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="1"/>
-        </node>
-        <node label="a1b2" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="2"/>
-        </node>
-        <node label="a1b3" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="3"/>
-        </node>
-        <node label="a1b4" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="4"/>
-        </node>
-        <node label="a1b5" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="5"/>
-        </node>
-        <node label="a1b6" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="6"/>
-        </node>
-        <node label="a1b7" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="7"/>
-        </node>
-        <node label="a1b8" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="8"/>
-        </node>
-        <node label="a1b9" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="9"/>
-        </node>
-        <node label="a1b10" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="10"/>
-        </node>
-        <node label="a1b11" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="11"/>
-        </node>
-        <node label="a1b12" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="12"/>
-        </node>
-        <node label="a1b13" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="13"/>
-        </node>
-        <node label="a1b14" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="14"/>
-        </node>
-        <node label="a1b15" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="15"/>
-        </node>
-        <node label="a1b16" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="16"/>
-        </node>
-        <node label="a1b17" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="17"/>
-        </node>
-        <node label="a1b18" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="18"/>
-        </node>
-        <node label="a1b19" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="19"/>
-        </node>
-        <node label="a1b20" status="START">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="20"/>
-        </node>
-        <node label="reward" status="REWARD">
-                    <var name="var0" value="1"/>
-                    <var name="var1" value="20"/>
-        </node>
-        <node label="complete" status="COMPLETE">
-                    <var name="var0" value="0"/>
-                    <var name="var1" value="0"/>
-        </node>
-    </nodes>
-    <transitions>
-        <!-- 接取：预览、拒绝与选择对话 / Accept: preview, decline and selection dialogs -->
-        <npc-start npc-id="279042" source="unaccepted" target="a0b0" selection-sources="unaccepted a0b0"/>
-        <!-- 击杀进度：var0 组 700497，var1 组 10 种怪物 / Kill progress: var0 group, var1 group -->
-        <counter-grid>
-          <dimension field="var0" required="1" npc-ids="700497"/>
-          <dimension field="var1" required="20" npc-ids="214806 214808 214813 214814 214819 214820 214821 214822" source-order="VALUE_THEN_NODE"/>
-        </counter-grid>
-        <!-- 终态报告与领奖 / Final report and reward -->
-        <npc-report npc-id="279042" source="a1b20" target="reward" page="1352"/>
-        <npc-complete npc-id="279042" source="reward" target="complete" fixed-reward-indices="0 1 2" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-          <choice dialog-id="8" reward-index="3"/>
-          <choice dialog-id="9" reward-index="4"/>
-        </npc-complete>
-  <transition source="a0b0" target="a0b1">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b0" target="a1b1">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b1" target="a0b2">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b1" target="a1b2">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b2" target="a0b3">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b2" target="a1b3">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b3" target="a0b4">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b3" target="a1b4">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b4" target="a0b5">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b4" target="a1b5">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b5" target="a0b6">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b5" target="a1b6">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b6" target="a0b7">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b6" target="a1b7">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b7" target="a0b8">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b7" target="a1b8">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b8" target="a0b9">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b8" target="a1b9">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b9" target="a0b10">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b9" target="a1b10">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b10" target="a0b11">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b10" target="a1b11">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b11" target="a0b12">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b11" target="a1b12">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b12" target="a0b13">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b12" target="a1b13">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b13" target="a0b14">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b13" target="a1b14">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b14" target="a0b15">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b14" target="a1b15">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b15" target="a0b16">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b15" target="a1b16">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b16" target="a0b17">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b16" target="a1b17">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b17" target="a0b18">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b17" target="a1b18">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b18" target="a0b19">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b18" target="a1b19">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a0b19" target="a0b20">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
-<transition source="a1b19" target="a1b20">
-            <event>
-                <kill-npc npc-id="216851"/>
-            </event>
-            <after-commit>
-                <sync-quest-state mode="PACKET_ONLY"/>
-            </after-commit>
-        </transition>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+    </node>
+    <node label="a0b0" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+    </node>
+    <node label="a0b1" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+    </node>
+    <node label="a0b2" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+    </node>
+    <node label="a0b3" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+    </node>
+    <node label="a0b4" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+    </node>
+    <node label="a0b5" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+    </node>
+    <node label="a0b6" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+    </node>
+    <node label="a0b7" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="7"/>
+    </node>
+    <node label="a0b8" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="8"/>
+    </node>
+    <node label="a0b9" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="9"/>
+    </node>
+    <node label="a0b10" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="10"/>
+    </node>
+    <node label="a0b11" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="11"/>
+    </node>
+    <node label="a0b12" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="12"/>
+    </node>
+    <node label="a0b13" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="13"/>
+    </node>
+    <node label="a0b14" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="14"/>
+    </node>
+    <node label="a0b15" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="15"/>
+    </node>
+    <node label="a0b16" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="16"/>
+    </node>
+    <node label="a0b17" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="17"/>
+    </node>
+    <node label="a0b18" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="18"/>
+    </node>
+    <node label="a0b19" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="19"/>
+    </node>
+    <node label="a0b20" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="20"/>
+    </node>
+    <node label="a1b0" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
+    </node>
+    <node label="a1b1" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+    </node>
+    <node label="a1b2" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="2"/>
+    </node>
+    <node label="a1b3" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="3"/>
+    </node>
+    <node label="a1b4" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="4"/>
+    </node>
+    <node label="a1b5" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="5"/>
+    </node>
+    <node label="a1b6" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="6"/>
+    </node>
+    <node label="a1b7" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="7"/>
+    </node>
+    <node label="a1b8" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="8"/>
+    </node>
+    <node label="a1b9" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="9"/>
+    </node>
+    <node label="a1b10" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="10"/>
+    </node>
+    <node label="a1b11" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="11"/>
+    </node>
+    <node label="a1b12" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="12"/>
+    </node>
+    <node label="a1b13" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="13"/>
+    </node>
+    <node label="a1b14" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="14"/>
+    </node>
+    <node label="a1b15" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="15"/>
+    </node>
+    <node label="a1b16" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="16"/>
+    </node>
+    <node label="a1b17" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="17"/>
+    </node>
+    <node label="a1b18" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="18"/>
+    </node>
+    <node label="a1b19" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="19"/>
+    </node>
+    <node label="a1b20" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="20"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="1"/>
+      <var name="var1" value="20"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 接取：预览、拒绝与选择对话 / Accept: preview, decline and selection dialogs -->
+    <dialog type="NPC_START" npc-id="279042" source="unaccepted" target="a0b0" selection-sources="unaccepted a0b0" start-page="SELECT1"/>
+    <!-- 击杀进度：var0 组 700497，var1 组 10 种怪物 / Kill progress: var0 group, var1 group -->
+    <counter-grid>
+      <dimension field="var0" required="1" npc-ids="700497"/>
+      <dimension field="var1" required="20" npc-ids="214806 214808 214813 214814 214819 214820 214821 214822" source-order="VALUE_THEN_NODE"/>
+    </counter-grid>
+    <!-- 终态报告与领奖 / Final report and reward -->
+    <dialog type="NPC_REPORT" npc-id="279042" source="a1b20" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="279042" source="reward" target="complete" fixed-reward-indices="0 1 2" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="4"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <transition source="a0b0" target="a0b1">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b0" target="a1b1">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b1" target="a0b2">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b1" target="a1b2">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b2" target="a0b3">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b2" target="a1b3">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b3" target="a0b4">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b3" target="a1b4">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b4" target="a0b5">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b4" target="a1b5">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b5" target="a0b6">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b5" target="a1b6">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b6" target="a0b7">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b6" target="a1b7">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b7" target="a0b8">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b7" target="a1b8">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b8" target="a0b9">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b8" target="a1b9">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b9" target="a0b10">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b9" target="a1b10">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b10" target="a0b11">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b10" target="a1b11">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b11" target="a0b12">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b11" target="a1b12">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b12" target="a0b13">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b12" target="a1b13">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b13" target="a0b14">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b13" target="a1b14">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b14" target="a0b15">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b14" target="a1b15">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b15" target="a0b16">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b15" target="a1b16">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b16" target="a0b17">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b16" target="a1b17">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b17" target="a0b18">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b17" target="a1b18">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b18" target="a0b19">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b18" target="a1b19">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b19" target="a0b20">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a1b19" target="a1b20">
+      <event>
+        <kill-npc npc-id="216851"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

@@ -18,50 +18,93 @@
     <bit-field name="var0" offset="0" width="3" min="0" max="2" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="v1" status="START"><var name="var0" value="1"/></node>
-    <node label="v2" status="START"><var name="var0" value="2"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="2"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="v1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="v2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
   </nodes>
   <transitions>
     <!-- 接取:Griffonix (204028)。START_DIALOG(31) 显示 1011,询问接受(1007)显示 4,接受(1002)接取并显示 1003。 -->
-    <npc-start npc-id="204028" source="unaccepted" target="started" selection-sources="unaccepted"/>
-
+    <dialog type="NPC_START" npc-id="204028" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
     <!-- 进行中:Griffonix (204028) START 任意步骤;START_DIALOG 显示 1693,SELECT_REWARD(1009) 直接进入奖励(var 无条件)。 -->
     <transition source="started" target="started">
-      <event><talk-to-npc npc-id="204028" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="1693"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204028" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
     </transition>
     <transition source="v1" target="v1">
-      <event><talk-to-npc npc-id="204028" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="1693"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204028" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
     </transition>
     <transition source="v2" target="v2">
-      <event><talk-to-npc npc-id="204028" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="1693"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204028" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
     </transition>
     <transition source="started" target="reward">
-      <event><talk-to-npc npc-id="204028" dialog-id="1009"/></event>
-      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204028" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
     </transition>
     <transition source="v1" target="reward">
-      <event><talk-to-npc npc-id="204028" dialog-id="1009"/></event>
-      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204028" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
     </transition>
     <transition source="v2" target="reward">
-      <event><talk-to-npc npc-id="204028" dialog-id="1009"/></event>
-      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204028" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
     </transition>
-
     <!-- 护送:Griffo (204029,世界 NPC,ai=following)。START_DIALOG 显示 1352,STEP_TO_1(10000) 生成跟随实例并启动跟随至 KURIULLU_MOUNTAIN。 -->
     <transition source="started" target="started">
-      <event><talk-to-npc npc-id="204029" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="1352"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204029" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
     </transition>
     <transition source="started" target="v1">
-      <event><talk-to-npc npc-id="204029" dialog-id="10000"/></event>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204029" action="SETPRO1"/>
+      </event>
       <after-commit>
         <spawn-npc-at-player slot="griffo" template-id="204029" heading="0"/>
         <start-follow slot="griffo"/>
@@ -72,26 +115,46 @@
     </transition>
     <!-- 到达目标坐标区域:var0 1→2,护送完成;NPC 克隆回收。 -->
     <transition source="v1" target="v2">
-      <event><npc-reach-target/></event>
-      <after-commit><despawn-npc slot="griffo"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <npc-reach-target/>
+      </event>
+      <after-commit>
+        <despawn-npc slot="griffo"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <!-- 丢失目标/登出:var0 1→0 重置,克隆回收。 -->
     <transition source="v1" target="started">
-      <event><npc-lost-target/></event>
-      <after-commit><despawn-npc slot="griffo"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <npc-lost-target/>
+      </event>
+      <after-commit>
+        <despawn-npc slot="griffo"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="v1" target="started">
-      <event><log-out/></event>
-      <after-commit><despawn-npc slot="griffo"/><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <log-out/>
+      </event>
+      <after-commit>
+        <despawn-npc slot="griffo"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
-
     <!-- 奖励:Griffonix (204028) 领取。SELECT_REWARD(1009)/USE_OBJECT(-1) 显示 5,8..12 完成结算(每档可选奖励一条)。 -->
     <transition source="reward" target="reward">
-      <event><talk-to-npc npc-id="204028" dialog-ids="-1 1009"/></event>
-      <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204028" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
     </transition>
     <transition source="reward" target="complete">
-      <event><talk-to-npc npc-id="204028" dialog-id="8"/></event>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204028" action="SELECTED_QUEST_REWARD1"/>
+      </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="484471" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="113101082" amount="1"/>
@@ -101,11 +164,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
-      <event><talk-to-npc npc-id="204028" dialog-id="9"/></event>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204028" action="SELECTED_QUEST_REWARD2"/>
+      </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="484471" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="113301085" amount="1"/>
@@ -115,11 +180,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
-      <event><talk-to-npc npc-id="204028" dialog-id="10"/></event>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204028" action="SELECTED_QUEST_REWARD3"/>
+      </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="484471" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="113501061" amount="1"/>
@@ -129,11 +196,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
-      <event><talk-to-npc npc-id="204028" dialog-id="11"/></event>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204028" action="SELECTED_QUEST_REWARD4"/>
+      </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="484471" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="113601026" amount="1"/>
@@ -143,11 +212,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
-      <event><talk-to-npc npc-id="204028" dialog-id="12"/></event>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204028" action="SELECTED_QUEST_REWARD5"/>
+      </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="484471" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="113501545" amount="1"/>
@@ -157,7 +228,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

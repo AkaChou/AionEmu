@@ -16,58 +16,58 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="s2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="s3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="reward0" status="REWARD">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward1" status="REWARD">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="reward2" status="REWARD">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="reward3" status="REWARD">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
     <!-- NPC 799527 接取对话与接受/拒绝分支。 NPC 799527 start dialog and accept/refuse branches. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799527" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="799527" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4762"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799527" dialog-id="1007"/>
+        <dialog type="TALK_TO_NPC" npc-id="799527" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <!-- 正式接取：启动 480 秒女王倒计时。 Formal accept: start 480s queen countdown. -->
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="799527" dialog-id="1002"/>
+        <dialog type="TALK_TO_NPC" npc-id="799527" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -75,13 +75,13 @@
       <after-commit>
         <start-quest-timer seconds="480" timer-id="11467-queen" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <!-- 简化接取：不启动计时器（忠实旧 handler else 分支）。 Simple accept: no timer (faithful to old handler else branch). -->
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="799527" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="799527" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -93,7 +93,7 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799527" dialog-ids="1003 1004 20001"/>
+        <dialog type="TALK_TO_NPC" npc-id="799527" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -101,10 +101,10 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799527" dialog-id="1008"/>
+        <dialog type="TALK_TO_NPC" npc-id="799527" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 女王倒计时推进：0→1→2 各重启 240 秒；var0==2/3 时计时结束无实际推进（忠实旧分支）。 Queen countdown advances 0→1→2 with 240s restarts; var0==2/3 timer-end does nothing (faithful). -->
@@ -281,32 +281,34 @@
     <!-- 领奖阶段：NPC 799503 按当前步骤档位发放不同数量奖励。 Reward phase: NPC 799503 grants tiered item counts by step. -->
     <transition source="reward0" target="reward0">
       <event>
-        <talk-to-npc npc-id="799503" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="799503" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="799503" source="reward0" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="799503" source="reward0" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
     <transition source="reward1" target="reward1">
       <event>
-        <talk-to-npc npc-id="799503" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="799503" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="reward1" target="reward1">
       <event>
-        <talk-to-npc npc-id="799503" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="799503" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="6"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
       </after-commit>
     </transition>
     <transition source="reward1" target="complete">
       <event>
-        <talk-to-npc npc-id="799503" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="799503" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="GOLD" id="0" amount="25400" amount-mode="QUEST_BASE"/>
@@ -317,28 +319,28 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward2" target="reward2">
       <event>
-        <talk-to-npc npc-id="799503" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="799503" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="reward2" target="reward2">
       <event>
-        <talk-to-npc npc-id="799503" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="799503" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="7"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW3"/>
       </after-commit>
     </transition>
     <transition source="reward2" target="complete">
       <event>
-        <talk-to-npc npc-id="799503" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="799503" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="GOLD" id="0" amount="25400" amount-mode="QUEST_BASE"/>
@@ -349,28 +351,28 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward3" target="reward3">
       <event>
-        <talk-to-npc npc-id="799503" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="799503" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="reward3" target="reward3">
       <event>
-        <talk-to-npc npc-id="799503" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="799503" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="8"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW4"/>
       </after-commit>
     </transition>
     <transition source="reward3" target="complete">
       <event>
-        <talk-to-npc npc-id="799503" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="799503" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="GOLD" id="0" amount="25400" amount-mode="QUEST_BASE"/>
@@ -381,7 +383,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

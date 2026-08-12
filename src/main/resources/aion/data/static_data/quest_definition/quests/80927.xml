@@ -17,45 +17,118 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="k1" status="START"><var name="var0" value="1"/></node>
-    <node label="k2" status="START"><var name="var0" value="2"/></node>
-    <node label="k3" status="START"><var name="var0" value="3"/></node>
-    <node label="k4" status="START"><var name="var0" value="4"/></node>
-    <node label="k5" status="START"><var name="var0" value="5"/></node>
-    <node label="k6" status="START"><var name="var0" value="6"/></node>
-    <node label="k7" status="START"><var name="var0" value="7"/></node>
-    <node label="k8" status="START"><var name="var0" value="8"/></node>
-    <node label="k9" status="START"><var name="var0" value="9"/></node>
-    <node label="k10" status="START"><var name="var0" value="10"/></node>
-    <node label="k11" status="START"><var name="var0" value="11"/></node>
-    <node label="k12" status="START"><var name="var0" value="12"/></node>
-    <node label="k13" status="START"><var name="var0" value="13"/></node>
-    <node label="k14" status="START"><var name="var0" value="14"/></node>
-    <node label="k15" status="START"><var name="var0" value="15"/></node>
-    <node label="k16" status="START"><var name="var0" value="16"/></node>
-    <node label="k17" status="START"><var name="var0" value="17"/></node>
-    <node label="k18" status="START"><var name="var0" value="18"/></node>
-    <node label="k19" status="START"><var name="var0" value="19"/></node>
-    <node label="k20" status="START"><var name="var0" value="20"/></node>
-    <node label="k21" status="START"><var name="var0" value="21"/></node>
-    <node label="k22" status="START"><var name="var0" value="22"/></node>
-    <node label="k23" status="START"><var name="var0" value="23"/></node>
-    <node label="k24" status="START"><var name="var0" value="24"/></node>
-    <node label="k25" status="START"><var name="var0" value="25"/></node>
-    <node label="k26" status="START"><var name="var0" value="26"/></node>
-    <node label="k27" status="START"><var name="var0" value="27"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="27"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="k1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="k2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="k3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="k4" status="START">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="k5" status="START">
+      <var name="var0" value="5"/>
+    </node>
+    <node label="k6" status="START">
+      <var name="var0" value="6"/>
+    </node>
+    <node label="k7" status="START">
+      <var name="var0" value="7"/>
+    </node>
+    <node label="k8" status="START">
+      <var name="var0" value="8"/>
+    </node>
+    <node label="k9" status="START">
+      <var name="var0" value="9"/>
+    </node>
+    <node label="k10" status="START">
+      <var name="var0" value="10"/>
+    </node>
+    <node label="k11" status="START">
+      <var name="var0" value="11"/>
+    </node>
+    <node label="k12" status="START">
+      <var name="var0" value="12"/>
+    </node>
+    <node label="k13" status="START">
+      <var name="var0" value="13"/>
+    </node>
+    <node label="k14" status="START">
+      <var name="var0" value="14"/>
+    </node>
+    <node label="k15" status="START">
+      <var name="var0" value="15"/>
+    </node>
+    <node label="k16" status="START">
+      <var name="var0" value="16"/>
+    </node>
+    <node label="k17" status="START">
+      <var name="var0" value="17"/>
+    </node>
+    <node label="k18" status="START">
+      <var name="var0" value="18"/>
+    </node>
+    <node label="k19" status="START">
+      <var name="var0" value="19"/>
+    </node>
+    <node label="k20" status="START">
+      <var name="var0" value="20"/>
+    </node>
+    <node label="k21" status="START">
+      <var name="var0" value="21"/>
+    </node>
+    <node label="k22" status="START">
+      <var name="var0" value="22"/>
+    </node>
+    <node label="k23" status="START">
+      <var name="var0" value="23"/>
+    </node>
+    <node label="k24" status="START">
+      <var name="var0" value="24"/>
+    </node>
+    <node label="k25" status="START">
+      <var name="var0" value="25"/>
+    </node>
+    <node label="k26" status="START">
+      <var name="var0" value="26"/>
+    </node>
+    <node label="k27" status="START">
+      <var name="var0" value="27"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="27"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="835067" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="835067" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-        <kill-chain nodes="started k1 k2 k3 k4 k5 k6 k7 k8 k9 k10 k11 k12 k13 k14 k15 k16 k17 k18 k19 k20 k21 k22 k23 k24 k25 k26 k27">
-          <event><kill-npc npc-ids="240475 240477 240479 240481 240483" /></event>
-        </kill-chain>
-    <npc-report npc-id="835067" source="k27" target="reward" page="1352"/>
-    <npc-complete npc-id="835067" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <dialog type="NPC_START" npc-id="835067" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="835067" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <kill-chain nodes="started k1 k2 k3 k4 k5 k6 k7 k8 k9 k10 k11 k12 k13 k14 k15 k16 k17 k18 k19 k20 k21 k22 k23 k24 k25 k26 k27">
+      <event>
+        <kill-npc npc-ids="240475 240477 240479 240481 240483"/>
+      </event>
+    </kill-chain>
+    <dialog type="NPC_REPORT" npc-id="835067" source="k27" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="835067" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

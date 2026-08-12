@@ -52,6 +52,13 @@ log
 /src/main/resources/aion/data/static_data/npc_drops.zip
 
 /docs
+!/docs/
+/docs/*
+!/docs/quest/
+/docs/quest/*
+!/docs/quest/client-dialog-mapping/
+/docs/quest/client-dialog-mapping/*
+!/docs/quest/client-dialog-mapping/quest-order-audit.csv
 
 
 .codex

@@ -23,6 +23,7 @@
 | `same-symbol-map.csv` | 去掉 `HACTION_`、`HTML_PAGE_` 前缀后的同符号词干对照 |
 | `parse-errors.csv` | 无法解析的中文任务 HTML；只有表头表示全部解析成功 |
 | `parse-recoveries.csv` | 原始标记不规范或为空的文件、恢复解析诊断及提取记录数 |
+| `quest-order-audit.csv` | active 客户端页面动作图与编译后任务 IR 的逐路径顺序审计 |
 
 CSV 使用带 BOM 的 UTF-8 编码，可直接用 Excel 打开。
 
@@ -39,12 +40,29 @@ HtmlPages  ID 31 = HTML_PAGE_PACKAGE_LIMITATION
 
 `quest-dialog-action-details.csv` 和 `page-action-map.csv` 表达的是客户端 HTML 中可以直接验证的关系：某个页面包含一个按钮，该按钮的 `href` 引用了某个 `HACTION_*`。动作执行后的服务器状态变化或下一个页面仍由服务端任务处理逻辑决定，不能只凭这两份客户端定义推断。
 
+`quest-order-audit.csv` 只使用 `source_variant=active` 的任务 HTML。每条 IR 响应显示任务页面后，审计器检查该页面的可见动作在响应后的状态和同一 NPC 下是否存在编译路由。状态含义如下：
+
+- `VERIFIED`：当前页面动作在编译 IR 中有匹配路由。
+- `UNRESOLVED`：客户端证明动作可见，但客户端不能单独证明响应页面或状态副作用；不得仅凭 `same-symbol-map.csv` 自动修复。
+- `UNREACHED`：active 客户端页面未由当前 IR 显示，现有路径不足以确定它对应的 NPC 和状态。
+
+`fix_status=FIXED` 表示该路径已经结合客户端 HTML、`origin/history` 旧 handler 和权威任务奖励数据修复；`NOT_NEEDED` 表示当前 IR 原本就满足客户端页面动作合同。任务 1913 和 8 个装备兑换任务由测试要求所有已进入 IR 的 active 页面路径均为 `VERIFIED`。
+
 ## 重新生成
 
 在项目根目录执行：
 
 ```bash
 rtk python3 scripts/generate_client_dialog_mapping.py
+```
+
+重新生成顺序审计（先完成测试编译）使用：
+
+```bash
+rtk mvn -q -Dexec.classpathScope=test \
+  -Dexec.mainClass=com.aionemu.gameserver.questEngine.definition.QuestDialogOrderAudit \
+  -Dexec.args="docs/quest/client-dialog-mapping/quest-dialog-action-details.csv docs/quest/client-dialog-mapping/quest-order-audit.csv" \
+  exec:java
 ```
 
 也可以显式指定来源和输出目录：

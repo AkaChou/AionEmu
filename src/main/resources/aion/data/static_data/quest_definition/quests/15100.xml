@@ -15,26 +15,112 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-<bit-field name="var1" offset="6" width="6" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
-<bit-field name="var2" offset="12" width="6" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="12" width="6" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="0"/><var name="var1" value="5"/><var name="var2" value="5"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/><var name="var1" value="0"/><var name="var2" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="5"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
+    </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="804711" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="804711" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="reward"><event><talk-to-npc npc-id="804711" dialog-id="1009"/></event><conditions><variable-at-least field="var1" value="5"/><variable-at-least field="var2" value="5"/></conditions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <npc-complete npc-id="804711" source="reward" target="complete" fixed-reward-indices="0 1 2 3" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="4"/>
-      <choice dialog-id="9" reward-index="5"/>
+    <dialog type="NPC_START" npc-id="804711" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804711" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804711" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var1" value="5"/>
+        <variable-at-least field="var2" value="5"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="804711" source="reward" target="complete" fixed-reward-indices="0 1 2 3" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="5"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-      <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="235941 235942"/></event><conditions><variable-below field="var1" value="5"/></conditions><actions><increment-variable field="var1" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started" target="reward" priority="0"><event><kill-npc npc-ids="235941 235942"/></event><conditions><variable-at-least field="var1" value="4"/><variable-at-least field="var2" value="5"/></conditions><actions><set-variable field="var1" value="5"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
-    <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="235946"/></event><conditions><variable-below field="var2" value="5"/></conditions><actions><increment-variable field="var2" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started" target="reward" priority="0"><event><kill-npc npc-ids="235946"/></event><conditions><variable-at-least field="var2" value="4"/><variable-at-least field="var1" value="5"/></conditions><actions><set-variable field="var2" value="5"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <kill-npc npc-ids="235941 235942"/>
+      </event>
+      <conditions>
+        <variable-below field="var1" value="5"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <kill-npc npc-ids="235941 235942"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var1" value="4"/>
+        <variable-at-least field="var2" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="5"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <kill-npc npc-ids="235946"/>
+      </event>
+      <conditions>
+        <variable-below field="var2" value="5"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var2" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <kill-npc npc-ids="235946"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var2" value="4"/>
+        <variable-at-least field="var1" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var2" value="5"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

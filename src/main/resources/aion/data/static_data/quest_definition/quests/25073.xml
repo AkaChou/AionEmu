@@ -21,23 +21,115 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="0"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="804918" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
-    <npc-report npc-id="804918" source="started" target="reward" page="1352"/>
-    <transition source="reward" target="reward"><event><talk-to-npc npc-id="804918" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="804918" dialog-ids="8..23"/></event><conditions><has-item item-id="182215725" count="1"/></conditions><actions>        <grant-reward kind="GOLD" id="0" amount="133740" amount-mode="QUEST_BASE"/>        <grant-reward kind="EXP" id="0" amount="9756478" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="186000231" amount="30"/>        <grant-reward kind="ITEM" id="186000237" amount="25"/>        <remove-item item-id="182215725" count="1"/><remove-item item-id="182215725" count="1"/><complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <npc-start npc-id="731556" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="731556" source="started" target="reward" page="1352"/>
-    <transition source="reward" target="reward"><event><talk-to-npc npc-id="731556" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="731556" dialog-ids="8..23"/></event><conditions><has-item item-id="182215725" count="1"/></conditions><actions>        <grant-reward kind="GOLD" id="0" amount="133740" amount-mode="QUEST_BASE"/>        <grant-reward kind="EXP" id="0" amount="9756478" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="186000231" amount="30"/>        <grant-reward kind="ITEM" id="186000237" amount="25"/>        <remove-item item-id="182215725" count="1"/><remove-item item-id="182215725" count="1"/><complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <npc-start npc-id="804732" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="804732" source="started" target="reward" page="1352"/>
-    <transition source="reward" target="reward"><event><talk-to-npc npc-id="804732" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="804732" dialog-ids="8..23"/></event><conditions><has-item item-id="182215725" count="1"/></conditions><actions>        <grant-reward kind="GOLD" id="0" amount="133740" amount-mode="QUEST_BASE"/>        <grant-reward kind="EXP" id="0" amount="9756478" amount-mode="QUEST_BASE"/>        <grant-reward kind="ITEM" id="186000231" amount="30"/>        <grant-reward kind="ITEM" id="186000237" amount="25"/>        <remove-item item-id="182215725" count="1"/><remove-item item-id="182215725" count="1"/><complete-quest reward-index="0"/></actions><after-commit>        <refresh-player-stats/>        <sync-quest-state mode="COMPLETION"/>        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <dialog type="NPC_START" npc-id="804918" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <dialog type="NPC_REPORT" npc-id="804918" source="started" target="reward" page="SELECT2"/>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804918" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804918" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
+      </event>
+      <conditions>
+        <has-item item-id="182215725" count="1"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="133740" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="9756478" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000231" amount="30"/>
+        <grant-reward kind="ITEM" id="186000237" amount="25"/>
+        <remove-item item-id="182215725" count="1"/>
+        <remove-item item-id="182215725" count="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_START" npc-id="731556" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_REPORT" npc-id="731556" source="started" target="reward" page="SELECT2"/>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731556" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731556" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
+      </event>
+      <conditions>
+        <has-item item-id="182215725" count="1"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="133740" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="9756478" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000231" amount="30"/>
+        <grant-reward kind="ITEM" id="186000237" amount="25"/>
+        <remove-item item-id="182215725" count="1"/>
+        <remove-item item-id="182215725" count="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_START" npc-id="804732" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_REPORT" npc-id="804732" source="started" target="reward" page="SELECT2"/>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804732" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804732" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
+      </event>
+      <conditions>
+        <has-item item-id="182215725" count="1"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="133740" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="9756478" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="186000231" amount="30"/>
+        <grant-reward kind="ITEM" id="186000237" amount="25"/>
+        <remove-item item-id="182215725" count="1"/>
+        <remove-item item-id="182215725" count="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

@@ -19,40 +19,177 @@
     <bit-field name="var1" offset="6" width="2" min="0" max="2" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/><var name="var1" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="s1" status="START"><var name="var0" value="1"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="2"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="2"/>
+    </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <!-- 接取前与 806261 对话。 Pre-accept dialog with 806261. -->
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806261" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="4762"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="806261" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-    <transition source="unaccepted" target="started"><event><talk-to-npc npc-id="806261" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
-    <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="806261" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806261" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806261" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806261" action="QUEST_ACCEPT_SIMPLE"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806261" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <!-- 703344 对话仅关闭窗口。 Dialog with 703344 only closes the window. -->
-    <transition source="started" target="started"><event><talk-to-npc npc-id="703344" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
-    <transition source="s1" target="s1"><event><talk-to-npc npc-id="703344" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="703344" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="703344" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <!-- 获得补给品 182213556 推进到 s1。 Obtaining supply 182213556 advances to s1. -->
-    <transition source="started" target="s1"><event><get-item item-id="182213556"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="started" target="s1">
+      <event>
+        <get-item item-id="182213556"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <!-- 击杀 243797 计数两次后进入领奖。 Killing 243797 twice enters reward. -->
-    <transition source="s1" target="s1" priority="1"><event><kill-npc npc-id="243797"/></event><conditions><variable-is field="var0" value="1"/><variable-below field="var1" value="2"/></conditions><actions><increment-variable field="var1" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="s1" target="reward" priority="0"><event><kill-npc npc-id="243797"/></event><conditions><variable-is field="var0" value="1"/><variable-at-least field="var1" value="2"/></conditions><actions><set-variable field="var0" value="2"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
-    <transition source="reward" target="reward"><event><talk-to-npc npc-id="703344" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
+    <transition source="s1" target="s1" priority="1">
+      <event>
+        <kill-npc npc-id="243797"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+        <variable-below field="var1" value="2"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="reward" priority="0">
+      <event>
+        <kill-npc npc-id="243797"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+        <variable-at-least field="var1" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="703344" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <!-- 与 806260 结算并移除补给品。 Settle with 806260 and remove the supply. -->
-    <transition source="reward" target="reward"><event><talk-to-npc npc-id="806260" dialog-id="-1"/></event><actions><remove-item item-id="182213556" count="1"/></actions><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="reward" target="reward"><event><talk-to-npc npc-id="806260" dialog-id="1009"/></event><actions><remove-item item-id="182213556" count="1"/></actions><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
-    <transition source="reward" target="complete"><event><talk-to-npc npc-id="806260" dialog-ids="8..23"/></event><actions>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806260" action="USE_OBJECT"/>
+      </event>
+      <actions>
+        <remove-item item-id="182213556" count="1"/>
+      </actions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806260" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <actions>
+        <remove-item item-id="182213556" count="1"/>
+      </actions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806260" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
+      </event>
+      <actions>
         <remove-item item-id="182213556" count="1"/>
         <grant-reward kind="EXP" id="0" amount="7911702" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="188100391" amount="500"/>
         <grant-reward kind="ITEM" id="162000196" amount="5"/>
-        <complete-quest reward-index="0"/></actions><after-commit>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="started" target="started"><event><can-act template-id="703344" action-type="ACTION_ITEM_USE"/></event></transition>
-    <transition source="s1" target="s1"><event><can-act template-id="703344" action-type="ACTION_ITEM_USE"/></event></transition>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="703344" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <can-act template-id="703344" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
   </transitions>
 </quest-definition>

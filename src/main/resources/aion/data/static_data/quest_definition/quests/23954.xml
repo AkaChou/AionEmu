@@ -17,25 +17,25 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="s2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="s3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
   </nodes>
   <transitions>
@@ -54,31 +54,31 @@
     <!-- 步骤 0：与 806599 对话，领取 182216188 并推进到步骤 1。 Step 0: talk 806599, receive 182216188 and advance to step 1. -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="806599" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="806599" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="806599" dialog-id="1012"/>
+        <dialog type="TALK_TO_NPC" npc-id="806599" action="SELECT1_1"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1012"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="806599" dialog-id="1013"/>
+        <dialog type="TALK_TO_NPC" npc-id="806599" action="SELECT1_1_1"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1013"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
       </after-commit>
     </transition>
     <transition source="started" target="s1">
       <event>
-        <talk-to-npc npc-id="806599" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="806599" action="SETPRO1"/>
       </event>
       <actions>
         <give-item item-id="182216188" count="1"/>
@@ -92,23 +92,23 @@
     <!-- 步骤 1：与 204153 对话，刷出 247093 并推进到步骤 2。 Step 1: talk 204153, spawn 247093 and advance to step 2. -->
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="204153" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204153" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="204153" dialog-id="1353"/>
+        <dialog type="TALK_TO_NPC" npc-id="204153" action="SELECT2_1"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1353"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s2">
       <event>
-        <talk-to-npc npc-id="204153" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="204153" action="SETPRO2"/>
       </event>
       <actions>
         <set-variable field="var0" value="2"/>
@@ -134,31 +134,31 @@
     <!-- 步骤 3：与 204153 对话进入 REWARD（var 3→4）。 Step 3: talk 204153 to enter REWARD (var 3→4). -->
     <transition source="s3" target="s3">
       <event>
-        <talk-to-npc npc-id="204153" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204153" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2120"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_2"/>
       </after-commit>
     </transition>
     <transition source="s3" target="s3">
       <event>
-        <talk-to-npc npc-id="204153" dialog-id="2034"/>
+        <dialog type="TALK_TO_NPC" npc-id="204153" action="SELECT4"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2034"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
     <transition source="s3" target="s3">
       <event>
-        <talk-to-npc npc-id="204153" dialog-id="2035"/>
+        <dialog type="TALK_TO_NPC" npc-id="204153" action="SELECT4_1"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2035"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
       </after-commit>
     </transition>
     <transition source="s3" target="reward">
       <event>
-        <talk-to-npc npc-id="204153" dialog-id="10255"/>
+        <dialog type="TALK_TO_NPC" npc-id="204153" action="SET_SUCCEED"/>
       </event>
       <actions>
         <set-variable field="var0" value="4"/>
@@ -172,12 +172,14 @@
     <!-- 奖励：与 806591 结算。 Reward: settle with 806591. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="806591" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="806591" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="806591" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="806591" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

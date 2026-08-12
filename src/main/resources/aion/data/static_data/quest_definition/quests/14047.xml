@@ -38,31 +38,31 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="s2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="s3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="s4" status="START">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="s5" status="START">
-          <var name="var0" value="5"/>
+      <var name="var0" value="5"/>
     </node>
     <node label="s6" status="START">
-          <var name="var0" value="6"/>
+      <var name="var0" value="6"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="6"/>
+      <var name="var0" value="6"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
@@ -91,18 +91,18 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="203704" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203704" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="s1">
       <event>
-        <talk-to-npc npc-id="203704" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="203704" action="SETPRO1"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -117,18 +117,18 @@
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="798154" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="798154" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s2">
       <event>
-        <talk-to-npc npc-id="798154" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="798154" action="SETPRO2"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
@@ -143,18 +143,18 @@
     </transition>
     <transition source="s2" target="s2">
       <event>
-        <talk-to-npc npc-id="204574" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204574" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="2"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1693"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
     <transition source="s2" target="s3">
       <event>
-        <talk-to-npc npc-id="204574" dialog-id="10002"/>
+        <dialog type="TALK_TO_NPC" npc-id="204574" action="SETPRO3"/>
       </event>
       <conditions>
         <variable-is field="var0" value="2"/>
@@ -169,18 +169,18 @@
     </transition>
     <transition source="s3" target="s3">
       <event>
-        <talk-to-npc npc-id="802051" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="802051" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="3"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="2034"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
     <transition source="s3" target="s4">
       <event>
-        <talk-to-npc npc-id="802051" dialog-id="10009"/>
+        <dialog type="TALK_TO_NPC" npc-id="802051" action="SETPRO10"/>
       </event>
       <conditions>
         <variable-is field="var0" value="3"/>
@@ -196,18 +196,18 @@
     </transition>
     <transition source="s6" target="s6">
       <event>
-        <talk-to-npc npc-id="802051" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="802051" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="6"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="3057"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT7"/>
       </after-commit>
     </transition>
     <transition source="s6" target="reward">
       <event>
-        <talk-to-npc npc-id="802051" dialog-id="10255"/>
+        <dialog type="TALK_TO_NPC" npc-id="802051" action="SET_SUCCEED"/>
       </event>
       <conditions>
         <variable-is field="var0" value="6"/>
@@ -222,7 +222,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="802051" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="802051" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <show-dialog-window dialog-id="10009"/>
@@ -230,7 +230,7 @@
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="802051" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="802051" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <show-dialog-window dialog-id="10009"/>
@@ -238,7 +238,7 @@
     </transition>
     <transition source="s2" target="s2">
       <event>
-        <talk-to-npc npc-id="802051" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="802051" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <show-dialog-window dialog-id="10009"/>
@@ -246,7 +246,7 @@
     </transition>
     <transition source="s4" target="s4">
       <event>
-        <talk-to-npc npc-id="802051" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="802051" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <show-dialog-window dialog-id="10009"/>
@@ -254,7 +254,7 @@
     </transition>
     <transition source="s5" target="s5">
       <event>
-        <talk-to-npc npc-id="802051" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="802051" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <show-dialog-window dialog-id="10009"/>
@@ -262,18 +262,18 @@
     </transition>
     <transition source="s4" target="s4">
       <event>
-        <talk-to-npc npc-id="802052" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="802052" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="4"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="s4" target="s4">
       <event>
-        <talk-to-npc npc-id="802052" dialog-id="2376"/>
+        <dialog type="TALK_TO_NPC" npc-id="802052" action="SELECT5_1"/>
       </event>
       <conditions>
         <variable-is field="var0" value="4"/>
@@ -284,7 +284,7 @@
     </transition>
     <transition source="s4" target="s5">
       <event>
-        <talk-to-npc npc-id="802052" dialog-id="10010"/>
+        <dialog type="TALK_TO_NPC" npc-id="802052" action="SETPRO11"/>
       </event>
       <conditions>
         <variable-is field="var0" value="4"/>
@@ -300,7 +300,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="802052" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="802052" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <show-dialog-window dialog-id="10010"/>
@@ -308,7 +308,7 @@
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="802052" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="802052" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <show-dialog-window dialog-id="10010"/>
@@ -316,7 +316,7 @@
     </transition>
     <transition source="s2" target="s2">
       <event>
-        <talk-to-npc npc-id="802052" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="802052" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <show-dialog-window dialog-id="10010"/>
@@ -324,7 +324,7 @@
     </transition>
     <transition source="s3" target="s3">
       <event>
-        <talk-to-npc npc-id="802052" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="802052" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <show-dialog-window dialog-id="10010"/>
@@ -332,7 +332,7 @@
     </transition>
     <transition source="s5" target="s5">
       <event>
-        <talk-to-npc npc-id="802052" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="802052" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <show-dialog-window dialog-id="10010"/>
@@ -340,7 +340,7 @@
     </transition>
     <transition source="s6" target="s6">
       <event>
-        <talk-to-npc npc-id="802052" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="802052" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <show-dialog-window dialog-id="10010"/>
@@ -411,12 +411,14 @@
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="278500" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="278500" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="278500" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="278500" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

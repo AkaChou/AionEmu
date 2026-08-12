@@ -15,45 +15,86 @@
     <bit-field name="var1" offset="7" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
     <node label="started" status="START"/>
-    <node label="m1" status="START"><var name="var0" value="80"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="80"/><var name="var1" value="1"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="80"/><var name="var1" value="1"/></node>
+    <node label="m1" status="START">
+      <var name="var0" value="80"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="80"/>
+      <var name="var1" value="1"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="80"/>
+      <var name="var1" value="1"/>
+    </node>
   </nodes>
   <transitions>
     <!-- 接取:深渊宝藏之门 (269265) 提供任务。 -->
-    <npc-start npc-id="805431" source="unaccepted" target="started"/>
-
+    <dialog type="NPC_START" npc-id="805431" source="unaccepted" target="started" start-page="SELECT1"/>
     <!-- 击杀 Dkisas 蜥蜴 (215137) 80 只:var0 计数 0→80,priority 1 计数、0 完成。 -->
     <transition source="started" target="started" priority="1">
-      <event><kill-npc npc-ids="215137 215138 215139 215140 215141 215142 215143 215144 215145 215146 215147 215148 215149 215150 215151 215152 215153 215154 215155 215156 215157 215158 215159 215160 215161 215162 215163 215164 215165 215166 215167 215168 215169 215170 215171 215172 215173 215174 215175 215176 215178 215179 215317 215318 215319 215320 215321 215322 215323 215324 215325 215326 215327 215328 215329 215330 215331 215332 215333 215334 215335 215336 215337 215338 215339 215340 215341 215342 215343 215344 215345 215346 215347 215348 "/></event>
-      <conditions><variable-below field="var0" value="80"/></conditions>
-      <actions><increment-variable field="var0" delta="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <kill-npc npc-ids="215137 215138 215139 215140 215141 215142 215143 215144 215145 215146 215147 215148 215149 215150 215151 215152 215153 215154 215155 215156 215157 215158 215159 215160 215161 215162 215163 215164 215165 215166 215167 215168 215169 215170 215171 215172 215173 215174 215175 215176 215178 215179 215317 215318 215319 215320 215321 215322 215323 215324 215325 215326 215327 215328 215329 215330 215331 215332 215333 215334 215335 215336 215337 215338 215339 215340 215341 215342 215343 215344 215345 215346 215347 215348 "/>
+      </event>
+      <conditions>
+        <variable-below field="var0" value="80"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var0" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="started" target="m1" priority="0">
-      <event><kill-npc npc-ids="215137 215138 215139 215140 215141 215142 215143 215144 215145 215146 215147 215148 215149 215150 215151 215152 215153 215154 215155 215156 215157 215158 215159 215160 215161 215162 215163 215164 215165 215166 215167 215168 215169 215170 215171 215172 215173 215174 215175 215176 215178 215179 215317 215318 215319 215320 215321 215322 215323 215324 215325 215326 215327 215328 215329 215330 215331 215332 215333 215334 215335 215336 215337 215338 215339 215340 215341 215342 215343 215344 215345 215346 215347 215348 "/></event>
-      <conditions><variable-at-least field="var0" value="80"/></conditions>
-      <actions><set-variable field="var0" value="80"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <kill-npc npc-ids="215137 215138 215139 215140 215141 215142 215143 215144 215145 215146 215147 215148 215149 215150 215151 215152 215153 215154 215155 215156 215157 215158 215159 215160 215161 215162 215163 215164 215165 215166 215167 215168 215169 215170 215171 215172 215173 215174 215175 215176 215178 215179 215317 215318 215319 215320 215321 215322 215323 215324 215325 215326 215327 215328 215329 215330 215331 215332 215333 215334 215335 215336 215337 215338 215339 215340 215341 215342 215343 215344 215345 215346 215347 215348 "/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="80"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="80"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
-
     <!-- 击杀 Dkisas 龙族队长 (215177) 1 只:var1 计数 0→1,完成后进入奖励。 -->
     <transition source="m1" target="m1" priority="1">
-      <event><kill-npc npc-id="215177"/></event>
-      <conditions><variable-below field="var1" value="1"/></conditions>
-      <actions><increment-variable field="var1" delta="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <kill-npc npc-id="215177"/>
+      </event>
+      <conditions>
+        <variable-below field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="m1" target="reward" priority="0">
-      <event><kill-npc npc-id="215177"/></event>
-      <conditions><variable-at-least field="var1" value="1"/></conditions>
-      <actions><set-variable field="var1" value="1"/></actions>
-      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
+      <event>
+        <kill-npc npc-id="215177"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
     </transition>
-
     <!-- 奖励:深渊宝藏之门 (269265) 领取固定奖励 (exp/ap)。 -->
-    <npc-complete npc-id="278502" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="278502" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

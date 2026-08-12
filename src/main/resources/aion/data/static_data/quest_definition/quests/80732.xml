@@ -4,7 +4,7 @@
     <races>
       <race id="PC_ALL"/>
     </races>
-      <rewards>
+    <rewards>
       <reward kind="SELECTABLE_ITEM" id="125004356" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="125004357" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="125004358" amount="1"/>
@@ -19,32 +19,60 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="k1" status="START"><var name="var0" value="1"/></node>
-    <node label="k2" status="START"><var name="var0" value="2"/></node>
-    <node label="k3" status="START"><var name="var0" value="3"/></node>
-    <node label="k4" status="START"><var name="var0" value="4"/></node>
-    <node label="k5" status="START"><var name="var0" value="5"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="5"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="k1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="k2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="k3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="k4" status="START">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="k5" status="START">
+      <var name="var0" value="5"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="5"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="833545" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="833545" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-        <kill-chain nodes="started k1 k2 k3 k4 k5">
-          <event><kill-npc npc-ids="230858 231073" /></event>
-        </kill-chain>
-    <npc-report npc-id="833545" source="k5" target="reward" page="1352"/>
-    <npc-complete npc-id="833545" source="reward" target="complete" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="0"/>
-      <choice dialog-id="9" reward-index="1"/>
-      <choice dialog-id="10" reward-index="2"/>
-      <choice dialog-id="11" reward-index="3"/>
-      <choice dialog-id="12" reward-index="4"/>
-      <choice dialog-id="13" reward-index="5"/>
-      <choice dialog-id="14" reward-index="6"/>
-      <choice dialog-id="15" reward-index="7"/>
+    <dialog type="NPC_START" npc-id="833545" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="833545" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <kill-chain nodes="started k1 k2 k3 k4 k5">
+      <event>
+        <kill-npc npc-ids="230858 231073"/>
+      </event>
+    </kill-chain>
+    <dialog type="NPC_REPORT" npc-id="833545" source="k5" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="833545" source="reward" target="complete" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="0"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD6" reward-index="5"/>
+      <choice action="SELECTED_QUEST_REWARD7" reward-index="6"/>
+      <choice action="SELECTED_QUEST_REWARD8" reward-index="7"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

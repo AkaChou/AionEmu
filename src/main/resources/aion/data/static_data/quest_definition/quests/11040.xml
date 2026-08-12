@@ -27,46 +27,46 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="v1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
     <!-- 接取提示与接取；对应旧 onDialogEvent 的 4762 与 sendQuestStartDialog。 Start hint and accept; mirrors the old onDialogEvent 4762 and sendQuestStartDialog. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799036" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="799036" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4762"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="799036" dialog-id="1002"/>
+        <dialog type="TALK_TO_NPC" npc-id="799036" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="799036" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="799036" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -78,19 +78,19 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="799036" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="799036" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <!-- 开始护送：在玩家处生成 Squamp 克隆并跟随至迪迈亚喷泉瀑布区域（旧代码跟随至精确坐标 292.6/489.5/574.2，DSL 无坐标目标，按 3050/4051 先例用小 zone 近似）。 Start escort: spawn a Squamp clone at the player and follow to the Dimaia fountainfall zone (old code followed to exact coordinates 292.6/489.5/574.2; the DSL has no coordinate target, approximated by a small zone per the 3050/4051 precedent). -->
     <transition source="started" target="v1">
       <event>
-        <talk-to-npc npc-id="799036" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="799036" action="SETPRO1"/>
       </event>
       <after-commit>
         <spawn-npc-at-player slot="squamp" template-id="799036" heading="0"/>
@@ -132,24 +132,24 @@
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="799035" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="799035" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="799035" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="799035" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <!-- 领取奖励并完成；经验为 quest_data 总量，可选奖励按 24053 先例全部发放。 Claim rewards and complete; EXP is the quest_data total, selectable rewards granted in full per the 24053 precedent. -->
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="799035" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="799035" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="5647915" amount-mode="QUEST_BASE"/>
@@ -167,7 +167,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

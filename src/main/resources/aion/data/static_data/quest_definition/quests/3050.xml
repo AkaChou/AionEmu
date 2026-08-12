@@ -22,68 +22,67 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="v2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="v3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
     <!-- 接取:Ruria (798211) 提供任务。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="798211" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="798211" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4762"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="798211" dialog-id="1002"/>
+        <dialog type="TALK_TO_NPC" npc-id="798211" action="QUEST_ACCEPT_1"/>
       </event>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-
     <!-- 开始:有任务物品显示 1011,无物品显示 1097。 -->
     <transition source="started" target="started" priority="0">
       <event>
-        <talk-to-npc npc-id="798211" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="798211" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <has-item item-id="182208035" count="1"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started" priority="10">
       <event>
-        <talk-to-npc npc-id="798211" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="798211" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1097"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
       </after-commit>
     </transition>
     <!-- 护送开始:交出物品、播放电影并跟随前往 Melleas (798208)。 -->
     <transition source="started" target="v2">
       <event>
-        <talk-to-npc npc-id="798211" dialog-id="1012"/>
+        <dialog type="TALK_TO_NPC" npc-id="798211" action="SELECT1_1"/>
       </event>
       <actions>
         <remove-item item-id="182208035" count="1"/>
@@ -97,7 +96,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-
     <!-- 护送到达 Melleas 所在营地,推进到 v3。 -->
     <transition source="v2" target="v3">
       <event>
@@ -126,35 +124,35 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <!-- 交付:Melleas (798208) 对话后进入奖励。 -->
     <transition source="v3" target="v3">
       <event>
-        <talk-to-npc npc-id="798208" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="798208" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2034"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
     <transition source="v3" target="reward">
       <event>
-        <talk-to-npc npc-id="798208" dialog-id="10255"/>
+        <dialog type="TALK_TO_NPC" npc-id="798208" action="SET_SUCCEED"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-
     <!-- 奖励:Rosina (798190) 领取。 -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="798190" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="798190" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="798190" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="798190" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

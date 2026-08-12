@@ -22,184 +22,184 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="s2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="s3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="s4" status="START">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="s5" status="START">
-          <var name="var0" value="5"/>
+      <var name="var0" value="5"/>
     </node>
     <node label="s6" status="START">
-          <var name="var0" value="6"/>
+      <var name="var0" value="6"/>
     </node>
     <node label="s7" status="START">
-          <var name="var0" value="7"/>
+      <var name="var0" value="7"/>
     </node>
     <node label="s8" status="START">
-          <var name="var0" value="8"/>
+      <var name="var0" value="8"/>
     </node>
     <node label="s9" status="START">
-          <var name="var0" value="9"/>
+      <var name="var0" value="9"/>
     </node>
     <node label="s10" status="START">
-          <var name="var0" value="10"/>
+      <var name="var0" value="10"/>
     </node>
     <node label="s11" status="START">
-          <var name="var0" value="11"/>
+      <var name="var0" value="11"/>
     </node>
     <node label="s12" status="START">
-          <var name="var0" value="12"/>
+      <var name="var0" value="12"/>
     </node>
     <node label="s13" status="START">
-          <var name="var0" value="13"/>
+      <var name="var0" value="13"/>
     </node>
     <node label="s14" status="START">
-          <var name="var0" value="14"/>
+      <var name="var0" value="14"/>
     </node>
     <node label="s15" status="START">
-          <var name="var0" value="15"/>
+      <var name="var0" value="15"/>
     </node>
     <node label="s16" status="START">
-          <var name="var0" value="16"/>
+      <var name="var0" value="16"/>
     </node>
     <node label="s17" status="START">
-          <var name="var0" value="17"/>
+      <var name="var0" value="17"/>
     </node>
     <node label="s18" status="START">
-          <var name="var0" value="18"/>
+      <var name="var0" value="18"/>
     </node>
     <node label="s19" status="START">
-          <var name="var0" value="19"/>
+      <var name="var0" value="19"/>
     </node>
     <node label="s20" status="START">
-          <var name="var0" value="20"/>
+      <var name="var0" value="20"/>
     </node>
     <node label="s21" status="START">
-          <var name="var0" value="21"/>
+      <var name="var0" value="21"/>
     </node>
     <node label="s22" status="START">
-          <var name="var0" value="22"/>
+      <var name="var0" value="22"/>
     </node>
     <node label="s23" status="START">
-          <var name="var0" value="23"/>
+      <var name="var0" value="23"/>
     </node>
     <node label="s24" status="START">
-          <var name="var0" value="24"/>
+      <var name="var0" value="24"/>
     </node>
     <node label="s25" status="START">
-          <var name="var0" value="25"/>
+      <var name="var0" value="25"/>
     </node>
     <node label="s26" status="START">
-          <var name="var0" value="26"/>
+      <var name="var0" value="26"/>
     </node>
     <node label="s27" status="START">
-          <var name="var0" value="27"/>
+      <var name="var0" value="27"/>
     </node>
     <node label="s28" status="START">
-          <var name="var0" value="28"/>
+      <var name="var0" value="28"/>
     </node>
     <node label="s29" status="START">
-          <var name="var0" value="29"/>
+      <var name="var0" value="29"/>
     </node>
     <node label="s30" status="START">
-          <var name="var0" value="30"/>
+      <var name="var0" value="30"/>
     </node>
     <node label="s31" status="START">
-          <var name="var0" value="31"/>
+      <var name="var0" value="31"/>
     </node>
     <node label="s32" status="START">
-          <var name="var0" value="32"/>
+      <var name="var0" value="32"/>
     </node>
     <node label="s33" status="START">
-          <var name="var0" value="33"/>
+      <var name="var0" value="33"/>
     </node>
     <node label="s34" status="START">
-          <var name="var0" value="34"/>
+      <var name="var0" value="34"/>
     </node>
     <node label="s35" status="START">
-          <var name="var0" value="35"/>
+      <var name="var0" value="35"/>
     </node>
     <node label="s36" status="START">
-          <var name="var0" value="36"/>
+      <var name="var0" value="36"/>
     </node>
     <node label="s37" status="START">
-          <var name="var0" value="37"/>
+      <var name="var0" value="37"/>
     </node>
     <node label="s38" status="START">
-          <var name="var0" value="38"/>
+      <var name="var0" value="38"/>
     </node>
     <node label="s39" status="START">
-          <var name="var0" value="39"/>
+      <var name="var0" value="39"/>
     </node>
     <node label="s40" status="START">
-          <var name="var0" value="40"/>
+      <var name="var0" value="40"/>
     </node>
     <node label="s41" status="START">
-          <var name="var0" value="41"/>
+      <var name="var0" value="41"/>
     </node>
     <node label="s42" status="START">
-          <var name="var0" value="42"/>
+      <var name="var0" value="42"/>
     </node>
     <node label="s43" status="START">
-          <var name="var0" value="43"/>
+      <var name="var0" value="43"/>
     </node>
     <node label="s44" status="START">
-          <var name="var0" value="44"/>
+      <var name="var0" value="44"/>
     </node>
     <node label="s45" status="START">
-          <var name="var0" value="45"/>
+      <var name="var0" value="45"/>
     </node>
     <node label="s46" status="START">
-          <var name="var0" value="46"/>
+      <var name="var0" value="46"/>
     </node>
     <node label="s47" status="START">
-          <var name="var0" value="47"/>
+      <var name="var0" value="47"/>
     </node>
     <node label="s48" status="START">
-          <var name="var0" value="48"/>
+      <var name="var0" value="48"/>
     </node>
     <node label="s49" status="START">
-          <var name="var0" value="49"/>
+      <var name="var0" value="49"/>
     </node>
     <node label="s50" status="START">
-          <var name="var0" value="50"/>
+      <var name="var0" value="50"/>
     </node>
     <node label="s51" status="START">
-          <var name="var0" value="51"/>
+      <var name="var0" value="51"/>
     </node>
     <node label="s52" status="START">
-          <var name="var0" value="52"/>
+      <var name="var0" value="52"/>
     </node>
     <node label="s53" status="START">
-          <var name="var0" value="53"/>
+      <var name="var0" value="53"/>
     </node>
     <node label="s54" status="START">
-          <var name="var0" value="54"/>
+      <var name="var0" value="54"/>
     </node>
     <node label="s55" status="START">
-          <var name="var0" value="55"/>
+      <var name="var0" value="55"/>
     </node>
     <node label="s56" status="START">
-          <var name="var0" value="56"/>
+      <var name="var0" value="56"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="57"/>
+      <var name="var0" value="57"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -216,15 +216,15 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="203700" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203700" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="s1">
       <event>
-        <talk-to-npc npc-id="203700" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="203700" action="SETPRO1"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -233,15 +233,15 @@
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="790001" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s2">
       <event>
-        <talk-to-npc npc-id="790001" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="SETPRO2"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -258,15 +258,15 @@
     </transition>
     <transition source="s3" target="s3">
       <event>
-        <talk-to-npc npc-id="790001" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2034"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
     <transition source="s3" target="s4">
       <event>
-        <talk-to-npc npc-id="790001" dialog-id="10003"/>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="SETPRO4"/>
       </event>
       <actions>
         <give-item item-id="182215387" count="1"/>
@@ -279,7 +279,7 @@
     </transition>
     <transition source="s4" target="s4">
       <event>
-        <talk-to-npc npc-id="700551" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="700551" action="USE_OBJECT"/>
       </event>
       <after-commit>
         <teleport-player-next-available-instance world-id="310120000" x="52" y="174" z="229" heading="0"/>
@@ -289,15 +289,15 @@
     </transition>
     <transition source="s4" target="s4">
       <event>
-        <talk-to-npc npc-id="205119" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="205119" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="s4" target="s4">
       <event>
-        <talk-to-npc npc-id="205119" dialog-id="10004"/>
+        <dialog type="TALK_TO_NPC" npc-id="205119" action="SETPRO5"/>
       </event>
       <actions>
         <remove-item item-id="182215387" count="1"/>
@@ -319,7 +319,9 @@
       </after-commit>
     </transition>
     <kill-chain nodes="s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s18 s19 s20 s21 s22 s23 s24 s25 s26 s27 s28 s29 s30 s31 s32 s33 s34 s35 s36 s37 s38 s39 s40 s41 s42 s43 s44 s45 s46 s47 s48 s49 s50 s51 s52 s53 s54">
-      <event><kill-npc npc-ids="215396 215397 215398 215399 215400 205021 205022" /></event>
+      <event>
+        <kill-npc npc-ids="215396 215397 215398 215399 215400 205021 205022"/>
+      </event>
     </kill-chain>
     <transition source="s54" target="s55">
       <event>
@@ -1717,7 +1719,7 @@
     </transition>
     <transition source="s56" target="reward">
       <event>
-        <talk-to-npc npc-id="700552" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="700552" action="USE_OBJECT"/>
       </event>
       <after-commit>
         <teleport-player-current-or-default world-id="110010000" x="1322.1934" y="1511.148" z="567.909" heading="0"/>
@@ -1727,23 +1729,23 @@
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="203700" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203700" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="203700" dialog-ids="-1 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="203700" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="203700" dialog-id="8"/>
+        <dialog type="TALK_TO_NPC" npc-id="203700" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="8755085" amount-mode="QUEST_BASE"/>
@@ -1757,12 +1759,12 @@
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
         <broadcast-zone-mission-end quest-ids="14031"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="203700" dialog-id="9"/>
+        <dialog type="TALK_TO_NPC" npc-id="203700" action="SELECTED_QUEST_REWARD2"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="8755085" amount-mode="QUEST_BASE"/>
@@ -1776,10 +1778,18 @@
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
         <broadcast-zone-mission-end quest-ids="14031"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <transition source="s4" target="s4"><event><can-act template-id="700551" action-type="ACTION_ITEM_USE"/></event></transition>
-    <transition source="s56" target="s56"><event><can-act template-id="700552" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="s4" target="s4">
+      <event>
+        <can-act template-id="700551" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="s56" target="s56">
+      <event>
+        <can-act template-id="700552" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
   </transitions>
 </quest-definition>

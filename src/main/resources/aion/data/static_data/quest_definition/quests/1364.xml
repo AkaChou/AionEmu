@@ -18,40 +18,39 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="v1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="v2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
     <!-- 接取:Ernia (203944) 对话。 -->
-    <npc-start npc-id="203944" source="unaccepted" target="started" selection-sources="unaccepted"/>
-
+    <dialog type="NPC_START" npc-id="203944" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
     <!-- 找到 Teos (203945),开始护送其回 Agairon 村的 Dellome (790007)。 -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="203945" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203945" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1693"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
     <transition source="started" target="v1">
       <event>
-        <talk-to-npc npc-id="203945" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="203945" action="SETPRO1"/>
       </event>
       <after-commit>
         <spawn-npc-at-player slot="teos" template-id="203945" heading="0"/>
@@ -61,7 +60,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-
     <!-- 护送 Teos 到达 Agairon 村,播放 movie 47,进入与 Dellome 对话阶段。 -->
     <transition source="v1" target="v2">
       <event>
@@ -91,11 +89,11 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-
     <!-- 到达后与 Dellome (790007) 对话,进入奖励。 -->
-    <npc-report npc-id="790007" source="v2" target="reward" page="1352"/>
-
+    <dialog type="NPC_REPORT" npc-id="790007" source="v2" target="reward" page="SELECT2"/>
     <!-- 奖励:Dellome (790007) 领取。 -->
-    <npc-complete npc-id="790007" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="790007" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

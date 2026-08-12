@@ -15,45 +15,86 @@
     <bit-field name="var1" offset="7" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
     <node label="started" status="START"/>
-    <node label="m1" status="START"><var name="var0" value="80"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="80"/><var name="var1" value="1"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="80"/><var name="var1" value="1"/></node>
+    <node label="m1" status="START">
+      <var name="var0" value="80"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="80"/>
+      <var name="var1" value="1"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="80"/>
+      <var name="var1" value="1"/>
+    </node>
   </nodes>
   <transitions>
     <!-- 接取:深渊守卫 Ebonlord Vershinak (215220) 提供任务。 -->
-    <npc-start npc-id="215220" source="unaccepted" target="started"/>
-
+    <dialog type="NPC_START" npc-id="215220" source="unaccepted" target="started" start-page="SELECT1"/>
     <!-- 击杀 Ranx Fighter (215180) 80 只:var0 计数 0→80,priority 1 计数、0 完成。 -->
     <transition source="started" target="started" priority="1">
-      <event><kill-npc npc-ids="215180 215181 215182 215183 215184 215185 215186 215187 215188 215189 215190 215191 215192 215193 215194 215195 215196 215197 215198 215199 215200 215201 215202 215203 215204 215205 215206 215207 215208 215209 215210 215211 215212 215213 215214 215215 215216 215217 215218 215219 215221 215222 215349 215350 215351 215352 215353 215354 215355 215356 215357 215358 215359 215360 215361 215362 215363 215364 215365 215366 215367 215368 215369 215370 215371 215372 215373 215374 215375 215376 215377 215378 215379 215380"/></event>
-      <conditions><variable-below field="var0" value="80"/></conditions>
-      <actions><increment-variable field="var0" delta="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <kill-npc npc-ids="215180 215181 215182 215183 215184 215185 215186 215187 215188 215189 215190 215191 215192 215193 215194 215195 215196 215197 215198 215199 215200 215201 215202 215203 215204 215205 215206 215207 215208 215209 215210 215211 215212 215213 215214 215215 215216 215217 215218 215219 215221 215222 215349 215350 215351 215352 215353 215354 215355 215356 215357 215358 215359 215360 215361 215362 215363 215364 215365 215366 215367 215368 215369 215370 215371 215372 215373 215374 215375 215376 215377 215378 215379 215380"/>
+      </event>
+      <conditions>
+        <variable-below field="var0" value="80"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var0" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="started" target="m1" priority="0">
-      <event><kill-npc npc-ids="215180 215181 215182 215183 215184 215185 215186 215187 215188 215189 215190 215191 215192 215193 215194 215195 215196 215197 215198 215199 215200 215201 215202 215203 215204 215205 215206 215207 215208 215209 215210 215211 215212 215213 215214 215215 215216 215217 215218 215219 215221 215222 215349 215350 215351 215352 215353 215354 215355 215356 215357 215358 215359 215360 215361 215362 215363 215364 215365 215366 215367 215368 215369 215370 215371 215372 215373 215374 215375 215376 215377 215378 215379 215380"/></event>
-      <conditions><variable-at-least field="var0" value="80"/></conditions>
-      <actions><set-variable field="var0" value="80"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <kill-npc npc-ids="215180 215181 215182 215183 215184 215185 215186 215187 215188 215189 215190 215191 215192 215193 215194 215195 215196 215197 215198 215199 215200 215201 215202 215203 215204 215205 215206 215207 215208 215209 215210 215211 215212 215213 215214 215215 215216 215217 215218 215219 215221 215222 215349 215350 215351 215352 215353 215354 215355 215356 215357 215358 215359 215360 215361 215362 215363 215364 215365 215366 215367 215368 215369 215370 215371 215372 215373 215374 215375 215376 215377 215378 215379 215380"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="80"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="80"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
-
     <!-- 击杀 Ebonlord Vershinak (215220) 1 只:var1 计数 0→1,完成后进入奖励。 -->
     <transition source="m1" target="m1" priority="1">
-      <event><kill-npc npc-id="215220"/></event>
-      <conditions><variable-below field="var1" value="1"/></conditions>
-      <actions><increment-variable field="var1" delta="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <kill-npc npc-id="215220"/>
+      </event>
+      <conditions>
+        <variable-below field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="m1" target="reward" priority="0">
-      <event><kill-npc npc-id="215220"/></event>
-      <conditions><variable-at-least field="var1" value="1"/></conditions>
-      <actions><set-variable field="var1" value="1"/></actions>
-      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
+      <event>
+        <kill-npc npc-id="215220"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var1" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var1" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
     </transition>
-
     <!-- 奖励:深渊守卫 Ebonlord Vershinak (215220) 领取固定奖励 (exp/ap)。 -->
-    <npc-complete npc-id="215220" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="215220" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

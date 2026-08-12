@@ -25,31 +25,31 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
     <!-- 管家 810022：接取对话。 Butler 810022: accept dialog. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="810022" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="810022" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="810022" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="810022" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -65,15 +65,15 @@
     <!-- 管家 810023：接取对话。 Butler 810023: accept dialog. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="810023" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="810023" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="810023" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="810023" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -89,15 +89,15 @@
     <!-- 管家 810024：接取对话。 Butler 810024: accept dialog. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="810024" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="810024" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="810024" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="810024" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -113,15 +113,15 @@
     <!-- 管家 810025：接取对话。 Butler 810025: accept dialog. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="810025" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="810025" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="810025" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="810025" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -137,15 +137,15 @@
     <!-- 管家 810026：接取对话。 Butler 810026: accept dialog. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="810026" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="810026" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="810026" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="810026" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -170,15 +170,15 @@
     <!-- 管家 810022：领奖对话；USE_OBJECT 展示提示，1009/23 移除物品并完成任务。 Butler 810022: reward dialog; USE_OBJECT shows hint, 1009/23 removes item and completes. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="810022" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="810022" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="810022" dialog-ids="23 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="810022" actions="SELECTED_QUEST_NOREWARD SELECT_QUEST_REWARD"/>
       </event>
       <actions>
         <remove-item item-id="182213205" count="1"/>
@@ -189,21 +189,21 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 管家 810023：领奖对话。 Butler 810023: reward dialog. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="810023" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="810023" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="810023" dialog-ids="23 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="810023" actions="SELECTED_QUEST_NOREWARD SELECT_QUEST_REWARD"/>
       </event>
       <actions>
         <remove-item item-id="182213205" count="1"/>
@@ -214,21 +214,21 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 管家 810024：领奖对话。 Butler 810024: reward dialog. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="810024" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="810024" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="810024" dialog-ids="23 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="810024" actions="SELECTED_QUEST_NOREWARD SELECT_QUEST_REWARD"/>
       </event>
       <actions>
         <remove-item item-id="182213205" count="1"/>
@@ -239,21 +239,21 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 管家 810025：领奖对话。 Butler 810025: reward dialog. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="810025" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="810025" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="810025" dialog-ids="23 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="810025" actions="SELECTED_QUEST_NOREWARD SELECT_QUEST_REWARD"/>
       </event>
       <actions>
         <remove-item item-id="182213205" count="1"/>
@@ -264,21 +264,21 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 管家 810026：领奖对话。 Butler 810026: reward dialog. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="810026" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="810026" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="810026" dialog-ids="23 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="810026" actions="SELECTED_QUEST_NOREWARD SELECT_QUEST_REWARD"/>
       </event>
       <actions>
         <remove-item item-id="182213205" count="1"/>
@@ -289,7 +289,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

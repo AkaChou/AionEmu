@@ -35,7 +35,23 @@
     <xs:attribute name="delivery" type="timer-delivery" use="required"/>
   </xs:attributeGroup>
 
+  <xs:complexType name="dialog-type">
+    <xs:sequence>
+      <xs:element name="accept-actions" type="actions-type" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="type" type="xs:string" use="required"/>
+    <xs:attribute name="npc-id" type="xs:int"/>
+    <xs:attribute name="action" type="xs:string"/>
+    <xs:attribute name="actions" type="xs:string"/>
+    <xs:attribute name="page" type="xs:string"/>
+    <xs:attribute name="start-page" type="xs:string"/>
+    <xs:attribute name="source" type="xs:string"/>
+    <xs:attribute name="target" type="xs:string"/>
+    <xs:attribute name="selection-sources" type="xs:string"/>
+  </xs:complexType>
+
   <xs:complexType name="event-type"><xs:choice>
+    <xs:element name="dialog" type="dialog-type"/>
     <xs:element name="talk-to-npc"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/><xs:attribute name="dialog"/><xs:attribute name="dialog-id" type="xs:int"/><xs:attribute name="dialog-ids" type="xs:string"/></xs:complexType></xs:element>
     <xs:element name="kill-npc"><xs:complexType><xs:attribute name="npc-id" type="xs:int"/><xs:attribute name="npc-ids" type="xs:string"/></xs:complexType></xs:element>
     <xs:element name="attack-npc"><xs:complexType><xs:attribute name="npc-id" type="xs:int" use="required"/></xs:complexType></xs:element>
@@ -121,6 +137,7 @@
   </xs:choice></xs:complexType>
 
   <xs:complexType name="after-commit-type"><xs:choice minOccurs="0" maxOccurs="unbounded">
+    <xs:element name="dialog" type="dialog-type"/>
     <xs:element name="close-dialog" type="empty-type"/>
 	<xs:element name="sync-quest-state"><xs:complexType><xs:attribute name="mode" type="quest-state-sync-mode" use="required"/></xs:complexType></xs:element>
 	<xs:element name="refresh-player-stats" type="empty-type"/>
@@ -258,13 +275,23 @@
     <xs:sequence>
       <xs:element name="choice" minOccurs="0" maxOccurs="unbounded">
         <xs:complexType>
-          <xs:attribute name="dialog-id" type="xs:int" use="required"/>
+          <xs:attribute name="dialog-id" type="xs:int"/>
+          <xs:attribute name="action" type="xs:string"/>
+          <xs:attribute name="actions" type="xs:string"/>
           <xs:attribute name="reward-index" type="xs:int" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="preview" minOccurs="0">
+        <xs:complexType>
+          <xs:attribute name="action" type="xs:string"/>
+          <xs:attribute name="actions" type="xs:string"/>
         </xs:complexType>
       </xs:element>
       <xs:element name="fallback" minOccurs="0">
         <xs:complexType>
-          <xs:attribute name="dialog-ids" use="required"/>
+          <xs:attribute name="dialog-ids"/>
+          <xs:attribute name="action" type="xs:string"/>
+          <xs:attribute name="actions" type="xs:string"/>
         </xs:complexType>
       </xs:element>
       <xs:element name="after-commit" type="after-commit-type" minOccurs="0"/>
@@ -274,9 +301,44 @@
     <xs:attribute name="target" use="required"/>
     <xs:attribute name="fixed-reward-indices"/>
     <xs:attribute name="dialog-ids"/>
+    <xs:attribute name="actions" type="xs:string"/>
     <xs:attribute name="complete-reward-index" type="xs:int" use="required"/>
-    <xs:attribute name="preview-dialog-ids" use="required"/>
+    <xs:attribute name="preview-dialog-ids"/>
     <xs:attribute name="finish" type="npc-complete-finish" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="equipment-exchange-category-type">
+    <xs:attribute name="action" type="xs:string" use="required"/>
+    <xs:attribute name="page" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="equipment-exchange-equipment-type">
+    <xs:attribute name="action" type="xs:string" use="required"/>
+    <xs:attribute name="item-id" type="xs:int"/>
+    <xs:attribute name="item-ids" type="positive-integer-list"/>
+  </xs:complexType>
+
+  <xs:complexType name="equipment-exchange-reward-group-type">
+    <xs:attribute name="action" type="xs:string" use="required"/>
+    <xs:attribute name="index" type="xs:int" use="required"/>
+    <xs:attribute name="page" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="equipment-exchange-type">
+    <xs:sequence>
+      <xs:element name="category" type="equipment-exchange-category-type" minOccurs="1" maxOccurs="unbounded"/>
+      <xs:element name="equipment" type="equipment-exchange-equipment-type" minOccurs="1" maxOccurs="unbounded"/>
+      <xs:element name="reward-group" type="equipment-exchange-reward-group-type" minOccurs="2" maxOccurs="15"/>
+    </xs:sequence>
+    <xs:attribute name="npc-id" type="xs:int" use="required"/>
+    <xs:attribute name="source" type="xs:string" use="required"/>
+    <xs:attribute name="started" type="xs:string" use="required"/>
+    <xs:attribute name="reward" type="xs:string" use="required"/>
+    <xs:attribute name="complete" type="xs:string" use="required"/>
+    <xs:attribute name="selection-field" type="xs:string" use="required"/>
+    <xs:attribute name="reward-field" type="xs:string" use="required"/>
+    <xs:attribute name="material-item-id" type="xs:int" use="required"/>
+    <xs:attribute name="material-count" type="xs:int" use="required"/>
   </xs:complexType>
 
 
@@ -331,6 +393,7 @@
         <xs:element name="transitions" minOccurs="0">
           <xs:complexType>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="dialog" type="dialog-type"/>
               <xs:element name="transition" type="transition-type"/>
               <xs:element name="npc-start" type="npc-start-type"/>
               <xs:element name="counter" type="counter-type"/>
@@ -340,6 +403,7 @@
               <xs:element name="npc-item-report" type="npc-item-report-type"/>
               <xs:element name="npc-report" type="npc-report-type"/>
               <xs:element name="npc-complete" type="npc-complete-type"/>
+              <xs:element name="equipment-exchange" type="equipment-exchange-type"/>
               <xs:element name="npc-dialog" type="npc-dialog-type"/>
             </xs:choice>
           </xs:complexType>

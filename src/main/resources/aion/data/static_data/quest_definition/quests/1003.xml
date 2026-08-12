@@ -16,46 +16,46 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="v0" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="v1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="v2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="v3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="v4" status="START">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="v5" status="START">
-          <var name="var0" value="5"/>
+      <var name="var0" value="5"/>
     </node>
     <node label="v6" status="START">
-          <var name="var0" value="6"/>
+      <var name="var0" value="6"/>
     </node>
     <node label="v7" status="START">
-          <var name="var0" value="7"/>
+      <var name="var0" value="7"/>
     </node>
     <node label="v8" status="START">
-          <var name="var0" value="8"/>
+      <var name="var0" value="8"/>
     </node>
     <node label="v9" status="START">
-          <var name="var0" value="9"/>
+      <var name="var0" value="9"/>
     </node>
     <node label="v10" status="START">
-          <var name="var0" value="10"/>
+      <var name="var0" value="10"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="10"/>
+      <var name="var0" value="10"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -84,15 +84,15 @@
     </transition>
     <transition source="v0" target="v0">
       <event>
-        <talk-to-npc npc-id="203081" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203081" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="v0" target="v1">
       <event>
-        <talk-to-npc npc-id="203081" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="203081" action="SETPRO1"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -107,15 +107,15 @@
     <kill-routes source="v6" target="v7" npc-ids="210096 210149 210145 210146 210150 210151 210092 210154 210685"/>
     <transition source="v7" target="v7">
       <event>
-        <talk-to-npc npc-id="203081" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203081" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="v7" target="v8">
       <event>
-        <talk-to-npc npc-id="203081" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="203081" action="SETPRO2"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -123,11 +123,13 @@
       </after-commit>
     </transition>
     <kill-chain nodes="v8 v9 v10 reward">
-      <event><kill-npc npc-id="210160" /></event>
+      <event>
+        <kill-npc npc-id="210160"/>
+      </event>
     </kill-chain>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="203081" dialog-id="8"/>
+        <dialog type="TALK_TO_NPC" npc-id="203081" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="17056" amount-mode="QUEST_BASE"/>
@@ -137,12 +139,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="203081" dialog-id="9"/>
+        <dialog type="TALK_TO_NPC" npc-id="203081" action="SELECTED_QUEST_REWARD2"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="17056" amount-mode="QUEST_BASE"/>
@@ -152,12 +154,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="203081" dialog-id="10"/>
+        <dialog type="TALK_TO_NPC" npc-id="203081" action="SELECTED_QUEST_REWARD3"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="17056" amount-mode="QUEST_BASE"/>
@@ -167,7 +169,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

@@ -12,17 +12,39 @@
       <reward kind="EXP" id="0" amount="337255"/>
     </rewards>
     <class-rewards>
-      <class id="FIGHTER"><reward kind="ITEM" id="140001111" amount="1"/></class>
-      <class id="KNIGHT"><reward kind="ITEM" id="140001128" amount="1"/></class>
-      <class id="RANGER"><reward kind="ITEM" id="140001171" amount="1"/></class>
-      <class id="ASSASSIN"><reward kind="ITEM" id="140001142" amount="1"/></class>
-      <class id="WIZARD"><reward kind="ITEM" id="140001186" amount="1"/></class>
-      <class id="ELEMENTALIST"><reward kind="ITEM" id="140001203" amount="1"/></class>
-      <class id="PRIEST"><reward kind="ITEM" id="140001240" amount="1"/></class>
-      <class id="CHANTER"><reward kind="ITEM" id="140001220" amount="1"/></class>
-      <class id="GUNSLINGER"><reward kind="ITEM" id="140001254" amount="1"/></class>
-      <class id="SONGWEAVER"><reward kind="ITEM" id="140001290" amount="1"/></class>
-      <class id="AETHERTECH"><reward kind="ITEM" id="140001275" amount="1"/></class>
+      <class id="FIGHTER">
+        <reward kind="ITEM" id="140001111" amount="1"/>
+      </class>
+      <class id="KNIGHT">
+        <reward kind="ITEM" id="140001128" amount="1"/>
+      </class>
+      <class id="RANGER">
+        <reward kind="ITEM" id="140001171" amount="1"/>
+      </class>
+      <class id="ASSASSIN">
+        <reward kind="ITEM" id="140001142" amount="1"/>
+      </class>
+      <class id="WIZARD">
+        <reward kind="ITEM" id="140001186" amount="1"/>
+      </class>
+      <class id="ELEMENTALIST">
+        <reward kind="ITEM" id="140001203" amount="1"/>
+      </class>
+      <class id="PRIEST">
+        <reward kind="ITEM" id="140001240" amount="1"/>
+      </class>
+      <class id="CHANTER">
+        <reward kind="ITEM" id="140001220" amount="1"/>
+      </class>
+      <class id="GUNSLINGER">
+        <reward kind="ITEM" id="140001254" amount="1"/>
+      </class>
+      <class id="SONGWEAVER">
+        <reward kind="ITEM" id="140001290" amount="1"/>
+      </class>
+      <class id="AETHERTECH">
+        <reward kind="ITEM" id="140001275" amount="1"/>
+      </class>
     </class-rewards>
   </metadata>
   <progress>
@@ -30,16 +52,16 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -104,26 +126,26 @@
     <!-- 领奖：打开任务文本。Reward dialog: open quest text. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="203711" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203711" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <!-- 领奖：打开奖励选择。Reward dialog: open reward selection. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="203711" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="203711" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <!-- 领奖：选择奖励并完成（8..23 覆盖 SELECTED_QUEST_REWARD1..15 与 SELECT_NO_REWARD）。
          Reward claim: finish with the chosen reward (8..23 covers reward slots and no-reward). -->
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="203711" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="203711" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <!-- 完成时回收全部任务工作物品（旧 finishQuest 的清理语义）。Reclaim all quest work items on completion. -->
@@ -134,7 +156,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

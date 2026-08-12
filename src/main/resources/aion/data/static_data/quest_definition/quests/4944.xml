@@ -46,42 +46,179 @@
     <bit-field name="var1" offset="6" width="9" min="0" max="300" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="s6" status="START"><var name="var0" value="6"/></node>
-    <node label="k300" status="START"><var name="var0" value="6"/><var name="var1" value="300"/></node>
-    <node label="s3" status="START"><var name="var0" value="3"/></node>
-    <node label="s4" status="START"><var name="var0" value="4"/></node>
-    <node label="s5" status="START"><var name="var0" value="5"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="0"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="s6" status="START">
+      <var name="var0" value="6"/>
+    </node>
+    <node label="k300" status="START">
+      <var name="var0" value="6"/>
+      <var name="var1" value="300"/>
+    </node>
+    <node label="s3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="s4" status="START">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="s5" status="START">
+      <var name="var0" value="5"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
   </nodes>
   <transitions>
     <!-- 接取:204053 Kvasir 起始,4762。 -->
-    <npc-start npc-id="204053" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
+    <dialog type="NPC_START" npc-id="204053" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <!-- 204053:var0=0,31 显示 1011;CHECK_COLLECTED_ITEMS(39) 有 182207126 x60 则收走推进 var0=6,否则 10001。 -->
-    <transition source="started" target="started"><event><talk-to-npc npc-id="204053" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
-    <transition source="started" target="s6" priority="0"><event><talk-to-npc npc-id="204053" dialog-id="39"/></event><conditions><has-item item-id="182207126" count="60"/></conditions><actions><remove-item item-id="182207126" count="60"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-dialog dialog-id="10000"/></after-commit></transition>
-    <transition source="started" target="started" priority="1"><event><talk-to-npc npc-id="204053" dialog-id="39"/></event><after-commit><show-quest-dialog dialog-id="10001"/></after-commit></transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204053" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="s6" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204053" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="182207126" count="60"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182207126" count="60"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204053" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
+    </transition>
     <!-- var0=6 起猎杀 39 种狼族,var1 计数 0..300。 -->
     <counter source="s6" target="k300" field="var1" required="300">
-      <event><kill-npc npc-ids="220257 220258 220259 220260 220261 220262 220263 220265 220266 220267 220268 220269 220270 220271 220272 220273 220274 220275 220276 220277 220278 220279 220280 220281 220282 220283 220284 220285 220286 220287 220288 220289 220290 220291 220292 220293 220294 220295 220296"/></event>
+      <event>
+        <kill-npc npc-ids="220257 220258 220259 220260 220261 220262 220263 220265 220266 220267 220268 220269 220270 220271 220272 220273 220274 220275 220276 220277 220278 220279 220280 220281 220282 220283 220284 220285 220286 220287 220288 220289 220290 220291 220292 220293 220294 220295 220296"/>
+      </event>
     </counter>
     <!-- 204053:var1=300,31 显示 1693,STEP_TO_3(10002) 推进 var0=3 并显示选择页。 -->
-    <transition source="k300" target="k300"><event><talk-to-npc npc-id="204053" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1693"/></after-commit></transition>
-    <transition source="k300" target="s3"><event><talk-to-npc npc-id="204053" dialog-id="10002"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+    <transition source="k300" target="k300">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204053" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="k300" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204053" action="SETPRO3"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
     <!-- var0=3:击杀 214823 推进 var0=4。 -->
-    <transition source="s3" target="s4"><event><kill-npc npc-id="214823"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s3" target="s4">
+      <event>
+        <kill-npc npc-id="214823"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <!-- 204053:var0=4,31 显示 2375,STEP_TO_5(10004) 推进 var0=5。 -->
-    <transition source="s4" target="s4"><event><talk-to-npc npc-id="204053" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
-    <transition source="s4" target="s5"><event><talk-to-npc npc-id="204053" dialog-id="10004"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204053" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204053" action="SETPRO5"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <!-- 204075 Balder:var0=5,31 显示 2716;2718 分支(DP>=4000 且有 186000087 收走显示 2718,DP>=4000 显示 2887,否则 2802);SET_REWARD(10255) 清零 DP 进 REWARD。 -->
-    <transition source="s5" target="s5"><event><talk-to-npc npc-id="204075" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2716"/></after-commit></transition>
-    <transition source="s5" target="s5" priority="0"><event><talk-to-npc npc-id="204075" dialog-id="2718"/></event><conditions><currency-at-least kind="DP" amount="4000"/><has-item item-id="186000087" count="1"/></conditions><actions><remove-item item-id="186000087" count="1"/></actions><after-commit><show-quest-dialog dialog-id="2718"/></after-commit></transition>
-    <transition source="s5" target="s5" priority="1"><event><talk-to-npc npc-id="204075" dialog-id="2718"/></event><conditions><currency-at-least kind="DP" amount="4000"/></conditions><after-commit><show-quest-dialog dialog-id="2887"/></after-commit></transition>
-    <transition source="s5" target="s5" priority="2"><event><talk-to-npc npc-id="204075" dialog-id="2718"/></event><after-commit><show-quest-dialog dialog-id="2802"/></after-commit></transition>
-    <transition source="s5" target="reward"><event><talk-to-npc npc-id="204075" dialog-id="10255"/></event><actions><reset-currency kind="DP"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <transition source="s5" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204075" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204075" action="SELECT6_1_1"/>
+      </event>
+      <conditions>
+        <currency-at-least kind="DP" amount="4000"/>
+        <has-item item-id="186000087" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="186000087" count="1"/>
+      </actions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204075" action="SELECT6_1_1"/>
+      </event>
+      <conditions>
+        <currency-at-least kind="DP" amount="4000"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_3"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5" priority="2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204075" action="SELECT6_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_2"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204075" action="SET_SUCCEED"/>
+      </event>
+      <actions>
+        <reset-currency kind="DP"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
     <!-- 完成:204053 Kvasir REWARD→COMPLETE。 -->
-    <npc-complete npc-id="204053" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="204053" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

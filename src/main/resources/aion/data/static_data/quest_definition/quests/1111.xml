@@ -21,37 +21,37 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="v1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="reward2" status="REWARD">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="reward3" status="REWARD">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="203075" source="unaccepted" target="started" selection-sources="unaccepted"/>
+    <dialog type="NPC_START" npc-id="203075" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="203061" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203061" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="started" target="v1" priority="0">
       <event>
-        <talk-to-npc npc-id="203061" dialog-id="39"/>
+        <dialog type="TALK_TO_NPC" npc-id="203061" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
         <has-item item-id="182200223" count="3"/>
@@ -61,20 +61,20 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="1353"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started" priority="10">
       <event>
-        <talk-to-npc npc-id="203061" dialog-id="39"/>
+        <dialog type="TALK_TO_NPC" npc-id="203061" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1693"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward2">
       <event>
-        <talk-to-npc npc-id="203061" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="203061" action="SETPRO1"/>
       </event>
       <actions>
         <give-item item-id="182200222" count="1"/>
@@ -86,7 +86,7 @@
     </transition>
     <transition source="started" target="reward3">
       <event>
-        <talk-to-npc npc-id="203061" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="203061" action="SETPRO2"/>
       </event>
       <actions>
         <give-item item-id="182200221" count="1"/>
@@ -98,15 +98,15 @@
     </transition>
     <transition source="v1" target="v1">
       <event>
-        <talk-to-npc npc-id="203061" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203061" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1353"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
     <transition source="v1" target="reward2">
       <event>
-        <talk-to-npc npc-id="203061" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="203061" action="SETPRO1"/>
       </event>
       <actions>
         <give-item item-id="182200222" count="1"/>
@@ -118,7 +118,7 @@
     </transition>
     <transition source="v1" target="reward3">
       <event>
-        <talk-to-npc npc-id="203061" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="203061" action="SETPRO2"/>
       </event>
       <actions>
         <give-item item-id="182200221" count="1"/>
@@ -130,38 +130,40 @@
     </transition>
     <transition source="reward2" target="reward2">
       <event>
-        <talk-to-npc npc-id="203075" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203075" action="USE_OBJECT"/>
       </event>
       <actions>
         <remove-item item-id="182200222" count="1"/>
       </actions>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="203075" source="reward2" target="complete" fixed-reward-indices="0 1" dialog-ids="23" complete-reward-index="0" preview-dialog-ids="1009" finish="CLOSE_DIALOG"/>
+    <npc-complete npc-id="203075" source="reward2" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="CLOSE_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
     <transition source="reward3" target="reward3">
       <event>
-        <talk-to-npc npc-id="203075" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203075" action="USE_OBJECT"/>
       </event>
       <actions>
         <remove-item item-id="182200221" count="1"/>
       </actions>
       <after-commit>
-        <show-quest-dialog dialog-id="2716"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
       </after-commit>
     </transition>
     <transition source="reward3" target="reward3">
       <event>
-        <talk-to-npc npc-id="203075" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="203075" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="6"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
       </after-commit>
     </transition>
     <transition source="reward3" target="complete">
       <event>
-        <talk-to-npc npc-id="203075" dialog-id="23"/>
+        <dialog type="TALK_TO_NPC" npc-id="203075" action="SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="GOLD" id="0" amount="450" amount-mode="QUEST_BASE"/>

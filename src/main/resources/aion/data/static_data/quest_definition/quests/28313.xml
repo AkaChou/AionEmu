@@ -11,7 +11,6 @@
     <rewards>
       <reward kind="EXP" id="0" amount="2762837"/>
     </rewards>
-
     <start-conditions>
       <condition type="finished" quest-id="28303"/>
     </start-conditions>
@@ -21,29 +20,29 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="k1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="k2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="k3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="804821" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <dialog type="NPC_START" npc-id="804821" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
     <transition source="started" target="k1">
       <event>
         <kill-npc npc-id="217371"/>
@@ -68,18 +67,18 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <npc-report npc-id="804821" source="k3" target="reward" page="1352"/>
+    <dialog type="NPC_REPORT" npc-id="804821" source="k3" target="reward" page="SELECT2"/>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="804821" dialog-ids="-1 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="8"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <conditions>
         <advanced-class-is class="GLADIATOR"/>
@@ -92,12 +91,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="9"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD2"/>
       </event>
       <conditions>
         <advanced-class-is class="GLADIATOR"/>
@@ -110,12 +109,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="10"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD3"/>
       </event>
       <conditions>
         <advanced-class-is class="GLADIATOR"/>
@@ -128,12 +127,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="11"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD4"/>
       </event>
       <conditions>
         <advanced-class-is class="GLADIATOR"/>
@@ -146,12 +145,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="12"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD5"/>
       </event>
       <conditions>
         <advanced-class-is class="GLADIATOR"/>
@@ -164,12 +163,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="13"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD6"/>
       </event>
       <conditions>
         <advanced-class-is class="GLADIATOR"/>
@@ -182,12 +181,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="8"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <conditions>
         <advanced-class-is class="TEMPLAR"/>
@@ -200,12 +199,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="9"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD2"/>
       </event>
       <conditions>
         <advanced-class-is class="TEMPLAR"/>
@@ -218,12 +217,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="10"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD3"/>
       </event>
       <conditions>
         <advanced-class-is class="TEMPLAR"/>
@@ -236,12 +235,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="8"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <conditions>
         <advanced-class-is class="RANGER"/>
@@ -254,12 +253,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="9"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD2"/>
       </event>
       <conditions>
         <advanced-class-is class="RANGER"/>
@@ -272,12 +271,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="10"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD3"/>
       </event>
       <conditions>
         <advanced-class-is class="RANGER"/>
@@ -290,12 +289,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="8"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <conditions>
         <advanced-class-is class="ASSASSIN"/>
@@ -308,12 +307,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="9"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD2"/>
       </event>
       <conditions>
         <advanced-class-is class="ASSASSIN"/>
@@ -326,12 +325,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="10"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD3"/>
       </event>
       <conditions>
         <advanced-class-is class="ASSASSIN"/>
@@ -344,12 +343,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="8"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <conditions>
         <advanced-class-is class="SORCERER"/>
@@ -362,12 +361,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="9"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD2"/>
       </event>
       <conditions>
         <advanced-class-is class="SORCERER"/>
@@ -380,12 +379,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="8"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <conditions>
         <advanced-class-is class="SPIRIT_MASTER"/>
@@ -398,12 +397,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="9"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD2"/>
       </event>
       <conditions>
         <advanced-class-is class="SPIRIT_MASTER"/>
@@ -416,12 +415,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="8"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <conditions>
         <advanced-class-is class="CLERIC"/>
@@ -434,12 +433,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="9"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD2"/>
       </event>
       <conditions>
         <advanced-class-is class="CLERIC"/>
@@ -452,12 +451,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="8"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <conditions>
         <advanced-class-is class="CHANTER"/>
@@ -470,12 +469,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="9"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD2"/>
       </event>
       <conditions>
         <advanced-class-is class="CHANTER"/>
@@ -488,12 +487,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="8"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <conditions>
         <advanced-class-is class="GUNSLINGER"/>
@@ -506,12 +505,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="9"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD2"/>
       </event>
       <conditions>
         <advanced-class-is class="GUNSLINGER"/>
@@ -524,12 +523,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="8"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <conditions>
         <advanced-class-is class="SONGWEAVER"/>
@@ -542,12 +541,12 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="804821" dialog-id="8"/>
+        <dialog type="TALK_TO_NPC" npc-id="804821" action="SELECTED_QUEST_REWARD1"/>
       </event>
       <conditions>
         <advanced-class-is class="AETHERTECH"/>
@@ -560,7 +559,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

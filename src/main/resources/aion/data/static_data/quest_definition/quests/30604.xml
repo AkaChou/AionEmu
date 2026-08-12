@@ -17,583 +17,583 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="a0b0c0" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="a0b0c1" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="1"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="1"/>
     </node>
     <node label="a0b0c2" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="2"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="2"/>
     </node>
     <node label="a0b0c3" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="3"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="3"/>
     </node>
     <node label="a0b0c4" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="4"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="4"/>
     </node>
     <node label="a0b0c5" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="5"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="5"/>
     </node>
     <node label="a0b0c6" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="6"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="6"/>
     </node>
     <node label="a0b0c7" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="7"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="7"/>
     </node>
     <node label="a0b0c8" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="8"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="8"/>
     </node>
     <node label="a0b0c9" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="9"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="9"/>
     </node>
     <node label="a0b0c10" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="10"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="10"/>
     </node>
     <node label="a0b0c11" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="11"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="11"/>
     </node>
     <node label="a0b0c12" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="12"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="12"/>
     </node>
     <node label="a0b0c13" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="13"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="13"/>
     </node>
     <node label="a0b0c14" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="14"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="14"/>
     </node>
     <node label="a0b0c15" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="15"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="15"/>
     </node>
     <node label="a0b1c0" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="a0b1c1" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="1"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="1"/>
     </node>
     <node label="a0b1c2" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="2"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="2"/>
     </node>
     <node label="a0b1c3" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="3"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="3"/>
     </node>
     <node label="a0b1c4" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="4"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="4"/>
     </node>
     <node label="a0b1c5" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="5"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="5"/>
     </node>
     <node label="a0b1c6" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="6"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="6"/>
     </node>
     <node label="a0b1c7" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="7"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="7"/>
     </node>
     <node label="a0b1c8" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="8"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="8"/>
     </node>
     <node label="a0b1c9" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="9"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="9"/>
     </node>
     <node label="a0b1c10" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="10"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="10"/>
     </node>
     <node label="a0b1c11" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="11"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="11"/>
     </node>
     <node label="a0b1c12" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="12"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="12"/>
     </node>
     <node label="a0b1c13" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="13"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="13"/>
     </node>
     <node label="a0b1c14" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="14"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="14"/>
     </node>
     <node label="a0b1c15" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
-          <var name="var2" value="15"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="15"/>
     </node>
     <node label="a0b2c0" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
-          <var name="var2" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="a0b2c1" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
-          <var name="var2" value="1"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+      <var name="var2" value="1"/>
     </node>
     <node label="a0b2c2" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
-          <var name="var2" value="2"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+      <var name="var2" value="2"/>
     </node>
     <node label="a0b2c3" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
-          <var name="var2" value="3"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+      <var name="var2" value="3"/>
     </node>
     <node label="a0b2c4" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
-          <var name="var2" value="4"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+      <var name="var2" value="4"/>
     </node>
     <node label="a0b2c5" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
-          <var name="var2" value="5"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+      <var name="var2" value="5"/>
     </node>
     <node label="a0b2c6" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
-          <var name="var2" value="6"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+      <var name="var2" value="6"/>
     </node>
     <node label="a0b2c7" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
-          <var name="var2" value="7"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+      <var name="var2" value="7"/>
     </node>
     <node label="a0b2c8" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
-          <var name="var2" value="8"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+      <var name="var2" value="8"/>
     </node>
     <node label="a0b2c9" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
-          <var name="var2" value="9"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+      <var name="var2" value="9"/>
     </node>
     <node label="a0b2c10" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
-          <var name="var2" value="10"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+      <var name="var2" value="10"/>
     </node>
     <node label="a0b2c11" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
-          <var name="var2" value="11"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+      <var name="var2" value="11"/>
     </node>
     <node label="a0b2c12" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
-          <var name="var2" value="12"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+      <var name="var2" value="12"/>
     </node>
     <node label="a0b2c13" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
-          <var name="var2" value="13"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+      <var name="var2" value="13"/>
     </node>
     <node label="a0b2c14" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
-          <var name="var2" value="14"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+      <var name="var2" value="14"/>
     </node>
     <node label="a0b2c15" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="2"/>
-          <var name="var2" value="15"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+      <var name="var2" value="15"/>
     </node>
     <node label="a0b3c0" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
-          <var name="var2" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="a0b3c1" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
-          <var name="var2" value="1"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+      <var name="var2" value="1"/>
     </node>
     <node label="a0b3c2" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
-          <var name="var2" value="2"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+      <var name="var2" value="2"/>
     </node>
     <node label="a0b3c3" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
-          <var name="var2" value="3"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+      <var name="var2" value="3"/>
     </node>
     <node label="a0b3c4" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
-          <var name="var2" value="4"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+      <var name="var2" value="4"/>
     </node>
     <node label="a0b3c5" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
-          <var name="var2" value="5"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+      <var name="var2" value="5"/>
     </node>
     <node label="a0b3c6" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
-          <var name="var2" value="6"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+      <var name="var2" value="6"/>
     </node>
     <node label="a0b3c7" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
-          <var name="var2" value="7"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+      <var name="var2" value="7"/>
     </node>
     <node label="a0b3c8" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
-          <var name="var2" value="8"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+      <var name="var2" value="8"/>
     </node>
     <node label="a0b3c9" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
-          <var name="var2" value="9"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+      <var name="var2" value="9"/>
     </node>
     <node label="a0b3c10" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
-          <var name="var2" value="10"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+      <var name="var2" value="10"/>
     </node>
     <node label="a0b3c11" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
-          <var name="var2" value="11"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+      <var name="var2" value="11"/>
     </node>
     <node label="a0b3c12" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
-          <var name="var2" value="12"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+      <var name="var2" value="12"/>
     </node>
     <node label="a0b3c13" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
-          <var name="var2" value="13"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+      <var name="var2" value="13"/>
     </node>
     <node label="a0b3c14" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
-          <var name="var2" value="14"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+      <var name="var2" value="14"/>
     </node>
     <node label="a0b3c15" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="3"/>
-          <var name="var2" value="15"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="3"/>
+      <var name="var2" value="15"/>
     </node>
     <node label="a0b4c0" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
-          <var name="var2" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="a0b4c1" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
-          <var name="var2" value="1"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+      <var name="var2" value="1"/>
     </node>
     <node label="a0b4c2" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
-          <var name="var2" value="2"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+      <var name="var2" value="2"/>
     </node>
     <node label="a0b4c3" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
-          <var name="var2" value="3"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+      <var name="var2" value="3"/>
     </node>
     <node label="a0b4c4" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
-          <var name="var2" value="4"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+      <var name="var2" value="4"/>
     </node>
     <node label="a0b4c5" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
-          <var name="var2" value="5"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+      <var name="var2" value="5"/>
     </node>
     <node label="a0b4c6" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
-          <var name="var2" value="6"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+      <var name="var2" value="6"/>
     </node>
     <node label="a0b4c7" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
-          <var name="var2" value="7"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+      <var name="var2" value="7"/>
     </node>
     <node label="a0b4c8" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
-          <var name="var2" value="8"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+      <var name="var2" value="8"/>
     </node>
     <node label="a0b4c9" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
-          <var name="var2" value="9"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+      <var name="var2" value="9"/>
     </node>
     <node label="a0b4c10" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
-          <var name="var2" value="10"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+      <var name="var2" value="10"/>
     </node>
     <node label="a0b4c11" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
-          <var name="var2" value="11"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+      <var name="var2" value="11"/>
     </node>
     <node label="a0b4c12" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
-          <var name="var2" value="12"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+      <var name="var2" value="12"/>
     </node>
     <node label="a0b4c13" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
-          <var name="var2" value="13"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+      <var name="var2" value="13"/>
     </node>
     <node label="a0b4c14" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
-          <var name="var2" value="14"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+      <var name="var2" value="14"/>
     </node>
     <node label="a0b4c15" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="4"/>
-          <var name="var2" value="15"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="4"/>
+      <var name="var2" value="15"/>
     </node>
     <node label="a0b5c0" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="a0b5c1" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="1"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="1"/>
     </node>
     <node label="a0b5c2" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="2"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="2"/>
     </node>
     <node label="a0b5c3" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="3"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="3"/>
     </node>
     <node label="a0b5c4" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="4"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="4"/>
     </node>
     <node label="a0b5c5" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="5"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="5"/>
     </node>
     <node label="a0b5c6" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="6"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="6"/>
     </node>
     <node label="a0b5c7" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="7"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="7"/>
     </node>
     <node label="a0b5c8" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="8"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="8"/>
     </node>
     <node label="a0b5c9" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="9"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="9"/>
     </node>
     <node label="a0b5c10" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="10"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="10"/>
     </node>
     <node label="a0b5c11" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="11"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="11"/>
     </node>
     <node label="a0b5c12" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="12"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="12"/>
     </node>
     <node label="a0b5c13" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="13"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="13"/>
     </node>
     <node label="a0b5c14" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="14"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="14"/>
     </node>
     <node label="a0b5c15" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="5"/>
-          <var name="var2" value="15"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="5"/>
+      <var name="var2" value="15"/>
     </node>
     <node label="a0b6c0" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="a0b6c1" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="1"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="1"/>
     </node>
     <node label="a0b6c2" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="2"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="2"/>
     </node>
     <node label="a0b6c3" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="3"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="3"/>
     </node>
     <node label="a0b6c4" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="4"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="4"/>
     </node>
     <node label="a0b6c5" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="5"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="5"/>
     </node>
     <node label="a0b6c6" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="6"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="6"/>
     </node>
     <node label="a0b6c7" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="7"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="7"/>
     </node>
     <node label="a0b6c8" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="8"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="8"/>
     </node>
     <node label="a0b6c9" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="9"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="9"/>
     </node>
     <node label="a0b6c10" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="10"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="10"/>
     </node>
     <node label="a0b6c11" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="11"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="11"/>
     </node>
     <node label="a0b6c12" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="12"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="12"/>
     </node>
     <node label="a0b6c13" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="13"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="13"/>
     </node>
     <node label="a0b6c14" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="14"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="14"/>
     </node>
     <node label="a0b6c15" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="15"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="15"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="0"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="15"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="15"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
-          <var name="var2" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="800325" source="unaccepted" target="a0b0c0" selection-sources="unaccepted a0b0c0" start-dialog-id="4762"/>
+    <dialog type="NPC_START" npc-id="800325" source="unaccepted" target="a0b0c0" selection-sources="unaccepted a0b0c0" start-page="SELECT_NONE"/>
     <transition source="a0b0c0" target="a0b1c0">
       <event>
         <kill-npc npc-id="219240"/>
@@ -9043,27 +9043,43 @@
       </after-commit>
     </transition>
     <kill-chain nodes="a0b0c0 a0b0c1 a0b0c2 a0b0c3 a0b0c4 a0b0c5 a0b0c6 a0b0c7 a0b0c8 a0b0c9 a0b0c10 a0b0c11 a0b0c12 a0b0c13 a0b0c14 a0b0c15">
-      <event><kill-npc npc-id="219245" /></event>
+      <event>
+        <kill-npc npc-id="219245"/>
+      </event>
     </kill-chain>
     <kill-chain nodes="a0b1c0 a0b1c1 a0b1c2 a0b1c3 a0b1c4 a0b1c5 a0b1c6 a0b1c7 a0b1c8 a0b1c9 a0b1c10 a0b1c11 a0b1c12 a0b1c13 a0b1c14 a0b1c15">
-      <event><kill-npc npc-id="219245" /></event>
+      <event>
+        <kill-npc npc-id="219245"/>
+      </event>
     </kill-chain>
     <kill-chain nodes="a0b2c0 a0b2c1 a0b2c2 a0b2c3 a0b2c4 a0b2c5 a0b2c6 a0b2c7 a0b2c8 a0b2c9 a0b2c10 a0b2c11 a0b2c12 a0b2c13 a0b2c14 a0b2c15">
-      <event><kill-npc npc-id="219245" /></event>
+      <event>
+        <kill-npc npc-id="219245"/>
+      </event>
     </kill-chain>
     <kill-chain nodes="a0b3c0 a0b3c1 a0b3c2 a0b3c3 a0b3c4 a0b3c5 a0b3c6 a0b3c7 a0b3c8 a0b3c9 a0b3c10 a0b3c11 a0b3c12 a0b3c13 a0b3c14 a0b3c15">
-      <event><kill-npc npc-id="219245" /></event>
+      <event>
+        <kill-npc npc-id="219245"/>
+      </event>
     </kill-chain>
     <kill-chain nodes="a0b4c0 a0b4c1 a0b4c2 a0b4c3 a0b4c4 a0b4c5 a0b4c6 a0b4c7 a0b4c8 a0b4c9 a0b4c10 a0b4c11 a0b4c12 a0b4c13 a0b4c14 a0b4c15">
-      <event><kill-npc npc-id="219245" /></event>
+      <event>
+        <kill-npc npc-id="219245"/>
+      </event>
     </kill-chain>
     <kill-chain nodes="a0b5c0 a0b5c1 a0b5c2 a0b5c3 a0b5c4 a0b5c5 a0b5c6 a0b5c7 a0b5c8 a0b5c9 a0b5c10 a0b5c11 a0b5c12 a0b5c13 a0b5c14 a0b5c15">
-      <event><kill-npc npc-id="219245" /></event>
+      <event>
+        <kill-npc npc-id="219245"/>
+      </event>
     </kill-chain>
     <kill-chain nodes="a0b6c0 a0b6c1 a0b6c2 a0b6c3 a0b6c4 a0b6c5 a0b6c6 a0b6c7 a0b6c8 a0b6c9 a0b6c10 a0b6c11 a0b6c12 a0b6c13 a0b6c14 a0b6c15">
-      <event><kill-npc npc-id="219245" /></event>
+      <event>
+        <kill-npc npc-id="219245"/>
+      </event>
     </kill-chain>
-    <npc-report npc-id="800325" source="a0b6c15" target="reward" page="1352"/>
-    <npc-complete npc-id="800325" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <dialog type="NPC_REPORT" npc-id="800325" source="a0b6c15" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="800325" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

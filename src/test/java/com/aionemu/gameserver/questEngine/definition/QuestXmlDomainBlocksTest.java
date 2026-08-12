@@ -29,10 +29,12 @@ class QuestXmlDomainBlocksTest {
 			""";
 		String expanded = """
 			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203110" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203110" dialog-id="1012"/></event><after-commit><show-quest-dialog dialog-id="1012"/></after-commit></transition>
 			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203110" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
 			<transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203110" dialog-id="1002"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="182400001" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
 			<transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203110" dialog-id="20000"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="182400001" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
-			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203110" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203110" dialog-id="1003"/></event><after-commit><show-quest-dialog dialog-id="1004"/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203110" dialog-ids="1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
 			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203110" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
 			<transition source="started" target="started"><event><talk-to-npc npc-id="203110" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
 			""";
@@ -53,7 +55,8 @@ class QuestXmlDomainBlocksTest {
 			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
 			<transition source="unaccepted" target="started"><event><talk-to-npc npc-id="834166" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
 			<transition source="unaccepted" target="started"><event><talk-to-npc npc-id="834166" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
-			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-id="1003"/></event><after-commit><show-quest-dialog dialog-id="1004"/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-ids="1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
 			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
 			<transition source="started" target="started"><event><talk-to-npc npc-id="834166" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
 			""";
@@ -265,6 +268,68 @@ class QuestXmlDomainBlocksTest {
 	}
 
 	@Test
+	void equipmentExchangeKeepsSelectionUntilAtomicCompletion() {
+		CompiledQuestDefinition definition = compile(equipmentExchangeDefinition("""
+			<equipment-exchange npc-id="203123" source="unaccepted" started="started"
+			    reward="reward" complete="complete" selection-field="equipment"
+			    reward-field="rewardGroup" material-item-id="186000041" material-count="10">
+			  <category action="SELECT1_1" page="SELECT1_1"/>
+			  <equipment action="SELECT1_1_1" item-id="110600001"/>
+			  <reward-group action="SETPRO1" index="0" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+			  <reward-group action="SETPRO2" index="1" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
+			</equipment-exchange>
+			"""));
+
+		QuestMutationPlan selected = route(definition,
+			exchangeSnapshot(definition, QuestStatus.START, 0, 0, Map.of(110600001, 1, 186000041, 10)),
+			new QuestEvent.TalkToNpc(203123, QuestDialogAction.SELECT1_1_1.id())).orElseThrow();
+		assertEquals(QuestStatus.START, selected.nextStatus());
+		assertEquals(Map.of("equipment", 1, "rewardGroup", 0),
+			definition.definition().progressLayout().unpack(selected.nextPackedVariables()));
+		assertTrue(selected.requiredActions().stream().noneMatch(QuestAction.RemoveItem.class::isInstance));
+
+		QuestMutationPlan reward = route(definition,
+			exchangeSnapshot(definition, QuestStatus.START, 1, 0, Map.of(110600001, 1, 186000041, 10)),
+			new QuestEvent.TalkToNpc(203123, QuestDialogAction.SETPRO2.id())).orElseThrow();
+		assertEquals(QuestStatus.REWARD, reward.nextStatus());
+		assertEquals(Map.of("equipment", 1, "rewardGroup", 2),
+			definition.definition().progressLayout().unpack(reward.nextPackedVariables()));
+		assertTrue(reward.requiredActions().stream().noneMatch(QuestAction.RemoveItem.class::isInstance));
+
+		QuestMutationPlan completed = route(definition,
+			exchangeSnapshot(definition, QuestStatus.REWARD, 1, 2, Map.of(110600001, 1, 186000041, 10)),
+			new QuestEvent.TalkToNpc(203123, QuestDialogAction.SELECTED_QUEST_REWARD2.id())).orElseThrow();
+		assertEquals(QuestStatus.COMPLETE, completed.nextStatus());
+		assertTrue(completed.requiredActions().contains(new QuestAction.RemoveItem(110600001, 1)));
+		assertTrue(completed.requiredActions().contains(new QuestAction.RemoveItem(186000041, 10)));
+		assertTrue(completed.requiredActions().contains(new QuestAction.GrantReward(
+			"ITEM", 100000004, 1, QuestRewardAmountMode.EXACT)));
+		assertTrue(completed.requiredActions().contains(new QuestAction.CompleteQuest(1)));
+	}
+
+	@Test
+	void equipmentExchangeFailsBeforeRewardWhenMaterialIsMissing() {
+		CompiledQuestDefinition definition = compile(equipmentExchangeDefinition("""
+			<equipment-exchange npc-id="203123" source="unaccepted" started="started"
+			    reward="reward" complete="complete" selection-field="equipment"
+			    reward-field="rewardGroup" material-item-id="186000041" material-count="10">
+			  <category action="SELECT1_1" page="SELECT1_1"/>
+			  <equipment action="SELECT1_1_1" item-id="110600001"/>
+			  <reward-group action="SETPRO1" index="0" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+			  <reward-group action="SETPRO2" index="1" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
+			</equipment-exchange>
+			"""));
+
+		QuestMutationPlan failed = route(definition,
+			exchangeSnapshot(definition, QuestStatus.START, 1, 0, Map.of(110600001, 1, 186000041, 9)),
+			new QuestEvent.TalkToNpc(203123, QuestDialogAction.SETPRO1.id())).orElseThrow();
+		assertEquals(QuestStatus.START, failed.nextStatus());
+		assertEquals(0, failed.nextPackedVariables() >>> 2);
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_FAILED_1.id())),
+			failed.afterCommit());
+	}
+
+	@Test
 	void blocksAndOrdinaryTransitionsKeepDocumentOrder() {
 		String xml = """
 
@@ -288,9 +353,9 @@ class QuestXmlDomainBlocksTest {
 
 			""";
 		List<QuestTransition> transitions = compile(xml).definition().transitions();
-		assertEquals(9, transitions.stream().takeWhile(t -> talkNpcId(t) == 203110).count());
-		assertEquals(203120, talkNpcId(transitions.get(9)));
-		assertEquals(203123, talkNpcId(transitions.get(10)));
+		assertEquals(10, transitions.stream().takeWhile(t -> talkNpcId(t) == 203110).count());
+		assertEquals(203120, talkNpcId(transitions.get(10)));
+		assertEquals(203123, talkNpcId(transitions.get(11)));
 	}
 
 	@Test
@@ -531,6 +596,45 @@ class QuestXmlDomainBlocksTest {
 	}
 
 	@Test
+	void npcCompleteRejectsLegacyAndTypedDialogAttributeConflicts() {
+		String typed = completionDefinition("""
+			<npc-complete npc-id="203123" source="reward" target="complete"
+			    fixed-reward-indices="0 1"
+			    actions="SELECTED_QUEST_REWARD1"
+			    complete-reward-index="0" finish="NONE">
+			  <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+			</npc-complete>
+			""");
+		assertCode("DIALOG_LEGACY_ATTRIBUTE_CONFLICT", typed.replace(
+			"actions=\"SELECTED_QUEST_REWARD1\"",
+			"dialog-ids=\"8\" actions=\"SELECTED_QUEST_REWARD1\""));
+		assertCode("DIALOG_LEGACY_ATTRIBUTE_CONFLICT", typed.replace(
+			"complete-reward-index=\"0\"",
+			"preview-dialog-ids=\"-1 1009\" complete-reward-index=\"0\""));
+		assertCode("DIALOG_ACTION_ATTRIBUTE_CONFLICT", typed.replace(
+			"<preview actions=\"USE_OBJECT SELECT_QUEST_REWARD\"/>",
+			"<preview action=\"USE_OBJECT\" actions=\"SELECT_QUEST_REWARD\"/>"));
+
+		String choice = typed.replace(
+			"actions=\"SELECTED_QUEST_REWARD1\"",
+			"actions=\"SELECTED_QUEST_NOREWARD\"").replace(
+			"<preview actions=\"USE_OBJECT SELECT_QUEST_REWARD\"/>",
+			"<choice dialog-id=\"8\" action=\"SELECTED_QUEST_REWARD1\" reward-index=\"2\"/>\n"
+				+ "  <preview actions=\"USE_OBJECT SELECT_QUEST_REWARD\"/>");
+		assertCode("DIALOG_LEGACY_ATTRIBUTE_CONFLICT", choice);
+
+		String fallback = typed.replace(
+			"actions=\"SELECTED_QUEST_REWARD1\"",
+			"actions=\"SELECTED_QUEST_NOREWARD\"").replace(
+			"<preview actions=\"USE_OBJECT SELECT_QUEST_REWARD\"/>",
+			"<preview actions=\"USE_OBJECT SELECT_QUEST_REWARD\"/>\n"
+				+ "  <fallback dialog-ids=\"8\" actions=\"SELECTED_QUEST_REWARD1\"/>");
+		assertCode("DIALOG_LEGACY_ATTRIBUTE_CONFLICT", fallback);
+		assertCode("INVALID_DIALOG_ACTION_RANGE", typed.replace(
+			"SELECTED_QUEST_REWARD1\"", "SELECTED_QUEST_REWARD3..SELECTED_QUEST_REWARD1\""));
+	}
+
+	@Test
 	void npcDialogEqualsNpcMajorDialogMinorExpandedTransitions() {
 		String block = """
 			<npc-dialog source="started"
@@ -710,6 +814,13 @@ class QuestXmlDomainBlocksTest {
 		return new QuestSnapshot(7, definition.id(), status, packed, Map.of());
 	}
 
+	private static QuestSnapshot exchangeSnapshot(CompiledQuestDefinition definition, QuestStatus status,
+			int equipment, int rewardGroup, Map<Integer, Integer> inventory) {
+		int packed = definition.definition().progressLayout().pack(Map.of(
+			"equipment", equipment, "rewardGroup", rewardGroup));
+		return new QuestSnapshot(7, definition.id(), status, packed, inventory);
+	}
+
 	private static int talkNpcId(QuestTransition transition) {
 		return assertInstanceOf(QuestEvent.TalkToNpc.class, transition.event()).npcId();
 	}
@@ -792,6 +903,30 @@ class QuestXmlDomainBlocksTest {
 					  <transitions>%s</transitions>
 					</quest-definition>
 
+			""".formatted(transitions);
+	}
+
+	private static String equipmentExchangeDefinition(String transitions) {
+		return """
+			<quest-definition id="990072" version="1">
+			  <metadata name="equipment-exchange-block" display-name-id="1" min-level="0" max-level="99" category="QUEST">
+			    <reward-groups>
+			      <group><reward kind="EXP" id="0" amount="100"/><reward kind="SELECTABLE_ITEM" id="100000001" amount="1"/><reward kind="SELECTABLE_ITEM" id="100000002" amount="1"/></group>
+			      <group><reward kind="EXP" id="0" amount="200"/><reward kind="SELECTABLE_ITEM" id="100000003" amount="1"/><reward kind="SELECTABLE_ITEM" id="100000004" amount="1"/></group>
+			    </reward-groups>
+			  </metadata>
+			  <progress>
+			    <bit-field name="equipment" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+			    <bit-field name="rewardGroup" offset="2" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+			  </progress>
+			  <nodes>
+			    <node label="unaccepted" status="NONE"><var name="equipment" value="0"/><var name="rewardGroup" value="0"/></node>
+			    <node label="started" status="START"/>
+			    <node label="reward" status="REWARD"/>
+			    <node label="complete" status="COMPLETE"><var name="equipment" value="0"/><var name="rewardGroup" value="0"/></node>
+			  </nodes>
+			  <transitions>%s</transitions>
+			</quest-definition>
 			""".formatted(transitions);
 	}
 

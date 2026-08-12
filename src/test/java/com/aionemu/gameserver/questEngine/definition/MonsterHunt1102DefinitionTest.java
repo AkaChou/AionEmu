@@ -27,12 +27,12 @@ class MonsterHunt1102DefinitionTest {
 		CompiledQuestDefinition compiled = definition();
 		List<QuestTransition> transitions = compiled.definition().transitions();
 
-		assertEquals(34, transitions.size());
+		assertEquals(36, transitions.size());
 		assertEquals(6, transitions.stream().filter(t -> t.event() instanceof QuestEvent.KillNpc).count());
 		assertEquals(Set.of(210133, 210134), transitions.stream()
 			.filter(t -> t.event() instanceof QuestEvent.KillNpc)
 			.map(t -> ((QuestEvent.KillNpc) t.event()).npcId()).collect(Collectors.toSet()));
-		assertEquals(Set.of(31, 1007, 1002, 20000, 1003, 1004, 20001, 1008),
+		assertEquals(Set.of(31, 1012, 1007, 1002, 20000, 1003, 1004, 20001, 1008),
 			dialogIds(transitions, "unaccepted"));
 		assertEquals(Set.of(31, 1009), dialogIds(transitions, "target-count-reached"));
 		assertEquals(Set.of(-1, 1009), transitions.stream()

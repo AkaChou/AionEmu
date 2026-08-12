@@ -29,46 +29,46 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="s2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="804909" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="804909" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4762"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="804909" dialog-id="1002"/>
+        <dialog type="TALK_TO_NPC" npc-id="804909" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="804909" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="804909" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -80,7 +80,7 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="804909" dialog-ids="1003 1004 20001"/>
+        <dialog type="TALK_TO_NPC" npc-id="804909" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -88,19 +88,19 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="804909" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="804909" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <!-- 收集齐全后交付并推进。Deliver once all sprouts are gathered. -->
     <transition source="started" target="s1" priority="0">
       <event>
-        <talk-to-npc npc-id="804909" dialog-id="39"/>
+        <dialog type="TALK_TO_NPC" npc-id="804909" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -112,36 +112,36 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="10000"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
       </after-commit>
     </transition>
     <!-- 收集未齐全时提示。Prompt when sprouts are insufficient. -->
     <transition source="started" target="started" priority="1">
       <event>
-        <talk-to-npc npc-id="804909" dialog-id="39"/>
+        <dialog type="TALK_TO_NPC" npc-id="804909" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="10001"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="804909" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="804909" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <!-- 交付后领取水壶。Take the watering can after the hand-in. -->
     <transition source="s1" target="s2">
       <event>
-        <talk-to-npc npc-id="804909" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="804909" action="SETPRO2"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
@@ -173,6 +173,8 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="804910" source="reward" target="complete" fixed-reward-indices="0 1 5 6" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="804910" source="reward" target="complete" fixed-reward-indices="0 1 5 6" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

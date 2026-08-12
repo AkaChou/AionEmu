@@ -15,52 +15,251 @@
     <bit-field name="var0" offset="0" width="5" min="0" max="20" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="k1" status="START"><var name="var0" value="1"/></node>
-    <node label="k2" status="START"><var name="var0" value="2"/></node>
-    <node label="k3" status="START"><var name="var0" value="3"/></node>
-    <node label="k4" status="START"><var name="var0" value="4"/></node>
-    <node label="k5" status="START"><var name="var0" value="5"/></node>
-    <node label="k6" status="START"><var name="var0" value="6"/></node>
-    <node label="k7" status="START"><var name="var0" value="7"/></node>
-    <node label="k8" status="START"><var name="var0" value="8"/></node>
-    <node label="k9" status="START"><var name="var0" value="9"/></node>
-    <node label="k10" status="START"><var name="var0" value="10"/></node>
-    <node label="k11" status="START"><var name="var0" value="11"/></node>
-    <node label="k12" status="START"><var name="var0" value="12"/></node>
-    <node label="k13" status="START"><var name="var0" value="13"/></node>
-    <node label="k14" status="START"><var name="var0" value="14"/></node>
-    <node label="k15" status="START"><var name="var0" value="15"/></node>
-    <node label="k16" status="START"><var name="var0" value="16"/></node>
-    <node label="k17" status="START"><var name="var0" value="17"/></node>
-    <node label="k18" status="START"><var name="var0" value="18"/></node>
-    <node label="k19" status="START"><var name="var0" value="19"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="20"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="k1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="k2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="k3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="k4" status="START">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="k5" status="START">
+      <var name="var0" value="5"/>
+    </node>
+    <node label="k6" status="START">
+      <var name="var0" value="6"/>
+    </node>
+    <node label="k7" status="START">
+      <var name="var0" value="7"/>
+    </node>
+    <node label="k8" status="START">
+      <var name="var0" value="8"/>
+    </node>
+    <node label="k9" status="START">
+      <var name="var0" value="9"/>
+    </node>
+    <node label="k10" status="START">
+      <var name="var0" value="10"/>
+    </node>
+    <node label="k11" status="START">
+      <var name="var0" value="11"/>
+    </node>
+    <node label="k12" status="START">
+      <var name="var0" value="12"/>
+    </node>
+    <node label="k13" status="START">
+      <var name="var0" value="13"/>
+    </node>
+    <node label="k14" status="START">
+      <var name="var0" value="14"/>
+    </node>
+    <node label="k15" status="START">
+      <var name="var0" value="15"/>
+    </node>
+    <node label="k16" status="START">
+      <var name="var0" value="16"/>
+    </node>
+    <node label="k17" status="START">
+      <var name="var0" value="17"/>
+    </node>
+    <node label="k18" status="START">
+      <var name="var0" value="18"/>
+    </node>
+    <node label="k19" status="START">
+      <var name="var0" value="19"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="20"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
   </nodes>
   <transitions>
-    <transition source="unaccepted" target="started"><event><at-distance npc-id="205960"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
-    <transition source="started" target="k1"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k1" target="k2"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k2" target="k3"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k3" target="k4"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k4" target="k5"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k5" target="k6"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k6" target="k7"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k7" target="k8"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k8" target="k9"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k9" target="k10"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k10" target="k11"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k11" target="k12"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k12" target="k13"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k13" target="k14"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k14" target="k15"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k15" target="k16"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k16" target="k17"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k17" target="k18"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k18" target="k19"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="k19" target="reward"><event><kill-in-world world-id="600040000"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
-    <npc-complete npc-id="205960" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <transition source="unaccepted" target="started">
+      <event>
+        <at-distance npc-id="205960"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="k1">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k1" target="k2">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k2" target="k3">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k3" target="k4">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k4" target="k5">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k5" target="k6">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k6" target="k7">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k7" target="k8">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k8" target="k9">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k9" target="k10">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k10" target="k11">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k11" target="k12">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k12" target="k13">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k13" target="k14">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k14" target="k15">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k15" target="k16">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k16" target="k17">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k17" target="k18">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k18" target="k19">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="k19" target="reward">
+      <event>
+        <kill-in-world world-id="600040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="205960" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

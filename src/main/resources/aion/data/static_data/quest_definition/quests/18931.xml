@@ -20,55 +20,55 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="s1" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="0"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="k1" status="START">
-          <var name="var0" value="0"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="s1k1" status="START">
-          <var name="var0" value="1"/>
-          <var name="var1" value="1"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="2"/>
-          <var name="var1" value="2"/>
+      <var name="var0" value="2"/>
+      <var name="var1" value="2"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="806259" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="806259" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4762"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="806259" dialog-id="1002"/>
+        <dialog type="TALK_TO_NPC" npc-id="806259" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="806259" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="806259" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -80,7 +80,7 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="806259" dialog-id="20001"/>
+        <dialog type="TALK_TO_NPC" npc-id="806259" action="QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -89,7 +89,7 @@
     <!-- 容器 703344 对话仅关闭窗口，无状态变化。 Container 703344 dialog only closes the window, no state change. -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="703344" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="703344" action="USE_OBJECT"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -188,23 +188,23 @@
     <!-- 向 806258 结算：先移除补给品再展示奖励。 Settle with 806258: remove supplies before showing rewards. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="806258" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="806258" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="806258" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="806258" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="806258" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="806258" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <remove-item item-id="182213555" count="1"/>
@@ -216,9 +216,13 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started"><event><can-act template-id="703344" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="703344" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
   </transitions>
 </quest-definition>

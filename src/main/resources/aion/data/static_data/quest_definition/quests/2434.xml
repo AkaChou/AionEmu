@@ -27,74 +27,136 @@
     <node label="unaccepted" status="NONE"/>
     <node label="started" status="START"/>
     <node label="reward" status="REWARD">
-          <var name="var0" value="4"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="4"/>
-          <var name="var3" value="6"/>
-          <var name="var4" value="4"/>
+      <var name="var0" value="4"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="4"/>
+      <var name="var3" value="6"/>
+      <var name="var4" value="4"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="4"/>
-          <var name="var1" value="6"/>
-          <var name="var2" value="4"/>
-          <var name="var3" value="6"/>
-          <var name="var4" value="4"/>
+      <var name="var0" value="4"/>
+      <var name="var1" value="6"/>
+      <var name="var2" value="4"/>
+      <var name="var3" value="6"/>
+      <var name="var4" value="4"/>
     </node>
   </nodes>
   <transitions>
     <!-- 接取:Morheim 的 Chaikata (204388) 提供任务;前置任务 2433。 -->
-    <npc-start npc-id="204388" source="unaccepted" target="started" selection-sources="unaccepted started"/>
+    <dialog type="NPC_START" npc-id="204388" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
     <!-- 击杀 var0 组 211595 211608 4 只(var0):未满则计数 +1;已满击杀无路由被忽略。 -->
     <transition source="started" target="started">
-      <event><kill-npc npc-ids="211595 211608"/></event>
-      <conditions><variable-below field="var0" value="4"/></conditions>
-      <actions><increment-variable field="var0" delta="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <kill-npc npc-ids="211595 211608"/>
+      </event>
+      <conditions>
+        <variable-below field="var0" value="4"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var0" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <!-- 击杀 var1 组 211575 211601 6 只(var1):未满则计数 +1;已满击杀无路由被忽略。 -->
     <transition source="started" target="started">
-      <event><kill-npc npc-ids="211575 211601"/></event>
-      <conditions><variable-below field="var1" value="6"/></conditions>
-      <actions><increment-variable field="var1" delta="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <kill-npc npc-ids="211575 211601"/>
+      </event>
+      <conditions>
+        <variable-below field="var1" value="6"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <!-- 击杀 var2 组 211612 212726 212727 4 只(var2):未满则计数 +1;已满击杀无路由被忽略。 -->
     <transition source="started" target="started">
-      <event><kill-npc npc-ids="211612 212726 212727"/></event>
-      <conditions><variable-below field="var2" value="4"/></conditions>
-      <actions><increment-variable field="var2" delta="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <kill-npc npc-ids="211612 212726 212727"/>
+      </event>
+      <conditions>
+        <variable-below field="var2" value="4"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var2" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <!-- 击杀 var3 组 211574 211599 6 只(var3):未满则计数 +1;已满击杀无路由被忽略。 -->
     <transition source="started" target="started">
-      <event><kill-npc npc-ids="211574 211599"/></event>
-      <conditions><variable-below field="var3" value="6"/></conditions>
-      <actions><increment-variable field="var3" delta="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <kill-npc npc-ids="211574 211599"/>
+      </event>
+      <conditions>
+        <variable-below field="var3" value="6"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var3" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <!-- 击杀 var4 组 212729 4 只(var4):未满则计数 +1;已满击杀无路由被忽略。 -->
     <transition source="started" target="started">
-      <event><kill-npc npc-ids="212729"/></event>
-      <conditions><variable-below field="var4" value="4"/></conditions>
-      <actions><increment-variable field="var4" delta="1"/></actions>
-      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+      <event>
+        <kill-npc npc-ids="212729"/>
+      </event>
+      <conditions>
+        <variable-below field="var4" value="4"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var4" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
     </transition>
     <transition source="started" target="started">
-      <event><talk-to-npc npc-id="204388" dialog-id="31"/></event>
-      <conditions><variable-at-least field="var0" value="4"/><variable-at-least field="var1" value="6"/><variable-at-least field="var2" value="4"/><variable-at-least field="var3" value="6"/><variable-at-least field="var4" value="4"/></conditions>
-      <after-commit><show-quest-dialog dialog-id="1352"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204388" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="4"/>
+        <variable-at-least field="var1" value="6"/>
+        <variable-at-least field="var2" value="4"/>
+        <variable-at-least field="var3" value="6"/>
+        <variable-at-least field="var4" value="4"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
     </transition>
     <transition source="started" target="reward">
-      <event><talk-to-npc npc-id="204388" dialog-id="1009"/></event>
-      <conditions><variable-at-least field="var0" value="4"/><variable-at-least field="var1" value="6"/><variable-at-least field="var2" value="4"/><variable-at-least field="var3" value="6"/><variable-at-least field="var4" value="4"/></conditions>
-      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit>
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204388" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="4"/>
+        <variable-at-least field="var1" value="6"/>
+        <variable-at-least field="var2" value="4"/>
+        <variable-at-least field="var3" value="6"/>
+        <variable-at-least field="var4" value="4"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
     </transition>
     <!-- 奖励:Chaikata (204388) 领取;4 选 1 鞋子 (114100801/114300811/114500773/114600732)。 -->
-    <npc-complete npc-id="204388" source="reward" target="complete" fixed-reward-indices="0 5" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="1"/>
-      <choice dialog-id="9" reward-index="2"/>
-      <choice dialog-id="10" reward-index="3"/>
-      <choice dialog-id="11" reward-index="4"/>
+    <npc-complete npc-id="204388" source="reward" target="complete" fixed-reward-indices="0 5" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

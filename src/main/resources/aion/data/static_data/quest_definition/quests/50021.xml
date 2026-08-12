@@ -31,69 +31,69 @@
   <nodes>
     <!-- 未接取状态 / Unaccepted state -->
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <!-- 已接取, 击杀 0/15 / Accepted, 0/15 kills -->
     <node label="a0" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <!-- 击杀 1/15 / 1/15 kills -->
     <node label="a1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <!-- 击杀 2/15 / 2/15 kills -->
     <node label="a2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <!-- 击杀 3/15 / 3/15 kills -->
     <node label="a3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <!-- 奖励结算 / Reward settlement -->
     <node label="reward" status="REWARD">
-          <var name="var0" value="15"/>
+      <var name="var0" value="15"/>
     </node>
     <!-- 完成 / Complete -->
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
     <!-- 未接取: 查看任务说明(不可接) / Unaccepted: view quest info (not eligible) -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="202549" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="202549" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <!-- 未接取: 未满足接取条件提示 / Unaccepted: not-eligible prompt -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="202549" dialog-id="1007"/>
+        <dialog type="TALK_TO_NPC" npc-id="202549" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <!-- 未接取: 接取任务(条件满足) / Unaccepted: accept quest (eligible) -->
     <transition source="unaccepted" target="a0">
       <event>
-        <talk-to-npc npc-id="202549" dialog-id="1002"/>
+        <dialog type="TALK_TO_NPC" npc-id="202549" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <!-- 未接取: 通过自动接取窗口接取 / Unaccepted: accept via auto window -->
     <transition source="unaccepted" target="a0">
       <event>
-        <talk-to-npc npc-id="202549" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="202549" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -106,7 +106,7 @@
     <!-- 未接取: 关闭/其它对话 / Unaccepted: close or other dialogs -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="202549" dialog-ids="1003 1004 20001"/>
+        <dialog type="TALK_TO_NPC" npc-id="202549" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -115,10 +115,10 @@
     <!-- 未接取: 任务详情列表 / Unaccepted: quest detail list -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="202549" dialog-id="1008"/>
+        <dialog type="TALK_TO_NPC" npc-id="202549" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 击杀递增 0->1 / Kill increment 0->1 -->
@@ -151,35 +151,35 @@
     <!-- 已达 3/3: 查看说明 / 3/3 done: view info -->
     <transition source="a3" target="a3">
       <event>
-        <talk-to-npc npc-id="202549" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="202549" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <!-- 已达 3/3: 申请交付 / 3/3 done: request reward -->
     <transition source="a3" target="reward">
       <event>
-        <talk-to-npc npc-id="202549" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="202549" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <!-- 奖励确认对话框 / Reward confirmation dialog -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="202549" dialog-ids="-1 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="202549" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <!-- 领取奖励并完成 / Grant rewards and complete -->
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="202549" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="202549" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="ITEM" id="188051771" amount="1"/>
@@ -190,7 +190,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

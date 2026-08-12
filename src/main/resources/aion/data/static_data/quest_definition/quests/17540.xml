@@ -22,29 +22,43 @@
     <bit-field name="var0" offset="0" width="3" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="s1" status="START"><var name="var0" value="1"/></node>
-    <node label="s2" status="START"><var name="var0" value="2"/></node>
-    <node label="s3" status="START"><var name="var0" value="3"/></node>
-    <node label="s4" status="START"><var name="var0" value="4"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="4"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="s2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="s3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="s4" status="START">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="4"/>
+    </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <!-- 未接取时对话显示提示。 Unaccepted dialog shows the prompt. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799553" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="799553" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4762"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
     <!-- 接受接取。 Accept the quest. -->
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="799553" dialog-ids="1002 20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="799553" actions="QUEST_ACCEPT_1 QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -57,7 +71,7 @@
     <!-- 简单拒绝。 Simple refuse. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="799553" dialog-id="20001"/>
+        <dialog type="TALK_TO_NPC" npc-id="799553" action="QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -82,32 +96,32 @@
     <!-- 与 Nepion 对话查看提示。 Talk to Nepion for the hint page. -->
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="799563" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="799563" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <!-- 选择动作 1353 播放电影。 Select action 1353 plays the movie. -->
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="799563" dialog-id="1353"/>
+        <dialog type="TALK_TO_NPC" npc-id="799563" action="SELECT2_1"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
       </conditions>
       <after-commit>
         <play-movie movie-id="473"/>
-        <show-quest-dialog dialog-id="1353"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
     <!-- 对话步骤推进到 2。 Dialog step advances to 2. -->
     <transition source="s1" target="s2">
       <event>
-        <talk-to-npc npc-id="799563" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="799563" action="SETPRO2"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
@@ -153,30 +167,30 @@
     <!-- 与 Daidra 对话查看提示。 Talk to Daidra for the hint page. -->
     <transition source="s4" target="s4">
       <event>
-        <talk-to-npc npc-id="799553" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="799553" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="4"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="s4" target="s4">
       <event>
-        <talk-to-npc npc-id="799553" dialog-id="2376"/>
+        <dialog type="TALK_TO_NPC" npc-id="799553" action="SELECT5_1"/>
       </event>
       <conditions>
         <variable-is field="var0" value="4"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="2376"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
       </after-commit>
     </transition>
     <!-- 交收集物后进入领奖。 Turn in the collected item to reach reward. -->
     <transition source="s4" target="reward" priority="0">
       <event>
-        <talk-to-npc npc-id="799553" dialog-id="39"/>
+        <dialog type="TALK_TO_NPC" npc-id="799553" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
         <variable-is field="var0" value="4"/>
@@ -184,30 +198,32 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="10000"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
       </after-commit>
     </transition>
     <!-- 缺收集物时提示。 Missing collectible shows the fail prompt. -->
     <transition source="s4" target="s4" priority="1">
       <event>
-        <talk-to-npc npc-id="799553" dialog-id="39"/>
+        <dialog type="TALK_TO_NPC" npc-id="799553" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
         <variable-is field="var0" value="4"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="10001"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>
     </transition>
     <!-- 奖励 NPC 打开奖励页。 Reward NPC opens the reward page. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="799553" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="799553" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="799553" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="799553" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

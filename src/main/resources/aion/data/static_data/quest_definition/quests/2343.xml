@@ -20,13 +20,13 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -35,12 +35,12 @@
         <use-item item-id="182204134"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <quest-dialog dialog-id="1003"/>
+        <dialog type="QUEST_ACTION" action="QUEST_REFUSE_1"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -48,19 +48,19 @@
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <quest-dialog dialog-id="1002"/>
+        <dialog type="QUEST_ACTION" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <transition source="started" target="complete">
       <event>
-        <talk-to-npc npc-id="700243" dialog="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="700243" action="USE_OBJECT"/>
       </event>
       <conditions>
         <world-npc-is npc-id="212814" expected="false"/>
@@ -80,6 +80,10 @@
         <sync-quest-state mode="COMPLETION"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started"><event><can-act template-id="700243" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700243" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
   </transitions>
 </quest-definition>

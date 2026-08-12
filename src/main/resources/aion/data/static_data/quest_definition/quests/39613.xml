@@ -16,67 +16,67 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="10"/>
+      <var name="var0" value="10"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="10"/>
+      <var name="var0" value="10"/>
     </node>
   </nodes>
   <transitions>
     <!-- 接取/报告 NPC:Sootaling (800927) 与 Malinlin (800928)。start_npc_ids=0,旧引擎经银光商会派系面板接取;DSL 按 39609/36505 先例用 end NPC 挂接取对话。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="800927" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="800927" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="800927" dialog-id="1007"/>
+        <dialog type="TALK_TO_NPC" npc-id="800927" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="800928" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="800928" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="800928" dialog-id="1007"/>
+        <dialog type="TALK_TO_NPC" npc-id="800928" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="800927" dialog-id="1002"/>
+        <dialog type="TALK_TO_NPC" npc-id="800927" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="800927" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="800927" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -88,7 +88,7 @@
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="800927" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="800927" action="SETPRO1"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -100,19 +100,19 @@
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="800928" dialog-id="1002"/>
+        <dialog type="TALK_TO_NPC" npc-id="800928" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="800928" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="800928" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -124,41 +124,65 @@
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="800928" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="800928" action="SETPRO1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <talk-to-npc npc-id="800927" dialog-ids="1003 1004 20001"/>
-      </event>
-      <after-commit>
         <close-dialog/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="800928" dialog-ids="1003 1004 20001"/>
+        <dialog type="TALK_TO_NPC" npc-id="800927" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
       </after-commit>
     </transition>
-    <npc-dialog source="unaccepted" npc-ids="800927 800928" dialog-ids="1008">
-      <show-quest-selection-dialog dialog-id="10" />
-    </npc-dialog>
-
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800928" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800927" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800928" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
     <!-- 进行中对话。 -->
-    <npc-dialog source="started" npc-ids="800927 800928" dialog-ids="31">
-      <show-quest-dialog dialog-id="2375" />
-    </npc-dialog>
-
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800927" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800928" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
     <!-- 击杀管道蠕虫 (230559/230560) 累计 10:var0 计数,priority 1 计数、0 完成进入奖励。 -->
     <transition source="started" target="started" priority="1">
       <event>
@@ -188,19 +212,18 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-
     <!-- 奖励:Sootaling (800927) 领取固定奖励。 -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="800927" dialog-ids="-1 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="800927" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="800927" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="800927" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="3251515"/>
@@ -211,21 +234,21 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 奖励:Malinlin (800928) 领取固定奖励。 -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="800928" dialog-ids="-1 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="800928" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="800928" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="800928" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="EXP" id="0" amount="3251515"/>
@@ -236,7 +259,7 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>

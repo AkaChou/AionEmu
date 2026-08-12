@@ -3,7 +3,8 @@
   <metadata name="Abyss General Knowledge" display-name-id="1104146" min-level="45" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ASMODIANS"/>
-    </races><rewards>
+    </races>
+    <rewards>
       <reward kind="EXP" id="0" amount="8325278"/>
       <reward kind="AP" id="0" amount="250"/>
       <reward kind="ITEM" id="188050932" amount="1"/>
@@ -17,25 +18,25 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="s2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="s3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
   </nodes>
   <transitions>
@@ -54,18 +55,18 @@
     <!-- 第一段对话 (204075)。 First dialogue. -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="204075" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204075" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="s1">
       <event>
-        <talk-to-npc npc-id="204075" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="204075" action="SETPRO1"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -78,18 +79,18 @@
     <!-- 第二段对话 (204210)。 Second dialogue. -->
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="204210" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204210" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s2">
       <event>
-        <talk-to-npc npc-id="204210" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="204210" action="SETPRO2"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
@@ -102,18 +103,18 @@
     <!-- 第三段对话 (204211)。 Third dialogue. -->
     <transition source="s2" target="s2">
       <event>
-        <talk-to-npc npc-id="204211" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204211" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="2"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1693"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
     <transition source="s2" target="s3">
       <event>
-        <talk-to-npc npc-id="204211" dialog-id="10002"/>
+        <dialog type="TALK_TO_NPC" npc-id="204211" action="SETPRO3"/>
       </event>
       <conditions>
         <variable-is field="var0" value="2"/>
@@ -126,18 +127,18 @@
     <!-- 第四段对话 (204208)：进入可结算状态。 Fourth dialogue: ready to settle. -->
     <transition source="s3" target="s3">
       <event>
-        <talk-to-npc npc-id="204208" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204208" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="3"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="2034"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
     <transition source="s3" target="reward">
       <event>
-        <talk-to-npc npc-id="204208" dialog-id="10255"/>
+        <dialog type="TALK_TO_NPC" npc-id="204208" action="SET_SUCCEED"/>
       </event>
       <conditions>
         <variable-is field="var0" value="3"/>
@@ -150,12 +151,14 @@
     <!-- 结算奖励 (204053)。 Claim rewards. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="204053" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="204053" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="204053" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="204053" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

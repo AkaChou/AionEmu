@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="28395" version="1">
   <metadata name="Activate the Orb of Time and Space" display-name-id="1802846" min-level="55" max-level="2147483647" category="QUEST" cannot-share="true">
-    <races><race id="ASMODIANS"/></races>
-    <items><item id="182216156" count="1"/></items>
-    <work-items><item id="182216155" count="1"/></work-items>
+    <races>
+      <race id="ASMODIANS"/>
+    </races>
+    <items>
+      <item id="182216156" count="1"/>
+    </items>
+    <work-items>
+      <item id="182216155" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="2785160"/>
       <reward kind="GOLD" id="0" amount="172800"/>
@@ -16,23 +22,93 @@
       <drop npc-id="246260" item-id="182216156" chance="100" each-member="true" collecting-step="2"/>
     </drops>
   </metadata>
-  <progress><bit-field name="var0" offset="0" width="2" min="0" max="2" persistence="PERSISTENT" scope="LOCAL"/></progress>
+  <progress>
+    <bit-field name="var0" offset="0" width="2" min="0" max="2" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="instance" status="START"><var name="var0" value="1"/></node>
-    <node label="orb" status="START"><var name="var0" value="2"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="2"/></node>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="instance" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="orb" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="2"/>
+    </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
-    <npc-start npc-id="799225" source="unaccepted" target="started" selection-sources="unaccepted started">
-      <accept-actions><give-item item-id="182216155" count="1"/></accept-actions>
-    </npc-start>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="799225" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="instance"><event><enter-world/></event><conditions><world-is world-id="300170000"/><has-item item-id="182216155" count="1"/></conditions><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="instance" target="orb"><event><talk-to-npc npc-id="730275" dialog-id="-1"/></event><conditions><variable-is field="var0" value="1"/><has-item item-id="182216156" count="1"/></conditions><actions><remove-item item-id="182216156" count="1"/><set-variable field="var0" value="2"/></actions><after-commit><play-movie movie-id="443"/><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
-    <transition source="orb" target="reward"><event><talk-to-npc npc-id="835649" dialog-id="-1"/></event><conditions><variable-is field="var0" value="2"/><has-item item-id="182216155" count="1"/></conditions><actions><remove-item item-id="182216155" count="1"/><set-status status="REWARD"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
-    <npc-complete npc-id="835649" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" complete-reward-index="0" preview-dialog-ids="-1 1009" dialog-ids="8..23" finish="SELECTION_DIALOG"/>
+    <dialog type="NPC_START" npc-id="799225" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+      <accept-actions>
+        <give-item item-id="182216155" count="1"/>
+      </accept-actions>
+    </dialog>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799225" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="instance">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="300170000"/>
+        <has-item item-id="182216155" count="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="instance" target="orb">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730275" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+        <has-item item-id="182216156" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182216156" count="1"/>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <play-movie movie-id="443"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="orb" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="835649" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+        <has-item item-id="182216155" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182216155" count="1"/>
+        <set-status status="REWARD"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="835649" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" complete-reward-index="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

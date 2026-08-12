@@ -22,45 +22,46 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
     <!-- 接取：Stein (204814) 提供任务并给予信件 (doc_quest_2667a)。 -->
-    <npc-start npc-id="204814" source="unaccepted" target="started" selection-sources="unaccepted">
+    <dialog type="NPC_START" npc-id="204814" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1">
       <accept-actions>
-        <give-item item-id="182204499" count="1" />
+        <give-item item-id="182204499" count="1"/>
       </accept-actions>
-    </npc-start>
-
+    </dialog>
     <!-- 报告：Paeru (204749) 对话，交付信件。 -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="204749" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204749" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <npc-item-report npc-id="204749" source="started" target="reward" item-id="182204499" required="1"/>
     <transition source="started" target="reward">
       <event>
-        <talk-to-npc npc-id="204749" dialog-id="10255"/>
+        <dialog type="TALK_TO_NPC" npc-id="204749" action="SET_SUCCEED"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="204749" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="204749" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

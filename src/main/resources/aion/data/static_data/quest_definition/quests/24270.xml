@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="24270" version="1">
   <metadata name="[Group] To Steal a Secret" display-name-id="1104007" min-level="45" max-level="2147483647" category="IMPORTANT">
-<races>
+    <races>
       <race id="ASMODIANS"/>
     </races>
-<rewards>
+    <rewards>
       <reward kind="EXP" id="0" amount="6242224"/>
       <reward kind="SELECTABLE_ITEM" id="120001544" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="120001545" amount="1"/>
     </rewards>
-<start-conditions>
+    <start-conditions>
       <condition type="unfinished" quest-id="24250"/>
       <condition type="noacquired" quest-id="24250"/>
     </start-conditions>
@@ -19,24 +19,25 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="204702" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="832820" source="started" target="reward" page="2375"/>
-    <npc-complete npc-id="832820" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-      <choice dialog-id="8" reward-index="1"/>
-      <choice dialog-id="9" reward-index="2"/>
+    <dialog type="NPC_START" npc-id="204702" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_REPORT" npc-id="832820" source="started" target="reward" page="SELECT5"/>
+    <npc-complete npc-id="832820" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

@@ -3,7 +3,8 @@
   <metadata name="The Last Checkpoint" display-name-id="1103142" min-level="45" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ASMODIANS"/>
-    </races><rewards>
+    </races>
+    <rewards>
       <reward kind="EXP" id="0" amount="8325278"/>
       <reward kind="ITEM" id="188050927" amount="1"/>
       <reward kind="ITEM" id="164000079" amount="10"/>
@@ -17,43 +18,43 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
-          <var name="var0" value="0"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="s1" status="START">
-          <var name="var0" value="1"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="s2" status="START">
-          <var name="var0" value="2"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="s3" status="START">
-          <var name="var0" value="3"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="s4" status="START">
-          <var name="var0" value="4"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="s5" status="START">
-          <var name="var0" value="5"/>
+      <var name="var0" value="5"/>
     </node>
     <node label="s6" status="START">
-          <var name="var0" value="6"/>
+      <var name="var0" value="6"/>
     </node>
     <node label="s7" status="START">
-          <var name="var0" value="7"/>
+      <var name="var0" value="7"/>
     </node>
     <node label="s8" status="START">
-          <var name="var0" value="8"/>
+      <var name="var0" value="8"/>
     </node>
     <node label="s9" status="START">
-          <var name="var0" value="9"/>
+      <var name="var0" value="9"/>
     </node>
     <node label="reward" status="REWARD">
-          <var name="var0" value="8"/>
+      <var name="var0" value="8"/>
     </node>
     <node label="complete" status="COMPLETE">
-          <var name="var0" value="8"/>
+      <var name="var0" value="8"/>
     </node>
   </nodes>
   <transitions>
@@ -72,18 +73,18 @@
     <!-- Aegir (204301): 提示前往 Yornduf。 Prompt to visit Yornduf. -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="204301" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204301" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="s1">
       <event>
-        <talk-to-npc npc-id="204301" dialog-id="10000"/>
+        <dialog type="TALK_TO_NPC" npc-id="204301" action="SETPRO1"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -96,31 +97,31 @@
     <!-- Yornduf (204319): 首次飞行测试。 First flight test attempt. -->
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="204319" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204319" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="204319" dialog-id="1354"/>
+        <dialog type="TALK_TO_NPC" npc-id="204319" action="SELECT2_1_1"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
       </conditions>
       <after-commit>
         <play-movie movie-id="89"/>
-        <show-quest-dialog dialog-id="1354"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
       </after-commit>
     </transition>
     <!-- 开始 300 秒飞行计时。 Start the 300 second flight countdown. -->
     <transition source="s1" target="s2">
       <event>
-        <talk-to-npc npc-id="204319" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="204319" action="SETPRO2"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
@@ -362,30 +363,30 @@
     <!-- Yornduf (204319): 重试分支，重新播放电影并重启计时器。 Retry branch: replay movie and restart the countdown. -->
     <transition source="s9" target="s9">
       <event>
-        <talk-to-npc npc-id="204319" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204319" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="9"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="3057"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT7"/>
       </after-commit>
     </transition>
     <transition source="s9" target="s9">
       <event>
-        <talk-to-npc npc-id="204319" dialog-id="1354"/>
+        <dialog type="TALK_TO_NPC" npc-id="204319" action="SELECT2_1_1"/>
       </event>
       <conditions>
         <variable-is field="var0" value="9"/>
       </conditions>
       <after-commit>
         <play-movie movie-id="89"/>
-        <show-quest-dialog dialog-id="1354"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
       </after-commit>
     </transition>
     <transition source="s9" target="s2">
       <event>
-        <talk-to-npc npc-id="204319" dialog-id="10001"/>
+        <dialog type="TALK_TO_NPC" npc-id="204319" action="SETPRO2"/>
       </event>
       <conditions>
         <variable-is field="var0" value="9"/>
@@ -400,18 +401,18 @@
     <!-- Yornduf (204319): 全部飞行环通过，可结算。 All rings passed, ready to settle. -->
     <transition source="s8" target="s8">
       <event>
-        <talk-to-npc npc-id="204319" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="204319" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="8"/>
       </conditions>
       <after-commit>
-        <show-quest-dialog dialog-id="1693"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
     <transition source="s8" target="reward">
       <event>
-        <talk-to-npc npc-id="204319" dialog-id="10255"/>
+        <dialog type="TALK_TO_NPC" npc-id="204319" action="SET_SUCCEED"/>
       </event>
       <conditions>
         <variable-is field="var0" value="8"/>
@@ -424,12 +425,14 @@
     <!-- Aegir (204301): 结算奖励。 Claim rewards. -->
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="204301" dialog-id="-1"/>
+        <dialog type="TALK_TO_NPC" npc-id="204301" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="10002"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="204301" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="204301" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>
