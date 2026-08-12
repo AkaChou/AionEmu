@@ -32,6 +32,7 @@
   <transitions>
     <npc-start npc-id="804901" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
     <!-- 702749:交互物件(USE_OBJECT),无对话逻辑。 -->
+    <transition source="started" target="started"><event><can-act template-id="702749" action-type="ACTION_ITEM_USE"/></event></transition>
     <transition source="started" target="started"><event><talk-to-npc npc-id="702749" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
     <!-- 804915:31 显示 1011;CHECK_COLLECTED_ITEMS(39) 检查 6 个 182215700 进 REWARD,不足显示 10001。 -->
     <transition source="started" target="started"><event><talk-to-npc npc-id="804915" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
