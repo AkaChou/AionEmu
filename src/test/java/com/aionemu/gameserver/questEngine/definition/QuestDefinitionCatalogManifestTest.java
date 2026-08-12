@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -8,7 +9,11 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -32,6 +37,7 @@ class QuestDefinitionCatalogManifestTest {
 		assertTrue(catalog.findExecutable(11143).orElseThrow().definition().transitions().stream()
 			.anyMatch(transition -> transition.event() instanceof QuestEvent.CanAct canAct
 				&& canAct.templateId() == 700909));
+		assertRepeatStartDialogs(catalog);
 	}
 
 	@Test
@@ -113,5 +119,53 @@ class QuestDefinitionCatalogManifestTest {
 
 	private static ByteArrayInputStream bytes(String xml) {
 		return new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+	}
+
+	private static void assertRepeatStartDialogs(QuestCatalog catalog) {
+		int checked = 0;
+		for (CompiledQuestDefinition compiled : catalog.executables()) {
+			QuestDefinition definition = compiled.definition();
+			if (definition.metadata().repeatPolicy().maxRepeatCount() <= 1) {
+				continue;
+			}
+			Map<String, QuestStatus> statuses = new HashMap<>();
+			for (QuestNode node : definition.nodes()) {
+				statuses.put(node.label(), node.projection().status());
+			}
+			Set<Integer> startNpcs = definition.transitions().stream()
+				.filter(transition -> statuses.get(transition.sourceNode()) == QuestStatus.NONE)
+				.filter(transition -> statuses.get(transition.targetNode()) == QuestStatus.START)
+				.filter(transition -> transition.conditions().contains(new QuestCondition.StartEligible()))
+				.map(QuestTransition::event)
+				.filter(QuestEvent.TalkToNpc.class::isInstance)
+				.map(QuestEvent.TalkToNpc.class::cast)
+				.filter(talk -> talk.dialogId() != null && (talk.dialogId() == 1002 || talk.dialogId() == 20000))
+				.map(QuestEvent.TalkToNpc::npcId)
+				.collect(Collectors.toSet());
+			List<String> completeNodes = definition.nodes().stream()
+				.filter(node -> node.projection().status() == QuestStatus.COMPLETE)
+				.map(QuestNode::label).toList();
+			for (QuestTransition opening : definition.transitions()) {
+				if (statuses.get(opening.sourceNode()) != QuestStatus.NONE
+						|| statuses.get(opening.targetNode()) != QuestStatus.NONE
+						|| !(opening.event() instanceof QuestEvent.TalkToNpc talk)
+						|| !startNpcs.contains(talk.npcId()) || talk.dialogId() == null
+						|| (talk.dialogId() != 31 && talk.dialogId() != 1007)) {
+					continue;
+				}
+				for (String complete : completeNodes) {
+					checked++;
+					assertTrue(definition.transitions().stream().anyMatch(transition ->
+						complete.equals(transition.sourceNode())
+							&& complete.equals(transition.targetNode())
+							&& transition.event().equals(opening.event())
+							&& transition.conditions().contains(new QuestCondition.StartEligible())
+							&& transition.afterCommit().equals(opening.afterCommit())),
+						"missing repeat dialog route: quest=" + compiled.id() + " source=" + complete
+							+ " npc=" + talk.npcId() + " dialog=" + talk.dialogId());
+				}
+			}
+		}
+		assertTrue(checked > 0, "repeat dialog audit must inspect production routes");
 	}
 }

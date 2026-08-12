@@ -18,6 +18,7 @@ public final class QuestDefinitionCompiler {
 
 	public static CompiledQuestDefinition compile(QuestDefinition definition) {
 		definition = restoreStartEligibilityContract(Objects.requireNonNull(definition, "definition"));
+		definition = restoreRepeatStartDialogContract(definition);
 		definition = restoreRewardPreviewContract(definition);
 		if (definition.nodes().isEmpty()) {
 			fail("NO_NODES", "executable definition has no nodes");
@@ -220,6 +221,70 @@ public final class QuestDefinitionCompiler {
 		}
 		return new QuestDefinition(definition.id(), definition.version(), definition.metadata(),
 			definition.progressLayout(), definition.nodes(), normalized);
+	}
+
+	/** Restores the 31 -> 1007 dialog handshake before a completed quest is accepted again. */
+	private static QuestDefinition restoreRepeatStartDialogContract(QuestDefinition definition) {
+		if (definition.metadata().repeatPolicy().maxRepeatCount() <= 1) {
+			return definition;
+		}
+		Map<String, QuestStatus> statuses = new HashMap<>();
+		for (QuestNode node : definition.nodes()) {
+			statuses.put(node.label(), node.projection().status());
+		}
+		List<String> completeNodes = definition.nodes().stream()
+			.filter(node -> node.projection().status() == QuestStatus.COMPLETE)
+			.map(QuestNode::label).toList();
+		if (completeNodes.isEmpty()) {
+			return definition;
+		}
+		Set<Integer> startNpcs = definition.transitions().stream()
+			.filter(transition -> statuses.get(transition.sourceNode()) == QuestStatus.NONE)
+			.filter(transition -> statuses.get(transition.targetNode()) == QuestStatus.START)
+			.filter(transition -> transition.conditions().stream()
+				.anyMatch(QuestCondition.StartEligible.class::isInstance))
+			.map(QuestTransition::event)
+			.filter(QuestEvent.TalkToNpc.class::isInstance)
+			.map(QuestEvent.TalkToNpc.class::cast)
+			.filter(talk -> talk.dialogId() != null && (talk.dialogId() == 1002 || talk.dialogId() == 20000))
+			.map(QuestEvent.TalkToNpc::npcId)
+			.collect(java.util.stream.Collectors.toUnmodifiableSet());
+		if (startNpcs.isEmpty()) {
+			return definition;
+		}
+
+		List<QuestTransition> normalized = new ArrayList<>();
+		for (QuestTransition transition : definition.transitions()) {
+			normalized.add(transition);
+			if (statuses.get(transition.sourceNode()) != QuestStatus.NONE
+					|| statuses.get(transition.targetNode()) != QuestStatus.NONE
+					|| !(transition.event() instanceof QuestEvent.TalkToNpc talk)
+					|| !startNpcs.contains(talk.npcId()) || talk.dialogId() == null
+					|| (talk.dialogId() != 31 && talk.dialogId() != 1007)) {
+				continue;
+			}
+			for (String complete : completeNodes) {
+				if (hasDialogRoute(definition, complete, talk)) {
+					continue;
+				}
+				List<QuestCondition> conditions = new ArrayList<>(transition.conditions());
+				if (conditions.stream().noneMatch(QuestCondition.StartEligible.class::isInstance)) {
+					conditions.add(new QuestCondition.StartEligible());
+				}
+				normalized.add(new QuestTransition(transition.event(), conditions, transition.actions(), complete,
+					transition.afterCommit(), transition.priority(), complete));
+			}
+		}
+		if (normalized.size() == definition.transitions().size()) {
+			return definition;
+		}
+		return new QuestDefinition(definition.id(), definition.version(), definition.metadata(),
+			definition.progressLayout(), definition.nodes(), normalized);
+	}
+
+	private static boolean hasDialogRoute(QuestDefinition definition, String source, QuestEvent.TalkToNpc event) {
+		return definition.transitions().stream().anyMatch(transition -> source.equals(transition.sourceNode())
+			&& QuestEvent.matches(transition.event(), event));
 	}
 
 	/**
