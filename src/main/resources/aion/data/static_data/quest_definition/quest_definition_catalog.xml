@@ -4086,7 +4086,7 @@
   <definition id="25596" resource="aion/data/static_data/quest_definition/quests/25596.xml" mode="EXECUTABLE" />
   <definition id="25601" resource="aion/data/static_data/quest_definition/quests/25601.xml" mode="EXECUTABLE" />
   <definition id="25602" resource="aion/data/static_data/quest_definition/quests/25602.xml" mode="EXECUTABLE" />
-  <definition id="25604" resource="aion/data/static_data/quest_definition/quests/25604.xml" mode="METADATA_ONLY" />
+  <definition id="25604" resource="aion/data/static_data/quest_definition/quests/25604.xml" mode="EXECUTABLE" />
   <definition id="25605" resource="aion/data/static_data/quest_definition/quests/25605.xml" mode="EXECUTABLE" />
   <definition id="25606" resource="aion/data/static_data/quest_definition/quests/25606.xml" mode="EXECUTABLE" />
   <definition id="25608" resource="aion/data/static_data/quest_definition/quests/25608.xml" mode="METADATA_ONLY" />
