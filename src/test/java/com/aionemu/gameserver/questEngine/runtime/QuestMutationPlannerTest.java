@@ -4,6 +4,7 @@ import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
+import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
@@ -380,5 +381,40 @@ class QuestMutationPlannerTest {
 			.on(new QuestEvent.TalkToNpc(700001)).from("started")
 			.then(removeAllItem(ITEM_ID)).goTo("reward")
 			.compile();
+	}
+
+	@Test
+	void selfLoopIncrementSurvivesTargetProjection() {
+		// 同节点自环 + increment(计数任务,如 18972):target 投影不得覆盖 action 的变量修改。
+		CompiledQuestDefinition definition = QuestDsl.quest(QUEST_ID + 20)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.on(new QuestEvent.KillNpc(235824)).from("started")
+			.when(new QuestCondition.VariableBelow("var0", 6))
+			.then(QuestDsl.incrementVariable("var0", 1)).goTo("started")
+			.compile();
+		var transition = definition.definition().transitions().get(0);
+		QuestSnapshot snapshot = new QuestSnapshot(7, QUEST_ID + 20, QuestStatus.START, 0, Map.of());
+		QuestMutationPlan plan = QuestMutationPlanner.plan(definition, snapshot,
+			new QuestEvent.KillNpc(235824), transition).orElseThrow();
+
+		assertEquals(1, plan.nextPackedVariables());
+	}
+
+	@Test
+	void crossNodeProjectionStillAppliesWhenActionDoesNotTouchField() {
+		// 跨节点推进无 action:target 节点声明值仍是权威写入(putIfAbsent 填充未声明字段)。
+		CompiledQuestDefinition definition = QuestDsl.quest(QUEST_ID + 21)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("s1", project(QuestStatus.START, vars("var0", 1)))
+			.on(new QuestEvent.TalkToNpc(203851, 10000)).from("started").goTo("s1")
+			.compile();
+		var transition = definition.definition().transitions().get(0);
+		QuestSnapshot snapshot = new QuestSnapshot(7, QUEST_ID + 21, QuestStatus.START, 0, Map.of());
+		QuestMutationPlan plan = QuestMutationPlanner.plan(definition, snapshot,
+			new QuestEvent.TalkToNpc(203851, 10000), transition).orElseThrow();
+
+		assertEquals(1, plan.nextPackedVariables());
 	}
 }

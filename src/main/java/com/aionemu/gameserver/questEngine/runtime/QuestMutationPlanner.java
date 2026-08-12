@@ -15,6 +15,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,7 @@ public final class QuestMutationPlanner {
 		appendFinalRepeatRewards(definition, snapshot, actions);
 		appendAbandonWorkItemCleanup(definition, event, transition.event(), actions);
 		Map<String, Integer> variables = new LinkedHashMap<>(layout.unpack(snapshot.packedVariables()));
+		Set<String> actionTouchedFields = new HashSet<>();
 		Map<QuestRewardKind, Long> plannedDebits = new LinkedHashMap<>();
 		Map<Integer, Integer> unequippedItems = new LinkedHashMap<>();
 		Map<Integer, Integer> returnedItemRemovals = new LinkedHashMap<>();
@@ -117,9 +119,14 @@ public final class QuestMutationPlanner {
 				}
 				case QuestAction.GiveItem ignored -> {
 				}
-				case QuestAction.SetVariable set -> variables.put(set.field(), set.value());
-				case QuestAction.IncrementVariable inc ->
+				case QuestAction.SetVariable set -> {
+					variables.put(set.field(), set.value());
+					actionTouchedFields.add(set.field());
+				}
+				case QuestAction.IncrementVariable inc -> {
 					variables.merge(inc.field(), inc.delta(), Integer::sum);
+					actionTouchedFields.add(inc.field());
+				}
 				case QuestAction.SetStatus ignored -> {
 				}
 				case QuestAction.GrantReward ignored -> {
@@ -160,7 +167,12 @@ public final class QuestMutationPlanner {
 				}
 			}
 		}
-		variables.putAll(projection.variables());
+		// Target projection is authoritative for fields the actions did not touch
+		// (cross-node progress), but must never overwrite an explicit set/increment
+		// by the transition itself (self-loop counting).
+		Map<String, Integer> projected = new LinkedHashMap<>(projection.variables());
+		actionTouchedFields.forEach(projected::remove);
+		variables.putAll(projected);
 		int packed = layout.pack(variables);
 		var status = projection.status();
 		for (QuestAction action : actions) {
