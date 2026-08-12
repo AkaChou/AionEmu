@@ -11,26 +11,75 @@
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="2" width="3" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var2" offset="5" width="2" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="3" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="3" width="3" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/><var name="var1" value="0"/><var name="var2" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="k1" status="START"><var name="var0" value="1"/></node>
-    <node label="k2" status="START"><var name="var0" value="2"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="3"/></node>
-    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/><var name="var1" value="0"/></node>
+    <node label="started" status="START"><var name="var0" value="0"/><var name="var1" value="0"/></node>
+    <node label="k1" status="START"><var name="var0" value="1"/><var name="var1" value="5"/></node>
+    <node label="k2" status="START"><var name="var0" value="2"/><var name="var1" value="5"/></node>
+    <node label="k3" status="START"><var name="var0" value="3"/><var name="var1" value="5"/></node>
+    <node label="k4" status="START"><var name="var0" value="4"/><var name="var1" value="5"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="5"/><var name="var1" value="5"/></node>
+    <node label="complete" status="COMPLETE"><var name="var0" value="0"/><var name="var1" value="0"/></node>
   </nodes>
   <transitions>
     <transition source="unaccepted" target="started"><event><level-up/></event><conditions><start-eligible/><quests-finished quest-ids="16822"/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="806284" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="806284" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="started" priority="1"><event><kill-npc npc-ids="220607 220608 220609 220610 220611 220612"/></event><conditions><variable-is field="var0" value="0"/><variable-below field="var1" value="4"/></conditions><actions><increment-variable field="var1" delta="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
-    <transition source="started" target="k1" priority="0"><event><kill-npc npc-ids="220607 220608 220609 220610 220611 220612"/></event><conditions><variable-is field="var0" value="0"/><variable-at-least field="var1" value="4"/></conditions><actions><increment-variable field="var1" delta="1"/><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><play-movie movie-id="939"/></after-commit></transition>
-    <transition source="k1" target="k2"><event><kill-npc npc-id="220593"/></event><conditions><variable-is field="var0" value="1"/></conditions><actions><set-variable field="var0" value="2"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><play-movie movie-id="940"/></after-commit></transition>
-    <npc-report npc-id="806284" source="k2" target="reward" page="1352"/>
-    <npc-complete npc-id="806284" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <transition source="unaccepted" target="started"><event><zone-mission-end/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="4"/></after-commit></transition>
+
+    <!-- 击杀 Event_Guard 累积计数(共 4 个)。Killing Event Guards accumulates the kill count (4 total). -->
+    <transition source="started" target="started" priority="1">
+      <event><kill-npc npc-ids="220607 220608 220610 220611"/></event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+        <variable-below field="var1" value="5"/>
+      </conditions>
+      <actions><increment-variable field="var1" delta="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="started" target="k1" priority="0">
+      <event><kill-npc npc-ids="220607 220608 220610 220611"/></event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+        <variable-at-least field="var1" value="4"/>
+      </conditions>
+      <actions><set-variable field="var1" value="5"/><set-variable field="var0" value="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <!-- 第 2 步:进入感官区域 a 播放过场 939。Step 2: entering sensory area a plays cutscene 939. -->
+    <transition source="k1" target="k2">
+      <event><enter-zone zone="IDETERNITY_02_Q16823_A_301550000"/></event>
+      <conditions><variable-is field="var0" value="1"/></conditions>
+      <actions><set-variable field="var0" value="2"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><play-movie movie-id="939"/></after-commit>
+    </transition>
+    <!-- 第 3 步:与 Viola(806284)对话。Step 3: talk to Viola. -->
+    <transition source="k2" target="k2"><event><talk-to-npc npc-id="806284" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1694"/></after-commit></transition>
+    <transition source="k2" target="k2"><event><talk-to-npc npc-id="806284" dialog-id="1695"/></event><after-commit><show-quest-dialog dialog-id="1695"/></after-commit></transition>
+    <transition source="k2" target="k3">
+      <event><talk-to-npc npc-id="806284" dialog-id="10000"/></event>
+      <conditions><variable-is field="var0" value="2"/></conditions>
+      <actions><set-variable field="var0" value="3"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+    <!-- 第 4 步:进入感官区域 b。Step 4: entering sensory area b. -->
+    <transition source="k3" target="k4">
+      <event><enter-zone zone="IDETERNITY_02_Q16823_B_301550000"/></event>
+      <conditions><variable-is field="var0" value="3"/></conditions>
+      <actions><set-variable field="var0" value="4"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <!-- 第 5 步:击杀 220540 播放过场 940 后进入领奖。Step 5: killing 220540 plays cutscene 940 and enters reward. -->
+    <transition source="k4" target="reward">
+      <event><kill-npc npc-id="220540"/></event>
+      <conditions><variable-is field="var0" value="4"/></conditions>
+      <actions><set-variable field="var0" value="5"/></actions>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><play-movie movie-id="940"/></after-commit>
+    </transition>
+
+    <!-- 领奖对话:806285。Claim-reward dialog. -->
+    <transition source="reward" target="reward"><event><talk-to-npc npc-id="806285" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
+    <npc-complete npc-id="806285" source="reward" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

@@ -69,6 +69,12 @@
       <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit>
     </transition>
 
+    <!-- 700183 Morheim Abyss Gate:仅注册交互,无对话逻辑。 -->
+    <transition source="started" target="started">
+      <event><talk-to-npc npc-id="700183" dialog-id="-1"/></event>
+      <after-commit><close-dialog/></after-commit>
+    </transition>
+
     <transition source="started" target="started">
       <event><talk-to-npc npc-id="204301" dialog-id="31"/></event>
       <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>

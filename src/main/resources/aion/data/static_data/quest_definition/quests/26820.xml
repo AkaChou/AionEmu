@@ -31,6 +31,8 @@
     </node>
   </nodes>
   <transitions>
+    <!-- 806075 启动入口(旧 handler 仅 addOnQuestStart)。Start entry via 806075. -->
+    <npc-start npc-id="806075" source="unaccepted" target="started" selection-sources="unaccepted started"/>
     <!-- 未接取时与 Corto 对话显示提示。Unaccepted dialog with Corto shows the prompt. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
