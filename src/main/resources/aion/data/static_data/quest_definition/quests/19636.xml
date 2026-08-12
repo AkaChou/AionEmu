@@ -80,7 +80,7 @@
     </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="205304" source="unaccepted" target="started" selection-sources="unaccepted"/>
+    <npc-start npc-id="205304" source="unaccepted" target="started" selection-sources="unaccepted" start-dialog-id="4762"/>
     <counter-grid>
       <dimension field="var0" required="10" npc-ids="214263 214264 214265 214266"/>
     </counter-grid>
