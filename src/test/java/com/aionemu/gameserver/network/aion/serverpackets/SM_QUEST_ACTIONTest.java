@@ -32,4 +32,15 @@ class SM_QUEST_ACTIONTest {
 		assertArrayEquals(new byte[] { 2, 0x78, 0x56, 0x34, 0x12, 4, 0,
 			(byte) 0x89, 0x67, 0x45, 0x23, 0, 0 }, buffer.array());
 	}
+
+	@Test
+	void removeQuestUsesTheClientListRemovalAction() {
+		SM_QUEST_ACTION packet = SM_QUEST_ACTION.removeQuestFromClientList(0x12345678);
+		ByteBuffer buffer = ByteBuffer.allocate(9);
+		packet.setBuf(buffer);
+
+		packet.writeImpl(null);
+
+		assertArrayEquals(new byte[] { 3, 0x78, 0x56, 0x34, 0x12, 0, 0, 0, 0 }, buffer.array());
+	}
 }

@@ -32,6 +32,11 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 		return new SM_QUEST_ACTION(questId, status, step);
 	}
 
+	/** Creates the protocol action that removes a quest from the client's active quest list. */
+	public static SM_QUEST_ACTION removeQuestFromClientList(int questId) {
+		return new SM_QUEST_ACTION(questId);
+	}
+
 	/**
 	 * 使用给定参数构造 SM_QUEST_ACTION 包。
 	 * Creates a SM_QUEST_ACTION packet with the given parameters.

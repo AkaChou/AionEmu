@@ -14,6 +14,7 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_COMPLETED_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
@@ -109,13 +110,17 @@ class Quest1112ProductionFlowTest {
 			assertEquals(List.of(
 				new QuestAction.GrantReward("EXP", 0, 1375, QuestRewardAmountMode.QUEST_BASE),
 				new QuestAction.GrantReward("ITEM", 169300002, 30)), fixture.durableRewards());
-			assertEquals(List.of(SM_STATS_INFO.class, SM_QUEST_ACTION.class, SM_DIALOG_WINDOW.class),
+			assertEquals(List.of(SM_STATS_INFO.class, SM_QUEST_ACTION.class, SM_QUEST_ACTION.class,
+				SM_QUEST_COMPLETED_LIST.class, SM_DIALOG_WINDOW.class),
 				fixture.packetTypes(), "dialog " + dialogId);
 			assertQuestAction(fixture.packets().get(1), QuestStatus.COMPLETE, 0);
-			assertDialog(fixture.packets().get(2), NPC_OBJECT_ID, 10, 0);
+			assertQuestRemoval(fixture.packets().get(2), QUEST_ID);
+			assertCompletedQuestList(fixture.packets().get(3), QUEST_ID);
+			assertDialog(fixture.packets().get(4), NPC_OBJECT_ID, 10, 0);
 			assertOrdered(fixture.calls(), "currency.apply", "reward.apply", "state.persist", "jdbc.commit",
 				"currency.afterCommit", "reward.afterCommit", "state.publish", "packet:SM_STATS_INFO",
-				"packet:SM_QUEST_ACTION", "zone.refresh", "nearby.refresh", "level.refresh",
+				"packet:SM_QUEST_ACTION", "packet:SM_QUEST_ACTION", "packet:SM_QUEST_COMPLETED_LIST",
+				"zone.refresh", "nearby.refresh", "level.refresh",
 				"packet:SM_DIALOG_WINDOW");
 			assertEquals(List.of(NPC_OBJECT_ID), fixture.resolvedInteractionObjects());
 			assertTrue(fixture.auditEvents().isEmpty());
@@ -133,11 +138,14 @@ class Quest1112ProductionFlowTest {
 		assertEquals(QuestStatus.COMPLETE, fixture.state().getStatus());
 		assertEquals(1, fixture.currency.applyCount);
 		assertEquals(1, fixture.rewards.applyCount);
-		assertEquals(List.of(SM_QUEST_ACTION.class, SM_DIALOG_WINDOW.class), fixture.packetTypes());
+		assertEquals(List.of(SM_QUEST_ACTION.class, SM_QUEST_ACTION.class, SM_QUEST_COMPLETED_LIST.class,
+			SM_DIALOG_WINDOW.class), fixture.packetTypes());
 		assertQuestAction(fixture.packets().get(0), QuestStatus.COMPLETE, 0);
-		assertDialog(fixture.packets().get(1), NPC_OBJECT_ID, 10, 0);
+		assertQuestRemoval(fixture.packets().get(1), QUEST_ID);
+		assertCompletedQuestList(fixture.packets().get(2), QUEST_ID);
+		assertDialog(fixture.packets().get(3), NPC_OBJECT_ID, 10, 0);
 		assertOrdered(fixture.calls(), "jdbc.commit", "state.publish", "stats.fail",
-			"packet:SM_QUEST_ACTION", "packet:SM_DIALOG_WINDOW");
+			"packet:SM_QUEST_ACTION", "packet:SM_QUEST_COMPLETED_LIST", "packet:SM_DIALOG_WINDOW");
 		QuestAuditEvent audit = fixture.auditEvents().getFirst();
 		assertEquals(QuestRouteResult.HANDLED, audit.result());
 		assertEquals(QuestFailureStage.AFTER_COMMIT, audit.failureStage());
@@ -277,6 +285,21 @@ class Quest1112ProductionFlowTest {
 		assertEquals(packed, intField(SM_QUEST_ACTION.class, action, "step"));
 	}
 
+	private static void assertQuestRemoval(AionServerPacket packet, int questId) throws Exception {
+		SM_QUEST_ACTION action = assertInstanceOf(SM_QUEST_ACTION.class, packet);
+		assertEquals(3, intField(SM_QUEST_ACTION.class, action, "action"));
+		assertEquals(questId, intField(SM_QUEST_ACTION.class, action, "questId"));
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void assertCompletedQuestList(AionServerPacket packet, int questId) throws Exception {
+		SM_QUEST_COMPLETED_LIST completed = assertInstanceOf(SM_QUEST_COMPLETED_LIST.class, packet);
+		Field field = SM_QUEST_COMPLETED_LIST.class.getDeclaredField("allQuests");
+		field.setAccessible(true);
+		List<QuestState> states = (List<QuestState>) field.get(completed);
+		assertEquals(List.of(questId), states.stream().map(QuestState::getQuestId).toList());
+	}
+
 	private static void assertDialog(AionServerPacket packet, int objectId, int dialogId, int questId)
 			throws Exception {
 		SM_DIALOG_WINDOW dialog = assertInstanceOf(SM_DIALOG_WINDOW.class, packet);
@@ -288,7 +311,10 @@ class Quest1112ProductionFlowTest {
 	private static void assertOrdered(List<String> calls, String... expected) {
 		int previous = -1;
 		for (String call : expected) {
-			int index = calls.indexOf(call);
+			int index = calls.subList(previous + 1, calls.size()).indexOf(call);
+			if (index >= 0) {
+				index += previous + 1;
+			}
 			assertTrue(index > previous, () -> call + " is out of order in " + calls);
 			previous = index;
 		}

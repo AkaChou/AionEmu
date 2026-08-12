@@ -7,6 +7,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_COMPLETED_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
@@ -72,6 +73,11 @@ public final class PlayerQuestStateSyncPort implements QuestStateSyncPort {
 			? SM_QUEST_ACTION.addQuest(plan.questId(), plan.nextStatus(), plan.nextPackedVariables())
 			: SM_QUEST_ACTION.updateQuest(plan.questId(), plan.nextStatus(), plan.nextPackedVariables());
 		PacketSendUtility.sendPacket(player, statePacket);
+		if (mode == QuestStateSyncMode.COMPLETION) {
+			PacketSendUtility.sendPacket(player, SM_QUEST_ACTION.removeQuestFromClientList(plan.questId()));
+			PacketSendUtility.sendPacket(player,
+				new SM_QUEST_COMPLETED_LIST(player.getQuestStateList().getAllFinishedQuests()));
+		}
 		VisibleObject interaction = snapshot.interactionObjectId() == 0 ? null
 			: interactionObjects.apply(snapshot.interactionObjectId());
 		QuestEnv env = new QuestEnv(interaction, player, plan.questId(), 0);

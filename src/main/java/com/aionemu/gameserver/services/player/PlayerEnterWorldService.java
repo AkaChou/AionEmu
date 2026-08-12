@@ -100,6 +100,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_SPAWN;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_STATE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PRICES;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_COMPLETED_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUIT_RESPONSE;
@@ -395,6 +396,11 @@ public final class PlayerEnterWorldService {
 				}
 			}
 			// SM_QUEST_COMPLETED_LIST
+			for (QuestState completedQuest : completeQuestList) {
+				if (completedQuest.getStatus() == QuestStatus.COMPLETE) {
+					client.sendPacket(SM_QUEST_ACTION.removeQuestFromClientList(completedQuest.getQuestId()));
+				}
+			}
 			client.sendPacket(new SM_QUEST_COMPLETED_LIST(completeQuestList));
 
 			// SM_QUEST_LIST
