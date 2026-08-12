@@ -197,6 +197,7 @@
     <xs:attribute name="source" use="required"/>
     <xs:attribute name="target" use="required"/>
     <xs:attribute name="selection-sources"/>
+    <xs:attribute name="start-dialog-id" type="xs:int"/>
   </xs:complexType>
 
   <xs:complexType name="counter-type">

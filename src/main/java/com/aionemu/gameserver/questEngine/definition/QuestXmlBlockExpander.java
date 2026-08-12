@@ -101,6 +101,11 @@ final class QuestXmlBlockExpander {
 				"node " + target + " must project START");
 		}
 		int npcId = positiveInteger(context, block, "npc-start", "npc-id");
+		// NONE 状态首次开启对话时下发的页。默认 1011;部分 quest (如 luna 80875/80876) 旧版
+		// start_dialog_id 为 4762, 客户端只有该页的 html, 必须显式指定才能命中客户端资源。
+		String startDialogAttr = attribute(block, "start-dialog-id");
+		int startDialogId = startDialogAttr.isBlank() ? 1011
+			: positiveInteger(context, block, "npc-start", "start-dialog-id");
 		List<String> selectionSources = block.hasAttribute("selection-sources")
 			? tokens(context, block, "npc-start", "selection-sources", true) : List.of();
 		for (String selectionSource : selectionSources) {
@@ -122,7 +127,7 @@ final class QuestXmlBlockExpander {
 
 		List<QuestTransition> result = new ArrayList<>();
 		result.add(talk(npcId, 31, List.of(), List.of(), source, source, null,
-			List.of(new AfterCommitAction.ShowQuestDialog(1011))));
+			List.of(new AfterCommitAction.ShowQuestDialog(startDialogId))));
 		result.add(talk(npcId, 1007, List.of(), List.of(), source, source, null,
 			List.of(new AfterCommitAction.ShowQuestDialog(4))));
 		List<QuestCondition> acceptConditions = List.of(new QuestCondition.StartEligible());

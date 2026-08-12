@@ -593,7 +593,7 @@
     </node>
   </nodes>
   <transitions>
-    <npc-start npc-id="800327" source="unaccepted" target="a0b0c0" selection-sources="unaccepted a0b0c0"/>
+    <npc-start npc-id="800327" source="unaccepted" target="a0b0c0" selection-sources="unaccepted a0b0c0" start-dialog-id="4762"/>
     <transition source="a0b0c0" target="a0b1c0">
       <event>
         <kill-npc npc-id="219240"/>

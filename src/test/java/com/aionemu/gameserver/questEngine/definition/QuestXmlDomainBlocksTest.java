@@ -41,6 +41,27 @@ class QuestXmlDomainBlocksTest {
 	}
 
 	@Test
+	void npcStartHonorsExplicitStartDialogId() {
+		// 部分 quest (如 luna 80875/80876) 客户端 html 只有 page 4762, 旧版 start_dialog_id 即 4762。
+		// npc-start 必须能显式指定, 否则下发默认 1011 会让客户端找不到页面 (load fail)。
+		String block = """
+			<npc-start npc-id="834166" source="unaccepted" target="started"
+			    selection-sources="unaccepted started" start-dialog-id="4762"/>
+			""";
+		String expanded = """
+			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="4762"/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
+			<transition source="unaccepted" target="started"><event><talk-to-npc npc-id="834166" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
+			<transition source="unaccepted" target="started"><event><talk-to-npc npc-id="834166" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-ids="1003 1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+			<transition source="started" target="started"><event><talk-to-npc npc-id="834166" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+			""";
+
+		assertEquals(compile(startDefinition(block)).definition(), compile(startDefinition(expanded)).definition());
+	}
+
+	@Test
 	void counterEqualsItsTwoExpandedTransitions() {
 		String block = """
 			<counter source="started" target="reward" field="var0" required="3">
