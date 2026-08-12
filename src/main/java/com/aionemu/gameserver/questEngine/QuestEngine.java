@@ -1820,22 +1820,10 @@ public class QuestEngine implements GameEngine {
 		});
 		snapshotComposition.installBroadcastPort(new PlayerQuestBroadcastPort(
 			playerId -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId),
-			(player, questIds) -> {
-				boolean any = false;
-				for (int questId : questIds) {
-					any |= dispatcher.dispatch(new QuestEvent.ZoneMissionEnd(), player.getObjectId(), questId,
-						QuestDispatchContract.EXCLUSIVE).claimed();
-				}
-				return any;
-			},
-			(player, questIds) -> {
-				boolean any = false;
-				for (int questId : questIds) {
-					any |= dispatcher.dispatch(new QuestEvent.EventQuestRefresh(), player.getObjectId(), questId,
-						QuestDispatchContract.EXCLUSIVE).claimed();
-				}
-				return any;
-			}));
+			(player, questIds) -> dispatcher.dispatchOwners(new QuestEvent.ZoneMissionEnd(), player.getObjectId(),
+				questIds, QuestDispatchContract.EXCLUSIVE),
+			(player, questIds) -> dispatcher.dispatchOwners(new QuestEvent.EventQuestRefresh(), player.getObjectId(),
+				questIds, QuestDispatchContract.EXCLUSIVE)));
 		for (CompiledQuestDefinition definition : registry.executables()) {
 			for (var transition : definition.definition().transitions()) {
 				if (!(transition.event() instanceof QuestEvent.TalkToNpc)

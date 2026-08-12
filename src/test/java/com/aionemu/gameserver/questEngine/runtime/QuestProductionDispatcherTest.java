@@ -186,6 +186,48 @@ class QuestProductionDispatcherTest {
 	}
 
 	@Test
+	void targetedBroadcastAcceptsARoutedConditionMismatch() {
+		QuestProductionDispatcher dispatcher = dispatcher(List.of(zoneMissionDefinition(1101)), new ArrayList<>(),
+			(connection, playerId, questId, event) ->
+				new QuestSnapshot(playerId, questId, QuestStatus.NONE, 0, Map.of()));
+
+		assertTrue(dispatcher.dispatchOwners(new QuestEvent.ZoneMissionEnd(), 7, new int[]{1101},
+			QuestDispatchContract.EXCLUSIVE));
+	}
+
+	@Test
+	void targetedBroadcastFailureCannotBeMaskedAndDoesNotSkipRemainingOwners() {
+		List<Integer> snapshots = new ArrayList<>();
+		QuestProductionDispatcher dispatcher = dispatcher(
+			List.of(zoneMissionDefinition(1101), zoneMissionDefinition(1102)), new ArrayList<>(),
+			(connection, playerId, questId, event) -> {
+				snapshots.add(questId);
+				if (questId == 1101) {
+					throw new SQLException("snapshot failed");
+				}
+				return new QuestSnapshot(playerId, questId, QuestStatus.START, 0, Map.of());
+			});
+
+		assertFalse(dispatcher.dispatchOwners(new QuestEvent.ZoneMissionEnd(), 7, new int[]{1101, 1102},
+			QuestDispatchContract.EXCLUSIVE));
+		assertEquals(List.of(1101, 1102), snapshots);
+	}
+
+	@Test
+	void targetedBroadcastRejectsAMissingOwnerRouteButStillDispatchesOtherTargets() {
+		List<Integer> snapshots = new ArrayList<>();
+		QuestProductionDispatcher dispatcher = dispatcher(List.of(zoneMissionDefinition(1101)), new ArrayList<>(),
+			(connection, playerId, questId, event) -> {
+				snapshots.add(questId);
+				return new QuestSnapshot(playerId, questId, QuestStatus.START, 0, Map.of());
+			});
+
+		assertFalse(dispatcher.dispatchOwners(new QuestEvent.ZoneMissionEnd(), 7, new int[]{1102, 1101},
+			QuestDispatchContract.EXCLUSIVE));
+		assertEquals(List.of(1101), snapshots);
+	}
+
+	@Test
 	void sharedQuestAcceptRunsTheTypedAcquisitionActionsWithoutAnNpcTarget() {
 		CompiledQuestDefinition definition = QuestDsl.quest(28738)
 			.progress(bitField("var0", 0, 2, PersistenceMode.PERSISTENT))
@@ -353,6 +395,15 @@ class QuestProductionDispatcherTest {
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
 			.node("one-kill", project(QuestStatus.START, vars("var0", 1)))
 			.on(new QuestEvent.KillNpc(210133)).from("started").goTo("one-kill")
+			.compile();
+	}
+
+	private static CompiledQuestDefinition zoneMissionDefinition(int id) {
+		return QuestDsl.quest(id)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
+			.on(new QuestEvent.ZoneMissionEnd()).from("started").goTo("reward")
 			.compile();
 	}
 

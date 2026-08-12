@@ -170,6 +170,23 @@ public final class QuestProductionDispatcher {
 		}
 	}
 
+	/**
+	 * Dispatches one event to every named owner and reports whether every target was routable without failure.
+	 * A routed condition mismatch is a successful delivery; an absent route or a failed execution is not.
+	 * Every target is attempted even after an earlier target fails.
+	 */
+	public boolean dispatchOwners(QuestEvent event, int playerId, int[] questIds, QuestDispatchContract contract) {
+		Objects.requireNonNull(event, "event");
+		Objects.requireNonNull(questIds, "questIds");
+		Objects.requireNonNull(contract, "contract");
+		boolean success = questIds.length > 0;
+		for (int questId : questIds) {
+			QuestEventRouter.DispatchResult result = dispatch(event, playerId, questId, contract);
+			success &= !result.owners().isEmpty() && !result.failed();
+		}
+		return success;
+	}
+
 	/** Executes a server-authorized, targetless share acceptance through the owner's typed acquisition route. */
 	public boolean dispatchSharedQuestAccept(int playerId, int questId, int dialogId) {
 		if (playerId <= 0 || questId <= 0 || (dialogId != 1002 && dialogId != 20000)) {
