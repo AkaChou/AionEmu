@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Reshanta 区域 NPC AI：Empyrean Blessing（@AIName "empyrean_blessing"），继承 ActionItemNpcAI2。
@@ -26,36 +25,26 @@ public class Empyrean_BlessingAI2 extends ActionItemNpcAI2
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
-		switch (getNpcId()) {
-		    case 883956: //Redemption Flight Energy.
-			case 883960: //Harbinger Flight Energy.
-                effectController.removeEffect(22739);
-				effectController.removeEffect(22740);
-				effectController.removeEffect(22741);
-                GameEngineServices.skillEngine().getSkill(player, 22742, 1, player).useNoAnimationSkill();
-            break;
-			case 883957: //Redemption Life Energy.
-			case 883961: //Harbinger Life Energy.
-			    effectController.removeEffect(22739);
-				effectController.removeEffect(22740);
-				effectController.removeEffect(22742);
-                GameEngineServices.skillEngine().getSkill(player, 22741, 1, player).useNoAnimationSkill();
-            break;
-			case 883958: //Redemption Battle Energy.
-			case 883962: //Harbinger Battle Energy.
-			    effectController.removeEffect(22739);
-				effectController.removeEffect(22741);
-				effectController.removeEffect(22742);
-                GameEngineServices.skillEngine().getSkill(player, 22740, 1, player).useNoAnimationSkill();
-            break;
-			case 883959: //Redemption Defense Energy.
-			case 883963: //Harbinger Defense Energy.
-			    effectController.removeEffect(22740);
-				effectController.removeEffect(22741);
-				effectController.removeEffect(22742);
-                GameEngineServices.skillEngine().getSkill(player, 22739, 1, player).useNoAnimationSkill();
-            break;
+		int skillId = getBlessingSkillId(getNpcId());
+		if (skillId == 0) {
+			return;
 		}
+		for (int otherSkillId = 22739; otherSkillId <= 22742; otherSkillId++) {
+			if (otherSkillId != skillId) {
+				effectController.removeEffect(otherSkillId);
+			}
+		}
+		GameEngineServices.skillEngine().applyEffectDirectly(skillId, getOwner(), player, 0);
+	}
+
+	static int getBlessingSkillId(int npcId) {
+		return switch (npcId) {
+			case 883956, 883960 -> 22742; // Flight Energy.
+			case 883957, 883961 -> 22741; // Life Energy.
+			case 883958, 883962 -> 22740; // Battle Energy.
+			case 883959, 883963 -> 22739; // Defense Energy.
+			default -> 0;
+		};
 	}
 	
 	@Override
