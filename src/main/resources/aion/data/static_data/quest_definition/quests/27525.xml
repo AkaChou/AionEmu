@@ -17,11 +17,10 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="3" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="3" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var2" offset="4" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE"><var name="var0" value="0"/><var name="var1" value="0"/><var name="var2" value="0"/></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/><var name="var1" value="0"/></node>
     <node label="started" status="START"><var name="var0" value="0"/></node>
     <node label="s1" status="START"><var name="var0" value="1"/></node>
     <node label="s2" status="START"><var name="var0" value="2"/></node>
@@ -39,9 +38,9 @@
     <!-- 进入区域 A 推进。 Entering zone A advances. -->
     <transition source="started" target="s1"><event><enter-zone zone="IDABRE_CORE_03_Q17525_A_301720000"/></event><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <!-- 击杀 248382 推进。 Killing 248382 advances. -->
-    <transition source="s1" target="s2"><event><kill-npc npc-id="248382"/></event><actions><set-variable field="var1" value="1"/><set-variable field="var0" value="2"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s1" target="s2"><event><kill-npc npc-id="248382"/></event><actions><set-variable field="var0" value="2"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <!-- 击杀女巫推进：A2_Witch_D_01..05 全 5 种。 Killing any witch D_01..05 advances. -->
-    <transition source="s2" target="s3"><event><kill-npc npc-ids="248395 248423 248424 248425 248426"/></event><actions><set-variable field="var2" value="1"/><set-variable field="var0" value="3"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
+    <transition source="s2" target="s3"><event><kill-npc npc-ids="248395 248423 248424 248425 248426"/></event><actions><set-variable field="var0" value="3"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <!-- 进入区域 B 推进。 Entering zone B advances. -->
     <transition source="s3" target="s4"><event><enter-zone zone="IDABRE_CORE_03_Q17525_B_301720000"/></event><actions><set-variable field="var0" value="4"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <!-- 击杀 248013 进入领奖。 Killing 248013 enters reward state. -->

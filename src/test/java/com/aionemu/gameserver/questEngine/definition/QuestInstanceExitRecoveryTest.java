@@ -164,8 +164,8 @@ class QuestInstanceExitRecoveryTest {
 				"s5", Map.of("var0", 5, "var1", 3), new QuestEvent.TalkToNpc(730243, 10002), Map.of()),
 			new RecoveryScenario(20038, 300150000, "s2", Map.of("var0", 2, "var1", 0), steps(3, 5), "s6",
 				"s5", Map.of("var0", 5, "var1", 3), new QuestEvent.TalkToNpc(730243, 10002), Map.of()),
-			new RecoveryScenario(2002, 320010000, "s12", Map.of("var0", 12, "var1", 7), List.of("s99"), "s13",
-				"s99", Map.of("var0", 99, "var1", 7), new QuestEvent.TalkToNpc(790002, 10004), Map.of()));
+			new RecoveryScenario(2002, 320010000, "s12", Map.of("var0", 12), List.of("s99"), "s13",
+				"s99", Map.of("var0", 99), new QuestEvent.TalkToNpc(790002, 10004), Map.of()));
 	}
 
 	private static List<FailureRecoveryScenario> failureRecoveryScenarios() {

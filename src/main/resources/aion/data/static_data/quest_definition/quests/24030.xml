@@ -29,7 +29,7 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="4" min="0" max="8" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="4" width="6" min="0" max="49" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="49" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">

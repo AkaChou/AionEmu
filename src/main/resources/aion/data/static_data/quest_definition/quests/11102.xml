@@ -45,26 +45,26 @@
     </class-rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="2" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="2" width="2" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var2" offset="4" width="2" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var3" offset="6" width="2" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="12" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
           <var name="var1" value="0"/>
           <var name="var2" value="0"/>
-          <var name="var3" value="0"/>
     </node>
-    <node label="started" status="START">
-          <var name="var0" value="0"/>
-    </node>
+    <node label="started" status="START"/>
     <node label="k3" status="START">
           <var name="var0" value="1"/>
+          <var name="var1" value="1"/>
+          <var name="var2" value="1"/>
     </node>
     <node label="reward" status="REWARD">
           <var name="var0" value="1"/>
+          <var name="var1" value="1"/>
+          <var name="var2" value="1"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
@@ -72,27 +72,46 @@
     <!-- 接取:Inggison 的 Esterra (798981) 提供任务。 -->
     <npc-start npc-id="798981" source="unaccepted" target="started" selection-sources="unaccepted started"/>
 
-    <!-- 击杀组 1:Stonedrake Explorer (216489) 1 只,var1 计数;三组全满进入 k3。 -->
-    <transition source="started" target="k3" priority="0">
+    <!-- 击杀组 1:Stonedrake Explorer (216489) 1 只,var0 计数;三组全满进入 k3。 -->
+    <transition source="started" target="k3" priority="1">
       <event>
         <kill-npc npc-id="216489"/>
       </event>
       <conditions>
-        <variable-sum-is fields="var1 var2 var3" value="3"/>
+        <variable-sum-is fields="var0 var1 var2" value="2"/>
+        <variable-below field="var0" value="1"/>
       </conditions>
       <actions>
+        <increment-variable field="var0" delta="1"/>
         <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="k3" priority="1">
+    <transition source="started" target="started" priority="2">
       <event>
         <kill-npc npc-id="216489"/>
       </event>
       <conditions>
-        <variable-sum-is fields="var1 var2 var3" value="2"/>
+        <variable-sum-below fields="var0 var1 var2" value="2"/>
+        <variable-below field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var0" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+
+    <!-- 击杀组 2:Stonedrake Stalker (216490) 1 只,var1 计数。 -->
+    <transition source="started" target="k3" priority="1">
+      <event>
+        <kill-npc npc-id="216490"/>
+      </event>
+      <conditions>
+        <variable-sum-is fields="var0 var1 var2" value="2"/>
         <variable-below field="var1" value="1"/>
       </conditions>
       <actions>
@@ -105,10 +124,10 @@
     </transition>
     <transition source="started" target="started" priority="2">
       <event>
-        <kill-npc npc-id="216489"/>
+        <kill-npc npc-id="216490"/>
       </event>
       <conditions>
-        <variable-sum-below fields="var1 var2 var3" value="2"/>
+        <variable-sum-below fields="var0 var1 var2" value="2"/>
         <variable-below field="var1" value="1"/>
       </conditions>
       <actions>
@@ -119,27 +138,13 @@
       </after-commit>
     </transition>
 
-    <!-- 击杀组 2:Stonedrake Stalker (216490) 1 只,var2 计数。 -->
-    <transition source="started" target="k3" priority="0">
-      <event>
-        <kill-npc npc-id="216490"/>
-      </event>
-      <conditions>
-        <variable-sum-is fields="var1 var2 var3" value="3"/>
-      </conditions>
-      <actions>
-        <set-variable field="var0" value="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
+    <!-- 击杀组 3:Stonedrake Slasher (216491) 1 只,var2 计数。 -->
     <transition source="started" target="k3" priority="1">
       <event>
-        <kill-npc npc-id="216490"/>
+        <kill-npc npc-id="216491"/>
       </event>
       <conditions>
-        <variable-sum-is fields="var1 var2 var3" value="2"/>
+        <variable-sum-is fields="var0 var1 var2" value="2"/>
         <variable-below field="var2" value="1"/>
       </conditions>
       <actions>
@@ -152,61 +157,14 @@
     </transition>
     <transition source="started" target="started" priority="2">
       <event>
-        <kill-npc npc-id="216490"/>
+        <kill-npc npc-id="216491"/>
       </event>
       <conditions>
-        <variable-sum-below fields="var1 var2 var3" value="2"/>
+        <variable-sum-below fields="var0 var1 var2" value="2"/>
         <variable-below field="var2" value="1"/>
       </conditions>
       <actions>
         <increment-variable field="var2" delta="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-
-    <!-- 击杀组 3:Stonedrake Slasher (216491) 1 只,var3 计数。 -->
-    <transition source="started" target="k3" priority="0">
-      <event>
-        <kill-npc npc-id="216491"/>
-      </event>
-      <conditions>
-        <variable-sum-is fields="var1 var2 var3" value="3"/>
-      </conditions>
-      <actions>
-        <set-variable field="var0" value="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="k3" priority="1">
-      <event>
-        <kill-npc npc-id="216491"/>
-      </event>
-      <conditions>
-        <variable-sum-is fields="var1 var2 var3" value="2"/>
-        <variable-below field="var3" value="1"/>
-      </conditions>
-      <actions>
-        <increment-variable field="var3" delta="1"/>
-        <set-variable field="var0" value="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="2">
-      <event>
-        <kill-npc npc-id="216491"/>
-      </event>
-      <conditions>
-        <variable-sum-below fields="var1 var2 var3" value="2"/>
-        <variable-below field="var3" value="1"/>
-      </conditions>
-      <actions>
-        <increment-variable field="var3" delta="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

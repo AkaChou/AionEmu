@@ -25,64 +25,67 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="7" min="0" max="99" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="7" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
     </node>
     <node label="started" status="START">
           <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
     </node>
     <node label="s1" status="START">
           <var name="var0" value="1"/>
-          <var name="var1" value="0"/>
     </node>
     <node label="s2" status="START">
           <var name="var0" value="2"/>
-          <var name="var1" value="0"/>
     </node>
     <node label="s3" status="START">
           <var name="var0" value="3"/>
-          <var name="var1" value="0"/>
+    </node>
+    <node label="s4" status="START">
+          <var name="var0" value="4"/>
+    </node>
+    <node label="s5" status="START">
+          <var name="var0" value="5"/>
+    </node>
+    <node label="s6" status="START">
+          <var name="var0" value="6"/>
+    </node>
+    <node label="s7" status="START">
+          <var name="var0" value="7"/>
+    </node>
+    <node label="s8" status="START">
+          <var name="var0" value="8"/>
+    </node>
+    <node label="s9" status="START">
+          <var name="var0" value="9"/>
     </node>
     <node label="s10" status="START">
           <var name="var0" value="10"/>
-          <var name="var1" value="7"/>
     </node>
     <node label="s11" status="START">
           <var name="var0" value="11"/>
-          <var name="var1" value="7"/>
     </node>
     <node label="s12" status="START">
           <var name="var0" value="12"/>
-          <var name="var1" value="7"/>
     </node>
     <node label="s13" status="START">
           <var name="var0" value="13"/>
-          <var name="var1" value="7"/>
     </node>
     <node label="s14" status="START">
           <var name="var0" value="14"/>
-          <var name="var1" value="7"/>
     </node>
     <node label="s15" status="START">
           <var name="var0" value="15"/>
-          <var name="var1" value="7"/>
     </node>
     <node label="s99" status="START">
           <var name="var0" value="99"/>
-          <var name="var1" value="7"/>
     </node>
     <node label="reward" status="REWARD">
           <var name="var0" value="15"/>
-          <var name="var1" value="7"/>
     </node>
     <node label="complete" status="COMPLETE">
           <var name="var0" value="0"/>
-          <var name="var1" value="0"/>
     </node>
   </nodes>
   <transitions>
@@ -175,35 +178,14 @@
       </after-commit>
     </transition>
 
-    <!-- 击杀 Ispy (210377/210378) 累计 7 只。 -->
-    <transition source="s3" target="s3" priority="1">
-      <event>
-        <kill-npc npc-ids="210377 210378"/>
-      </event>
-      <conditions>
-        <variable-below field="var1" value="7"/>
-      </conditions>
-      <actions>
-        <increment-variable field="var1" delta="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="s3" target="s10" priority="0">
-      <event>
-        <kill-npc npc-ids="210377 210378"/>
-      </event>
-      <conditions>
-        <variable-is field="var1" value="7"/>
-      </conditions>
-      <actions>
-        <set-variable field="var0" value="10"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
+    <!-- 击杀 Ispy (210377/210378) 直接推进客户端 SECTION_0:3→10。 -->
+    <kill-routes source="s3" target="s4" npc-ids="210377 210378"/>
+    <kill-routes source="s4" target="s5" npc-ids="210377 210378"/>
+    <kill-routes source="s5" target="s6" npc-ids="210377 210378"/>
+    <kill-routes source="s6" target="s7" npc-ids="210377 210378"/>
+    <kill-routes source="s7" target="s8" npc-ids="210377 210378"/>
+    <kill-routes source="s8" target="s9" npc-ids="210377 210378"/>
+    <kill-routes source="s9" target="s10" npc-ids="210377 210378"/>
 
     <!-- 步骤 10-15:Munin (790002) 收集/推进。 -->
     <transition source="s10" target="s10">
