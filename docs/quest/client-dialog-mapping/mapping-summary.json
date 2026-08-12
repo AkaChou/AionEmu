@@ -1,0 +1,23 @@
+{
+  "sources": {
+    "hyperlinks_xml": "/Users/mc/PycharmProjects/unpak/dialog_unpacked/HyperLinks.xml",
+    "hyperlinks_sha256": "b66a747042102623c2d0a177d65c93473809f44d5283875ce7160f7a5dd92aa5",
+    "html_pages_xml": "/Users/mc/PycharmProjects/unpak/dialog_unpacked/HtmlPages.xml",
+    "html_pages_sha256": "20d9c07c20e43f37d9cddd2a1a91d17a44e6aeeabbca4edc4c3e6823f9267f60",
+    "zh_dialogs_dir": "/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs"
+  },
+  "counts": {
+    "hyperlink_definitions": 6209,
+    "html_page_definitions": 5904,
+    "same_id_rows": 6244,
+    "same_symbol_rows": 5803,
+    "quest_html_files": 9127,
+    "quest_action_occurrences": 50854,
+    "page_action_rows": 838,
+    "quest_action_constants": 202,
+    "parse_errors": 0,
+    "parse_recoveries": 62,
+    "missing_action_mappings": 24,
+    "missing_page_mappings": 0
+  }
+}

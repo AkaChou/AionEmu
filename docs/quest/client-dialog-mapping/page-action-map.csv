@@ -1,0 +1,839 @@
+﻿html_page_name,page_id,page_constant,page_mapping,action_id,action_constant,action_mapping,occurrences,distinct_quests,button_text_samples_zh
+SELECT2_1_1_1,1355,HTML_PAGE_SELECT2_1_1_1,exact,1693,HACTION_SELECT3,exact,3,3,我会铭记于心的。
+SELECT2_1_1_2,1360,HTML_PAGE_SELECT2_1_1_2,exact,2034,HACTION_SELECT4,exact,3,3,我会铭记于心的。
+SELECT2_1_2,1375,HTML_PAGE_SELECT2_1_2,exact,1376,HACTION_SELECT2_1_2_1,exact,3,3,从准确的数字中体现的真理。 | 美丽的数字之类的就是真理。
+SELECT2_1_2,1375,HTML_PAGE_SELECT2_1_2,exact,1381,HACTION_SELECT2_1_2_2,exact,3,3,浩瀚宇宙的准则就是真理。 | 未知的宇宙的准则就是真理。
+SELECT2_1_2_1,1376,HTML_PAGE_SELECT2_1_2_1,exact,1693,HACTION_SELECT3,exact,3,3,我会铭记于心的。
+SELECT2_1_2_2,1381,HTML_PAGE_SELECT2_1_2_2,exact,2034,HACTION_SELECT4,exact,3,3,我会铭记于心的。
+SELECT2_2_1,1439,HTML_PAGE_SELECT2_2_1,exact,1440,HACTION_SELECT2_2_1_1,exact,3,3,爱情应该是理性的。
+SELECT2_2_1,1439,HTML_PAGE_SELECT2_2_1,exact,1445,HACTION_SELECT2_2_1_2,exact,3,3,爱情应该是感性的。
+SELECT2_2_1_1,1440,HTML_PAGE_SELECT2_2_1_1,exact,2375,HACTION_SELECT5,exact,3,3,我会铭记于心的。
+SELECT2_2_1_2,1445,HTML_PAGE_SELECT2_2_1_2,exact,2716,HACTION_SELECT6,exact,3,3,我会铭记于心的。
+SELECT2_2_2_1,1461,HTML_PAGE_SELECT2_2_2_1,exact,2375,HACTION_SELECT5,exact,3,3,我会铭记于心的。
+SELECT2_2_2_2,1466,HTML_PAGE_SELECT2_2_2_2,exact,2716,HACTION_SELECT6,exact,3,3,我会铭记于心的。
+SELECT3,1693,HTML_PAGE_SELECT3,exact,1694,HACTION_SELECT3_1,exact,3,3,黑。 | 我喜欢黑色。
+SELECT3,1693,HTML_PAGE_SELECT3,exact,1779,HACTION_SELECT3_2,exact,3,3,白。 | 我喜欢白色。
+SELECT3_1,1694,HTML_PAGE_SELECT3_1,exact,,HACTION_SELECT_QUEST_REWARD1,missing,3,3,是什么样的启示呢？ | 是什么样的能力呢？
+SELECT3_2,1779,HTML_PAGE_SELECT3_2,exact,,HACTION_SELECT_QUEST_REWARD2,missing,3,3,是什么样的启示呢？ | 是什么样的能力呢？
+SELECT4,2034,HTML_PAGE_SELECT4,exact,2035,HACTION_SELECT4_1,exact,3,3,我喜欢天。
+SELECT4,2034,HTML_PAGE_SELECT4,exact,2120,HACTION_SELECT4_2,exact,3,3,我喜欢地。
+SELECT4_1,2035,HTML_PAGE_SELECT4_1,exact,,HACTION_SELECT_QUEST_REWARD3,missing,3,3,是什么样的启示呢？ | 是什么样的能力呢？
+SELECT4_2,2120,HTML_PAGE_SELECT4_2,exact,,HACTION_SELECT_QUEST_REWARD4,missing,3,3,是什么样的启示呢？ | 是什么样的能力呢？
+SELECT5,2375,HTML_PAGE_SELECT5,exact,2376,HACTION_SELECT5_1,exact,3,3,我觉得开始重要。
+SELECT5,2375,HTML_PAGE_SELECT5,exact,2461,HACTION_SELECT5_2,exact,3,3,我觉得结尾重要。
+SELECT5_1,2376,HTML_PAGE_SELECT5_1,exact,,HACTION_SELECT_QUEST_REWARD1,missing,3,3,是什么样的启示呢？ | 是什么样的能力呢？
+SELECT5_2,2461,HTML_PAGE_SELECT5_2,exact,,HACTION_SELECT_QUEST_REWARD2,missing,3,3,是什么样的启示呢？ | 是什么样的能力呢？
+SELECT6,2716,HTML_PAGE_SELECT6,exact,2717,HACTION_SELECT6_1,exact,3,3,我喜欢白天。
+SELECT6,2716,HTML_PAGE_SELECT6,exact,2802,HACTION_SELECT6_2,exact,3,3,我喜欢夜晚。
+SELECT6_1,2717,HTML_PAGE_SELECT6_1,exact,,HACTION_SELECT_QUEST_REWARD3,missing,3,3,继续听。 | 是什么样的能力呢？
+SELECT6_2,2802,HTML_PAGE_SELECT6_2,exact,,HACTION_SELECT_QUEST_REWARD4,missing,3,3,继续听。 | 是什么样的能力呢？
+ask_quest_accept,4,HTML_PAGE_SHOW_ASK_QUEST_ACCEPT_WINDOW,exact,1002,HACTION_QUEST_ACCEPT_1,exact,3540,3528,接受。 | 接受 | 折起传单。 | 帮着寻找。 | 帮她找。
+ask_quest_accept,4,HTML_PAGE_SHOW_ASK_QUEST_ACCEPT_WINDOW,exact,1003,HACTION_QUEST_REFUSE_1,exact,3524,3514,拒绝。 | 拒绝 | 决绝 | 答应下次帮忙。 | 走开。
+ask_quest_accept,4,HTML_PAGE_SHOW_ASK_QUEST_ACCEPT_WINDOW,exact,1008,HACTION_FINISH_DIALOG,exact,691,691,停止查看。 | 把书放进箱子。 | 决定和他谈谈。 | 执行委托。 | 执行请求。
+ask_quest_accept,4,HTML_PAGE_SHOW_ASK_QUEST_ACCEPT_WINDOW,exact,20000,HACTION_QUEST_ACCEPT_SIMPLE,exact,27,27,接受。
+ask_quest_accept,4,HTML_PAGE_SHOW_ASK_QUEST_ACCEPT_WINDOW,exact,20001,HACTION_QUEST_REFUSE_SIMPLE,exact,27,27,拒绝。
+check_user_item_fail,10001,HTML_PAGE_CHECK_USER_ITEM_FAIL,exact,1008,HACTION_FINISH_DIALOG,exact,638,638,结束对话。 | 停止查看。 | 结束观察。 | 结束对话 | 远离了抽抽自动贩卖机。
+check_user_item_ok,10000,HTML_PAGE_CHECK_USER_ITEM_OK,exact,10001,HACTION_SETPRO2,exact,10,10,结束对话。
+check_user_item_ok,10000,HTML_PAGE_CHECK_USER_ITEM_OK,exact,10002,HACTION_SETPRO3,exact,6,6,回答说去察看一下。 | 结束对话。 | 调查龟裂根源。
+check_user_item_ok,10000,HTML_PAGE_CHECK_USER_ITEM_OK,exact,10003,HACTION_SETPRO4,exact,2,2,收下装满的伊德凝胶箱子。 | 收下满满的伊德凝胶箱子。
+check_user_item_ok,10000,HTML_PAGE_CHECK_USER_ITEM_OK,exact,1008,HACTION_FINISH_DIALOG,exact,229,229,结束对话。 | 稍等一下。 | 递过证物。 | 点头。 | 结束对话
+check_user_item_ok,10000,HTML_PAGE_CHECK_USER_ITEM_OK,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,290,290,继续听。 | 点头。 | 询问其有没有忘记什么事。 | 要求适当的回报。 | 询问其是否满足。
+check_user_item_ok,10000,HTML_PAGE_CHECK_USER_ITEM_OK,exact,10255,HACTION_SET_SUCCEED,exact,6,6,点头。 | 继续对话。 | 结束对话。
+check_user_item_ok,10000,HTML_PAGE_CHECK_USER_ITEM_OK,exact,1352,HACTION_SELECT2,exact,7,7,稍等一会儿。 | 继续听。 | 询问她是否知道这个名字。 | 结束对话。 | 察看周围。
+check_user_item_ok,10000,HTML_PAGE_CHECK_USER_ITEM_OK,exact,1353,HACTION_SELECT2_1,exact,2,2,继续听。 | 人参江米条比较好。
+check_user_item_ok,10000,HTML_PAGE_CHECK_USER_ITEM_OK,exact,1354,HACTION_SELECT2_1_1,exact,2,2,说会记住。 | 说知道了。
+check_user_item_ok,10000,HTML_PAGE_CHECK_USER_ITEM_OK,exact,1438,HACTION_SELECT2_2,exact,1,1,参茶比较好。
+check_user_item_ok,10000,HTML_PAGE_CHECK_USER_ITEM_OK,exact,1693,HACTION_SELECT3,exact,25,25,摇头。 | 继续对话。 | 稍等片刻。 | 继续听。 | 询问方法。
+check_user_item_ok,10000,HTML_PAGE_CHECK_USER_ITEM_OK,exact,1694,HACTION_SELECT3_1,exact,3,3,说愿意听。 | 说尽管说。 | 继续听。
+check_user_item_ok,10000,HTML_PAGE_CHECK_USER_ITEM_OK,exact,2034,HACTION_SELECT4,exact,12,12,继续听。 | 稍等一会儿。 | 表示愿意帮忙。 | 操作回廊装置。 | 点头。
+check_user_item_ok,10000,HTML_PAGE_CHECK_USER_ITEM_OK,exact,2716,HACTION_SELECT6,exact,2,2,暂时等待。
+check_user_item_ok,10000,HTML_PAGE_CHECK_USER_ITEM_OK,exact,3739,HACTION_SELECT9,exact,2,2,暂时等一等。
+check_user_item_ok,10000,HTML_PAGE_CHECK_USER_ITEM_OK,exact,7523,HACTION_SELECT14,exact,2,2,说在回收塔之碎片时遇到了魔族的事情。 | 说在回收塔之碎片时遇到了天族的事情。
+no_right,27,HTML_PAGE_NO_RIGHT,exact,1008,HACTION_FINISH_DIALOG,exact,7,7,结束对话。 | 结束对话
+quest_accept_1,1003,HTML_PAGE_QUEST_ACCEPT_1,exact,10000,HACTION_SETPRO1,exact,8,8,好，马上出发。 | 准备好了。 | 结束对话。 | “好。” | “准备好了！”
+quest_accept_1,1003,HTML_PAGE_QUEST_ACCEPT_1,exact,10009,HACTION_SETPRO10,exact,1,1,好像是塔鲁。
+quest_accept_1,1003,HTML_PAGE_QUEST_ACCEPT_1,exact,10019,HACTION_SETPRO20,exact,1,1,好像是雪人。
+quest_accept_1,1003,HTML_PAGE_QUEST_ACCEPT_1,exact,1008,HACTION_FINISH_DIALOG,exact,3357,3347,结束对话。 | 结束对话 | 稍等一下。 | 接受对话。 | 说知道了。
+quest_accept_1,1003,HTML_PAGE_QUEST_ACCEPT_1,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,102,102,闭上眼睛集中精神。 | 结束对话。 | 点头。 | 确认管家给的东西。 | 继续听。
+quest_accept_1,1003,HTML_PAGE_QUEST_ACCEPT_1,exact,1011,HACTION_SELECT1,exact,10,10,继续听。 | 点头。
+quest_accept_1,1003,HTML_PAGE_QUEST_ACCEPT_1,exact,1012,HACTION_SELECT1_1,exact,13,13,说想去除掉突击队长坎塔克。 | 说会去问君君宾。 | “请跟我走。” | 说会交给莎拉琳琳。 | 我要去捕捉地之精灵。
+quest_accept_1,1003,HTML_PAGE_QUEST_ACCEPT_1,exact,1013,HACTION_SELECT1_1_1,exact,2,2,还没有准备好。 | 说还没准备好。
+quest_accept_1,1003,HTML_PAGE_QUEST_ACCEPT_1,exact,1097,HACTION_SELECT1_2,exact,12,12,说想去除掉法师长帕乌托。 | 说会去问米诺隆。 | 说会交给佩佩龙。 | 我要去捕捉水之精灵。 | 说会施舍5000基纳。
+quest_accept_1,1003,HTML_PAGE_QUEST_ACCEPT_1,exact,1182,HACTION_SELECT1_3,exact,7,7,"说想去除掉大治疗师邱巴克。 | 说会施舍50000基纳。 | 告诉他有100杯梅拉果汁。 | ""说会给他10,000基纳。"" | 说会给他10000基纳。"
+quest_accept_1,1003,HTML_PAGE_QUEST_ACCEPT_1,exact,1267,HACTION_SELECT1_4,exact,1,1,说想去除掉侦察队长坎土。
+quest_accept_1,1003,HTML_PAGE_QUEST_ACCEPT_1,exact,1352,HACTION_SELECT2,exact,3,3,结束对话。
+quest_accept_1,1003,HTML_PAGE_QUEST_ACCEPT_1,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,192,192,拿出魔石。 | 交出米拉詹特圣骑士交换证书。 | 打开陈列柜。 | 交出潘利尔的犬牙交换证书。 | 拿出神圣证物。
+quest_complete,1008,HTML_PAGE_QUEST_COMPLETE,exact,1008,HACTION_FINISH_DIALOG,exact,10,10,结束对话。
+quest_failed_1,1009,HTML_PAGE_QUEST_FAILED_1,exact,1008,HACTION_FINISH_DIALOG,exact,10,10,结束对话。
+quest_refuse_1,1004,HTML_PAGE_QUEST_REFUSE_1,exact,1008,HACTION_FINISH_DIALOG,exact,3675,3665,结束对话。 | 停止查看。 | (放着一口巨大的锅。) | 结束对话 | 远离了抽抽自动贩卖机。
+select1,1011,HTML_PAGE_SELECT1,exact,10000,HACTION_SETPRO1,exact,193,193,结束对话。 | 说别担心。 | 说知道了。 | 说马上去找伊利乌姆。 | 必须从细根佩里亚那里搜集一些水给他喝。
+select1,1011,HTML_PAGE_SELECT1,exact,10001,HACTION_SETPRO2,exact,10,10,拿出成长的种子和纳巴鲁的金苹果。 | 交出成长的种子和纳巴鲁的金苹果。 | 递出成长的种子和纳巴鲁的巨大金苹果。 | 拿出火鸟的红黑色羽毛。 | 回答是雷帕尔革命团。
+select1,1011,HTML_PAGE_SELECT1,exact,10002,HACTION_SETPRO3,exact,1,1,拿出蛇妖的白色鬃毛。
+select1,1011,HTML_PAGE_SELECT1,exact,10009,HACTION_SETPRO10,exact,1,1,说可以帮他。
+select1,1011,HTML_PAGE_SELECT1,exact,10019,HACTION_SETPRO20,exact,1,1,好像不是正当的要求，拒绝。
+select1,1011,HTML_PAGE_SELECT1,exact,1002,HACTION_QUEST_ACCEPT_1,exact,122,122,接受。 | 点头。 | 摇头。 | 送鲜花。 | 说很好吃。
+select1,1011,HTML_PAGE_SELECT1,exact,1003,HACTION_QUEST_REFUSE_1,exact,121,121,拒绝 | 摇头。 | 拒绝。 | 询问原因。 | 摇头
+select1,1011,HTML_PAGE_SELECT1,exact,1007,HACTION_ASK_QUEST_ACCEPT,exact,2196,2196,点头。 | 说出名字。 | 询问发生了什么事。 | 询问是什么事情。 | 询问是什么问题。
+select1,1011,HTML_PAGE_SELECT1,exact,1008,HACTION_FINISH_DIALOG,exact,22,22,结束对话。 | 开始投石炮破坏作战。 | 去见见泰尼希安。 | 去见见雷斯科。 | 去见见希格蒙特。
+select1,1011,HTML_PAGE_SELECT1,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,16,16,询问任务。 | 说愿意执行。 | 请问是什么任务。 | 询问新技能。 | 答应试一试。
+select1,1011,HTML_PAGE_SELECT1,exact,1011,HACTION_SELECT1,exact,86,86,拿出下级古代圣像。 | 拿出下级古代印章。 | 拿出下级古代圣杯。 | 拿出下级古代王冠。 | 拿出10个下级古代圣像。
+select1,1011,HTML_PAGE_SELECT1,exact,1012,HACTION_SELECT1_1,exact,1550,1550,询问是什么事情。 | 难道不是为了消灭提亚马特吗？ | 继续听。 | 询问英吉斯温前哨基地的情况。 | 摇头。
+select1,1011,HTML_PAGE_SELECT1,exact,10255,HACTION_SET_SUCCEED,exact,36,36,拿出须希尔的腐蚀液。 | 结束对话。 | 点头。 | 表示知道了。 | 报告强化结果。
+select1,1011,HTML_PAGE_SELECT1,exact,1097,HACTION_SELECT1_2,exact,99,99,用1200个秘银铸币交换上衣。 | 选择防御用制作技术。 | 带来了7个神圣证物。 | 带来了14个神圣证物。 | 带来了28个神圣证物。
+select1,1011,HTML_PAGE_SELECT1,exact,1182,HACTION_SELECT1_3,exact,98,98,用900个秘银铸币交换下衣。 | 选择辅助用制作技术。 | 带来了15个神圣证物。 | 带来了30个神圣证物。 | 带来了60个神圣证物。
+select1,1011,HTML_PAGE_SELECT1,exact,1267,HACTION_SELECT1_4,exact,34,34,用600个秘银铸币交换护具。 | 我有龙帝之心。 | 我有特化龙帝之心。 | 我拥有锁链防具。 | 说想去除掉侦察队长坎土。
+select1,1011,HTML_PAGE_SELECT1,exact,1268,HACTION_SELECT1_4_1,exact,2,2,我有龙帝之尾。 | 我有特化龙帝之尾。
+select1,1011,HTML_PAGE_SELECT1,exact,1352,HACTION_SELECT2,exact,87,87,拿出中级古代圣像。 | 拿出中级古代印章。 | 拿出中级古代圣杯。 | 拿出中级古代王冠。 | 拿出10个中级古代圣像。
+select1,1011,HTML_PAGE_SELECT1,exact,1353,HACTION_SELECT2_1,exact,1,1,继续听故事。
+select1,1011,HTML_PAGE_SELECT1,exact,1693,HACTION_SELECT3,exact,60,60,拿出上级古代圣像。 | 拿出上级古代印章。 | 拿出上级古代圣杯。 | 拿出上级古代王冠。 | 拿出10个上级古代圣像。
+select1,1011,HTML_PAGE_SELECT1,exact,20000,HACTION_QUEST_ACCEPT_SIMPLE,exact,2060,2060,接受。 | 说知道了。 | 明白了。 | 说愿意去帮他。 | 听取祝贺的话语。
+select1,1011,HTML_PAGE_SELECT1,exact,20001,HACTION_QUEST_REFUSE_SIMPLE,exact,2060,2060,拒绝。 | 不要。 | 对不起。 | 说很忙。 | 接受。
+select1,1011,HTML_PAGE_SELECT1,exact,20002,HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE,exact,58,58,拿出破碎的黑金。 | 拿出奥德之珠结晶。 | 拿出关着精灵的笼子。 | 拿出变身材料。 | 拿出卷轴的后半部分。
+select1,1011,HTML_PAGE_SELECT1,exact,2034,HACTION_SELECT4,exact,42,42,拿出最上级古代圣像。 | 拿出最上级古代印章。 | 拿出最上级古代圣杯。 | 拿出最上级古代王冠。 | 拿出10个最上级古代圣像。
+select1,1011,HTML_PAGE_SELECT1,exact,2375,HACTION_SELECT5,exact,4,4,我拥有魔皮防具。 | 我拥有魔皮防具 | 我有魔法皮革防具。
+select1,1011,HTML_PAGE_SELECT1,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,352,352,拿出佩里亚叶子。 | 拿出触手。 | 拿出尾鳍。 | 拿出奥德之珠碎片。 | 交出知识实体核碎片。
+select1,1011,HTML_PAGE_SELECT1,exact,4763,HACTION_SELECT_NONE_1,exact,1,1,详细说明失事船的样子。
+select10,4080,HTML_PAGE_SELECT10,exact,10003,HACTION_SETPRO4,exact,1,1,准备好了就说一声。
+select10,4080,HTML_PAGE_SELECT10,exact,10009,HACTION_SETPRO10,exact,6,6,使用生命的气息发动实体。 | 点头。 | 移动到卡斯帕外部。 | 结束对话。 | 使用生命的泪水发动实体。
+select10,4080,HTML_PAGE_SELECT10,exact,1008,HACTION_FINISH_DIALOG,exact,50,50,结束对话。
+select10,4080,HTML_PAGE_SELECT10,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,4,4,报告结果。 | 讲述期间发生的事情。 | 拿出钱袋，说明情况。
+select10,4080,HTML_PAGE_SELECT10,exact,1012,HACTION_SELECT1_1,exact,12,12,重新领取名人考试所需的物品。 | 重新购买名人考试需要的物品。 | 重新购买图案。
+select10,4080,HTML_PAGE_SELECT10,exact,10255,HACTION_SET_SUCCEED,exact,2,2,结束对话 | 拿出Doc_Quest_28700a，并报告。
+select10,4080,HTML_PAGE_SELECT10,exact,4081,HACTION_SELECT10_1,exact,38,38,转达从罗特亚斯那里听到的话。 | 报告实验结果。 | 报告结果。 | 说是来把鸢族俘虏押走的。 | 询问有关战斗的痕迹的情况。
+select10,4080,HTML_PAGE_SELECT10,exact,4166,HACTION_SELECT10_2,exact,1,1,“我要成为护法星。”
+select10_1,4081,HTML_PAGE_SELECT10_1,exact,10009,HACTION_SETPRO10,exact,14,14,移动到卡斯帕森林。 | 结束对话。 | 说知道了。 | 接受慧眼符咒。 | 移动到伏魔殿。
+select10_1,4081,HTML_PAGE_SELECT10_1,exact,10010,HACTION_SETPRO11,exact,2,2,操作大型次元移动装置。
+select10_1,4081,HTML_PAGE_SELECT10_1,exact,10013,HACTION_SETPRO14,exact,2,2,是的，想成为吟游星。 | “是，我要成为治愈星。”
+select10_1,4081,HTML_PAGE_SELECT10_1,exact,1008,HACTION_FINISH_DIALOG,exact,5,5,“结束对话” | 结束对话。
+select10_1,4081,HTML_PAGE_SELECT10_1,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,5,5,点头 | 点头。 | 报告结果。
+select10_1,4081,HTML_PAGE_SELECT10_1,exact,1012,HACTION_SELECT1_1,exact,2,2,请再给我一份第一种料理图案。
+select10_1,4081,HTML_PAGE_SELECT10_1,exact,10255,HACTION_SET_SUCCEED,exact,4,4,结束对话。
+select10_1,4081,HTML_PAGE_SELECT10_1,exact,4082,HACTION_SELECT10_1_1,exact,8,8,敷衍点头。 | 摇晃德扎波波的身体。 | 询问需要做什么事。 | “被隐藏的真相？” | 摇晃卫扎波波的身体。
+select10_1,4081,HTML_PAGE_SELECT10_1,exact,4166,HACTION_SELECT10_2,exact,3,3,继续查看记录。 | 让我再考虑一下。
+select10_1_1,4082,HTML_PAGE_SELECT10_1_1,exact,10009,HACTION_SETPRO10,exact,4,4,结束对话。
+select10_1_1,4082,HTML_PAGE_SELECT10_1_1,exact,10010,HACTION_SETPRO11,exact,2,2,把折断的剑收起来。
+select10_1_1,4082,HTML_PAGE_SELECT10_1_1,exact,10011,HACTION_SETPRO12,exact,2,2,确认完毕。
+select10_1_1,4082,HTML_PAGE_SELECT10_1_1,exact,4081,HACTION_SELECT10_1,exact,1,1,“我要成为治愈星。”
+select10_1_1,4082,HTML_PAGE_SELECT10_1_1,exact,4083,HACTION_SELECT10_1_1_1,exact,3,3,点头。 | “是的，我不畏惧。” | 没什么可畏惧的。
+select10_1_1,4082,HTML_PAGE_SELECT10_1_1,exact,4166,HACTION_SELECT10_2,exact,1,1,“我要成为护法星。”
+select10_1_1_1,4083,HTML_PAGE_SELECT10_1_1_1,exact,10003,HACTION_SETPRO4,exact,1,1,结束对话。
+select10_1_1_1,4083,HTML_PAGE_SELECT10_1_1_1,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,4,4,报告结果。 | 继续听。 | 在莫尔海姆组织了希佩里安的搬运。
+select10_2,4166,HTML_PAGE_SELECT10_2,exact,10009,HACTION_SETPRO10,exact,2,2,结束查看。
+select10_2,4166,HTML_PAGE_SELECT10_2,exact,10012,HACTION_SETPRO13,exact,1,1,“是，我要成为护法星。”
+select10_2,4166,HTML_PAGE_SELECT10_2,exact,1008,HACTION_FINISH_DIALOG,exact,16,16,结束对话。
+select10_2,4166,HTML_PAGE_SELECT10_2,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,1,1,拿出日志。
+select10_2,4166,HTML_PAGE_SELECT10_2,exact,1353,HACTION_SELECT2_1,exact,2,2,请再给我一份第二种料理图案。
+select10_2,4166,HTML_PAGE_SELECT10_2,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,1,1,拿出从龙族身上发现的东西。
+select10_2,4166,HTML_PAGE_SELECT10_2,exact,4081,HACTION_SELECT10_1,exact,1,1,我选择了吟游星之路。
+select10_2,4166,HTML_PAGE_SELECT10_2,exact,4167,HACTION_SELECT10_2_1,exact,1,1,“我再考虑一下。”
+select10_2_1,4167,HTML_PAGE_SELECT10_2_1,exact,4081,HACTION_SELECT10_1,exact,1,1,“是，我要成为治愈星。”
+select10_2_1,4167,HTML_PAGE_SELECT10_2_1,exact,4166,HACTION_SELECT10_2,exact,1,1,“我要成为护法星。”
+select10_3,4251,HTML_PAGE_SELECT10_3,exact,1008,HACTION_FINISH_DIALOG,exact,14,14,结束对话。
+select10_3,4251,HTML_PAGE_SELECT10_3,exact,1694,HACTION_SELECT3_1,exact,2,2,请再给我一份第三种料理图案。
+select10_4,4336,HTML_PAGE_SELECT10_4,exact,1694,HACTION_SELECT3_1,exact,1,1,抓住罗特亚斯的树枝。
+select10_4,4336,HTML_PAGE_SELECT10_4,exact,2035,HACTION_SELECT4_1,exact,2,2,请再给我一份第四种料理图案。
+select10_4_4,4400,HTML_PAGE_SELECT10_4_4,exact,1008,HACTION_FINISH_DIALOG,exact,14,14,结束对话。
+select11,6500,HTML_PAGE_SELECT11,exact,1008,HACTION_FINISH_DIALOG,exact,1,1,结束对话。
+select11,6500,HTML_PAGE_SELECT11,exact,10255,HACTION_SET_SUCCEED,exact,2,2,点头。
+select11,6500,HTML_PAGE_SELECT11,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,2,2,拿出库尔玛武器碎片。 | 交出库尔玛武器碎片。
+select11,6500,HTML_PAGE_SELECT11,exact,6501,HACTION_SELECT11_1,exact,4,4,报告魔族入侵地下奥德矿山的事情。 | 继续听。 | 报告天族入侵地下奥德矿山的事情。
+select11_1,6501,HTML_PAGE_SELECT11_1,exact,10010,HACTION_SETPRO11,exact,2,2,结束对话。
+select11_1,6501,HTML_PAGE_SELECT11_1,exact,6502,HACTION_SELECT11_1_1,exact,2,2,给她看陷入沉睡的贤者，报告之前的事情。 | 给他看陷入沉睡的贤者，报告之前的事情。
+select11_1_1,6502,HTML_PAGE_SELECT11_1_1,exact,10255,HACTION_SET_SUCCEED,exact,2,2,结束对话。
+select12,6841,HTML_PAGE_SELECT12,exact,10001,HACTION_SETPRO2,exact,2,2,回答说前往那个地方吧。
+select12,6841,HTML_PAGE_SELECT12,exact,10011,HACTION_SETPRO12,exact,2,2,移动到永恒之苦痛地狱。 | 前往永恒之苦痛地狱。
+select12,6841,HTML_PAGE_SELECT12,exact,6842,HACTION_SELECT12_1,exact,6,6,谁是亚特雷亚的守护者？ | 因为碎片的影响出现了间歇泉 | 说我也不知道为什么。
+select12_1,6842,HTML_PAGE_SELECT12_1,exact,10011,HACTION_SETPRO12,exact,2,2,结束对话。
+select12_1,6842,HTML_PAGE_SELECT12_1,exact,10255,HACTION_SET_SUCCEED,exact,2,2,结束对话。
+select12_1,6842,HTML_PAGE_SELECT12_1,exact,6843,HACTION_SELECT12_1_1,exact,2,2,敷衍点头。
+select12_1_1,6843,HTML_PAGE_SELECT12_1_1,exact,10255,HACTION_SET_SUCCEED,exact,2,2,结束对话。
+select13,7182,HTML_PAGE_SELECT13,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,2,2,交出密封的秘密文书。 | 交出经过加密的秘密文书。
+select14,7523,HTML_PAGE_SELECT14,exact,10013,HACTION_SETPRO14,exact,2,2,点头。
+select14,7523,HTML_PAGE_SELECT14,exact,7524,HACTION_SELECT14_1,exact,2,2,稍等片刻。
+select14_1,7524,HTML_PAGE_SELECT14_1,exact,10013,HACTION_SETPRO14,exact,2,2,结束对话。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,10000,HACTION_SETPRO1,exact,368,368,结束对话。 | 说准备好了。 | 接过保密誓约。 | 点头。 | 回答说知道了。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,10001,HACTION_SETPRO2,exact,3,3,把这件事告诉[%dic:STR_DIC_N_Lusena]。 | 直接寻找次元之门。 | 结束对话。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,10009,HACTION_SETPRO10,exact,7,7,获取第一种图案。 | 结束对话。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,1002,HACTION_QUEST_ACCEPT_1,exact,3,3,接受。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,1003,HACTION_QUEST_REFUSE_1,exact,3,3,拒绝。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,1007,HACTION_ASK_QUEST_ACCEPT,exact,899,899,点头。 | 说可以帮他送。 | 继续听。 | 说不吃。 | 你好像对黑暗术古很关心嘛。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,1008,HACTION_FINISH_DIALOG,exact,7,7,结束对话。 | 料理完成。 | 就那么放下了。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,1011,HACTION_SELECT1,exact,80,80,重新考虑一下。 | 仔细查看物品。 | 再考虑一下。 | 跟他说再考虑一下。 | 跟她说再考虑一下。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,1013,HACTION_SELECT1_1_1,exact,212,212,点头。 | 其中可能会有你的派遣队员。 | 继续听。 | 询问该如何帮忙。 | 只有布里特拉军可以？
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,10255,HACTION_SET_SUCCEED,exact,25,25,结束对话。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,1034,HACTION_SELECT1_1_2,exact,31,31,说任务太麻烦了。 | 不愿意。 | 选择加工。 | 我想要交换下衣。 | 我拥有大剑。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,1055,HACTION_SELECT1_1_3,exact,12,12,我想要交换鞋子。 | 我拥有战戟。 | 我想交换鞋子。 | 我有战戟。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,1076,HACTION_SELECT1_1_4,exact,12,12,我想要交换护肩。 | 我拥有短剑。 | 我想交换护肩。 | 我有短剑。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,1097,HACTION_SELECT1_2,exact,20,20,继续对话。 | 继续听。 | 我想购买艾尔米提亚之大剑图案。 | 我想购买艾尔米提亚之金属胸甲图案。 | 我想购买艾尔米提亚之长袍腰带图案。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,1182,HACTION_SELECT1_3,exact,12,12,我想购买发光的艾尔米提亚之大剑图案。 | 我想购买发光的艾尔米提亚之金属胸甲图案。 | 我想购买发光的艾尔米提亚之长袍腰带图案。 | 我想购买发光的艾尔米提亚之项链图案。 | 我想购买发光的艾尔米提亚之法书图案。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,1353,HACTION_SELECT2_1,exact,6,6,我选择情侣！我正在恋爱。 | 我选情侣！我正在恋爱中。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,1438,HACTION_SELECT2_2,exact,6,6,我选择单身！好孤独。 | 我选单身汉！我很孤独。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,20000,HACTION_QUEST_ACCEPT_SIMPLE,exact,29,29,接受。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,20001,HACTION_QUEST_REFUSE_SIMPLE,exact,29,29,拒绝。
+select1_1,1012,HTML_PAGE_SELECT1_1,exact,5103,HACTION_SELECT1_1_5,exact,12,12,我想要交换手套。 | 我拥有弓。 | 我想交换手套。 | 我有弓。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,10000,HACTION_SETPRO1,exact,157,155,结束对话。 | 点头。 | 收下军牌。 | 收下标注遗迹位置的地图。 | 到第72基地去。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,10001,HACTION_SETPRO2,exact,14,14,到第74基地去。 | 到第73基地去。 | 我想要皮革防具。 | 我需要侦察者的武器。 | 我需要侦察者用的武器。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,10002,HACTION_SETPRO3,exact,14,14,到第77基地去。 | 到第76基地去。 | 我想要长袍防具。 | 我需要法师的武器。 | 我需要法师用的武器。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,10003,HACTION_SETPRO4,exact,12,12,我想要锁链防具。 | 我需要祭司的武器。 | 我需要祭司用的武器。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,10004,HACTION_SETPRO5,exact,8,8,我想要魔皮防具。 | 我需要工程师的武器。 | 我想要魔法皮革防具。 | 我需要工程师用的武器。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,10005,HACTION_SETPRO6,exact,4,4,我需要艺术家的武器。 | 我需要艺术家用的武器。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,10011,HACTION_SETPRO12,exact,2,2,结束对话。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,1002,HACTION_QUEST_ACCEPT_1,exact,2,2,说心已经平静下来了。 | 说准备好了。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,1007,HACTION_ASK_QUEST_ACCEPT,exact,11,11,询问派遣任务是什么。 | 说把戒指给他。 | 继续听。 | 继续听着。 | 点头。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,1011,HACTION_SELECT1,exact,16,16,重新选择。 | 不，我再想想。 | 不，让我再想想。 | 不，我再考虑一下。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,1014,HACTION_SELECT1_1_1_1,exact,35,35,点头。 | 继续听。 | 说愿意帮忙。 | “原来如此。” | 答应。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,1019,HACTION_SELECT1_1_1_2,exact,6,6,请求传送到极乐世界。 | 我想去极乐世界地下竞技场。 | 要求现在送过去。 | 说忙，拒绝。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,1024,HACTION_SELECT1_1_1_3,exact,3,3,我想去魔界。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,10255,HACTION_SET_SUCCEED,exact,4,4,结束对话。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,20000,HACTION_QUEST_ACCEPT_SIMPLE,exact,2,2,接受。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,20001,HACTION_QUEST_REFUSE_SIMPLE,exact,2,2,拒绝。
+select1_1_1,1013,HTML_PAGE_SELECT1_1_1,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,2,2,拿出图尔辛克拉尔的证物。
+select1_1_1_1,1014,HTML_PAGE_SELECT1_1_1_1,exact,10000,HACTION_SETPRO1,exact,26,26,结束对话。 | 闭上眼睛，移动到克利奥尼湖。 | 说好像是萤火虫。 | 结束查看。
+select1_1_1_1,1014,HTML_PAGE_SELECT1_1_1_1,exact,10001,HACTION_SETPRO2,exact,1,1,说好像是缪塔。
+select1_1_1_1,1014,HTML_PAGE_SELECT1_1_1_1,exact,10010,HACTION_SETPRO11,exact,5,5,结束对话。
+select1_1_1_1,1014,HTML_PAGE_SELECT1_1_1_1,exact,1008,HACTION_FINISH_DIALOG,exact,2,2,结束对话。
+select1_1_1_1,1014,HTML_PAGE_SELECT1_1_1_1,exact,1013,HACTION_SELECT1_1_1,exact,5,5,“让我重新考虑一下。” | 重新考虑一下。 | 我再考虑一下。
+select1_1_1_1,1014,HTML_PAGE_SELECT1_1_1_1,exact,10255,HACTION_SET_SUCCEED,exact,3,3,结束对话。
+select1_1_1_1,1014,HTML_PAGE_SELECT1_1_1_1,exact,1097,HACTION_SELECT1_2,exact,1,1,继续听。
+select1_1_1_2,1019,HTML_PAGE_SELECT1_1_1_2,exact,10000,HACTION_SETPRO1,exact,2,2,闭上眼睛。
+select1_1_1_2,1019,HTML_PAGE_SELECT1_1_1_2,exact,10011,HACTION_SETPRO12,exact,5,5,结束对话。
+select1_1_1_2,1019,HTML_PAGE_SELECT1_1_1_2,exact,1008,HACTION_FINISH_DIALOG,exact,1,1,结束对话。
+select1_1_1_2,1019,HTML_PAGE_SELECT1_1_1_2,exact,1013,HACTION_SELECT1_1_1,exact,5,5,然我再考虑一下。 | 重新考虑一下。 | 让我重新考虑一下。
+select1_1_1_3,1024,HTML_PAGE_SELECT1_1_1_3,exact,10012,HACTION_SETPRO13,exact,5,5,结束对话。
+select1_1_1_3,1024,HTML_PAGE_SELECT1_1_1_3,exact,1013,HACTION_SELECT1_1_1,exact,5,5,然我再考虑一下。 | 重新考虑一下。 | 我再考虑一下。
+select1_1_2,1034,HTML_PAGE_SELECT1_1_2,exact,10001,HACTION_SETPRO2,exact,4,4,点头。
+select1_1_2,1034,HTML_PAGE_SELECT1_1_2,exact,1008,HACTION_FINISH_DIALOG,exact,15,15,结束对话。
+select1_1_2,1034,HTML_PAGE_SELECT1_1_2,exact,1011,HACTION_SELECT1,exact,4,4,重新选择。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,10000,HACTION_SETPRO1,exact,9,9,结束对话。 | 拿到椰林族精髓。 | 再次跟他说现在要出发。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,10001,HACTION_SETPRO2,exact,75,75,拿出1200个秘银铸币。 | 拿出7个神圣证物。 | 拿出14个神圣证物。 | 拿出28个神圣证物。 | 拿出15个特殊作战部证物。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,10002,HACTION_SETPRO3,exact,6,6,"拿出5000基纳。 | 给他10杯梅拉果汁。 | ""祝福，并拿出1,000基纳。"" | 祝愿，并拿出1000基纳。 | 祈愿，并拿出1000基纳。"
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,10009,HACTION_SETPRO10,exact,12,12,是的，我想购买艾尔米提亚之大剑图案。 | 是的，我想购买艾尔米提亚之金属胸甲图案。 | 是的，我想购买艾尔米提亚之长袍腰带图案。 | 是的，我想购买艾尔米提亚之项链图案。 | 是的，我想购买艾尔米提亚之法书图案。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,10010,HACTION_SETPRO11,exact,2,2,拿出第一种料理。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,10019,HACTION_SETPRO20,exact,5,5,结束对话。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,1008,HACTION_FINISH_DIALOG,exact,33,33,结束对话。 | 料理完成。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,1011,HACTION_SELECT1,exact,80,80,重新考虑一下。 | 仔细查看物品。 | 再考虑一下。 | 跟他说再考虑一下。 | 跟她说再考虑一下。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,1012,HACTION_SELECT1_1,exact,12,12,我要再考虑一下。 | 我要重新想一想。 | 再考虑一下。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,10255,HACTION_SET_SUCCEED,exact,1,1,结束对话。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,1098,HACTION_SELECT1_2_1,exact,19,19,继续听。 | 选择金属盔甲制作。 | 我想要交换上衣。 | 我拥有权杖。 | 接受。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,1119,HACTION_SELECT1_2_2,exact,18,18,选择裁缝。 | 我想要交换下衣。 | 我拥有法杖。 | 拒绝。 | 我想交换下衣。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,1140,HACTION_SELECT1_2_3,exact,12,12,我想要交换鞋子。 | 我拥有法书。 | 我想交换鞋子。 | 我有法书。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,1161,HACTION_SELECT1_2_4,exact,12,12,我想要交换护肩。 | 我拥有宝珠。 | 我想交换护肩。 | 我有宝珠。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,1204,HACTION_SELECT1_3_2,exact,4,4,我拥有魔力枪。 | 我有魔力枪。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,1225,HACTION_SELECT1_3_3,exact,4,4,我拥有魔力炮。 | 我有魔力炮。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,1246,HACTION_SELECT1_3_4,exact,4,4,我拥有弦乐器。 | 我有弦乐器。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,5104,HACTION_SELECT1_2_5,exact,6,6,我想要交换手套。 | 我想交换手套。
+select1_2,1097,HTML_PAGE_SELECT1_2,exact,5105,HACTION_SELECT1_3_5,exact,4,4,我拥有启动钥匙。 | 我有启动钥匙。
+select1_2_1,1098,HTML_PAGE_SELECT1_2_1,exact,10000,HACTION_SETPRO1,exact,2,2,结束对话。
+select1_2_1,1098,HTML_PAGE_SELECT1_2_1,exact,10002,HACTION_SETPRO3,exact,4,4,点头。
+select1_2_1,1098,HTML_PAGE_SELECT1_2_1,exact,1011,HACTION_SELECT1,exact,4,4,重新选择。
+select1_2_1,1098,HTML_PAGE_SELECT1_2_1,exact,1099,HACTION_SELECT1_2_1_1,exact,1,1,需要我做什么呢？
+select1_2_1_1,1099,HTML_PAGE_SELECT1_2_1_1,exact,10000,HACTION_SETPRO1,exact,1,1,结束对话。
+select1_2_2,1119,HTML_PAGE_SELECT1_2_2,exact,10003,HACTION_SETPRO4,exact,4,4,点头。
+select1_2_2,1119,HTML_PAGE_SELECT1_2_2,exact,1011,HACTION_SELECT1,exact,4,4,重新选择。
+select1_3,1182,HTML_PAGE_SELECT1_3,exact,10000,HACTION_SETPRO1,exact,8,8,只拿出成长的种子。 | 只交出成长的种子。 | 只递出成长的种子。
+select1_3,1182,HTML_PAGE_SELECT1_3,exact,10002,HACTION_SETPRO3,exact,75,75,拿出900个秘银铸币。 | 拿出15个神圣证物。 | 拿出30个神圣证物。 | 拿出60个神圣证物。 | 拿出30个特殊作战部证物。
+select1_3,1182,HTML_PAGE_SELECT1_3,exact,10006,HACTION_SETPRO7,exact,6,6,"拿出50000基纳。 | 给他100杯梅拉果汁。 | ""祝福，并拿出10,000基纳。"" | 祝愿，并拿出10000基纳。 | 祈愿，并拿出10000基纳。"
+select1_3,1182,HTML_PAGE_SELECT1_3,exact,10019,HACTION_SETPRO20,exact,12,12,是的，我想购买发光的艾尔米提亚之大剑图案。 | 是的，我想购买发光的艾尔米提亚之金属胸甲图案。 | 是的，我想购买发光的艾尔米提亚之长袍腰带图案。 | 是的，我想购买发光的艾尔米提亚之项链图案。 | 是的，我想购买发光的艾尔米提亚之法书图案。
+select1_3,1182,HTML_PAGE_SELECT1_3,exact,1008,HACTION_FINISH_DIALOG,exact,16,16,结束对话。
+select1_3,1182,HTML_PAGE_SELECT1_3,exact,1011,HACTION_SELECT1,exact,80,80,重新考虑一下。 | 仔细查看物品。 | 再考虑一下。 | 跟他说再考虑一下。 | 跟她说再考虑一下。
+select1_3,1182,HTML_PAGE_SELECT1_3,exact,1012,HACTION_SELECT1_1,exact,12,12,我要再考虑一下。 | 我要重新想一想。 | 再考虑一下。
+select1_3,1182,HTML_PAGE_SELECT1_3,exact,1183,HACTION_SELECT1_3_1,exact,17,17,选择料理。 | 继续听。 | 我想要交换上衣。 | 当然了。 | 是的。
+select1_3,1182,HTML_PAGE_SELECT1_3,exact,1204,HACTION_SELECT1_3_2,exact,10,10,选择炼金术。 | 我想要交换下衣。 | 我想交换下衣。 | 选择炼金术
+select1_3,1182,HTML_PAGE_SELECT1_3,exact,1225,HACTION_SELECT1_3_3,exact,6,6,我想要交换鞋子。 | 我想交换鞋子。
+select1_3,1182,HTML_PAGE_SELECT1_3,exact,1246,HACTION_SELECT1_3_4,exact,6,6,我想要交换护肩。 | 我想交换护肩。
+select1_3,1182,HTML_PAGE_SELECT1_3,exact,5105,HACTION_SELECT1_3_5,exact,6,6,我想要交换手套。 | 我想交换手套。
+select1_3_1,1183,HTML_PAGE_SELECT1_3_1,exact,10004,HACTION_SETPRO5,exact,4,4,点头。
+select1_3_1,1183,HTML_PAGE_SELECT1_3_1,exact,1011,HACTION_SELECT1,exact,4,4,重新选择。
+select1_3_1,1183,HTML_PAGE_SELECT1_3_1,exact,1184,HACTION_SELECT1_3_1_1,exact,1,1,询问帕夫纳提供的情报。
+select1_3_1_1,1184,HTML_PAGE_SELECT1_3_1_1,exact,10000,HACTION_SETPRO1,exact,1,1,结束对话。
+select1_3_2,1204,HTML_PAGE_SELECT1_3_2,exact,10005,HACTION_SETPRO6,exact,4,4,点头。
+select1_3_2,1204,HTML_PAGE_SELECT1_3_2,exact,1011,HACTION_SELECT1,exact,4,4,重新选择。
+select1_4,1267,HTML_PAGE_SELECT1_4,exact,10003,HACTION_SETPRO4,exact,27,27,拿出600个秘银铸币 | 交出龙帝之心。 | 交出特化龙帝之心。 | 结束对话。 | 将200白金铸币交给他。
+select1_4,1267,HTML_PAGE_SELECT1_4,exact,10010,HACTION_SETPRO11,exact,1,1,结束对话
+select1_4,1267,HTML_PAGE_SELECT1_4,exact,1008,HACTION_FINISH_DIALOG,exact,8,8,结束对话。
+select1_4,1267,HTML_PAGE_SELECT1_4,exact,1011,HACTION_SELECT1,exact,26,26,重新考虑一下。 | 仔细查看物品。 | 跟他说再考虑一下。 | 跟她说再考虑一下。 | 跟他说再考虑一下
+select1_4,1267,HTML_PAGE_SELECT1_4,exact,1268,HACTION_SELECT1_4_1,exact,7,7,询问锡兰泰拉回廊和帕休曼迪尔寺院的情况。 | 我想要交换上衣。 | 我想交换上衣。
+select1_4,1267,HTML_PAGE_SELECT1_4,exact,1289,HACTION_SELECT1_4_2,exact,6,6,我想要交换下衣。 | 我想交换下衣。
+select1_4,1267,HTML_PAGE_SELECT1_4,exact,1310,HACTION_SELECT1_4_3,exact,6,6,我想要交换鞋子。 | 我想交换鞋子。
+select1_4,1267,HTML_PAGE_SELECT1_4,exact,1331,HACTION_SELECT1_4_4,exact,6,6,我想要交换护肩。 | 我想交换护肩。
+select1_4,1267,HTML_PAGE_SELECT1_4,exact,5106,HACTION_SELECT1_4_5,exact,6,6,我想要交换手套。 | 我想交换手套。
+select1_4_1,1268,HTML_PAGE_SELECT1_4_1,exact,10004,HACTION_SETPRO5,exact,2,2,交出龙帝之尾。 | 交出特化龙帝之尾。
+select1_4_1,1268,HTML_PAGE_SELECT1_4_1,exact,10010,HACTION_SETPRO11,exact,1,1,结束对话。
+select1_4_1,1268,HTML_PAGE_SELECT1_4_1,exact,1008,HACTION_FINISH_DIALOG,exact,2,2,结束对话。
+select1_4_1,1268,HTML_PAGE_SELECT1_4_1,exact,1011,HACTION_SELECT1,exact,2,2,仔细查看物品。
+select1_4_2,1289,HTML_PAGE_SELECT1_4_2,exact,1008,HACTION_FINISH_DIALOG,exact,2,2,点头。
+select2,1352,HTML_PAGE_SELECT2,exact,10000,HACTION_SETPRO1,exact,167,167,拿出黑暗术古牧师掉落物品。 | 结束对话。 | 回答说知道了。 | 收下报告书。 | 结束调查。
+select2,1352,HTML_PAGE_SELECT2,exact,10001,HACTION_SETPRO2,exact,92,92,结束对话。 | 搭乘尤洛斯号。 | 说准备好了。 | 回答说知道了。 | 使用进攻回廊。
+select2,1352,HTML_PAGE_SELECT2,exact,10002,HACTION_SETPRO3,exact,6,6,拿出黑暗术古游侠掉落物品。 | 拿出慧眼之衣和布拉斯的蹄子。 | 拿出火鸟大腿肉。 | 拿出剑齿豹皮毛。 | 递过萤火虫的卵囊。
+select2,1352,HTML_PAGE_SELECT2,exact,1008,HACTION_FINISH_DIALOG,exact,41,41,结束对话。 | 说知道了。
+select2,1352,HTML_PAGE_SELECT2,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,1911,1911,报告结果。 | 说出名字。 | 点头。 | 说没关系，事情都做完了。 | 说事情已经完成了。
+select2,1352,HTML_PAGE_SELECT2,exact,1011,HACTION_SELECT1,exact,12,12,再次选择。 | 重新选择。
+select2,1352,HTML_PAGE_SELECT2,exact,10255,HACTION_SET_SUCCEED,exact,25,25,停止查看。 | 说知道了。 | 前往知识书库。 | 结束对话。 | 点头。
+select2,1352,HTML_PAGE_SELECT2,exact,1353,HACTION_SELECT2_1,exact,878,878,转达艾尔米提亚的话。 | 碰了碰被缠住的守护者。 | 摇头。 | 询问原因。 | 转达塞昆迪拉的话。
+select2,1352,HTML_PAGE_SELECT2,exact,1354,HACTION_SELECT2_1_1,exact,2,2,请给我手套。 | 选择手套。
+select2,1352,HTML_PAGE_SELECT2,exact,1375,HACTION_SELECT2_1_2,exact,2,2,请给我护肩。 | 选择护肩。
+select2,1352,HTML_PAGE_SELECT2,exact,1396,HACTION_SELECT2_1_3,exact,2,2,请给我鞋子。 | 选择鞋。
+select2,1352,HTML_PAGE_SELECT2,exact,1438,HACTION_SELECT2_2,exact,18,18,询问可以获得埃利安露水的方法。 | 询问可以获得炽热的气息的方法。 | 询问可以获得封印的知识之书的方法。 | 是深邃的水之气息。 | 询问可以获得佩尔农露水的方法。
+select2,1352,HTML_PAGE_SELECT2,exact,1523,HACTION_SELECT2_3,exact,10,10,询问可以获得奥格林特叶子的方法。 | 询问可以获得受诅咒的知识之书的方法。 | 询问可以获得荣誉守护者勋章的方法。 | “是龙族制造的空间。”
+select2,1352,HTML_PAGE_SELECT2,exact,1608,HACTION_SELECT2_4,exact,4,4,询问可以获得荣誉守护者勋章的方法。
+select2,1352,HTML_PAGE_SELECT2,exact,1693,HACTION_SELECT3,exact,1,1,不是，不是我丢的那只斧头。
+select2,1352,HTML_PAGE_SELECT2,exact,20002,HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE,exact,11,11,拿出无华的花。 | 交出搜集的道具。
+select2,1352,HTML_PAGE_SELECT2,exact,2716,HACTION_SELECT6,exact,2,2,打开装有机密的箱子查看。
+select2,1352,HTML_PAGE_SELECT2,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,107,107,交出自由之箭派遣队员的痕迹。 | 拿出时空精髓。 | 拿出守卫的军牌。 | 拿出水。 | 拿出布里特拉军的指令书。
+select2_1,1353,HTML_PAGE_SELECT2_1,exact,10000,HACTION_SETPRO1,exact,475,475,结束对话。 | 说知道了。 | 说知道了 | 停止查看。 | 收下信。
+select2_1,1353,HTML_PAGE_SELECT2_1,exact,10001,HACTION_SETPRO2,exact,206,206,向守护者默哀后离开。 | 结束对话。 | 回答说知道了。 | 说知道了。 | 我知道了。
+select2_1,1353,HTML_PAGE_SELECT2_1,exact,10006,HACTION_SETPRO7,exact,4,4,结束对话。
+select2_1,1353,HTML_PAGE_SELECT2_1,exact,10009,HACTION_SETPRO10,exact,1,1,结束对话。
+select2_1,1353,HTML_PAGE_SELECT2_1,exact,10010,HACTION_SETPRO11,exact,1,1,“仔细想了一下，您说的对。
+select2_1,1353,HTML_PAGE_SELECT2_1,exact,10019,HACTION_SETPRO20,exact,2,2,获取第二种图案。
+select2_1,1353,HTML_PAGE_SELECT2_1,exact,1008,HACTION_FINISH_DIALOG,exact,35,35,结束对话。 | 拒绝。 | 停止查看。
+select2_1,1353,HTML_PAGE_SELECT2_1,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,3,3,“是我选的。” | 报告结果。 | 回答说塔鲁好像是犯人，并且已经将塔鲁消灭。
+select2_1,1353,HTML_PAGE_SELECT2_1,exact,10255,HACTION_SET_SUCCEED,exact,11,11,点头。 | 交出米拉詹特圣骑士之印章。 | 结束对话。 | 交出潘利尔的犬牙之印章。
+select2_1,1353,HTML_PAGE_SELECT2_1,exact,1354,HACTION_SELECT2_1_1,exact,161,161,提亚马特龙帝怎么？ | 继续听。 | 询问哈纳尔卡德的位置。 | 说是代替贝尔丹过来帮他的。 | 你说只有一张？
+select2_1,1353,HTML_PAGE_SELECT2_1,exact,1375,HACTION_SELECT2_1_2,exact,8,8,"需要我的生命？ | 询问做什么事。 | 是真理。 | ""需要我的生命？"" | 询问要做什么事。"
+select2_1,1353,HTML_PAGE_SELECT2_1,exact,1396,HACTION_SELECT2_1_3,exact,2,2,"需要我的气息？ | ""需要我的气息？"""
+select2_1,1353,HTML_PAGE_SELECT2_1,exact,1438,HACTION_SELECT2_2,exact,11,11,说准备好了。 | 让他讲述鸢族的历史。 | 继续听。 | 了解混沌竞技场的规则。 | 坦白说看过。
+select2_1,1353,HTML_PAGE_SELECT2_1,exact,1523,HACTION_SELECT2_3,exact,1,1,骗他说没看过。
+select2_1,1353,HTML_PAGE_SELECT2_1,exact,1693,HACTION_SELECT3,exact,1,1,“仔细看了看，这不是我的斧头。”
+select2_1,1353,HTML_PAGE_SELECT2_1,exact,1694,HACTION_SELECT3_1,exact,7,7,说要以情侣身份活动。 | 我会站在情侣这边进行活动。 | 说是受到了埃尔的委托。
+select2_1_1,1354,HTML_PAGE_SELECT2_1_1,exact,10000,HACTION_SETPRO1,exact,27,27,结束对话。 | 闭上眼睛。
+select2_1_1,1354,HTML_PAGE_SELECT2_1_1,exact,10001,HACTION_SETPRO2,exact,99,99,结束对话。 | 说知道了。 | 好的。 | “准备好了。” | 接受提议。
+select2_1_1,1354,HTML_PAGE_SELECT2_1_1,exact,10009,HACTION_SETPRO10,exact,2,2,是的，请给我手套。 | 决定为手套。
+select2_1_1,1354,HTML_PAGE_SELECT2_1_1,exact,10010,HACTION_SETPRO11,exact,3,3,交钱拿到药水。 | 把钱给他，收下药水。 | “怎么看都像是雷帕尔革命团干的。”
+select2_1_1,1354,HTML_PAGE_SELECT2_1_1,exact,1008,HACTION_FINISH_DIALOG,exact,6,6,结束对话。
+select2_1_1,1354,HTML_PAGE_SELECT2_1_1,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,1,1,继续听。
+select2_1_1,1354,HTML_PAGE_SELECT2_1_1,exact,10255,HACTION_SET_SUCCEED,exact,1,1,结束对话。
+select2_1_1,1354,HTML_PAGE_SELECT2_1_1,exact,1355,HACTION_SELECT2_1_1_1,exact,18,18,继续听。 | 点头。 | 遵从信念。 | 询问要寻找的物品。 | 询问最后是在什么地方看见的。
+select2_1_1,1354,HTML_PAGE_SELECT2_1_1,exact,1360,HACTION_SELECT2_1_1_2,exact,3,3,遵从主神们的意愿。 | 遵从主神的意愿。
+select2_1_1,1354,HTML_PAGE_SELECT2_1_1,exact,1375,HACTION_SELECT2_1_2,exact,4,4,不，请给我护肩。 | “因为永恒之塔正在崩溃。” | 改为护肩。
+select2_1_1,1354,HTML_PAGE_SELECT2_1_1,exact,1396,HACTION_SELECT2_1_3,exact,4,4,不，请给我鞋子。 | “因为亚特雷亚的奥德的能量正在枯竭。” | 改为鞋。
+select2_1_1,1354,HTML_PAGE_SELECT2_1_1,exact,1417,HACTION_SELECT2_1_4,exact,2,2,因为欧比斯的怪物涌入了亚特雷亚。 | “因为欧比斯的怪物涌入了亚特雷亚。”
+select2_1_1,1354,HTML_PAGE_SELECT2_1_1,exact,1438,HACTION_SELECT2_2,exact,3,3,再考虑一下。 | 支付1万基尼。
+select2_1_1,1354,HTML_PAGE_SELECT2_1_1,exact,1523,HACTION_SELECT2_3,exact,1,1,没这么多钱？
+select2_1_1,1354,HTML_PAGE_SELECT2_1_1,exact,1694,HACTION_SELECT3_1,exact,6,6,说要以情侣身份活动。 | 我会站在情侣这边进行活动。
+select2_1_1,1354,HTML_PAGE_SELECT2_1_1,exact,1779,HACTION_SELECT3_2,exact,6,6,说要以单身身份活动。 | 我会站在单身汉这边进行活动。
+select2_1_1_1,1355,HTML_PAGE_SELECT2_1_1_1,exact,10000,HACTION_SETPRO1,exact,1,1,结束对话。
+select2_1_1_1,1355,HTML_PAGE_SELECT2_1_1_1,exact,10001,HACTION_SETPRO2,exact,13,13,结束对话。 | 结束对话 | “准备好了。”
+select2_1_1_1,1355,HTML_PAGE_SELECT2_1_1_1,exact,10011,HACTION_SETPRO12,exact,1,1,“原来真的像我想得那样，蛇妖才是罪犯。”
+select2_1_1_1,1355,HTML_PAGE_SELECT2_1_1_1,exact,1008,HACTION_FINISH_DIALOG,exact,3,3,回去拿钱来。 | 说去拿钱过来。 | 结束对话。
+select2_1_1_1,1355,HTML_PAGE_SELECT2_1_1_1,exact,1360,HACTION_SELECT2_1_1_2,exact,2,2,回答说是第一个。
+select2_1_1_1,1355,HTML_PAGE_SELECT2_1_1_1,exact,1365,HACTION_SELECT2_1_1_3,exact,2,2,回答说是第二个。
+select2_1_1_1,1355,HTML_PAGE_SELECT2_1_1_1,exact,1370,HACTION_SELECT2_1_1_4,exact,2,2,回答说是第三个。
+select2_1_1_1,1355,HTML_PAGE_SELECT2_1_1_1,exact,1375,HACTION_SELECT2_1_2,exact,2,2,替你办事。 | 说愿意帮他做事。
+select2_1_1_2,1360,HTML_PAGE_SELECT2_1_1_2,exact,1365,HACTION_SELECT2_1_1_3,exact,2,2,回答说是第二个。
+select2_1_1_2,1360,HTML_PAGE_SELECT2_1_1_2,exact,1370,HACTION_SELECT2_1_1_4,exact,2,2,回答说是第三个。
+select2_1_1_3,1365,HTML_PAGE_SELECT2_1_1_3,exact,1360,HACTION_SELECT2_1_1_2,exact,2,2,回答说是第一个。
+select2_1_1_3,1365,HTML_PAGE_SELECT2_1_1_3,exact,1370,HACTION_SELECT2_1_1_4,exact,2,2,回答说是第三个。
+select2_1_1_4,1370,HTML_PAGE_SELECT2_1_1_4,exact,10001,HACTION_SETPRO2,exact,2,2,结束对话。
+select2_1_2,1375,HTML_PAGE_SELECT2_1_2,exact,10001,HACTION_SETPRO2,exact,1,1,结束对话。
+select2_1_2,1375,HTML_PAGE_SELECT2_1_2,exact,10011,HACTION_SETPRO12,exact,2,2,前往马皮尔那里。 | 说马上去找马皮尔。
+select2_1_2,1375,HTML_PAGE_SELECT2_1_2,exact,10019,HACTION_SETPRO20,exact,2,2,是的，请给我护肩。 | 决定为护肩。
+select2_1_2,1375,HTML_PAGE_SELECT2_1_2,exact,1353,HACTION_SELECT2_1,exact,2,2,请他再说一遍。
+select2_1_2,1375,HTML_PAGE_SELECT2_1_2,exact,1354,HACTION_SELECT2_1_1,exact,2,2,不，请给我手套。 | 改为手套。
+select2_1_2,1375,HTML_PAGE_SELECT2_1_2,exact,1396,HACTION_SELECT2_1_3,exact,4,4,不，请给我鞋子。 | “因为亚特雷亚的奥德的能量正在枯竭。” | 改为鞋。
+select2_1_2,1375,HTML_PAGE_SELECT2_1_2,exact,1417,HACTION_SELECT2_1_4,exact,2,2,因为欧比斯的怪物涌入了亚特雷亚。 | “因为欧比斯的怪物涌入了亚特雷亚。”
+select2_1_2,1375,HTML_PAGE_SELECT2_1_2,exact,1438,HACTION_SELECT2_2,exact,2,2,再考虑一下。
+select2_1_3,1396,HTML_PAGE_SELECT2_1_3,exact,10029,HACTION_SETPRO30,exact,2,2,是的，请给我鞋子。 | 决定为鞋。
+select2_1_3,1396,HTML_PAGE_SELECT2_1_3,exact,1353,HACTION_SELECT2_1,exact,2,2,请他再说一遍。
+select2_1_3,1396,HTML_PAGE_SELECT2_1_3,exact,1354,HACTION_SELECT2_1_1,exact,2,2,不，请给我手套。 | 改为手套。
+select2_1_3,1396,HTML_PAGE_SELECT2_1_3,exact,1355,HACTION_SELECT2_1_1_1,exact,2,2,点头。 | 点头
+select2_1_3,1396,HTML_PAGE_SELECT2_1_3,exact,1375,HACTION_SELECT2_1_2,exact,2,2,不，请给我护肩。 | 改为护肩。
+select2_1_4,1417,HTML_PAGE_SELECT2_1_4,exact,1375,HACTION_SELECT2_1_2,exact,2,2,“因为永恒之塔正在崩溃。”
+select2_1_4,1417,HTML_PAGE_SELECT2_1_4,exact,1396,HACTION_SELECT2_1_3,exact,2,2,“因为亚特雷亚的奥德的能量正在枯竭。”
+select2_2,1438,HTML_PAGE_SELECT2_2,exact,10000,HACTION_SETPRO1,exact,4,4,结束对话。
+select2_2,1438,HTML_PAGE_SELECT2_2,exact,10001,HACTION_SETPRO2,exact,7,7,说明白了。 | 结束对话。 | 准备好了。 | 拿出嘉喔隆的笔记。 | 喝酒。
+select2_2,1438,HTML_PAGE_SELECT2_2,exact,10019,HACTION_SETPRO20,exact,1,1,结束对话。
+select2_2,1438,HTML_PAGE_SELECT2_2,exact,10020,HACTION_SETPRO21,exact,2,2,拿出第二种料理。
+select2_2,1438,HTML_PAGE_SELECT2_2,exact,1008,HACTION_FINISH_DIALOG,exact,34,34,结束对话。 | 说还是不会喝。
+select2_2,1438,HTML_PAGE_SELECT2_2,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,3,3,“是我选的。” | 报告结果。 | 回答说雪人好像是犯人，并且已经将雪人消灭。
+select2_2,1438,HTML_PAGE_SELECT2_2,exact,1353,HACTION_SELECT2_1,exact,2,2,“是由于永恒之塔裂成了2块。”
+select2_2,1438,HTML_PAGE_SELECT2_2,exact,1354,HACTION_SELECT2_1_1,exact,8,8,支付2万基纳。 | 说要再考虑一下。 | 让我再想想。
+select2_2,1438,HTML_PAGE_SELECT2_2,exact,1375,HACTION_SELECT2_1_2,exact,2,2,询问做什么事。 | 询问要做什么事。
+select2_2,1438,HTML_PAGE_SELECT2_2,exact,1439,HACTION_SELECT2_2_1,exact,9,9,继续听。 | 是爱。 | 询问是谁。 | 继续听故事。 | 说不知道打开箱子的方法。
+select2_2,1438,HTML_PAGE_SELECT2_2,exact,1460,HACTION_SELECT2_2_2,exact,3,3,是真相。
+select2_2,1438,HTML_PAGE_SELECT2_2,exact,1523,HACTION_SELECT2_3,exact,5,5,继续听。 | 了解合作竞技场的规则。 | “是龙族制造的空间。”
+select2_2,1438,HTML_PAGE_SELECT2_2,exact,1779,HACTION_SELECT3_2,exact,6,6,说要以单身身份活动。 | 我会站在单身汉这边进行活动。
+select2_2_1,1439,HTML_PAGE_SELECT2_2_1,exact,10001,HACTION_SETPRO2,exact,3,3,瞬间移动到阿塔兰特那里。 | 结束对话。
+select2_2_1,1439,HTML_PAGE_SELECT2_2_1,exact,1008,HACTION_FINISH_DIALOG,exact,1,1,结束对话。
+select2_2_1,1439,HTML_PAGE_SELECT2_2_1,exact,1440,HACTION_SELECT2_2_1_1,exact,3,3,继续听。 | 答应他的请求。 | 询问有没有什么好办法。
+select2_2_1_1,1440,HTML_PAGE_SELECT2_2_1_1,exact,10000,HACTION_SETPRO1,exact,1,1,结束对话。
+select2_2_1_1,1440,HTML_PAGE_SELECT2_2_1_1,exact,10001,HACTION_SETPRO2,exact,1,1,结束对话。
+select2_2_1_1,1440,HTML_PAGE_SELECT2_2_1_1,exact,10002,HACTION_SETPRO3,exact,1,1,结束对话。
+select2_2_2,1460,HTML_PAGE_SELECT2_2_2,exact,1461,HACTION_SELECT2_2_2_1,exact,3,3,真相是绝对的。
+select2_2_2,1460,HTML_PAGE_SELECT2_2_2,exact,1466,HACTION_SELECT2_2_2_2,exact,3,3,真相是相对的。
+select2_3,1523,HTML_PAGE_SELECT2_3,exact,10000,HACTION_SETPRO1,exact,3,3,结束对话。
+select2_3,1523,HTML_PAGE_SELECT2_3,exact,1008,HACTION_FINISH_DIALOG,exact,10,10,结束对话。
+select2_3,1523,HTML_PAGE_SELECT2_3,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,2,2,“是我选的。” | 报告结果。
+select2_3,1523,HTML_PAGE_SELECT2_3,exact,1353,HACTION_SELECT2_1,exact,2,2,“是由于永恒之塔裂成了2块。”
+select2_3,1523,HTML_PAGE_SELECT2_3,exact,1438,HACTION_SELECT2_2,exact,2,2,“是由于大崩溃时结界产生了裂缝。”
+select2_3,1523,HTML_PAGE_SELECT2_3,exact,1524,HACTION_SELECT2_3_1,exact,2,2,继续听故事。 | 恳求他，说是急需的东西。
+select2_3_1,1524,HTML_PAGE_SELECT2_3_1,exact,1525,HACTION_SELECT2_3_1_1,exact,2,2,好像听说过这个传说。 | 点头。
+select2_3_1_1,1525,HTML_PAGE_SELECT2_3_1_1,exact,10000,HACTION_SETPRO1,exact,1,1,结束对话。
+select2_3_1_1,1525,HTML_PAGE_SELECT2_3_1_1,exact,10001,HACTION_SETPRO2,exact,1,1,结束对话。
+select2_4,1608,HTML_PAGE_SELECT2_4,exact,1008,HACTION_FINISH_DIALOG,exact,5,5,结束对话。
+select2_4,1608,HTML_PAGE_SELECT2_4,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,1,1,报告结果。
+select2_4,1608,HTML_PAGE_SELECT2_4,exact,10255,HACTION_SET_SUCCEED,exact,2,2,结束对话 | 结束对话。
+select2_4,1608,HTML_PAGE_SELECT2_4,exact,1609,HACTION_SELECT2_4_1,exact,8,8,拿出报告书。 | 询问巨神兵的事情。 | 询问空中结界膜生成器的位置。 | 点头。 | 报告结果。
+select2_4_1,1609,HTML_PAGE_SELECT2_4_1,exact,10010,HACTION_SETPRO11,exact,2,2,结束对话。
+select2_4_1,1609,HTML_PAGE_SELECT2_4_1,exact,10011,HACTION_SETPRO12,exact,1,1,结束对话。
+select2_4_1,1609,HTML_PAGE_SELECT2_4_1,exact,10255,HACTION_SET_SUCCEED,exact,4,4,结束对话。
+select2_4_1,1609,HTML_PAGE_SELECT2_4_1,exact,1610,HACTION_SELECT2_4_1_1,exact,1,1,让他讲讲详细的情况。
+select2_4_1_1,1610,HTML_PAGE_SELECT2_4_1_1,exact,10010,HACTION_SETPRO11,exact,1,1,结束对话。
+select3,1693,HTML_PAGE_SELECT3,exact,10000,HACTION_SETPRO1,exact,2,2,说马上出发。 | “走吧。”
+select3,1693,HTML_PAGE_SELECT3,exact,10001,HACTION_SETPRO2,exact,74,74,结束对话。 | 停止查看。 | 收下报告书。 | 结束调查。 | 调查内容。
+select3,1693,HTML_PAGE_SELECT3,exact,10002,HACTION_SETPRO3,exact,101,97,替换奥德波动石。 | 停止查看。 | 结束对话。 | 进入次元之门。 | 收起伊德凝胶箱子。
+select3,1693,HTML_PAGE_SELECT3,exact,1008,HACTION_FINISH_DIALOG,exact,26,26,结束对话。 | 停止。 | 关闭箱子。 | 想想送给比尔利是不是更好。 | 继续听。
+select3,1693,HTML_PAGE_SELECT3,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,33,33,回答说已经帮完回来了。 | 回答很好。 | 报告结果。 | 陈述结果。 | 点头。
+select3,1693,HTML_PAGE_SELECT3,exact,10255,HACTION_SET_SUCCEED,exact,14,14,结束对话。 | 引爆最新型苏尔卡纳。 | 献上花束。
+select3,1693,HTML_PAGE_SELECT3,exact,1694,HACTION_SELECT3_1,exact,459,459,转达艾尔米提亚的话。 | 继续听。 | 碰了碰被缠住的守护者。 | 说可以帮助他。 | 转达贝尔塞蒂的话。
+select3,1693,HTML_PAGE_SELECT3,exact,1779,HACTION_SELECT3_2,exact,11,11,说看到他们在和龙族战斗。 | 试着摧毁。 | 我想来找回失去的记忆。 | 拒绝好意。 | “实际上是我干的。”
+select3,1693,HTML_PAGE_SELECT3,exact,1864,HACTION_SELECT3_3,exact,4,4,试着触摸。 | “经过调查，没查出是谁干的。” | “在第一次天魔战争的时候。”
+select3,1693,HTML_PAGE_SELECT3,exact,20002,HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE,exact,3,3,拿出搜集物品。
+select3,1693,HTML_PAGE_SELECT3,exact,2034,HACTION_SELECT4,exact,1,1,“不是，不是我的斧头。”
+select3,1693,HTML_PAGE_SELECT3,exact,2375,HACTION_SELECT5,exact,1,1,把羽衣交给他。
+select3,1693,HTML_PAGE_SELECT3,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,58,58,拿出观察之眼。 | 拿出艾洛昆的腰带。 | 拿出发光的泥土标本。 | 拿出陈旧的龙族文件。 | 拿出散落的布里特拉计划书。
+select3_1,1694,HTML_PAGE_SELECT3_1,exact,10000,HACTION_SETPRO1,exact,8,8,结束对话。 | 说明纳姆斯的事情。 | “对，是这样的。”
+select3_1,1694,HTML_PAGE_SELECT3_1,exact,10001,HACTION_SETPRO2,exact,170,170,结束对话。 | 点头。 | 停止展开。 | 结束任务。 | 盖上记录之书。
+select3_1,1694,HTML_PAGE_SELECT3_1,exact,10002,HACTION_SETPRO3,exact,171,171,结束对话。 | 放弃并后退。 | 登上战舰。 | 抓住罗特亚斯的树枝。 | 回答说准备好了。
+select3_1,1694,HTML_PAGE_SELECT3_1,exact,10006,HACTION_SETPRO7,exact,4,4,结束对话。 | 结束对话
+select3_1,1694,HTML_PAGE_SELECT3_1,exact,10011,HACTION_SETPRO12,exact,1,1,“听您一说，罪犯好像应该是蛇妖。”
+select3_1,1694,HTML_PAGE_SELECT3_1,exact,10029,HACTION_SETPRO30,exact,2,2,获取第三种图案。
+select3_1,1694,HTML_PAGE_SELECT3_1,exact,1008,HACTION_FINISH_DIALOG,exact,12,12,结束对话。 | 停止查看。 | 停止察看。 | 结束观察。
+select3_1,1694,HTML_PAGE_SELECT3_1,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,3,3,点头。 | 把手放到穆您的手掌上。
+select3_1,1694,HTML_PAGE_SELECT3_1,exact,10255,HACTION_SET_SUCCEED,exact,17,17,结束对话。 | 移动到守护者殿堂。
+select3_1,1694,HTML_PAGE_SELECT3_1,exact,1695,HACTION_SELECT3_1_1,exact,83,83,净化、筛选、安息？ | 继续听。 | 说非常吃惊。 | 询问是否接到了命令。 | 询问关于永恒之塔裂缝和贤者行踪的事情。
+select3_1,1694,HTML_PAGE_SELECT3_1,exact,1716,HACTION_SELECT3_1_2,exact,1,1,要是我的话，我不会那么做的。
+select3_1,1694,HTML_PAGE_SELECT3_1,exact,1779,HACTION_SELECT3_2,exact,10,10,试着摧毁。 | 继续听。 | 询问还有没有别的话要说。 | “在大崩溃以后。” | 远远地看了看，他好像已经死了。
+select3_1,1694,HTML_PAGE_SELECT3_1,exact,1864,HACTION_SELECT3_3,exact,3,3,试着触摸。 | “在第一次天魔战争的时候。”
+select3_1,1694,HTML_PAGE_SELECT3_1,exact,2034,HACTION_SELECT4,exact,1,1,“仔细看了看，这不是我的斧头。”
+select3_1,1694,HTML_PAGE_SELECT3_1,exact,2035,HACTION_SELECT4_1,exact,2,2,继续听。
+select3_1,1694,HTML_PAGE_SELECT3_1,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,2,2,拿出材料。 | 拿出材料，并告诉他方法。
+select3_1_1,1695,HTML_PAGE_SELECT3_1_1,exact,10000,HACTION_SETPRO1,exact,3,3,点头。 | 结束对话。
+select3_1_1,1695,HTML_PAGE_SELECT3_1_1,exact,10001,HACTION_SETPRO2,exact,7,7,结束对话。
+select3_1_1,1695,HTML_PAGE_SELECT3_1_1,exact,10002,HACTION_SETPRO3,exact,45,45,结束对话。 | 说知道了。 | 说谢谢。 | 知道了。 | 闭上眼睛。
+select3_1_1,1695,HTML_PAGE_SELECT3_1_1,exact,10011,HACTION_SETPRO12,exact,1,1,“听您一说，罪犯好像应该是蛇妖。”
+select3_1_1,1695,HTML_PAGE_SELECT3_1_1,exact,1008,HACTION_FINISH_DIALOG,exact,2,2,结束对话。
+select3_1_1,1695,HTML_PAGE_SELECT3_1_1,exact,10255,HACTION_SET_SUCCEED,exact,18,18,结束对话。
+select3_1_1,1695,HTML_PAGE_SELECT3_1_1,exact,1696,HACTION_SELECT3_1_1_1,exact,9,9,询问在这里有没有找到什么。 | 我想回到奥德的流动当中去。 | 说愿意帮她。 | 继续听。 | 再等一会儿。
+select3_1_1,1695,HTML_PAGE_SELECT3_1_1,exact,1716,HACTION_SELECT3_1_2,exact,2,2,回答是普埃塔。 | 回答说是特米伦要塞。
+select3_1_1,1695,HTML_PAGE_SELECT3_1_1,exact,1737,HACTION_SELECT3_1_3,exact,2,2,回答是贝尔特伦。 | 回答说是硫磺树要塞。
+select3_1_1,1695,HTML_PAGE_SELECT3_1_1,exact,1758,HACTION_SELECT3_1_4,exact,2,2,回答是埃尔特内。 | 回答说是普利姆要塞。
+select3_1_1_1,1696,HTML_PAGE_SELECT3_1_1_1,exact,10002,HACTION_SETPRO3,exact,7,7,说知道了。 | 结束对话 | 回答说知道了。 | 点头。 | 结束对话。
+select3_1_1_1,1696,HTML_PAGE_SELECT3_1_1_1,exact,10010,HACTION_SETPRO11,exact,1,1,“原来真的像我想得那样，雷帕尔革命团才是罪犯。”
+select3_1_1_1,1696,HTML_PAGE_SELECT3_1_1_1,exact,1701,HACTION_SELECT3_1_1_2,exact,2,2,“由泰尔拉斯指挥的暴风军团。”
+select3_1_1_1,1696,HTML_PAGE_SELECT3_1_1_1,exact,1706,HACTION_SELECT3_1_1_3,exact,2,2,“由布雷亚斯指挥的银辉军团。” | “是由特拉乌普尼尔智慧的黑色火焰军团。”
+select3_1_1_1,1696,HTML_PAGE_SELECT3_1_1_1,exact,1711,HACTION_SELECT3_1_1_4,exact,2,2,“内扎坎主神麾下的神庙。”
+select3_1_1_1,1696,HTML_PAGE_SELECT3_1_1_1,exact,1779,HACTION_SELECT3_2,exact,1,1,继续听。
+select3_1_1_2,1701,HTML_PAGE_SELECT3_1_1_2,exact,10002,HACTION_SETPRO3,exact,2,2,结束对话。
+select3_1_1_3,1706,HTML_PAGE_SELECT3_1_1_3,exact,1701,HACTION_SELECT3_1_1_2,exact,2,2,“由泰尔拉斯指挥的暴风军团。”
+select3_1_1_3,1706,HTML_PAGE_SELECT3_1_1_3,exact,1711,HACTION_SELECT3_1_1_4,exact,2,2,“内扎坎主神麾下的神庙。”
+select3_1_1_4,1711,HTML_PAGE_SELECT3_1_1_4,exact,1701,HACTION_SELECT3_1_1_2,exact,2,2,“由泰尔拉斯指挥的暴风军团。”
+select3_1_1_4,1711,HTML_PAGE_SELECT3_1_1_4,exact,1706,HACTION_SELECT3_1_1_3,exact,2,2,“由布雷亚斯指挥的银辉军团。” | “是由特拉乌普尼尔智慧的黑色火焰军团。”
+select3_1_2,1716,HTML_PAGE_SELECT3_1_2,exact,10003,HACTION_SETPRO4,exact,1,1,结束对话。
+select3_1_2,1716,HTML_PAGE_SELECT3_1_2,exact,1695,HACTION_SELECT3_1_1,exact,1,1,真的不后悔吗？
+select3_1_2,1716,HTML_PAGE_SELECT3_1_2,exact,1737,HACTION_SELECT3_1_3,exact,2,2,回答是贝尔特伦。 | 回答说是硫磺树要塞。
+select3_1_2,1716,HTML_PAGE_SELECT3_1_2,exact,1758,HACTION_SELECT3_1_4,exact,2,2,回答是埃尔特内。 | 回答说是普利姆要塞。
+select3_1_3,1737,HTML_PAGE_SELECT3_1_3,exact,1696,HACTION_SELECT3_1_1_1,exact,1,1,点头。
+select3_1_3,1737,HTML_PAGE_SELECT3_1_3,exact,1716,HACTION_SELECT3_1_2,exact,1,1,回答说是特米伦要塞。
+select3_1_3,1737,HTML_PAGE_SELECT3_1_3,exact,1758,HACTION_SELECT3_1_4,exact,1,1,回答说是普利姆要塞。
+select3_1_4,1758,HTML_PAGE_SELECT3_1_4,exact,1696,HACTION_SELECT3_1_1_1,exact,1,1,点头。
+select3_1_4,1758,HTML_PAGE_SELECT3_1_4,exact,1716,HACTION_SELECT3_1_2,exact,1,1,回答是普埃塔。
+select3_1_4,1758,HTML_PAGE_SELECT3_1_4,exact,1737,HACTION_SELECT3_1_3,exact,1,1,回答是贝尔特伦。
+select3_2,1779,HTML_PAGE_SELECT3_2,exact,10001,HACTION_SETPRO2,exact,10,10,结束对话。 | 说明详细的情况。
+select3_2,1779,HTML_PAGE_SELECT3_2,exact,10002,HACTION_SETPRO3,exact,17,13,结束对话。 | 说要去普埃塔。 | 说要去贝尔特伦。 | 说要去极乐世界。 | 是
+select3_2,1779,HTML_PAGE_SELECT3_2,exact,10003,HACTION_SETPRO4,exact,8,8,移动到达弥努森林。 | 抓住罗特亚斯的树枝。 | 结束对话。 | 您快走吧！ | 说不管怎样，反正看到了尸体。
+select3_2,1779,HTML_PAGE_SELECT3_2,exact,10030,HACTION_SETPRO31,exact,2,2,拿出第三种料理。
+select3_2,1779,HTML_PAGE_SELECT3_2,exact,1008,HACTION_FINISH_DIALOG,exact,14,14,停止查看。 | 结束对话。 | 结束查看。 | 拒绝好意。 | 说还是不会喝。
+select3_2,1779,HTML_PAGE_SELECT3_2,exact,10255,HACTION_SET_SUCCEED,exact,2,2,结束对话。
+select3_2,1779,HTML_PAGE_SELECT3_2,exact,1694,HACTION_SELECT3_1,exact,2,2,试着舔舔。 | 说雅芬哈尔其实没有死。
+select3_2,1779,HTML_PAGE_SELECT3_2,exact,1695,HACTION_SELECT3_1_1,exact,2,2,点头。
+select3_2,1779,HTML_PAGE_SELECT3_2,exact,1780,HACTION_SELECT3_2_1,exact,5,5,询问关于永恒之塔裂缝和贤者行踪的事情。 | 将卡西亚斯的话转告给他。 | 转告马邦塔说的话。 | 转达卡西亚斯的话。
+select3_2,1779,HTML_PAGE_SELECT3_2,exact,1864,HACTION_SELECT3_3,exact,1,1,试着触摸。
+select3_2_1,1780,HTML_PAGE_SELECT3_2_1,exact,1008,HACTION_FINISH_DIALOG,exact,2,2,结束对话。
+select3_2_1,1780,HTML_PAGE_SELECT3_2_1,exact,1781,HACTION_SELECT3_2_1_1,exact,3,3,让他看看自己的身体。 | 点头。
+select3_2_1_1,1781,HTML_PAGE_SELECT3_2_1_1,exact,10002,HACTION_SETPRO3,exact,3,3,结束对话 | 结束对话。
+select3_3,1864,HTML_PAGE_SELECT3_3,exact,10002,HACTION_SETPRO3,exact,1,1,回答说真的不知道。
+select3_3,1864,HTML_PAGE_SELECT3_3,exact,10004,HACTION_SETPRO5,exact,1,1,您快走吧！
+select3_3,1864,HTML_PAGE_SELECT3_3,exact,1008,HACTION_FINISH_DIALOG,exact,4,4,结束对话。
+select3_3,1864,HTML_PAGE_SELECT3_3,exact,1694,HACTION_SELECT3_1,exact,2,2,“在和龙族的千年战争的时候。”
+select3_3,1864,HTML_PAGE_SELECT3_3,exact,1695,HACTION_SELECT3_1_1,exact,1,1,继续调查。
+select3_3,1864,HTML_PAGE_SELECT3_3,exact,1779,HACTION_SELECT3_2,exact,2,2,“在大崩溃以后。”
+select3_3,1864,HTML_PAGE_SELECT3_3,exact,1865,HACTION_SELECT3_3_1,exact,4,4,询问关于永恒之塔裂缝和贤者行踪的事情。 | 将卡西亚斯的话转告给他。 | 转达卡西亚斯的话。
+select3_3_1,1865,HTML_PAGE_SELECT3_3_1,exact,1008,HACTION_FINISH_DIALOG,exact,2,2,结束对话。
+select3_3_1,1865,HTML_PAGE_SELECT3_3_1,exact,1866,HACTION_SELECT3_3_1_1,exact,2,2,告诉她死过之后变成了不死族。 | 让她回到奥德的流动中去。
+select3_3_1_1,1866,HTML_PAGE_SELECT3_3_1_1,exact,10002,HACTION_SETPRO3,exact,2,2,结束对话 | 结束对话。
+select3_4,1949,HTML_PAGE_SELECT3_4,exact,1950,HACTION_SELECT3_4_1,exact,7,7,询问巨神兵的事情。 | 询问关于永恒之塔裂缝和贤者行踪的事情。 | 将卡西亚斯的话转告给他。 | 转达卡西亚斯的话。 | 请求在球中注入祝福的气息。
+select3_4_1,1950,HTML_PAGE_SELECT3_4_1,exact,10011,HACTION_SETPRO12,exact,2,2,结束对话。
+select3_4_1,1950,HTML_PAGE_SELECT3_4_1,exact,1008,HACTION_FINISH_DIALOG,exact,2,2,结束对话。
+select3_4_1,1950,HTML_PAGE_SELECT3_4_1,exact,1951,HACTION_SELECT3_4_1_1,exact,3,3,询问进入那里的方法。 | 点头。
+select3_4_1_1,1951,HTML_PAGE_SELECT3_4_1_1,exact,10002,HACTION_SETPRO3,exact,2,2,结束对话 | 结束对话。
+select3_4_1_1,1951,HTML_PAGE_SELECT3_4_1_1,exact,10011,HACTION_SETPRO12,exact,1,1,结束对话。
+select4,2034,HTML_PAGE_SELECT4,exact,10000,HACTION_SETPRO1,exact,1,1,不是，都不是我丢的那只斧头。
+select4,2034,HTML_PAGE_SELECT4,exact,10001,HACTION_SETPRO2,exact,11,11,结束对话。 | 想一想该怎么办。 | 思索，不知道该把戒指交给谁。
+select4,2034,HTML_PAGE_SELECT4,exact,10002,HACTION_SETPRO3,exact,19,19,结束对话。 | 结束调查。 | 拿出复苏之药，并讲述奈夫的事情。 | 制作拓本。 | 拿出羽衣，讲述纳姆斯的事情。
+select4,2034,HTML_PAGE_SELECT4,exact,10003,HACTION_SETPRO4,exact,46,46,放进标本箱。 | 装入标本箱。 | 把锯齿形状的刀插入石像。 | 停止查看。 | 回答说好的。
+select4,2034,HTML_PAGE_SELECT4,exact,1008,HACTION_FINISH_DIALOG,exact,77,77,结束对话。 | 再考虑一下。 | 不管他。 | 停止。 | 想想送给奈夫是不是更好。
+select4,2034,HTML_PAGE_SELECT4,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,29,29,"""拿出10,000,000基纳。"" | ""拿出15,000,000基纳。"" | ""拿出20,000,000基纳。"" | 讲述在杜卡基采掘场发生的事情。 | 报告结果。"
+select4,2034,HTML_PAGE_SELECT4,exact,10255,HACTION_SET_SUCCEED,exact,14,14,说知道了。 | 结束对话。 | 举起手。 | 点头。 | 打开箱子。
+select4,2034,HTML_PAGE_SELECT4,exact,2035,HACTION_SELECT4_1,exact,260,260,收下奥德波动石。 | 询问究竟怎么做才能帮他。 | 报告结果。 | 拿出破烂不堪的羊皮纸。 | 点头。
+select4,2034,HTML_PAGE_SELECT4,exact,2120,HACTION_SELECT4_2,exact,6,6,眼神的注视下，我的心狂跳不已。 | 如实告诉他，她不可能会回来了。 | 回答只要除掉结界膜生成者就行了。 | 回答说已经干掉了。 | 回答说只要杀死结界膜生成者就行了。
+select4,2034,HTML_PAGE_SELECT4,exact,2205,HACTION_SELECT4_3,exact,3,3,火焰所包围着的漆黑地下，据说它就被埋在那里。 | 回答只要打倒守护神将就行了。 | 回答说只要打倒守护神将就行了。
+select4,2034,HTML_PAGE_SELECT4,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,70,70,"拿出魔力之核。 | 拿出现身的爪子。 | 拿出带来的东西。 | 拿出破碎的书板。 | ""拿出崇拜者的头巾和50,000基纳。"""
+select4_1,2035,HTML_PAGE_SELECT4_1,exact,10000,HACTION_SETPRO1,exact,2,2,仔细看看，这不是我丢的那只斧头。 | 结束对话。
+select4_1,2035,HTML_PAGE_SELECT4_1,exact,10001,HACTION_SETPRO2,exact,4,4,点头。 | 是我丢的斧头，错不了！ | 结束对话。
+select4_1,2035,HTML_PAGE_SELECT4_1,exact,10002,HACTION_SETPRO3,exact,69,69,结束对话。 | 停止查看。 | 结束对话 | 盖上记录之书。
+select4_1,2035,HTML_PAGE_SELECT4_1,exact,10003,HACTION_SETPRO4,exact,109,109,结束对话。 | 说知道了。 | 回答说知道了。 | 收下拓本工具。 | 收下解读后的文件。
+select4_1,2035,HTML_PAGE_SELECT4_1,exact,10004,HACTION_SETPRO5,exact,2,2,拿出封印的书信。
+select4_1,2035,HTML_PAGE_SELECT4_1,exact,10006,HACTION_SETPRO7,exact,4,4,结束对话。
+select4_1,2035,HTML_PAGE_SELECT4_1,exact,10009,HACTION_SETPRO10,exact,2,2,准备好了。 | 准备好了就说一声。
+select4_1,2035,HTML_PAGE_SELECT4_1,exact,10039,HACTION_SETPRO40,exact,2,2,获取第四种图案。
+select4_1,2035,HTML_PAGE_SELECT4_1,exact,1008,HACTION_FINISH_DIALOG,exact,15,15,结束对话。
+select4_1,2035,HTML_PAGE_SELECT4_1,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,4,4,继续听。 | 点头。 | 是的，准备好了。 | 是的，我准备好了。
+select4_1,2035,HTML_PAGE_SELECT4_1,exact,10255,HACTION_SET_SUCCEED,exact,16,16,结束对话。 | 交出誓约之石。 | 交出米拉詹特圣骑士之印章。 | 说知道了。 | 交出圣水。
+select4_1,2035,HTML_PAGE_SELECT4_1,exact,2036,HACTION_SELECT4_1_1,exact,43,43,问他认不认识巴斯提尔派遣队长。 | 询问破坏方法。 | 继续听。 | 继续对话。 | 卡伦？
+select4_1,2035,HTML_PAGE_SELECT4_1,exact,2120,HACTION_SELECT4_2,exact,4,4,眼神的注视下，我的心狂跳不已。 | 知道了。 | 回答只要除掉结界膜生成者就行了。 | 回答说只要杀死结界膜生成者就行了。
+select4_1,2035,HTML_PAGE_SELECT4_1,exact,2205,HACTION_SELECT4_3,exact,3,3,火焰所包围着的漆黑地下，据说它就被埋在那里。 | 回答只要打倒守护神将就行了。 | 回答说只要打倒守护神将就行了。
+select4_1_1,2036,HTML_PAGE_SELECT4_1_1,exact,10000,HACTION_SETPRO1,exact,2,2,结束对话。
+select4_1_1,2036,HTML_PAGE_SELECT4_1_1,exact,10002,HACTION_SETPRO3,exact,3,3,结束对话。
+select4_1_1,2036,HTML_PAGE_SELECT4_1_1,exact,10003,HACTION_SETPRO4,exact,19,19,结束对话。 | 准备好了就说一声。
+select4_1_1,2036,HTML_PAGE_SELECT4_1_1,exact,10255,HACTION_SET_SUCCEED,exact,6,6,结束对话。
+select4_1_1,2036,HTML_PAGE_SELECT4_1_1,exact,2037,HACTION_SELECT4_1_1_1,exact,11,11,提议一起逃出去。 | 询问是什么计划。 | 继续听。 | 点头。 | 询问影子的命令是什么意思。
+select4_1_1,2036,HTML_PAGE_SELECT4_1_1,exact,2057,HACTION_SELECT4_1_2,exact,5,5,"女王就被囚禁在那里。 | ""冷风太强了，眼睛凉？"" | 回答说是第一个。"
+select4_1_1,2036,HTML_PAGE_SELECT4_1_1,exact,2078,HACTION_SELECT4_1_3,exact,5,5,"不停地打瞌睡，头还一点一点的。 | ""在风车下面等着？"" | 回答说是第二个。"
+select4_1_1,2036,HTML_PAGE_SELECT4_1_1,exact,2099,HACTION_SELECT4_1_4,exact,2,2,回答说是第三个。
+select4_1_1,2036,HTML_PAGE_SELECT4_1_1,exact,2120,HACTION_SELECT4_2,exact,2,2,"""到外面去调查？"""
+select4_1_1_1,2037,HTML_PAGE_SELECT4_1_1_1,exact,10003,HACTION_SETPRO4,exact,12,12,结束对话。 | 思考含义。 | 收下卡伦给的画。 | 飞往洞穴。
+select4_1_1_1,2037,HTML_PAGE_SELECT4_1_1_1,exact,2042,HACTION_SELECT4_1_1_2,exact,2,2,回答说是第一个。
+select4_1_1_1,2037,HTML_PAGE_SELECT4_1_1_1,exact,2047,HACTION_SELECT4_1_1_3,exact,2,2,回答说是第二个。
+select4_1_1_1,2037,HTML_PAGE_SELECT4_1_1_1,exact,2052,HACTION_SELECT4_1_1_4,exact,2,2,回答说是第三个。
+select4_1_1_2,2042,HTML_PAGE_SELECT4_1_1_2,exact,2037,HACTION_SELECT4_1_1_1,exact,1,1,布里特拉大人向着那里出发了。
+select4_1_1_2,2042,HTML_PAGE_SELECT4_1_1_2,exact,2047,HACTION_SELECT4_1_1_3,exact,3,3,装作没听见。 | 回答说是第二个。
+select4_1_1_2,2042,HTML_PAGE_SELECT4_1_1_2,exact,2052,HACTION_SELECT4_1_1_4,exact,2,2,回答说是第三个。
+select4_1_1_3,2047,HTML_PAGE_SELECT4_1_1_3,exact,2037,HACTION_SELECT4_1_1_1,exact,1,1,布里特拉大人向着那里出发了。
+select4_1_1_3,2047,HTML_PAGE_SELECT4_1_1_3,exact,2042,HACTION_SELECT4_1_1_2,exact,3,3,东张西望。 | 回答说是第一个。
+select4_1_1_3,2047,HTML_PAGE_SELECT4_1_1_3,exact,2052,HACTION_SELECT4_1_1_4,exact,2,2,回答说是第三个。
+select4_1_1_4,2052,HTML_PAGE_SELECT4_1_1_4,exact,10255,HACTION_SET_SUCCEED,exact,2,2,结束对话。
+select4_1_2,2057,HTML_PAGE_SELECT4_1_2,exact,2036,HACTION_SELECT4_1_1,exact,2,2,点头。
+select4_1_2,2057,HTML_PAGE_SELECT4_1_2,exact,2037,HACTION_SELECT4_1_1_1,exact,1,1,布里特拉大人向着那里出发了。
+select4_1_2,2057,HTML_PAGE_SELECT4_1_2,exact,2042,HACTION_SELECT4_1_1_2,exact,1,1,东张西望。
+select4_1_2,2057,HTML_PAGE_SELECT4_1_2,exact,2047,HACTION_SELECT4_1_1_3,exact,1,1,装作没听见。
+select4_1_2,2057,HTML_PAGE_SELECT4_1_2,exact,2078,HACTION_SELECT4_1_3,exact,2,2,回答说是第二个。
+select4_1_2,2057,HTML_PAGE_SELECT4_1_2,exact,2099,HACTION_SELECT4_1_4,exact,2,2,回答说是第三个。
+select4_1_3,2078,HTML_PAGE_SELECT4_1_3,exact,2036,HACTION_SELECT4_1_1,exact,3,3,孩子，在进行劝慰时，最好能抱着他。 | 点头。
+select4_1_3,2078,HTML_PAGE_SELECT4_1_3,exact,2057,HACTION_SELECT4_1_2,exact,3,3,女王就被囚禁在那里。 | 回答说是第一个。
+select4_1_3,2078,HTML_PAGE_SELECT4_1_3,exact,2099,HACTION_SELECT4_1_4,exact,2,2,回答说是第三个。
+select4_1_4,2099,HTML_PAGE_SELECT4_1_4,exact,2037,HACTION_SELECT4_1_1_1,exact,2,2,点头。
+select4_2,2120,HTML_PAGE_SELECT4_2,exact,10003,HACTION_SETPRO4,exact,2,2,结束对话。
+select4_2,2120,HTML_PAGE_SELECT4_2,exact,10004,HACTION_SETPRO5,exact,1,1,打开箱子。
+select4_2,2120,HTML_PAGE_SELECT4_2,exact,10040,HACTION_SETPRO41,exact,2,2,拿出第四种料理。
+select4_2,2120,HTML_PAGE_SELECT4_2,exact,1008,HACTION_FINISH_DIALOG,exact,29,29,结束对话。 | 结束对话 | 继续听。 | 结束任务。 | 放弃观察。
+select4_2,2120,HTML_PAGE_SELECT4_2,exact,10255,HACTION_SET_SUCCEED,exact,2,2,结束对话。
+select4_2,2120,HTML_PAGE_SELECT4_2,exact,2035,HACTION_SELECT4_1,exact,4,4,温泉中，它很想把身子浸泡在其中，让骨肉熔化。 | 是达弥努吗 | 回答只要打破城门就可以了。 | 回答说只要攻破城门就行了。
+select4_2,2120,HTML_PAGE_SELECT4_2,exact,2121,HACTION_SELECT4_2_1,exact,4,4,点头。 | 继续听。
+select4_2,2120,HTML_PAGE_SELECT4_2,exact,2205,HACTION_SELECT4_3,exact,4,4,火焰所包围着的漆黑地下，据说它就被埋在那里。 | 回答只要打倒守护神将就行了。 | 请求帮助寻找头目的女儿。 | 回答说只要打倒守护神将就行了。
+select4_2_1,2121,HTML_PAGE_SELECT4_2_1,exact,10003,HACTION_SETPRO4,exact,1,1,说做好了移动到马邦塔那里去的准备。
+select4_2_1,2121,HTML_PAGE_SELECT4_2_1,exact,2122,HACTION_SELECT4_2_1_1,exact,1,1,询问任务。
+select4_2_1,2121,HTML_PAGE_SELECT4_2_1,exact,2142,HACTION_SELECT4_2_2,exact,2,2,"""如果出去就洗一下手？"""
+select4_2_1,2121,HTML_PAGE_SELECT4_2_1,exact,2163,HACTION_SELECT4_2_3,exact,2,2,"""为了生病的人而祈祷？"""
+select4_2_1,2121,HTML_PAGE_SELECT4_2_1,exact,2205,HACTION_SELECT4_3,exact,2,2,"""你没力气，所以让我带你出去？"""
+select4_2_1_1,2122,HTML_PAGE_SELECT4_2_1_1,exact,10003,HACTION_SETPRO4,exact,1,1,结束对话。
+select4_2_2,2142,HTML_PAGE_SELECT4_2_2,exact,2121,HACTION_SELECT4_2_1,exact,2,2,请他再说一遍。
+select4_2_3,2163,HTML_PAGE_SELECT4_2_3,exact,2121,HACTION_SELECT4_2_1,exact,2,2,请他再说一遍。
+select4_3,2205,HTML_PAGE_SELECT4_3,exact,10003,HACTION_SETPRO4,exact,1,1,结束对话。
+select4_3,2205,HTML_PAGE_SELECT4_3,exact,1008,HACTION_FINISH_DIALOG,exact,2,2,结束对话。
+select4_3,2205,HTML_PAGE_SELECT4_3,exact,2036,HACTION_SELECT4_1_1,exact,3,3,孩子，在进行劝慰时，最好能抱着他。 | 点头。
+select4_3,2205,HTML_PAGE_SELECT4_3,exact,2057,HACTION_SELECT4_1_2,exact,1,1,女王就被囚禁在那里。
+select4_3,2205,HTML_PAGE_SELECT4_3,exact,2078,HACTION_SELECT4_1_3,exact,1,1,不停地打瞌睡，头还一点一点的。
+select4_3,2205,HTML_PAGE_SELECT4_3,exact,2206,HACTION_SELECT4_3_1,exact,2,2,点头。
+select4_3_1,2206,HTML_PAGE_SELECT4_3_1,exact,2227,HACTION_SELECT4_3_2,exact,2,2,"""短暂停止的那件事不是梦？"""
+select4_3_1,2206,HTML_PAGE_SELECT4_3_1,exact,2248,HACTION_SELECT4_3_3,exact,2,2,"""在外面睡觉时，羽毛枕头是最好的？"""
+select4_3_1,2206,HTML_PAGE_SELECT4_3_1,exact,2290,HACTION_SELECT4_4,exact,2,2,"""外面的事情太累了，如果有需要再叫醒你？"""
+select4_3_2,2227,HTML_PAGE_SELECT4_3_2,exact,2206,HACTION_SELECT4_3_1,exact,2,2,请他再说一遍。
+select4_3_3,2248,HTML_PAGE_SELECT4_3_3,exact,2206,HACTION_SELECT4_3_1,exact,2,2,请他再说一遍。
+select4_4,2290,HTML_PAGE_SELECT4_4,exact,10013,HACTION_SETPRO14,exact,1,1,把研究日志放进箱子。
+select4_4,2290,HTML_PAGE_SELECT4_4,exact,2291,HACTION_SELECT4_4_1,exact,4,4,询问自己理解的内容是不是正确的。 | 请求在球中注入祝福的气息。 | 听取有关对抗天族的建议。
+select4_4_1,2291,HTML_PAGE_SELECT4_4_1,exact,10003,HACTION_SETPRO4,exact,2,2,结束对话。
+select4_4_1,2291,HTML_PAGE_SELECT4_4_1,exact,10012,HACTION_SETPRO13,exact,2,2,结束对话。
+select5,2375,HTML_PAGE_SELECT5,exact,10003,HACTION_SETPRO4,exact,2,2,结束对话。
+select5,2375,HTML_PAGE_SELECT5,exact,10004,HACTION_SETPRO5,exact,27,27,放进标本箱。 | 装入标本箱。 | 进入血之王座。 | 结束对话。 | 把书捡起来。
+select5,2375,HTML_PAGE_SELECT5,exact,10020,HACTION_SETPRO21,exact,1,1,说肚子饿了。
+select5,2375,HTML_PAGE_SELECT5,exact,10021,HACTION_SETPRO22,exact,1,1,说肚子疼。
+select5,2375,HTML_PAGE_SELECT5,exact,10022,HACTION_SETPRO23,exact,1,1,说“你这个笨蛋！”
+select5,2375,HTML_PAGE_SELECT5,exact,1008,HACTION_FINISH_DIALOG,exact,30,30,结束对话。 | 说知道了。 | 点头。
+select5,2375,HTML_PAGE_SELECT5,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,1523,1523,报告结果。 | 陈述结果。 | 把贝尔塞蒂的表扬信交给她。 | 转达皮罗梅内斯的话。 | 递给药品。
+select5,2375,HTML_PAGE_SELECT5,exact,1013,HACTION_SELECT1_1_1,exact,3,3,点头。
+select5,2375,HTML_PAGE_SELECT5,exact,10255,HACTION_SET_SUCCEED,exact,6,6,回答说知道了。 | 대화를 마친다. | 结束对话。 | 点头。 | 告诉他咒语。
+select5,2375,HTML_PAGE_SELECT5,exact,20002,HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE,exact,713,713,拿出带来的药材。 | 拿出龙族的命令书。 | 拿出剧毒粉末。 | 拿出材料。 | 拿出巨人记录板。
+select5,2375,HTML_PAGE_SELECT5,exact,20004,HACTION_CHECK_AP,exact,3,3,回收AP。
+select5,2375,HTML_PAGE_SELECT5,exact,20005,HACTION_CHECK_GOLD,exact,2,2,返还基纳。
+select5,2375,HTML_PAGE_SELECT5,exact,2034,HACTION_SELECT4,exact,36,36,"""拿出崇拜者的头巾和50,000基纳。"" | ""拿出闪光的珠子和50,000基纳。"" | ""拿出努考的枯叶和50,000基纳。"" | ""拿出龙族表皮碎片和150,000基纳。"" | ""拿出带回来的东西和200,000基纳。"""
+select5,2375,HTML_PAGE_SELECT5,exact,2035,HACTION_SELECT4_1,exact,2,2,点头。
+select5,2375,HTML_PAGE_SELECT5,exact,2376,HACTION_SELECT5_1,exact,174,174,说可以去把钥匙拿回来。 | 浏览报告书。 | 报告结果。 | 点头。 | 表示目前还不清楚。
+select5,2375,HTML_PAGE_SELECT5,exact,2461,HACTION_SELECT5_2,exact,5,5,我想要交换下衣。 | 我选择守护星之路。 | 我想交换下衣。
+select5,2375,HTML_PAGE_SELECT5,exact,2546,HACTION_SELECT5_3,exact,4,4,我想要交换鞋子。 | 我想交换鞋子。
+select5,2375,HTML_PAGE_SELECT5,exact,2631,HACTION_SELECT5_4,exact,4,4,我想要交换护肩。 | 我想交换护肩。
+select5,2375,HTML_PAGE_SELECT5,exact,2632,HACTION_SELECT5_4_1,exact,4,4,我想要交换手套。 | 我想交换手套。
+select5,2375,HTML_PAGE_SELECT5,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,1601,1601,拿出纽特的消化腺。 | 交出天族补给品箱。 | 交出光之魔力石。 | 拿出材料，转达帕伊洛斯的话。 | 拿出拿回来的东西。
+select5_1,2376,HTML_PAGE_SELECT5_1,exact,10001,HACTION_SETPRO2,exact,2,2,点头。
+select5_1,2376,HTML_PAGE_SELECT5_1,exact,10002,HACTION_SETPRO3,exact,1,1,说知道了。
+select5_1,2376,HTML_PAGE_SELECT5_1,exact,10003,HACTION_SETPRO4,exact,3,3,结束对话。
+select5_1,2376,HTML_PAGE_SELECT5_1,exact,10004,HACTION_SETPRO5,exact,94,94,结束对话。 | 抓住罗特亚斯的树枝。 | 让她把自己送到地下工房。 | 回答说知道了。 | 做好战斗准备。
+select5_1,2376,HTML_PAGE_SELECT5_1,exact,10006,HACTION_SETPRO7,exact,4,4,结束对话。
+select5_1,2376,HTML_PAGE_SELECT5_1,exact,10008,HACTION_SETPRO9,exact,2,2,拿出封印的书信。
+select5_1,2376,HTML_PAGE_SELECT5_1,exact,10010,HACTION_SETPRO11,exact,2,2,展开翅膀。 | 张开翅膀。
+select5_1,2376,HTML_PAGE_SELECT5_1,exact,1008,HACTION_FINISH_DIALOG,exact,9,9,结束对话。 | 结束对话
+select5_1,2376,HTML_PAGE_SELECT5_1,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,3,3,继续听。 | 闭上眼睛。 | 点头。
+select5_1,2376,HTML_PAGE_SELECT5_1,exact,10255,HACTION_SET_SUCCEED,exact,21,21,结束对话。 | 结束对话 | 交出誓约之石。 | 交出米拉詹特圣骑士之印章。 | 交出发光的圣水。
+select5_1,2376,HTML_PAGE_SELECT5_1,exact,2377,HACTION_SELECT5_1_1,exact,38,38,浏览报告书。 | 继续听。 | 点头。 | 查看祭坛下端。 | 我突然对达马希温说的事有点好奇呢。
+select5_1,2376,HTML_PAGE_SELECT5_1,exact,2461,HACTION_SELECT5_2,exact,2,2,回答说知道了。 | 知道了。
+select5_1_1,2377,HTML_PAGE_SELECT5_1_1,exact,10000,HACTION_SETPRO1,exact,3,3,结束对话。
+select5_1_1,2377,HTML_PAGE_SELECT5_1_1,exact,10004,HACTION_SETPRO5,exact,22,22,结束对话。 | 移动到马邦塔的隐匿处。 | 移动到埃尔特内要塞。 | “是，我想体验未来。”
+select5_1_1,2377,HTML_PAGE_SELECT5_1_1,exact,10255,HACTION_SET_SUCCEED,exact,2,2,停止查看宝珠。
+select5_1_1,2377,HTML_PAGE_SELECT5_1_1,exact,2376,HACTION_SELECT5_1,exact,1,1,我选择剑星之路。
+select5_1_1,2377,HTML_PAGE_SELECT5_1_1,exact,2378,HACTION_SELECT5_1_1_1,exact,9,9,浏览报告书。 | 说愿意帮助。 | 先前在这祭坛上的该不会是奥里萨吧？ | 询问计划。 | 说就交给魔族吧。
+select5_1_1,2377,HTML_PAGE_SELECT5_1_1,exact,2461,HACTION_SELECT5_2,exact,4,4,先前在这祭坛上的该不会是艾莱休奇卡吧？ | 我选择守护星之路。 | 结束对话。
+select5_1_1,2377,HTML_PAGE_SELECT5_1_1,exact,2546,HACTION_SELECT5_3,exact,2,2,先前在这祭坛上的该不会是帕鲁夏吧？
+select5_1_1_1,2378,HTML_PAGE_SELECT5_1_1_1,exact,10004,HACTION_SETPRO5,exact,4,4,结束对话。 | 仔细想想。
+select5_1_1_1,2378,HTML_PAGE_SELECT5_1_1_1,exact,10255,HACTION_SET_SUCCEED,exact,2,2,说马上就出发。 | 说会去看看。
+select5_1_1_1,2378,HTML_PAGE_SELECT5_1_1_1,exact,2383,HACTION_SELECT5_1_1_2,exact,1,1,说会跟他走。
+select5_1_1_1,2378,HTML_PAGE_SELECT5_1_1_1,exact,2388,HACTION_SELECT5_1_1_3,exact,1,1,说不跟他走。
+select5_1_1_1,2378,HTML_PAGE_SELECT5_1_1_1,exact,2461,HACTION_SELECT5_2,exact,2,2,浏览报告书。
+select5_1_1_2,2383,HTML_PAGE_SELECT5_1_1_2,exact,10004,HACTION_SETPRO5,exact,1,1,结束对话。
+select5_1_1_3,2388,HTML_PAGE_SELECT5_1_1_3,exact,10005,HACTION_SETPRO6,exact,1,1,结束对话。
+select5_2,2461,HTML_PAGE_SELECT5_2,exact,10000,HACTION_SETPRO1,exact,1,1,结束对话。
+select5_2,2461,HTML_PAGE_SELECT5_2,exact,10004,HACTION_SETPRO5,exact,5,5,带上马赫罗西的报告书。 | 抓住罗特亚斯的树枝。 | 结束对话。
+select5_2,2461,HTML_PAGE_SELECT5_2,exact,10005,HACTION_SETPRO6,exact,2,2,结束对话。 | 是的，想成为守护星。
+select5_2,2461,HTML_PAGE_SELECT5_2,exact,1008,HACTION_FINISH_DIALOG,exact,11,11,结束对话。
+select5_2,2461,HTML_PAGE_SELECT5_2,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,2,2,说完成了任务。 | 回答说不是。
+select5_2,2461,HTML_PAGE_SELECT5_2,exact,2375,HACTION_SELECT5,exact,2,2,再次仔细查看。
+select5_2,2461,HTML_PAGE_SELECT5_2,exact,2462,HACTION_SELECT5_2_1,exact,2,2,让我再考虑一下。 | 回答自己变成德布里后又变了回来。
+select5_2,2461,HTML_PAGE_SELECT5_2,exact,2546,HACTION_SELECT5_3,exact,1,1,结束对话。
+select5_2_1,2462,HTML_PAGE_SELECT5_2_1,exact,2376,HACTION_SELECT5_1,exact,1,1,我选择剑星之路。
+select5_2_1,2462,HTML_PAGE_SELECT5_2_1,exact,2461,HACTION_SELECT5_2,exact,1,1,我选择守护星之路。
+select5_2_1,2462,HTML_PAGE_SELECT5_2_1,exact,2463,HACTION_SELECT5_2_1_1,exact,1,1,拿出放在怀里的预言书。
+select5_2_1_1,2463,HTML_PAGE_SELECT5_2_1_1,exact,10004,HACTION_SETPRO5,exact,1,1,闭上眼睛。
+select5_3,2546,HTML_PAGE_SELECT5_3,exact,1008,HACTION_FINISH_DIALOG,exact,1,1,结束对话。
+select5_3,2546,HTML_PAGE_SELECT5_3,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,1,1,说明明听到的是笨蛋。
+select5_3,2546,HTML_PAGE_SELECT5_3,exact,2375,HACTION_SELECT5,exact,2,2,再次仔细查看。
+select5_3,2546,HTML_PAGE_SELECT5_3,exact,2547,HACTION_SELECT5_3_1,exact,2,2,询问守护者的存在目的。 | 询问守护者的信念。
+select5_3_1,2547,HTML_PAGE_SELECT5_3_1,exact,2548,HACTION_SELECT5_3_1_1,exact,1,1,这样真的能找到答案吗？
+select5_3_1,2547,HTML_PAGE_SELECT5_3_1,exact,2568,HACTION_SELECT5_3_2,exact,1,1,继续听。
+select5_3_1_1,2548,HTML_PAGE_SELECT5_3_1_1,exact,10000,HACTION_SETPRO1,exact,1,1,结束对话。
+select5_3_2,2568,HTML_PAGE_SELECT5_3_2,exact,10000,HACTION_SETPRO1,exact,1,1,结束对话。
+select5_3_2,2568,HTML_PAGE_SELECT5_3_2,exact,1008,HACTION_FINISH_DIALOG,exact,1,1,结束对话。
+select5_3_3,2589,HTML_PAGE_SELECT5_3_3,exact,1008,HACTION_FINISH_DIALOG,exact,1,1,结束对话。
+select5_4,2631,HTML_PAGE_SELECT5_4,exact,2632,HACTION_SELECT5_4_1,exact,4,4,请求在球中注入祝福的气息。 | 询问守护者的存在目的。 | 听取有关对抗天族的建议。 | 询问守护者的信念。
+select5_4_1,2632,HTML_PAGE_SELECT5_4_1,exact,10013,HACTION_SETPRO14,exact,2,2,结束对话。
+select5_4_1,2632,HTML_PAGE_SELECT5_4_1,exact,2633,HACTION_SELECT5_4_1_1,exact,1,1,这样真的能找到答案吗？
+select5_4_1,2632,HTML_PAGE_SELECT5_4_1,exact,2653,HACTION_SELECT5_4_2,exact,1,1,继续听。
+select5_4_1_1,2633,HTML_PAGE_SELECT5_4_1_1,exact,10000,HACTION_SETPRO1,exact,1,1,结束对话。
+select5_4_2,2653,HTML_PAGE_SELECT5_4_2,exact,10000,HACTION_SETPRO1,exact,1,1,结束对话。
+select5_4_2,2653,HTML_PAGE_SELECT5_4_2,exact,1008,HACTION_FINISH_DIALOG,exact,1,1,结束对话。
+select5_4_3,2674,HTML_PAGE_SELECT5_4_3,exact,1008,HACTION_FINISH_DIALOG,exact,1,1,结束对话。
+select6,2716,HTML_PAGE_SELECT6,exact,10001,HACTION_SETPRO2,exact,1,1,结束对话。
+select6,2716,HTML_PAGE_SELECT6,exact,10005,HACTION_SETPRO6,exact,29,29,放进标本箱。 | 装入标本箱。 | 移动到上层。 | 说知道了。 | 结束察看。
+select6,2716,HTML_PAGE_SELECT6,exact,1008,HACTION_FINISH_DIALOG,exact,1675,1675,结束对话。 | 停止查看。 | 结束对话 | 确认包再回来。 | 确认卦的数量后再来。
+select6,2716,HTML_PAGE_SELECT6,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,21,21,报告任务。 | 拿出提林斯的指令书。 | 报告结果。 | 向他报告。 | 询问那个力量。
+select6,2716,HTML_PAGE_SELECT6,exact,10255,HACTION_SET_SUCCEED,exact,8,8,谈论幻影。 | 把图纸收起来。 | 没有。 | 结束对话。 | 结束对话。！
+select6,2716,HTML_PAGE_SELECT6,exact,20002,HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE,exact,1,1,拿出证物。
+select6,2716,HTML_PAGE_SELECT6,exact,2717,HACTION_SELECT6_1,exact,122,122,什么时候才能修好呢？ | 交出马赫罗西的报告书。 | 点头。 | 转达迪亚娜的话。 | 让他打开锡兰泰拉回廊。
+select6,2716,HTML_PAGE_SELECT6,exact,2718,HACTION_SELECT6_1_1,exact,1,1,仔细观察下半部分。
+select6,2716,HTML_PAGE_SELECT6,exact,2802,HACTION_SELECT6_2,exact,1,1,我选择弓星之路。
+select6,2716,HTML_PAGE_SELECT6,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,18,18,拿出特伦克的心脏。 | 拿出龙族装备，讲述事情经过。 | 拿出力量结晶体。 | 交出生命的气息。 | 拿出卡尔杜谷的调查书。
+select6_1,2717,HTML_PAGE_SELECT6_1,exact,10004,HACTION_SETPRO5,exact,2,2,结束对话。
+select6_1,2717,HTML_PAGE_SELECT6_1,exact,10005,HACTION_SETPRO6,exact,65,65,结束对话。 | 移动到扎马努克旅馆。 | 点头。 | 普诺埃……！ | 结束查看。
+select6_1,2717,HTML_PAGE_SELECT6_1,exact,10006,HACTION_SETPRO7,exact,5,5,结束对话。 | 是的，想成为杀星。
+select6_1,2717,HTML_PAGE_SELECT6_1,exact,1008,HACTION_FINISH_DIALOG,exact,4,4,结束对话。 | 结束对话
+select6_1,2717,HTML_PAGE_SELECT6_1,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,2,2,稍作等待。
+select6_1,2717,HTML_PAGE_SELECT6_1,exact,10255,HACTION_SET_SUCCEED,exact,6,6,我会记住的。 | 结束对话。 | 搭乘战舰。
+select6_1,2717,HTML_PAGE_SELECT6_1,exact,2716,HACTION_SELECT6,exact,1,1,重新查看。
+select6_1,2717,HTML_PAGE_SELECT6_1,exact,2718,HACTION_SELECT6_1_1,exact,40,40,询问什么是欧柏利斯克。 | 点头。 | 继续听。 | 壁画上的背景不同。 | 继续听他说。
+select6_1,2717,HTML_PAGE_SELECT6_1,exact,2802,HACTION_SELECT6_2,exact,1,1,点头。
+select6_1_1,2718,HTML_PAGE_SELECT6_1_1,exact,10000,HACTION_SETPRO1,exact,2,2,瞬间移动到马邦塔那里。 | 移动到泰山那里。
+select6_1_1,2718,HTML_PAGE_SELECT6_1_1,exact,10001,HACTION_SETPRO2,exact,3,3,结束对话。 | 继续听。
+select6_1_1,2718,HTML_PAGE_SELECT6_1_1,exact,10005,HACTION_SETPRO6,exact,20,20,结束对话。 | 收下军牌。 | 结束调查。 | 移动到伏魔殿。 | 移动到乌尔古伦那里。
+select6_1_1,2718,HTML_PAGE_SELECT6_1_1,exact,1008,HACTION_FINISH_DIALOG,exact,6,6,结束对话。
+select6_1_1,2718,HTML_PAGE_SELECT6_1_1,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,1,1,接受戒指。
+select6_1_1,2718,HTML_PAGE_SELECT6_1_1,exact,10255,HACTION_SET_SUCCEED,exact,9,9,结束对话。 | 交出神圣誓约之石。 | 交出米拉詹特圣骑士之印章。 | 交出圣水。 | 交出潘利尔的犬牙之印章。
+select6_1_1,2718,HTML_PAGE_SELECT6_1_1,exact,2717,HACTION_SELECT6_1,exact,1,1,我选择杀星之路。
+select6_1_1,2718,HTML_PAGE_SELECT6_1_1,exact,2719,HACTION_SELECT6_1_1_1,exact,5,5,询问提亚马特在这里藏匿了什么。 | 继续听。 | 继续听下去。 | 说会跟雷帕尔走。 | 向他告别。
+select6_1_1,2718,HTML_PAGE_SELECT6_1_1,exact,2724,HACTION_SELECT6_1_1_2,exact,1,1,说不跟雷帕尔走。
+select6_1_1,2718,HTML_PAGE_SELECT6_1_1,exact,2802,HACTION_SELECT6_2,exact,1,1,我选择弓星之路。
+select6_1_1_1,2719,HTML_PAGE_SELECT6_1_1_1,exact,10005,HACTION_SETPRO6,exact,4,4,结束对话。 | 现在马上出发。
+select6_1_1_1,2719,HTML_PAGE_SELECT6_1_1_1,exact,2720,HACTION_SELECT6_1_1_1_1,exact,1,1,回答说知道了。
+select6_1_1_2,2724,HTML_PAGE_SELECT6_1_1_2,exact,10006,HACTION_SETPRO7,exact,1,1,结束对话。
+select6_2,2802,HTML_PAGE_SELECT6_2,exact,10005,HACTION_SETPRO6,exact,2,2,现在马上出发。 | 结束对话。
+select6_2,2802,HTML_PAGE_SELECT6_2,exact,10007,HACTION_SETPRO8,exact,1,1,是的，想成为弓星。
+select6_2,2802,HTML_PAGE_SELECT6_2,exact,10009,HACTION_SETPRO10,exact,1,1,搭乘战舰。
+select6_2,2802,HTML_PAGE_SELECT6_2,exact,1008,HACTION_FINISH_DIALOG,exact,9,9,结束对话。
+select6_2,2802,HTML_PAGE_SELECT6_2,exact,10255,HACTION_SET_SUCCEED,exact,1,1,结束对话。
+select6_2,2802,HTML_PAGE_SELECT6_2,exact,2803,HACTION_SELECT6_2_1,exact,4,4,继续听。 | 说完成了任务。 | 让我再考虑一下。 | 询问破碎的石棺的事情。
+select6_2_1,2803,HTML_PAGE_SELECT6_2_1,exact,10003,HACTION_SETPRO4,exact,1,1,说做好了移动到马邦塔那里去的准备。
+select6_2_1,2803,HTML_PAGE_SELECT6_2_1,exact,10005,HACTION_SETPRO6,exact,2,2,结束对话。
+select6_2_1,2803,HTML_PAGE_SELECT6_2_1,exact,2717,HACTION_SELECT6_1,exact,1,1,我选择杀星之路。
+select6_2_1,2803,HTML_PAGE_SELECT6_2_1,exact,2802,HACTION_SELECT6_2,exact,1,1,我选择弓星之路。
+select6_3,2887,HTML_PAGE_SELECT6_3,exact,1008,HACTION_FINISH_DIALOG,exact,7,7,结束对话。
+select6_3,2887,HTML_PAGE_SELECT6_3,exact,2888,HACTION_SELECT6_3_1,exact,1,1,询问破碎的石棺的事情。
+select6_3_1,2888,HTML_PAGE_SELECT6_3_1,exact,10005,HACTION_SETPRO6,exact,1,1,结束对话。
+select6_4,2972,HTML_PAGE_SELECT6_4,exact,2973,HACTION_SELECT6_4_1,exact,3,3,请求在球中注入祝福的气息。 | 询问破碎的石棺的事情。 | 听取有关对抗天族的建议。
+select6_4_1,2973,HTML_PAGE_SELECT6_4_1,exact,10005,HACTION_SETPRO6,exact,1,1,结束对话。
+select6_4_1,2973,HTML_PAGE_SELECT6_4_1,exact,10255,HACTION_SET_SUCCEED,exact,2,2,结束对话。
+select7,3057,HTML_PAGE_SELECT7,exact,10000,HACTION_SETPRO1,exact,1,1,“准备好了。”
+select7,3057,HTML_PAGE_SELECT7,exact,10001,HACTION_SETPRO2,exact,2,2,我要重新挑战。
+select7,3057,HTML_PAGE_SELECT7,exact,10002,HACTION_SETPRO3,exact,1,1,结束对话。
+select7,3057,HTML_PAGE_SELECT7,exact,10006,HACTION_SETPRO7,exact,36,36,移动到索泰利亚圣地村。 | 把研究日志放入箱子。 | 停止查看。 | 盯着提亚马特看。 | 结束察看。
+select7,3057,HTML_PAGE_SELECT7,exact,1008,HACTION_FINISH_DIALOG,exact,16,16,结束对话。 | 稍等一下。
+select7,3057,HTML_PAGE_SELECT7,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,20,20,拿出提林斯的指令书。 | 报告结果。 | 继续听。 | 拿出巴尔德的指令书。 | 报告结果并转交马邦塔的书信。
+select7,3057,HTML_PAGE_SELECT7,exact,10255,HACTION_SET_SUCCEED,exact,6,6,结束调查。 | 结束对话。 | 点头。
+select7,3057,HTML_PAGE_SELECT7,exact,3058,HACTION_SELECT7_1,exact,83,83,拿出战舰钥匙。 | 点头。 | 报告结果。 | 转达迪亚娜的话。 | 拿出沉重的标本箱。
+select7,3057,HTML_PAGE_SELECT7,exact,3143,HACTION_SELECT7_2,exact,5,5,我选择精灵星之路。 | 我要走职业之路。 | “我要成为守护星。” | 不给他钥匙。 | 我要走追随主神之路。
+select7,3057,HTML_PAGE_SELECT7,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,5,5,拿出特伦克的心脏。 | 交出特伦克的心脏。 | 拿出证物。 | 交出酷乐比之精炼蜜袋。 | 拿出书袋。
+select7_1,3058,HTML_PAGE_SELECT7_1,exact,10001,HACTION_SETPRO2,exact,1,1,瞬间移动到次元之门前面。
+select7_1,3058,HTML_PAGE_SELECT7_1,exact,10002,HACTION_SETPRO3,exact,1,1,准备好了！
+select7_1,3058,HTML_PAGE_SELECT7_1,exact,10003,HACTION_SETPRO4,exact,3,3,好的，我马上就出发。 | 结束对话。
+select7_1,3058,HTML_PAGE_SELECT7_1,exact,10005,HACTION_SETPRO6,exact,1,1,结束对话。
+select7_1,3058,HTML_PAGE_SELECT7_1,exact,10006,HACTION_SETPRO7,exact,36,36,结束对话。 | 移动到名人的殿堂。 | 移动到凯西内尔主神殿。 | 结束查看。 | 移动到沃夫冈那里。
+select7_1,3058,HTML_PAGE_SELECT7_1,exact,10008,HACTION_SETPRO9,exact,1,1,是的，想成为魔道星。
+select7_1,3058,HTML_PAGE_SELECT7_1,exact,1008,HACTION_FINISH_DIALOG,exact,4,4,结束对话。
+select7_1,3058,HTML_PAGE_SELECT7_1,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,1,1,继续听。
+select7_1,3058,HTML_PAGE_SELECT7_1,exact,10255,HACTION_SET_SUCCEED,exact,22,22,结束对话。 | 采集化石标本。 | 结束调查。 | 移动到仓库建筑工地。 | 拿出誓约之石。
+select7_1,3058,HTML_PAGE_SELECT7_1,exact,3059,HACTION_SELECT7_1_1,exact,16,16,询问欧柏利斯克是什么。 | 继续听。 | 欧柏利斯克是什么。 | 说想去看看。 | 退到镜子外面。
+select7_1,3058,HTML_PAGE_SELECT7_1,exact,3143,HACTION_SELECT7_2,exact,4,4,点头。 | 我要走职业之路。 | 我要走追随主神之路。
+select7_1,3058,HTML_PAGE_SELECT7_1,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,2,2,交出誓约之石。 | 交出发光的圣水。
+select7_1_1,3059,HTML_PAGE_SELECT7_1_1,exact,10005,HACTION_SETPRO6,exact,1,1,结束对话。
+select7_1_1,3059,HTML_PAGE_SELECT7_1_1,exact,10006,HACTION_SETPRO7,exact,6,6,说知道了。 | 移动到吉兹那里。 | 结束对话。
+select7_1_1,3059,HTML_PAGE_SELECT7_1_1,exact,10255,HACTION_SET_SUCCEED,exact,4,4,结束对话。 | 结束查看。
+select7_1_1,3059,HTML_PAGE_SELECT7_1_1,exact,3058,HACTION_SELECT7_1,exact,2,2,我选择魔道星之路。 | “我要成为剑星。”
+select7_1_1,3059,HTML_PAGE_SELECT7_1_1,exact,3060,HACTION_SELECT7_1_1_1,exact,3,3,继续听。 | 询问故事中的厄夏勒的样子。
+select7_1_1,3059,HTML_PAGE_SELECT7_1_1,exact,3143,HACTION_SELECT7_2,exact,2,2,我选择精灵星之路。 | “我要成为守护星。”
+select7_1_1_1,3060,HTML_PAGE_SELECT7_1_1_1,exact,10006,HACTION_SETPRO7,exact,2,2,结束对话。
+select7_1_1_1,3060,HTML_PAGE_SELECT7_1_1_1,exact,3061,HACTION_SELECT7_1_1_1_1,exact,1,1,点头。
+select7_1_1_1_1,3061,HTML_PAGE_SELECT7_1_1_1_1,exact,10255,HACTION_SET_SUCCEED,exact,1,1,结束对话。
+select7_2,3143,HTML_PAGE_SELECT7_2,exact,10004,HACTION_SETPRO5,exact,2,2,好的，我马上就出发。
+select7_2,3143,HTML_PAGE_SELECT7_2,exact,10006,HACTION_SETPRO7,exact,4,4,结束对话。 | 说没有钥匙。
+select7_2,3143,HTML_PAGE_SELECT7_2,exact,10007,HACTION_SETPRO8,exact,1,1,“是，我要成为守护星。”
+select7_2,3143,HTML_PAGE_SELECT7_2,exact,10009,HACTION_SETPRO10,exact,1,1,是的，想成为精灵星。
+select7_2,3143,HTML_PAGE_SELECT7_2,exact,1008,HACTION_FINISH_DIALOG,exact,7,7,结束对话。 | 结束查看。
+select7_2,3143,HTML_PAGE_SELECT7_2,exact,3058,HACTION_SELECT7_1,exact,2,2,我要继续走无尽的战斗之路。 | 我要走无尽的战斗之路。
+select7_2,3143,HTML_PAGE_SELECT7_2,exact,3144,HACTION_SELECT7_2_1,exact,3,3,让我再考虑一下。 | “我再考虑一下。” | 询问破碎的石棺的事情。
+select7_2_1,3144,HTML_PAGE_SELECT7_2_1,exact,10005,HACTION_SETPRO6,exact,1,1,结束对话。
+select7_2_1,3144,HTML_PAGE_SELECT7_2_1,exact,3058,HACTION_SELECT7_1,exact,2,2,我选择魔道星之路。 | “我要成为剑星。”
+select7_2_1,3144,HTML_PAGE_SELECT7_2_1,exact,3143,HACTION_SELECT7_2,exact,2,2,我选择精灵星之路。 | “我要成为守护星。”
+select7_3,3228,HTML_PAGE_SELECT7_3,exact,3229,HACTION_SELECT7_3_1,exact,1,1,询问破碎的石棺的事情。
+select7_3_1,3229,HTML_PAGE_SELECT7_3_1,exact,10005,HACTION_SETPRO6,exact,1,1,结束对话。
+select7_4,3313,HTML_PAGE_SELECT7_4,exact,3314,HACTION_SELECT7_4_1,exact,1,1,询问破碎的石棺的事情。
+select7_4_1,3314,HTML_PAGE_SELECT7_4_1,exact,10005,HACTION_SETPRO6,exact,1,1,结束对话。
+select8,3398,HTML_PAGE_SELECT8,exact,10007,HACTION_SETPRO8,exact,12,12,用奥德波动石替换球体。 | 用奥德波动石替换。 | 拿下饰品。 | 把巨大的伊德凝胶箱子插入希佩里安。 | 结束对话。
+select8,3398,HTML_PAGE_SELECT8,exact,1008,HACTION_FINISH_DIALOG,exact,14,14,结束对话。
+select8,3398,HTML_PAGE_SELECT8,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,17,17,报告结果。 | 点头。 | 继续听。 | 说还是第一次听到。 | 拿出施了魔法的书。
+select8,3398,HTML_PAGE_SELECT8,exact,10255,HACTION_SET_SUCCEED,exact,5,5,登上战舰。 | 结束对话。 | 点头。
+select8,3398,HTML_PAGE_SELECT8,exact,3399,HACTION_SELECT8_1,exact,47,47,继续听。 | 转达从罗特亚斯那里听到的话。 | 拿出德拉纳标本和鹅膏菌汁。 | 拿出标本箱，并转达苏尔拉的话。 | 报告结果。
+select8,3398,HTML_PAGE_SELECT8,exact,3484,HACTION_SELECT8_2,exact,2,2,我选择护法星之路。 | “我要成为弓星。”
+select8,3398,HTML_PAGE_SELECT8,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,11,11,拿出进攻计划书。 | 递出带回来的物品。 | 拿出计划书。 | 拿出伊德刻印，讲述发生的事情。 | 交出灼热的魔力心脏。
+select8_1,3399,HTML_PAGE_SELECT8_1,exact,10002,HACTION_SETPRO3,exact,2,2,结束对话。 | 准备好了！
+select8_1,3399,HTML_PAGE_SELECT8_1,exact,10006,HACTION_SETPRO7,exact,1,1,结束对话。
+select8_1,3399,HTML_PAGE_SELECT8_1,exact,10007,HACTION_SETPRO8,exact,30,30,移动到艾易隆沙漠。 | 稍等一下。 | 移动到泰奥勃莫斯城寨。 | 结束对话。 | “准备好了。”
+select8_1,3399,HTML_PAGE_SELECT8_1,exact,10008,HACTION_SETPRO9,exact,1,1,“是，我要成为杀星”
+select8_1,3399,HTML_PAGE_SELECT8_1,exact,10009,HACTION_SETPRO10,exact,1,1,登上战舰。
+select8_1,3399,HTML_PAGE_SELECT8_1,exact,10010,HACTION_SETPRO11,exact,1,1,是的，想成为治愈星。
+select8_1,3399,HTML_PAGE_SELECT8_1,exact,1008,HACTION_FINISH_DIALOG,exact,2,2,结束对话。 | 结束对话
+select8_1,3399,HTML_PAGE_SELECT8_1,exact,10255,HACTION_SET_SUCCEED,exact,9,9,结束对话。 | 说准备好了。 | 收起种子。
+select8_1,3399,HTML_PAGE_SELECT8_1,exact,3400,HACTION_SELECT8_1_1,exact,5,5,敷衍点头。 | 让我再考虑一下。 | 等待配制解毒药。 | “我再考虑一下。
+select8_1_1,3400,HTML_PAGE_SELECT8_1_1,exact,10007,HACTION_SETPRO8,exact,3,3,结束对话。
+select8_1_1,3400,HTML_PAGE_SELECT8_1_1,exact,3399,HACTION_SELECT8_1,exact,2,2,我选择治愈星之路。 | “我要成为杀星。”
+select8_1_1,3400,HTML_PAGE_SELECT8_1_1,exact,3484,HACTION_SELECT8_2,exact,2,2,我选择护法星之路。 | 我要成为弓星。”
+select8_2,3484,HTML_PAGE_SELECT8_2,exact,10001,HACTION_SETPRO2,exact,1,1,结束对话。
+select8_2,3484,HTML_PAGE_SELECT8_2,exact,10007,HACTION_SETPRO8,exact,1,1,结束对话。
+select8_2,3484,HTML_PAGE_SELECT8_2,exact,10009,HACTION_SETPRO10,exact,1,1,“是，我要成为弓星。”
+select8_2,3484,HTML_PAGE_SELECT8_2,exact,10011,HACTION_SETPRO12,exact,1,1,是的，想成为护法星。
+select8_2,3484,HTML_PAGE_SELECT8_2,exact,1008,HACTION_FINISH_DIALOG,exact,2,2,结束对话。
+select8_2,3484,HTML_PAGE_SELECT8_2,exact,3485,HACTION_SELECT8_2_1,exact,2,2,让我再考虑一下。 | “我再考虑一下。”
+select8_2_1,3485,HTML_PAGE_SELECT8_2_1,exact,3399,HACTION_SELECT8_1,exact,2,2,我选择治愈星之路。 | “我要成为杀星。”
+select8_2_1,3485,HTML_PAGE_SELECT8_2_1,exact,3484,HACTION_SELECT8_2,exact,2,2,我选择护法星之路。 | “我要成为弓星。”
+select8_3,3569,HTML_PAGE_SELECT8_3,exact,1008,HACTION_FINISH_DIALOG,exact,1,1,结束对话。
+select8_3,3569,HTML_PAGE_SELECT8_3,exact,3570,HACTION_SELECT8_3_1,exact,1,1,我要成为枪炮星。
+select8_3,3569,HTML_PAGE_SELECT8_3,exact,3591,HACTION_SELECT8_3_2,exact,1,1,我要成为机甲星。
+select8_3_1,3570,HTML_PAGE_SELECT8_3_1,exact,10014,HACTION_SETPRO15,exact,1,1,是，我要成为枪炮星。
+select8_3_1,3570,HTML_PAGE_SELECT8_3_1,exact,3612,HACTION_SELECT8_3_3,exact,1,1,我再考虑一下。
+select8_3_2,3591,HTML_PAGE_SELECT8_3_2,exact,10016,HACTION_SETPRO17,exact,1,1,是的，我要成为机甲星。
+select8_3_2,3591,HTML_PAGE_SELECT8_3_2,exact,3612,HACTION_SELECT8_3_3,exact,1,1,我再考虑一下。
+select8_3_3,3612,HTML_PAGE_SELECT8_3_3,exact,3570,HACTION_SELECT8_3_1,exact,1,1,我想选择枪炮星之路。
+select8_3_3,3612,HTML_PAGE_SELECT8_3_3,exact,3591,HACTION_SELECT8_3_2,exact,1,1,我想选择机甲星之路。
+select8_4,3654,HTML_PAGE_SELECT8_4,exact,10010,HACTION_SETPRO11,exact,1,1,重新领取服装。
+select9,3739,HTML_PAGE_SELECT9,exact,10000,HACTION_SETPRO1,exact,1,1,捡起戒指。
+select9,3739,HTML_PAGE_SELECT9,exact,10006,HACTION_SETPRO7,exact,2,2,结束对话。 | 移动到特米伦要塞。
+select9,3739,HTML_PAGE_SELECT9,exact,10007,HACTION_SETPRO8,exact,1,1,结束对话。
+select9,3739,HTML_PAGE_SELECT9,exact,10008,HACTION_SETPRO9,exact,12,12,移动到英吉斯温前哨基地。 | 点头。 | 退后。 | 在塔之碎片上标记x字后，等待援军。 | 获得生命的气息。
+select9,3739,HTML_PAGE_SELECT9,exact,1007,HACTION_ASK_QUEST_ACCEPT,exact,20,20,重新拿出魔石。
+select9,3739,HTML_PAGE_SELECT9,exact,1008,HACTION_FINISH_DIALOG,exact,30,30,结束对话。
+select9,3739,HTML_PAGE_SELECT9,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,14,14,报告结果。 | 继续听。 | 点头。 | 拿出神圣吊坠。 | 将监狱收监表交给他，并跟他说已经知道真相。
+select9,3739,HTML_PAGE_SELECT9,exact,10255,HACTION_SET_SUCCEED,exact,2,2,移动到沙帕灵开拓地。 | 移动到鲁比灵开拓地。
+select9,3739,HTML_PAGE_SELECT9,exact,3740,HACTION_SELECT9_1,exact,49,49,问他是否要紧。 | 转达从罗特亚斯那里听到的话。 | 拿出标本箱，转达苏尔拉的话。 | 摇头。 | 继续对话。
+select9,3739,HTML_PAGE_SELECT9,exact,3825,HACTION_SELECT9_2,exact,2,2,我想选择机甲星之路。 | “我要成为精灵星。”
+select9,3739,HTML_PAGE_SELECT9,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,3,3,交出米拉詹特圣骑士之印章。 | 拿出东西，并转达沃夫冈的话。 | 交出潘利尔的犬牙之印章。
+select9_1,3740,HTML_PAGE_SELECT9_1,exact,10007,HACTION_SETPRO8,exact,1,1,结束对话。
+select9_1,3740,HTML_PAGE_SELECT9_1,exact,10008,HACTION_SETPRO9,exact,16,16,移动到帕塞尔塔村。 | 移动到索泰利亚圣地村。 | 移动到英吉斯温锡兰泰拉回廊入口。 | 结束对话。 | “知道了。”
+select9_1,3740,HTML_PAGE_SELECT9_1,exact,10010,HACTION_SETPRO11,exact,1,1,“是，我要成为魔道星。”
+select9_1,3740,HTML_PAGE_SELECT9_1,exact,10012,HACTION_SETPRO13,exact,1,1,是的，我想成为枪炮星。
+select9_1,3740,HTML_PAGE_SELECT9_1,exact,1008,HACTION_FINISH_DIALOG,exact,9,9,结束对话。
+select9_1,3740,HTML_PAGE_SELECT9_1,exact,10255,HACTION_SET_SUCCEED,exact,16,16,结束对话。 | 回答说知道了。 | 交出发光的誓约之石。 | 交出玲珑之光圣水。 | 拿出誓约之石。
+select9_1,3740,HTML_PAGE_SELECT9_1,exact,3741,HACTION_SELECT9_1_1,exact,13,13,最起码能够阻止日后的牺牲。 | 是什么。 | 再说一遍。 | 继续听。 | 那今后该怎么办呢？
+select9_1,3740,HTML_PAGE_SELECT9_1,exact,39,HACTION_CHECK_USER_HAS_QUEST_ITEM,exact,2,2,交出誓约之石。 | 交出发光的圣水。
+select9_1_1,3741,HTML_PAGE_SELECT9_1_1,exact,10002,HACTION_SETPRO3,exact,1,1,说谢谢。
+select9_1_1,3741,HTML_PAGE_SELECT9_1_1,exact,10008,HACTION_SETPRO9,exact,5,5,结束对话。
+select9_1_1,3741,HTML_PAGE_SELECT9_1_1,exact,10255,HACTION_SET_SUCCEED,exact,3,3,结束对话。
+select9_1_1,3741,HTML_PAGE_SELECT9_1_1,exact,3740,HACTION_SELECT9_1,exact,2,2,我选择枪炮星之路。 | “我要做魔道星。”
+select9_1_1,3741,HTML_PAGE_SELECT9_1_1,exact,3742,HACTION_SELECT9_1_1_1,exact,2,2,梦境的内容是什么。
+select9_1_1,3741,HTML_PAGE_SELECT9_1_1,exact,3825,HACTION_SELECT9_2,exact,2,2,我选择机甲星之路。 | “我要做精灵星。”
+select9_1_1_1,3742,HTML_PAGE_SELECT9_1_1_1,exact,3743,HACTION_SELECT9_1_1_1_1,exact,2,2,继续听下去。
+select9_1_1_1_1,3743,HTML_PAGE_SELECT9_1_1_1_1,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,2,2,结束对话。
+select9_2,3825,HTML_PAGE_SELECT9_2,exact,10011,HACTION_SETPRO12,exact,1,1,“是，我要成为精灵星。”
+select9_2,3825,HTML_PAGE_SELECT9_2,exact,10014,HACTION_SETPRO15,exact,1,1,是的，我想成为机甲星。
+select9_2,3825,HTML_PAGE_SELECT9_2,exact,1008,HACTION_FINISH_DIALOG,exact,11,11,结束对话。 | 结束查看。
+select9_2,3825,HTML_PAGE_SELECT9_2,exact,3826,HACTION_SELECT9_2_1,exact,2,2,让我再考虑一下。 | “我再考虑一下。”
+select9_2_1,3826,HTML_PAGE_SELECT9_2_1,exact,3740,HACTION_SELECT9_1,exact,2,2,我选择枪炮星之路。 | “我要做魔道星。”
+select9_2_1,3826,HTML_PAGE_SELECT9_2_1,exact,3825,HACTION_SELECT9_2,exact,2,2,我选择机甲星之路。 | “我要做精灵星。”
+select9_3,3910,HTML_PAGE_SELECT9_3,exact,3911,HACTION_SELECT9_3_1,exact,1,1,我要成为吟游星。
+select9_3_1,3911,HTML_PAGE_SELECT9_3_1,exact,10015,HACTION_SETPRO16,exact,1,1,是，我要成为吟游星。
+select9_3_1,3911,HTML_PAGE_SELECT9_3_1,exact,3932,HACTION_SELECT9_3_2,exact,1,1,我再考虑一下。
+select9_3_2,3932,HTML_PAGE_SELECT9_3_2,exact,3911,HACTION_SELECT9_3_1,exact,1,1,我想选择吟游星之路。
+select9_4,3995,HTML_PAGE_SELECT9_4,exact,10012,HACTION_SETPRO13,exact,1,1,把锯齿形状的剑插在石像上。
+select_none,4762,HTML_PAGE_SELECT_NONE,exact,10000,HACTION_SETPRO1,exact,6,6,决定捉拿长耳洛克斯。 | 决定捉拿阴险狡诈的希尼斯。 | 挑战赏金。 | 决定去见见皮格马利安。 | 决定去抓捕司考宾得。
+select_none,4762,HTML_PAGE_SELECT_NONE,exact,1002,HACTION_QUEST_ACCEPT_1,exact,20,20,接受。 | 说需要米拉詹特圣骑士鞋子。 | 说需要米拉詹特圣骑士武器。 | 说需要米拉詹特圣骑士手套。 | 说需要米拉詹特圣骑士护肩。
+select_none,4762,HTML_PAGE_SELECT_NONE,exact,1003,HACTION_QUEST_REFUSE_1,exact,8,8,拒绝。
+select_none,4762,HTML_PAGE_SELECT_NONE,exact,1007,HACTION_ASK_QUEST_ACCEPT,exact,401,391,点头。 | 继续听。 | 这次又是什么？ | 询问是什么事情。 | 询问什么是发光体的光。
+select_none,4762,HTML_PAGE_SELECT_NONE,exact,1008,HACTION_FINISH_DIALOG,exact,118,118,执行委托。 | 执行紧急指令。 | 拒绝。 | 履行委托。 | 情节展开到此告一段落。
+select_none,4762,HTML_PAGE_SELECT_NONE,exact,1012,HACTION_SELECT1_1,exact,17,17,继续听。 | 问生日宴到底有什么特别的。 | 继续听讲。 | 点头。
+select_none,4762,HTML_PAGE_SELECT_NONE,exact,20000,HACTION_QUEST_ACCEPT_SIMPLE,exact,1847,1847,接受。 | 수락한다. | 执行委托。 | 执行任务。 | 接收。
+select_none,4762,HTML_PAGE_SELECT_NONE,exact,20001,HACTION_QUEST_REFUSE_SIMPLE,exact,1847,1847,拒绝。 | 거절한다. | 结束查看。 | 拒绝任务。 | 结束对话。
+select_none,4762,HTML_PAGE_SELECT_NONE,exact,4763,HACTION_SELECT_NONE_1,exact,80,80,继续听。 | 询问任务是什么。 | 接受。 | 询问有没有其他办法。 | 询问怎么帮助他们。
+select_none,4762,HTML_PAGE_SELECT_NONE,exact,4848,HACTION_SELECT_NONE_2,exact,1,1,说没兴趣。
+select_none_1,4763,HTML_PAGE_SELECT_NONE_1,exact,1007,HACTION_ASK_QUEST_ACCEPT,exact,32,32,继续听下去。 | 继续听。 | 点头。 | 询问了解笛子用途的人。 | 询问是否可以帮忙。
+select_none_1,4763,HTML_PAGE_SELECT_NONE_1,exact,20000,HACTION_QUEST_ACCEPT_SIMPLE,exact,44,44,接受。 | 说知道了。
+select_none_1,4763,HTML_PAGE_SELECT_NONE_1,exact,20001,HACTION_QUEST_REFUSE_SIMPLE,exact,44,44,拒绝。
+select_none_1,4763,HTML_PAGE_SELECT_NONE_1,exact,4764,HACTION_SELECT_NONE_1_1,exact,4,4,算是吧。 | 继续听。 | 听取文件内容。 | 讲述阿尔特盖德结界塔的马车事件。
+select_none_1_1,4764,HTML_PAGE_SELECT_NONE_1_1,exact,1007,HACTION_ASK_QUEST_ACCEPT,exact,2,2,是不是记错了约定的地点呢？ | 继续听。
+select_none_1_1,4764,HTML_PAGE_SELECT_NONE_1_1,exact,20000,HACTION_QUEST_ACCEPT_SIMPLE,exact,1,1,接受。
+select_none_1_1,4764,HTML_PAGE_SELECT_NONE_1_1,exact,20001,HACTION_QUEST_REFUSE_SIMPLE,exact,1,1,拒绝。
+select_none_1_1,4764,HTML_PAGE_SELECT_NONE_1_1,exact,4765,HACTION_SELECT_NONE_1_1_1,exact,1,1,使用后面的机器就能过去了吗？
+select_none_1_1_1,4765,HTML_PAGE_SELECT_NONE_1_1_1,exact,20000,HACTION_QUEST_ACCEPT_SIMPLE,exact,1,1,接受。
+select_none_1_1_1,4765,HTML_PAGE_SELECT_NONE_1_1_1,exact,20001,HACTION_QUEST_REFUSE_SIMPLE,exact,1,1,拒绝。
+select_none_2,4848,HTML_PAGE_SELECT_NONE_2,exact,1008,HACTION_FINISH_DIALOG,exact,5,5,结束对话。
+select_quest,10,HTML_PAGE_SELECT_QUEST,exact,10000,HACTION_SETPRO1,exact,4,4,把白金功勋勋章扔进去。 | 投掷金功勋勋章。
+select_success,10002,HTML_PAGE_DEFAULT_SUCCESS,exact,1009,HACTION_SELECT_QUEST_REWARD,exact,2911,2901,点头。 | 说还不知道。 | 稍作等待。 | 向他报告在纳拉克卡里发生的事。 | 继续听。
+select_success,10002,HTML_PAGE_DEFAULT_SUCCESS,exact,2034,HACTION_SELECT4,exact,6,6,"报告结果。 | ""报告结果，并拿出10,000,000基纳。"" | ""报告结果，并拿出15,000,000基纳。"" | ""报告结果，并拿出20,000,000基纳。"""
+select_talknpc01,5103,HTML_PAGE_SELECT_TALKNPC01,exact,20003,HACTION_SETPRO_NEXT,exact,2,2,结束对话。 | 대화를 마친다.
+select_talknpc02,5104,HTML_PAGE_SELECT_TALKNPC02,exact,20003,HACTION_SETPRO_NEXT,exact,2,2,结束对话。 | 대화를 마친다.
+select_talknpc03,5105,HTML_PAGE_SELECT_TALKNPC03,exact,20003,HACTION_SETPRO_NEXT,exact,2,2,结束对话。 | 대화를 마친다.
+select_talknpc04,5106,HTML_PAGE_SELECT_TALKNPC04,exact,20003,HACTION_SETPRO_NEXT,exact,2,2,结束对话。 | 대화를 마친다.
+select_talknpc05,5107,HTML_PAGE_SELECT_TALKNPC05,exact,20003,HACTION_SETPRO_NEXT,exact,2,2,结束对话。 | 대화를 마친다.
+select_talknpc06,5108,HTML_PAGE_SELECT_TALKNPC06,exact,20003,HACTION_SETPRO_NEXT,exact,2,2,结束对话。 | 대화를 마친다.
+select_talknpc07,5109,HTML_PAGE_SELECT_TALKNPC07,exact,20003,HACTION_SETPRO_NEXT,exact,2,2,结束对话。 | 대화를 마친다.
+select_talknpc08,5110,HTML_PAGE_SELECT_TALKNPC08,exact,20003,HACTION_SETPRO_NEXT,exact,2,2,结束对话。 | 대화를 마친다.
+select_talknpc09,5111,HTML_PAGE_SELECT_TALKNPC09,exact,20003,HACTION_SETPRO_NEXT,exact,2,2,结束对话。 | 대화를 마친다.
+select_talknpc10,5112,HTML_PAGE_SELECT_TALKNPC10,exact,20003,HACTION_SETPRO_NEXT,exact,1,1,대화를 마친다.
+select_talknpc11,5113,HTML_PAGE_SELECT_TALKNPC11,exact,20003,HACTION_SETPRO_NEXT,exact,1,1,대화를 마친다.
+select_talknpc12,5114,HTML_PAGE_SELECT_TALKNPC12,exact,20003,HACTION_SETPRO_NEXT,exact,1,1,대화를 마친다.
+select_talknpc13,5115,HTML_PAGE_SELECT_TALKNPC13,exact,20003,HACTION_SETPRO_NEXT,exact,1,1,대화를 마친다.
+select_talknpc14,5116,HTML_PAGE_SELECT_TALKNPC14,exact,20003,HACTION_SETPRO_NEXT,exact,1,1,대화를 마친다.
+select_talknpc15,5117,HTML_PAGE_SELECT_TALKNPC15,exact,20003,HACTION_SETPRO_NEXT,exact,1,1,대화를 마친다.
