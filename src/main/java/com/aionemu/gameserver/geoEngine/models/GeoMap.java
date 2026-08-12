@@ -122,8 +122,8 @@ public class GeoMap extends Node {
 		if (distance > 50.0f) {
 			return false;
 		}
-		Vector3f pos = new Vector3f(x, y, z);
-		Vector3f dir = new Vector3f(targetX, targetY, targetZ);
+		Vector3f pos = new Vector3f(x, y, z + COLLISION_BOUND_OFFSET);
+		Vector3f dir = new Vector3f(targetX, targetY, targetZ + COLLISION_BOUND_OFFSET);
 		dir.subtractLocal(pos).normalizeLocal();
 		Ray r = new Ray(pos, dir);
 		r.setLimit(limit);
