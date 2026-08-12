@@ -25,109 +25,49 @@
     <bit-field name="var0" offset="0" width="4" min="0" max="11" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="started">
-      <project status="START">
-        <vars>
+    <node label="started" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="s1">
-      <project status="START">
-        <vars>
+    <node label="s1" status="START">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="s2">
-      <project status="START">
-        <vars>
+    <node label="s2" status="START">
           <var name="var0" value="2"/>
-        </vars>
-      </project>
     </node>
-    <node label="s3">
-      <project status="START">
-        <vars>
+    <node label="s3" status="START">
           <var name="var0" value="3"/>
-        </vars>
-      </project>
     </node>
-    <node label="s4">
-      <project status="START">
-        <vars>
+    <node label="s4" status="START">
           <var name="var0" value="4"/>
-        </vars>
-      </project>
     </node>
-    <node label="s5">
-      <project status="START">
-        <vars>
+    <node label="s5" status="START">
           <var name="var0" value="5"/>
-        </vars>
-      </project>
     </node>
-    <node label="s6">
-      <project status="START">
-        <vars>
+    <node label="s6" status="START">
           <var name="var0" value="6"/>
-        </vars>
-      </project>
     </node>
-    <node label="s7">
-      <project status="START">
-        <vars>
+    <node label="s7" status="START">
           <var name="var0" value="7"/>
-        </vars>
-      </project>
     </node>
-    <node label="s8">
-      <project status="START">
-        <vars>
+    <node label="s8" status="START">
           <var name="var0" value="8"/>
-        </vars>
-      </project>
     </node>
-    <node label="s9">
-      <project status="START">
-        <vars>
+    <node label="s9" status="START">
           <var name="var0" value="9"/>
-        </vars>
-      </project>
     </node>
-    <node label="s10">
-      <project status="START">
-        <vars>
+    <node label="s10" status="START">
           <var name="var0" value="10"/>
-        </vars>
-      </project>
     </node>
-    <node label="s11">
-      <project status="START">
-        <vars>
+    <node label="s11" status="START">
           <var name="var0" value="11"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="11"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars/>
-      </project>
-    </node>
+    <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <!-- 升级达标且前置 24030 完成时自动接取 / Auto-start on level-up when 24030 finished -->

@@ -21,425 +21,185 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="57" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="started">
-      <project status="START">
-        <vars>
+    <node label="started" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="s1">
-      <project status="START">
-        <vars>
+    <node label="s1" status="START">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="s2">
-      <project status="START">
-        <vars>
+    <node label="s2" status="START">
           <var name="var0" value="2"/>
-        </vars>
-      </project>
     </node>
-    <node label="s3">
-      <project status="START">
-        <vars>
+    <node label="s3" status="START">
           <var name="var0" value="3"/>
-        </vars>
-      </project>
     </node>
-    <node label="s4">
-      <project status="START">
-        <vars>
+    <node label="s4" status="START">
           <var name="var0" value="4"/>
-        </vars>
-      </project>
     </node>
-    <node label="s5">
-      <project status="START">
-        <vars>
+    <node label="s5" status="START">
           <var name="var0" value="5"/>
-        </vars>
-      </project>
     </node>
-    <node label="s6">
-      <project status="START">
-        <vars>
+    <node label="s6" status="START">
           <var name="var0" value="6"/>
-        </vars>
-      </project>
     </node>
-    <node label="s7">
-      <project status="START">
-        <vars>
+    <node label="s7" status="START">
           <var name="var0" value="7"/>
-        </vars>
-      </project>
     </node>
-    <node label="s8">
-      <project status="START">
-        <vars>
+    <node label="s8" status="START">
           <var name="var0" value="8"/>
-        </vars>
-      </project>
     </node>
-    <node label="s9">
-      <project status="START">
-        <vars>
+    <node label="s9" status="START">
           <var name="var0" value="9"/>
-        </vars>
-      </project>
     </node>
-    <node label="s10">
-      <project status="START">
-        <vars>
+    <node label="s10" status="START">
           <var name="var0" value="10"/>
-        </vars>
-      </project>
     </node>
-    <node label="s11">
-      <project status="START">
-        <vars>
+    <node label="s11" status="START">
           <var name="var0" value="11"/>
-        </vars>
-      </project>
     </node>
-    <node label="s12">
-      <project status="START">
-        <vars>
+    <node label="s12" status="START">
           <var name="var0" value="12"/>
-        </vars>
-      </project>
     </node>
-    <node label="s13">
-      <project status="START">
-        <vars>
+    <node label="s13" status="START">
           <var name="var0" value="13"/>
-        </vars>
-      </project>
     </node>
-    <node label="s14">
-      <project status="START">
-        <vars>
+    <node label="s14" status="START">
           <var name="var0" value="14"/>
-        </vars>
-      </project>
     </node>
-    <node label="s15">
-      <project status="START">
-        <vars>
+    <node label="s15" status="START">
           <var name="var0" value="15"/>
-        </vars>
-      </project>
     </node>
-    <node label="s16">
-      <project status="START">
-        <vars>
+    <node label="s16" status="START">
           <var name="var0" value="16"/>
-        </vars>
-      </project>
     </node>
-    <node label="s17">
-      <project status="START">
-        <vars>
+    <node label="s17" status="START">
           <var name="var0" value="17"/>
-        </vars>
-      </project>
     </node>
-    <node label="s18">
-      <project status="START">
-        <vars>
+    <node label="s18" status="START">
           <var name="var0" value="18"/>
-        </vars>
-      </project>
     </node>
-    <node label="s19">
-      <project status="START">
-        <vars>
+    <node label="s19" status="START">
           <var name="var0" value="19"/>
-        </vars>
-      </project>
     </node>
-    <node label="s20">
-      <project status="START">
-        <vars>
+    <node label="s20" status="START">
           <var name="var0" value="20"/>
-        </vars>
-      </project>
     </node>
-    <node label="s21">
-      <project status="START">
-        <vars>
+    <node label="s21" status="START">
           <var name="var0" value="21"/>
-        </vars>
-      </project>
     </node>
-    <node label="s22">
-      <project status="START">
-        <vars>
+    <node label="s22" status="START">
           <var name="var0" value="22"/>
-        </vars>
-      </project>
     </node>
-    <node label="s23">
-      <project status="START">
-        <vars>
+    <node label="s23" status="START">
           <var name="var0" value="23"/>
-        </vars>
-      </project>
     </node>
-    <node label="s24">
-      <project status="START">
-        <vars>
+    <node label="s24" status="START">
           <var name="var0" value="24"/>
-        </vars>
-      </project>
     </node>
-    <node label="s25">
-      <project status="START">
-        <vars>
+    <node label="s25" status="START">
           <var name="var0" value="25"/>
-        </vars>
-      </project>
     </node>
-    <node label="s26">
-      <project status="START">
-        <vars>
+    <node label="s26" status="START">
           <var name="var0" value="26"/>
-        </vars>
-      </project>
     </node>
-    <node label="s27">
-      <project status="START">
-        <vars>
+    <node label="s27" status="START">
           <var name="var0" value="27"/>
-        </vars>
-      </project>
     </node>
-    <node label="s28">
-      <project status="START">
-        <vars>
+    <node label="s28" status="START">
           <var name="var0" value="28"/>
-        </vars>
-      </project>
     </node>
-    <node label="s29">
-      <project status="START">
-        <vars>
+    <node label="s29" status="START">
           <var name="var0" value="29"/>
-        </vars>
-      </project>
     </node>
-    <node label="s30">
-      <project status="START">
-        <vars>
+    <node label="s30" status="START">
           <var name="var0" value="30"/>
-        </vars>
-      </project>
     </node>
-    <node label="s31">
-      <project status="START">
-        <vars>
+    <node label="s31" status="START">
           <var name="var0" value="31"/>
-        </vars>
-      </project>
     </node>
-    <node label="s32">
-      <project status="START">
-        <vars>
+    <node label="s32" status="START">
           <var name="var0" value="32"/>
-        </vars>
-      </project>
     </node>
-    <node label="s33">
-      <project status="START">
-        <vars>
+    <node label="s33" status="START">
           <var name="var0" value="33"/>
-        </vars>
-      </project>
     </node>
-    <node label="s34">
-      <project status="START">
-        <vars>
+    <node label="s34" status="START">
           <var name="var0" value="34"/>
-        </vars>
-      </project>
     </node>
-    <node label="s35">
-      <project status="START">
-        <vars>
+    <node label="s35" status="START">
           <var name="var0" value="35"/>
-        </vars>
-      </project>
     </node>
-    <node label="s36">
-      <project status="START">
-        <vars>
+    <node label="s36" status="START">
           <var name="var0" value="36"/>
-        </vars>
-      </project>
     </node>
-    <node label="s37">
-      <project status="START">
-        <vars>
+    <node label="s37" status="START">
           <var name="var0" value="37"/>
-        </vars>
-      </project>
     </node>
-    <node label="s38">
-      <project status="START">
-        <vars>
+    <node label="s38" status="START">
           <var name="var0" value="38"/>
-        </vars>
-      </project>
     </node>
-    <node label="s39">
-      <project status="START">
-        <vars>
+    <node label="s39" status="START">
           <var name="var0" value="39"/>
-        </vars>
-      </project>
     </node>
-    <node label="s40">
-      <project status="START">
-        <vars>
+    <node label="s40" status="START">
           <var name="var0" value="40"/>
-        </vars>
-      </project>
     </node>
-    <node label="s41">
-      <project status="START">
-        <vars>
+    <node label="s41" status="START">
           <var name="var0" value="41"/>
-        </vars>
-      </project>
     </node>
-    <node label="s42">
-      <project status="START">
-        <vars>
+    <node label="s42" status="START">
           <var name="var0" value="42"/>
-        </vars>
-      </project>
     </node>
-    <node label="s43">
-      <project status="START">
-        <vars>
+    <node label="s43" status="START">
           <var name="var0" value="43"/>
-        </vars>
-      </project>
     </node>
-    <node label="s44">
-      <project status="START">
-        <vars>
+    <node label="s44" status="START">
           <var name="var0" value="44"/>
-        </vars>
-      </project>
     </node>
-    <node label="s45">
-      <project status="START">
-        <vars>
+    <node label="s45" status="START">
           <var name="var0" value="45"/>
-        </vars>
-      </project>
     </node>
-    <node label="s46">
-      <project status="START">
-        <vars>
+    <node label="s46" status="START">
           <var name="var0" value="46"/>
-        </vars>
-      </project>
     </node>
-    <node label="s47">
-      <project status="START">
-        <vars>
+    <node label="s47" status="START">
           <var name="var0" value="47"/>
-        </vars>
-      </project>
     </node>
-    <node label="s48">
-      <project status="START">
-        <vars>
+    <node label="s48" status="START">
           <var name="var0" value="48"/>
-        </vars>
-      </project>
     </node>
-    <node label="s49">
-      <project status="START">
-        <vars>
+    <node label="s49" status="START">
           <var name="var0" value="49"/>
-        </vars>
-      </project>
     </node>
-    <node label="s50">
-      <project status="START">
-        <vars>
+    <node label="s50" status="START">
           <var name="var0" value="50"/>
-        </vars>
-      </project>
     </node>
-    <node label="s51">
-      <project status="START">
-        <vars>
+    <node label="s51" status="START">
           <var name="var0" value="51"/>
-        </vars>
-      </project>
     </node>
-    <node label="s52">
-      <project status="START">
-        <vars>
+    <node label="s52" status="START">
           <var name="var0" value="52"/>
-        </vars>
-      </project>
     </node>
-    <node label="s53">
-      <project status="START">
-        <vars>
+    <node label="s53" status="START">
           <var name="var0" value="53"/>
-        </vars>
-      </project>
     </node>
-    <node label="s54">
-      <project status="START">
-        <vars>
+    <node label="s54" status="START">
           <var name="var0" value="54"/>
-        </vars>
-      </project>
     </node>
-    <node label="s55">
-      <project status="START">
-        <vars>
+    <node label="s55" status="START">
           <var name="var0" value="55"/>
-        </vars>
-      </project>
     </node>
-    <node label="s56">
-      <project status="START">
-        <vars>
+    <node label="s56" status="START">
           <var name="var0" value="56"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="57"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>

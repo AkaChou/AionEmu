@@ -14,25 +14,25 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="k1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
-    <node label="k2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
-    <node label="k3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
-    <node label="k4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
-    <node label="k5"><project status="START"><vars><var name="var0" value="5"/></vars></project></node>
-    <node label="k6"><project status="START"><vars><var name="var0" value="6"/></vars></project></node>
-    <node label="k7"><project status="START"><vars><var name="var0" value="7"/></vars></project></node>
-    <node label="k8"><project status="START"><vars><var name="var0" value="8"/></vars></project></node>
-    <node label="k9"><project status="START"><vars><var name="var0" value="9"/></vars></project></node>
-    <node label="k10"><project status="START"><vars><var name="var0" value="10"/></vars></project></node>
-    <node label="k11"><project status="START"><vars><var name="var0" value="11"/></vars></project></node>
-    <node label="k12"><project status="START"><vars><var name="var0" value="12"/></vars></project></node>
-    <node label="k13"><project status="START"><vars><var name="var0" value="13"/></vars></project></node>
-    <node label="k14"><project status="START"><vars><var name="var0" value="14"/></vars></project></node>
-    <node label="k15"><project status="START"><vars><var name="var0" value="15"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="15"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="started" status="START"><var name="var0" value="0"/></node>
+    <node label="k1" status="START"><var name="var0" value="1"/></node>
+    <node label="k2" status="START"><var name="var0" value="2"/></node>
+    <node label="k3" status="START"><var name="var0" value="3"/></node>
+    <node label="k4" status="START"><var name="var0" value="4"/></node>
+    <node label="k5" status="START"><var name="var0" value="5"/></node>
+    <node label="k6" status="START"><var name="var0" value="6"/></node>
+    <node label="k7" status="START"><var name="var0" value="7"/></node>
+    <node label="k8" status="START"><var name="var0" value="8"/></node>
+    <node label="k9" status="START"><var name="var0" value="9"/></node>
+    <node label="k10" status="START"><var name="var0" value="10"/></node>
+    <node label="k11" status="START"><var name="var0" value="11"/></node>
+    <node label="k12" status="START"><var name="var0" value="12"/></node>
+    <node label="k13" status="START"><var name="var0" value="13"/></node>
+    <node label="k14" status="START"><var name="var0" value="14"/></node>
+    <node label="k15" status="START"><var name="var0" value="15"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="15"/></node>
+    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
     <npc-start npc-id="806267" source="unaccepted" target="started" selection-sources="unaccepted started"/>

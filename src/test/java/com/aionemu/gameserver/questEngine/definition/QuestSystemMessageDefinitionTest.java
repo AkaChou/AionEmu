@@ -12,14 +12,16 @@ class QuestSystemMessageDefinitionTest {
 	@Test
 	void compilesQuestSpecificSystemMessagePacketShape() {
 		String xml = """
-				<quest-definition id="18602" version="1">
-				  <metadata name="message" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
-				  <nodes><node label="started"><project status="START"/></node></nodes>
-				  <transitions><transition source="started" target="started">
-				    <event><talk-to-npc npc-id="700939" dialog-id="10000"/></event>
-				    <after-commit><system-message message-id="1111307" target="PLAYER" text-color-id="2"/></after-commit>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="18602" version="1">
+						  <metadata name="message" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
+						  <nodes><node label="started" status="START"/></nodes>
+						  <transitions><transition source="started" target="started">
+						    <event><talk-to-npc npc-id="700939" dialog-id="10000"/></event>
+						    <after-commit><system-message message-id="1111307" target="PLAYER" text-color-id="2"/></after-commit>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(

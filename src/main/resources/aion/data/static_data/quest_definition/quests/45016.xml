@@ -15,10 +15,10 @@
     <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars/></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="3"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="3"/></vars></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="started" status="START"/>
+    <node label="reward" status="REWARD"><var name="var0" value="3"/></node>
+    <node label="complete" status="COMPLETE"><var name="var0" value="3"/></node>
   </nodes>
   <transitions>
     <!-- 接取:FACTION 派系任务无 start NPC(start_npc_ids="0"),由深渊守备军军官 Vintel (799849) 对话接取。 -->

@@ -25,18 +25,20 @@ class QuestAdditionalCapabilityDefinitionTest {
 	@Test
 	void compilesAndEvaluatesEquipmentMembershipAndUnequipCapabilities() {
 		String xml = """
-				<quest-definition id="20043" version="1">
-				  <metadata name="stigma-capabilities" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
-				  <nodes><node label="started"><project status="START"/></node></nodes>
-				  <transitions><transition source="started" target="started">
-				    <event><talk-to-npc npc-id="204264" dialog-id="3058"/></event>
-				    <conditions>
-				      <equipped-item item-id="140000003" count="1"/>
-				      <membership-permission permission="STIGMA_SLOT_QUEST"/>
-				    </conditions>
-				    <actions><unequip-item item-id="140000003" remove-count="1"/></actions>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="20043" version="1">
+						  <metadata name="stigma-capabilities" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
+						  <nodes><node label="started" status="START"/></nodes>
+						  <transitions><transition source="started" target="started">
+						    <event><talk-to-npc npc-id="204264" dialog-id="3058"/></event>
+						    <conditions>
+						      <equipped-item item-id="140000003" count="1"/>
+						      <membership-permission permission="STIGMA_SLOT_QUEST"/>
+						    </conditions>
+						    <actions><unequip-item item-id="140000003" remove-count="1"/></actions>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
@@ -59,14 +61,16 @@ class QuestAdditionalCapabilityDefinitionTest {
 	@Test
 	void compilesAndEvaluatesNegativeInventoryCondition() {
 		String xml = """
-				<quest-definition id="20045" version="1">
-				  <metadata name="missing-item" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
-				  <nodes><node label="started"><project status="START"/></node></nodes>
-				  <transitions><transition source="started" target="started">
-				    <event><talk-to-npc npc-id="799513"/></event>
-				    <conditions><has-item item-id="182203009" count="1" expected="false"/></conditions>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="20045" version="1">
+						  <metadata name="missing-item" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
+						  <nodes><node label="started" status="START"/></nodes>
+						  <transitions><transition source="started" target="started">
+						    <event><talk-to-npc npc-id="799513"/></event>
+						    <conditions><has-item item-id="182203009" count="1" expected="false"/></conditions>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
@@ -84,16 +88,18 @@ class QuestAdditionalCapabilityDefinitionTest {
 	@Test
 	void compilesSelectedRewardActionAndRejectsUnknownMetadataIndex() {
 		String valid = """
-				<quest-definition id="20033" version="1">
-				  <metadata name="selected-reward" display-name-id="0" min-level="1" max-level="55" category="QUEST">
-				    <rewards><reward kind="AP" id="0" amount="300"/><reward kind="AP" id="0" amount="600"/></rewards>
-				  </metadata>
-				  <nodes><node label="started"><project status="START"/></node></nodes>
-				  <transitions><transition source="started" target="started">
-				    <event><talk-to-npc npc-id="799513"/></event>
-				    <actions><grant-selected-reward reward-index="1"/></actions>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="20033" version="1">
+						  <metadata name="selected-reward" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+						    <rewards><reward kind="AP" id="0" amount="300"/><reward kind="AP" id="0" amount="600"/></rewards>
+						  </metadata>
+						  <nodes><node label="started" status="START"/></nodes>
+						  <transitions><transition source="started" target="started">
+						    <event><talk-to-npc npc-id="799513"/></event>
+						    <actions><grant-selected-reward reward-index="1"/></actions>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(valid.getBytes(StandardCharsets.UTF_8)));
@@ -108,18 +114,20 @@ class QuestAdditionalCapabilityDefinitionTest {
 	@Test
 	void compilesTeamAdvancedClassAndRawDialogCapabilities() {
 		String xml = """
-				<quest-definition id="20034" version="1">
-				  <metadata name="capabilities" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
-				  <nodes><node label="started"><project status="START"/></node></nodes>
-				  <transitions><transition source="started" target="started">
-				    <event><talk-to-npc npc-id="799513"/></event>
-				    <conditions>
-				      <player-in-group/>
-				      <advanced-class-is class="GLADIATOR"/>
-				    </conditions>
-				    <after-commit><show-dialog-window dialog-id="10"/></after-commit>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="20034" version="1">
+						  <metadata name="capabilities" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
+						  <nodes><node label="started" status="START"/></nodes>
+						  <transitions><transition source="started" target="started">
+						    <event><talk-to-npc npc-id="799513"/></event>
+						    <conditions>
+						      <player-in-group/>
+						      <advanced-class-is class="GLADIATOR"/>
+						    </conditions>
+						    <after-commit><show-dialog-window dialog-id="10"/></after-commit>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
@@ -135,14 +143,16 @@ class QuestAdditionalCapabilityDefinitionTest {
 	@Test
 	void compilesConcretePlayerClassChangeAction() {
 		String xml = """
-				<quest-definition id="20037" version="1">
-				  <metadata name="class-change" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
-				  <nodes><node label="started"><project status="START"/></node></nodes>
-				  <transitions><transition source="started" target="started">
-				    <event><talk-to-npc npc-id="799513"/></event>
-				    <after-commit><set-class class="GLADIATOR"/></after-commit>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="20037" version="1">
+						  <metadata name="class-change" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
+						  <nodes><node label="started" status="START"/></nodes>
+						  <transitions><transition source="started" target="started">
+						    <event><talk-to-npc npc-id="799513"/></event>
+						    <after-commit><set-class class="GLADIATOR"/></after-commit>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
@@ -155,14 +165,16 @@ class QuestAdditionalCapabilityDefinitionTest {
 	@Test
 	void compilesNpcHpThresholdForAttackEvents() {
 		String xml = """
-				<quest-definition id="20038" version="1">
-				  <metadata name="attack-threshold" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
-				  <nodes><node label="started"><project status="START"/></node></nodes>
-				  <transitions><transition source="started" target="started">
-				    <event><attack-npc npc-id="211043"/></event>
-				    <conditions><npc-hp-below-percent npc-id="211043" percent="50"/></conditions>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="20038" version="1">
+						  <metadata name="attack-threshold" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
+						  <nodes><node label="started" status="START"/></nodes>
+						  <transitions><transition source="started" target="started">
+						    <event><attack-npc npc-id="211043"/></event>
+						    <conditions><npc-hp-below-percent npc-id="211043" percent="50"/></conditions>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
@@ -175,15 +187,17 @@ class QuestAdditionalCapabilityDefinitionTest {
 	@Test
 	void compilesCurrencyBalanceConditionAndDebitAction() {
 		String xml = """
-				<quest-definition id="20039" version="1">
-				  <metadata name="currency" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
-				  <nodes><node label="started"><project status="START"/></node></nodes>
-				  <transitions><transition source="started" target="started">
-				    <event><talk-to-npc npc-id="211043"/></event>
-				    <conditions><currency-at-least kind="GOLD" amount="20000"/></conditions>
-				    <actions><decrease-currency kind="GOLD" amount="20000"/></actions>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="20039" version="1">
+						  <metadata name="currency" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
+						  <nodes><node label="started" status="START"/></nodes>
+						  <transitions><transition source="started" target="started">
+						    <event><talk-to-npc npc-id="211043"/></event>
+						    <conditions><currency-at-least kind="GOLD" amount="20000"/></conditions>
+						    <actions><decrease-currency kind="GOLD" amount="20000"/></actions>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
@@ -199,14 +213,16 @@ class QuestAdditionalCapabilityDefinitionTest {
 	@Test
 	void compilesAndEvaluatesFinishedQuestConditionWithCapturedFacts() {
 		String xml = """
-				<quest-definition id="20042" version="1">
-				  <metadata name="prerequisite-condition" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
-				  <nodes><node label="started"><project status="START"/></node></nodes>
-				  <transitions><transition source="started" target="started">
-				    <event><talk-to-npc npc-id="211043"/></event>
-				    <conditions><quests-finished quest-ids="14020 14021"/></conditions>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="20042" version="1">
+						  <metadata name="prerequisite-condition" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
+						  <nodes><node label="started" status="START"/></nodes>
+						  <transitions><transition source="started" target="started">
+						    <event><talk-to-npc npc-id="211043"/></event>
+						    <conditions><quests-finished quest-ids="14020 14021"/></conditions>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
@@ -227,14 +243,16 @@ class QuestAdditionalCapabilityDefinitionTest {
 	@Test
 	void compilesStrictCurrencyBelowCondition() {
 		String xml = """
-				<quest-definition id="20040" version="1">
-				  <metadata name="currency-below" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
-				  <nodes><node label="started"><project status="START"/></node></nodes>
-				  <transitions><transition source="started" target="started">
-				    <event><talk-to-npc npc-id="211043"/></event>
-				    <conditions><currency-below kind="GOLD" amount="6500"/></conditions>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="20040" version="1">
+						  <metadata name="currency-below" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
+						  <nodes><node label="started" status="START"/></nodes>
+						  <transitions><transition source="started" target="started">
+						    <event><talk-to-npc npc-id="211043"/></event>
+						    <conditions><currency-below kind="GOLD" amount="6500"/></conditions>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
@@ -247,19 +265,21 @@ class QuestAdditionalCapabilityDefinitionTest {
 	@Test
 	void treatsOppositeFactBranchesAsMutuallyExclusiveTransitions() {
 		String xml = """
-				<quest-definition id="20035" version="1">
-				  <metadata name="branches" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
-				  <progress><bit-field name="step" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/></progress>
-				  <nodes>
-				    <node label="started"><project status="START"><vars><var name="step" value="0"/></vars></project></node>
-				    <node label="grouped"><project status="START"><vars><var name="step" value="1"/></vars></project></node>
-				    <node label="solo"><project status="START"><vars><var name="step" value="2"/></vars></project></node>
-				  </nodes>
-				  <transitions>
-				    <transition source="started" target="grouped"><event><talk-to-npc npc-id="799513"/></event><conditions><player-in-group/></conditions></transition>
-				    <transition source="started" target="solo"><event><talk-to-npc npc-id="799513"/></event><conditions><player-in-group expected="false"/></conditions></transition>
-				  </transitions>
-				</quest-definition>
+
+						<quest-definition id="20035" version="1">
+						  <metadata name="branches" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
+						  <progress><bit-field name="step" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/></progress>
+						  <nodes>
+						    <node label="started" status="START"><var name="step" value="0"/></node>
+						    <node label="grouped" status="START"><var name="step" value="1"/></node>
+						    <node label="solo" status="START"><var name="step" value="2"/></node>
+						  </nodes>
+						  <transitions>
+						    <transition source="started" target="grouped"><event><talk-to-npc npc-id="799513"/></event><conditions><player-in-group/></conditions></transition>
+						    <transition source="started" target="solo"><event><talk-to-npc npc-id="799513"/></event><conditions><player-in-group expected="false"/></conditions></transition>
+						  </transitions>
+						</quest-definition>
+
 				""";
 
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
@@ -271,14 +291,16 @@ class QuestAdditionalCapabilityDefinitionTest {
 	@Test
 	void compilesResidentNpcCoordinateFollowAction() {
 		String xml = """
-				<quest-definition id="20036" version="1">
-				  <metadata name="escort" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
-				  <nodes><node label="started"><project status="START"/></node></nodes>
-				  <transitions><transition source="started" target="started">
-				    <event><talk-to-npc npc-id="799036" dialog-id="10000"/></event>
-				    <after-commit><start-follow-current-target x="292.63895" y="489.47452" z="574.2429"/></after-commit>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="20036" version="1">
+						  <metadata name="escort" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
+						  <nodes><node label="started" status="START"/></nodes>
+						  <transitions><transition source="started" target="started">
+						    <event><talk-to-npc npc-id="799036" dialog-id="10000"/></event>
+						    <after-commit><start-follow-current-target x="292.63895" y="489.47452" z="574.2429"/></after-commit>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
@@ -294,20 +316,22 @@ class QuestAdditionalCapabilityDefinitionTest {
 	@Test
 	void compilesRandomSpawnAndWorldNpcAttackActions() {
 		String xml = """
-				<quest-definition id="20041" version="1">
-				  <metadata name="defense" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
-				  <nodes><node label="started"><project status="START"/></node></nodes>
-				  <transitions><transition source="started" target="started">
-				    <event><talk-to-npc npc-id="799513"/></event>
-				    <after-commit>
-				      <spawn-npc-random slot="defense-mob" replace-existing="true">
-				        <variant template-id="213576" world-id="310040000" x="254.74" y="236.72" z="217.48" heading="95"/>
-				        <variant template-id="213577" world-id="310040000" x="257.92" y="237.39" z="217.48" heading="95"/>
-				      </spawn-npc-random>
-				      <attack-npc-template slot="defense-mob" template-id="204044"/>
-				    </after-commit>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="20041" version="1">
+						  <metadata name="defense" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
+						  <nodes><node label="started" status="START"/></nodes>
+						  <transitions><transition source="started" target="started">
+						    <event><talk-to-npc npc-id="799513"/></event>
+						    <after-commit>
+						      <spawn-npc-random slot="defense-mob" replace-existing="true">
+						        <variant template-id="213576" world-id="310040000" x="254.74" y="236.72" z="217.48" heading="95"/>
+						        <variant template-id="213577" world-id="310040000" x="257.92" y="237.39" z="217.48" heading="95"/>
+						      </spawn-npc-random>
+						      <attack-npc-template slot="defense-mob" template-id="204044"/>
+						    </after-commit>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
@@ -321,18 +345,20 @@ class QuestAdditionalCapabilityDefinitionTest {
 	@Test
 	void acceptsStatusBoundWildcardTransitionsAcrossMultipleQuestNodes() {
 		String xml = """
-				<quest-definition id="20044" version="1">
-				  <metadata name="wildcard-source" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
-				  <progress><bit-field name="step" offset="0" width="7" min="0" max="98" persistence="PERSISTENT" scope="LOCAL"/></progress>
-				  <nodes>
-				    <node label="step93"><project status="START"><vars><var name="step" value="93"/></vars></project></node>
-				    <node label="step94"><project status="START"><vars><var name="step" value="94"/></vars></project></node>
-				  </nodes>
-				  <transitions>
-				    <transition source="step93" target="step94"><event><talk-to-npc npc-id="799513"/></event></transition>
-				    <transition target="step93"><event><die/></event><conditions><status-is status="START"/><variable-at-least field="step" value="93"/><variable-below field="step" value="99"/></conditions></transition>
-				  </transitions>
-				</quest-definition>
+
+						<quest-definition id="20044" version="1">
+						  <metadata name="wildcard-source" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
+						  <progress><bit-field name="step" offset="0" width="7" min="0" max="98" persistence="PERSISTENT" scope="LOCAL"/></progress>
+						  <nodes>
+						    <node label="step93" status="START"><var name="step" value="93"/></node>
+						    <node label="step94" status="START"><var name="step" value="94"/></node>
+						  </nodes>
+						  <transitions>
+						    <transition source="step93" target="step94"><event><talk-to-npc npc-id="799513"/></event></transition>
+						    <transition target="step93"><event><die/></event><conditions><status-is status="START"/><variable-at-least field="step" value="93"/><variable-below field="step" value="99"/></conditions></transition>
+						  </transitions>
+						</quest-definition>
+
 				""";
 
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
@@ -348,15 +374,17 @@ class QuestAdditionalCapabilityDefinitionTest {
 	@Test
 	void compilesAndEvaluatesCompleteCountCondition() {
 		String xml = """
-				<quest-definition id="20046" version="1">
-				  <metadata name="complete-count" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
-				  <nodes><node label="started"><project status="START"/></node></nodes>
-				  <transitions><transition source="started" target="started">
-				    <event><bonus-apply bonus-type="MOVIE"/></event>
-				    <conditions><complete-count-is value="9"/></conditions>
-				    <actions><grant-reward kind="ITEM" id="188051106" amount="1"/></actions>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="20046" version="1">
+						  <metadata name="complete-count" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
+						  <nodes><node label="started" status="START"/></nodes>
+						  <transitions><transition source="started" target="started">
+						    <event><bonus-apply bonus-type="MOVIE"/></event>
+						    <conditions><complete-count-is value="9"/></conditions>
+						    <actions><grant-reward kind="ITEM" id="188051106" amount="1"/></actions>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
@@ -376,18 +404,20 @@ class QuestAdditionalCapabilityDefinitionTest {
 	@Test
 	void compilesAndEvaluatesEventActiveConditionWithAbandonQuestAction() {
 		String xml = """
-				<quest-definition id="20047" version="1">
-				  <metadata name="event-abandon" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
-				  <nodes>
-				    <node label="started"><project status="START"/></node>
-				    <node label="abandoned"><project status="NONE"/></node>
-				  </nodes>
-				  <transitions><transition source="started" target="abandoned">
-				    <event><level-up/></event>
-				    <conditions><event-active expected="false"/></conditions>
-				    <actions><abandon-quest/></actions>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="20047" version="1">
+						  <metadata name="event-abandon" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
+						  <nodes>
+						    <node label="started" status="START"/>
+						    <node label="abandoned" status="NONE"/>
+						  </nodes>
+						  <transitions><transition source="started" target="abandoned">
+						    <event><level-up/></event>
+						    <conditions><event-active expected="false"/></conditions>
+						    <actions><abandon-quest/></actions>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
@@ -407,14 +437,16 @@ class QuestAdditionalCapabilityDefinitionTest {
 	@Test
 	void compilesRandomMovieAction() {
 		String xml = """
-				<quest-definition id="20048" version="1">
-				  <metadata name="random-movie" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
-				  <nodes><node label="started"><project status="START"/></node></nodes>
-				  <transitions><transition source="started" target="started">
-				    <event><bonus-apply bonus-type="MOVIE"/></event>
-				    <after-commit><play-movie-random><variant movie-id="103"/><variant movie-id="104"/></play-movie-random></after-commit>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="20048" version="1">
+						  <metadata name="random-movie" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
+						  <nodes><node label="started" status="START"/></nodes>
+						  <transitions><transition source="started" target="started">
+						    <event><bonus-apply bonus-type="MOVIE"/></event>
+						    <after-commit><play-movie-random><variant movie-id="103"/><variant movie-id="104"/></play-movie-random></after-commit>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition compiled = QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));

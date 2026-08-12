@@ -15,40 +15,20 @@
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="started">
-      <project status="START">
-        <vars>
+    <node label="started" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="k1">
-      <project status="START">
-        <vars>
+    <node label="k1" status="START">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>
@@ -191,47 +171,16 @@
       </after-commit>
     </transition>
     <!-- 击杀 217010 后进入交付状态。 Kill target then report. -->
-    <transition source="started" target="k1">
-      <event>
-        <kill-npc npc-id="217010"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
+    <counter-grid>
+      <dimension field="var0" required="1" npc-ids="217010"/>
+    </counter-grid>
     <!-- 进行中对话。 In-progress dialog. -->
-    <transition source="started" target="started">
-      <event>
-        <talk-to-npc npc-id="799837" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <talk-to-npc npc-id="799838" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="k1" target="k1">
-      <event>
-        <talk-to-npc npc-id="799837" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
-    <transition source="k1" target="k1">
-      <event>
-        <talk-to-npc npc-id="799838" dialog-id="31"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="1352"/>
-      </after-commit>
-    </transition>
+    <npc-dialog source="started" npc-ids="799837 799838" dialog-ids="31">
+      <show-quest-dialog dialog-id="1352" />
+    </npc-dialog>
+    <npc-dialog source="k1" npc-ids="799837 799838" dialog-ids="31">
+      <show-quest-dialog dialog-id="1352" />
+    </npc-dialog>
     <!-- 交付: 799837/799838 报告。 Turn in at report NPC. -->
     <transition source="k1" target="reward">
       <event>

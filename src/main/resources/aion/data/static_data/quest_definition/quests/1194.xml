@@ -17,96 +17,44 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="started">
-      <project status="START">
-        <vars>
+    <node label="started" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="z1">
-      <project status="START">
-        <vars>
+    <node label="z1" status="START">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="z2">
-      <project status="START">
-        <vars>
+    <node label="z2" status="START">
           <var name="var0" value="2"/>
-        </vars>
-      </project>
     </node>
-    <node label="z3">
-      <project status="START">
-        <vars>
+    <node label="z3" status="START">
           <var name="var0" value="3"/>
-        </vars>
-      </project>
     </node>
-    <node label="z4">
-      <project status="START">
-        <vars>
+    <node label="z4" status="START">
           <var name="var0" value="4"/>
-        </vars>
-      </project>
     </node>
-    <node label="z5">
-      <project status="START">
-        <vars>
+    <node label="z5" status="START">
           <var name="var0" value="5"/>
-        </vars>
-      </project>
     </node>
-    <node label="z6">
-      <project status="START">
-        <vars>
+    <node label="z6" status="START">
           <var name="var0" value="6"/>
-        </vars>
-      </project>
     </node>
-    <node label="z7">
-      <project status="START">
-        <vars>
+    <node label="z7" status="START">
           <var name="var0" value="7"/>
-        </vars>
-      </project>
     </node>
-    <node label="z8">
-      <project status="START">
-        <vars>
+    <node label="z8" status="START">
           <var name="var0" value="8"/>
-        </vars>
-      </project>
     </node>
-    <node label="z9">
-      <project status="START">
-        <vars>
+    <node label="z9" status="START">
           <var name="var0" value="9"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="9"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="9"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>

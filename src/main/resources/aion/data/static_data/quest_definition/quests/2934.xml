@@ -6,7 +6,7 @@
     <work-items><item id="182207023" count="1"/></work-items>
     <rewards><reward kind="EXP" id="0" amount="291412"/><reward kind="SELECTABLE_ITEM" id="152206433" amount="1"/><reward kind="SELECTABLE_ITEM" id="152206434" amount="1"/><reward kind="SELECTABLE_ITEM" id="152206435" amount="1"/><reward kind="SELECTABLE_ITEM" id="152206436" amount="1"/><reward kind="SELECTABLE_ITEM" id="152206437" amount="1"/><reward kind="SELECTABLE_ITEM" id="152206438" amount="1"/><reward kind="ITEM" id="125001762" amount="1"/></rewards>
   </metadata>
-  <nodes><node label="unaccepted"><project status="NONE"/></node><node label="started"><project status="START"/></node><node label="reward"><project status="REWARD"/></node><node label="complete"><project status="COMPLETE"/></node></nodes>
+  <nodes><node label="unaccepted" status="NONE"/><node label="started" status="START"/><node label="reward" status="REWARD"/><node label="complete" status="COMPLETE"/></nodes>
   <transitions>
     <npc-start npc-id="204100" source="unaccepted" target="started" selection-sources="unaccepted"/>
     <transition source="started" target="started"><event><talk-to-npc npc-id="204052" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>

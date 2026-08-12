@@ -17,40 +17,40 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="h1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
-    <node label="h2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
-    <node label="h3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
-    <node label="h4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
-    <node label="h5"><project status="START"><vars><var name="var0" value="5"/></vars></project></node>
-    <node label="h6"><project status="START"><vars><var name="var0" value="6"/></vars></project></node>
-    <node label="h7"><project status="START"><vars><var name="var0" value="7"/></vars></project></node>
-    <node label="h8"><project status="START"><vars><var name="var0" value="8"/></vars></project></node>
-    <node label="h9"><project status="START"><vars><var name="var0" value="9"/></vars></project></node>
-    <node label="h10"><project status="START"><vars><var name="var0" value="10"/></vars></project></node>
-    <node label="h11"><project status="START"><vars><var name="var0" value="11"/></vars></project></node>
-    <node label="h12"><project status="START"><vars><var name="var0" value="12"/></vars></project></node>
-    <node label="h13"><project status="START"><vars><var name="var0" value="13"/></vars></project></node>
-    <node label="h14"><project status="START"><vars><var name="var0" value="14"/></vars></project></node>
-    <node label="h15"><project status="START"><vars><var name="var0" value="15"/></vars></project></node>
-    <node label="h16"><project status="START"><vars><var name="var0" value="16"/></vars></project></node>
-    <node label="h17"><project status="START"><vars><var name="var0" value="17"/></vars></project></node>
-    <node label="h18"><project status="START"><vars><var name="var0" value="18"/></vars></project></node>
-    <node label="h19"><project status="START"><vars><var name="var0" value="19"/></vars></project></node>
-    <node label="h20"><project status="START"><vars><var name="var0" value="20"/></vars></project></node>
-    <node label="h21"><project status="START"><vars><var name="var0" value="21"/></vars></project></node>
-    <node label="h22"><project status="START"><vars><var name="var0" value="22"/></vars></project></node>
-    <node label="h23"><project status="START"><vars><var name="var0" value="23"/></vars></project></node>
-    <node label="h24"><project status="START"><vars><var name="var0" value="24"/></vars></project></node>
-    <node label="h25"><project status="START"><vars><var name="var0" value="25"/></vars></project></node>
-    <node label="h26"><project status="START"><vars><var name="var0" value="26"/></vars></project></node>
-    <node label="h27"><project status="START"><vars><var name="var0" value="27"/></vars></project></node>
-    <node label="h28"><project status="START"><vars><var name="var0" value="28"/></vars></project></node>
-    <node label="h29"><project status="START"><vars><var name="var0" value="29"/></vars></project></node>
-    <node label="h30"><project status="START"><vars><var name="var0" value="30"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="30"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars/></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="started" status="START"><var name="var0" value="0"/></node>
+    <node label="h1" status="START"><var name="var0" value="1"/></node>
+    <node label="h2" status="START"><var name="var0" value="2"/></node>
+    <node label="h3" status="START"><var name="var0" value="3"/></node>
+    <node label="h4" status="START"><var name="var0" value="4"/></node>
+    <node label="h5" status="START"><var name="var0" value="5"/></node>
+    <node label="h6" status="START"><var name="var0" value="6"/></node>
+    <node label="h7" status="START"><var name="var0" value="7"/></node>
+    <node label="h8" status="START"><var name="var0" value="8"/></node>
+    <node label="h9" status="START"><var name="var0" value="9"/></node>
+    <node label="h10" status="START"><var name="var0" value="10"/></node>
+    <node label="h11" status="START"><var name="var0" value="11"/></node>
+    <node label="h12" status="START"><var name="var0" value="12"/></node>
+    <node label="h13" status="START"><var name="var0" value="13"/></node>
+    <node label="h14" status="START"><var name="var0" value="14"/></node>
+    <node label="h15" status="START"><var name="var0" value="15"/></node>
+    <node label="h16" status="START"><var name="var0" value="16"/></node>
+    <node label="h17" status="START"><var name="var0" value="17"/></node>
+    <node label="h18" status="START"><var name="var0" value="18"/></node>
+    <node label="h19" status="START"><var name="var0" value="19"/></node>
+    <node label="h20" status="START"><var name="var0" value="20"/></node>
+    <node label="h21" status="START"><var name="var0" value="21"/></node>
+    <node label="h22" status="START"><var name="var0" value="22"/></node>
+    <node label="h23" status="START"><var name="var0" value="23"/></node>
+    <node label="h24" status="START"><var name="var0" value="24"/></node>
+    <node label="h25" status="START"><var name="var0" value="25"/></node>
+    <node label="h26" status="START"><var name="var0" value="26"/></node>
+    <node label="h27" status="START"><var name="var0" value="27"/></node>
+    <node label="h28" status="START"><var name="var0" value="28"/></node>
+    <node label="h29" status="START"><var name="var0" value="29"/></node>
+    <node label="h30" status="START"><var name="var0" value="30"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="30"/></node>
+    <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <npc-start npc-id="806101" source="unaccepted" target="started" selection-sources="unaccepted started"/>

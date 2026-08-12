@@ -18,82 +18,38 @@
     <bit-field name="var0" offset="0" width="7" min="0" max="127" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="s0">
-      <project status="START">
-        <vars>
+    <node label="s0" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="a">
-      <project status="START">
-        <vars>
+    <node label="a" status="START">
           <var name="var0" value="16"/>
-        </vars>
-      </project>
     </node>
-    <node label="b">
-      <project status="START">
-        <vars>
+    <node label="b" status="START">
           <var name="var0" value="32"/>
-        </vars>
-      </project>
     </node>
-    <node label="c">
-      <project status="START">
-        <vars>
+    <node label="c" status="START">
           <var name="var0" value="64"/>
-        </vars>
-      </project>
     </node>
-    <node label="ab">
-      <project status="START">
-        <vars>
+    <node label="ab" status="START">
           <var name="var0" value="48"/>
-        </vars>
-      </project>
     </node>
-    <node label="ac">
-      <project status="START">
-        <vars>
+    <node label="ac" status="START">
           <var name="var0" value="80"/>
-        </vars>
-      </project>
     </node>
-    <node label="bc">
-      <project status="START">
-        <vars>
+    <node label="bc" status="START">
           <var name="var0" value="96"/>
-        </vars>
-      </project>
     </node>
-    <node label="done">
-      <project status="START">
-        <vars>
+    <node label="done" status="START">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>

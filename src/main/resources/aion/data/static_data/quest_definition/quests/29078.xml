@@ -17,10 +17,10 @@
     <bit-field name="var1" offset="0" width="4" min="0" max="10" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var1" value="0"/></vars></project></node>
-    <node label="started"><project status="START"/></node>
-    <node label="reward"><project status="REWARD"/></node>
-    <node label="complete"><project status="COMPLETE"/></node>
+    <node label="unaccepted" status="NONE"><var name="var1" value="0"/></node>
+    <node label="started" status="START"/>
+    <node label="reward" status="REWARD"/>
+    <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="801222" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>

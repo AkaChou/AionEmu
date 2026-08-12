@@ -15,33 +15,17 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="started">
-      <project status="START">
-        <vars>
+    <node label="started" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>
@@ -127,30 +111,6 @@
         <show-quest-dialog dialog-id="10002"/>
       </after-commit>
     </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <talk-to-npc npc-id="204325" dialog-id="1009"/>
-      </event>
-      <after-commit>
-        <show-quest-dialog dialog-id="5"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <talk-to-npc npc-id="204325" dialog-ids="8..23"/>
-      </event>
-      <actions>
-        <grant-reward kind="GOLD" id="0" amount="3640" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="EXP" id="0" amount="186469" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="TITLE" id="70" amount="1"/>
-        <grant-reward kind="ITEM" id="162000048" amount="12"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
-      </after-commit>
-    </transition>
+    <npc-complete npc-id="204325" source="reward" target="complete" fixed-reward-indices="0 1 2 3" dialog-ids="8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23" complete-reward-index="0" preview-dialog-ids="1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

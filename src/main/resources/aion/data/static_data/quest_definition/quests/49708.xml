@@ -21,33 +21,17 @@
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="started">
-      <project status="START">
-        <vars>
+    <node label="started" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>
@@ -119,14 +103,9 @@
       <event><can-act template-id="701569" action-type="ACTION_ITEM_USE"/></event>
     </transition>
     <!-- 进行中对话。 -->
-    <transition source="started" target="started">
-      <event><talk-to-npc npc-id="800934" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="2375"/></after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event><talk-to-npc npc-id="800935" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="2375"/></after-commit>
-    </transition>
+    <npc-dialog source="started" npc-ids="800934 800935" dialog-ids="31">
+      <show-quest-dialog dialog-id="2375" />
+    </npc-dialog>
     <!-- 交付 800934: 收集齐 6 个后提交。 -->
     <npc-item-report npc-id="800934" source="started" target="reward" item-id="182215269" required="6"/>
     <transition source="started" target="reward">

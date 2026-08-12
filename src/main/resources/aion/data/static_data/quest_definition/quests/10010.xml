@@ -41,15 +41,15 @@
     <bit-field name="var0" offset="0" width="4" min="0" max="6" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="s1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
-    <node label="s2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
-    <node label="s3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
-    <node label="s4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
-    <node label="s5"><project status="START"><vars><var name="var0" value="5"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="6"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars/></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="started" status="START"><var name="var0" value="0"/></node>
+    <node label="s1" status="START"><var name="var0" value="1"/></node>
+    <node label="s2" status="START"><var name="var0" value="2"/></node>
+    <node label="s3" status="START"><var name="var0" value="3"/></node>
+    <node label="s4" status="START"><var name="var0" value="4"/></node>
+    <node label="s5" status="START"><var name="var0" value="5"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="6"/></node>
+    <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <transition source="unaccepted" target="started"><event><enter-world/></event><conditions><world-is world-id="302340000"/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/></after-commit></transition>
@@ -64,8 +64,9 @@
     <transition source="s2" target="s2"><event><talk-to-npc npc-id="806584" dialog-id="-1"/></event><after-commit><show-quest-dialog dialog-id="1695"/></after-commit></transition>
     <transition source="s2" target="s2"><event><talk-to-npc npc-id="806584" dialog-id="1696"/></event><after-commit><show-quest-dialog dialog-id="1696"/></after-commit></transition>
     <transition source="s2" target="s3"><event><talk-to-npc npc-id="806584" dialog-id="10002"/></event><actions><set-variable field="var0" value="3"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
-    <transition source="s1" target="s1"><event><talk-to-npc npc-id="703429" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
-    <transition source="s1" target="s1"><event><talk-to-npc npc-id="703430" dialog-id="-1"/></event><after-commit><close-dialog/></after-commit></transition>
+    <npc-dialog source="s1" npc-ids="703429 703430" dialog-ids="-1">
+      <close-dialog />
+    </npc-dialog>
     <transition source="s3" target="s4"><event><kill-npc npc-id="246544"/></event><conditions><variable-is field="var0" value="3"/></conditions><actions><set-variable field="var0" value="4"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="s3" target="s4"><event><kill-npc npc-id="246545"/></event><conditions><variable-is field="var0" value="3"/></conditions><actions><set-variable field="var0" value="4"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>
     <transition source="s3" target="s4"><event><kill-npc npc-id="246546"/></event><conditions><variable-is field="var0" value="3"/></conditions><actions><set-variable field="var0" value="4"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit></transition>

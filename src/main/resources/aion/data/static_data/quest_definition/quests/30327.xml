@@ -21,46 +21,22 @@
     <bit-field name="var0" offset="0" width="4" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="started">
-      <project status="START">
-        <vars>
+    <node label="started" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="v1">
-      <project status="START">
-        <vars>
+    <node label="v1" status="START">
           <var name="var0" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="v2">
-      <project status="START">
-        <vars>
+    <node label="v2" status="START">
           <var name="var0" value="2"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="2"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars/>
-      </project>
-    </node>
+    <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <!-- 未接取状态与凯伦对话：凯伦（799244）展示任务简介。 Pre-start dialog with Kaluen (799244). -->

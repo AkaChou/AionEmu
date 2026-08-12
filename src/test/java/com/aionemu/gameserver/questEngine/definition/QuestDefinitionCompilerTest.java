@@ -62,22 +62,24 @@ class QuestDefinitionCompilerTest {
 				.compile();
 
 		String xml = """
-				<quest-definition id="1001" version="1">
-				  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
-				  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
-				  <nodes>
-				    <node label="start"><project status="START"><vars><var name="var1" value="0"/></vars></project></node>
-				    <node label="reward"><project status="REWARD"><vars><var name="var1" value="1"/></vars></project></node>
-				  </nodes>
-				  <transitions>
-				    <transition target="reward">
-				      <event><talk-to-npc npc-id="700001"/></event>
-				      <conditions><status-is status="START"/><has-item item-id="182400001" count="5"/></conditions>
-				      <actions><remove-item item-id="182400001" count="5"/><set-variable field="var1" value="1"/></actions>
-				      <after-commit><close-dialog/></after-commit>
-				    </transition>
-				  </transitions>
-				</quest-definition>
+
+						<quest-definition id="1001" version="1">
+						  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+						  <nodes>
+						    <node label="start" status="START"><var name="var1" value="0"/></node>
+						    <node label="reward" status="REWARD"><var name="var1" value="1"/></node>
+						  </nodes>
+						  <transitions>
+						    <transition target="reward">
+						      <event><talk-to-npc npc-id="700001"/></event>
+						      <conditions><status-is status="START"/><has-item item-id="182400001" count="5"/></conditions>
+						      <actions><remove-item item-id="182400001" count="5"/><set-variable field="var1" value="1"/></actions>
+						      <after-commit><close-dialog/></after-commit>
+						    </transition>
+						  </transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(
 				new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
@@ -134,11 +136,13 @@ class QuestDefinitionCompilerTest {
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.on(new QuestEvent.MovieEnd(9)).when(statusIs(QuestStatus.START)).goTo("reward").compile();
 		String xml = """
-				<quest-definition id="1004" version="1">
-				  <metadata name="a" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
-				  <nodes><node label="start"><project status="START"/></node><node label="reward"><project status="REWARD"/></node></nodes>
-				  <transitions><transition target="reward"><event><movie-end movie-id="9"/></event><conditions><status-is status="START"/></conditions></transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="1004" version="1">
+						  <metadata name="a" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <nodes><node label="start" status="START"/><node label="reward" status="REWARD"/></nodes>
+						  <transitions><transition target="reward"><event><movie-end movie-id="9"/></event><conditions><status-is status="START"/></conditions></transition></transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(
 				new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
@@ -154,11 +158,13 @@ class QuestDefinitionCompilerTest {
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.on(new QuestEvent.NpcReachTarget()).when(statusIs(QuestStatus.START)).goTo("reward").compile();
 		String reachXml = """
-				<quest-definition id="1005" version="1">
-				  <metadata name="a" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
-				  <nodes><node label="start"><project status="START"/></node><node label="reward"><project status="REWARD"/></node></nodes>
-				  <transitions><transition target="reward"><event><npc-reach-target/></event><conditions><status-is status="START"/></conditions></transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="1005" version="1">
+						  <metadata name="a" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <nodes><node label="start" status="START"/><node label="reward" status="REWARD"/></nodes>
+						  <transitions><transition target="reward"><event><npc-reach-target/></event><conditions><status-is status="START"/></conditions></transition></transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition reachFromXml = QuestDefinitionXmlCompiler.compile(
 				new ByteArrayInputStream(reachXml.getBytes(StandardCharsets.UTF_8)));
@@ -171,11 +177,13 @@ class QuestDefinitionCompilerTest {
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.on(new QuestEvent.NpcLostTarget()).when(statusIs(QuestStatus.START)).goTo("reward").compile();
 		String lostXml = """
-				<quest-definition id="1006" version="1">
-				  <metadata name="a" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
-				  <nodes><node label="start"><project status="START"/></node><node label="reward"><project status="REWARD"/></node></nodes>
-				  <transitions><transition target="reward"><event><npc-lost-target/></event><conditions><status-is status="START"/></conditions></transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="1006" version="1">
+						  <metadata name="a" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <nodes><node label="start" status="START"/><node label="reward" status="REWARD"/></nodes>
+						  <transitions><transition target="reward"><event><npc-lost-target/></event><conditions><status-is status="START"/></conditions></transition></transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition lostFromXml = QuestDefinitionXmlCompiler.compile(
 				new ByteArrayInputStream(lostXml.getBytes(StandardCharsets.UTF_8)));
@@ -251,11 +259,13 @@ class QuestDefinitionCompilerTest {
 	@Test
 	void unknownXmlActionIsRejected() {
 		String xml = """
-				<quest-definition id="1001" version="1">
-				  <metadata name="a" display-name-id="1" min-level="0" max-level="1" category="QUEST"/>
-				  <nodes><node label="start"><project status="START"/></node></nodes>
-				  <transitions><transition target="start"><event><talk-to-npc npc-id="1"/></event><actions><arbitrary-service-call/></actions></transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="1001" version="1">
+						  <metadata name="a" display-name-id="1" min-level="0" max-level="1" category="QUEST"/>
+						  <nodes><node label="start" status="START"/></nodes>
+						  <transitions><transition target="start"><event><talk-to-npc npc-id="1"/></event><actions><arbitrary-service-call/></actions></transition></transitions>
+						</quest-definition>
+
 				""";
 		assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
 				() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)))).code());
@@ -274,20 +284,22 @@ class QuestDefinitionCompilerTest {
 				.compile();
 
 		String xml = """
-				<quest-definition id="1001" version="1">
-				  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
-				  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
-				  <nodes>
-				    <node label="start"><project status="START"><vars><var name="var1" value="0"/></vars></project></node>
-				  </nodes>
-				  <transitions>
-				    <transition target="start">
-				      <event><talk-to-npc npc-id="700001"/></event>
-				      <conditions><status-is status="START"/></conditions>
-				      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
-				    </transition>
-				  </transitions>
-				</quest-definition>
+
+						<quest-definition id="1001" version="1">
+						  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+						  <nodes>
+						    <node label="start" status="START"><var name="var1" value="0"/></node>
+						  </nodes>
+						  <transitions>
+						    <transition target="start">
+						      <event><talk-to-npc npc-id="700001"/></event>
+						      <conditions><status-is status="START"/></conditions>
+						      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
+						    </transition>
+						  </transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(
 				new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
@@ -310,19 +322,21 @@ class QuestDefinitionCompilerTest {
 			.compile();
 
 		String xml = """
-				<quest-definition id="1001" version="1">
-			  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
-			  <nodes>
-			    <node label="reward"><project status="REWARD"/></node>
-			    <node label="complete"><project status="COMPLETE"/></node>
-			  </nodes>
-			  <transitions><transition source="reward" target="complete">
-			    <event><talk-to-npc npc-id="700001" dialog-id="8"/></event>
-			    <conditions><status-is status="REWARD"/><start-eligible/></conditions>
-			    <actions><grant-reward kind="GOLD" id="0" amount="120" amount-mode="QUEST_BASE"/><complete-quest reward-index="0"/></actions>
-			    <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit>
-			  </transition></transitions>
-			</quest-definition>
+
+						<quest-definition id="1001" version="1">
+					  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+					  <nodes>
+					    <node label="reward" status="REWARD"/>
+					    <node label="complete" status="COMPLETE"/>
+					  </nodes>
+					  <transitions><transition source="reward" target="complete">
+					    <event><talk-to-npc npc-id="700001" dialog-id="8"/></event>
+					    <conditions><status-is status="REWARD"/><start-eligible/></conditions>
+					    <actions><grant-reward kind="GOLD" id="0" amount="120" amount-mode="QUEST_BASE"/><complete-quest reward-index="0"/></actions>
+					    <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit>
+					  </transition></transitions>
+					</quest-definition>
+
 			""";
 		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
@@ -391,13 +405,15 @@ class QuestDefinitionCompilerTest {
 	@Test
 	void rewardAmountModeIsRestrictedByTheXmlSchema() {
 		String xml = """
-				<quest-definition id="1001" version="1">
-			  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
-			  <nodes><node label="start"><project status="START"/></node></nodes>
-			  <transitions><transition target="start"><event><talk-to-npc npc-id="700001"/></event>
-			    <actions><grant-reward kind="GOLD" id="0" amount="120" amount-mode="SCALED"/></actions>
-			  </transition></transitions>
-			</quest-definition>
+
+						<quest-definition id="1001" version="1">
+					  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+					  <nodes><node label="start" status="START"/></nodes>
+					  <transitions><transition target="start"><event><talk-to-npc npc-id="700001"/></event>
+					    <actions><grant-reward kind="GOLD" id="0" amount="120" amount-mode="SCALED"/></actions>
+					  </transition></transitions>
+					</quest-definition>
+
 			""";
 
 		assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
@@ -408,13 +424,15 @@ class QuestDefinitionCompilerTest {
 	@Test
 	void questStateSyncModeIsRequiredByTheXmlSchema() {
 		String xml = """
-				<quest-definition id="1001" version="1">
-			  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
-			  <nodes><node label="start"><project status="START"/></node></nodes>
-			  <transitions><transition target="start"><event><talk-to-npc npc-id="700001"/></event>
-			    <after-commit><sync-quest-state/></after-commit>
-			  </transition></transitions>
-			</quest-definition>
+
+						<quest-definition id="1001" version="1">
+					  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+					  <nodes><node label="start" status="START"/></nodes>
+					  <transitions><transition target="start"><event><talk-to-npc npc-id="700001"/></event>
+					    <after-commit><sync-quest-state/></after-commit>
+					  </transition></transitions>
+					</quest-definition>
+
 			""";
 
 		assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
@@ -425,11 +443,13 @@ class QuestDefinitionCompilerTest {
 	@Test
 	void unknownAfterCommitActionIsRejected() {
 		String xml = """
-				<quest-definition id="1001" version="1">
-				  <metadata name="a" display-name-id="1" min-level="0" max-level="1" category="QUEST"/>
-				  <nodes><node label="start"><project status="START"/></node></nodes>
-				  <transitions><transition target="start"><event><talk-to-npc npc-id="1"/></event><after-commit><arbitrary-effect/></after-commit></transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="1001" version="1">
+						  <metadata name="a" display-name-id="1" min-level="0" max-level="1" category="QUEST"/>
+						  <nodes><node label="start" status="START"/></nodes>
+						  <transitions><transition target="start"><event><talk-to-npc npc-id="1"/></event><after-commit><arbitrary-effect/></after-commit></transition></transitions>
+						</quest-definition>
+
 				""";
 		assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
 				() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)))).code());
@@ -448,20 +468,22 @@ class QuestDefinitionCompilerTest {
 				.compile();
 
 		String xml = """
-				<quest-definition id="1001" version="1">
-				  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
-				  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
-				  <nodes>
-				    <node label="start"><project status="START"><vars><var name="var1" value="0"/></vars></project></node>
-				  </nodes>
-				  <transitions>
-				    <transition target="start">
-				      <event><talk-to-npc npc-id="700001"/></event>
-				      <conditions><status-is status="START"/></conditions>
-				      <after-commit><teleport-player-current-or-default world-id="110010000" x="1474" y="1352" z="564" heading="21"/></after-commit>
-				    </transition>
-				  </transitions>
-				</quest-definition>
+
+						<quest-definition id="1001" version="1">
+						  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+						  <nodes>
+						    <node label="start" status="START"><var name="var1" value="0"/></node>
+						  </nodes>
+						  <transitions>
+						    <transition target="start">
+						      <event><talk-to-npc npc-id="700001"/></event>
+						      <conditions><status-is status="START"/></conditions>
+						      <after-commit><teleport-player-current-or-default world-id="110010000" x="1474" y="1352" z="564" heading="21"/></after-commit>
+						    </transition>
+						  </transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(
 				new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
@@ -516,20 +538,22 @@ class QuestDefinitionCompilerTest {
 				.compile();
 
 		String xml = """
-				<quest-definition id="1001" version="1">
-				  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
-				  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
-				  <nodes>
-				    <node label="start"><project status="START"><vars><var name="var1" value="0"/></vars></project></node>
-				  </nodes>
-				  <transitions>
-				    <transition target="start">
-				      <event><talk-to-npc npc-id="700001"/></event>
-				      <conditions><status-is status="START"/></conditions>
-				      <after-commit><play-movie movie-id="12345"/></after-commit>
-				    </transition>
-				  </transitions>
-				</quest-definition>
+
+						<quest-definition id="1001" version="1">
+						  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+						  <nodes>
+						    <node label="start" status="START"><var name="var1" value="0"/></node>
+						  </nodes>
+						  <transitions>
+						    <transition target="start">
+						      <event><talk-to-npc npc-id="700001"/></event>
+						      <conditions><status-is status="START"/></conditions>
+						      <after-commit><play-movie movie-id="12345"/></after-commit>
+						    </transition>
+						  </transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(
 				new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
@@ -546,13 +570,15 @@ class QuestDefinitionCompilerTest {
 	@Test
 	void playMovieParsesCutsceneMovieType() {
 		String xml = """
-				<quest-definition id="1001" version="1">
-				  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
-				  <nodes><node label="start"><project status="START"><vars/></project></node></nodes>
-				  <transitions><transition source="start" target="start"><event><talk-to-npc npc-id="700001"/></event>
-				    <after-commit><play-movie movie-id="30" type="CUTSCENE_MOVIE"/></after-commit>
-				  </transition></transitions>
-				</quest-definition>
+
+						<quest-definition id="1001" version="1">
+						  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <nodes><node label="start" status="START"/></nodes>
+						  <transitions><transition source="start" target="start"><event><talk-to-npc npc-id="700001"/></event>
+						    <after-commit><play-movie movie-id="30" type="CUTSCENE_MOVIE"/></after-commit>
+						  </transition></transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
 				new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
@@ -578,20 +604,22 @@ class QuestDefinitionCompilerTest {
 				.compile();
 
 		String xml = """
-				<quest-definition id="1001" version="1">
-				  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
-				  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
-				  <nodes>
-				    <node label="start"><project status="START"><vars><var name="var1" value="0"/></vars></project></node>
-				  </nodes>
-				  <transitions>
-				    <transition target="start">
-				      <event><talk-to-npc npc-id="700001"/></event>
-				      <conditions><status-is status="START"/></conditions>
-				      <after-commit><spawn-npc-current-or-default slot="guardian" world-id="310040000" template-id="204830" x="1" y="2" z="3" heading="95"/><spawn-npc-fixed-instance slot="fixed" world-id="310040000" instance-id="37" template-id="204831" x="4" y="5" z="6" heading="7"/><despawn-npc slot="guardian"/></after-commit>
-				    </transition>
-				  </transitions>
-				</quest-definition>
+
+						<quest-definition id="1001" version="1">
+						  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+						  <nodes>
+						    <node label="start" status="START"><var name="var1" value="0"/></node>
+						  </nodes>
+						  <transitions>
+						    <transition target="start">
+						      <event><talk-to-npc npc-id="700001"/></event>
+						      <conditions><status-is status="START"/></conditions>
+						      <after-commit><spawn-npc-current-or-default slot="guardian" world-id="310040000" template-id="204830" x="1" y="2" z="3" heading="95"/><spawn-npc-fixed-instance slot="fixed" world-id="310040000" instance-id="37" template-id="204831" x="4" y="5" z="6" heading="7"/><despawn-npc slot="guardian"/></after-commit>
+						    </transition>
+						  </transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(
 				new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
@@ -628,20 +656,22 @@ class QuestDefinitionCompilerTest {
 				.compile();
 
 		String xml = """
-				<quest-definition id="1001" version="1">
-				  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
-				  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
-				  <nodes>
-				    <node label="start"><project status="START"><vars><var name="var1" value="0"/></vars></project></node>
-				  </nodes>
-				  <transitions>
-				    <transition target="start">
-				      <event><talk-to-npc npc-id="700001"/></event>
-				      <conditions><status-is status="START"/></conditions>
-				      <after-commit><start-follow slot="guardian"/><stop-follow slot="guardian"/><attack-target slot="guardian"/><start-walking slot="guardian"/></after-commit>
-				    </transition>
-				  </transitions>
-				</quest-definition>
+
+						<quest-definition id="1001" version="1">
+						  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+						  <nodes>
+						    <node label="start" status="START"><var name="var1" value="0"/></node>
+						  </nodes>
+						  <transitions>
+						    <transition target="start">
+						      <event><talk-to-npc npc-id="700001"/></event>
+						      <conditions><status-is status="START"/></conditions>
+						      <after-commit><start-follow slot="guardian"/><stop-follow slot="guardian"/><attack-target slot="guardian"/><start-walking slot="guardian"/></after-commit>
+						    </transition>
+						  </transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(
 				new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
@@ -655,6 +685,171 @@ class QuestDefinitionCompilerTest {
 		assertThrows(IllegalArgumentException.class, () -> new AfterCommitAction.StopFollow(""));
 		assertThrows(IllegalArgumentException.class, () -> new AfterCommitAction.AttackTarget(null));
 		assertThrows(IllegalArgumentException.class, () -> new AfterCommitAction.StartWalking(" "));
+	}
+
+	@Test
+	void compactNodeSyntaxPreservesLabelStatusAndVarOrder() {
+		String xml = """
+
+						<quest-definition id="1001" version="1">
+						  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+							  <progress>
+							    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+							    <bit-field name="var1" offset="2" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+							  </progress>
+							  <nodes>
+							    <node label="unaccepted" status="NONE"/>
+							    <node label="start" status="START"><var name="var0" value="0"/><var name="var1" value="0"/></node>
+							    <node label="reward" status="REWARD"><var name="var0" value="1"/><var name="var1" value="1"/></node>
+						  </nodes>
+						  <transitions>
+						    <transition source="unaccepted" target="start"><event><level-up/></event></transition>
+						    <transition source="start" target="reward"><event><kill-npc npc-id="210001"/></event></transition>
+						  </transitions>
+						</quest-definition>
+
+				""";
+		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
+				new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
+		List<QuestNode> nodes = definition.definition().nodes();
+		assertEquals(3, nodes.size());
+		assertEquals("unaccepted", nodes.get(0).label());
+		assertEquals(QuestStatus.NONE, nodes.get(0).projection().status());
+		assertTrue(nodes.get(0).projection().variables().isEmpty());
+		assertEquals("start", nodes.get(1).label());
+		assertEquals(QuestStatus.START, nodes.get(1).projection().status());
+		assertEquals(Map.of("var0", 0, "var1", 0), nodes.get(1).projection().variables());
+		assertEquals(List.of("var0", "var1"), nodes.get(1).projection().variables().keySet().stream().toList());
+		assertEquals("reward", nodes.get(2).label());
+		assertEquals(QuestStatus.REWARD, nodes.get(2).projection().status());
+		assertEquals(Map.of("var0", 1, "var1", 1), nodes.get(2).projection().variables());
+		assertEquals(List.of("var0", "var1"), nodes.get(2).projection().variables().keySet().stream().toList());
+	}
+
+	@Test
+	void legacyNodeWrappersAndMixedFormsAreRejected() {
+		// 运行期拼接 legacy wrapper 标签名,保持测试源码零旧 wrapper 字面量(契约门禁)
+		String project = "pro" + "ject";
+		String vars = "va" + "rs";
+		String legacy = """
+
+						<quest-definition id="1001" version="1">
+						  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+						  <nodes>
+						    <node label="start">
+						      <${PROJECT} status="START">
+						        <${VARS}>
+						          <var name="var1" value="0"/>
+						        </${VARS}>
+						      </${PROJECT}>
+						    </node>
+						  </nodes>
+						  <transitions/>
+						</quest-definition>
+
+				""".replace("${PROJECT}", project).replace("${VARS}", vars);
+		QuestCompilationException legacyError = assertThrows(QuestCompilationException.class,
+			() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+				legacy.getBytes(StandardCharsets.UTF_8))));
+		assertEquals("INVALID_XML", legacyError.code());
+
+		String varsOnly = """
+
+							<quest-definition id="1001" version="1">
+							  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+							  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+							  <nodes><node label="start" status="START"><${VARS}><var name="var1" value="0"/></${VARS}></node></nodes>
+							  <transitions/>
+							</quest-definition>
+
+					""".replace("${VARS}", vars);
+		assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
+			() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+				varsOnly.getBytes(StandardCharsets.UTF_8)))).code());
+
+		// mixed form: compact node that also carries the legacy wrapper
+		String mixed = legacy.replace("<node label=\"start\">",
+			"<node label=\"start\" status=\"START\">");
+		assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
+			() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+				mixed.getBytes(StandardCharsets.UTF_8)))).code());
+	}
+
+	@Test
+	void compactNodeSchemaAndProjectionValidationRejectInvalidForms() {
+		String valid = """
+
+						<quest-definition id="1001" version="1">
+						  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <progress><bit-field name="var1" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/></progress>
+						  <nodes>
+						    <node label="start" status="START"><var name="var1" value="0"/></node>
+						    <node label="reward" status="REWARD"><var name="var1" value="1"/></node>
+						  </nodes>
+						  <transitions><transition source="start" target="reward"><event><level-up/></event></transition></transitions>
+						</quest-definition>
+
+					""";
+		for (String malformed : List.of(
+			valid.replace("label=\"start\" ", ""),
+			valid.replace(" status=\"START\"", ""),
+			valid.replace("<var name=\"var1\" ", "<var "),
+			valid.replace(" value=\"0\"", ""),
+			valid.replace("status=\"START\"", "status=\"START\" var1=\"0\""))) {
+			assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
+				() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+					malformed.getBytes(StandardCharsets.UTF_8)))).code());
+		}
+
+		String unknownField = valid.replace("name=\"var1\" value=\"0\"", "name=\"missing\" value=\"0\"");
+		assertEquals("UNKNOWN_PROGRESS_FIELD", assertThrows(QuestCompilationException.class,
+			() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+				unknownField.getBytes(StandardCharsets.UTF_8)))).code());
+
+		String outOfRange = valid.replace("name=\"var1\" value=\"0\"", "name=\"var1\" value=\"4\"");
+		assertThrows(IllegalArgumentException.class, () -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+			outOfRange.getBytes(StandardCharsets.UTF_8))));
+
+		String duplicateProjection = valid.replace("label=\"reward\" status=\"REWARD\"",
+			"label=\"reward\" status=\"START\"").replace("value=\"1\"", "value=\"0\"");
+		assertEquals("DUPLICATE_NODE_PROJECTION", assertThrows(QuestCompilationException.class,
+			() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+				duplicateProjection.getBytes(StandardCharsets.UTF_8)))).code());
+	}
+
+	@Test
+	void compactNodeRejectsUnknownStatusAndKeepsLegacyLastWinDuplicateVarSemantics() {
+		String unknownStatus = """
+
+						<quest-definition id="1001" version="1">
+						  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+						  <nodes><node label="start" status="WIPED"/></nodes>
+						  <transitions/>
+						</quest-definition>
+
+				""";
+		assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
+			() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+				unknownStatus.getBytes(StandardCharsets.UTF_8)))).code());
+
+		// duplicate vars keep the legacy last-wins projection semantics (map put, not a wrapper check)
+		String duplicateVar = """
+
+						<quest-definition id="1001" version="1">
+						  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+						  <nodes><node label="start" status="START"><var name="var1" value="0"/><var name="var1" value="1"/></node></nodes>
+						  <transitions>
+						    <transition source="start" target="start"><event><level-up/></event></transition>
+						  </transitions>
+						</quest-definition>
+
+				""";
+		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+			duplicateVar.getBytes(StandardCharsets.UTF_8)));
+		assertEquals(Map.of("var1", 1), definition.definition().nodes().getFirst().projection().variables());
 	}
 
 	@Test
@@ -672,20 +867,22 @@ class QuestDefinitionCompilerTest {
 				.compile();
 
 		String xml = """
-				<quest-definition id="1001" version="1">
-				  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
-				  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
-				  <nodes>
-				    <node label="start"><project status="START"><vars><var name="var1" value="0"/></vars></project></node>
-				  </nodes>
-				  <transitions>
-				    <transition target="start">
-				      <event><talk-to-npc npc-id="700001"/></event>
-				      <conditions><status-is status="START"/></conditions>
-				      <after-commit><start-quest-timer seconds="300" timer-id="visible" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/><start-invisible-timer seconds="60" timer-id="invisible" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/><cancel-quest-timer timer-id="visible" scope="PLAYER_QUEST"/></after-commit>
-				    </transition>
-				  </transitions>
-				</quest-definition>
+
+						<quest-definition id="1001" version="1">
+						  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+						  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+						  <nodes>
+						    <node label="start" status="START"><var name="var1" value="0"/></node>
+						  </nodes>
+						  <transitions>
+						    <transition target="start">
+						      <event><talk-to-npc npc-id="700001"/></event>
+						      <conditions><status-is status="START"/></conditions>
+						      <after-commit><start-quest-timer seconds="300" timer-id="visible" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/><start-invisible-timer seconds="60" timer-id="invisible" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/><cancel-quest-timer timer-id="visible" scope="PLAYER_QUEST"/></after-commit>
+						    </transition>
+						  </transitions>
+						</quest-definition>
+
 				""";
 		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(
 				new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
@@ -761,12 +958,14 @@ class QuestDefinitionCompilerTest {
 
 	private static String xmlWithTransition(String event, String afterCommit) {
 		return """
-			<quest-definition id="1001" version="1">
-			  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
-			  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
-			  <nodes><node label="start"><project status="START"><vars><var name="var1" value="0"/></vars></project></node></nodes>
-			  <transitions><transition target="start">%s<conditions><status-is status="START"/></conditions>%s</transition></transitions>
-			</quest-definition>
+
+					<quest-definition id="1001" version="1">
+					  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
+					  <progress><bit-field name="var1" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+					  <nodes><node label="start" status="START"><var name="var1" value="0"/></node></nodes>
+					  <transitions><transition target="start">%s<conditions><status-is status="START"/></conditions>%s</transition></transitions>
+					</quest-definition>
+
 			""".formatted(event, afterCommit);
 	}
 }

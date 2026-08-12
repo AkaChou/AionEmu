@@ -21,140 +21,80 @@
     <bit-field name="var2" offset="12" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
           <var name="var1" value="0"/>
           <var name="var2" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="a0b0c0">
-      <project status="START">
-        <vars>
+    <node label="a0b0c0" status="START">
           <var name="var0" value="0"/>
           <var name="var1" value="0"/>
           <var name="var2" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="a0b0c1">
-      <project status="START">
-        <vars>
+    <node label="a0b0c1" status="START">
           <var name="var0" value="0"/>
           <var name="var1" value="0"/>
           <var name="var2" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="a0b1c0">
-      <project status="START">
-        <vars>
+    <node label="a0b1c0" status="START">
           <var name="var0" value="0"/>
           <var name="var1" value="1"/>
           <var name="var2" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="a0b1c1">
-      <project status="START">
-        <vars>
+    <node label="a0b1c1" status="START">
           <var name="var0" value="0"/>
           <var name="var1" value="1"/>
           <var name="var2" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="a1b0c0">
-      <project status="START">
-        <vars>
+    <node label="a1b0c0" status="START">
           <var name="var0" value="1"/>
           <var name="var1" value="0"/>
           <var name="var2" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="a1b0c1">
-      <project status="START">
-        <vars>
+    <node label="a1b0c1" status="START">
           <var name="var0" value="1"/>
           <var name="var1" value="0"/>
           <var name="var2" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="a1b1c0">
-      <project status="START">
-        <vars>
+    <node label="a1b1c0" status="START">
           <var name="var0" value="1"/>
           <var name="var1" value="1"/>
           <var name="var2" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="a1b1c1">
-      <project status="START">
-        <vars>
+    <node label="a1b1c1" status="START">
           <var name="var0" value="1"/>
           <var name="var1" value="1"/>
           <var name="var2" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="a2b0c0">
-      <project status="START">
-        <vars>
+    <node label="a2b0c0" status="START">
           <var name="var0" value="2"/>
           <var name="var1" value="0"/>
           <var name="var2" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="a2b0c1">
-      <project status="START">
-        <vars>
+    <node label="a2b0c1" status="START">
           <var name="var0" value="2"/>
           <var name="var1" value="0"/>
           <var name="var2" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="a2b1c0">
-      <project status="START">
-        <vars>
+    <node label="a2b1c0" status="START">
           <var name="var0" value="2"/>
           <var name="var1" value="1"/>
           <var name="var2" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="a2b1c1">
-      <project status="START">
-        <vars>
+    <node label="a2b1c1" status="START">
           <var name="var0" value="2"/>
           <var name="var1" value="1"/>
           <var name="var2" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="2"/>
           <var name="var1" value="1"/>
           <var name="var2" value="1"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="0"/>
           <var name="var1" value="0"/>
           <var name="var2" value="0"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>
@@ -288,166 +228,11 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="a0b0c0" target="a1b0c0">
-      <event>
-        <kill-npc npc-id="217084"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b0c1" target="a1b0c1">
-      <event>
-        <kill-npc npc-id="217084"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b1c0" target="a1b1c0">
-      <event>
-        <kill-npc npc-id="217084"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b1c1" target="a1b1c1">
-      <event>
-        <kill-npc npc-id="217084"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b0c0" target="a2b0c0">
-      <event>
-        <kill-npc npc-id="217084"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b0c1" target="a2b0c1">
-      <event>
-        <kill-npc npc-id="217084"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b1c0" target="a2b1c0">
-      <event>
-        <kill-npc npc-id="217084"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b1c1" target="a2b1c1">
-      <event>
-        <kill-npc npc-id="217084"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b0c0" target="a0b1c0">
-      <event>
-        <kill-npc npc-id="217080"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b0c1" target="a0b1c1">
-      <event>
-        <kill-npc npc-id="217080"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b0c0" target="a1b1c0">
-      <event>
-        <kill-npc npc-id="217080"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b0c1" target="a1b1c1">
-      <event>
-        <kill-npc npc-id="217080"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a2b0c0" target="a2b1c0">
-      <event>
-        <kill-npc npc-id="217080"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a2b0c1" target="a2b1c1">
-      <event>
-        <kill-npc npc-id="217080"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b0c0" target="a0b0c1">
-      <event>
-        <kill-npc npc-id="217081"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a0b1c0" target="a0b1c1">
-      <event>
-        <kill-npc npc-id="217081"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b0c0" target="a1b0c1">
-      <event>
-        <kill-npc npc-id="217081"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a1b1c0" target="a1b1c1">
-      <event>
-        <kill-npc npc-id="217081"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a2b0c0" target="a2b0c1">
-      <event>
-        <kill-npc npc-id="217081"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="a2b1c0" target="a2b1c1">
-      <event>
-        <kill-npc npc-id="217081"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
+    <counter-grid>
+      <dimension field="var0" required="2" npc-ids="217084"/>
+      <dimension field="var1" required="1" npc-ids="217080"/>
+      <dimension field="var2" required="1" npc-ids="217081"/>
+    </counter-grid>
     <!-- 终态：报告 / terminal: report to 799229 -->
     <npc-report npc-id="799229" source="a2b1c1" target="reward" page="1352"/>
     <!-- 奖励：发放并完成 / reward: grant and complete -->

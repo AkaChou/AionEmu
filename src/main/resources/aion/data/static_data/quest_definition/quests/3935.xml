@@ -23,10 +23,10 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="started" status="START"><var name="var0" value="0"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="0"/></node>
+    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
     <npc-start npc-id="203701" source="unaccepted" target="started" selection-sources="unaccepted started"/>
@@ -38,11 +38,8 @@
       <choice dialog-id="11" reward-index="4"/>
       <choice dialog-id="12" reward-index="5"/>
     </npc-complete>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="203316" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="203702" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="203329" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="203710" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="203708" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="203752" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <npc-dialog source="started" npc-ids="203316 203702 203329 203710 203708 203752" dialog-ids="31">
+      <show-quest-dialog dialog-id="1352" />
+    </npc-dialog>
   </transitions>
 </quest-definition>

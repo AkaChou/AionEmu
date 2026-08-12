@@ -31,54 +31,26 @@
     <bit-field name="var4" offset="4" width="4" min="0" max="10" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="started">
-      <project status="START">
-        <vars>
+    <node label="started" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="s4">
-      <project status="START">
-        <vars>
+    <node label="s4" status="START">
           <var name="var0" value="4"/>
-        </vars>
-      </project>
     </node>
-    <node label="s5">
-      <project status="START">
-        <vars>
+    <node label="s5" status="START">
           <var name="var0" value="5"/>
-        </vars>
-      </project>
     </node>
-    <node label="s7">
-      <project status="START">
-        <vars>
+    <node label="s7" status="START">
           <var name="var0" value="7"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="7"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>

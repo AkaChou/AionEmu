@@ -15,33 +15,17 @@
     <bit-field name="var0" offset="0" width="3" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted">
-      <project status="NONE">
-        <vars>
+    <node label="unaccepted" status="NONE">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="started">
-      <project status="START">
-        <vars>
+    <node label="started" status="START">
           <var name="var0" value="0"/>
-        </vars>
-      </project>
     </node>
-    <node label="reward">
-      <project status="REWARD">
-        <vars>
+    <node label="reward" status="REWARD">
           <var name="var0" value="5"/>
-        </vars>
-      </project>
     </node>
-    <node label="complete">
-      <project status="COMPLETE">
-        <vars>
+    <node label="complete" status="COMPLETE">
           <var name="var0" value="5"/>
-        </vars>
-      </project>
     </node>
   </nodes>
   <transitions>
@@ -100,24 +84,14 @@
       <event><talk-to-npc npc-id="799843" dialog-ids="1003 1004 20001"/></event>
       <after-commit><close-dialog/></after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="799842" dialog-id="1008"/></event>
-      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event><talk-to-npc npc-id="799843" dialog-id="1008"/></event>
-      <after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit>
-    </transition>
+    <npc-dialog source="unaccepted" npc-ids="799842 799843" dialog-ids="1008">
+      <show-quest-selection-dialog dialog-id="10" />
+    </npc-dialog>
 
     <!-- 进行中：799842 / 799843 对话查看任务详情。 -->
-    <transition source="started" target="started">
-      <event><talk-to-npc npc-id="799842" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="2375"/></after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event><talk-to-npc npc-id="799843" dialog-id="31"/></event>
-      <after-commit><show-quest-dialog dialog-id="2375"/></after-commit>
-    </transition>
+    <npc-dialog source="started" npc-ids="799842 799843" dialog-ids="31">
+      <show-quest-dialog dialog-id="2375" />
+    </npc-dialog>
 
     <!-- 击杀 Smiling Dragrint (216022) 5 只：var0 计数 0→5，priority 1 计数、0 完成进入奖励。 -->
     <transition source="started" target="started" priority="1">

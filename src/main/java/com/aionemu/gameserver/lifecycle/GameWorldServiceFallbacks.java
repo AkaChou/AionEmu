@@ -34,7 +34,7 @@ final class GameWorldServiceFallbacks {
      * PathService singleton
      */
     static PathService pathService() {
-        return PathServiceFallback.INSTANCE;
+        return PathService.getInstance();
     }
 
     /**
@@ -57,18 +57,6 @@ final class GameWorldServiceFallbacks {
          * GeoService singleton.
          */
         private static final GeoService INSTANCE = GeoService.getInstance();
-    }
-
-    /**
-     * PathService 回退持有者。
-     * PathService fallback holder.
-     */
-    private static final class PathServiceFallback {
-        /**
-         * PathService 单例。
-         * PathService singleton.
-         */
-        private static final PathService INSTANCE = PathService.getInstance();
     }
 
     /**

@@ -21,10 +21,10 @@
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="1"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars><var name="var0" value="0"/></vars></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="started" status="START"><var name="var0" value="0"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="1"/></node>
+    <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
     <!-- 接取/咨询：Minggiling (800925) / 派系 NPC (800926)。start_npc_ids=0 派系日任，沿用 FACTION 先例（49601）以 end NPC 承接对话。 -->
@@ -49,8 +49,9 @@
     </transition>
 
     <!-- 进行中对话。 -->
-    <transition source="started" target="started"><event><talk-to-npc npc-id="800925" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
-    <transition source="started" target="started"><event><talk-to-npc npc-id="800926" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
+    <npc-dialog source="started" npc-ids="800925 800926" dialog-ids="31">
+      <show-quest-dialog dialog-id="2375" />
+    </npc-dialog>
 
     <!-- 交付 800925: 收集齐 6 个后提交。 -->
     <npc-item-report npc-id="800925" source="started" target="reward" item-id="182215266" required="6" remove-count="ALL"/>

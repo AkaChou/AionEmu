@@ -117,17 +117,19 @@ class RemainingCapabilityDefinitionTest {
 			.afterCommit(QuestDsl.addNpcAggro(203175, 50))
 			.compile();
 		String xml = """
-			<quest-definition id="14213" version="1">
-			  <metadata name="typed-actions" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
-			  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
-			  <nodes><node label="start"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-			    <node label="done"><project status="REWARD"><vars><var name="var0" value="1"/></vars></project></node></nodes>
-			  <transitions><transition source="start" target="done"><event><quest-dialog dialog="ACCEPT_QUEST"/></event>
-			    <conditions><status-is status="START"/></conditions>
-			    <actions><remove-item item-id="182200501" count="ALL"/><set-variable field="var0" value="1"/></actions>
-			    <after-commit><player-emotion emotion="STAND"/><broadcast-interaction-npc-emotion emotion="NO"/><add-npc-aggro npc-id="203175" damage="50"/></after-commit>
-			  </transition></transitions>
-			</quest-definition>
+
+					<quest-definition id="14213" version="1">
+					  <metadata name="typed-actions" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
+					  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+					  <nodes><node label="start" status="START"><var name="var0" value="0"/></node>
+					    <node label="done" status="REWARD"><var name="var0" value="1"/></node></nodes>
+					  <transitions><transition source="start" target="done"><event><quest-dialog dialog="ACCEPT_QUEST"/></event>
+					    <conditions><status-is status="START"/></conditions>
+					    <actions><remove-item item-id="182200501" count="ALL"/><set-variable field="var0" value="1"/></actions>
+					    <after-commit><player-emotion emotion="STAND"/><broadcast-interaction-npc-emotion emotion="NO"/><add-npc-aggro npc-id="203175" damage="50"/></after-commit>
+					  </transition></transitions>
+					</quest-definition>
+
 			""";
 		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
@@ -144,13 +146,15 @@ class RemainingCapabilityDefinitionTest {
 			.on(event).from("start").when(statusIs(QuestStatus.START))
 			.then(QuestDsl.setVariable("var0", 1)).goTo("done").compile();
 		String xml = """
-			<quest-definition id="%d" version="1">
-			  <metadata name="representative" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
-			  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
-			  <nodes><node label="start"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-			    <node label="done"><project status="REWARD"><vars><var name="var0" value="1"/></vars></project></node></nodes>
-			  <transitions><transition source="start" target="done"><event>%s</event><conditions><status-is status="START"/></conditions><actions><set-variable field="var0" value="1"/></actions></transition></transitions>
-			</quest-definition>
+
+					<quest-definition id="%d" version="1">
+					  <metadata name="representative" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
+					  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
+					  <nodes><node label="start" status="START"><var name="var0" value="0"/></node>
+					    <node label="done" status="REWARD"><var name="var0" value="1"/></node></nodes>
+					  <transitions><transition source="start" target="done"><event>%s</event><conditions><status-is status="START"/></conditions><actions><set-variable field="var0" value="1"/></actions></transition></transitions>
+					</quest-definition>
+
 			""".formatted(id, xmlEvent);
 		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(
 			new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));

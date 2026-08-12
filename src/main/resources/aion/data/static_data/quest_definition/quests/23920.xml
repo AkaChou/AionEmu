@@ -14,20 +14,20 @@
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="started"><project status="START"><vars><var name="var0" value="0"/></vars></project></node>
-    <node label="h1"><project status="START"><vars><var name="var0" value="1"/></vars></project></node>
-    <node label="h2"><project status="START"><vars><var name="var0" value="2"/></vars></project></node>
-    <node label="h3"><project status="START"><vars><var name="var0" value="3"/></vars></project></node>
-    <node label="h4"><project status="START"><vars><var name="var0" value="4"/></vars></project></node>
-    <node label="h5"><project status="START"><vars><var name="var0" value="5"/></vars></project></node>
-    <node label="h6"><project status="START"><vars><var name="var0" value="6"/></vars></project></node>
-    <node label="h7"><project status="START"><vars><var name="var0" value="7"/></vars></project></node>
-    <node label="h8"><project status="START"><vars><var name="var0" value="8"/></vars></project></node>
-    <node label="h9"><project status="START"><vars><var name="var0" value="9"/></vars></project></node>
-    <node label="h10"><project status="START"><vars><var name="var0" value="10"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="var0" value="10"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars/></project></node>
+    <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
+    <node label="started" status="START"><var name="var0" value="0"/></node>
+    <node label="h1" status="START"><var name="var0" value="1"/></node>
+    <node label="h2" status="START"><var name="var0" value="2"/></node>
+    <node label="h3" status="START"><var name="var0" value="3"/></node>
+    <node label="h4" status="START"><var name="var0" value="4"/></node>
+    <node label="h5" status="START"><var name="var0" value="5"/></node>
+    <node label="h6" status="START"><var name="var0" value="6"/></node>
+    <node label="h7" status="START"><var name="var0" value="7"/></node>
+    <node label="h8" status="START"><var name="var0" value="8"/></node>
+    <node label="h9" status="START"><var name="var0" value="9"/></node>
+    <node label="h10" status="START"><var name="var0" value="10"/></node>
+    <node label="reward" status="REWARD"><var name="var0" value="10"/></node>
+    <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <npc-start npc-id="278019" source="unaccepted" target="started" selection-sources="unaccepted started"/>

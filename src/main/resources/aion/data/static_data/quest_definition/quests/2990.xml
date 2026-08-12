@@ -70,14 +70,14 @@
     <bit-field name="hunt-complete" offset="18" width="6" min="0" max="60" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted"><project status="NONE"><vars><var name="step" value="0"/></vars></project></node>
-    <node label="started0"><project status="START"><vars><var name="step" value="0"/></vars></project></node>
-    <node label="started1"><project status="START"><vars><var name="step" value="1"/></vars></project></node>
-    <node label="started2"><project status="START"><vars><var name="step" value="2"/></vars></project></node>
-    <node label="started2-complete"><project status="START"><vars><var name="step" value="2"/><var name="crestlich" value="30"/><var name="monitor" value="30"/><var name="vespine" value="30"/><var name="hunt-complete" value="60"/></vars></project></node>
-    <node label="started3"><project status="START"><vars><var name="step" value="3"/><var name="crestlich" value="30"/><var name="monitor" value="30"/><var name="vespine" value="30"/><var name="hunt-complete" value="60"/></vars></project></node>
-    <node label="reward"><project status="REWARD"><vars><var name="step" value="3"/><var name="crestlich" value="30"/><var name="monitor" value="30"/><var name="vespine" value="30"/><var name="hunt-complete" value="60"/></vars></project></node>
-    <node label="complete"><project status="COMPLETE"><vars><var name="step" value="3"/><var name="crestlich" value="30"/><var name="monitor" value="30"/><var name="vespine" value="30"/><var name="hunt-complete" value="60"/></vars></project></node>
+    <node label="unaccepted" status="NONE"><var name="step" value="0"/></node>
+    <node label="started0" status="START"><var name="step" value="0"/></node>
+    <node label="started1" status="START"><var name="step" value="1"/></node>
+    <node label="started2" status="START"><var name="step" value="2"/></node>
+    <node label="started2-complete" status="START"><var name="step" value="2"/><var name="crestlich" value="30"/><var name="monitor" value="30"/><var name="vespine" value="30"/><var name="hunt-complete" value="60"/></node>
+    <node label="started3" status="START"><var name="step" value="3"/><var name="crestlich" value="30"/><var name="monitor" value="30"/><var name="vespine" value="30"/><var name="hunt-complete" value="60"/></node>
+    <node label="reward" status="REWARD"><var name="step" value="3"/><var name="crestlich" value="30"/><var name="monitor" value="30"/><var name="vespine" value="30"/><var name="hunt-complete" value="60"/></node>
+    <node label="complete" status="COMPLETE"><var name="step" value="3"/><var name="crestlich" value="30"/><var name="monitor" value="30"/><var name="vespine" value="30"/><var name="hunt-complete" value="60"/></node>
   </nodes>
   <transitions>
     <transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="204146" dialog-id="31"/></event><conditions><equipment-set-equipped set-ids="9 8 7 6 378" count="5" expected="true"/></conditions><after-commit><show-quest-dialog dialog-id="4762"/></after-commit></transition>
