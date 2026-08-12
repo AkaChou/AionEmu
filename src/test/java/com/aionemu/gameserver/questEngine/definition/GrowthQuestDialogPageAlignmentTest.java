@@ -17,10 +17,15 @@ class GrowthQuestDialogPageAlignmentTest {
 		19673, 19674, 19675, 19676, 19680, 19681, 19682,
 		29673, 29674, 29675, 29676, 29680, 29681, 29682);
 	private static final List<ItemQuest> ABBEY_ITEM_QUESTS = List.of(
-		new ItemQuest(19672, 806698, 10),
-		new ItemQuest(19677, 806698, 50),
-		new ItemQuest(29672, 806700, 10),
-		new ItemQuest(29677, 806700, 50));
+		new ItemQuest(19672, 806698, 186000476, 10),
+		new ItemQuest(19677, 806698, 186000476, 50),
+		new ItemQuest(19684, 806698, 186000477, 3),
+		new ItemQuest(29672, 806700, 186000476, 10),
+		new ItemQuest(29677, 806700, 186000476, 50));
+	private static final List<WelcomeQuest> ABBEY_WELCOME_QUESTS = List.of(
+		new WelcomeQuest(19671, 806698, 806699),
+		new WelcomeQuest(19683, 806698, 806708),
+		new WelcomeQuest(29671, 806700, 806701));
 
 	@Test
 	void deliveryOnlyGrowthQuestsUseTheClientSelect5Page() throws Exception {
@@ -41,7 +46,9 @@ class GrowthQuestDialogPageAlignmentTest {
 		for (ItemQuest quest : ABBEY_ITEM_QUESTS) {
 			assertDialogPage(compile(quest.id()), "unaccepted", quest.npcId(), 31, 4762);
 		}
-		assertDialogPage(compile(29671), "unaccepted", 806700, 31, 4762);
+		for (WelcomeQuest quest : ABBEY_WELCOME_QUESTS) {
+			assertDialogPage(compile(quest.id()), "unaccepted", quest.instructorNpcId(), 31, 4762);
+		}
 	}
 
 	@Test
@@ -81,9 +88,9 @@ class GrowthQuestDialogPageAlignmentTest {
 				.filter(transition -> Integer.valueOf(0).equals(transition.priority()))
 				.findFirst().orElseThrow();
 			assertEquals("reward", success.targetNode(), "quest " + quest.id() + " item check target");
-			assertEquals(List.of(new QuestCondition.HasItem(186000476, quest.count(), true)),
+			assertEquals(List.of(new QuestCondition.HasItem(quest.itemId(), quest.count(), true)),
 				success.conditions(), "quest " + quest.id() + " item check condition");
-			assertEquals(List.of(new QuestAction.RemoveItem(186000476, quest.count())),
+			assertEquals(List.of(new QuestAction.RemoveItem(quest.itemId(), quest.count())),
 				success.actions(), "quest " + quest.id() + " item removal");
 			assertEquals(List.of(
 				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
@@ -102,18 +109,20 @@ class GrowthQuestDialogPageAlignmentTest {
 	}
 
 	@Test
-	void rasisWelcomeUsesTheSellerThenInstructorProtocol() throws Exception {
-		QuestDefinition definition = compile(29671);
-		assertDialogPage(definition, "started", 806701, 31, 1011);
-		assertDialogPage(definition, "started", 806701, 1012, 1012);
-		assertDialogPage(definition, "reward", 806700, 31, 10002);
+	void welcomeQuestsUseTheSellerThenInstructorProtocol() throws Exception {
+		for (WelcomeQuest quest : ABBEY_WELCOME_QUESTS) {
+			QuestDefinition definition = compile(quest.id());
+			assertDialogPage(definition, "started", quest.sellerNpcId(), 31, 1011);
+			assertDialogPage(definition, "started", quest.sellerNpcId(), 1012, 1012);
+			assertDialogPage(definition, "reward", quest.instructorNpcId(), 31, 10002);
 
-		QuestTransition reward = singleTalkRoute(definition, "started", 806701, 10255);
-		assertEquals("reward", reward.targetNode());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.CloseDialog()), reward.afterCommit());
-		assertTrue(talkRoutes(definition, "unaccepted", 806701, 31).isEmpty());
+			QuestTransition reward = singleTalkRoute(definition, "started", quest.sellerNpcId(), 10255);
+			assertEquals("reward", reward.targetNode());
+			assertEquals(List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.CloseDialog()), reward.afterCommit());
+			assertTrue(talkRoutes(definition, "unaccepted", quest.sellerNpcId(), 31).isEmpty());
+		}
 	}
 
 	private static QuestDefinition compile(int questId) throws Exception {
@@ -155,6 +164,9 @@ class GrowthQuestDialogPageAlignmentTest {
 			.toList();
 	}
 
-	private record ItemQuest(int id, int npcId, int count) {
+	private record ItemQuest(int id, int npcId, int itemId, int count) {
+	}
+
+	private record WelcomeQuest(int id, int instructorNpcId, int sellerNpcId) {
 	}
 }
