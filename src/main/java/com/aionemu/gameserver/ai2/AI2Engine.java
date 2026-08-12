@@ -119,7 +119,8 @@ public class AI2Engine implements GameEngine {
 	static String selectNpcAi(String fallback, int npcId, Npc npc) {
 		// These scripted action items own their interaction protocol; a retail pattern would
 		// bypass it and fall through to the generic page-10 dialog.
-		if ("quest_use_item".equals(fallback) || "empyrean_blessing".equals(fallback)) {
+		if ("quest_use_item".equals(fallback) || "quest_start_use_item".equals(fallback)
+			|| "empyrean_blessing".equals(fallback)) {
 			return fallback;
 		}
 		var pattern = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getPattern(npcId);

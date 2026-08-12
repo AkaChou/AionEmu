@@ -29,6 +29,7 @@ class AI2EngineRetailSelectionTest {
 				Map.of(), Map.of(), Map.of());
 			assertEquals("retail_pattern", AI2Engine.selectNpcAi("general", 200000, null));
 			assertEquals("quest_use_item", AI2Engine.selectNpcAi("quest_use_item", 200000, null));
+			assertEquals("quest_start_use_item", AI2Engine.selectNpcAi("quest_start_use_item", 700004, null));
 			assertEquals("empyrean_blessing", AI2Engine.selectNpcAi("empyrean_blessing", 883959, null));
 		} finally {
 			DataManager.RETAIL_AI_DATA = previous;
