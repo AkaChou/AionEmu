@@ -73,7 +73,6 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="4"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
@@ -86,7 +85,6 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="4"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">

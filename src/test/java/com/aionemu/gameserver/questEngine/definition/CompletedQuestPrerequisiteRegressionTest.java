@@ -45,13 +45,18 @@ class CompletedQuestPrerequisiteRegressionTest {
 	}
 
 	@Test
-	void startsAFrillOfAFussWhenTheZoneMissionUnlocksAtLevelFourteen() throws Exception {
-		CompiledQuestDefinition definition = load(14013);
-		QuestMutationPlan plan = plan(definition, new QuestEvent.ZoneMissionEnd(), Set.of()).orElseThrow();
-		assertEquals(QuestStatus.START, plan.nextStatus());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(4)), plan.afterCommit());
+	void verteronAutomaticStartsSyncWithoutOpeningNpcQuestHtml() throws Exception {
+		for (int questId : new int[] {14011, 14012, 14013, 14014, 14015}) {
+			CompiledQuestDefinition definition = load(questId);
+			for (QuestEvent event : new QuestEvent[] {new QuestEvent.LevelUp(), new QuestEvent.ZoneMissionEnd()}) {
+				Set<Integer> completedQuestIds = event instanceof QuestEvent.LevelUp ? Set.of(14010) : Set.of();
+				QuestMutationPlan plan = plan(definition, event, completedQuestIds).orElseThrow();
+				assertEquals(QuestStatus.START, plan.nextStatus(), "quest " + questId);
+				assertEquals(List.of(
+					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH)),
+					plan.afterCommit(), "quest " + questId + " on " + event.getClass().getSimpleName());
+			}
+		}
 	}
 
 	@Test
