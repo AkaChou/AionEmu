@@ -10,16 +10,26 @@
     <work-items>
       <item id="182204221" count="1"/>
     </work-items>
-    <rewards>
-      <reward kind="GOLD" id="0" amount="3270"/>
-      <reward kind="EXP" id="0" amount="64755"/>
-      <reward kind="ITEM" id="186000007" amount="1"/>
-      <reward kind="ITEM" id="186000007" amount="1"/>
-      <reward kind="ITEM" id="186000007" amount="1"/>
-    </rewards>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="3270"/>
+        <reward kind="EXP" id="0" amount="64755"/>
+        <reward kind="ITEM" id="186000007" amount="1"/>
+      </group>
+      <group>
+        <reward kind="GOLD" id="0" amount="10000"/>
+        <reward kind="EXP" id="0" amount="75000"/>
+        <reward kind="ITEM" id="186000007" amount="1"/>
+      </group>
+      <group>
+        <reward kind="GOLD" id="0" amount="20000"/>
+        <reward kind="EXP" id="0" amount="150000"/>
+        <reward kind="ITEM" id="186000007" amount="1"/>
+      </group>
+    </reward-groups>
     <drops>
-      <drop npc-id="211298" item-id="182204222" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="211305" item-id="182204222" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="211298" item-id="182204222" chance="100" each-member="true" collecting-step="8"/>
+      <drop npc-id="211305" item-id="182204222" chance="100" each-member="true" collecting-step="8"/>
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="2422"/>
@@ -30,13 +40,111 @@
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
-    <node label="started" status="START"><var name="var0" value="0"/></node>
-    <node label="reward" status="REWARD"><var name="var0" value="0"/></node>
+    <node label="s1" status="START"><var name="var0" value="1"/></node>
+    <node label="s2" status="START"><var name="var0" value="2"/></node>
+    <node label="s3" status="START"><var name="var0" value="3"/></node>
+    <node label="s4" status="START"><var name="var0" value="4"/></node>
+    <node label="s5" status="START"><var name="var0" value="5"/></node>
+    <node label="s6" status="START"><var name="var0" value="6"/></node>
+    <node label="s7" status="START"><var name="var0" value="7"/></node>
+    <node label="s8" status="START"><var name="var0" value="8"/></node>
+    <node label="reward_a" status="REWARD"><var name="var0" value="2"/></node>
+    <node label="reward_b" status="REWARD"><var name="var0" value="6"/></node>
+    <node label="reward_c" status="REWARD"><var name="var0" value="8"/></node>
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
-    <npc-start npc-id="204327" source="unaccepted" target="started" selection-sources="unaccepted started" start-dialog-id="4762"/>
-    <npc-report npc-id="204327" source="started" target="reward" page="1352"/>
-    <npc-complete npc-id="204327" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <!-- 接取:204327 (Sveinn) 付费启动。31 显示 4762;10000/10002/10006 扣 kinah 启动并直达 var1/3/7,kinah 不足显示 1267。 -->
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="204327" dialog-id="31"/></event>
+      <after-commit><show-quest-dialog dialog-id="4762"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="204327" dialog-id="1007"/></event>
+      <after-commit><show-quest-dialog dialog-id="4"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="204327" dialog-id="1002"/></event>
+      <after-commit><show-quest-dialog dialog-id="1003"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="204327" dialog-id="1003"/></event>
+      <after-commit><show-quest-dialog dialog-id="1004"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event><talk-to-npc npc-id="204327" dialog-ids="1004 20001"/></event>
+      <after-commit><close-dialog/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="s1" priority="0">
+      <event><talk-to-npc npc-id="204327" dialog-id="10000"/></event>
+      <conditions><currency-at-least kind="KINAH" amount="500"/></conditions>
+      <actions><decrease-currency kind="KINAH" amount="500"/></actions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1352"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted" priority="1">
+      <event><talk-to-npc npc-id="204327" dialog-id="10000"/></event>
+      <conditions><currency-below kind="KINAH" amount="500"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="1267"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="s3" priority="0">
+      <event><talk-to-npc npc-id="204327" dialog-id="10002"/></event>
+      <conditions><currency-at-least kind="KINAH" amount="5000"/></conditions>
+      <actions><decrease-currency kind="KINAH" amount="5000"/></actions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="2034"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted" priority="1">
+      <event><talk-to-npc npc-id="204327" dialog-id="10002"/></event>
+      <conditions><currency-below kind="KINAH" amount="5000"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="1267"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="s7" priority="0">
+      <event><talk-to-npc npc-id="204327" dialog-id="10006"/></event>
+      <conditions><currency-at-least kind="KINAH" amount="50000"/></conditions>
+      <actions><decrease-currency kind="KINAH" amount="50000"/></actions>
+      <after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="3398"/></after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted" priority="1">
+      <event><talk-to-npc npc-id="204327" dialog-id="10006"/></event>
+      <conditions><currency-below kind="KINAH" amount="50000"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="1267"/></after-commit>
+    </transition>
+
+    <!-- 204327:var1=1,31 显示 1352,STEP_TO_2(10001) 给 182204221 推进 var2。 -->
+    <transition source="s1" target="s1"><event><talk-to-npc npc-id="204327" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="s1" target="s2"><event><talk-to-npc npc-id="204327" dialog-id="10001"/></event><actions><give-item item-id="182204221" count="1"/></actions><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <!-- 204377 (Grall):var2=2,31 显示 1693,SELECT_REWARD(1009) 移除 182204221 进 REWARD(var2)。 -->
+    <transition source="s2" target="s2"><event><talk-to-npc npc-id="204377" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1693"/></after-commit></transition>
+    <transition source="s2" target="reward_a"><event><talk-to-npc npc-id="204377" dialog-id="1009"/></event><actions><remove-item item-id="182204221" count="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <!-- 204327:var3=3,31 显示 2034,STEP_TO_4(10003) 推进 var4。 -->
+    <transition source="s3" target="s3"><event><talk-to-npc npc-id="204327" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2034"/></after-commit></transition>
+    <transition source="s3" target="s4"><event><talk-to-npc npc-id="204327" dialog-id="10003"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <!-- 798078 (Hugorunerk):var4=4,31 显示 2375,STEP_TO_5(10004) 推进 var5。 -->
+    <transition source="s4" target="s4"><event><talk-to-npc npc-id="798078" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
+    <transition source="s4" target="s5"><event><talk-to-npc npc-id="798078" dialog-id="10004"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <!-- 798081 (Nicoyerk):var5=5,31 显示 2716,STEP_TO_6(10005) 推进 var6。 -->
+    <transition source="s5" target="s5"><event><talk-to-npc npc-id="798081" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2716"/></after-commit></transition>
+    <transition source="s5" target="s6"><event><talk-to-npc npc-id="798081" dialog-id="10005"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <!-- 798082 (Bicorunerk):var6=6,31 显示 3057,SELECT_REWARD(1009) 进 REWARD(var6)。 -->
+    <transition source="s6" target="s6"><event><talk-to-npc npc-id="798082" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="3057"/></after-commit></transition>
+    <transition source="s6" target="reward_b"><event><talk-to-npc npc-id="798082" dialog-id="1009"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="6"/></after-commit></transition>
+    <!-- 204327:var7=7,31 显示 3398,STEP_TO_8(10007) 推进 var8。 -->
+    <transition source="s7" target="s7"><event><talk-to-npc npc-id="204327" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="3398"/></after-commit></transition>
+    <transition source="s7" target="s8"><event><talk-to-npc npc-id="204327" dialog-id="10007"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <!-- 204300 (Bolverk):var8=8,31 按 182204222 有无显示 3739/3825,SELECT_REWARD(1009) 移除物品进 REWARD(var8)。 -->
+    <transition source="s8" target="s8">
+      <event><talk-to-npc npc-id="204300" dialog-id="31"/></event>
+      <conditions><has-item item-id="182204222" count="1"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="3739"/></after-commit>
+    </transition>
+    <transition source="s8" target="s8">
+      <event><talk-to-npc npc-id="204300" dialog-id="31"/></event>
+      <conditions><has-item item-id="182204222" count="1" expected="false"/></conditions>
+      <after-commit><show-quest-dialog dialog-id="3825"/></after-commit>
+    </transition>
+    <transition source="s8" target="reward_c"><event><talk-to-npc npc-id="204300" dialog-id="1009"/></event><actions><remove-item item-id="182204222" count="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="7"/></after-commit></transition>
+    <!-- 完成:三个分支各自完成 NPC,发放对应奖励组 (reward 0/1/2)。 -->
+    <npc-complete npc-id="204377" source="reward_a" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="798082" source="reward_b" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="1" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
+    <npc-complete npc-id="204300" source="reward_c" target="complete" fixed-reward-indices="0 1 2" dialog-ids="8..23" complete-reward-index="2" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>
