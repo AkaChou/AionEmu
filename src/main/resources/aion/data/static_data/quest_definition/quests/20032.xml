@@ -417,6 +417,10 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <!-- 注册任务相关 NPC：799503(塔洛克幻影)/799258/799239，START 状态显示任务对话页。 -->
+    <npc-dialog source="started" npc-ids="799503 799258 799239" dialog-ids="31">
+      <show-quest-dialog dialog-id="1352"/>
+    </npc-dialog>
     <!-- 领奖：向 799247 领取。 Reward: claim from 799247. -->
     <transition source="reward" target="reward">
       <event>

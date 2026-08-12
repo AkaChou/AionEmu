@@ -15,12 +15,24 @@
   <nodes>
     <node label="unaccepted" status="NONE"><var name="var0" value="0"/></node>
     <node label="started" status="START"><var name="var0" value="0"/></node>
+    <node label="s1" status="START"><var name="var0" value="1"/></node>
+    <node label="s2" status="START"><var name="var0" value="2"/></node>
     <node label="reward" status="REWARD"><var name="var0" value="0"/></node>
     <node label="complete" status="COMPLETE"><var name="var0" value="0"/></node>
   </nodes>
   <transitions>
+    <!-- 接取:799227 起始。 -->
     <npc-start npc-id="799227" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-    <npc-report npc-id="799227" source="started" target="reward" page="1352"/>
+    <!-- 799268:var0=0,31 显示 1352,STEP_TO_1(10000) 推进 var0=1。 -->
+    <transition source="started" target="started"><event><talk-to-npc npc-id="799268" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+    <transition source="started" target="s1"><event><talk-to-npc npc-id="799268" dialog-id="10000"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <!-- 799269:var0=1,31 显示 1693,STEP_TO_2(10001) 推进 var0=2。 -->
+    <transition source="s1" target="s1"><event><talk-to-npc npc-id="799269" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1693"/></after-commit></transition>
+    <transition source="s1" target="s2"><event><talk-to-npc npc-id="799269" dialog-id="10001"/></event><after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit></transition>
+    <!-- 799227:var0=2,31 显示 2375,1009 进 REWARD。 -->
+    <transition source="s2" target="s2"><event><talk-to-npc npc-id="799227" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="2375"/></after-commit></transition>
+    <transition source="s2" target="reward"><event><talk-to-npc npc-id="799227" dialog-id="1009"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+    <!-- 完成:799227 REWARD→COMPLETE。 -->
     <npc-complete npc-id="799227" source="reward" target="complete" fixed-reward-indices="0 1" dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>
