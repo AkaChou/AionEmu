@@ -14,52 +14,24 @@ out/
 .project
 .settings/
 .vscode/
-.cursor/
-.codegraph/
+.codegraph
+.cursor
+.codex
+.claude
 
 # Runtime logs and pid files
 log/
-logs/
 *.log
 *.pid
-
-# Legacy top-level service directories are runtime/build leftovers after the single-module migration.
-/AL-Boot/
-/AL-Chat/
-/AL-Commons/
-/AL-Game/
-/AL-Login/
-/cache/
+/log
+/aion
 
 # OS files
 .DS_Store
 Thumbs.db
 
-.codegraph
-.cursor
-/docs/*
-!/docs/RETAIL_SKILL_ENGINE_MIGRATION_PLAN.md
-!/docs/RETAIL_SKILL_FIELD_MAPPING.md
-!/docs/RETAIL_AI_MIGRATION.md
-
-log
-
-/aion
-/game
-/chat
-/login
-
-/src/main/resources/aion/data/static_data/npc_drops.zip
 
 /docs
-!/docs/
-/docs/*
-!/docs/quest/
-/docs/quest/*
-!/docs/quest/client-dialog-mapping/
-/docs/quest/client-dialog-mapping/*
-!/docs/quest/client-dialog-mapping/quest-order-audit.csv
 
 
-.codex
-.claude
+
