@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="23706" version="1">
-  <metadata name="Don't Eat the Messenger" display-name-id="1111632" min-level="65" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Don't Eat the Messenger" display-name-id="1111632" min-level="65" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

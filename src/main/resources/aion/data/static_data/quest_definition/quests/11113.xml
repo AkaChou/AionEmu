@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="11113" version="1">
-  <metadata name="Not For You!" display-name-id="1125089" min-level="52" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Not For You!" display-name-id="1125089" min-level="52" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -7,7 +7,11 @@
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL" />
     <items>
       <item id="182216223" count="3" />
-    </items>
+    
+      <item id="182216224" count="1"/>
+      <item id="182216225" count="1"/>
+      <item id="182216226" count="1"/>
+      </items>
     <reward-groups>
       <group>
         <reward kind="EXP" id="0" amount="10000000" />

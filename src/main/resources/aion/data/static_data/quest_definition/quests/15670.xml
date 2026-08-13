@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="15670" version="1">
-  <metadata name="Investigating the Ancient Archon Weapon Invasion" display-name-id="1803262" min-level="66" max-level="2147483647" category="SEEN_MARKER">
+  <metadata name="Investigating the Ancient Archon Weapon Invasion" display-name-id="1803262" min-level="66" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4006" version="1">
-  <metadata name="Frightcorn-ucopia" display-name-id="1114005" min-level="22" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Frightcorn-ucopia" display-name-id="1114005" min-level="22" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

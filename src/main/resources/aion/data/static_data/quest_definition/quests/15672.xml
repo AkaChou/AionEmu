@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="15672" version="1">
-  <metadata name="[Weekly/Union] Stop the Ancient Archon Weapon Tetranon" display-name-id="1803264" min-level="66" max-level="2147483647" category="QUEST" target-type="UNION">
+  <metadata name="[Weekly/Union] Stop the Ancient Archon Weapon Tetranon" display-name-id="1803264" min-level="66" max-level="2147483647" category="QUEST" target-type="UNION" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -27,6 +27,21 @@
       <group>
         <condition type="finished" quest-id="25307" />
       </group>
+      <group>
+        <condition type="noacquired" quest-id="25311" />
+      </group>
+      <group>
+        <condition type="noacquired" quest-id="25312" />
+      </group>
+      <group>
+        <condition type="noacquired" quest-id="25313" />
+      </group>
+      <group>
+        <condition type="noacquired" quest-id="25315" />
+      </group>
+      <group>
+        <condition type="noacquired" quest-id="25316" />
+      </group>
     </start-condition-groups>
   </metadata>
 </quest-definition>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2104" version="1">
-  <metadata name="Meeting The Fruit Quota" display-name-id="1103204" min-level="1" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Meeting The Fruit Quota" display-name-id="1103204" min-level="1" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

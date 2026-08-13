@@ -17,6 +17,7 @@
            The 60 abyss observation points are metadata only: the runtime currency port cannot grant ABYSS_OP, so no grant-reward is declared. -->
       <reward kind="ABYSS_OP" id="0" amount="60"/>
       <reward kind="ITEM" id="188056936" amount="1"/>
+      <reward kind="ITEM" id="188100391" amount="700"/>
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="25402"/>
@@ -213,7 +214,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="805829" source="reward" target="complete" fixed-reward-indices="0 1 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="805829" source="reward" target="complete" fixed-reward-indices="0 1 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <transition source="reward" target="reward">
@@ -224,7 +225,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="805830" source="reward" target="complete" fixed-reward-indices="0 1 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="805830" source="reward" target="complete" fixed-reward-indices="0 1 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <transition source="reward" target="reward">
@@ -235,7 +236,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="805831" source="reward" target="complete" fixed-reward-indices="0 1 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="805831" source="reward" target="complete" fixed-reward-indices="0 1 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>

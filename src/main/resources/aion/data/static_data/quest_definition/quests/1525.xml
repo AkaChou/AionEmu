@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1525" version="1">
-  <metadata name="Agrint Aggro" display-name-id="1102725" min-level="36" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Agrint Aggro" display-name-id="1102725" min-level="36" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

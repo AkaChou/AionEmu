@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1523" version="1">
-  <metadata name="Basilisk is Best" display-name-id="1102723" min-level="32" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Basilisk is Best" display-name-id="1102723" min-level="32" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

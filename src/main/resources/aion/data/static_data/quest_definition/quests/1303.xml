@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1303" version="1">
-  <metadata name="Pluma Attack!" display-name-id="1102403" min-level="19" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Pluma Attack!" display-name-id="1102403" min-level="19" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

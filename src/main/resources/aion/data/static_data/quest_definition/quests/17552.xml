@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="17552" version="1">
-  <metadata name="[Instance Dungeon/Daily/Group] Frozen Monolith Demolition Operation" display-name-id="1803642" min-level="66" max-level="2147483647" category="SEEN_MARKER">
+  <metadata name="[Instance Dungeon/Daily/Group] Frozen Monolith Demolition Operation" display-name-id="1803642" min-level="66" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

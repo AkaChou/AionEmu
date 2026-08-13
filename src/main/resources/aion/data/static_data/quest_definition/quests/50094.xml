@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="50094" version="1">
-  <metadata name="[Event/Daily] Mansurunerk's Secret Request" display-name-id="1803561" min-level="46" max-level="2147483647" category="EVENT">
+  <metadata name="[Event/Daily] Mansurunerk's Secret Request" display-name-id="1803561" min-level="46" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false"/>
     <items>
       <item id="188600413" count="2"/>
     </items>

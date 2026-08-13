@@ -2,7 +2,7 @@
 <!-- 埃利姆的善意：从 205193 接取，击杀两组怪物（var0 0→8、var1 0→4）后回报。
      Elim's Goodwill: accept from 205193, kill two groups of monsters (var0 0→8, var1 0→4), report back. -->
 <quest-definition id="4039" version="1">
-  <metadata name="Elim's Goodwill" display-name-id="1114038" min-level="47" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Elim's Goodwill" display-name-id="1114038" min-level="47" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

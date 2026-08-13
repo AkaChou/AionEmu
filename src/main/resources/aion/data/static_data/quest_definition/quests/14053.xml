@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="14053" version="1">
-  <metadata name="Danger Cubed" display-name-id="1129911" min-level="43" max-level="2147483647" category="MISSION" cannot-share="true">
+  <metadata name="Danger Cubed" display-name-id="1129911" min-level="43" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ELYOS"/>
     </races>

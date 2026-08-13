@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="28221" version="1">
-  <metadata name="Making an Impression" display-name-id="2259269" min-level="56" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
+  <metadata name="Making an Impression" display-name-id="2259269" min-level="56" max-level="2147483647" category="SEEN_MARKER">
     <races>
       <race id="ASMODIANS"/>
     </races>

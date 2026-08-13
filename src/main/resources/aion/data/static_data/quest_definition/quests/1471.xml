@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1471" version="1">
-  <metadata name="Fake Stigma" display-name-id="1102571" min-level="36" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Fake Stigma" display-name-id="1102571" min-level="36" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

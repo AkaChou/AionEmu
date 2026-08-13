@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2425" version="1">
-  <metadata name="Promise Kept" display-name-id="1103625" min-level="23" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Promise Kept" display-name-id="1103625" min-level="23" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

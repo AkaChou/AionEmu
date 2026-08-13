@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 203993 接取，收集 10 个 182201341 后交回领奖。
      Single-NPC item-collecting quest: accept from 203993, collect 10x 182201341, turn in to the same NPC for rewards. -->
 <quest-definition id="1389" version="1">
-  <metadata name="Suspicious Pretors" display-name-id="1102489" min-level="32" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Suspicious Pretors" display-name-id="1102489" min-level="32" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

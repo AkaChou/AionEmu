@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2692" version="1">
-  <metadata name="Broken Music Box" display-name-id="1103992" min-level="40" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Broken Music Box" display-name-id="1103992" min-level="40" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

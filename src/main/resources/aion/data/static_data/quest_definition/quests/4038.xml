@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4038" version="1">
-  <metadata name="Alas Poor Groznak" display-name-id="1114037" min-level="46" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Alas Poor Groznak" display-name-id="1114037" min-level="46" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

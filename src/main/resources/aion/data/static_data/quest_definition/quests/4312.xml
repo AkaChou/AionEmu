@@ -2,7 +2,7 @@
 <!-- [组队] 冈格勒里的请求：从 204372 接取，击杀两组怪物（var0/var1 各 0→5）后回报。
      [Group] Gangleri's Request: accept from 204372, kill two groups of monsters (var0/var1 0→5), report back. -->
 <quest-definition id="4312" version="1">
-  <metadata name="[Group] Gangleri's Request" display-name-id="1103709" min-level="29" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Group] Gangleri's Request" display-name-id="1103709" min-level="29" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

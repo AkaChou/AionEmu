@@ -4,6 +4,7 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <gender id="FEMALE"/>
     <items>
       <item id="182206121" count="1"/>
     </items>

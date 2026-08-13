@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="24054" version="1">
-  <metadata name="Crisis in Beluslan" display-name-id="1129927" min-level="44" max-level="2147483647" category="MISSION" cannot-share="true">
+  <metadata name="Crisis in Beluslan" display-name-id="1129927" min-level="44" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 204013 接取，收集 10 个 152000104 后交回领奖，奖励为经验金币加五选一可选取物。
      Single-NPC item-collecting quest: accept from 204013, collect 10x 152000104, turn in to the same NPC for a choose-1-of-5 selectable reward. -->
 <quest-definition id="1444" version="1">
-  <metadata name="[Gathering] Combat preparation" display-name-id="1102544" min-level="31" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] Combat preparation" display-name-id="1102544" min-level="31" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

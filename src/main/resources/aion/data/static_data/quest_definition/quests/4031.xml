@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4031" version="1">
-  <metadata name="Carnivores Run Amok" display-name-id="1114030" min-level="45" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Carnivores Run Amok" display-name-id="1114030" min-level="45" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

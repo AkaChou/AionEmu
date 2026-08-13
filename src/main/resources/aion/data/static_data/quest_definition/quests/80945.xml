@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80945" version="1">
-  <metadata name="Event/Daily] Misfortune Abolishment" display-name-id="1803260" min-level="66" max-level="82" category="EVENT">
+  <metadata name="Event/Daily] Misfortune Abolishment" display-name-id="1803260" min-level="66" max-level="82" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false"/>
     <items>
       <item id="182007419" count="3"/>
     </items>

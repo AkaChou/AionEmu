@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4083" version="1">
-  <metadata name="Those Pesky Mosks" display-name-id="1114082" min-level="47" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Those Pesky Mosks" display-name-id="1114082" min-level="47" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

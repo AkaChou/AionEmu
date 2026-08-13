@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="10500" version="1">
-  <metadata name="Expedition Coalition" display-name-id="1800437" min-level="55" max-level="2147483647" category="MISSION" cannot-share="true">
+  <metadata name="Expedition Coalition" display-name-id="1800437" min-level="55" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -9,6 +9,12 @@
       <reward kind="ITEM" id="186000231" amount="25"/>
       <reward kind="ITEM" id="186000237" amount="60"/>
       <reward kind="ITEM" id="188057352" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114101313" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114301319" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114301531" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114501277" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114501629" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="114601219" amount="1"/>
     </rewards>
   </metadata>
   <progress>

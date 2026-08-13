@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 203923 接取，收集 10 个 152000602 后交回领奖。
      Single-NPC item-collecting quest: accept from 203923, collect 10x 152000602, turn in to the same NPC for rewards. -->
 <quest-definition id="1436" version="1">
-  <metadata name="[Gathering] Material for clothes" display-name-id="1102536" min-level="21" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] Material for clothes" display-name-id="1102536" min-level="21" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

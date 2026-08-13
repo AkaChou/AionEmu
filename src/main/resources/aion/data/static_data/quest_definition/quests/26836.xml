@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="26836" version="1">
-  <metadata name="Weakened Artifact of Knowledge" display-name-id="1803211" min-level="66" max-level="2147483647" category="MISSION" cannot-share="true">
+  <metadata name="Weakened Artifact of Knowledge" display-name-id="1803211" min-level="66" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
     <rewards>
       <reward kind="GOLD" id="0" amount="405720"/>
       <reward kind="EXP" id="0" amount="40757397"/>
+      <reward kind="SELECTABLE_ITEM" id="167010280" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="167010281" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="167010282" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="167010283" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="167010284" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="167010285" amount="1"/>
     </rewards>
   </metadata>
   <progress>

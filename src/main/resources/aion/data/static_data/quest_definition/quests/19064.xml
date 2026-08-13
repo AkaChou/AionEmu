@@ -10,6 +10,8 @@
     </items>
     <start-conditions>
       <condition type="finished" quest-id="3935"/>
+      <condition type="noacquired" quest-id="3938"/>
+      <condition type="unfinished" quest-id="3938"/>
     </start-conditions>
   </metadata>
   <progress>

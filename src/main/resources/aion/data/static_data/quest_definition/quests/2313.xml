@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2313" version="1">
-  <metadata name="Why The Fish Aren't Biting" display-name-id="1103513" min-level="23" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Why The Fish Aren't Biting" display-name-id="1103513" min-level="23" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

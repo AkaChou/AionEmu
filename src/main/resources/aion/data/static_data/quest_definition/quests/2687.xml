@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2687" version="1">
-  <metadata name="[Gathering] Appetite for Almeha" display-name-id="1103987" min-level="37" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] Appetite for Almeha" display-name-id="1103987" min-level="37" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

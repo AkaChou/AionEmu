@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2455" version="1">
-  <metadata name="[Gathering] Sora's energy booster" display-name-id="1103655" min-level="21" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] Sora's energy booster" display-name-id="1103655" min-level="21" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

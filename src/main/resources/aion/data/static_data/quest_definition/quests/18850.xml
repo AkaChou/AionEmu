@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="18850" version="1">
-  <metadata name="[Relic Bundle Reward] Ancient Crown" display-name-id="1150195" min-level="40" max-level="2147483647" category="NON_COUNT">
+  <metadata name="[Relic Bundle Reward] Ancient Crown" display-name-id="1150195" min-level="40" max-level="2147483647" category="NON_COUNT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

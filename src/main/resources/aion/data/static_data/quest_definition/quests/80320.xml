@@ -8,7 +8,7 @@
       <quest id="80319"/>
     </prerequisites>
     <items>
-      <item id="182215303" count="12"/>
+      <item id="182215303" count="24"/>
     </items>
     <rewards>
       <reward kind="GOLD" id="0" amount="10000"/>

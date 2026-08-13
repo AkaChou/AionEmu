@@ -16,6 +16,7 @@
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="28910"/>
+      <condition type="finished" quest-id="28917"/>
     </start-conditions>
   </metadata>
   <progress>

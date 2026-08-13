@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2118" version="1">
-  <metadata name="Up to no Good" display-name-id="1103218" min-level="5" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Up to no Good" display-name-id="1103218" min-level="5" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

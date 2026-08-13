@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2344" version="1">
-  <metadata name="Destroying The Mau Flag" display-name-id="1103544" min-level="27" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Destroying The Mau Flag" display-name-id="1103544" min-level="27" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

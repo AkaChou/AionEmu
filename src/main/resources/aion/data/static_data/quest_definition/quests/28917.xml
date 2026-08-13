@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="28917" version="1">
-  <metadata name="When One Door Closes" display-name-id="1800272" min-level="65" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="When One Door Closes" display-name-id="1800272" min-level="65" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

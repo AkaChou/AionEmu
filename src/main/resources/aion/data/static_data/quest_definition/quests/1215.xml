@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1215" version="1">
-  <metadata name="[Gathering] You can't do right by everyone" display-name-id="1102385" min-level="17" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] You can't do right by everyone" display-name-id="1102385" min-level="17" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

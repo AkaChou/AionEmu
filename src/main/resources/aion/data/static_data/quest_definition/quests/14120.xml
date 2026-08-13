@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="14120" version="1">
-  <metadata name="The Bucket List" display-name-id="1129981" min-level="24" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="The Bucket List" display-name-id="1129981" min-level="24" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

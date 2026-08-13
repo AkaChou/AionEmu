@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="11211" version="1">
-  <metadata name="Chaser's Backpack" display-name-id="1125137" min-level="54" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Chaser's Backpack" display-name-id="1125137" min-level="54" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

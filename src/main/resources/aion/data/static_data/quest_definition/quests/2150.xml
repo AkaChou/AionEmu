@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2150" version="1">
-  <metadata name="Sibling Rivalry" display-name-id="1199807" min-level="3" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
+  <metadata name="Sibling Rivalry" display-name-id="1199807" min-level="3" max-level="2147483647" category="SIGNIFICANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

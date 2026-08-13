@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1488" version="1">
-  <metadata name="Three Kurin Brothers" display-name-id="1102588" min-level="22" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Three Kurin Brothers" display-name-id="1102588" min-level="22" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

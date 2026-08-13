@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3118" version="1">
-  <metadata name="[Instance/Cash/Group] The Lord Of The Adma Stronghold" display-name-id="1137093" min-level="46" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Instance/Cash/Group] The Lord Of The Adma Stronghold" display-name-id="1137093" min-level="46" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS" />
     </races>

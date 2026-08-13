@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1667" version="1">
-  <metadata name="[Cash] Eliminating The Undead at The Ruins" display-name-id="1102858" min-level="42" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Cash] Eliminating The Undead at The Ruins" display-name-id="1102858" min-level="42" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

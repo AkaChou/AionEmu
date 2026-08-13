@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1971" version="1">
   <metadata name="D'yer Ma'ker" display-name-id="1102971" min-level="20" max-level="2147483647" category="QUEST">
+    
     <races>
       <race id="ELYOS"/>
     </races>
+
+    <items>
+      <item id="152000601" count="15"/>
+      <item id="182206040" count="10"/>
+      <item id="182206041" count="10"/>
+    </items>
+
     <work-items>
       <item id="182215758" count="1"/>
     </work-items>
+
     <rewards>
       <reward kind="GOLD" id="0" amount="28180"/>
       <reward kind="EXP" id="0" amount="139050"/>
@@ -15,6 +24,7 @@
       <reward kind="SELECTABLE_ITEM" id="169200001" amount="8"/>
       <reward kind="SELECTABLE_ITEM" id="169200003" amount="8"/>
     </rewards>
+  
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

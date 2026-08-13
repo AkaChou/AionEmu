@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1641" version="1">
-  <metadata name="Namarinerk's Dream" display-name-id="1102840" min-level="42" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Namarinerk's Dream" display-name-id="1102840" min-level="42" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

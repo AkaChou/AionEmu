@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="50092" version="1">
-  <metadata name="[Event] Major attack on the Kumuki Hideout" display-name-id="1803559" min-level="51" max-level="2147483647" category="EVENT">
+  <metadata name="[Event] Major attack on the Kumuki Hideout" display-name-id="1803559" min-level="51" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL"/>
     </races>

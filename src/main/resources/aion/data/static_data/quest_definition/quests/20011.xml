@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="20011" version="1">
-  <metadata name="A Flower That Blooms With Death" display-name-id="1803229" min-level="66" max-level="2147483647" category="MISSION" target-type="FORCE">
+  <metadata name="A Flower That Blooms With Death" display-name-id="1803229" min-level="66" max-level="2147483647" category="MISSION" target-type="FORCE" cannot-giveup="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

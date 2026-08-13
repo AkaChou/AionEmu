@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 203931 接取，收集 10 个 182201355 后交回领奖。
      Single-NPC item-collecting quest: accept from 203931, collect 10x 182201355, turn in to the same NPC for rewards. -->
 <quest-definition id="1419" version="1">
-  <metadata name="Ferenna's Test" display-name-id="1102519" min-level="20" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Ferenna's Test" display-name-id="1102519" min-level="20" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

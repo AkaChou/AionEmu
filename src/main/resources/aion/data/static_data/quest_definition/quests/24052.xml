@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="24052" version="1">
-  <metadata name="A Frozen City" display-name-id="1129925" min-level="41" max-level="2147483647" category="MISSION" cannot-share="true">
+  <metadata name="A Frozen City" display-name-id="1129925" min-level="41" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

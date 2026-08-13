@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2133" version="1">
-  <metadata name="Azpha For Health And Well-being" display-name-id="1103233" min-level="2" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Azpha For Health And Well-being" display-name-id="1103233" min-level="2" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

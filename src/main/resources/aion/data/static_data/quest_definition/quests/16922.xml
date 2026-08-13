@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="16922" version="1">
-  <metadata name="Shugo Checkup" display-name-id="1800292" min-level="65" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Shugo Checkup" display-name-id="1800292" min-level="65" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

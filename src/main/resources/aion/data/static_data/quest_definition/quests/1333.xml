@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 203998 接取，收集 3 个 182201313 后交回领奖，奖励为经验金币加十三选一可选取物。
      Single-NPC item-collecting quest: accept from 203998, collect 3x 182201313, turn in to the same NPC for a choose-1-of-13 selectable reward. -->
 <quest-definition id="1333" version="1">
-  <metadata name="Acheron Drake Research" display-name-id="1102433" min-level="27" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Acheron Drake Research" display-name-id="1102433" min-level="27" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

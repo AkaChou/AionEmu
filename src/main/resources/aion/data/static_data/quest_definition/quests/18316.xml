@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="18316" version="1">
-  <metadata name="Operation Disable the Aerial Fortress" display-name-id="1802839" min-level="55" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Operation Disable the Aerial Fortress" display-name-id="1802839" min-level="55" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

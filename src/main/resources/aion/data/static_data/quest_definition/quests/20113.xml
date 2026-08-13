@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="20113" version="1">
-  <metadata name="Track Down Ereshkigal" display-name-id="1803531" min-level="66" max-level="2147483647" category="MISSION">
+  <metadata name="Track Down Ereshkigal" display-name-id="1803531" min-level="66" max-level="2147483647" category="MISSION" cannot-giveup="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

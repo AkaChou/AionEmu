@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80138" version="1">
-  <metadata name="[Event] Alone In Heiron" display-name-id="1180138" min-level="30" max-level="39" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Alone In Heiron" display-name-id="1180138" min-level="30" max-level="39" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false"/>
     <items>
       <item id="182215114" count="10"/>
       <item id="182215115" count="13"/>

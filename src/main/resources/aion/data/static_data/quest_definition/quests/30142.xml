@@ -6,7 +6,7 @@
     </races>
     <reward-groups>
       <group>
-        <reward kind="EXP" id="0" amount="21014395" />
+        <reward kind="EXP" id="0" amount="8798808" />
         <reward kind="SELECTABLE_ITEM" id="166050221" amount="2" />
         <reward kind="SELECTABLE_ITEM" id="166050222" amount="2" />
       </group>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1602" version="1">
-  <metadata name="Looting The Tigrics" display-name-id="1102802" min-level="40" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Looting The Tigrics" display-name-id="1102802" min-level="40" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

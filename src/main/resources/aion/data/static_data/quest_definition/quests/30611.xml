@@ -8,12 +8,12 @@
     <rewards>
       <reward kind="EXP" id="0" amount="3387764"/>
       <reward kind="AP" id="0" amount="900"/>
-      <reward kind="SELECTABLE_ITEM" id="160001338" amount="6"/>
-      <reward kind="SELECTABLE_ITEM" id="160001339" amount="6"/>
-      <reward kind="SELECTABLE_ITEM" id="160001340" amount="6"/>
-      <reward kind="SELECTABLE_ITEM" id="160001341" amount="6"/>
-      <reward kind="SELECTABLE_ITEM" id="160001342" amount="6"/>
-      <reward kind="SELECTABLE_ITEM" id="160001343" amount="6"/>
+      <reward kind="SELECTABLE_ITEM" id="160002336" amount="6"/>
+      <reward kind="SELECTABLE_ITEM" id="160002337" amount="6"/>
+      <reward kind="SELECTABLE_ITEM" id="160002338" amount="6"/>
+      <reward kind="SELECTABLE_ITEM" id="160002339" amount="6"/>
+      <reward kind="SELECTABLE_ITEM" id="160002340" amount="6"/>
+      <reward kind="SELECTABLE_ITEM" id="160002341" amount="6"/>
     </rewards>
   </metadata>
   <progress>

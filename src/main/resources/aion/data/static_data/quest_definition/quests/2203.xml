@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2203" version="1">
-  <metadata name="Ice Lake Crystals" display-name-id="1103303" min-level="10" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Ice Lake Crystals" display-name-id="1103303" min-level="10" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

@@ -9,7 +9,7 @@
       <class id="AETHERTECH"/>
     </classes>
     <rewards>
-      <reward kind="EXP" id="0" amount="11237"/>
+      <reward kind="EXP" id="0" amount="14046"/>
       <reward kind="ITEM" id="160001273" amount="5"/>
     </rewards>
     <start-conditions>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80144" version="1">
-  <metadata name="[Event] Abandoned In Morheim" display-name-id="1180144" min-level="20" max-level="29" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Abandoned In Morheim" display-name-id="1180144" min-level="20" max-level="29" category="EVENT">
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false"/>
     <items>
       <item id="182215123" count="7"/>
       <item id="182215124" count="10"/>

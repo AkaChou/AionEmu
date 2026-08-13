@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80143" version="1">
-  <metadata name="[Event] Warped Rift Blocking" display-name-id="1180143" min-level="10" max-level="19" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Warped Rift Blocking" display-name-id="1180143" min-level="10" max-level="19" category="EVENT">
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false"/>
     <work-items>
       <item id="182215136" count="1"/>
     </work-items>

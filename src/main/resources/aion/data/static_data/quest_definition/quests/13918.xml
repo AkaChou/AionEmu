@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="13918" version="1">
-  <metadata name="[Hero/Group] Live by the Sword..." display-name-id="1800110" min-level="65" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Hero/Group] Live by the Sword..." display-name-id="1800110" min-level="65" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

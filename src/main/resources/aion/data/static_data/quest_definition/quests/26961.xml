@@ -5,10 +5,15 @@
   Single monster-hunt group: kill npc 233544 once, then report to end NPC 801280.
 -->
 <quest-definition id="26961" version="1">
-  <metadata name="[Alliance] Capture The Bastion" display-name-id="1129951" min-level="66" max-level="2147483647" category="QUEST" cannot-share="true" target-type="FORCE">
+  <metadata name="[Alliance] Capture The Bastion" display-name-id="1129951" min-level="66" max-level="2147483647" category="QUEST" target-type="FORCE">
+    
     <races>
       <race id="ASMODIANS"/>
     </races>
+
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+  
+
     <rewards>
       <reward kind="EXP" id="0" amount="8028623"/>
       <reward kind="GP" id="0" amount="150"/>

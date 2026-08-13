@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80207" version="1">
-  <metadata name="[Event] Who Throws Away A Shoe?" display-name-id="1180207" min-level="1" max-level="999" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Who Throws Away A Shoe?" display-name-id="1180207" min-level="1" max-level="999" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>

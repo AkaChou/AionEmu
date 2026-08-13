@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="15673" version="1">
-  <metadata name="[Weekly/Infiltration/Alliance] Astera Tower Fragment Retrieval Operation Support Officer" display-name-id="1803265" min-level="66" max-level="2147483647" category="QUEST">
+  <metadata name="[Weekly/Infiltration/Alliance] Astera Tower Fragment Retrieval Operation Support Officer" display-name-id="1803265" min-level="66" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="true" cycles="WED"/>
     <rewards>
       <reward kind="EXP" id="0" amount="67580742"/>
       <reward kind="AP" id="0" amount="5000"/>

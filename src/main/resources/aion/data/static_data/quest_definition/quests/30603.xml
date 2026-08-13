@@ -7,7 +7,7 @@
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
     <rewards>
       <reward kind="EXP" id="0" amount="4742870"/>
-      <reward kind="ITEM" id="186000201" amount="63"/>
+      <reward kind="ITEM" id="186000469" amount="63"/>
     </rewards>
   </metadata>
   <progress>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4725" version="1">
-  <metadata name="[Group] Ceaseless Attack" display-name-id="1120016" min-level="51" max-level="55" category="QUEST" cannot-share="true">
+  <metadata name="[Group] Ceaseless Attack" display-name-id="1120016" min-level="51" max-level="55" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

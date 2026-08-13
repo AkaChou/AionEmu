@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 798049 接取，收集 4 个 152000304 后交回领奖。
      Single-NPC item-collecting quest: accept from 798049, collect 4x 152000304, turn in to the same NPC for rewards. -->
 <quest-definition id="1455" version="1">
-  <metadata name="[Gathering] Shaoranyerk's business plan" display-name-id="1102555" min-level="21" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] Shaoranyerk's business plan" display-name-id="1102555" min-level="21" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

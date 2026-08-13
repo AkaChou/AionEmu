@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1903" version="1">
-  <metadata name="[Craft] Ingot Ingredients" display-name-id="1102903" min-level="10" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Craft] Ingot Ingredients" display-name-id="1102903" min-level="10" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

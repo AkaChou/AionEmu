@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1743" version="1">
-  <metadata name="Undead Destroyer's Ring" display-name-id="1104543" min-level="45" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Undead Destroyer's Ring" display-name-id="1104543" min-level="45" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

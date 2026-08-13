@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 203936 接取，收集 10 个 152000004 后交回领奖。
      Single-NPC item-collecting quest: accept from 203936, collect 10x 152000004, turn in to the same NPC for rewards. -->
 <quest-definition id="1434" version="1">
-  <metadata name="[Gathering] A special material against colds" display-name-id="1102534" min-level="20" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] A special material against colds" display-name-id="1102534" min-level="20" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

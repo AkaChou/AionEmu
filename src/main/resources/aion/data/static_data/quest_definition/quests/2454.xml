@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2454" version="1">
-  <metadata name="[Gathering] Kellan's request" display-name-id="1103654" min-level="20" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] Kellan's request" display-name-id="1103654" min-level="20" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -8,7 +8,7 @@
       <item id="152000652" count="10"/>
     </items>
     <rewards>
-      <reward kind="GOLD" id="0" amount="8280"/>
+      <reward kind="GOLD" id="0" amount="12150"/>
       <reward kind="EXP" id="0" amount="94800"/>
       <reward kind="ITEM" id="186000007" amount="1"/>
     </rewards>

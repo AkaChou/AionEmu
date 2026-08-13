@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2232" version="1">
-  <metadata name="The Broken Honey Jar" display-name-id="1103332" min-level="12" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="The Broken Honey Jar" display-name-id="1103332" min-level="12" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

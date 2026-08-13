@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2416" version="1">
-  <metadata name="Abex On a Stick" display-name-id="1103616" min-level="35" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Abex On a Stick" display-name-id="1103616" min-level="35" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

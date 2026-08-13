@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="18221" version="1">
-  <metadata name="Arena Of Glory Challenge 3" display-name-id="2259269" min-level="56" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
+  <metadata name="Arena Of Glory Challenge 3" display-name-id="2259269" min-level="56" max-level="2147483647" category="SEEN_MARKER">
     <races>
       <race id="ELYOS"/>
     </races>

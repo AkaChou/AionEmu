@@ -4,7 +4,7 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" reward-repeat-count="5"/>
     <prerequisites>
       <quest id="2876"/>
       <quest id="2882"/>
@@ -13,6 +13,18 @@
       <reward kind="EXP" id="0" amount="3166358"/>
       <reward kind="ITEM" id="161000003" amount="5"/>
     </rewards>
+    <start-conditions>
+      <condition type="noacquired" quest-id="2877"/>
+      <condition type="noacquired" quest-id="2878"/>
+      <condition type="noacquired" quest-id="2879"/>
+      <condition type="noacquired" quest-id="2880"/>
+      <condition type="noacquired" quest-id="2881"/>
+      <condition type="noacquired" quest-id="2882"/>
+      <condition type="noacquired" quest-id="2884"/>
+      <condition type="noacquired" quest-id="2885"/>
+      <condition type="noacquired" quest-id="2886"/>
+      <condition type="noacquired" quest-id="2887"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>

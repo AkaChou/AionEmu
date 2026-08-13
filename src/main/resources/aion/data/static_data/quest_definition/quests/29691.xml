@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="29691" version="1">
-  <metadata name="[Premium] Attack on the Fissure of Oblivion Instanced Dungeon" display-name-id="1803430" min-level="66" max-level="2147483647" category="EVENT">
+  <metadata name="[Premium] Attack on the Fissure of Oblivion Instanced Dungeon" display-name-id="1803430" min-level="66" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false"/>
     <rewards>
       <reward kind="EXP" id="0" amount="250000000"/>
     </rewards>

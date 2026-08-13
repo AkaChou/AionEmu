@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2385" version="1">
-  <metadata name="Worgs at The Door" display-name-id="1103585" min-level="32" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Worgs at The Door" display-name-id="1103585" min-level="32" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1427" version="1">
-  <metadata name="Cleansing The Forest" display-name-id="1102527" min-level="22" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Cleansing The Forest" display-name-id="1102527" min-level="22" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

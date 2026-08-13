@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 730019 接取，收集 4 个 182201394 与 4 个 182201395 后交回领奖，奖励为经验金币加固定物品与二选一可选取物。
      Single-NPC item-collecting quest: accept from 730019, collect 4x 182201394 and 4x 182201395, turn in to the same NPC for a choose-1-of-2 selectable reward. -->
 <quest-definition id="1478" version="1">
-  <metadata name="A Feast for Phomona" display-name-id="1102578" min-level="24" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="A Feast for Phomona" display-name-id="1102578" min-level="24" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

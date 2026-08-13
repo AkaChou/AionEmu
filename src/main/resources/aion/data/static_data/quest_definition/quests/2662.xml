@@ -2,7 +2,7 @@
 <!-- [组队] 死人不说谎：从 204777 接取，击杀三组亡魂（各组 0→3）后回报。
      [Group] Dead Men Tell No Tales: accept from 204777, kill three groups of undead (each 0→3), report back. -->
 <quest-definition id="2662" version="1">
-  <metadata name="[Group] Dead Men Tell No Tales" display-name-id="1103962" min-level="41" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Group] Dead Men Tell No Tales" display-name-id="1103962" min-level="41" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

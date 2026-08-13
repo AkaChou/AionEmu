@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 204802 接取，收集 10 个 182204421 后交回领奖。
      Single-NPC item-collecting quest: accept from 204802, collect 10x 182204421, turn in to the same NPC for reward. -->
 <quest-definition id="2529" version="1">
-  <metadata name="Mutant Earth Spirits" display-name-id="1103829" min-level="33" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Mutant Earth Spirits" display-name-id="1103829" min-level="33" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

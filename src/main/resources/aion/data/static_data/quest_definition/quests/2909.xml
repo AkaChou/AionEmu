@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2909" version="1">
-  <metadata name="[Craft] The Basics Of Alchemy" display-name-id="1104109" min-level="10" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Craft] The Basics Of Alchemy" display-name-id="1104109" min-level="10" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

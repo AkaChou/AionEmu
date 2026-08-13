@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1351" version="1">
-  <metadata name="[Group] Earning Marana's Respect" display-name-id="1102451" min-level="29" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Group] Earning Marana's Respect" display-name-id="1102451" min-level="29" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

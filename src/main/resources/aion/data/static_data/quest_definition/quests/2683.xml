@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2683" version="1">
-  <metadata name="[Gathering] Wish-fulfilling jewel" display-name-id="1103983" min-level="35" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] Wish-fulfilling jewel" display-name-id="1103983" min-level="35" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

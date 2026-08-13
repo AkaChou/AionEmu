@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2390" version="1">
-  <metadata name="The Tripeed Thief" display-name-id="1103590" min-level="34" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="The Tripeed Thief" display-name-id="1103590" min-level="34" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

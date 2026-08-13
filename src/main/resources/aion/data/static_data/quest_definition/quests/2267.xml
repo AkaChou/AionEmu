@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2267" version="1">
-  <metadata name="A Monster in a Box" display-name-id="1103367" min-level="15" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="A Monster in a Box" display-name-id="1103367" min-level="15" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

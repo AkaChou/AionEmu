@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80950" version="1">
-  <metadata name="[Event] Ancient Origins" display-name-id="1803472" min-level="65" max-level="2147483647" category="EVENT">
+  <metadata name="[Event] Ancient Origins" display-name-id="1803472" min-level="65" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="18954" version="1">
-  <metadata name="Hand it to the Expedition" display-name-id="1801083" min-level="65" max-level="2147483647" category="QUEST">
+  <metadata name="Hand it to the Expedition" display-name-id="1801083" min-level="65" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1404" version="1">
-  <metadata name="A Head Start On Hylas" display-name-id="1102504" min-level="34" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="A Head Start On Hylas" display-name-id="1102504" min-level="34" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

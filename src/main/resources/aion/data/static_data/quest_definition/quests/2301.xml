@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2301" version="1">
-  <metadata name="[Gathering] Secure teleportation" display-name-id="1103501" min-level="19" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] Secure teleportation" display-name-id="1103501" min-level="19" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

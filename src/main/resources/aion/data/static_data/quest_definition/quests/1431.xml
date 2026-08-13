@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 203328 接取，收集 6 个 152000803 后交回领奖。
      Single-NPC item-collecting quest: accept from 203328, collect 6x 152000803, turn in to the same NPC for rewards. -->
 <quest-definition id="1431" version="1">
-  <metadata name="[Gathering] The River Robbers" display-name-id="1102531" min-level="19" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] The River Robbers" display-name-id="1102531" min-level="19" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

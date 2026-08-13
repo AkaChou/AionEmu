@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4009" version="1">
-  <metadata name="Pollution Solution" display-name-id="1114008" min-level="22" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Pollution Solution" display-name-id="1114008" min-level="22" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

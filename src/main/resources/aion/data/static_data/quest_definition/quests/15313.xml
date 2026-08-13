@@ -34,6 +34,21 @@
       <group>
         <condition type="finished" quest-id="15307" />
       </group>
+      <group>
+        <condition type="noacquired" quest-id="15311" />
+      </group>
+      <group>
+        <condition type="noacquired" quest-id="15312" />
+      </group>
+      <group>
+        <condition type="noacquired" quest-id="15314" />
+      </group>
+      <group>
+        <condition type="noacquired" quest-id="15315" />
+      </group>
+      <group>
+        <condition type="noacquired" quest-id="15316" />
+      </group>
     </start-condition-groups>
   </metadata>
 </quest-definition>

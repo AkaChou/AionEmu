@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="15200" version="1">
-  <metadata name="A Token of Victory" display-name-id="1801071" min-level="65" max-level="999" category="QUEST">
+  <metadata name="A Token of Victory" display-name-id="1801071" min-level="65" max-level="999" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

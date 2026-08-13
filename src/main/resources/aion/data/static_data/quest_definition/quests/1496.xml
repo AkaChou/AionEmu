@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1496" version="1">
-  <metadata name="Enemy in The Kaidan Mine" display-name-id="1102596" min-level="28" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Enemy in The Kaidan Mine" display-name-id="1102596" min-level="28" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

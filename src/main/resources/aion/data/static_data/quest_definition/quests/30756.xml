@@ -6,11 +6,13 @@
     </races>
     <items>
       <item id="182213260" count="3"/>
-    </items>
+    
+      <item id="182213266" count="3"/>
+      </items>
     <rewards>
       <reward kind="GOLD" id="0" amount="331020"/>
       <reward kind="EXP" id="0" amount="7086913"/>
-      <reward kind="ITEM" id="169000009" amount="761"/>
+      <reward kind="ITEM" id="169000010" amount="761"/>
     </rewards>
     <drops>
       <drop npc-id="219374" item-id="182213260" chance="100" each-member="true" collecting-step="0"/>

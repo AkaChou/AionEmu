@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="15671" version="1">
-  <metadata name="Investigating the Ancient Archon Weapon Invasion" display-name-id="1803263" min-level="66" max-level="2147483647" category="QUEST">
+  <metadata name="Investigating the Ancient Archon Weapon Invasion" display-name-id="1803263" min-level="66" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="true" cycles="WED"/>
     <rewards>
       <reward kind="EXP" id="0" amount="19662333"/>
     </rewards>

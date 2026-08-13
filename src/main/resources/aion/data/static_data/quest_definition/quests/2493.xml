@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2493" version="1">
-  <metadata name="Bringing up Tayga" display-name-id="1103693" min-level="21" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Bringing up Tayga" display-name-id="1103693" min-level="21" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

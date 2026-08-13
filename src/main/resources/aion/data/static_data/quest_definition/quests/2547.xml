@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2547" version="1">
-  <metadata name="Barosunerk's New Business" display-name-id="1103847" min-level="34" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Barosunerk's New Business" display-name-id="1103847" min-level="34" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

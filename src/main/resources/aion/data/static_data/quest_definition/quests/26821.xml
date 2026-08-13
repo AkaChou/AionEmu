@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="26821" version="1">
-  <metadata name="[Instance Dungeon/Group] Lost Agent Feregran" display-name-id="1802593" min-level="66" max-level="2147483647" category="MISSION" cannot-share="true">
+  <metadata name="[Instance Dungeon/Group] Lost Agent Feregran" display-name-id="1802593" min-level="66" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
     <rewards>
       <reward kind="GOLD" id="0" amount="371040"/>
       <reward kind="EXP" id="0" amount="32354564"/>
+      <reward kind="SELECTABLE_ITEM" id="167010274" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="167010275" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="167010276" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="167010277" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="167010278" amount="1"/>
+      <reward kind="SELECTABLE_ITEM" id="167010279" amount="1"/>
     </rewards>
   </metadata>
   <progress>

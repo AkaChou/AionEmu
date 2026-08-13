@@ -7,7 +7,9 @@
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
     <items>
       <item id="182007412" count="1" />
-    </items>
+    
+      <item id="182007411" count="1"/>
+      </items>
     <reward-groups>
       <group>
         <reward kind="GOLD" id="0" amount="1000" />

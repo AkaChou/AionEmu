@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="16803" version="1">
-  <metadata name="Hunting Reliquarians" display-name-id="1802313" min-level="66" max-level="2147483647" category="MISSION" cannot-share="true" use-class-reward="1">
+  <metadata name="Hunting Reliquarians" display-name-id="1802313" min-level="66" max-level="2147483647" category="MISSION" cannot-share="true" use-class-reward="1" cannot-giveup="true">
     <races>
       <race id="ELYOS"/>
     </races>

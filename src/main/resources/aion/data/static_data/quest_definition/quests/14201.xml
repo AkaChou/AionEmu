@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="14201" version="1">
-  <metadata name="Weapons of Past Destruction" display-name-id="1129969" min-level="46" max-level="2147483647" category="QUEST">
+  <metadata name="Weapons of Past Destruction" display-name-id="1129969" min-level="46" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>
@@ -22,6 +22,7 @@
       <condition type="noacquired" quest-id="1091"/>
       <condition type="unfinished" quest-id="1093"/>
       <condition type="noacquired" quest-id="1093"/>
+      <condition type="finished" quest-id="14200"/>
     </start-conditions>
   </metadata>
   <progress>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="14211" version="1">
-  <metadata name="Empyrean Scribe" display-name-id="1800565" min-level="66" max-level="2147483647" category="IMPORTANT">
+  <metadata name="Empyrean Scribe" display-name-id="1800565" min-level="66" max-level="2147483647" category="IMPORTANT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="true" cycles="WED"/>
     <rewards>
       <reward kind="GP" id="0" amount="100"/>
     </rewards>

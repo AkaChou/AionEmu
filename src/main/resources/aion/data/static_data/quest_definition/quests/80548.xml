@@ -4,6 +4,7 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <gender id="FEMALE"/>
     <rewards>
       <reward kind="ITEM" id="125045253" amount="1"/>
     </rewards>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="14050" version="1">
-  <metadata name="Orders from Heiron Fortress" display-name-id="1129908" min-level="36" max-level="2147483647" category="MISSION" cannot-share="true">
+  <metadata name="Orders from Heiron Fortress" display-name-id="1129908" min-level="36" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ELYOS"/>
     </races>

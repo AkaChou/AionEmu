@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80713" version="1">
-  <metadata name="[Event/Daily] Wizard's Request - Protect Enshar" display-name-id="1185846" min-level="60" max-level="2147483647" category="EVENT">
+  <metadata name="[Event/Daily] Wizard's Request - Protect Enshar" display-name-id="1185846" min-level="60" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

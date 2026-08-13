@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2340" version="1">
-  <metadata name="The Munmun's Ginseng" display-name-id="1103540" min-level="28" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="The Munmun's Ginseng" display-name-id="1103540" min-level="28" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

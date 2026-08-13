@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="14152" version="1">
-  <metadata name="Spoiler Alert" display-name-id="1129961" min-level="35" max-level="2147483647" category="QUEST">
+  <metadata name="Spoiler Alert" display-name-id="1129961" min-level="35" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

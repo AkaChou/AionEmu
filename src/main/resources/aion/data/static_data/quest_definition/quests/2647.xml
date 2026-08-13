@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2647" version="1">
-  <metadata name="Belated Regret" display-name-id="1103947" min-level="42" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Belated Regret" display-name-id="1103947" min-level="42" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

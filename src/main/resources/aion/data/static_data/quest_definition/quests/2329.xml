@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2329" version="1">
-  <metadata name="Arachna Egg" display-name-id="1103529" min-level="26" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Arachna Egg" display-name-id="1103529" min-level="26" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

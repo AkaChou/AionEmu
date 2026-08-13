@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3913" version="1">
-  <metadata name="[Instance] Poeta in Danger" display-name-id="1103053" min-level="48" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="[Instance] Poeta in Danger" display-name-id="1103053" min-level="48" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

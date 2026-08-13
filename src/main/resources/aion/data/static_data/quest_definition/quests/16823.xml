@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="16823" version="1">
-  <metadata name="[Instance Dungeon/Group] Reunion with Agent Viola" display-name-id="1802582" min-level="66" max-level="2147483647" category="MISSION" cannot-share="true">
+  <metadata name="[Instance Dungeon/Group] Reunion with Agent Viola" display-name-id="1802582" min-level="66" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ELYOS"/>
     </races>

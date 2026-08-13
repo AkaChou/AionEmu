@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2123" version="1">
-  <metadata name="The Imprisoned Gourmet" display-name-id="1103223" min-level="6" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="The Imprisoned Gourmet" display-name-id="1103223" min-level="6" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

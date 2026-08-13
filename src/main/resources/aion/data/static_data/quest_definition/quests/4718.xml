@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4718" version="1">
-  <metadata name="[Group] Pressing The Attack" display-name-id="1120011" min-level="46" max-level="50" category="QUEST" cannot-share="true">
+  <metadata name="[Group] Pressing The Attack" display-name-id="1120011" min-level="46" max-level="50" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

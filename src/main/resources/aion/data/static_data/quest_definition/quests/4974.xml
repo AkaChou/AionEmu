@@ -4,6 +4,7 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
+    <gender id="MALE"/>
     <rewards>
       <reward kind="GOLD" id="0" amount="18240"/>
       <reward kind="EXP" id="0" amount="7800"/>

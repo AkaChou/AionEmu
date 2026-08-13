@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2648" version="1">
-  <metadata name="Drakes and their Breeders" display-name-id="1103948" min-level="42" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Drakes and their Breeders" display-name-id="1103948" min-level="42" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

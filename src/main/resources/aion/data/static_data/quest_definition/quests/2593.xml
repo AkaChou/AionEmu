@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2593" version="1">
-  <metadata name="Wandering Souls" display-name-id="1103893" min-level="38" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Wandering Souls" display-name-id="1103893" min-level="38" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

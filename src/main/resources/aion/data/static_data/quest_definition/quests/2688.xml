@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2688" version="1">
-  <metadata name="[Gathering] Divine Asvata Tree" display-name-id="1103988" min-level="41" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] Divine Asvata Tree" display-name-id="1103988" min-level="41" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2236" version="1">
-  <metadata name="Rarified Tastes" display-name-id="1103336" min-level="14" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Rarified Tastes" display-name-id="1103336" min-level="14" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

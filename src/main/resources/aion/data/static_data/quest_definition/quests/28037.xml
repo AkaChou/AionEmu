@@ -2,14 +2,20 @@
 <quest-definition id="28037" version="1">
   <!-- [Alliance] Keep Up the Defense (Asmodians Only) / [联盟] 坚守防线（仅魔族） -->
   <metadata name="[Alliance] Keep Up the Defense" display-name-id="1129953" min-level="65" max-level="2147483647" category="QUEST" cannot-share="true" target-type="AREA">
+    
     <races>
       <race id="ASMODIANS"/>
     </races>
+
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+  
+
     <rewards>
       <reward kind="GOLD" id="0" amount="903960"/>
       <reward kind="EXP" id="0" amount="3618881"/>
       <reward kind="GP" id="0" amount="100"/>
     </rewards>
+
     <start-conditions>
       <condition type="finished" quest-id="28030"/>
     </start-conditions>

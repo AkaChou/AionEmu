@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 203903 接取，收集 10 个 182201363 后交回领奖，奖励为经验加固定物品与四选一可选取物。
      Single-NPC item-collecting quest: accept from 203903, collect 10x 182201363, turn in to the same NPC for a choose-1-of-4 selectable reward. -->
 <quest-definition id="1424" version="1">
-  <metadata name="[Group] Raiding The Raiders" display-name-id="1102524" min-level="37" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Group] Raiding The Raiders" display-name-id="1102524" min-level="37" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

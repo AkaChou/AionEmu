@@ -4,7 +4,7 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="10" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="5" cooldown-seconds="0" daily="false" weekly="false" reward-repeat-count="5"/>
     <rewards>
       <reward kind="GOLD" id="0" amount="4400"/>
       <reward kind="EXP" id="0" amount="3921386"/>

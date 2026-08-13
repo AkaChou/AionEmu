@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="13956" version="1">
-  <metadata name="[Urgent Order] Attack on Bastion of Souls" display-name-id="1803227" min-level="66" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Urgent Order] Attack on Bastion of Souls" display-name-id="1803227" min-level="66" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

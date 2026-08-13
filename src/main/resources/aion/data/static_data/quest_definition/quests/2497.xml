@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2497" version="1">
-  <metadata name="Good Tools After Bad" display-name-id="1103697" min-level="23" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Good Tools After Bad" display-name-id="1103697" min-level="23" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

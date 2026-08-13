@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1963" version="1">
-  <metadata name="Delivery for the Outer Port" display-name-id="1102963" min-level="10" max-level="2147483647" category="QUEST">
+  <metadata name="Delivery for the Outer Port" display-name-id="1102963" min-level="10" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

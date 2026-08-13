@@ -64,6 +64,7 @@
       <actions>
         <remove-item item-id="182212217" count="1"/>
         <grant-reward kind="EXP" id="0" amount="37405" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="188508000" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

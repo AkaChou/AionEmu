@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 832822 接取，收集 3 种物品各 1 个后交回领奖，奖励为经验加二选一可选取物。
      Single-NPC item-collecting quest: accept from 832822, collect 1 of each of 3 items, turn in to the same NPC for a choose-1-of-2 selectable reward. -->
 <quest-definition id="2292" version="1">
-  <metadata name="Making a New Start" display-name-id="1103392" min-level="14" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Making a New Start" display-name-id="1103392" min-level="14" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

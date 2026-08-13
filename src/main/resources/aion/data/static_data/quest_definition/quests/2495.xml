@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2495" version="1">
-  <metadata name="Sprigg Nightlights" display-name-id="1103695" min-level="24" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Sprigg Nightlights" display-name-id="1103695" min-level="24" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

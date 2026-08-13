@@ -19,6 +19,7 @@
     </drops>
     <start-conditions>
       <condition type="unfinished" quest-id="80130"/>
+      <condition type="noacquired" quest-id="80130"/>
     </start-conditions>
   </metadata>
   <progress>

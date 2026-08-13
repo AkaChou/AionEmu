@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2342" version="1">
-  <metadata name="[Group] An Ice Claw Raid" display-name-id="1103542" min-level="28" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Group] An Ice Claw Raid" display-name-id="1103542" min-level="28" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

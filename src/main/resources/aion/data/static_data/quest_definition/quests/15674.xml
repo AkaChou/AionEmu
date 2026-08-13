@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="15674" version="1">
-  <metadata name="[Weekly] Support the Light Armored Guardian Transporter" display-name-id="1803266" min-level="66" max-level="2147483647" category="QUEST">
+  <metadata name="[Weekly] Support the Light Armored Guardian Transporter" display-name-id="1803266" min-level="66" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

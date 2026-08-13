@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2431" version="1">
-  <metadata name="Beneficial Poison" display-name-id="1103631" min-level="36" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Beneficial Poison" display-name-id="1103631" min-level="36" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

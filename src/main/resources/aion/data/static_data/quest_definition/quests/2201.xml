@@ -4,7 +4,7 @@
   Pure monster-hunt: kill 10 Crasaurs (210414/210415), report to 203563 for reward.
 -->
 <quest-definition id="2201" version="1">
-  <metadata name="The Crasaur Threat" display-name-id="1103301" min-level="10" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="The Crasaur Threat" display-name-id="1103301" min-level="10" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4077" version="1">
-  <metadata name="Porgus Roundup" display-name-id="1114076" min-level="46" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Porgus Roundup" display-name-id="1114076" min-level="46" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

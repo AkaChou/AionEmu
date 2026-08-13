@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2583" version="1">
-  <metadata name="A Polite Request" display-name-id="1103883" min-level="33" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="A Polite Request" display-name-id="1103883" min-level="33" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

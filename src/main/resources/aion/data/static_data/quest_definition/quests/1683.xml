@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1683" version="1">
-  <metadata name="[Spy/Group] Meeting The Mau Spy" display-name-id="1102874" min-level="43" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Spy/Group] Meeting The Mau Spy" display-name-id="1102874" min-level="43" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

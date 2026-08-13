@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2375" version="1">
-  <metadata name="[Group] All Nyerk and No Play" display-name-id="1103575" min-level="29" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Group] All Nyerk and No Play" display-name-id="1103575" min-level="29" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

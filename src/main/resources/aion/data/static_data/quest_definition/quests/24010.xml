@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="24010" version="1">
-  <metadata name="Suthran's Orders" display-name-id="1129886" min-level="10" max-level="2147483647" category="MISSION" cannot-share="true">
+  <metadata name="Suthran's Orders" display-name-id="1129886" min-level="10" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4322" version="1">
-  <metadata name="A Melange Of Spices" display-name-id="1103722" min-level="28" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="A Melange Of Spices" display-name-id="1103722" min-level="28" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

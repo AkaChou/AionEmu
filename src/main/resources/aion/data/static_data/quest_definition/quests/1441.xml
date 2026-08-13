@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 203969 接取，收集 10 个 152000005 后交回领奖。
      Single-NPC item-collecting quest: accept from 203969, collect 10x 152000005, turn in to the same NPC for rewards. -->
 <quest-definition id="1441" version="1">
-  <metadata name="[Gathering] Appetising meals" display-name-id="1102541" min-level="25" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] Appetising meals" display-name-id="1102541" min-level="25" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

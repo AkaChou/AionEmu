@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2600" version="1">
-  <metadata name="Humongous Malek" display-name-id="1103900" min-level="35" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Humongous Malek" display-name-id="1103900" min-level="35" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

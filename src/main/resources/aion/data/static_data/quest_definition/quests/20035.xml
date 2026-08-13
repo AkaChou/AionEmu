@@ -24,6 +24,10 @@
       <reward kind="SELECTABLE_ITEM" id="110601131" amount="1"/>
       <reward kind="SELECTABLE_ITEM" id="110301536" amount="1"/>
     </rewards>
+    <start-conditions>
+      <condition type="unfinished" quest-id="20025"/>
+      <condition type="unfinished" quest-id="24062"/>
+    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="4" min="0" max="8" persistence="PERSISTENT" scope="LOCAL"/>

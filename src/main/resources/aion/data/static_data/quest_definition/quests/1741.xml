@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1741" version="1">
-  <metadata name="Twilight Battlefield" display-name-id="1104541" min-level="45" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Twilight Battlefield" display-name-id="1104541" min-level="45" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

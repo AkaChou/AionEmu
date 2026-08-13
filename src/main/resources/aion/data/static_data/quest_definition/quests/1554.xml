@@ -14,7 +14,7 @@
         <reward kind="TITLE" id="28" amount="1" />
         <reward kind="SELECTABLE_ITEM" id="120000852" amount="1" />
         <reward kind="SELECTABLE_ITEM" id="120000853" amount="1" />
-        <reward kind="ITEM" id="186000469" amount="5" />
+        <reward kind="ITEM" id="186000469" amount="25" />
       </group>
     </reward-groups>
     <drops>

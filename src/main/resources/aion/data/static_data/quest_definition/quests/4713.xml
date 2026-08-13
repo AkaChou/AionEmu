@@ -2,7 +2,7 @@
 <!-- 击杀任务：从 279042 接取，击杀 700497 1 次、10 种 Dredgion 怪物各 20 次后向同一 NPC 报告领奖。
      Monster-hunt quest: accept from 279042, kill 700497 x1 and 10 Dredgion mobs x20, report to the same NPC for reward. -->
 <quest-definition id="4713" version="1">
-  <metadata name="[Group] Chaos On The Dredgion" display-name-id="1120006" min-level="46" max-level="50" category="QUEST" cannot-share="true">
+  <metadata name="[Group] Chaos On The Dredgion" display-name-id="1120006" min-level="46" max-level="50" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

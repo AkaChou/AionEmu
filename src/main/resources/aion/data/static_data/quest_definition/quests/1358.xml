@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 798055 接取，收集 5 个 182201323 后交回领奖。
      Single-NPC item-collecting quest: accept from 798055, collect 5x 182201323, turn in to the same NPC for rewards. -->
 <quest-definition id="1358" version="1">
-  <metadata name="Spring Water Essence" display-name-id="1102458" min-level="31" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Spring Water Essence" display-name-id="1102458" min-level="31" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

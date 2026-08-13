@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="18809" version="1">
-  <metadata name="Daeva On The Ride" display-name-id="1136593" min-level="30" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
+  <metadata name="Daeva On The Ride" display-name-id="1136593" min-level="30" max-level="2147483647" category="SEEN_MARKER" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ELYOS"/>
     </races>

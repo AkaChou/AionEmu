@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="14122" version="1">
-  <metadata name="Oasis Wasted" display-name-id="1129983" min-level="26" max-level="2147483647" category="QUEST">
+  <metadata name="Oasis Wasted" display-name-id="1129983" min-level="26" max-level="2147483647" category="QUEST" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2429" version="1">
-  <metadata name="Keeping Warm" display-name-id="1103629" min-level="22" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Keeping Warm" display-name-id="1103629" min-level="22" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

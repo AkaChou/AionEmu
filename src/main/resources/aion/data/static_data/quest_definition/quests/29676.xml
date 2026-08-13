@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="29676" version="1">
-  <metadata name="[Growth] Attack on the Draupnir Instanced Dungeon" display-name-id="1803415" min-level="45" max-level="2147483647" category="SIGNIFICANT">
+  <metadata name="[Growth] Attack on the Draupnir Instanced Dungeon" display-name-id="1803415" min-level="45" max-level="2147483647" category="SIGNIFICANT" cannot-share="true">
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="2592000" daily="false" weekly="false"/>
     <rewards>
       <reward kind="EXP" id="0" amount="32000000"/>
     </rewards>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2503" version="1">
-  <metadata name="The Fragment Hazard" display-name-id="1103803" min-level="30" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="The Fragment Hazard" display-name-id="1103803" min-level="30" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

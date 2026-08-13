@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2521" version="1">
-  <metadata name="Gigrite's Secret" display-name-id="1103821" min-level="31" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Gigrite's Secret" display-name-id="1103821" min-level="31" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

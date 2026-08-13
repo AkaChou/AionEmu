@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1578" version="1">
-  <metadata name="Where do Rotrons Come From?" display-name-id="1102778" min-level="35" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Where do Rotrons Come From?" display-name-id="1102778" min-level="35" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

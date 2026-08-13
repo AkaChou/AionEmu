@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2876" version="1">
-  <metadata name="Mission to annihilate new Elyos soldiers" display-name-id="1104976" min-level="45" max-level="2147483647" category="PUBLIC" cannot-share="true">
+  <metadata name="Mission to annihilate new Elyos soldiers" display-name-id="1104976" min-level="45" max-level="2147483647" category="PUBLIC">
     <races>
       <race id="ASMODIANS"/>
     </races>

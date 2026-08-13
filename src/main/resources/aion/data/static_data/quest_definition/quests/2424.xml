@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2424" version="1">
-  <metadata name="Greeting to an Alchemist" display-name-id="1103624" min-level="23" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Greeting to an Alchemist" display-name-id="1103624" min-level="23" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 204040 接取，收集 7 个 182201351 后交回领奖。
      Single-NPC item-collecting quest: accept from 204040, collect 7x 182201351, turn in to the same NPC for rewards. -->
 <quest-definition id="1381" version="1">
-  <metadata name="Armour for Pilgrims" display-name-id="1102481" min-level="28" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Armour for Pilgrims" display-name-id="1102481" min-level="28" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

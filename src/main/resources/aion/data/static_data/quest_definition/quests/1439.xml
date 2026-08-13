@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 204020 接取，收集 10 个 152000502 后交回领奖。
      Single-NPC item-collecting quest: accept from 204020, collect 10x 152000502, turn in to the same NPC for rewards. -->
 <quest-definition id="1439" version="1">
-  <metadata name="[Gathering] The strongest spear" display-name-id="1102539" min-level="21" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] The strongest spear" display-name-id="1102539" min-level="21" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

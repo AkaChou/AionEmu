@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2650" version="1">
-  <metadata name="Balaur Assassin" display-name-id="1103950" min-level="42" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Balaur Assassin" display-name-id="1103950" min-level="42" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

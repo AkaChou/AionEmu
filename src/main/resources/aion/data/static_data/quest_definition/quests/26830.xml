@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="26830" version="1">
-  <metadata name="[Instanced Dungeon/Group] Sleeping Queen Alb" display-name-id="1802602" min-level="66" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
+  <metadata name="[Instanced Dungeon/Group] Sleeping Queen Alb" display-name-id="1802602" min-level="66" max-level="2147483647" category="SEEN_MARKER">
     <races>
       <race id="ASMODIANS"/>
     </races>

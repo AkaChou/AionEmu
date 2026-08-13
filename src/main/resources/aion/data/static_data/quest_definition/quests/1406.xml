@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1406" version="1">
-  <metadata name="Tigrics Of Ill Omen" display-name-id="1102506" min-level="34" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Tigrics Of Ill Omen" display-name-id="1102506" min-level="34" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -5,7 +5,7 @@
   运行语义: 与 835570/835571 对话接取, 击杀 15 只 IDEvent_Solo_Saam_65_N (246293) 后向 835570/835571 报告领奖。
 -->
 <quest-definition id="50074" version="1">
-  <metadata name="[Event] Major attack on the Kumuki Hideout" display-name-id="1803482" min-level="51" max-level="82" category="EVENT">
+  <metadata name="[Event] Major attack on the Kumuki Hideout" display-name-id="1803482" min-level="51" max-level="82" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL"/>
     </races>

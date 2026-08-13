@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3718" version="1">
-  <metadata name="[Group] Dredging The Dredgion" display-name-id="1104717" min-level="46" max-level="50" category="QUEST" cannot-share="true">
+  <metadata name="[Group] Dredging The Dredgion" display-name-id="1104717" min-level="46" max-level="50" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

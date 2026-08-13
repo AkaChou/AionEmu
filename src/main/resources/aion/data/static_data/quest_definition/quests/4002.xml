@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4002" version="1">
-  <metadata name="Samples for Study" display-name-id="1114001" min-level="20" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Samples for Study" display-name-id="1114001" min-level="20" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

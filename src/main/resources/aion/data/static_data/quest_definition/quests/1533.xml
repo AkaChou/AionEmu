@@ -1,23 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1533" version="1">
   <metadata name="Remembering Firescar" display-name-id="1102733" min-level="33" max-level="2147483647" category="QUEST" cannot-share="true">
+    
     <races>
       <race id="ELYOS"/>
     </races>
+
     <prerequisites>
       <quest id="1200"/>
     </prerequisites>
+
+    <items>
+      <item id="182201714" count="5"/>
+    </items>
+
     <inventory-items>
       <item id="186000017" count="1"/>
     </inventory-items>
+
     <work-items>
       <item id="186000017" count="1"/>
     </work-items>
+
     <rewards>
       <reward kind="EXP" id="0" amount="633457"/>
       <reward kind="ITEM" id="188100335" amount="61"/>
       <reward kind="ITEM" id="186000003" amount="2"/>
     </rewards>
+  
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

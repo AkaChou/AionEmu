@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="20500" version="1">
-  <metadata name="Enshar Expedition" display-name-id="1800500" min-level="55" max-level="2147483647" category="MISSION" cannot-share="true">
+  <metadata name="Enshar Expedition" display-name-id="1800500" min-level="55" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

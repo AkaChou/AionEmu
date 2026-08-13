@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2988" version="1">
-  <metadata name="The Wise in Disguise" display-name-id="1104188" min-level="30" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="The Wise in Disguise" display-name-id="1104188" min-level="30" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

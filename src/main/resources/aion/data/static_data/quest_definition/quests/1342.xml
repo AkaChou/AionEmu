@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 204007 接取，收集 10 个 182201318 后交回领奖，奖励仅经验。
      Single-NPC item-collecting quest: accept from 204007, collect 10x 182201318, turn in to the same NPC for an exp reward. -->
 <quest-definition id="1342" version="1">
-  <metadata name="Killer Ksellids" display-name-id="1102442" min-level="30" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Killer Ksellids" display-name-id="1102442" min-level="30" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

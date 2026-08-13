@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2245" version="1">
-  <metadata name="Ksellid Control" display-name-id="1103345" min-level="14" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Ksellid Control" display-name-id="1103345" min-level="14" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

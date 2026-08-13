@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="14010" version="1">
-  <metadata name="Terrain of the Verteron Fortress" display-name-id="1129872" min-level="10" max-level="2147483647" category="MISSION">
+  <metadata name="Terrain of the Verteron Fortress" display-name-id="1129872" min-level="10" max-level="2147483647" category="MISSION" cannot-giveup="true">
     <races>
       <race id="ELYOS"/>
     </races>

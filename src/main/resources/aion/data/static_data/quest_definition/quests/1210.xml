@@ -4,7 +4,7 @@
   Gathering-collect quest: accept from 203157, collect 10x 152000601 and 5x 152000702 (cold-medicine herbs), report back for reward.
 -->
 <quest-definition id="1210" version="1">
-  <metadata name="[Gathering] Medicine for colds" display-name-id="1102380" min-level="15" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] Medicine for colds" display-name-id="1102380" min-level="15" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="28618" version="1">
   <metadata name="Kaliga's Sword Collection" display-name-id="1117068" min-level="37" max-level="2147483647" category="IMPORTANT">
+    
     <races>
       <race id="ASMODIANS"/>
     </races>
+
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+  
+
     <items>
       <item id="185000102" count="1"/>
     </items>
+
     <rewards>
       <reward kind="EXP" id="0" amount="1047731"/>
       <reward kind="ITEM" id="100001067" amount="1"/>
     </rewards>
+
     <drops>
       <drop npc-id="217006" item-id="185000102" chance="100" each-member="true" collecting-step="0"/>
     </drops>

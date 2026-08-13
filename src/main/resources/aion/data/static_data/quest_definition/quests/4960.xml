@@ -15,6 +15,19 @@
       <condition type="finished" quest-id="2932"/>
       <condition type="finished" quest-id="2933"/>
       <condition type="finished" quest-id="2934"/>
+      <condition type="finished" quest-id="2935"/>
+      <condition type="noacquired" quest-id="4945"/>
+      <condition type="noacquired" quest-id="4948"/>
+      <condition type="noacquired" quest-id="4951"/>
+      <condition type="noacquired" quest-id="4954"/>
+      <condition type="noacquired" quest-id="4957"/>
+      <condition type="noacquired" quest-id="2982"/>
+      <condition type="unfinished" quest-id="4945"/>
+      <condition type="unfinished" quest-id="4948"/>
+      <condition type="unfinished" quest-id="4951"/>
+      <condition type="unfinished" quest-id="4954"/>
+      <condition type="unfinished" quest-id="4957"/>
+      <condition type="unfinished" quest-id="2982"/>
     </start-conditions>
   </metadata>
   <progress>

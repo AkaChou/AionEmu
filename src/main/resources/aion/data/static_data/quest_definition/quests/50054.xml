@@ -7,7 +7,9 @@
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
     <items>
       <item id="186000432" count="3"/>
-    </items>
+    
+      <item id="162001062" count="2"/>
+      </items>
     <rewards>
       <reward kind="EXP" id="0" amount="50000000"/>
     </rewards>

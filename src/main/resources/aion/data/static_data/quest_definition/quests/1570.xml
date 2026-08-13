@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1570" version="1">
-  <metadata name="Dignity and Bluster" display-name-id="1102770" min-level="41" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Dignity and Bluster" display-name-id="1102770" min-level="41" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

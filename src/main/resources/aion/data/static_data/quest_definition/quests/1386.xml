@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 204040 接取，收集 5 个 182201348 后交回领奖，奖励仅经验。
      Single-NPC item-collecting quest: accept from 204040, collect 5x 182201348, turn in to the same NPC for an exp reward. -->
 <quest-definition id="1386" version="1">
-  <metadata name="Sentinel Viragos" display-name-id="1102486" min-level="32" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Sentinel Viragos" display-name-id="1102486" min-level="32" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

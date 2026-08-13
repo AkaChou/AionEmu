@@ -3,8 +3,9 @@
   <metadata name="[Event] Trouble Brewing" display-name-id="1185417" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
+      <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false"/>
     <items>
       <item id="182215216" count="20"/>
     </items>

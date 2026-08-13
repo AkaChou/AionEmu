@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4976" version="1">
-  <metadata name="A Settler's Ambition" display-name-id="1104297" min-level="44" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="A Settler's Ambition" display-name-id="1104297" min-level="44" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

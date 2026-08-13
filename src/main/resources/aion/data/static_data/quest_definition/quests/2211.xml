@@ -4,7 +4,7 @@
   Pure monster-hunt: kill 10 Karnifs (210421/210422), report to 203606 for reward.
 -->
 <quest-definition id="2211" version="1">
-  <metadata name="Karnif Threat" display-name-id="1103311" min-level="11" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Karnif Threat" display-name-id="1103311" min-level="11" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

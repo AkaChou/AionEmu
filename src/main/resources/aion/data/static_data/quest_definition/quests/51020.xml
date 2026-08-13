@@ -2,10 +2,9 @@
 <quest-definition id="51020" version="1">
   <metadata name="[Event/Daily] Chocolate, Extra-Bitter" display-name-id="1150067" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
-      <race id="ELYOS"/>
       <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false"/>
     <prerequisites>
       <quest id="51010"/>
     </prerequisites>

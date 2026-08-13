@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="15691" version="1">
-  <metadata name="Exchange Crystals for Cores" display-name-id="1803358" min-level="66" max-level="2147483647" category="IMPORTANT">
+  <metadata name="Exchange Crystals for Cores" display-name-id="1803358" min-level="66" max-level="2147483647" category="IMPORTANT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

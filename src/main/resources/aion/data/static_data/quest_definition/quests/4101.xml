@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4101" version="1">
-  <metadata name="Elim Of Brusthonin" display-name-id="1114100" min-level="47" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Elim Of Brusthonin" display-name-id="1114100" min-level="47" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

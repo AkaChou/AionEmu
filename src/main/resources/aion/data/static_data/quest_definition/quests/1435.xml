@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1435" version="1">
-  <metadata name="[Gathering] Material costs" display-name-id="1102535" min-level="20" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] Material costs" display-name-id="1102535" min-level="20" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

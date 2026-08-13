@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3116" version="1">
-  <metadata name="[Instance] Creation Of The Rifts" display-name-id="1137091" min-level="46" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Instance] Creation Of The Rifts" display-name-id="1137091" min-level="46" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS" />
     </races>

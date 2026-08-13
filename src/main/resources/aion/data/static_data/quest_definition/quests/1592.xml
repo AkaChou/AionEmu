@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1592" version="1">
-  <metadata name="Sylphen Wing Soup" display-name-id="1102792" min-level="38" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Sylphen Wing Soup" display-name-id="1102792" min-level="38" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

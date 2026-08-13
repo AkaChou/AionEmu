@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80709" version="1">
-  <metadata name="[Event] All the Magical Energy to Our Team!" display-name-id="1185842" min-level="60" max-level="2147483647" category="EVENT">
+  <metadata name="[Event] All the Magical Energy to Our Team!" display-name-id="1185842" min-level="60" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

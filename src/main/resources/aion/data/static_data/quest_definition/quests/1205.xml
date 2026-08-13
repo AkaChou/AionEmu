@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1205" version="1">
-  <metadata name="A New Skill" display-name-id="1102375" min-level="2" max-level="2147483647" category="IMPORTANT">
+  <metadata name="A New Skill" display-name-id="1102375" min-level="2" max-level="2147483647" category="IMPORTANT" cannot-giveup="true">
     <races>
       <race id="ELYOS"/>
     </races>

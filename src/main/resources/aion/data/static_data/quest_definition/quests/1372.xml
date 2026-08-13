@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 203947 接取，收集 5 个 182201337 后交回领奖，奖励为经验金币加五选一可选取物。
      Single-NPC item-collecting quest: accept from 203947, collect 5x 182201337, turn in to the same NPC for a choose-1-of-5 selectable reward. -->
 <quest-definition id="1372" version="1">
-  <metadata name="Food For Agairon Village" display-name-id="1102472" min-level="31" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Food For Agairon Village" display-name-id="1102472" min-level="31" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1596" version="1">
-  <metadata name="[Repeat] Dead Porgus Walking" display-name-id="1102796" min-level="41" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="[Repeat] Dead Porgus Walking" display-name-id="1102796" min-level="41" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1666" version="1">
-  <metadata name="Taking it to The Indratu" display-name-id="1102857" min-level="44" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Taking it to The Indratu" display-name-id="1102857" min-level="44" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2948" version="1">
-  <metadata name="Huron's Letter" display-name-id="1104148" min-level="29" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Huron's Letter" display-name-id="1104148" min-level="29" max-level="2147483647" category="IMPORTANT" cannot-share="true" cannot-giveup="true">
     <races>
       <race id="ASMODIANS"/>
     </races>

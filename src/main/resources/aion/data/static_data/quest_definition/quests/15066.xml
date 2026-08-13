@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="15066" version="1">
-  <metadata name="Work Hard for the Shard" display-name-id="1800778" min-level="61" max-level="2147483647" category="IMPORTANT">
+  <metadata name="Work Hard for the Shard" display-name-id="1800778" min-level="61" max-level="2147483647" category="IMPORTANT" cannot-share="true">
     <races>
       <race id="ELYOS"/>
     </races>

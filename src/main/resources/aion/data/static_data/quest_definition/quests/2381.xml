@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2381" version="1">
-  <metadata name="Harvesting Tripeed" display-name-id="1103581" min-level="31" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Harvesting Tripeed" display-name-id="1103581" min-level="31" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

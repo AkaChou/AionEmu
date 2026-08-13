@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80790" version="1">
-  <metadata name="[Event/Daily] Hang In There, Dormant User! Encouragement from the Giving Rotund" display-name-id="1185908" min-level="1" max-level="75" category="EVENT">
+  <metadata name="[Event/Daily] Hang In There, Dormant User! Encouragement from the Giving Rotund" display-name-id="1185908" min-level="1" max-level="75" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL"/>
     </races>

@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 798151 接取，收集 1 个 182201415 与 38 个 186000028 后交回领奖，奖励为经验加固定物品与六选一可选取物。
      Single-NPC item-collecting quest: accept from 798151, collect 1x 182201415 and 38x 186000028, turn in to the same NPC for a choose-1-of-6 selectable reward. -->
 <quest-definition id="1495" version="1">
-  <metadata name="[Group] Korumonerk's Backpack" display-name-id="1102595" min-level="38" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Group] Korumonerk's Backpack" display-name-id="1102595" min-level="38" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

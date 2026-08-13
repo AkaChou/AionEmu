@@ -5,5 +5,8 @@
       <race id="PC_ALL" />
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" />
+    <items>
+      <item id="182007397" count="1"/>
+    </items>
   </metadata>
 </quest-definition>

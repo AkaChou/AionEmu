@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4717" version="1">
-  <metadata name="[Group] This Time It's Personnel" display-name-id="1120010" min-level="46" max-level="50" category="QUEST" cannot-share="true">
+  <metadata name="[Group] This Time It's Personnel" display-name-id="1120010" min-level="46" max-level="50" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

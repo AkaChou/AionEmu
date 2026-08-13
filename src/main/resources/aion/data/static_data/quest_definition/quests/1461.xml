@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 204030 接取，收集 1 个 182201379 与 3 个 182201380 后交回领奖。
      Single-NPC item-collecting quest: accept from 204030, collect 1x 182201379 and 3x 182201380, turn in to the same NPC for rewards. -->
 <quest-definition id="1461" version="1">
-  <metadata name="Plant Poison Antidote" display-name-id="1102561" min-level="21" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Plant Poison Antidote" display-name-id="1102561" min-level="21" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

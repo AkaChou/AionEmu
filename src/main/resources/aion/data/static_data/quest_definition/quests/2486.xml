@@ -11,6 +11,7 @@
     </rewards>
     <start-conditions>
       <condition type="finished" quest-id="24122"/>
+      <condition type="finished" quest-id="2038"/>
     </start-conditions>
   </metadata>
   <progress>

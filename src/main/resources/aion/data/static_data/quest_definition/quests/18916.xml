@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="18916" version="1">
   <metadata name="[Group] For The Folks Back Home" display-name-id="1141604" min-level="65" max-level="2147483647" category="QUEST" cannot-share="true">
+    
     <races>
       <race id="ELYOS"/>
     </races>
+
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+  
+
     <items>
       <item id="182213553" count="1"/>
     </items>
+
     <rewards>
       <reward kind="GOLD" id="0" amount="133740"/>
       <reward kind="EXP" id="0" amount="3618881"/>
       <reward kind="ITEM" id="188052569" amount="1"/>
     </rewards>
+
     <drops>
       <drop npc-id="230853" item-id="182213553" chance="100" each-member="true" collecting-step="0"/>
     </drops>
+
     <start-conditions>
       <condition type="finished" quest-id="18912"/>
     </start-conditions>

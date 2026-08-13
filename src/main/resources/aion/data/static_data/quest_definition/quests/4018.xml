@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4018" version="1">
-  <metadata name="Scared Of Undeads" display-name-id="1114017" min-level="23" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Scared Of Undeads" display-name-id="1114017" min-level="23" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

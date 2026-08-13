@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1988" version="1">
-  <metadata name="A Meeting with a Sage" display-name-id="1102988" min-level="30" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="A Meeting with a Sage" display-name-id="1102988" min-level="30" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

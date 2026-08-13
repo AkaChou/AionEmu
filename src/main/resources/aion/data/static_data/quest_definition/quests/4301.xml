@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4301" version="1">
-  <metadata name="Marital Difficulties" display-name-id="1103712" min-level="26" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Marital Difficulties" display-name-id="1103712" min-level="26" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

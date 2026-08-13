@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80140" version="1">
-  <metadata name="[Event] Forlorn In Theobomos" display-name-id="1180140" min-level="40" max-level="49" category="EVENT" cannot-share="true">
+  <metadata name="[Event] Forlorn In Theobomos" display-name-id="1180140" min-level="40" max-level="49" category="EVENT">
     <races>
       <race id="ELYOS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false"/>
     <items>
       <item id="182215117" count="10"/>
       <item id="182215118" count="13"/>

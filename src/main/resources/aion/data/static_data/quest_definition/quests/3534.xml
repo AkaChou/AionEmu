@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3534" version="1">
-  <metadata name="[Alliance] Into Eternity" display-name-id="1102885" min-level="45" max-level="2147483647" category="QUEST" cannot-share="true" target-type="FORCE">
+  <metadata name="[Alliance] Into Eternity" display-name-id="1102885" min-level="45" max-level="2147483647" category="QUEST" target-type="FORCE">
     <races>
       <race id="ELYOS"/>
     </races>

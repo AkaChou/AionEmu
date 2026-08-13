@@ -4,7 +4,7 @@
   Item-collecting quest: accept from 203605, collect 5x 182203209 (plain quills), report back for reward.
 -->
 <quest-definition id="2214" version="1">
-  <metadata name="No-Frills Quills" display-name-id="1103314" min-level="11" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="No-Frills Quills" display-name-id="1103314" min-level="11" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

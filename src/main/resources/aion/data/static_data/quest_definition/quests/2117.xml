@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="2117" version="1">
-  <metadata name="Food Bandits" display-name-id="1103217" min-level="5" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Food Bandits" display-name-id="1103217" min-level="5" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

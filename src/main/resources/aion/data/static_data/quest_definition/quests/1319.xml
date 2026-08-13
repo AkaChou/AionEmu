@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1319" version="1">
-  <metadata name="Prorite's Money" display-name-id="1102419" min-level="19" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Prorite's Money" display-name-id="1102419" min-level="19" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

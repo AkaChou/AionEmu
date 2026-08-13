@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 203137 接取，收集 5 个 152000101 后交回领奖，奖励为二选一可选取物。
      Single-NPC item-collecting quest: accept from 203137, collect 5x 152000101, turn in to the same NPC for a choose-1-of-2 selectable reward. -->
 <quest-definition id="1208" version="1">
-  <metadata name="[Gathering] Secret trade" display-name-id="1102378" min-level="13" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Gathering] Secret trade" display-name-id="1102378" min-level="13" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

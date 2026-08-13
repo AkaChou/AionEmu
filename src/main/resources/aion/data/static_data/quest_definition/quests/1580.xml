@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1580" version="1">
-  <metadata name="Picking off The Undead" display-name-id="1102780" min-level="37" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Picking off The Undead" display-name-id="1102780" min-level="37" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4046" version="1">
-  <metadata name="BuBu Mep's Wedding Preparation" display-name-id="1114045" min-level="47" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="BuBu Mep's Wedding Preparation" display-name-id="1114045" min-level="47" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>

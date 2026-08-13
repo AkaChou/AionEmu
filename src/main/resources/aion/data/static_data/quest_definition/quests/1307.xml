@@ -2,7 +2,7 @@
 <!-- 单 NPC 物品收集任务：从 203936 接取，收集 2 种物品各 1 个后交回领奖。
      Single-NPC item-collecting quest: accept from 203936, collect 1 of each of 2 items, turn in to the same NPC for rewards. -->
 <quest-definition id="1307" version="1">
-  <metadata name="Stolen Goods" display-name-id="1102407" min-level="20" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Stolen Goods" display-name-id="1102407" min-level="20" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

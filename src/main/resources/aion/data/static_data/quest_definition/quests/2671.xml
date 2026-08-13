@@ -2,7 +2,7 @@
 <!-- 削弱巴卡尔玛军团：从 802053 接取，击杀五种巴卡尔玛族怪物（0→9）后回报。
      Weakening The Bakarma Legion: accept from 802053, kill five Bakarma monsters (0→9), report back. -->
 <quest-definition id="2671" version="1">
-  <metadata name="Weakening The Bakarma Legion" display-name-id="1103971" min-level="44" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="Weakening The Bakarma Legion" display-name-id="1103971" min-level="44" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

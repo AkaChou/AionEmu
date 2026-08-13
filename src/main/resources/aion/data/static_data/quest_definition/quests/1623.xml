@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="1623" version="1">
-  <metadata name="Supplies For The Blue Fleet" display-name-id="1102822" min-level="39" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Supplies For The Blue Fleet" display-name-id="1102822" min-level="39" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

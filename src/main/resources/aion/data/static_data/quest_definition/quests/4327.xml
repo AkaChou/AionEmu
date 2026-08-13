@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4327" version="1">
-  <metadata name="War Of The Worgs" display-name-id="1135300" min-level="31" max-level="2147483647" category="IMPORTANT" cannot-share="true">
+  <metadata name="War Of The Worgs" display-name-id="1135300" min-level="31" max-level="2147483647" category="IMPORTANT">
     <races>
       <race id="ASMODIANS"/>
     </races>

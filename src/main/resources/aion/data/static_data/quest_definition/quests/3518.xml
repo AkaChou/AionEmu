@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="3518" version="1">
-  <metadata name="Violeteye Sylphen" display-name-id="1102666" min-level="36" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="Violeteye Sylphen" display-name-id="1102666" min-level="36" max-level="2147483647" category="QUEST">
     <races>
       <race id="ELYOS"/>
     </races>

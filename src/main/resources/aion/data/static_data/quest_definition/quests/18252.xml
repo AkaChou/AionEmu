@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="18252" version="1">
-  <metadata name="Start of the First Trial" display-name-id="1803443" min-level="66" max-level="2147483647" category="SEEN_MARKER" cannot-share="true">
+  <metadata name="Start of the First Trial" display-name-id="1803443" min-level="66" max-level="2147483647" category="SEEN_MARKER">
     <races>
       <race id="ELYOS"/>
     </races>

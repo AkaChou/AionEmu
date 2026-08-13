@@ -6,7 +6,9 @@
     </races>
     <items>
       <item id="182213239" count="1"/>
-    </items>
+    
+      <item id="186000085" count="1"/>
+      </items>
     <start-conditions>
       <condition type="finished" quest-id="4939"/>
       <condition type="unfinished" quest-id="4942"/>

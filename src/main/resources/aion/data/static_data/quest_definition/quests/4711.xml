@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="4711" version="1">
-  <metadata name="[Group] The Dredgion Captain" display-name-id="1120004" min-level="46" max-level="2147483647" category="QUEST" cannot-share="true">
+  <metadata name="[Group] The Dredgion Captain" display-name-id="1120004" min-level="46" max-level="2147483647" category="QUEST">
     <races>
       <race id="ASMODIANS"/>
     </races>
