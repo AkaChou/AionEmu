@@ -27,4 +27,68 @@
       </group>
     </start-condition-groups>
   </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
+  </nodes>
+  <transitions>
+    <dialog type="NPC_START" npc-id="204129" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204127" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204127" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204127" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_REPORT" npc-id="204242" source="started1" target="reward" page="SELECT5"/>
+    <npc-complete npc-id="204242" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
+      <choice action="SELECTED_QUEST_REWARD6" reward-index="6"/>
+      <choice action="SELECTED_QUEST_REWARD7" reward-index="7"/>
+      <choice action="SELECTED_QUEST_REWARD8" reward-index="8"/>
+      <choice action="SELECTED_QUEST_REWARD9" reward-index="9"/>
+      <choice action="SELECTED_QUEST_REWARD10" reward-index="10"/>
+      <choice action="SELECTED_QUEST_REWARD11" reward-index="11"/>
+      <choice action="SELECTED_QUEST_REWARD12" reward-index="12"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+  </transitions>
 </quest-definition>
