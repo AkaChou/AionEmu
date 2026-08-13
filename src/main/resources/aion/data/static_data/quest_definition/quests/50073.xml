@@ -79,9 +79,9 @@
   </nodes>
   <transitions>
     <!-- 835570 NPC_event_idevent_s3_L_seller：接取对话 / accept dialogs -->
-    <dialog type="NPC_START" npc-id="835570" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="835570" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <!-- 835571 NPC_event_idevent_s3_D_seller：接取对话 / accept dialogs -->
-    <dialog type="NPC_START" npc-id="835571" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="835571" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <!-- 击杀 246293 IDEvent_Solo_Saam_65_N 15 次 / kill 15x 246293 -->
     <kill-chain nodes="started k1 k2 k3 k4 k5 k6 k7 k8 k9 k10 k11 k12 k13 k14 k15">
       <event>
@@ -89,12 +89,12 @@
       </event>
     </kill-chain>
     <!-- 835570 报告并领奖 / turn-in and reward at 835570 -->
-    <dialog type="NPC_REPORT" npc-id="835570" source="k15" target="reward" page="SELECT2"/>
+    <dialog type="NPC_REPORT" npc-id="835570" source="k15" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="835570" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <!-- 835571 报告并领奖 / turn-in and reward at 835571 -->
-    <dialog type="NPC_REPORT" npc-id="835571" source="k15" target="reward" page="SELECT2"/>
+    <dialog type="NPC_REPORT" npc-id="835571" source="k15" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="835571" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

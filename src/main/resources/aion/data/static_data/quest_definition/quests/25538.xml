@@ -37,7 +37,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="806255" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="806255" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <dialog type="NPC_REPORT" npc-id="806255" source="started" target="reward" page="SELECT2"/>
     <transition source="reward" target="reward">
       <event>

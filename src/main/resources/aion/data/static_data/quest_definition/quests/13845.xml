@@ -553,8 +553,8 @@
     <counter-grid>
       <dimension field="var0" required="40" npc-ids="214744 214745 214746 214747 214748 214749 214750 214751"/>
     </counter-grid>
-    <dialog type="NPC_START" npc-id="263597" source="unaccepted" target="started" selection-sources="unaccepted k40" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="263597" source="k40" target="reward" page="SELECT2"/>
+    <dialog type="NPC_START" npc-id="263597" source="unaccepted" target="started" selection-sources="unaccepted k40" start-page="SELECT_NONE"/>
+    <dialog type="NPC_REPORT" npc-id="263597" source="k40" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="263597" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

@@ -73,7 +73,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="806269" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="806269" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <transition source="started" target="k1">
       <event>
         <kill-in-world world-id="301670000"/>

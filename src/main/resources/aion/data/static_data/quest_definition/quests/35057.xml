@@ -133,8 +133,7 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- s1: 回到 804944 领取奖励。 -->
-    <dialog type="NPC_REPORT" npc-id="804944" source="s1" target="reward" page="SELECT5"/>
+    <dialog type="NPC_REPORT" npc-id="804944" source="s1" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="804944" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

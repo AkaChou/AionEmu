@@ -55,7 +55,7 @@
       <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="206379" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="206379" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="206379" action="QUEST_SELECT"/>
@@ -69,7 +69,7 @@
       <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="206380" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="206380" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="206380" action="QUEST_SELECT"/>

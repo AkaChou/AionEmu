@@ -150,7 +150,12 @@ class QuestDefinitionCatalogManifestTest {
 						|| statuses.get(opening.targetNode()) != QuestStatus.NONE
 						|| !(opening.event() instanceof QuestEvent.TalkToNpc talk)
 						|| !startNpcs.contains(talk.npcId()) || talk.dialogId() == null
-						|| (talk.dialogId() != 31 && talk.dialogId() != 1007)) {
+						|| !opening.actions().isEmpty()
+						|| !opening.afterCommit().stream().allMatch(action ->
+							action instanceof AfterCommitAction.ShowQuestDialog
+								|| action instanceof AfterCommitAction.ShowQuestSelectionDialog
+								|| action instanceof AfterCommitAction.ShowDialogWindow
+								|| action instanceof AfterCommitAction.CloseDialog)) {
 					continue;
 				}
 				for (String complete : completeNodes) {

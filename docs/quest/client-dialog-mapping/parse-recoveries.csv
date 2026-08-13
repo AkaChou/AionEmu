@@ -1,63 +1,63 @@
-﻿source_file,diagnostic,recovered_action_occurrences
-10000_19999/quest_q10522.html,line 68: Opening and ending tag mismatch: img line 68 and font | line 68: Opening and ending tag mismatch: img line 68 and p | line 71: Opening and ending tag mismatch: img line 71 and font | line 71: Opening and ending tag mismatch: font line 71 and p | line 74: Opening and ending tag mismatch: p line 71 and body | line 75: Opening and ending tag mismatch: font line 68 and html | line 76: Opening and ending tag mismatch: p line 68 and Contents | line 77: Opening and ending tag mismatch: body line 63 and HtmlPage | line 111: Opening and ending tag mismatch: html line 62 and HtmlPages,1
-10000_19999/quest_q10530.html,line 543: Opening and ending tag mismatch: p line 543 and font | line 543: Opening and ending tag mismatch: step line 543 and p | line 543: Opening and ending tag mismatch: steps line 534 and step | line 546: Opening and ending tag mismatch: body line 533 and steps | line 548: Opening and ending tag mismatch: html line 532 and body | line 549: Opening and ending tag mismatch: Contents line 531 and html | line 550: Opening and ending tag mismatch: HtmlPage line 530 and Contents | line 551: Opening and ending tag mismatch: HtmlPages line 1 and HtmlPage,26
-10000_19999/quest_q11341.html,line 68: Opening and ending tag mismatch: p line 68 and font | line 68: Opening and ending tag mismatch: body line 67 and p | line 71: Opening and ending tag mismatch: html line 66 and body | line 72: Opening and ending tag mismatch: Contents line 65 and html | line 73: Opening and ending tag mismatch: HtmlPage line 64 and Contents | line 74: Opening and ending tag mismatch: HtmlPages line 3 and HtmlPage,3
-10000_19999/quest_q11370.html,line 14: Opening and ending tag mismatch: p line 13 and body | line 15: Opening and ending tag mismatch: body line 8 and html | line 16: Opening and ending tag mismatch: html line 7 and Contents | line 21: Opening and ending tag mismatch: Contents line 6 and HtmlPage | line 92: Opening and ending tag mismatch: HtmlPage line 5 and HtmlPages,3
-10000_19999/quest_q11402.html,line 1: XML declaration allowed only at the start of the document,3
-10000_19999/quest_q14081.html,line 41: Entity 'ldquo' not defined | line 41: Entity 'rdquo' not defined,4
-10000_19999/quest_q14114.html,line 139: Entity 'ldquo' not defined | line 139: Entity 'rdquo' not defined,14
-20000_29999/quest_q20100.html,line 187: Entity 'ldquo' not defined | line 187: Entity 'rdquo' not defined | line 246: Entity 'ldquo' not defined | line 246: Entity 'rdquo' not defined | line 248: Entity 'ldquo' not defined | line 248: Entity 'rdquo' not defined,11
-20000_29999/quest_q20522.html,line 68: Opening and ending tag mismatch: img line 68 and font | line 68: Opening and ending tag mismatch: img line 68 and p | line 71: Opening and ending tag mismatch: img line 71 and font | line 71: Opening and ending tag mismatch: font line 71 and p | line 74: Opening and ending tag mismatch: p line 71 and body | line 75: Opening and ending tag mismatch: font line 68 and html | line 76: Opening and ending tag mismatch: p line 68 and Contents | line 77: Opening and ending tag mismatch: body line 63 and HtmlPage | line 111: Opening and ending tag mismatch: html line 62 and HtmlPages,1
-20000_29999/quest_q23810.html,line 39: Entity 'ldquo' not defined | line 39: Entity 'rdquo' not defined | line 59: Entity 'ldquo' not defined | line 59: Entity 'rdquo' not defined | line 61: Entity 'ldquo' not defined | line 61: Entity 'rdquo' not defined,3
-20000_29999/quest_q24042.html,line 162: Entity 'ldquo' not defined | line 162: Entity 'rdquo' not defined,9
-20000_29999/quest_q24071.html,line 184: Entity 'ldquo' not defined | line 184: Entity 'rdquo' not defined | line 287: Entity 'ldquo' not defined | line 287: Entity 'rdquo' not defined | line 452: Entity 'ldquo' not defined | line 452: Entity 'rdquo' not defined | line 470: Entity 'ldquo' not defined | line 470: Entity 'rdquo' not defined | line 489: Entity 'rdquo' not defined | line 489: Entity 'ldquo' not defined,27
-20000_29999/quest_q24081.html,line 43: Entity 'ldquo' not defined | line 43: Entity 'rdquo' not defined | line 144: Entity 'ldquo' not defined | line 144: Entity 'rdquo' not defined,7
-20000_29999/quest_q28395.html,line 130: Opening and ending tag mismatch: body line 125 and html | line 131: Opening and ending tag mismatch: html line 124 and Contents | line 132: Opening and ending tag mismatch: Contents line 123 and HtmlPage | line 179: Opening and ending tag mismatch: HtmlPage line 122 and HtmlPages,8
-30000_39999/quest_q30043.html,line 124: Opening and ending tag mismatch: p line 123 and body | line 125: Opening and ending tag mismatch: p line 123 and html | line 126: Opening and ending tag mismatch: body line 123 and Contents | line 127: Opening and ending tag mismatch: html line 122 and HtmlPage | line 141: Opening and ending tag mismatch: Contents line 121 and HtmlPages,6
-30000_39999/quest_q30143.html,line 123: Opening and ending tag mismatch: p line 122 and body | line 124: Opening and ending tag mismatch: p line 122 and html | line 125: Opening and ending tag mismatch: body line 122 and Contents | line 126: Opening and ending tag mismatch: html line 121 and HtmlPage | line 140: Opening and ending tag mismatch: Contents line 120 and HtmlPages,6
-50000_59999/quest_q50064.html,line 10: Entity 'mdash' not defined | line 10: Entity 'mdash' not defined,6
-50000_59999/quest_q51064.html,line 10: Entity 'mdash' not defined | line 10: Entity 'mdash' not defined,6
-80000-84999/QUEST_Q80269.html,line 88: Entity 'ldquo' not defined | line 88: Entity 'rdquo' not defined | line 92: Entity 'ldquo' not defined | line 92: Entity 'rdquo' not defined,6
-80000-84999/QUEST_Q80271.html,line 88: Entity 'ldquo' not defined | line 88: Entity 'rdquo' not defined | line 92: Entity 'ldquo' not defined | line 92: Entity 'rdquo' not defined,6
-80000-84999/quest_q80554.html,line 13: EntityRef: expecting ';',3
-80000-84999/quest_q80558.html,line 13: EntityRef: expecting ';',3
-80000-84999/quest_q80895.html,line 50: Opening and ending tag mismatch: p line 50 and body | line 51: Opening and ending tag mismatch: body line 47 and html | line 52: Opening and ending tag mismatch: html line 46 and Contents | line 53: Opening and ending tag mismatch: Contents line 45 and HtmlPage | line 93: Opening and ending tag mismatch: HtmlPage line 44 and HtmlPages,3
-80000-84999/quest_q80897.html,line 17: Opening and ending tag mismatch: p line 15 and body | line 18: Opening and ending tag mismatch: body line 14 and html | line 19: Opening and ending tag mismatch: html line 13 and Contents | line 24: Opening and ending tag mismatch: Contents line 12 and HtmlPage | line 47: Opening and ending tag mismatch: p line 47 and body | line 48: Opening and ending tag mismatch: body line 44 and html | line 49: Opening and ending tag mismatch: html line 43 and Contents | line 50: Opening and ending tag mismatch: Contents line 42 and HtmlPage | line 90: Opening and ending tag mismatch: HtmlPage line 41 and HtmlPages,3
-80000-84999/quest_q80925.html,line 65: Opening and ending tag mismatch: p line 63 and body | line 66: Opening and ending tag mismatch: p line 63 and html | line 67: Opening and ending tag mismatch: body line 62 and Contents | line 71: Opening and ending tag mismatch: html line 61 and HtmlPage | line 139: Opening and ending tag mismatch: Contents line 60 and HtmlPages,6
-80000-84999/quest_q80926.html,line 65: Opening and ending tag mismatch: p line 63 and body | line 66: Opening and ending tag mismatch: p line 63 and html | line 67: Opening and ending tag mismatch: body line 62 and Contents | line 71: Opening and ending tag mismatch: html line 61 and HtmlPage | line 139: Opening and ending tag mismatch: Contents line 60 and HtmlPages,6
-80000-84999/QUEST_Q80979.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,6
-80000-84999/QUEST_Q80980.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,6
-80000-84999/QUEST_Q80981.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,6
-80000-84999/QUEST_Q80982.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,6
-80000-84999/QUEST_Q80983.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,6
-80000-84999/QUEST_Q80984.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,6
-80000-84999/QUEST_Q80985.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,6
-80000-84999/QUEST_Q80986.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,6
-80000-84999/QUEST_Q80987.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,6
-80000-84999/QUEST_Q80988.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,6
-QUEST_Q1023.html,line 106: Entity 'ldquo' not defined | line 106: Entity 'rdquo' not defined,11
-QUEST_Q1044.html,line 159: Entity 'ldquo' not defined | line 159: Entity 'rdquo' not defined,14
-QUEST_Q1071.html,line 84: Entity 'nbsp' not defined | line 105: Entity 'nbsp' not defined | line 168: Entity 'nbsp' not defined,22
-QUEST_Q1072.html,line 88: Entity 'mdash' not defined | line 88: Entity 'mdash' not defined,16
-QUEST_Q1097.html,line 97: Entity 'mdash' not defined | line 97: Entity 'mdash' not defined,10
-QUEST_Q1107.html,line 12: Entity 'ldquo' not defined | line 12: Entity 'rdquo' not defined | line 14: Entity 'ldquo' not defined | line 14: Entity 'rdquo' not defined | line 46: Entity 'ldquo' not defined | line 46: Entity 'rdquo' not defined | line 76: Entity 'ldquo' not defined | line 76: Entity 'rdquo' not defined,2
-QUEST_Q1110.html,line 135: Entity 'ldquo' not defined | line 135: Entity 'rdquo' not defined,6
-QUEST_Q1111.html,line 33: Entity 'ldquo' not defined | line 33: Entity 'rdquo' not defined | line 135: Entity 'nbsp' not defined,14
-QUEST_Q1135.html,line 37: Entity 'ldquo' not defined | line 37: Entity 'rdquo' not defined,7
-QUEST_Q1138.html,line 19: Entity 'ldquo' not defined | line 19: Entity 'rdquo' not defined,7
-QUEST_Q1153.html,line 51: Entity 'ldquo' not defined | line 51: Entity 'rdquo' not defined,3
-QUEST_Q1170.html,line 52: Entity 'nbsp' not defined,7
-QUEST_Q1910.html,line 36: Entity 'ldquo' not defined | line 36: Entity 'rdquo' not defined,7
-QUEST_Q1911.html,line 18: Entity 'ldquo' not defined | line 18: Entity 'rdquo' not defined,8
-QUEST_Q2004.html,line 184: Entity 'ldquo' not defined | line 184: Entity 'rdquo' not defined,14
-QUEST_Q2042.html,line 161: Entity 'ldquo' not defined | line 161: Entity 'rdquo' not defined,14
-QUEST_Q2099.html,line 97: Entity 'ldquo' not defined | line 97: Entity 'rdquo' not defined | line 150: Entity 'nbsp' not defined,12
-QUEST_Q2345.html,line 156: Entity 'nbsp' not defined | line 177: Entity 'nbsp' not defined,16
-QUEST_Q3082.html,line 14: Entity 'ldquo' not defined | line 14: Entity 'rdquo' not defined,11
-quest_q3731.html,line 53: Entity 'mdash' not defined | line 53: Entity 'mdash' not defined,3
-QUEST_Q4011.html,line 33: Entity 'nbsp' not defined,8
-QUEST_Q4038.html,line 225: Entity 'rdquo' not defined,12
-QUEST_Q4702.html,line 166: Entity 'mdash' not defined | line 166: Entity 'mdash' not defined,7
-quest_q4731.html,line 55: Entity 'mdash' not defined | line 55: Entity 'mdash' not defined,3
-QUEST_Q9550.html,line 14: Opening and ending tag mismatch: P line 14 and p | line 29: Opening and ending tag mismatch: P line 29 and p | line 30: Opening and ending tag mismatch: P line 30 and p | line 31: Opening and ending tag mismatch: P line 31 and p | line 32: Opening and ending tag mismatch: P line 32 and p | line 33: Opening and ending tag mismatch: P line 33 and p | line 34: Opening and ending tag mismatch: P line 34 and p | line 52: Opening and ending tag mismatch: P line 52 and p | line 53: Opening and ending tag mismatch: P line 53 and p | line 72: Opening and ending tag mismatch: P line 72 and p | line 150: Opening and ending tag mismatch: P line 150 and p | line 186: Opening and ending tag mismatch: P line 186 and p | line 187: Opening and ending tag mismatch: P line 187 and p | line 189: Opening and ending tag mismatch: P line 189 and p | line 246: Opening and ending tag mismatch: P line 246 and p | line 248: Opening and ending tag mismatch: P line 248 and p,13
-unused/quest_q21223.html,empty file,0
+﻿source_file,diagnostic,recovered_page_occurrences,recovered_action_occurrences
+10000_19999/quest_q10522.html,line 68: Opening and ending tag mismatch: img line 68 and font | line 68: Opening and ending tag mismatch: img line 68 and p | line 71: Opening and ending tag mismatch: img line 71 and font | line 71: Opening and ending tag mismatch: font line 71 and p | line 74: Opening and ending tag mismatch: p line 71 and body | line 75: Opening and ending tag mismatch: font line 68 and html | line 76: Opening and ending tag mismatch: p line 68 and Contents | line 77: Opening and ending tag mismatch: body line 63 and HtmlPage | line 111: Opening and ending tag mismatch: html line 62 and HtmlPages,6,1
+10000_19999/quest_q10530.html,line 543: Opening and ending tag mismatch: p line 543 and font | line 543: Opening and ending tag mismatch: step line 543 and p | line 543: Opening and ending tag mismatch: steps line 534 and step | line 546: Opening and ending tag mismatch: body line 533 and steps | line 548: Opening and ending tag mismatch: html line 532 and body | line 549: Opening and ending tag mismatch: Contents line 531 and html | line 550: Opening and ending tag mismatch: HtmlPage line 530 and Contents | line 551: Opening and ending tag mismatch: HtmlPages line 1 and HtmlPage,30,26
+10000_19999/quest_q11341.html,line 68: Opening and ending tag mismatch: p line 68 and font | line 68: Opening and ending tag mismatch: body line 67 and p | line 71: Opening and ending tag mismatch: html line 66 and body | line 72: Opening and ending tag mismatch: Contents line 65 and html | line 73: Opening and ending tag mismatch: HtmlPage line 64 and Contents | line 74: Opening and ending tag mismatch: HtmlPages line 3 and HtmlPage,7,3
+10000_19999/quest_q11370.html,line 14: Opening and ending tag mismatch: p line 13 and body | line 15: Opening and ending tag mismatch: body line 8 and html | line 16: Opening and ending tag mismatch: html line 7 and Contents | line 21: Opening and ending tag mismatch: Contents line 6 and HtmlPage | line 92: Opening and ending tag mismatch: HtmlPage line 5 and HtmlPages,7,3
+10000_19999/quest_q11402.html,line 1: XML declaration allowed only at the start of the document,7,3
+10000_19999/quest_q14081.html,line 41: Entity 'ldquo' not defined | line 41: Entity 'rdquo' not defined,9,4
+10000_19999/quest_q14114.html,line 139: Entity 'ldquo' not defined | line 139: Entity 'rdquo' not defined,18,14
+20000_29999/quest_q20100.html,line 187: Entity 'ldquo' not defined | line 187: Entity 'rdquo' not defined | line 246: Entity 'ldquo' not defined | line 246: Entity 'rdquo' not defined | line 248: Entity 'ldquo' not defined | line 248: Entity 'rdquo' not defined,15,11
+20000_29999/quest_q20522.html,line 68: Opening and ending tag mismatch: img line 68 and font | line 68: Opening and ending tag mismatch: img line 68 and p | line 71: Opening and ending tag mismatch: img line 71 and font | line 71: Opening and ending tag mismatch: font line 71 and p | line 74: Opening and ending tag mismatch: p line 71 and body | line 75: Opening and ending tag mismatch: font line 68 and html | line 76: Opening and ending tag mismatch: p line 68 and Contents | line 77: Opening and ending tag mismatch: body line 63 and HtmlPage | line 111: Opening and ending tag mismatch: html line 62 and HtmlPages,6,1
+20000_29999/quest_q23810.html,line 39: Entity 'ldquo' not defined | line 39: Entity 'rdquo' not defined | line 59: Entity 'ldquo' not defined | line 59: Entity 'rdquo' not defined | line 61: Entity 'ldquo' not defined | line 61: Entity 'rdquo' not defined,7,3
+20000_29999/quest_q24042.html,line 162: Entity 'ldquo' not defined | line 162: Entity 'rdquo' not defined,14,9
+20000_29999/quest_q24071.html,line 184: Entity 'ldquo' not defined | line 184: Entity 'rdquo' not defined | line 287: Entity 'ldquo' not defined | line 287: Entity 'rdquo' not defined | line 452: Entity 'ldquo' not defined | line 452: Entity 'rdquo' not defined | line 470: Entity 'ldquo' not defined | line 470: Entity 'rdquo' not defined | line 489: Entity 'rdquo' not defined | line 489: Entity 'ldquo' not defined,32,27
+20000_29999/quest_q24081.html,line 43: Entity 'ldquo' not defined | line 43: Entity 'rdquo' not defined | line 144: Entity 'ldquo' not defined | line 144: Entity 'rdquo' not defined,12,7
+20000_29999/quest_q28395.html,line 130: Opening and ending tag mismatch: body line 125 and html | line 131: Opening and ending tag mismatch: html line 124 and Contents | line 132: Opening and ending tag mismatch: Contents line 123 and HtmlPage | line 179: Opening and ending tag mismatch: HtmlPage line 122 and HtmlPages,12,8
+30000_39999/quest_q30043.html,line 124: Opening and ending tag mismatch: p line 123 and body | line 125: Opening and ending tag mismatch: p line 123 and html | line 126: Opening and ending tag mismatch: body line 123 and Contents | line 127: Opening and ending tag mismatch: html line 122 and HtmlPage | line 141: Opening and ending tag mismatch: Contents line 121 and HtmlPages,10,6
+30000_39999/quest_q30143.html,line 123: Opening and ending tag mismatch: p line 122 and body | line 124: Opening and ending tag mismatch: p line 122 and html | line 125: Opening and ending tag mismatch: body line 122 and Contents | line 126: Opening and ending tag mismatch: html line 121 and HtmlPage | line 140: Opening and ending tag mismatch: Contents line 120 and HtmlPages,10,6
+50000_59999/quest_q50064.html,line 10: Entity 'mdash' not defined | line 10: Entity 'mdash' not defined,10,6
+50000_59999/quest_q51064.html,line 10: Entity 'mdash' not defined | line 10: Entity 'mdash' not defined,10,6
+80000-84999/QUEST_Q80269.html,line 88: Entity 'ldquo' not defined | line 88: Entity 'rdquo' not defined | line 92: Entity 'ldquo' not defined | line 92: Entity 'rdquo' not defined,10,6
+80000-84999/QUEST_Q80271.html,line 88: Entity 'ldquo' not defined | line 88: Entity 'rdquo' not defined | line 92: Entity 'ldquo' not defined | line 92: Entity 'rdquo' not defined,10,6
+80000-84999/quest_q80554.html,line 13: EntityRef: expecting ';',8,3
+80000-84999/quest_q80558.html,line 13: EntityRef: expecting ';',8,3
+80000-84999/quest_q80895.html,line 50: Opening and ending tag mismatch: p line 50 and body | line 51: Opening and ending tag mismatch: body line 47 and html | line 52: Opening and ending tag mismatch: html line 46 and Contents | line 53: Opening and ending tag mismatch: Contents line 45 and HtmlPage | line 93: Opening and ending tag mismatch: HtmlPage line 44 and HtmlPages,7,3
+80000-84999/quest_q80897.html,line 17: Opening and ending tag mismatch: p line 15 and body | line 18: Opening and ending tag mismatch: body line 14 and html | line 19: Opening and ending tag mismatch: html line 13 and Contents | line 24: Opening and ending tag mismatch: Contents line 12 and HtmlPage | line 47: Opening and ending tag mismatch: p line 47 and body | line 48: Opening and ending tag mismatch: body line 44 and html | line 49: Opening and ending tag mismatch: html line 43 and Contents | line 50: Opening and ending tag mismatch: Contents line 42 and HtmlPage | line 90: Opening and ending tag mismatch: HtmlPage line 41 and HtmlPages,7,3
+80000-84999/quest_q80925.html,line 65: Opening and ending tag mismatch: p line 63 and body | line 66: Opening and ending tag mismatch: p line 63 and html | line 67: Opening and ending tag mismatch: body line 62 and Contents | line 71: Opening and ending tag mismatch: html line 61 and HtmlPage | line 139: Opening and ending tag mismatch: Contents line 60 and HtmlPages,10,6
+80000-84999/quest_q80926.html,line 65: Opening and ending tag mismatch: p line 63 and body | line 66: Opening and ending tag mismatch: p line 63 and html | line 67: Opening and ending tag mismatch: body line 62 and Contents | line 71: Opening and ending tag mismatch: html line 61 and HtmlPage | line 139: Opening and ending tag mismatch: Contents line 60 and HtmlPages,10,6
+80000-84999/QUEST_Q80979.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,10,6
+80000-84999/QUEST_Q80980.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,10,6
+80000-84999/QUEST_Q80981.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,10,6
+80000-84999/QUEST_Q80982.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,10,6
+80000-84999/QUEST_Q80983.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,10,6
+80000-84999/QUEST_Q80984.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,10,6
+80000-84999/QUEST_Q80985.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,10,6
+80000-84999/QUEST_Q80986.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,10,6
+80000-84999/QUEST_Q80987.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,10,6
+80000-84999/QUEST_Q80988.html,line 10: Entity 'ldquo' not defined | line 10: Entity 'rdquo' not defined,10,6
+QUEST_Q1023.html,line 106: Entity 'ldquo' not defined | line 106: Entity 'rdquo' not defined,16,11
+QUEST_Q1044.html,line 159: Entity 'ldquo' not defined | line 159: Entity 'rdquo' not defined,16,14
+QUEST_Q1071.html,line 84: Entity 'nbsp' not defined | line 105: Entity 'nbsp' not defined | line 168: Entity 'nbsp' not defined,21,22
+QUEST_Q1072.html,line 88: Entity 'mdash' not defined | line 88: Entity 'mdash' not defined,20,16
+QUEST_Q1097.html,line 97: Entity 'mdash' not defined | line 97: Entity 'mdash' not defined,14,10
+QUEST_Q1107.html,line 12: Entity 'ldquo' not defined | line 12: Entity 'rdquo' not defined | line 14: Entity 'ldquo' not defined | line 14: Entity 'rdquo' not defined | line 46: Entity 'ldquo' not defined | line 46: Entity 'rdquo' not defined | line 76: Entity 'ldquo' not defined | line 76: Entity 'rdquo' not defined,7,2
+QUEST_Q1110.html,line 135: Entity 'ldquo' not defined | line 135: Entity 'rdquo' not defined,10,6
+QUEST_Q1111.html,line 33: Entity 'ldquo' not defined | line 33: Entity 'rdquo' not defined | line 135: Entity 'nbsp' not defined,18,14
+QUEST_Q1135.html,line 37: Entity 'ldquo' not defined | line 37: Entity 'rdquo' not defined,11,7
+QUEST_Q1138.html,line 19: Entity 'ldquo' not defined | line 19: Entity 'rdquo' not defined,11,7
+QUEST_Q1153.html,line 51: Entity 'ldquo' not defined | line 51: Entity 'rdquo' not defined,7,3
+QUEST_Q1170.html,line 52: Entity 'nbsp' not defined,10,7
+QUEST_Q1910.html,line 36: Entity 'ldquo' not defined | line 36: Entity 'rdquo' not defined,11,7
+QUEST_Q1911.html,line 18: Entity 'ldquo' not defined | line 18: Entity 'rdquo' not defined,12,8
+QUEST_Q2004.html,line 184: Entity 'ldquo' not defined | line 184: Entity 'rdquo' not defined,19,14
+QUEST_Q2042.html,line 161: Entity 'ldquo' not defined | line 161: Entity 'rdquo' not defined,16,14
+QUEST_Q2099.html,line 97: Entity 'ldquo' not defined | line 97: Entity 'rdquo' not defined | line 150: Entity 'nbsp' not defined,16,12
+QUEST_Q2345.html,line 156: Entity 'nbsp' not defined | line 177: Entity 'nbsp' not defined,19,16
+QUEST_Q3082.html,line 14: Entity 'ldquo' not defined | line 14: Entity 'rdquo' not defined,15,11
+quest_q3731.html,line 53: Entity 'mdash' not defined | line 53: Entity 'mdash' not defined,7,3
+QUEST_Q4011.html,line 33: Entity 'nbsp' not defined,12,8
+QUEST_Q4038.html,line 225: Entity 'rdquo' not defined,16,12
+QUEST_Q4702.html,line 166: Entity 'mdash' not defined | line 166: Entity 'mdash' not defined,11,7
+quest_q4731.html,line 55: Entity 'mdash' not defined | line 55: Entity 'mdash' not defined,7,3
+QUEST_Q9550.html,line 14: Opening and ending tag mismatch: P line 14 and p | line 29: Opening and ending tag mismatch: P line 29 and p | line 30: Opening and ending tag mismatch: P line 30 and p | line 31: Opening and ending tag mismatch: P line 31 and p | line 32: Opening and ending tag mismatch: P line 32 and p | line 33: Opening and ending tag mismatch: P line 33 and p | line 34: Opening and ending tag mismatch: P line 34 and p | line 52: Opening and ending tag mismatch: P line 52 and p | line 53: Opening and ending tag mismatch: P line 53 and p | line 72: Opening and ending tag mismatch: P line 72 and p | line 150: Opening and ending tag mismatch: P line 150 and p | line 186: Opening and ending tag mismatch: P line 186 and p | line 187: Opening and ending tag mismatch: P line 187 and p | line 189: Opening and ending tag mismatch: P line 189 and p | line 246: Opening and ending tag mismatch: P line 246 and p | line 248: Opening and ending tag mismatch: P line 248 and p,17,13
+unused/quest_q21223.html,empty file,0,0

@@ -52,6 +52,7 @@ class QuestXmlDomainBlocksTest {
 			""";
 		String expanded = """
 			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="4762"/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-id="4763"/></event><after-commit><show-quest-dialog dialog-id="4763"/></after-commit></transition>
 			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
 			<transition source="unaccepted" target="started"><event><talk-to-npc npc-id="834166" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
 			<transition source="unaccepted" target="started"><event><talk-to-npc npc-id="834166" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
@@ -438,12 +439,26 @@ class QuestXmlDomainBlocksTest {
 	}
 
 	@Test
+	void npcReportSupportsRewardStatePreparedBeforeTheDialog() {
+		String preparation = "<transition source=\"started\" target=\"reward\"><event><kill-npc npc-id=\"210001\"/></event></transition>";
+		String block = preparation
+			+ "<npc-report npc-id=\"203941\" source=\"reward\" target=\"reward\" page=\"10002\"/>";
+		String expanded = """
+			%s
+			<transition source="reward" target="reward"><event><talk-to-npc npc-id="203941" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
+			<transition source="reward" target="reward"><event><talk-to-npc npc-id="203941" dialog-id="1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
+			""".formatted(preparation);
+
+		assertEquals(compile(reportDefinition(block)).definition(), compile(reportDefinition(expanded)).definition());
+	}
+
+	@Test
 	void npcReportRejectsInvalidPagesAndStatuses() {
 		String valid = reportDefinition(
 			"<npc-report npc-id=\"203941\" source=\"started\" target=\"reward\" page=\"1352\"/>");
 		assertCode("NPC_REPORT_INVALID_PAGE", valid.replace("page=\"1352\"", "page=\"2716\""));
 		assertCode("NPC_REPORT_SOURCE_STATUS", valid.replace("label=\"started\" status=\"START\"",
-			"label=\"started\" status=\"REWARD\""));
+			"label=\"started\" status=\"COMPLETE\""));
 		assertCode("NPC_REPORT_TARGET_STATUS", valid.replace("label=\"reward\" status=\"REWARD\"",
 			"label=\"reward\" status=\"START\""));
 	}

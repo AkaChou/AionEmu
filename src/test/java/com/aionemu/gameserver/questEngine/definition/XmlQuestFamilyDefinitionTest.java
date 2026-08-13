@@ -23,14 +23,18 @@ class XmlQuestFamilyDefinitionTest {
 		CompiledQuestDefinition compiled = definition("1115.xml");
 		List<QuestTransition> transitions = compiled.definition().transitions();
 
-		// Accept at 203075, then step to v1 at 203072, then reward at 203058.
-		assertTrue(talk(transitions, "started", 203072, 10000, "v1") != null);
-		assertTrue(talk(transitions, "v1", 203058, 1009, "reward") != null);
+		// The only report step reaches REWARD; the end NPC then opens the reward preview directly.
+		QuestTransition progress = talk(transitions, "started", 203072, 10000, "reward");
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestSelectionDialog(10)), progress.afterCommit());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(5)),
+			talk(transitions, "reward", 203058, 1009, "reward").afterCommit());
 		assertTrue(talk(transitions, "unaccepted", 203072, 31, "unaccepted") != null);
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1352)),
 			talk(transitions, "started", 203072, 31, "started").afterCommit());
 
-		assertEquals(1, varsOf(compiled, "reward").get("var0"));
+		assertEquals(0, varsOf(compiled, "reward").get("var0"));
 		List<QuestAction> rewardActions = completions(transitions, "reward");
 		assertTrue(rewardActions.contains(new QuestAction.GrantReward("GOLD", 0, 680, QuestRewardAmountMode.QUEST_BASE)));
 		assertTrue(rewardActions.contains(new QuestAction.GrantReward("EXP", 0, 2673, QuestRewardAmountMode.QUEST_BASE)));

@@ -22,11 +22,8 @@
     <node label="s1" status="START">
       <var name="var0" value="1"/>
     </node>
-    <node label="s2" status="START">
-      <var name="var0" value="2"/>
-    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="2"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -48,7 +45,7 @@
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <close-dialog/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s1">
@@ -59,16 +56,15 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
-    <transition source="s1" target="s2">
+    <transition source="s1" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203701" action="SETPRO2"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <close-dialog/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="798500" source="s2" target="reward" page="SELECT5"/>
     <npc-complete npc-id="798500" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

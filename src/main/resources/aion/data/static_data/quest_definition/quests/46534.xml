@@ -102,7 +102,7 @@
     <counter-grid>
       <dimension field="var0" required="1" npc-ids="220048"/>
     </counter-grid>
-    <dialog type="NPC_REPORT" npc-id="804956" source="k1" target="reward" page="SELECT2"/>
+    <dialog type="NPC_REPORT" npc-id="804956" source="k1" target="reward" page="DEFAULT_SUCCESS"/>
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="804956" actions="USE_OBJECT SELECT_QUEST_REWARD"/>

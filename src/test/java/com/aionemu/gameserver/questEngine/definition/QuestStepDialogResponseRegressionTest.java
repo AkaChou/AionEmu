@@ -11,10 +11,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class QuestStepDialogResponseRegressionTest {
 	@Test
 	void stepDialogsPreserveTheirLegacyTerminalResponses() {
-		QuestTransition elimMessage = route(1115, "started", "v1", 203072, 10000);
+		QuestTransition elimMessage = route(1115, "started", "reward", 203072, 10000);
 		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-			new AfterCommitAction.ShowDialogWindow(1352)), elimMessage.afterCommit());
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestSelectionDialog(10)), elimMessage.afterCommit());
 
 		QuestTransition undeliveredArmor = route(1131, "started", "shugo", 799093, 10000);
 		assertEquals(List.of(

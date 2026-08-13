@@ -54,6 +54,102 @@ class QuestStartEligibilityContractTest {
 	}
 
 	@Test
+	void repeatableQuestsRestoreEverySideEffectFreeAcquisitionDialogStep() {
+		String xml = """
+
+				<quest-definition id="900002" version="1">
+				  <metadata name="repeat-dialog" display-name-id="0" min-level="1" max-level="2147483647" category="QUEST">
+				    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL"/>
+				  </metadata>
+				  <progress>
+				    <bit-field name="step" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+				  </progress>
+				  <nodes>
+				    <node label="unaccepted" status="NONE"/>
+				    <node label="started" status="START"/>
+				    <node label="complete" status="COMPLETE"/>
+				  </nodes>
+				  <transitions>
+				    <transition source="unaccepted" target="unaccepted">
+				      <event><dialog type="TALK_TO_NPC" npc-id="100001" action="QUEST_SELECT"/></event>
+				      <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT1"/></after-commit>
+				    </transition>
+				    <transition source="unaccepted" target="unaccepted">
+				      <event><dialog type="TALK_TO_NPC" npc-id="100001" action="SELECT1_1"/></event>
+				      <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/></after-commit>
+				    </transition>
+				    <transition source="unaccepted" target="unaccepted">
+				      <event><dialog type="TALK_TO_NPC" npc-id="100001" action="QUEST_REFUSE_SIMPLE"/></event>
+				      <after-commit><close-dialog/></after-commit>
+				    </transition>
+				    <transition source="unaccepted" target="started">
+				      <event><dialog type="TALK_TO_NPC" npc-id="100001" action="QUEST_ACCEPT_SIMPLE"/></event>
+				      <conditions><start-eligible/></conditions>
+				    </transition>
+				    <transition source="started" target="complete">
+				      <event><dialog type="TALK_TO_NPC" npc-id="100001" action="FINISH_DIALOG"/></event>
+				      <actions><complete-quest reward-index="0"/></actions>
+				      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
+				    </transition>
+				  </transitions>
+				</quest-definition>
+
+			""";
+
+		List<QuestTransition> transitions = compile(xml).definition().transitions();
+		for (int action : List.of(QuestDialogAction.QUEST_SELECT.id(), QuestDialogAction.SELECT1_1.id(),
+				QuestDialogAction.QUEST_REFUSE_SIMPLE.id())) {
+			QuestTransition repeated = transitions.stream()
+				.filter(transition -> "complete".equals(transition.sourceNode())
+					&& "complete".equals(transition.targetNode()))
+				.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+					&& talk.npcId() == 100001 && Integer.valueOf(action).equals(talk.dialogId()))
+				.findFirst().orElseThrow();
+			assertEquals(List.of(new QuestCondition.StartEligible()), repeated.conditions());
+			assertEquals(List.of(), repeated.actions());
+		}
+	}
+
+	@Test
+	void repeatableQuestsDoNotRestoreAcquisitionRoutesWithPostCommitSideEffects() {
+		String xml = """
+
+				<quest-definition id="900003" version="1">
+				  <metadata name="repeat-dialog-side-effect" display-name-id="0" min-level="1" max-level="2147483647" category="QUEST">
+				    <repeat max-repeat-count="255" cooldown-seconds="0" daily="true" weekly="false" cycles="ALL"/>
+				  </metadata>
+				  <progress/>
+				  <nodes>
+				    <node label="unaccepted" status="NONE"/>
+				    <node label="started" status="START"/>
+				    <node label="complete" status="COMPLETE"/>
+				  </nodes>
+				  <transitions>
+				    <transition source="unaccepted" target="unaccepted">
+				      <event><dialog type="TALK_TO_NPC" npc-id="100001" action="QUEST_SELECT"/></event>
+				      <after-commit><teleport-player-current-or-default world-id="210010000" x="1" y="2" z="3" heading="4"/></after-commit>
+				    </transition>
+				    <transition source="unaccepted" target="started">
+				      <event><dialog type="TALK_TO_NPC" npc-id="100001" action="QUEST_ACCEPT_SIMPLE"/></event>
+				      <conditions><start-eligible/></conditions>
+				    </transition>
+				    <transition source="started" target="complete">
+				      <event><dialog type="TALK_TO_NPC" npc-id="100001" action="FINISH_DIALOG"/></event>
+				      <actions><complete-quest reward-index="0"/></actions>
+				      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
+				    </transition>
+				  </transitions>
+				</quest-definition>
+
+			""";
+
+		assertFalse(compile(xml).definition().transitions().stream()
+			.anyMatch(transition -> "complete".equals(transition.sourceNode())
+				&& transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == 100001 && talk.dialogId() == QuestDialogAction.QUEST_SELECT.id()));
+	}
+
+	@Test
 	void archdaevaCapitalStartsHonorTheirLevelSixtyFiveGate() throws Exception {
 		assertCapitalStart(10520, 110010000);
 		assertCapitalStart(20520, 120010000);

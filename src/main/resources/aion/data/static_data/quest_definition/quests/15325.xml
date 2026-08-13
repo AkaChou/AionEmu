@@ -34,7 +34,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="805331" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="805331" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-ids="215768 215769 215770 215771 215772 215773 215774 215775 215776 215777 215778 215779 217043 217044 217045 217046 217047 217048 217049 217050 217051 217052 217053 217054 217055 217056 217057 217059 217060 217061 217062 217063 217064 216436 216437"/>

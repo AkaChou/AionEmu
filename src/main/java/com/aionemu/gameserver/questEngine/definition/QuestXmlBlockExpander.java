@@ -170,6 +170,9 @@ final class QuestXmlBlockExpander {
 		if (startDialogId == QuestDialogPage.SELECT1.id()) {
 			result.add(talk(npcId, QuestDialogAction.SELECT1_1.id(), List.of(), List.of(), source, source, null,
 				List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1_1.id()))));
+		} else if (startDialogId == QuestDialogPage.SELECT_NONE.id()) {
+			result.add(talk(npcId, QuestDialogAction.SELECT_NONE_1.id(), List.of(), List.of(), source, source, null,
+				List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT_NONE_1.id()))));
 		}
 		result.add(talk(npcId, QuestDialogAction.ASK_QUEST_ACCEPT.id(), List.of(), List.of(), source, source, null,
 			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id()))));
@@ -230,9 +233,10 @@ final class QuestXmlBlockExpander {
 		String target = attribute(block, "target");
 		QuestNode sourceNode = requireNode(context, "npc-report", "source", source);
 		QuestNode targetNode = requireNode(context, "npc-report", "target", target);
-		if (sourceNode.projection().status() != QuestStatus.START) {
+		if (sourceNode.projection().status() != QuestStatus.START
+				&& sourceNode.projection().status() != QuestStatus.REWARD) {
 			fail("NPC_REPORT_SOURCE_STATUS", context, "npc-report", "source",
-				"node " + source + " must project START");
+				"node " + source + " must project START or REWARD");
 		}
 		if (targetNode.projection().status() != QuestStatus.REWARD) {
 			fail("NPC_REPORT_TARGET_STATUS", context, "npc-report", "target",
@@ -247,12 +251,17 @@ final class QuestXmlBlockExpander {
 			fail("NPC_REPORT_INVALID_PAGE", context, "npc-report", "page",
 				"must be SELECT2, SELECT5, or DEFAULT_SUCCESS");
 		}
+		List<AfterCommitAction> rewardAfterCommit = new ArrayList<>();
+		if (!source.equals(target)) {
+			rewardAfterCommit.add(syncQuestState(targetNode));
+		}
+		rewardAfterCommit.add(new AfterCommitAction.ShowQuestDialog(
+			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()));
 		return List.of(
 			talk(npcId, QuestDialogAction.QUEST_SELECT.id(), List.of(), List.of(), source, source, null,
 				List.of(new AfterCommitAction.ShowQuestDialog(page))),
 			talk(npcId, QuestDialogAction.SELECT_QUEST_REWARD.id(), List.of(), List.of(), source, target, null,
-				List.of(syncQuestState(targetNode),
-					new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()))));
+				List.copyOf(rewardAfterCommit)));
 	}
 
 	private static List<QuestTransition> expandNpcItemReport(Context context, Element block) {

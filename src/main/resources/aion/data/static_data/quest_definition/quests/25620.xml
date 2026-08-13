@@ -32,7 +32,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="806171" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="806171" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806171" action="QUEST_SELECT"/>

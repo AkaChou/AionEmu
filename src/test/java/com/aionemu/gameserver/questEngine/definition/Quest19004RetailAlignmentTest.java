@@ -38,11 +38,15 @@ class Quest19004RetailAlignmentTest {
 		assertTrue(transitions.stream().anyMatch(transition ->
 			transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 203701 && Integer.valueOf(10001).equals(talk.dialogId())
-				&& "s1".equals(transition.sourceNode()) && "s2".equals(transition.targetNode())));
+				&& "s1".equals(transition.sourceNode()) && "reward".equals(transition.targetNode())
+				&& transition.afterCommit().equals(List.of(
+					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+					new AfterCommitAction.ShowQuestSelectionDialog(10)))));
 		assertTrue(transitions.stream().anyMatch(transition ->
 			transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 798500 && Integer.valueOf(1009).equals(talk.dialogId())
-				&& "s2".equals(transition.sourceNode()) && "reward".equals(transition.targetNode())));
+				&& "reward".equals(transition.sourceNode()) && "reward".equals(transition.targetNode())
+				&& transition.afterCommit().equals(List.of(new AfterCommitAction.ShowQuestDialog(5)))));
 		assertTrue(transitions.stream().anyMatch(transition ->
 			transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 203752 && Integer.valueOf(31).equals(talk.dialogId())
@@ -51,10 +55,10 @@ class Quest19004RetailAlignmentTest {
 			transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 203701 && Integer.valueOf(31).equals(talk.dialogId())
 				&& transition.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(1693))));
-		assertTrue(transitions.stream().anyMatch(transition ->
+		assertTrue(transitions.stream().noneMatch(transition ->
 			transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 798500 && Integer.valueOf(31).equals(talk.dialogId())
-				&& transition.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(2375))));
+				&& "reward".equals(transition.sourceNode())));
 		assertTrue(transitions.stream().anyMatch(transition ->
 			"reward".equals(transition.sourceNode()) && "complete".equals(transition.targetNode())
 				&& transition.actions().contains(new QuestAction.GrantReward("GOLD", 0, 9830, QuestRewardAmountMode.QUEST_BASE))

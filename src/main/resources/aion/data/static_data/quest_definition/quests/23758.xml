@@ -30,7 +30,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="805291" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="805291" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <counter source="started" target="reward" field="var1" required="5">
       <event>
         <kill-npc npc-ids="235366 235367"/>
@@ -39,11 +39,11 @@
     <npc-complete npc-id="805291" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="805292" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="805292" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <npc-complete npc-id="805292" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="805293" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="805293" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <npc-complete npc-id="805293" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

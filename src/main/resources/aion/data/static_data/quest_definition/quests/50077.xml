@@ -29,7 +29,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="835578" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="835578" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-ids="241815 241816 241817 241818 241819 241820 241821 241822 241823 241743 241744 241745 241746 241747 241748 241749 241750 241751 242667 242671 242675 242679 242683 242687 242691 242695 242699 242703 242707 242711 242715 242719 242723 242807 242811 242815 242819 242823 242827 242831 242835 242839 242843 242847 242851 242855 242859 242863 243207 243211 243215 243219 243223 243227 243231 243235 243239 243243 243247 243251 243255 243259 243263 241776 241777 241778 241779 241780 241781 241782 241783 241784 241785 241786 241787 243007 243011 243015 243019 243023 243027 243031 243035 243039 243043 243047 243051 243055 243059 243063"/>
@@ -58,7 +58,7 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="835578" source="started" target="reward" page="SELECT2"/>
+    <dialog type="NPC_REPORT" npc-id="835578" source="started" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="835578" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

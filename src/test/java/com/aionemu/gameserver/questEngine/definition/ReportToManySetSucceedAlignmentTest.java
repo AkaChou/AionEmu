@@ -64,6 +64,36 @@ class ReportToManySetSucceedAlignmentTest {
 		}
 	}
 
+	@Test
+	void completedReportToManyStepsOpenTheRewardSelectionDirectly() throws Exception {
+		for (CompletedQuest quest : List.of(
+			new CompletedQuest(1115, "started", 203072, 10000, 203058),
+			new CompletedQuest(3201, "started", 804601, 10000, 204534),
+			new CompletedQuest(4201, "started", 205233, 10000, 204791),
+			new CompletedQuest(19004, "s1", 203701, 10001, 798500),
+			new CompletedQuest(39000, "started", 800501, 10000, 800500))) {
+			QuestDefinition definition = compile(quest.id());
+			QuestTransition progress = route(definition, quest.source(), quest.stepNpcId(),
+				quest.progressDialogId(), null);
+
+			assertEquals("reward", progress.targetNode(), "quest " + quest.id() + " final target");
+			assertTrue(progress.actions().isEmpty(), "quest " + quest.id() + " final actions");
+			assertEquals(List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestSelectionDialog(10)), progress.afterCommit(),
+				"quest " + quest.id() + " final protocol");
+			assertTrue(dialogNpcs(definition, "reward", 31).isEmpty(),
+				"quest " + quest.id() + " must not insert a report page after reaching REWARD");
+
+			for (int dialogId : List.of(-1, 1009)) {
+				QuestTransition preview = route(definition, "reward", quest.endNpcId(), dialogId, null);
+				assertEquals("reward", preview.targetNode(), "quest " + quest.id() + " preview target");
+				assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(5)), preview.afterCommit(),
+					"quest " + quest.id() + " reward preview");
+			}
+		}
+	}
+
 	private static void assertOrderedQuest(OrderedQuest quest) throws Exception {
 		QuestDefinition definition = compile(quest.id());
 		assertEquals(List.of(quest.startNpcId()), dialogNpcs(definition, "unaccepted", 31),
@@ -141,6 +171,9 @@ class ReportToManySetSucceedAlignmentTest {
 	}
 
 	private record OrderedQuest(int id, int startNpcId, int endNpcId, List<Step> steps) {
+	}
+
+	private record CompletedQuest(int id, String source, int stepNpcId, int progressDialogId, int endNpcId) {
 	}
 
 	private record Step(int npcId, int pageId) {

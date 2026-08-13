@@ -29,7 +29,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="264798" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="264798" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-ids="214733 214734 214735 214736 214737 214738 214739 214803"/>
@@ -59,7 +59,7 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="264798" source="started" target="reward" page="SELECT2"/>
+    <dialog type="NPC_REPORT" npc-id="264798" source="started" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="264798" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

@@ -71,7 +71,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="805736" source="unaccepted" target="a0b0c0" selection-sources="unaccepted a0b0c0" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="805736" source="unaccepted" target="a0b0c0" selection-sources="unaccepted a0b0c0" start-page="SELECT_NONE"/>
     <counter-grid>
       <dimension field="var0" required="1" npc-ids="213775"/>
       <dimension field="var1" required="1" npc-ids="213780"/>

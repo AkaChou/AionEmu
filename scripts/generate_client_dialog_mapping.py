@@ -8,6 +8,7 @@ import hashlib
 import html
 import json
 import re
+import tempfile
 import xml.etree.ElementTree as ET
 from collections import Counter, defaultdict
 from dataclasses import dataclass
@@ -22,6 +23,20 @@ except ImportError:
 
 ACTION_PATTERN = re.compile(r"\bHACTION_[A-Z0-9_]+\b", re.IGNORECASE)
 QUEST_FILE_PATTERN = re.compile(r"^quest_q(\d+)\.html$", re.IGNORECASE)
+DEFAULT_CLIENT_ROOT = Path("/Users/mc/IdeaProjects/5.8客户端")
+OUTPUT_FILES = (
+    "client-hyperlinks.csv",
+    "client-html-pages.csv",
+    "same-id-map.csv",
+    "same-symbol-map.csv",
+    "quest-dialog-pages.csv",
+    "quest-dialog-action-details.csv",
+    "page-action-map.csv",
+    "quest-action-summary.csv",
+    "parse-errors.csv",
+    "parse-recoveries.csv",
+    "mapping-summary.json",
+)
 HTML_PAGE_START_PATTERN = re.compile(
     r"<HtmlPage\b[^>]*\bname\s*=\s*(?P<quote>['\"])(?P<name>.*?)"
     r"(?P=quote)[^>]*>",
@@ -56,12 +71,25 @@ class ActionOccurrence:
     quest_id: int
     source_file: str
     source_variant: str
+    source_sha256: str
+    page_order: int
     html_page_name: str
     select_index: int
     token_index: int
     href: str
     action_constant: str
     button_text_zh: str
+
+
+@dataclass(frozen=True)
+class PageOccurrence:
+    quest_id: int
+    source_file: str
+    source_variant: str
+    source_sha256: str
+    page_order: int
+    html_page_name: str
+    action_count: int
 
 
 def parse_args() -> argparse.Namespace:
@@ -85,6 +113,29 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=Path("docs/quest/client-dialog-mapping"),
         help="Directory where CSV and summary files are written.",
+    )
+    parser.add_argument(
+        "--dialogs-pak",
+        type=Path,
+        default=DEFAULT_CLIENT_ROOT / "data/Dialogs/Dialogs.pak",
+        help="Authoritative client package containing HyperLinks.xml and HtmlPages.xml.",
+    )
+    parser.add_argument(
+        "--chs-data-pak",
+        type=Path,
+        default=DEFAULT_CLIENT_ROOT / "L10N/CHS/Data/data.pak",
+        help="Authoritative Chinese localization package containing quest HTML.",
+    )
+    parser.add_argument(
+        "--quest-pak",
+        type=Path,
+        default=DEFAULT_CLIENT_ROOT / "data/Quest/Quest.pak",
+        help="Authoritative client quest-data package recorded with the audit evidence.",
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Fail if the generated files differ without modifying the output directory.",
     )
     return parser.parse_args()
 
@@ -168,19 +219,22 @@ def parse_quest_document(path: Path) -> tuple[object | None, str]:
 
 def parse_quest_file(
     path: Path, root: Path
-) -> tuple[list[ActionOccurrence], str]:
+) -> tuple[list[PageOccurrence], list[ActionOccurrence], str]:
     match = QUEST_FILE_PATTERN.match(path.name)
     if match is None:
-        return [], ""
+        return [], [], ""
 
     quest_id = int(match.group(1))
     relative_path = path.relative_to(root).as_posix()
     variant = "unused" if "unused" in {part.lower() for part in path.parts} else "active"
     document, recovery_diagnostic = parse_quest_document(path)
     if document is None:
-        return [], recovery_diagnostic or "empty document"
+        return [], [], recovery_diagnostic or "empty document"
     source = path.read_text(encoding="utf-8-sig")
+    source_sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
     occurrences = []
+    page_rows: list[tuple[int, str]] = []
+    page_action_counts: Counter[int] = Counter()
 
     events = [
         (match.start(), "page", match)
@@ -190,10 +244,13 @@ def parse_quest_file(
         (match.start(), "action", match) for match in ACT_ELEMENT_PATTERN.finditer(source)
     )
     page_name = ""
+    page_order = 0
     select_index = 0
     for _, event_type, match in sorted(events, key=lambda item: item[0]):
         if event_type == "page":
             page_name = html.unescape(match.group("name")).strip()
+            page_order += 1
+            page_rows.append((page_order, page_name))
             select_index = 0
             continue
 
@@ -205,12 +262,15 @@ def parse_quest_file(
         if not constants:
             continue
         select_index += 1
+        page_action_counts[page_order] += 1
         for token_index, constant in enumerate(constants, start=1):
             occurrences.append(
                 ActionOccurrence(
                     quest_id=quest_id,
                     source_file=relative_path,
                     source_variant=variant,
+                    source_sha256=source_sha256,
+                    page_order=page_order,
                     html_page_name=page_name,
                     select_index=select_index,
                     token_index=token_index,
@@ -219,7 +279,19 @@ def parse_quest_file(
                     button_text_zh=normalized_source_text(match.group("body")),
                 )
             )
-    return occurrences, recovery_diagnostic
+    pages = [
+        PageOccurrence(
+            quest_id=quest_id,
+            source_file=relative_path,
+            source_variant=variant,
+            source_sha256=source_sha256,
+            page_order=order,
+            html_page_name=name,
+            action_count=page_action_counts[order],
+        )
+        for order, name in page_rows
+    ]
+    return pages, occurrences, recovery_diagnostic
 
 
 def discover_quest_files(root: Path) -> list[Path]:
@@ -280,6 +352,23 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def active_quest_html_manifest(root: Path) -> tuple[int, str]:
+    rows = []
+    for path in discover_quest_files(root):
+        if "unused" in {part.lower() for part in path.parts}:
+            continue
+        rows.append(
+            (
+                path.relative_to(root).as_posix().lower(),
+                sha256(path),
+            )
+        )
+    payload = "".join(
+        f"{relative_path}\0{digest}\n" for relative_path, digest in rows
+    ).encode("utf-8")
+    return len(rows), hashlib.sha256(payload).hexdigest()
+
+
 def limited_join(values: Iterable[str], limit: int = 5) -> str:
     unique_values = []
     seen = set()
@@ -293,15 +382,23 @@ def limited_join(values: Iterable[str], limit: int = 5) -> str:
     return " | ".join(unique_values)
 
 
-def main() -> None:
-    args = parse_args()
+def generate(args: argparse.Namespace, output_dir: Path) -> dict[str, object]:
     definitions_dir = args.definitions_dir.resolve()
     zh_dialogs_dir = args.zh_dialogs_dir.resolve()
-    output_dir = args.output_dir.resolve()
     hyperlinks_path = definitions_dir / "HyperLinks.xml"
     html_pages_path = definitions_dir / "HtmlPages.xml"
+    dialogs_pak = args.dialogs_pak.resolve()
+    chs_data_pak = args.chs_data_pak.resolve()
+    quest_pak = args.quest_pak.resolve()
 
-    for required_path in (hyperlinks_path, html_pages_path, zh_dialogs_dir):
+    for required_path in (
+        hyperlinks_path,
+        html_pages_path,
+        zh_dialogs_dir,
+        dialogs_pak,
+        chs_data_pak,
+        quest_pak,
+    ):
         if not required_path.exists():
             raise FileNotFoundError(required_path)
 
@@ -315,20 +412,26 @@ def main() -> None:
     page_stems = grouped_by(pages, "constant", lambda value: symbol_stem(value.upper()))
 
     quest_files = discover_quest_files(zh_dialogs_dir)
+    active_html_files, active_html_manifest_sha256 = active_quest_html_manifest(
+        zh_dialogs_dir
+    )
+    page_occurrences = []
     occurrences = []
     parse_errors = []
     parse_recoveries = []
     for quest_file in quest_files:
         try:
-            file_occurrences, recovery_diagnostic = parse_quest_file(
+            file_pages, file_occurrences, recovery_diagnostic = parse_quest_file(
                 quest_file, zh_dialogs_dir
             )
+            page_occurrences.extend(file_pages)
             occurrences.extend(file_occurrences)
             if recovery_diagnostic:
                 parse_recoveries.append(
                     {
                         "source_file": quest_file.relative_to(zh_dialogs_dir).as_posix(),
                         "diagnostic": recovery_diagnostic,
+                        "recovered_page_occurrences": len(file_pages),
                         "recovered_action_occurrences": len(file_occurrences),
                     }
                 )
@@ -421,6 +524,40 @@ def main() -> None:
         symbol_rows,
     )
 
+    quest_page_rows = []
+    for occurrence in page_occurrences:
+        page_matches = pages_by_name.get(occurrence.html_page_name.lower(), [])
+        quest_page_rows.append(
+            {
+                "quest_id": occurrence.quest_id,
+                "source_file": occurrence.source_file,
+                "source_variant": occurrence.source_variant,
+                "source_sha256": occurrence.source_sha256,
+                "page_order": occurrence.page_order,
+                "html_page_name": occurrence.html_page_name,
+                "page_id": joined_ids(page_matches, "page_id"),
+                "page_constant": joined_values(page_matches, "constant"),
+                "page_mapping": mapping_status(page_matches),
+                "action_count": occurrence.action_count,
+            }
+        )
+    write_csv(
+        output_dir / "quest-dialog-pages.csv",
+        (
+            "quest_id",
+            "source_file",
+            "source_variant",
+            "source_sha256",
+            "page_order",
+            "html_page_name",
+            "page_id",
+            "page_constant",
+            "page_mapping",
+            "action_count",
+        ),
+        quest_page_rows,
+    )
+
     detail_rows = []
     for occurrence in occurrences:
         page_matches = pages_by_name.get(occurrence.html_page_name.lower(), [])
@@ -430,6 +567,8 @@ def main() -> None:
                 "quest_id": occurrence.quest_id,
                 "source_file": occurrence.source_file,
                 "source_variant": occurrence.source_variant,
+                "source_sha256": occurrence.source_sha256,
+                "page_order": occurrence.page_order,
                 "html_page_name": occurrence.html_page_name,
                 "page_id": joined_ids(page_matches, "page_id"),
                 "page_constant": joined_values(page_matches, "constant"),
@@ -449,6 +588,8 @@ def main() -> None:
             "quest_id",
             "source_file",
             "source_variant",
+            "source_sha256",
+            "page_order",
             "html_page_name",
             "page_id",
             "page_constant",
@@ -556,17 +697,30 @@ def main() -> None:
     )
     write_csv(
         output_dir / "parse-recoveries.csv",
-        ("source_file", "diagnostic", "recovered_action_occurrences"),
+        (
+            "source_file",
+            "diagnostic",
+            "recovered_page_occurrences",
+            "recovered_action_occurrences",
+        ),
         parse_recoveries,
     )
 
     summary = {
         "sources": {
+            "dialogs_pak": str(dialogs_pak),
+            "dialogs_pak_sha256": sha256(dialogs_pak),
+            "chs_data_pak": str(chs_data_pak),
+            "chs_data_pak_sha256": sha256(chs_data_pak),
+            "quest_pak": str(quest_pak),
+            "quest_pak_sha256": sha256(quest_pak),
             "hyperlinks_xml": str(hyperlinks_path),
             "hyperlinks_sha256": sha256(hyperlinks_path),
             "html_pages_xml": str(html_pages_path),
             "html_pages_sha256": sha256(html_pages_path),
             "zh_dialogs_dir": str(zh_dialogs_dir),
+            "active_quest_html_files": active_html_files,
+            "active_quest_html_manifest_sha256": active_html_manifest_sha256,
         },
         "counts": {
             "hyperlink_definitions": len(actions),
@@ -574,6 +728,10 @@ def main() -> None:
             "same_id_rows": len(same_id_rows),
             "same_symbol_rows": len(symbol_rows),
             "quest_html_files": len(quest_files),
+            "quest_page_occurrences": len(quest_page_rows),
+            "terminal_page_occurrences": sum(
+                row["action_count"] == 0 for row in quest_page_rows
+            ),
             "quest_action_occurrences": len(detail_rows),
             "page_action_rows": len(page_action_rows),
             "quest_action_constants": len(action_summary_rows),
@@ -585,6 +743,12 @@ def main() -> None:
             "missing_page_mappings": sum(
                 row["page_mapping"] == "missing" for row in detail_rows
             ),
+            "missing_quest_page_mappings": sum(
+                row["page_mapping"] == "missing" for row in quest_page_rows
+            ),
+            "ambiguous_quest_page_mappings": sum(
+                row["page_mapping"] == "ambiguous" for row in quest_page_rows
+            ),
         },
     }
     (output_dir / "mapping-summary.json").write_text(
@@ -592,12 +756,36 @@ def main() -> None:
         encoding="utf-8",
     )
 
-    print(json.dumps(summary["counts"], ensure_ascii=False, sort_keys=True))
     if parse_errors:
         raise SystemExit(
             f"Generated partial tables with {len(parse_errors)} parse errors; "
             f"see {output_dir / 'parse-errors.csv'}"
         )
+    return summary
+
+
+def stale_outputs(generated: Path, expected: Path) -> list[str]:
+    return [
+        name
+        for name in OUTPUT_FILES
+        if not (expected / name).is_file()
+        or (generated / name).read_bytes() != (expected / name).read_bytes()
+    ]
+
+
+def main() -> None:
+    args = parse_args()
+    output_dir = args.output_dir.resolve()
+    if args.check:
+        with tempfile.TemporaryDirectory(prefix="quest-dialog-mapping-") as directory:
+            generated_dir = Path(directory)
+            summary = generate(args, generated_dir)
+            stale = stale_outputs(generated_dir, output_dir)
+        if stale:
+            raise SystemExit("client dialog mapping outputs are stale: " + ", ".join(stale))
+    else:
+        summary = generate(args, output_dir)
+    print(json.dumps(summary["counts"], ensure_ascii=False, sort_keys=True))
 
 
 if __name__ == "__main__":

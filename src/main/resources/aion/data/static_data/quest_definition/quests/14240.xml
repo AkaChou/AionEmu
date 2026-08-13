@@ -105,7 +105,7 @@
       <dimension field="var0" required="9" npc-ids="210805 210807 211632"/>
     </counter-grid>
     <dialog type="NPC_START" npc-id="203998" source="unaccepted" target="started" selection-sources="unaccepted k9" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="203998" source="k9" target="reward" page="SELECT2"/>
+    <dialog type="NPC_REPORT" npc-id="203998" source="k9" target="reward" page="SELECT5"/>
     <npc-complete npc-id="203998" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

@@ -78,17 +78,17 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="805272" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
-    <dialog type="NPC_START" npc-id="805273" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
-    <dialog type="NPC_START" npc-id="805274" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="805272" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE"/>
+    <dialog type="NPC_START" npc-id="805273" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE"/>
+    <dialog type="NPC_START" npc-id="805274" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT_NONE"/>
     <kill-chain nodes="started k1 k2 k3 k4 k5 k6 k7 k8">
       <event>
         <kill-npc npc-id="235357"/>
       </event>
     </kill-chain>
-    <dialog type="NPC_REPORT" npc-id="805272" source="k8" target="reward" page="SELECT2"/>
-    <dialog type="NPC_REPORT" npc-id="805273" source="k8" target="reward" page="SELECT2"/>
-    <dialog type="NPC_REPORT" npc-id="805274" source="k8" target="reward" page="SELECT2"/>
+    <dialog type="NPC_REPORT" npc-id="805272" source="k8" target="reward" page="DEFAULT_SUCCESS"/>
+    <dialog type="NPC_REPORT" npc-id="805273" source="k8" target="reward" page="DEFAULT_SUCCESS"/>
+    <dialog type="NPC_REPORT" npc-id="805274" source="k8" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="805272" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

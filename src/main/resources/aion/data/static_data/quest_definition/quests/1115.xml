@@ -19,11 +19,8 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="v1" status="START">
-      <var name="var0" value="1"/>
-    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="1"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -47,16 +44,15 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <transition source="started" target="v1">
+    <transition source="started" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203072" action="SETPRO1"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <show-dialog-window dialog-id="1352"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="203058" source="v1" target="reward" page="SELECT5"/>
     <npc-complete npc-id="203058" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

@@ -283,8 +283,8 @@
     <counter-grid>
       <dimension field="var0" required="10" npc-ids="264526 264527 264528 264529 264530 264541 264542 264543 264544 264545 264830 264845 265130 265145 265430 265445 265730 265745 266030 266045"/>
     </counter-grid>
-    <dialog type="NPC_START" npc-id="278517" source="unaccepted" target="started" selection-sources="unaccepted k10" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="278517" source="k10" target="reward" page="SELECT2"/>
+    <dialog type="NPC_START" npc-id="278517" source="unaccepted" target="started" selection-sources="unaccepted k10" start-page="SELECT_NONE"/>
+    <dialog type="NPC_REPORT" npc-id="278517" source="k10" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="278517" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

@@ -3,6 +3,8 @@ package com.aionemu.gameserver.questEngine.definition;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.lang.reflect.RecordComponent;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,26 +26,30 @@ public final class QuestDialogOrderAudit {
 	private static final List<String> OUTPUT_FIELDS = List.of(
 		"quest_id", "source_file", "server_source_state", "npc_id", "trigger_action",
 		"actual_path", "shown_page", "client_visible_action", "client_expected",
+		"candidate_count", "candidate_index", "candidate_source_node", "candidate_target_node",
+		"candidate_target_status", "candidate_target_variables", "candidate_conditions",
+		"candidate_priority", "candidate_transaction_actions", "candidate_response",
+		"candidate_after_commit_sequence",
 		"evidence_source", "audit_status", "fix_status", "unresolved_reason");
 
 	private QuestDialogOrderAudit() {
 	}
 
 	public static void main(String[] args) throws Exception {
-		if (args.length != 2) {
-			throw new IllegalArgumentException("usage: QuestDialogOrderAudit <client-details.csv> <output.csv>");
+		if (args.length != 3) {
+			throw new IllegalArgumentException(
+				"usage: QuestDialogOrderAudit <client-pages.csv> <client-details.csv> <output.csv>");
 		}
-		Path details = Path.of(args[0]).toAbsolutePath().normalize();
-		Path output = Path.of(args[1]).toAbsolutePath().normalize();
+		Path pages = Path.of(args[0]).toAbsolutePath().normalize();
+		Path details = Path.of(args[1]).toAbsolutePath().normalize();
+		Path output = Path.of(args[2]).toAbsolutePath().normalize();
 		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(
 			QuestDialogOrderAudit.class.getClassLoader());
-		List<AuditRow> rows = audit(catalog, readClientPages(details));
+		List<AuditRow> rows = audit(catalog, readClientPages(pages, details));
 		write(output, rows);
-		long unresolved = rows.stream().filter(row -> row.auditStatus().equals("UNRESOLVED")).count();
-		long unreached = rows.stream().filter(row -> row.auditStatus().equals("UNREACHED")).count();
-		long verified = rows.stream().filter(row -> row.auditStatus().equals("VERIFIED")).count();
-		System.out.printf("rows=%d verified=%d unresolved=%d unreached=%d output=%s%n",
-			rows.size(), verified, unresolved, unreached, output);
+		Map<String, Long> counts = rows.stream().collect(java.util.stream.Collectors.groupingBy(
+			AuditRow::auditStatus, java.util.TreeMap::new, java.util.stream.Collectors.counting()));
+		System.out.printf("rows=%d statuses=%s output=%s%n", rows.size(), counts, output);
 	}
 
 	static List<AuditRow> audit(QuestCatalog catalog, Map<Integer, ClientQuest> clientQuests) {
@@ -62,7 +68,17 @@ public final class QuestDialogOrderAudit {
 				.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk && talk.dialogId() != null
 					|| transition.event() instanceof QuestEvent.QuestDialog).toList();
 			Set<Integer> shownPages = new LinkedHashSet<>();
-			for (QuestTransition trigger : dialogRoutes) {
+			Set<Integer> clientVisibleActions = client.pages().values().stream()
+				.flatMap(page -> page.actions().keySet().stream())
+				.collect(java.util.stream.Collectors.toUnmodifiableSet());
+			List<QuestTransition> pending = new ArrayList<>(dialogRoutes.stream()
+				.filter(transition -> isExternalDialogEntry(transition, client, clientVisibleActions)).toList());
+			Set<QuestTransition> visited = new LinkedHashSet<>();
+			for (int index = 0; index < pending.size(); index++) {
+				QuestTransition trigger = pending.get(index);
+				if (!visited.add(trigger)) {
+					continue;
+				}
 				for (AfterCommitAction afterCommit : trigger.afterCommit()) {
 					if (!(afterCommit instanceof AfterCommitAction.ShowQuestDialog shown)) {
 						continue;
@@ -79,27 +95,55 @@ public final class QuestDialogOrderAudit {
 							trigger.sourceNode() + " + " + dialogOwner(trigger.event()) + " + "
 								+ dialogAction(trigger.event()) + " -> " + trigger.targetNode()
 								+ " + page " + shown.dialogId(), Integer.toString(shown.dialogId()), "",
-							"shown server page must exist in the active client HTML action map",
-							client.sourceFile(), "UNRESOLVED", "UNRESOLVED",
-							"compiled IR emits a task page absent from the active client details"));
+							"shown server page must exist in the active client page index",
+							-1, null,
+							client.sourceFile(), "EVIDENCE_REQUIRED", "EVIDENCE_REQUIRED",
+							"compiled IR emits a task page absent from the active client page index"));
 						continue;
 					}
+					if (page.actions().isEmpty() && page.unmappedActions().isEmpty()) {
+						result.add(new AuditRow(definition.id(), client.sourceFile(),
+							nullToEmpty(trigger.sourceNode()), ownerNpc(trigger.event()),
+							Integer.toString(dialogAction(trigger.event())),
+							trigger.sourceNode() + " + " + dialogOwner(trigger.event()) + " + "
+								+ dialogAction(trigger.event()) + " -> " + trigger.targetNode()
+								+ " + terminal page " + shown.dialogId(), Integer.toString(shown.dialogId()), "",
+							"server response reaches an active client page with no visible action",
+							-1, null,
+							page.evidence(), "TERMINAL_PAGE_REACHED", "NOT_NEEDED", ""));
+						continue;
+					}
+					for (Map.Entry<String, String> unmapped : page.unmappedActions().entrySet()) {
+						result.add(new AuditRow(definition.id(), client.sourceFile(),
+							nullToEmpty(trigger.sourceNode()), ownerNpc(trigger.event()),
+							Integer.toString(dialogAction(trigger.event())),
+							trigger.sourceNode() + " + " + dialogOwner(trigger.event()) + " + "
+								+ dialogAction(trigger.event()) + " -> " + trigger.targetNode()
+								+ " + page " + shown.dialogId(), Integer.toString(shown.dialogId()), unmapped.getKey(),
+							"visible client action must map to a HyperLinks.xml protocol id",
+							-1, null,
+							unmapped.getValue(), "EVIDENCE_REQUIRED", "EVIDENCE_REQUIRED",
+							"visible client action has no exact HyperLinks.xml mapping"));
+					}
 					for (ClientAction action : page.actions().values()) {
-						boolean routeExists = dialogRoutes.stream().anyMatch(candidate ->
+						List<QuestTransition> candidates = dialogRoutes.stream().filter(candidate ->
 							sameDialogOwner(trigger.event(), candidate.event())
 								&& dialogAction(candidate.event()) == action.actionId()
-								&& startsFromNode(candidate, trigger.targetNode(), definition));
-						result.add(row(definition.id(), client.sourceFile(), trigger, shown.dialogId(),
-							action, routeExists));
+								&& startsFromNode(candidate, trigger.targetNode(), definition)).toList();
+						result.addAll(rows(definition, client.sourceFile(), trigger, shown.dialogId(),
+							action, candidates));
+						pending.addAll(candidates);
 					}
 				}
 			}
 			for (ClientPage page : client.pages().values()) {
-				if (!page.actions().isEmpty() && !shownPages.contains(page.pageId())) {
+				if ((!page.actions().isEmpty() || !page.unmappedActions().isEmpty())
+						&& !shownPages.contains(page.pageId())) {
 					result.add(new AuditRow(definition.id(), client.sourceFile(), "", "", "",
 						"no compiled transition emits this active client page", Integer.toString(page.pageId()),
-						joinActions(page.actions().keySet()), "active client page must be emitted before its buttons can be used",
-						page.evidence(), "UNREACHED", "UNRESOLVED",
+						joinActions(page), "active client page must be emitted before its buttons can be used",
+						-1, null,
+						page.evidence(), "CLIENT_PAGE_UNREACHED", "EVIDENCE_REQUIRED",
 						"active page is absent from compiled IR responses; no current path identifies its NPC or state"));
 				}
 			}
@@ -109,8 +153,25 @@ public final class QuestDialogOrderAudit {
 			.thenComparing(AuditRow::sourceFile)
 			.thenComparing(AuditRow::shownPage)
 			.thenComparing(AuditRow::clientVisibleAction)
-			.thenComparing(AuditRow::actualPath));
+			.thenComparing(AuditRow::actualPath)
+			.thenComparingInt(row -> row.candidate() == null ? 0 : row.candidate().index()));
 		return List.copyOf(result);
+	}
+
+	private static boolean isExternalDialogEntry(QuestTransition transition, ClientQuest client,
+			Set<Integer> clientVisibleActions) {
+		if (transition.event() instanceof QuestEvent.QuestDialog) {
+			return true;
+		}
+		QuestEvent.TalkToNpc talk = (QuestEvent.TalkToNpc) transition.event();
+		if (talk.dialogId() == QuestDialogAction.QUEST_SELECT.id()
+				|| talk.dialogId() == QuestDialogAction.USE_OBJECT.id()) {
+			return true;
+		}
+		return !clientVisibleActions.contains(talk.dialogId()) && transition.afterCommit().stream()
+			.filter(AfterCommitAction.ShowQuestDialog.class::isInstance)
+			.map(AfterCommitAction.ShowQuestDialog.class::cast)
+			.anyMatch(shown -> client.pages().containsKey(shown.dialogId()));
 	}
 
 	private static boolean isKnownGenericPage(int pageId, Set<Integer> taskHtmlPageIds) {
@@ -125,25 +186,138 @@ public final class QuestDialogOrderAudit {
 		}
 	}
 
-	private static AuditRow row(int questId, String sourceFile, QuestTransition trigger,
-			int shownPage, ClientAction clientAction, boolean routeExists) {
+	private static List<AuditRow> rows(QuestDefinition definition, String sourceFile,
+			QuestTransition trigger, int shownPage, ClientAction clientAction,
+			List<QuestTransition> candidates) {
 		String owner = dialogOwner(trigger.event());
 		String triggerAction = Integer.toString(dialogAction(trigger.event()));
 		String path = trigger.sourceNode() + " + " + owner + " + " + triggerAction + " -> "
 			+ trigger.targetNode() + " + page " + shownPage;
 		String expected = trigger.targetNode() + " + " + owner + " + " + clientAction.actionId()
 			+ " must have a compiled route";
-		boolean fixedExchange = FIXED_EQUIPMENT_EXCHANGES.contains(questId);
+		boolean fixedExchange = FIXED_EQUIPMENT_EXCHANGES.contains(definition.id());
 		String evidence = clientAction.evidence();
 		if (fixedExchange) {
-			evidence += " | origin/history daevanion handler for quest " + questId
+			evidence += " | origin/history daevanion handler for quest " + definition.id()
 				+ " | quest_data.xml reward groups";
 		}
-		return new AuditRow(questId, sourceFile, nullToEmpty(trigger.sourceNode()), ownerNpc(trigger.event()),
-			triggerAction, path, Integer.toString(shownPage), Integer.toString(clientAction.actionId()),
-			expected, evidence, routeExists ? "VERIFIED" : "UNRESOLVED",
-			routeExists ? fixedExchange ? "FIXED" : "NOT_NEEDED" : "UNRESOLVED",
-			routeExists ? "" : "visible client action has no route; client does not prove its response page or state side effect");
+		if (candidates.isEmpty()) {
+			return List.of(new AuditRow(definition.id(), sourceFile, nullToEmpty(trigger.sourceNode()),
+				ownerNpc(trigger.event()), triggerAction, path, Integer.toString(shownPage),
+				Integer.toString(clientAction.actionId()), expected, 0, null, evidence,
+				"EVIDENCE_REQUIRED", "EVIDENCE_REQUIRED",
+				"visible client action has no route; client does not prove its response page or state side effect"));
+		}
+		List<QuestTransition> sorted = candidates.stream()
+			.sorted(Comparator.comparing(candidate -> candidateSortKey(candidate, definition)))
+			.toList();
+		List<AuditRow> rows = new ArrayList<>(sorted.size());
+		for (int index = 0; index < sorted.size(); index++) {
+			CandidateContract contract = candidateContract(index + 1, sorted.get(index), definition);
+			rows.add(new AuditRow(definition.id(), sourceFile, nullToEmpty(trigger.sourceNode()),
+				ownerNpc(trigger.event()), triggerAction, path, Integer.toString(shownPage),
+				Integer.toString(clientAction.actionId()), expected, sorted.size(), contract, evidence,
+				"PAGE_ACTION_MATCHED", fixedExchange ? "FIXED" : "NOT_NEEDED", ""));
+		}
+		return List.copyOf(rows);
+	}
+
+	private static CandidateContract candidateContract(int index, QuestTransition candidate,
+			QuestDefinition definition) {
+		NodeProjection target = node(definition, candidate.targetNode()).projection();
+		return new CandidateContract(index, nullToEmpty(candidate.sourceNode()), candidate.targetNode(),
+			target.status().name(), serializeMap(target.variables()), serializeSequence(candidate.conditions()),
+			candidate.priority() == null ? "" : candidate.priority().toString(),
+			serializeSequence(candidate.actions()), serializeResponse(candidate.afterCommit()),
+			serializeSequence(candidate.afterCommit()));
+	}
+
+	private static String candidateSortKey(QuestTransition candidate, QuestDefinition definition) {
+		CandidateContract contract = candidateContract(0, candidate, definition);
+		return String.join("\u0000", contract.sourceNode(), contract.targetNode(), contract.targetStatus(),
+			contract.targetVariables(), contract.conditions(), contract.priority(), contract.transactionActions(),
+			contract.response(), contract.afterCommitSequence());
+	}
+
+	private static QuestNode node(QuestDefinition definition, String label) {
+		return definition.nodes().stream().filter(candidate -> candidate.label().equals(label))
+			.findFirst().orElseThrow(() -> new IllegalArgumentException("unknown quest node " + label));
+	}
+
+	private static String serializeResponse(List<AfterCommitAction> actions) {
+		List<String> responses = new ArrayList<>();
+		for (int index = 0; index < actions.size(); index++) {
+			AfterCommitAction action = actions.get(index);
+			String response = switch (action) {
+				case AfterCommitAction.CloseDialog ignored -> "CLOSE_DIALOG";
+				case AfterCommitAction.ShowQuestDialog shown -> "SHOW_QUEST_PAGE(page=" + shown.dialogId() + ")";
+				case AfterCommitAction.ShowQuestSelectionDialog shown ->
+					"SHOW_SELECTION_PAGE(page=" + shown.dialogId() + ")";
+				case AfterCommitAction.ShowDialogWindow shown -> "SHOW_DIALOG_WINDOW(page=" + shown.dialogId() + ")";
+				default -> null;
+			};
+			if (response != null) {
+				responses.add((index + 1) + ":" + response);
+			}
+		}
+		return String.join(" -> ", responses);
+	}
+
+	private static String serializeSequence(List<?> values) {
+		List<String> serialized = new ArrayList<>(values.size());
+		for (int index = 0; index < values.size(); index++) {
+			serialized.add((index + 1) + ":" + serializeValue(values.get(index)));
+		}
+		return String.join(" -> ", serialized);
+	}
+
+	private static String serializeMap(Map<?, ?> values) {
+		return values.entrySet().stream()
+			.map(entry -> serializeValue(entry.getKey()) + "=" + serializeValue(entry.getValue()))
+			.sorted()
+			.collect(java.util.stream.Collectors.joining(", ", "{", "}"));
+	}
+
+	private static String serializeValue(Object value) {
+		if (value == null) {
+			return "null";
+		}
+		if (value instanceof String string) {
+			return '"' + string.replace("\\", "\\\\").replace("\"", "\\\"") + '"';
+		}
+		if (value instanceof Enum<?> enumValue) {
+			return enumValue.name();
+		}
+		if (value instanceof Map<?, ?> map) {
+			return serializeMap(map);
+		}
+		if (value instanceof Set<?> set) {
+			return set.stream().map(QuestDialogOrderAudit::serializeValue).sorted()
+				.collect(java.util.stream.Collectors.joining(", ", "{", "}"));
+		}
+		if (value instanceof Collection<?> collection) {
+			return collection.stream().map(QuestDialogOrderAudit::serializeValue)
+				.collect(java.util.stream.Collectors.joining(", ", "[", "]"));
+		}
+		if (value.getClass().isArray()) {
+			List<String> elements = new ArrayList<>(Array.getLength(value));
+			for (int index = 0; index < Array.getLength(value); index++) {
+				elements.add(serializeValue(Array.get(value, index)));
+			}
+			return "[" + String.join(", ", elements) + "]";
+		}
+		if (value.getClass().isRecord()) {
+			List<String> components = new ArrayList<>();
+			for (RecordComponent component : value.getClass().getRecordComponents()) {
+				try {
+					components.add(component.getName() + "=" + serializeValue(component.getAccessor().invoke(value)));
+				} catch (ReflectiveOperationException e) {
+					throw new IllegalStateException("cannot serialize " + value.getClass().getName(), e);
+				}
+			}
+			return value.getClass().getSimpleName() + "(" + String.join(", ", components) + ")";
+		}
+		return String.valueOf(value);
 	}
 
 	private static boolean startsFromNode(QuestTransition transition, String nodeLabel,
@@ -152,10 +326,14 @@ public final class QuestDialogOrderAudit {
 			return true;
 		}
 		if (transition.sourceNode() != null) {
-			return false;
+			QuestNode actual = node(definition, nodeLabel);
+			QuestNode declared = node(definition, transition.sourceNode());
+			return definition.metadata().repeatPolicy().maxRepeatCount() > 1
+				&& actual.projection().status() == com.aionemu.gameserver.questEngine.model.QuestStatus.COMPLETE
+				&& declared.projection().status() == com.aionemu.gameserver.questEngine.model.QuestStatus.NONE
+				&& transition.conditions().stream().anyMatch(QuestCondition.StartEligible.class::isInstance);
 		}
-		QuestNode node = definition.nodes().stream()
-			.filter(candidate -> candidate.label().equals(nodeLabel)).findFirst().orElseThrow();
+		QuestNode node = node(definition, nodeLabel);
 		for (QuestCondition condition : transition.conditions()) {
 			Boolean matches = conditionMatchesNode(condition, node);
 			if (Boolean.FALSE.equals(matches)) {
@@ -216,51 +394,109 @@ public final class QuestDialogOrderAudit {
 		return event instanceof QuestEvent.TalkToNpc talk ? Integer.toString(talk.npcId()) : "";
 	}
 
-	private static String joinActions(Collection<Integer> actions) {
-		return actions.stream().sorted().map(String::valueOf)
-			.collect(java.util.stream.Collectors.joining(" "));
+	private static String joinActions(ClientPage page) {
+		List<String> actions = new ArrayList<>();
+		page.actions().keySet().stream().sorted().map(String::valueOf).forEach(actions::add);
+		page.unmappedActions().keySet().stream().sorted().forEach(actions::add);
+		return String.join(" ", actions);
 	}
 
-	static Map<Integer, ClientQuest> readClientPages(Path details) throws IOException {
+	static Map<Integer, ClientQuest> readClientPages(Path pageIndex, Path details) throws IOException {
 		Map<Integer, MutableClientQuest> quests = new LinkedHashMap<>();
-		try (BufferedReader reader = Files.newBufferedReader(details, StandardCharsets.UTF_8)) {
-			List<String> header = parseCsvLine(stripBom(reader.readLine()));
-			Map<String, Integer> columns = new HashMap<>();
-			for (int index = 0; index < header.size(); index++) {
-				columns.put(header.get(index), index);
-			}
+		Set<Integer> ambiguousQuests = new LinkedHashSet<>();
+		try (BufferedReader reader = Files.newBufferedReader(pageIndex, StandardCharsets.UTF_8)) {
+			Map<String, Integer> columns = columns(parseCsvLine(stripBom(reader.readLine())));
 			String line;
 			while ((line = reader.readLine()) != null) {
 				List<String> values = parseCsvLine(line);
 				if (!"active".equals(value(values, columns, "source_variant"))
-						|| !"exact".equals(value(values, columns, "page_mapping"))
-						|| !"exact".equals(value(values, columns, "action_mapping"))) {
+						|| !"exact".equals(value(values, columns, "page_mapping"))) {
 					continue;
 				}
 				int questId = Integer.parseInt(value(values, columns, "quest_id"));
 				int pageId = Integer.parseInt(value(values, columns, "page_id"));
-				int actionId = Integer.parseInt(value(values, columns, "action_id"));
 				String sourceFile = value(values, columns, "source_file");
 				String pageName = value(values, columns, "html_page_name");
-				String buttonText = value(values, columns, "button_text_zh");
+				String pageOrder = value(values, columns, "page_order");
+				String sourceHash = value(values, columns, "source_sha256");
 				MutableClientQuest quest = quests.computeIfAbsent(questId,
 					ignored -> new MutableClientQuest(sourceFile));
 				quest.sourceFiles.add(sourceFile);
-				MutableClientPage page = quest.pages.computeIfAbsent(pageId,
-					ignored -> new MutableClientPage(pageName));
-				page.evidence.add(sourceFile + "#" + pageName);
-				page.actions.putIfAbsent(actionId,
-					new ClientAction(actionId, sourceFile + "#" + pageName + ": " + buttonText));
+				quest.sourceIdentities.add(sourceFile + "\u0000" + sourceHash);
+				if (quest.sourceIdentities.size() > 1) {
+					ambiguousQuests.add(questId);
+				}
+				int actionCount = Integer.parseInt(value(values, columns, "action_count"));
+				MutableClientPage page = quest.pages.get(pageId);
+				if (page == null) {
+					page = new MutableClientPage(pageName, Integer.parseInt(pageOrder), sourceFile, sourceHash,
+						actionCount);
+					quest.pages.put(pageId, page);
+				} else if (!page.pageName.equals(pageName) || !page.sourceFile.equals(sourceFile)
+						|| !page.sourceSha256.equals(sourceHash)
+						|| page.actionCount != 0 || actionCount != 0) {
+					// Repeated interactive pages, or pages from different active sources, are ambiguous.
+					ambiguousQuests.add(questId);
+				}
+				page.evidence.add(sourceFile + "#" + pageName + " page-order=" + pageOrder
+					+ " sha256=" + sourceHash);
+			}
+		}
+		try (BufferedReader reader = Files.newBufferedReader(details, StandardCharsets.UTF_8)) {
+			Map<String, Integer> columns = columns(parseCsvLine(stripBom(reader.readLine())));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				List<String> values = parseCsvLine(line);
+				if (!"active".equals(value(values, columns, "source_variant"))
+						|| !"exact".equals(value(values, columns, "page_mapping"))) {
+					continue;
+				}
+				int questId = Integer.parseInt(value(values, columns, "quest_id"));
+				int pageId = Integer.parseInt(value(values, columns, "page_id"));
+				String sourceFile = value(values, columns, "source_file");
+				String pageName = value(values, columns, "html_page_name");
+				String buttonText = value(values, columns, "button_text_zh");
+				MutableClientQuest quest = quests.get(questId);
+				if (quest == null || !quest.pages.containsKey(pageId)) {
+					throw new IllegalArgumentException("client action references a page absent from the page index: quest "
+						+ questId + " page " + pageId);
+				}
+				quest.sourceFiles.add(sourceFile);
+				MutableClientPage page = quest.pages.get(pageId);
+				if (!page.sourceFile.equals(sourceFile) || !page.sourceSha256.equals(value(values, columns, "source_sha256"))) {
+					ambiguousQuests.add(questId);
+					continue;
+				}
+				String evidence = sourceFile + "#" + pageName + ": " + buttonText;
+				if ("exact".equals(value(values, columns, "action_mapping"))) {
+					int actionId = Integer.parseInt(value(values, columns, "action_id"));
+					page.actions.putIfAbsent(actionId, new ClientAction(actionId, evidence));
+				} else {
+					page.unmappedActions.putIfAbsent(value(values, columns, "action_constant"), evidence);
+				}
 			}
 		}
 		Map<Integer, ClientQuest> result = new LinkedHashMap<>();
+		if (!ambiguousQuests.isEmpty()) {
+			throw new IllegalArgumentException("ambiguous active client pages for quests "
+				+ ambiguousQuests.stream().sorted().toList());
+		}
 		quests.forEach((questId, quest) -> {
 			Map<Integer, ClientPage> pages = new LinkedHashMap<>();
 			quest.pages.forEach((pageId, page) -> pages.put(pageId,
-				new ClientPage(pageId, page.pageName, Map.copyOf(page.actions), String.join(" | ", page.evidence))));
+				new ClientPage(pageId, page.pageName, page.pageOrder, Map.copyOf(page.actions),
+					Map.copyOf(page.unmappedActions), String.join(" | ", page.evidence))));
 			result.put(questId, new ClientQuest(String.join(" | ", quest.sourceFiles), Map.copyOf(pages)));
 		});
 		return Map.copyOf(result);
+	}
+
+	private static Map<String, Integer> columns(List<String> header) {
+		Map<String, Integer> columns = new HashMap<>();
+		for (int index = 0; index < header.size(); index++) {
+			columns.put(header.get(index), index);
+		}
+		return columns;
 	}
 
 	private static String value(List<String> values, Map<String, Integer> columns, String name) {
@@ -311,10 +547,26 @@ public final class QuestDialogOrderAudit {
 			for (AuditRow row : rows) {
 				writeCsvRow(writer, List.of(Integer.toString(row.questId()), row.sourceFile(),
 					row.serverSourceState(), row.npcId(), row.triggerAction(), row.actualPath(),
-					row.shownPage(), row.clientVisibleAction(), row.clientExpected(), row.evidenceSource(),
+					row.shownPage(), row.clientVisibleAction(), row.clientExpected(),
+					row.candidateCount() < 0 ? "" : Integer.toString(row.candidateCount()),
+					row.candidate() == null ? "" : Integer.toString(row.candidate().index()),
+					candidateValue(row, CandidateContract::sourceNode),
+					candidateValue(row, CandidateContract::targetNode),
+					candidateValue(row, CandidateContract::targetStatus),
+					candidateValue(row, CandidateContract::targetVariables),
+					candidateValue(row, CandidateContract::conditions),
+					candidateValue(row, CandidateContract::priority),
+					candidateValue(row, CandidateContract::transactionActions),
+					candidateValue(row, CandidateContract::response),
+					candidateValue(row, CandidateContract::afterCommitSequence), row.evidenceSource(),
 					row.auditStatus(), row.fixStatus(), row.unresolvedReason()));
 			}
 		}
+	}
+
+	private static String candidateValue(AuditRow row,
+			java.util.function.Function<CandidateContract, String> value) {
+		return row.candidate() == null ? "" : value.apply(row.candidate());
 	}
 
 	private static void writeCsvRow(BufferedWriter writer, List<String> values) throws IOException {
@@ -340,14 +592,20 @@ public final class QuestDialogOrderAudit {
 
 	record AuditRow(int questId, String sourceFile, String serverSourceState, String npcId,
 		String triggerAction, String actualPath, String shownPage, String clientVisibleAction,
-		String clientExpected, String evidenceSource, String auditStatus, String fixStatus,
-		String unresolvedReason) {
+		String clientExpected, int candidateCount, CandidateContract candidate, String evidenceSource,
+		String auditStatus, String fixStatus, String unresolvedReason) {
+	}
+
+	record CandidateContract(int index, String sourceNode, String targetNode, String targetStatus,
+		String targetVariables, String conditions, String priority, String transactionActions,
+		String response, String afterCommitSequence) {
 	}
 
 	record ClientQuest(String sourceFile, Map<Integer, ClientPage> pages) {
 	}
 
-	record ClientPage(int pageId, String pageName, Map<Integer, ClientAction> actions, String evidence) {
+	record ClientPage(int pageId, String pageName, int pageOrder, Map<Integer, ClientAction> actions,
+			Map<String, String> unmappedActions, String evidence) {
 	}
 
 	record ClientAction(int actionId, String evidence) {
@@ -355,6 +613,7 @@ public final class QuestDialogOrderAudit {
 
 	private static final class MutableClientQuest {
 		private final Set<String> sourceFiles = new LinkedHashSet<>();
+		private final Set<String> sourceIdentities = new LinkedHashSet<>();
 		private final Map<Integer, MutableClientPage> pages = new LinkedHashMap<>();
 
 		private MutableClientQuest(String sourceFile) {
@@ -364,11 +623,21 @@ public final class QuestDialogOrderAudit {
 
 	private static final class MutableClientPage {
 		private final String pageName;
+		private final int pageOrder;
+		private final String sourceFile;
+		private final String sourceSha256;
+		private final int actionCount;
 		private final Map<Integer, ClientAction> actions = new LinkedHashMap<>();
+		private final Map<String, String> unmappedActions = new LinkedHashMap<>();
 		private final Set<String> evidence = new LinkedHashSet<>();
 
-		private MutableClientPage(String pageName) {
+		private MutableClientPage(String pageName, int pageOrder, String sourceFile, String sourceSha256,
+				int actionCount) {
 			this.pageName = pageName;
+			this.pageOrder = pageOrder;
+			this.sourceFile = sourceFile;
+			this.sourceSha256 = sourceSha256;
+			this.actionCount = actionCount;
 		}
 	}
 }

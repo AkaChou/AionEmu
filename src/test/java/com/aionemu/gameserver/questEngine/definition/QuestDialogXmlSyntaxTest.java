@@ -42,6 +42,20 @@ class QuestDialogXmlSyntaxTest {
 	}
 
 	@Test
+	void npcStartExpandsTheFirstClientStepForSelectNone() {
+		QuestDefinition definition = parse("""
+			<dialog type="NPC_START" npc-id="203758" source="unaccepted" target="started" start-page="SELECT_NONE"/>
+		""");
+
+		QuestTransition next = definition.transitions().stream()
+			.filter(transition -> transition.event().equals(new QuestEvent.TalkToNpc(203758,
+				QuestDialogAction.SELECT_NONE_1.id())))
+			.findFirst().orElseThrow();
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT_NONE_1.id())),
+			next.afterCommit());
+	}
+
+	@Test
 	void actionAndPageEnumsKeepOverlappingIdsInSeparateSpaces() {
 		assertEquals(1003, QuestDialogAction.QUEST_REFUSE_1.id());
 		assertEquals(1003, QuestDialogPage.QUEST_ACCEPT_1.id());

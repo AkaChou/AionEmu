@@ -223,7 +223,7 @@ public final class QuestDefinitionCompiler {
 			definition.progressLayout(), definition.nodes(), normalized);
 	}
 
-	/** Restores the 31 -> 1007 dialog handshake before a completed quest is accepted again. */
+	/** Restores the complete client-side acquisition dialog chain before a repeat quest starts again. */
 	private static QuestDefinition restoreRepeatStartDialogContract(QuestDefinition definition) {
 		if (definition.metadata().repeatPolicy().maxRepeatCount() <= 1) {
 			return definition;
@@ -260,7 +260,8 @@ public final class QuestDefinitionCompiler {
 					|| statuses.get(transition.targetNode()) != QuestStatus.NONE
 					|| !(transition.event() instanceof QuestEvent.TalkToNpc talk)
 					|| !startNpcs.contains(talk.npcId()) || talk.dialogId() == null
-					|| (talk.dialogId() != 31 && talk.dialogId() != 1007)) {
+					|| !transition.actions().isEmpty()
+					|| !isDialogOnlyResponse(transition.afterCommit())) {
 				continue;
 			}
 			for (String complete : completeNodes) {
@@ -280,6 +281,13 @@ public final class QuestDefinitionCompiler {
 		}
 		return new QuestDefinition(definition.id(), definition.version(), definition.metadata(),
 			definition.progressLayout(), definition.nodes(), normalized);
+	}
+
+	private static boolean isDialogOnlyResponse(List<AfterCommitAction> actions) {
+		return actions.stream().allMatch(action -> action instanceof AfterCommitAction.ShowQuestDialog
+			|| action instanceof AfterCommitAction.ShowQuestSelectionDialog
+			|| action instanceof AfterCommitAction.ShowDialogWindow
+			|| action instanceof AfterCommitAction.CloseDialog);
 	}
 
 	private static boolean hasDialogRoute(QuestDefinition definition, String source, QuestEvent.TalkToNpc event) {

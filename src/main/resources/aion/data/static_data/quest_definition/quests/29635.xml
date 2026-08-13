@@ -63,7 +63,7 @@
       </after-commit>
     </transition>
     <dialog type="NPC_START" npc-id="205164" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="205164" source="started" target="reward" page="SELECT2"/>
+    <dialog type="NPC_REPORT" npc-id="205164" source="started" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="205164" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>

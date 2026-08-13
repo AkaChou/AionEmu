@@ -31,7 +31,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="835724" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="835724" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <counter source="started" target="reward" field="var1" required="1">
       <event>
         <kill-npc npc-id="885020"/>
