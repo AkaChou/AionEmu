@@ -37,7 +37,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="204700" source="unaccepted" target="s0" selection-sources="unaccepted s0 s1 s2" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="204700" source="unaccepted" target="s0" selection-sources="unaccepted s0 s1 s2" start-page="SELECT_NONE"/>
     <transition source="s0" target="s0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204807" action="QUEST_SELECT"/>
@@ -88,5 +88,13 @@
       <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
+    <transition source="s0" target="s0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204807" action="SELECT1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

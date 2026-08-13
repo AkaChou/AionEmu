@@ -46,7 +46,7 @@
   </nodes>
   <transitions>
     <!-- 接取:204702 起始,接取时给 182213004。 -->
-    <dialog type="NPC_START" npc-id="204702" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
+    <dialog type="NPC_START" npc-id="204702" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
       <accept-actions>
         <give-item item-id="182213004" count="1"/>
       </accept-actions>
@@ -131,5 +131,29 @@
       <preview actions="SELECT_QUEST_REWARD"/>
       <fallback actions="SELECTED_QUEST_REWARD7..SELECTED_QUEST_NOREWARD"/>
     </npc-complete>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205233" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205233" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205233" action="SELECT4_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

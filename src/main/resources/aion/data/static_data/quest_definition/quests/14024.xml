@@ -239,5 +239,13 @@
       <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
       <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203904" action="SELECT5_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

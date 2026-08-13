@@ -70,7 +70,15 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="798959" actions="QUEST_REFUSE_1 QUEST_REFUSE_2"/>
+        <dialog type="TALK_TO_NPC" npc-id="798959" action="QUEST_REFUSE_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798959" actions="QUEST_REFUSE_2"/>
       </event>
       <after-commit>
         <close-dialog/>

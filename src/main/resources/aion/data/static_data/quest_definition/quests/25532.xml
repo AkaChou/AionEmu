@@ -38,7 +38,7 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="806111" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="806111" source="started" target="reward" page="SELECT2"/>
+    <dialog type="NPC_REPORT" npc-id="806111" source="started" target="reward" page="DEFAULT_SUCCESS"/>
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806111" actions="USE_OBJECT SELECT_QUEST_REWARD"/>

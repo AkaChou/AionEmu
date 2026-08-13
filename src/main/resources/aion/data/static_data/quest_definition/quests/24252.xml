@@ -77,7 +77,7 @@
       <dimension field="var1" required="1" npc-ids="213780"/>
       <dimension field="var2" required="1" npc-ids="237275"/>
     </counter-grid>
-    <dialog type="NPC_REPORT" npc-id="832820" source="a1b1c1" target="reward" page="SELECT2"/>
+    <dialog type="NPC_REPORT" npc-id="832820" source="a1b1c1" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="832820" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

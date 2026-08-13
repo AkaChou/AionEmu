@@ -71,7 +71,7 @@
         <dialog type="TALK_TO_NPC" npc-id="806148" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">

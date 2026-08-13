@@ -32,7 +32,7 @@
         <dialog type="TALK_TO_NPC" npc-id="204056" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
@@ -81,7 +81,15 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204056" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+        <dialog type="TALK_TO_NPC" npc-id="204056" action="QUEST_REFUSE_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204056" actions="QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>

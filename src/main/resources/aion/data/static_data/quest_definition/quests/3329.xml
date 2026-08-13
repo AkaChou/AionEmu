@@ -198,5 +198,21 @@
       <dimension field="var0" required="4" npc-ids="210887 210912"/>
       <dimension field="var1" required="6" npc-ids="210914 210932"/>
     </counter-grid>
+    <transition source="a0b0" target="a0b0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203909" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="a0b0" target="a0b0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203956" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

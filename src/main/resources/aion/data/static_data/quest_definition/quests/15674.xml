@@ -44,7 +44,7 @@
         <dialog type="TALK_TO_NPC" npc-id="806114" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
     <!-- 点击奥德之石关闭窗口。Clicking the Od stone closes the dialog. -->

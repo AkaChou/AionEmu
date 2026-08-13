@@ -107,5 +107,13 @@
     <npc-complete npc-id="204208" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_REWARD2 SELECTED_QUEST_REWARD3 SELECTED_QUEST_REWARD4 SELECTED_QUEST_REWARD5 SELECTED_QUEST_REWARD6 SELECTED_QUEST_REWARD7 SELECTED_QUEST_REWARD8 SELECTED_QUEST_REWARD9 SELECTED_QUEST_REWARD10 SELECTED_QUEST_REWARD11 SELECTED_QUEST_REWARD12 SELECTED_QUEST_REWARD13 SELECTED_QUEST_REWARD14 SELECTED_QUEST_REWARD15 SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204702" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

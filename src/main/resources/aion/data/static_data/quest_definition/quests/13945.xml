@@ -144,7 +144,7 @@
       <dimension field="var0" required="2" npc-ids="884544 884545 884546 884547 884548 884622 884623 884624 884625 884626 884700 884701 884702 884703 884704 884778 884779 884780 884781 884782 884856 884857 884858 884859 884860 884594 884595 884596 884597 884598 884672 884673 884674 884675 884676 884750 884751 884752 884753 884754 884828 884829 884830 884831 884832 884906 884907 884908 884909 884910"/>
     </counter-grid>
     <dialog type="NPC_START" npc-id="835722" source="unaccepted" target="started" selection-sources="unaccepted k2" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="835722" source="k2" target="reward" page="SELECT2"/>
+    <dialog type="NPC_REPORT" npc-id="835722" source="k2" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="835722" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

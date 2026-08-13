@@ -155,5 +155,13 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799780" actions="QUEST_REFUSE_1"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

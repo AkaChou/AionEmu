@@ -97,5 +97,13 @@
       <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
+        <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804707" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

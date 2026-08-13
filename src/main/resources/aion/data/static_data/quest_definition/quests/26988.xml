@@ -78,5 +78,6 @@
     <npc-complete npc-id="804865" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
+    <dialog type="NPC_REPORT" npc-id="804867" source="reward" target="reward" page="DEFAULT_SUCCESS"/>
   </transitions>
 </quest-definition>

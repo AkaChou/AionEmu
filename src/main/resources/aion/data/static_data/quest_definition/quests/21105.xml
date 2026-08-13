@@ -34,7 +34,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="799276" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+    <dialog type="NPC_START" npc-id="799276" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
       <accept-actions>
         <give-item item-id="182207857" count="1"/>
       </accept-actions>
@@ -76,7 +76,7 @@
       <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="700812" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+    <dialog type="NPC_START" npc-id="700812" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
       <accept-actions>
         <give-item item-id="182207857" count="1"/>
       </accept-actions>
@@ -118,7 +118,7 @@
       <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="799366" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+    <dialog type="NPC_START" npc-id="799366" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
       <accept-actions>
         <give-item item-id="182207857" count="1"/>
       </accept-actions>

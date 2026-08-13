@@ -36,7 +36,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="798959" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+    <dialog type="NPC_START" npc-id="798959" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
       <accept-actions>
         <give-item item-id="182206724" count="1"/>
       </accept-actions>

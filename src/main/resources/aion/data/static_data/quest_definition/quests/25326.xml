@@ -85,5 +85,6 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
+    <dialog type="NPC_REPORT" npc-id="805343" source="reward" target="reward" page="DEFAULT_SUCCESS"/>
   </transitions>
 </quest-definition>

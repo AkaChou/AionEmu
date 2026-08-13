@@ -89,7 +89,15 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203082" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+        <dialog type="TALK_TO_NPC" npc-id="203082" action="QUEST_REFUSE_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203082" actions="QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -131,5 +139,13 @@
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       <fallback actions="SELECTED_QUEST_REWARD7 SELECTED_QUEST_REWARD8 SELECTED_QUEST_REWARD9 SELECTED_QUEST_REWARD10 SELECTED_QUEST_REWARD11 SELECTED_QUEST_REWARD12 SELECTED_QUEST_REWARD13 SELECTED_QUEST_REWARD14 SELECTED_QUEST_REWARD15 SELECTED_QUEST_NOREWARD"/>
     </npc-complete>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203082" action="SELECT1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

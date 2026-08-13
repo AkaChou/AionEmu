@@ -41,7 +41,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="204787" source="unaccepted" target="s0" selection-sources="unaccepted s0 s1" start-page="SELECT1">
+    <dialog type="NPC_START" npc-id="204787" source="unaccepted" target="s0" selection-sources="unaccepted s0 s1" start-page="SELECT_NONE">
       <accept-actions>
         <give-item item-id="182204498" count="1"/>
       </accept-actions>
@@ -145,5 +145,13 @@
     <npc-complete npc-id="204787" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
+    <transition source="s0" target="s0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700323" action="SELECT1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

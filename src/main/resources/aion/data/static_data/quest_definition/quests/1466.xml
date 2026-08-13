@@ -36,7 +36,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="212649" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+    <dialog type="NPC_START" npc-id="212649" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
       <accept-actions>
         <give-item item-id="182201385" count="1"/>
       </accept-actions>
@@ -125,7 +125,7 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_START" npc-id="203903" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+    <dialog type="NPC_START" npc-id="203903" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
       <accept-actions>
         <give-item item-id="182201385" count="1"/>
       </accept-actions>

@@ -150,7 +150,7 @@
       </after-commit>
     </transition>
     <dialog type="NPC_START" npc-id="804740" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="804740" source="started" target="reward" page="SELECT2"/>
+    <dialog type="NPC_REPORT" npc-id="804740" source="started" target="reward" page="DEFAULT_SUCCESS"/>
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="804740" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
