@@ -191,7 +191,8 @@ public class AionConnection extends AConnection {
 		try {
 			if (!crypt.decrypt(data)) {
 				nbInvalidPackets++;
-				log.info(I18n.get("log.d968eb33925d", nbInvalidPackets, MAX_INVALID_PACKETS));
+				// ponytail: SM_KEY 启用密钥瞬间客户端抢先包必然失败一次，属无害竞态，降噪为 debug
+				log.debug(I18n.get("log.d968eb33925d", nbInvalidPackets, MAX_INVALID_PACKETS));
 				if (nbInvalidPackets >= MAX_INVALID_PACKETS) {
 					log.warn(I18n.get("log.76b586319b01"));
 					return false;

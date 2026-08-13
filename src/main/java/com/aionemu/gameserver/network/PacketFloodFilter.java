@@ -84,7 +84,7 @@ public class PacketFloodFilter {
 			log.info(I18n.get("log.20b577511b63", cnt));
 		} else {
 			packets = new int[0x2ff];
-			log.info(I18n.get("log.c044ce589649"));
+			// ponytail: 0 条可能是配置为空也可能 PFF_ENABLE=false，INFO 无信息量，移除
 		}
 	}
 
