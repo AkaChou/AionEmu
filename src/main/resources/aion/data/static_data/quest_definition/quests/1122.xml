@@ -15,14 +15,20 @@
     <work-items>
       <item id="182200216" count="1"/>
     </work-items>
-    <rewards>
-      <reward kind="EXP" id="0" amount="5962"/>
-      <reward kind="ITEM" id="123000878" amount="1"/>
-      <reward kind="EXP" id="0" amount="4950"/>
-      <reward kind="ITEM" id="162000048" amount="1"/>
-      <reward kind="EXP" id="0" amount="3950"/>
-      <reward kind="ITEM" id="182000352" amount="1"/>
-    </rewards>
+    <reward-groups>
+      <group>
+        <reward kind="EXP" id="0" amount="5962"/>
+        <reward kind="ITEM" id="123000878" amount="1"/>
+      </group>
+      <group>
+        <reward kind="EXP" id="0" amount="4950"/>
+        <reward kind="ITEM" id="162000048" amount="1"/>
+      </group>
+      <group>
+        <reward kind="EXP" id="0" amount="3950"/>
+        <reward kind="ITEM" id="182000352" amount="1"/>
+      </group>
+    </reward-groups>
     <drops>
       <drop npc-id="210306" item-id="182200218" chance="100" each-member="true" collecting-step="0"/>
       <drop npc-id="210195" item-id="182200219" chance="100" each-member="true" collecting-step="0"/>

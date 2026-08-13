@@ -7,12 +7,16 @@
     <work-items>
       <item id="182200217" count="1"/>
     </work-items>
-    <rewards>
-      <reward kind="GOLD" id="0" amount="1920"/>
-      <reward kind="EXP" id="0" amount="4367"/>
-      <reward kind="GOLD" id="0" amount="960"/>
-      <reward kind="EXP" id="0" amount="3120"/>
-    </rewards>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="1920"/>
+        <reward kind="EXP" id="0" amount="4367"/>
+      </group>
+      <group>
+        <reward kind="GOLD" id="0" amount="960"/>
+        <reward kind="EXP" id="0" amount="3120"/>
+      </group>
+    </reward-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
@@ -210,7 +214,7 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="203058" source="reward3" target="complete" fixed-reward-indices="2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="203058" source="reward3" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="1" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <transition source="v1" target="v1">
