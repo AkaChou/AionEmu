@@ -16,4 +16,39 @@
       </group>
     </reward-groups>
   </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
+  </nodes>
+  <transitions>
+    <dialog type="NPC_START" npc-id="806700" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <counter source="started" target="reward" field="var0" required="3">
+      <event>
+        <kill-npc npc-ids="246200 246201 246202 246203 246204 246205 246206 246207 246208 246209 246210 246211 246212 246213 246214 246215 246216 246217 246218 246219 246220 246221 246222 246223 246224 246225 246226 246227 246228 246229 246230 246231 246232 246233 246234 246235 246236 246237 246238 246239 248037 248038 248039 248040 248041 248042 248043 248044 248045 248046 248047 248048 248049 248050 248051 248052 248053 248054 248055 248056 248057 248058 248059 248060 248061 248062 248063 248064 248065 248066 248067 248068 248069 248070 248071 248072 248073 248074 248075 248076"/>
+      </event>
+    </counter>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806700" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="806700" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+  </transitions>
 </quest-definition>

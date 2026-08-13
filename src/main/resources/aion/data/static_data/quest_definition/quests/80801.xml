@@ -16,4 +16,69 @@
       </group>
     </start-condition-groups>
   </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="2" min="0" max="2" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="2" min="0" max="2" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+    </node>
+    <node label="a0b0" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+    </node>
+    <node label="a0b1" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="1"/>
+    </node>
+    <node label="a0b2" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="2"/>
+    </node>
+    <node label="a1b0" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
+    </node>
+    <node label="a1b1" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+    </node>
+    <node label="a1b2" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="2"/>
+    </node>
+    <node label="a2b0" status="START">
+      <var name="var0" value="2"/>
+      <var name="var1" value="0"/>
+    </node>
+    <node label="a2b1" status="START">
+      <var name="var0" value="2"/>
+      <var name="var1" value="1"/>
+    </node>
+    <node label="a2b2" status="START">
+      <var name="var0" value="2"/>
+      <var name="var1" value="2"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="2"/>
+      <var name="var1" value="2"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+    </node>
+  </nodes>
+  <transitions>
+    <dialog type="NPC_START" npc-id="833543" source="unaccepted" target="a0b0" selection-sources="unaccepted" start-page="SELECT_NONE"/>
+    <counter-grid>
+      <dimension field="var0" required="2" npc-ids="214904"/>
+      <dimension field="var1" required="2" npc-ids="216263"/>
+    </counter-grid>
+    <dialog type="NPC_REPORT" npc-id="833543" source="a2b2" target="reward" page="DEFAULT_SUCCESS"/>
+    <npc-complete npc-id="833543" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+  </transitions>
 </quest-definition>

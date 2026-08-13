@@ -16,4 +16,39 @@
       </group>
     </reward-groups>
   </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="4" min="0" max="15" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="15"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
+  </nodes>
+  <transitions>
+    <dialog type="NPC_START" npc-id="806698" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <counter source="started" target="reward" field="var0" required="15">
+      <event>
+        <kill-npc npc-ids="239120 239125 239130 240275 240280 240285 240290 240295 240300 240305 240310 240315 240320 240325 240330 240335 240340 240345 240350 240355 240360 240573 240575 240577"/>
+      </event>
+    </counter>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806698" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="806698" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+  </transitions>
 </quest-definition>

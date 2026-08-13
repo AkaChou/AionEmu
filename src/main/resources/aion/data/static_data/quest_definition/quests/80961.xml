@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="80961" version="1">
-  <metadata name="[Event/Training] Destroy the Fire Temple" display-name-id="1803522" min-level="27" max-level="2147483647" category="EVENT" cannot-share="true">
+<metadata name="[Event/Training] Destroy the Fire Temple" display-name-id="1803522" min-level="27" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
       <race id="PC_ALL" />
     </races>
@@ -15,4 +15,54 @@
       </group>
     </reward-groups>
   </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="s0" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
+  </nodes>
+  <transitions>
+    <transition source="unaccepted" target="s0">
+      <event>
+        <item-play item-id="182216222" animation-millis="3000"/>
+      </event>
+      <actions>
+        <remove-item item-id="182216222" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="s0" target="reward">
+      <event>
+        <kill-npc npc-id="212846"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_REPORT" npc-id="835607" source="s0" target="reward" page="DEFAULT_SUCCESS"/>
+    <npc-complete npc-id="835607" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="835607" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>
