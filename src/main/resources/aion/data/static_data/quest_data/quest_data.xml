@@ -51028,34 +51028,6 @@
       <reward_item item_id="162001063" count="5" />
     </rewards>
   </quest>
-  <quest id="50115" name="[Event/Daily] Moonlight Duel" nameId="1803913" minlevel_permitted="46" maxlevel_permitted="82" max_repeat_count="255" repeat_cycle="ALL" race_permitted="ELYOS" category="EVENT">
-    <rewards>
-      <reward_item item_id="186000502" count="50" />
-    </rewards>
-  </quest>
-  <quest id="50116" name="[Event/Daily] Daru Protector's Dance" nameId="1803914" minlevel_permitted="46" maxlevel_permitted="82" max_repeat_count="255" repeat_cycle="ALL" race_permitted="ELYOS" category="EVENT">
-    <rewards>
-      <reward_item item_id="186000502" count="30" />
-    </rewards>
-  </quest>
-  <quest id="50119" name="[Event/Daily] Elimination of the Redeye Hare Legion" nameId="1803154" minlevel_permitted="66" maxlevel_permitted="82" max_repeat_count="255" repeat_cycle="ALL" race_permitted="ELYOS" category="EVENT">
-    <collect_items>
-      <collect_item item_id="182007410" count="15" />
-    </collect_items>
-    <rewards exp="25000000">
-      <reward_item item_id="188058571" count="1" />
-    </rewards>
-  </quest>
-  <quest id="50120" name="[Event] Attack on the Kumuki Hideout" nameId="1803927" minlevel_permitted="46" maxlevel_permitted="50" max_repeat_count="255" race_permitted="PC_ALL" category="EVENT">
-    <rewards exp="20000000">
-      <reward_item item_id="162001063" count="5" />
-    </rewards>
-  </quest>
-  <quest id="50121" name="[Event] Major Attack on the Kumuki Hideout" nameId="1803928" minlevel_permitted="51" maxlevel_permitted="82" max_repeat_count="255" race_permitted="PC_ALL" category="EVENT">
-    <rewards exp="55000000">
-      <reward_item item_id="162001063" count="5" />
-    </rewards>
-  </quest>
   <quest id="50123" name="[Event/Daily] Ista's Secret Request" nameId="1803930" minlevel_permitted="46" maxlevel_permitted="82" max_repeat_count="255" repeat_cycle="ALL" race_permitted="PC_ALL" category="EVENT">
     <collect_items>
       <collect_item item_id="188600413" count="2" />
@@ -51459,24 +51431,6 @@
   <quest id="51111" name="[Event] Purify Vicious Energy" nameId="1803911" minlevel_permitted="51" maxlevel_permitted="82" max_repeat_count="255" race_permitted="ASMODIANS" category="EVENT">
     <rewards exp="55000000">
       <reward_item item_id="162001063" count="5" />
-    </rewards>
-  </quest>
-  <quest id="51115" name="[Event/Daily] Battle Under the Moonlight" nameId="1803917" minlevel_permitted="46" maxlevel_permitted="82" max_repeat_count="255" repeat_cycle="ALL" race_permitted="ASMODIANS" category="EVENT">
-    <rewards>
-      <reward_item item_id="186000502" count="50" />
-    </rewards>
-  </quest>
-  <quest id="51116" name="[Event/Daily] Dance of the Moonlight Fairy" nameId="1803918" minlevel_permitted="46" maxlevel_permitted="82" max_repeat_count="255" repeat_cycle="ALL" race_permitted="ASMODIANS" category="EVENT">
-    <rewards>
-      <reward_item item_id="186000502" count="30" />
-    </rewards>
-  </quest>
-  <quest id="51119" name="[Event/Daily] Eliminating the Red-eyed Bunny Legion" nameId="1803155" minlevel_permitted="66" maxlevel_permitted="82" max_repeat_count="255" repeat_cycle="ALL" cannot_share="true" race_permitted="ASMODIANS" category="EVENT">
-    <collect_items>
-      <collect_item item_id="182007410" count="15" />
-    </collect_items>
-    <rewards exp="25000000">
-      <reward_item item_id="188058571" count="1" />
     </rewards>
   </quest>
   <quest id="51125" name="[Urgent Order] Grimron's Order" nameId="1803946" minlevel_permitted="66" max_repeat_count="100" race_permitted="ASMODIANS" category="EVENT">

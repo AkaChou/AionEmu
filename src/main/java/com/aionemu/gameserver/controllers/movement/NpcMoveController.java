@@ -377,7 +377,7 @@ public class NpcMoveController
 
     static boolean shouldAdjustGeoHeight(boolean enhancedHomeReturn, boolean returning, boolean spawnDestination,
             float[][] path) {
-        return path == null && (enhancedHomeReturn && returning || !returning && !spawnDestination);
+        return enhancedHomeReturn && returning || !returning && !spawnDestination;
     }
 
     /**
@@ -788,7 +788,7 @@ public class NpcMoveController
                 && !GameWorldServices.pathService().usesSpatialPath(owner)
                 && owner.getAi2().getSubState() != AISubState.WALK_PATH
                 && owner.getGameStats().checkGeoNeedUpdate()) {
-            float geoZ = GameWorldServices.geoService().getZ(owner.getWorldId(), newX, newY, newZ, 0, owner.getInstanceId());
+            float geoZ = GameWorldServices.geoService().getZ(owner.getWorldId(), newX, newY, newZ, 100, owner.getInstanceId());
             if (Math.abs(newZ - geoZ) > 1) {
                 directionChanged = true;
             }
