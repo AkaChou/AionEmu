@@ -1360,7 +1360,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		getOwner().getMoveController().abortMove();
 		setStateIfNot(AIState.FEAR);
 		setSubStateIfNot(AISubState.NONE);
-		fleeMoveTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> moveAwayFrom(source), 0, 1000);
+		fleeMoveTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> moveAwayFrom(source), 0, 500);
 		fleeStopTask = GameThreadPoolServices.threadPoolManager().schedule(
 			() -> stopFlee(source, pushState), Math.max(1L, integer(action, "seconds")) * 1000);
 		actionTasks.add(fleeMoveTask);
