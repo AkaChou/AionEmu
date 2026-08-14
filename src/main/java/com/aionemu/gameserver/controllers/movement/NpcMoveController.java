@@ -785,13 +785,14 @@ public class NpcMoveController
         if (shouldAdjustGeoHeight(AIConfig.ENHANCED_HOME_RETURN, returning, spawnDestination)
                 && GeoDataConfig.GEO_NPC_MOVE && GeoDataConfig.GEO_ENABLE
                 && !GameWorldServices.pathService().usesSpatialPath(owner)
-                && owner.getAi2().getSubState() != AISubState.WALK_PATH
-                && owner.getGameStats().checkGeoNeedUpdate()) {
+                && owner.getAi2().getSubState() != AISubState.WALK_PATH) {
+            // 每 tick 采地表并半步插值：600ms 节流会在中间 5 个 tick 让 Z 漂回线性值，
+            // 坡面不齐处表现为上下抖动。每 tick 平滑贴地消除锯齿。
             float geoZ = GameWorldServices.geoService().getZ(owner.getWorldId(), newX, newY, newZ, 100, owner.getInstanceId());
             if (Math.abs(newZ - geoZ) > 1) {
                 directionChanged = true;
             }
-            newZ += (geoZ - newZ) * 0.5f; // 坡面贴地走半步，避免 600ms 节流下的 Z 锯齿抖动
+            newZ += (geoZ - newZ) * 0.5f;
         }
         if (((Npc)this.owner).getAi2().isLogging()) {
             AI2Logger.moveinfo((Creature)this.owner, "newX=" + newX + " newY=" + newY + " newZ=" + newZ + " mask=" + this.movementMask);
