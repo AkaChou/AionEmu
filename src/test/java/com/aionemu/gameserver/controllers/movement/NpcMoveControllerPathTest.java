@@ -304,11 +304,11 @@ class NpcMoveControllerPathTest {
 
 	@Test
 	void pathMovementKeepsItsPathHeight() {
-		assertFalse(NpcMoveController.shouldAdjustGeoHeight(true, true, true, new float[][] {{1, 2, 3}}));
-		assertTrue(NpcMoveController.shouldAdjustGeoHeight(true, true, true, null));
-		assertFalse(NpcMoveController.shouldAdjustGeoHeight(false, true, true, null));
-		assertTrue(NpcMoveController.shouldAdjustGeoHeight(false, false, false, null));
-		assertFalse(NpcMoveController.shouldAdjustGeoHeight(false, false, true, null));
+		// path 守卫已移除：pathed 移动也走 geo 高度校正，仅由 returning/spawnDestination 决定
+		assertTrue(NpcMoveController.shouldAdjustGeoHeight(true, true, true));
+		assertFalse(NpcMoveController.shouldAdjustGeoHeight(false, true, true));
+		assertTrue(NpcMoveController.shouldAdjustGeoHeight(false, false, false));
+		assertFalse(NpcMoveController.shouldAdjustGeoHeight(false, false, true));
 	}
 
 	@Test
