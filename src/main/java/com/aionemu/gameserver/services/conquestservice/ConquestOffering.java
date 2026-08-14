@@ -147,7 +147,7 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 		if (cb == null) {
 			// id 3-14 为限时副本入口通知（术古宝库/火神殿/库穆奇/提亚之眼等），本身无征服 BOSS，
 			// 仅靠 spawn(CONQUEST) 刷出入口 NPC 即可，不应中断活动。
-			log.warn("No <Conquest/Offering Boss> in loc:{} — 入口型活动，跳过 BOSS 初始化", getConquestLocationId());
+			log.debug("No <Conquest/Offering Boss> in loc:{} — 入口型活动，跳过 BOSS 初始化", getConquestLocationId());
 			return;
 		}
 		setConquestBoss(cb);
