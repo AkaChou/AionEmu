@@ -789,10 +789,17 @@ public class NpcMoveController
             // 每 tick 采地表并半步插值：600ms 节流会在中间 5 个 tick 让 Z 漂回线性值，
             // 坡面不齐处表现为上下抖动。每 tick 平滑贴地消除锯齿。
             float geoZ = GameWorldServices.geoService().getZ(owner.getWorldId(), newX, newY, newZ, 100, owner.getInstanceId());
-            if (Math.abs(newZ - geoZ) > 1) {
+            // 障碍物顶面等离散跳变：按移动速度限制单 tick Z 爬升幅度，避免瞬抬/瞬降
+            float maxZStep = Math.max(0.5f, currentSpeed * elapsedMillis / 1000.0f * 1.5f);
+            float zDelta = geoZ - newZ;
+            if (Math.abs(zDelta) > maxZStep) {
+                zDelta = Math.signum(zDelta) * maxZStep;
+            }
+            newZ += zDelta;
+            // 仅显著落差（>1）才重置方向，避免每 tick STARTMOVE 造成客户端抖动
+            if (Math.abs(ownerZ - newZ) > 1) {
                 directionChanged = true;
             }
-            newZ += (geoZ - newZ) * 0.5f;
         }
         if (((Npc)this.owner).getAi2().isLogging()) {
             AI2Logger.moveinfo((Creature)this.owner, "newX=" + newX + " newY=" + newY + " newZ=" + newZ + " mask=" + this.movementMask);
