@@ -29,7 +29,7 @@ public class InhibitorSikarAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19657, 1, getOwner()).useNoAnimationSkill(); //Dragon Breath.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19657, 1, getOwner()).useNoAnimationSkill(); // 龙之吐息 / Dragon Breath.
 				startLifeTask();
 			}
 		}, 1000);

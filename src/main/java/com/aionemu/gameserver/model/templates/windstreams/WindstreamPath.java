@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.model.templates.windstreams;
 
 /**
- * 风道路径模板（静态数据/XML）。
- * XML template.
+ * 风道路径：传送 ID 与距离。
+ * Windstream path: teleport id and distance.
  */
 
 public class WindstreamPath {

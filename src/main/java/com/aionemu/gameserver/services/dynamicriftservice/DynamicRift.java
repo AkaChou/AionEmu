@@ -38,7 +38,7 @@ public abstract class DynamicRift<DL extends DynamicRiftLocation> {
 	 * 绑定动态裂隙地点。
 	 * Binds the Dynamic Rift location.
 	 *
-	 * location
+	 * @param dynamicRiftLocation 动态裂隙地点 / dynamic rift location
 	 */
 	public DynamicRift(DL dynamicRiftLocation) {
 		this.dynamicRiftLocation = dynamicRiftLocation;
@@ -105,7 +105,7 @@ public abstract class DynamicRift<DL extends DynamicRiftLocation> {
 	 * 获取绑定地点。
 	 * Returns the bound location.
 	 *
-	 * location
+	 * @return 动态裂隙地点 / dynamic rift location
 	 */
 	public DL getDynamicRiftLocation() {
 		return dynamicRiftLocation;
@@ -115,7 +115,7 @@ public abstract class DynamicRift<DL extends DynamicRiftLocation> {
 	 * 获取地点 ID。
 	 * Returns the location id.
 	 *
-	 * location id
+	 * @return 地点 ID / location id
 	 */
 	public int getDynamicRiftLocationId() {
 		return dynamicRiftLocation.getId();

@@ -10,8 +10,8 @@ import com.aionemu.gameserver.model.iu.IuStateType;
  * IU 演唱会活动抽象基类。
  * Abstract base for IU concert world events.
  *
- * <p>封装启动/停止幂等守卫与按状态刷怪/清怪。
- * Encapsulates idempotent start/stop guards and spawn/despawn by state type.</p>
+ * 封装启动/停止幂等守卫与按状态刷怪/清怪。
+ * Encapsulates idempotent start/stop guards and spawn/despawn by state type.
  *
  * @author Rinzler (Encom)
  * @param <IUL> IU 地点类型 / IU location type

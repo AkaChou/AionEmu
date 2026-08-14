@@ -33,10 +33,10 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
-		   /**
-	 * WINDSTREAM INGGISON
-	 */
-			case 215584: //Titan Starturtle.
+		/**
+		 * 英吉斯温风道 / WINDSTREAM INGGISON
+		 */
+			case 215584: // 泰坦 Starturtle / Titan Starturtle.
 				announceWindBox();
 				SpawnTemplate CastShadowPLSM = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), 281817, 338.26440f, 573.72168f, 458.27939f, (byte) 0);
 				CastShadowPLSM.setEntityId(755);
@@ -48,7 +48,7 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 					}
 				}, 300000); //5 分钟。 / 5 Minutes.
 			break;
-			case 216849: //Watcher Garma.
+			case 216849: // 守望者 Garma / Watcher Garma.
 				announceWindBox();
 				SpawnTemplate EnvWeatherShow = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), 281817, 2602.6992f, 1526.0367f, 258.13651f, (byte) 0);
 				EnvWeatherShow.setEntityId(754);
@@ -60,7 +60,7 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 					}
 				}, 300000); //5 分钟。 / 5 Minutes.
 			break;
-			case 216848: //Illanthe Hundredyears.
+			case 216848: //Illanthe Hundredyears / Illanthe Hundredyears.
 				announceWindBox();
 				SpawnTemplate SkipOnLowSpec = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), 281817, 1745.8660f, 1716.3790f, 226.37808f, (byte) 0);
 				SkipOnLowSpec.setEntityId(1039);
@@ -72,7 +72,7 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 					}
 				}, 300000); //5 分钟。 / 5 Minutes.
 			break;
-			case 217071: //Esalki The Fourth.
+			case 217071: // Esalki 第四 / Esalki The Fourth.
 				announceWindBox();
 				SpawnTemplate EnvWeatherHide = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), 281817, 2288.1091f, 1067.0475f, 285.73407f, (byte) 0);
 				EnvWeatherHide.setEntityId(2311);
@@ -84,7 +84,7 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 					}
 				}, 300000); //5 分钟。 / 5 Minutes.
 			break;
-			case 217072: //Huge Waterfall Starturtle.
+			case 217072: // 巨型瀑布 Starturtle / Huge Waterfall Starturtle.
 				announceWindBox();
 				SpawnTemplate DisplayFilled = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), 281817, 1660.0439f, 928.57129f, 404.99213f, (byte) 0);
 				DisplayFilled.setEntityId(2292);
@@ -96,10 +96,10 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 					}
 				}, 300000); //5 分钟。 / 5 Minutes.
 			break;
-		   /**
-	 * WINDSTREAM GELKMAROS
-	 */
-			case 216846: //Agrima.
+		/**
+		 * 格尔克马洛斯风道 / WINDSTREAM GELKMAROS
+		 */
+			case 216846: //Agrima / Agrima.
 				announceWindBox();
 				SpawnTemplate FileLadderCGF = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), 281817, 1719.2194f, 2301.7344f, 318.70938f, (byte) 0);
 				FileLadderCGF.setEntityId(1821);

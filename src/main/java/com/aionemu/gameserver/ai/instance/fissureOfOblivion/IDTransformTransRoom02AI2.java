@@ -32,6 +32,10 @@ public class IDTransformTransRoom02AI2 extends NpcAI2
         checkDistance(this, creature);
     }
 	
+	/**
+	 * 检测进入 15 米范围内的玩家，按其等级（66–75）触发对应的房间变换逻辑。
+	 * Detects players within 15m and triggers the room transformation matching their level (66-75).
+	 */
 	private void checkDistance(NpcAI2 ai, Creature creature) {
         if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
         	if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 66) {

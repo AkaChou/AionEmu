@@ -45,17 +45,17 @@ public class EquipmentSettingList {
 		return setting;
 	}
 
-	/** 返回装备方案 / Returns the equipment setting*/
+	/** 返回全部装备方案。 / Returns the equipment settings. */
 	public Collection<EquipmentSetting> getEquipmentSetting() {
 		return Collections.unmodifiableCollection(equipmentSetting.values());
 	}
 
-	/** 返回所有者 / Returns the owner*/
+	/** 返回所有者。 / Returns the owner. */
 	public Player getOwner() {
 		return owner;
 	}
 
-	/** 设置所有者 / Sets the owner*/
+	/** 设置所有者。 / Sets the owner. */
 	public void setOwner(Player owner) {
 		this.owner = owner;
 	}

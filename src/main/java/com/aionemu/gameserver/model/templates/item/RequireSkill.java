@@ -9,8 +9,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Require 技能模板（静态数据/XML）。
- * XML template.
+ * 所需技能模板：使用物品需要的技能列表。
+ * Required skill template: skills needed to use the item.
  *
  * @author Rinzler
  */
@@ -21,7 +21,7 @@ public class RequireSkill {
 	@XmlAttribute
 	protected List<Integer> skillIds;
 
-	/** 返回技能 ID / Returns the skill ids */
+	/** 返回技能 ID 列表 / Returns the skill ids */
 	public List<Integer> getSkillIds() {
 		if (skillIds == null) {
 			skillIds = new ArrayList<Integer>();

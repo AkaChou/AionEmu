@@ -65,7 +65,7 @@ public abstract class AMovementMotor {
 	 * 绑定所属 NPC 与移动处理器。
 	 * Bind the owner NPC and movement processor.
 	 *
-	 * Owner NPC
+	 * @param owner 所属 NPC / owner NPC
 	 * @param processor 移动处理器 / Movement processor
 	 */
 	AMovementMotor(Npc owner, MovementProcessor processor) {
@@ -89,7 +89,7 @@ public abstract class AMovementMotor {
 	 * 返回当前目标位置。
 	 * Return the current target position.
 	 *
-	 * Target position
+	 * @return 目标位置 / target position
 	 */
 	public Vector3f getCurrentTarget() {
 		return this._targetPosition;
@@ -99,7 +99,7 @@ public abstract class AMovementMotor {
 	 * 返回当前移动掩码。
 	 * Return the current movement mask.
 	 *
-	 * Movement mask
+	 * @return 移动掩码 / movement mask
 	 */
 	public byte getMovementMask() {
 		return this._targetMask;

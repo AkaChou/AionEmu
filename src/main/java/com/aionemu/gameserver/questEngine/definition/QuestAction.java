@@ -1,6 +1,9 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-/** Closed set of required mutations in the quest transaction. */
+/**
+ * 任务事务中所需变更的封闭集合。
+ * Closed set of required mutations in the quest transaction.
+ */
 public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.SetVariable,
 		QuestAction.IncrementVariable, QuestAction.SetStatus, QuestAction.GrantReward,
 		QuestAction.GrantSelectedReward,
@@ -37,6 +40,8 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 	}
 
 	/**
+	 * 在同一变更计划内的任何背包移除之前，先卸下所有已装备的该物品副本。
+	 * 可选移除数量会从结果背包中最多消耗相应数量的副本，包括事件前已卸下的副本。
 	 * Unequips every currently equipped copy of the requested item before any
 	 * inventory removal in the same mutation plan. The optional removal count
 	 * consumes up to that many copies from the resulting inventory, including a
@@ -58,6 +63,10 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 	record BlockDefaultItemUse() implements QuestAction {
 	}
 
+	/**
+	 * 将任务变量字段设置为精确值。
+	 * Sets a quest variable field to an exact value.
+	 */
 	record SetVariable(String field, int value) implements QuestAction {
 		public SetVariable {
 			if (field == null || field.isBlank()) {
@@ -66,7 +75,10 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 		}
 	}
 
-	/** 在现有值上做增量（delta 可正可负），用于多次收集/击杀/使用技能的计数推进。 */
+	/**
+	 * 在现有值上做增量（delta 可正可负），用于多次收集/击杀/使用技能的计数推进。
+	 * Increments an existing value (delta may be positive or negative) for multi-collect/kill/skill-use counting.
+	 */
 	record IncrementVariable(String field, int delta) implements QuestAction {
 		public IncrementVariable {
 			if (field == null || field.isBlank()) {
@@ -78,6 +90,10 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 		}
 	}
 
+	/**
+	 * 将任务状态投影切换为指定状态。
+	 * Switches the quest status projection to the given status.
+	 */
 	record SetStatus(com.aionemu.gameserver.questEngine.model.QuestStatus status)
 			implements QuestAction {
 		public SetStatus {
@@ -106,6 +122,8 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 	}
 
 	/**
+	 * 发放任务元数据中 {@code rewardIndex} 处的权威奖励条目。规划器在调用任何
+	 * 事务端口之前，会将该声明式动作降级为具体的 GrantReward，因此 XML 无法重复官方奖励数据。
 	 * Grants the authoritative reward entry at {@code rewardIndex} in quest metadata.
 	 * The planner lowers this declarative action to a concrete GrantReward before
 	 * any transactional port is called, so XML cannot duplicate retail reward data.
@@ -118,7 +136,10 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 		}
 	}
 
-	/** Atomically removes a positive amount of a supported quest currency. */
+	/**
+	 * 以事务方式移除正数量的受支持任务货币。
+	 * Atomically removes a positive amount of a supported quest currency.
+	 */
 	record DecreaseCurrency(QuestRewardKind kind, long amount) implements QuestAction {
 		public DecreaseCurrency {
 			if (kind == null || !kind.isCurrency()) {
@@ -130,7 +151,10 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 		}
 	}
 
-	/** Sets a supported currency to an exact non-negative balance transactionally. */
+	/**
+	 * 以事务方式将受支持货币设置为精确的非负余额。
+	 * Sets a supported currency to an exact non-negative balance transactionally.
+	 */
 	record SetCurrency(QuestRewardKind kind, long amount) implements QuestAction {
 		public SetCurrency {
 			if (kind == null || !kind.isCurrency()) {
@@ -142,7 +166,10 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 		}
 	}
 
-	/** Completes the quest and freezes completion count, reward index, and timestamps in the state transaction. */
+	/**
+	 * 完成任务并在状态事务中冻结完成次数、奖励索引与时间戳。
+	 * Completes the quest and freezes completion count, reward index, and timestamps in the state transaction.
+	 */
 	record CompleteQuest(int rewardIndex) implements QuestAction {
 		public CompleteQuest {
 			if (rewardIndex < 0) {
@@ -151,7 +178,10 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 		}
 	}
 
-	/** Learns a recipe in the same transaction as the quest state. */
+	/**
+	 * 在与任务状态相同的事务中学会配方。
+	 * Learns a recipe in the same transaction as the quest state.
+	 */
 	record LearnRecipe(int recipeId, QuestRecipeOwnership ownership) implements QuestAction {
 		public LearnRecipe {
 			if (recipeId <= 0) {
@@ -163,7 +193,10 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 		}
 	}
 
-	/** Explicitly releases a recipe; quest-owned recipes are never removed implicitly on logout or shutdown. */
+	/**
+	 * 显式释放配方；任务拥有的配方不会在登出或关服时被隐式移除。
+	 * Explicitly releases a recipe; quest-owned recipes are never removed implicitly on logout or shutdown.
+	 */
 	record ForgetRecipe(int recipeId) implements QuestAction {
 		public ForgetRecipe {
 			if (recipeId <= 0) {
@@ -172,7 +205,10 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 		}
 	}
 
-	/** Grants a crafting skill level and optionally learns all authoritative auto-learn recipes up to that level. */
+	/**
+	 * 授予制作技能等级，并可选地学会该等级以下全部权威自动学习配方。
+	 * Grants a crafting skill level and optionally learns all authoritative auto-learn recipes up to that level.
+	 */
 	record GrantCraftSkill(int skillId, int targetLevel, boolean autoLearnRecipes) implements QuestAction {
 		public GrantCraftSkill {
 			if (skillId <= 0 || targetLevel <= 0) {

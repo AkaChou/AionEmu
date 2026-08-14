@@ -8,9 +8,19 @@ package com.aionemu.gameserver.model;
  */
 public enum PetitionType {
 	/** 角色卡住 / Character Stuck */
-	CHARACTER_STUCK(256), CHARACTER_RESTORATION(512), BUG(768), QUEST(1024), UNACCEPTABLE_BEHAVIOR(1280),
+	CHARACTER_STUCK(256),
+	/** 角色恢复 / Character Restoration */
+	CHARACTER_RESTORATION(512),
+	/** 错误 / Bug */
+	BUG(768),
+	/** 任务 / Quest */
+	QUEST(1024),
+	/** 不当行为 / Unacceptable Behavior */
+	UNACCEPTABLE_BEHAVIOR(1280),
 	/** 建议 / Suggestion. */
-	SUGGESTION(1536), INQUIRY(65280);
+	SUGGESTION(1536),
+	/** 咨询 / Inquiry */
+	INQUIRY(65280);
 
 	private int element;
 

@@ -49,7 +49,7 @@ public class CM_VIEW_PLAYER_DETAILS extends AionClientPacket {
 		Player player = this.getConnection().getActivePlayer();
 		VisibleObject obj = player.getKnownList().getObject(targetObjectId);
 		if (obj == null) {
-			// probably targetObjectId can be 0
+			// targetObjectId 可能为 0 / probably targetObjectId can be 0
 			log.warn(I18n.get("log.6fc3165d4f7d", targetObjectId));
 			return;
 		}

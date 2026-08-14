@@ -19,8 +19,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("kamar_general")
 public class KamarGeneralAI2 extends AggressiveNpcAI2
 {
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+	private AtomicBoolean isAggred = new AtomicBoolean(false); // 是否已触发首次受袭广播 / whether the first-hit announcement was triggered
+
+	/**
+	 * 首次受击时按 NPC 类型向副本内全体玩家广播对应指挥官的受袭消息。
+	 * On first attack, broadcasts the corresponding commander-under-attack message to all players in the instance.
+	 */
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);

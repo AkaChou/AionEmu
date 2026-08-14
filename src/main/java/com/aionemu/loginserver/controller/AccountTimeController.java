@@ -116,8 +116,8 @@ public class AccountTimeController {
      * 将毫秒时间换算为天数。
      * Converts milliseconds to whole days.
      *
-     * Time in ms
-     * Days
+     * @param millis 毫秒时间 / time in ms
+     * @return 天数 / days
      */
     public int getDays(long millis) {
         return (int) (millis / 1000 / 3600 / 24);

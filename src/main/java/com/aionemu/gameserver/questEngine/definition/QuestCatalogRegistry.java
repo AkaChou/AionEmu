@@ -5,6 +5,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
+ * 不可变的运行时目录快照。发布持有该注册表的分发器时，会以同一编译目录原子性安装
+ * 元数据、可执行归属及全部索引。
  * Immutable runtime catalog snapshot. Publishing the dispatcher that owns this registry atomically installs
  * metadata, executable owners, and all indexes built from the same compiled catalog.
  */

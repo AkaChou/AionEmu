@@ -47,7 +47,7 @@ public class HiddenKiskAI2 extends NpcAI2
 					getOwner().setVisualState(CreatureVisualState.HIDE1);
 		            PacketSendUtility.broadcastPacket(getOwner(), new SM_PLAYER_STATE(getOwner()));
 				}
-			}, 180000); //3 Min after be come half-invisible.
+			}, 180000); // 3 分钟后进入半隐形状态 / 3 Min after become half-invisible.
         }
 		super.handleSpawned();
     }

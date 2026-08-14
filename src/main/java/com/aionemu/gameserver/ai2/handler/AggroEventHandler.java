@@ -33,7 +33,7 @@ public class AggroEventHandler {
 	 * 处理 NPC 对目标产生仇恨：过滤管理员中立/敌意，广播攻击包，并延迟通知周围友方。
 	 * Handles NPC aggro on a target: filters admin neutral/enmity, broadcasts attack packet, and schedules ally notification.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param myTarget 仇恨目标生物 / creature being aggroed
 	 */
 	public static void onAggro(NpcAI2 npcAI, final Creature myTarget) {
@@ -52,10 +52,8 @@ public class AggroEventHandler {
 	 * 处理友方请求支援：在支援范围内且视线可达时，协助攻击其目标。
 	 * Handles ally support request: assists attacking the ally's target when in range and with line of sight.
 	 *
-	 * NPC AI instance
-	 *
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param notMyTarget 请求支援的友方生物 / ally creature requesting support
-	 * @param notMyTarget
 	 * @return 是否成功进入支援 / whether support was engaged
 	 */
 	public static boolean onCreatureNeedsSupport(NpcAI2 npcAI, Creature notMyTarget) {
@@ -81,10 +79,10 @@ public class AggroEventHandler {
 	 * 判断是否可对友方提供支援（友方关系、距离、双方视线）。
 	 * Checks whether support can be provided (ally relation, distance, mutual line of sight).
 	 *
-	 * supporting NPC
+	 * @param owner 提供支援的 NPC / supporting NPC
 	 * @param notMyTarget 请求支援的友方 / ally requesting support
 	 * @param targetCreature 友方当前目标 / ally's current target
-	 * support range
+	 * @param supportRange 支援范围 / support range
 	 * @param canSee 视线判定谓词 / line-of-sight predicate
 	 * @return 是否可支援 / whether support is allowed
 	 */
@@ -100,8 +98,8 @@ public class AggroEventHandler {
 	 * 守卫反击：当守卫发现攻击者正在攻击非敌对玩家时，对攻击者建立仇恨。
 	 * Guard counter-attack: starts hate on an attacker who is targeting a non-enemy player.
 	 *
-	 * NPC AI instance
-	 * attacker
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 * @param attacker 攻击者 / attacker
 	 *
 	 * @return 是否成功建立守卫仇恨 / whether guard hate was started
 	 */
@@ -139,7 +137,7 @@ public class AggroEventHandler {
 		 * Creates a delayed aggro notification task.
 		 *
 		 * @param aggressive 发起仇恨的 NPC / NPC generating aggro
-		 * hate target
+		 * @param target 仇恨目标 / hate target
 		 * @param broadcast 是否广播支援事件 / whether to broadcast support events
 		 */
 		AggroNotifier(Npc aggressive, Creature target, boolean broadcast) {

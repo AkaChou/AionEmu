@@ -35,7 +35,7 @@ public class CM_PTRANSFER_RESPONSE extends LsClientPacket {
 	protected void readImpl() {
 		int actionId = this.readD();
 		switch (actionId) {
-		case 20: // send info
+		case 20: // 发送角色信息 / send info
 		{
 			int targetAccount = readD();
 			int taskId = readD();
@@ -46,13 +46,13 @@ public class CM_PTRANSFER_RESPONSE extends LsClientPacket {
 			GameRuntimeServices.playerTransferService().cloneCharacter(taskId, targetAccount, name, account, db);
 		}
 			break;
-		case 21:// ok
+		case 21:// 成功 / ok
 		{
 			int taskId = readD();
 			GameRuntimeServices.playerTransferService().onOk(taskId);
 		}
 			break;
-		case 22:// error
+		case 22:// 错误 / error
 		{
 			int taskId = readD();
 			String reason = readS();

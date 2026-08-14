@@ -18,7 +18,8 @@ public abstract class RequestResponseHandler {
 	}
 
 	/**
-	 * 收到响应时调用。 / Called when a response is received.
+	 * 收到响应时调用。
+	 * Called when a response is received.
 	 */
 	public void handle(Player responder, int response) {
 		if (response == 0) {
@@ -29,12 +30,14 @@ public abstract class RequestResponseHandler {
 	}
 
 	/**
-	 * 玩家接受请求时调用。 / Called when the player accepts a request.
+	 * 玩家接受请求时调用。
+	 * Called when the player accepts a request.
 	 */
 	public abstract void acceptRequest(Creature requester, Player responder);
 
 	/**
-	 * 玩家拒绝请求时调用。 / Called when the player denies a request.
+	 * 玩家拒绝请求时调用。
+	 * Called when the player denies a request.
 	 */
 	public abstract void denyRequest(Creature requester, Player responder);
 

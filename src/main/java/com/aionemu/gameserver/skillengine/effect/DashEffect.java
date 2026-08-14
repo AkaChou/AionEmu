@@ -68,7 +68,9 @@ public class DashEffect extends DamageEffect {
 		effect.setDashStatus(DashStatus.DASH);
 		
 		// 修复：计算偏移位置，避免玩家直接落在目标身上
+		// Fix: calculate the offset position so the player does not land directly on the target.
 		// 直接重叠会导致客户端无法自动攻击，需要停在目标前方一定距离
+		// Full overlap prevents the client from auto-attacking, so the player stops a short distance in front of the target.
 		byte newHeading = MathUtil.estimateHeadingFrom(effector, effected);
 		float boundRadius = effector.getCollision() + effected.getCollision();
 		float x1 = effector.getX(), y1 = effector.getY(), z1 = effector.getZ(),

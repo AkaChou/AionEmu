@@ -533,7 +533,7 @@ public class DeathmatchBg extends Battleground {
 		map50.addSpawn(new SpawnPosition(709f, 772f, 547f));
 		map50.setKillZ(530f);
 		super.maps.add(map50);
-		// 西奥波莫斯试验室。 / Theobomos Test Chamber.
+		// 泰奥勃莫斯试验室。 / Theobomos Test Chamber.
 		BattlegroundMap map51 = new BattlegroundMap(301610000);
 		map51.addSpawn(new SpawnPosition(228f, 256f, 203f));
 		map51.addSpawn(new SpawnPosition(240f, 226f, 203f));
@@ -543,7 +543,7 @@ public class DeathmatchBg extends Battleground {
 		map51.addSpawn(new SpawnPosition(211f, 274f, 202f));
 		map51.setKillZ(190f);
 		super.maps.add(map51);
-		// 西奥波莫斯试验室【元素炼金炉】 / Theobomos Test Chamber [Elemental Athanor]
+		// 泰奥勃莫斯试验室【元素炼金炉】 / Theobomos Test Chamber [Elemental Athanor]
 		BattlegroundMap map52 = new BattlegroundMap(301610000);
 		map52.addSpawn(new SpawnPosition(258f, 119f, 196f));
 		map52.addSpawn(new SpawnPosition(310f, 120f, 195f));
@@ -814,8 +814,8 @@ public class DeathmatchBg extends Battleground {
 	 * 创建死亡竞赛锦标赛对局。
 	 * Creates a deathmatch tournament match.
 	 *
-	 * sides of players
-	 * true on success
+	 * @param players 各方玩家列表 / sides of players
+	 * @return 成功则 true / true on success
 	 */
 	public boolean createTournament(List<List<Player>> players) {
 		if (!super.createPlayers(players)) {
@@ -830,7 +830,7 @@ public class DeathmatchBg extends Battleground {
 	 * 处理死亡：计杀并重生。
 	 * Handles death: score kill and respawn.
 	 *
-	 * dead player
+	 * @param player 死亡玩家 / dead player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
 	public void onDie(final Player player, Creature lastAttacker) {
@@ -869,9 +869,9 @@ public class DeathmatchBg extends Battleground {
 	 * 处理玩家离开死亡竞赛。
 	 * Handles a player leaving deathmatch.
 	 *
-	 * 玩家 / player
-	 * logout
-	 * @param isAfk 是否挂机 / AFK
+	 * @param player 玩家 / player
+	 * @param isLogout 是否登出 / whether logout
+	 * @param isAfk 是否挂机 / whether AFK
 	 */
 	public void onLeave(Player player, boolean isLogout, boolean isAfk) {
 		super.onLeaveDefault(player, isLogout, isAfk);
@@ -884,8 +884,8 @@ public class DeathmatchBg extends Battleground {
 	 * 在随机出生点生成或重生玩家。
 	 * Spawns or respawns the player at a random spawn point.
 	 *
-	 * 玩家 / player
-	 * whether respawn
+	 * @param player 玩家 / player
+	 * @param isRespawn 是否重生 / whether respawn
 	 */
 	private void spawnPlayer(Player player, boolean isRespawn) {
 		if (player.getLifeStats().isAlreadyDead()) {
@@ -923,23 +923,23 @@ public class DeathmatchBg extends Battleground {
 					byte level = pl.getLevel();
 					// 若为“胜者”则奖励玩家 / Reward Player if "WINNER"
 					if (level >= 10 && level <= 50) {
-						ItemService.addItem(pl, 186000030, 5); // Gold Medal.
-						ItemService.addItem(pl, 186000031, 5); // Silver Medal.
+						ItemService.addItem(pl, 186000030, 5); // 金牌。 / Gold Medal.
+						ItemService.addItem(pl, 186000031, 5); // 银牌。 / Silver Medal.
 						ItemService.addItem(pl, 166030005, 2); // 淬炼溶液。 / Tempering Solution.
 						ItemService.addItem(pl, 166020000, 2); // 欧米伽强化石。 / Omega Enchantment Stone.
 						ItemService.addItem(pl, 188100335, 100); // 强化石粉末。 / Enchantment Stone Dust.
-						ItemService.addItem(pl, 188710113, 1); // No Limits Pack "1 Day"
+						ItemService.addItem(pl, 188710113, 1); // 无限制礼包（1 天）。 / No Limits Pack "1 Day"
 						AbyssPointsService.addAp(pl, 1000);
 						AbyssPointsService.addGp(pl, 5);
 					}
 					if (level >= 51 && level <= 65) {
-						ItemService.addItem(pl, 186000096, 5); // Platinum Medal.
-						ItemService.addItem(pl, 186000147, 5); // Mithril Medal.
-						ItemService.addItem(pl, 186000223, 5); // Honorable Mithril Medal.
+						ItemService.addItem(pl, 186000096, 5); // 白金徽章。 / Platinum Medal.
+						ItemService.addItem(pl, 186000147, 5); // 秘银徽章。 / Mithril Medal.
+						ItemService.addItem(pl, 186000223, 5); // 荣誉秘银徽章。 / Honorable Mithril Medal.
 						ItemService.addItem(pl, 166030005, 2); // 淬炼溶液。 / Tempering Solution.
 						ItemService.addItem(pl, 166020000, 2); // 欧米伽强化石。 / Omega Enchantment Stone.
 						ItemService.addItem(pl, 188100335, 200); // 强化石粉末。 / Enchantment Stone Dust.
-						ItemService.addItem(pl, 188710113, 1); // No Limits Pack "1 Day"
+						ItemService.addItem(pl, 188710113, 1); // 无限制礼包（1 天）。 / No Limits Pack "1 Day"
 						AbyssPointsService.addAp(pl, 3000);
 						AbyssPointsService.addGp(pl, 10);
 					}

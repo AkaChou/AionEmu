@@ -73,8 +73,8 @@ public class JavaAgentUtils {
 		 * Fully block before call and return true.
 		 *
 		 * @param obj 目标对象 / Target object
-		 * Arguments
-		 * Blocking result
+		 * @param args 参数列表 / Arguments
+		 * @return 完全拦截结果 / Blocking result
 		 */
 		@Override
 		public CallbackResult<Boolean> beforeCall(Object obj, Object[] args) {
@@ -86,9 +86,9 @@ public class JavaAgentUtils {
 		 * Continue after call.
 		 *
 		 * @param obj 目标对象 / Target object
-		 * Arguments
+		 * @param args 参数列表 / Arguments
 		 * @param methodResult 方法返回值 / Method result
-		 * Continue result
+		 * @return 继续执行结果 / Continue result
 		 */
 		@Override
 		public CallbackResult<Boolean> afterCall(Object obj, Object[] args, Object methodResult) {

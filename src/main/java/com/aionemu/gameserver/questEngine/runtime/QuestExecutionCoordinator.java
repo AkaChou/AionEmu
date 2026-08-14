@@ -147,6 +147,7 @@ public final class QuestExecutionCoordinator {
 			}
 			if (persistState
 					&& (resolved.nextStatus() == QuestStatus.COMPLETE || resolved.nextStatus() == QuestStatus.NONE)) {
+				// 清理也是有序的 best-effort 提交后动作。最后注册它，使领域效果仍可在拆除前解析其任务拥有的资源。
 				// Cleanup is an ordered, best-effort post-commit action too. Register it last so
 				// domain effects can still resolve their quest-owned resources before teardown.
 				unit.afterCommit(() -> {
@@ -160,8 +161,10 @@ public final class QuestExecutionCoordinator {
 			stage = QuestFailureStage.COMMIT;
 			unit.commit();
 			committed = true;
-			// 只有提交成功后内存才前进;commit 失败时 publish 不执行,内存保持事件前值。
+			// 只有提交成功后内存才前进；commit 失败时 publish 不执行，内存保持事件前值。
+			// Only after a successful commit does live memory advance; publish never runs on a failed commit, so memory stays at the pre-event value.
 			// required participant 先清理已提交的 dirty 状态，再发布 quest state 和协议动作。
+			// The required participant first clears committed dirty state, then publishes quest state and protocol actions.
 			stage = QuestFailureStage.PARTICIPANT_AFTER_COMMIT;
 			try {
 				participant.afterCommit();

@@ -37,9 +37,9 @@ public final class FloodManager {
 		private final int _tickLimit;
 
 		/**
-		 * 警告上限 / warn limit
-		 * 拒绝上限 / reject limit
-		 * 时间窗口 / tick window
+		 * @param warnLimit 警告上限 / warn limit
+		 * @param rejectLimit 拒绝上限 / reject limit
+		 * @param tickLimit 时间窗口 / tick window
 		 */
 		public FloodFilter(final int warnLimit, final int rejectLimit, final int tickLimit) {
 			_warnLimit = warnLimit;
@@ -48,21 +48,21 @@ public final class FloodManager {
 		}
 
 		/**
-		 * 拒绝上限 / reject limit
+		 * @return 拒绝上限 / reject limit
 		 */
 		public int getRejectLimit() {
 			return _rejectLimit;
 		}
 
 		/**
-		 * 时间窗口 / tick window
+		 * @return 时间窗口 / tick window
 		 */
 		public int getTickLimit() {
 			return _tickLimit;
 		}
 
 		/**
-		 * 警告上限 / warn limit
+		 * @return 警告上限 / warn limit
 		 */
 		public int getWarnLimit() {
 			return _warnLimit;
@@ -79,7 +79,7 @@ public final class FloodManager {
 		private int _lastTick = getCurrentTick();
 
 		/**
-		 * 当前 tick 索引 / current tick index
+		 * @return 当前 tick 索引 / current tick index
 		 */
 		public int getCurrentTick() {
 			return (int) ((System.currentTimeMillis() - ZERO) / _tickLength);
@@ -99,8 +99,8 @@ public final class FloodManager {
 		 * 判断当前是否洪泛，可选递增当前 tick 计数。
 		 * Whether currently flooding; optionally increments current tick count.
 		 *
-		 * whether to increment
-		 * result
+		 * @param increment 是否递增计数 / whether to increment
+		 * @return 判定结果 / flood result
 		 */
 		public Result isFlooding(final boolean increment) {
 			final int currentTick = getCurrentTick();
@@ -160,7 +160,7 @@ public final class FloodManager {
 		 *
 		 * @param r1 结果 1 / result 1
 		 * @param r2 结果 2 / result 2
-		 * more severe result
+		 * @return 更严重的结果 / the more severe result
 		 */
 		public static Result max(final Result r1, final Result r2) {
 			if (r1.ordinal() > r2.ordinal()) {
@@ -185,7 +185,7 @@ public final class FloodManager {
 	 * 构造洪泛管理器，并注册定时清理任务。
 	 * Constructs the flood manager and registers a periodic flush task.
 	 *
-	 * milliseconds per tick
+	 * @param msecPerTick 每个 tick 的毫秒数 / milliseconds per tick
 	 * @param filters 过滤器列表 / flood filters
 	 */
 	public FloodManager(final int msecPerTick, final FloodFilter... filters) {
@@ -231,7 +231,7 @@ public final class FloodManager {
 	 *
 	 * @param key 统计键（如 IP） / key (e.g. IP)
 	 * @param increment 是否递增计数 / whether to increment
-	 * result
+	 * @return 判定结果 / flood result
 	 */
 	public Result isFlooding(final String key, final boolean increment) {
 		if (key == null || key.isEmpty()) {

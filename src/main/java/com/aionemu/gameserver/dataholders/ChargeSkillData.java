@@ -52,7 +52,7 @@ public class ChargeSkillData {
 	 * 返回已加载的蓄力技能数量。
 	 * Returns the number of loaded charge skills.
 	 *
-	 * template count
+	 * @return 已加载的充能技能数量 / Returns the number of loaded charge skills.
 	 */
 	public int size() {
 		return ids.size();
@@ -73,9 +73,7 @@ public class ChargeSkillData {
 	 * 按套装名获取蓄力技能模板。
 	 * Returns the charge skill template for the given set name.
 	 *
-	 * set name
-	 *
-	 * @param name
+	 * @param name 套装名 / set name
 	 * @return 模板，不存在则为 null / template or null
 	 */
 	public ChargeSkillTemplate getChargeSkillTemplateBySetName(String name) {
@@ -97,9 +95,7 @@ public class ChargeSkillData {
 	 * 按任意阶段技能 ID 获取蓄力技能模板。
 	 * Returns the charge skill template for any stage skill id.
 	 *
-	 * skill id
-	 *
-	 * @param skillId
+	 * @param skillId 技能 ID / skill id
 	 * @return 模板，不存在则为 null / template or null
 	 */
 	public ChargeSkillTemplate getChargeSkillTemplateTotal(int skillId) {

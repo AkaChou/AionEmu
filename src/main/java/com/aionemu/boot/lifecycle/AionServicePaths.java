@@ -90,7 +90,7 @@ class AionServicePaths {
      *
      * @param property 系统属性名 / system property name
      * @param defaultPath 默认目录路径 / default directory path
-     * classpath resource root
+     * @param resourcePath classpath 资源根路径 / classpath resource root
      */
     private void configureConfig(String property, String defaultPath, String resourcePath) {
         if (RUNTIME_PROPERTIES.has(property)) {
@@ -105,7 +105,7 @@ class AionServicePaths {
      *
      * @param property 系统属性名 / system property name
      * @param defaultPath 默认目录路径 / default directory path
-     * classpath resource root
+     * @param resourcePath classpath 资源根路径 / classpath resource root
      */
     private void configureResourceDirectory(String property, String defaultPath, String resourcePath) {
         boolean explicit = RUNTIME_PROPERTIES.has(property);
@@ -121,7 +121,7 @@ class AionServicePaths {
      *
      * @param property 系统属性名 / system property name
      * @param defaultPath 默认目录路径 / default directory path
-     * classpath resource root
+     * @param resourcePath classpath 资源根路径 / classpath resource root
      */
     private void configureGameData(String property, String defaultPath, String resourcePath) {
         if (configureSourceResourceDirectory(property, resourcePath)) {
@@ -137,7 +137,7 @@ class AionServicePaths {
      *
      * @param property 系统属性名 / system property name
      * @param defaultPath 默认目录路径 / default directory path
-     * classpath resource root
+     * @param resourcePath classpath 资源根路径 / classpath resource root
      */
     private void configureGeoData(String property, String defaultPath, String resourcePath) {
         if (!configureSourceResourceDirectory(property, resourcePath)) {
@@ -194,8 +194,8 @@ class AionServicePaths {
      * 将 classpath 下 resourcePath 树中的文件复制到目标目录（已存在则跳过）。
      * Copies files under a classpath resourcePath tree into the target directory (skip existing).
      *
-     * classpath resource root
-     * target directory
+     * @param resourcePath classpath 资源根路径 / classpath resource root
+     * @param targetDirectory 目标目录 / target directory
      */
     private void materializeDefaults(String resourcePath, Path targetDirectory) {
         try {
@@ -213,8 +213,8 @@ class AionServicePaths {
      * 若目标文件不存在，则从 classpath 复制单个默认配置文件。
      * Copies a single default config file from the classpath when the target is missing.
      *
-     * classpath resource path
-     * target file
+     * @param resourcePath classpath 资源路径 / classpath resource path
+     * @param targetFile 目标文件 / target file
      */
     private void materializeDefaultFile(String resourcePath, Path targetFile) {
         if (Files.exists(targetFile)) {
@@ -239,9 +239,9 @@ class AionServicePaths {
      * Copies one resource into the target directory at its relative path.
      *
      * @param resourcePath 资源根路径 / resource root path
-     * Spring resource
-     * target directory
-     * if I/O fails。
+     * @param resource Spring 资源 / Spring resource
+     * @param targetDirectory 目标目录 / target directory
+     * @throws IOException I/O 失败时抛出 / if I/O fails
      */
     private void copyResource(String resourcePath, Resource resource, Path targetDirectory) throws IOException {
         if (!resource.isReadable() || resource.getFilename() == null) {
@@ -271,7 +271,7 @@ class AionServicePaths {
      * Extracts the path segment relative to resourcePath from a resource URL.
      *
      * @param resourcePath 资源根路径 / resource root path
-     * resource URL
+     * @param url 资源 URL / resource URL
      * @return 相对路径，无法解析则为 null / relative path, or null if unresolvable
      */
     private String relativePath(String resourcePath, URL url) {
@@ -306,9 +306,7 @@ class AionServicePaths {
          * 是否已设置指定系统属性。
          * Whether the given system property is set.
          *
-         * property name
-         *
-         * @param property
+         * @param property 系统属性名 / property name
          * @return 已设置则为 true / true if set
          */
         private boolean has(String property) {
@@ -319,8 +317,8 @@ class AionServicePaths {
          * 读取系统属性值。
          * Reads a system property value.
          *
-         * property name
-         * property value
+         * @param property 系统属性名 / property name
+         * @return 系统属性值 / property value
          */
         private String get(String property) {
             return System.getProperty(property);
@@ -330,8 +328,8 @@ class AionServicePaths {
          * 将路径规范化后写入系统属性。
          * Writes a normalized path into a system property.
          *
-         * property name
-         * path value
+         * @param property 系统属性名 / property name
+         * @param value 路径值 / path value
          */
         private void set(String property, Path value) {
             System.setProperty(property, value.normalize().toString());

@@ -11,8 +11,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.rewards.IdLevelReward;
 
 /**
- * 强化石奖励组模板（静态数据/XML）。
- * XML template.
+ * 强化石奖励组：按等级奖励的条目。
+ * Enchant reward group: level-based reward entries.
  *
  * @author Rolandas
  */

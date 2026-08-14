@@ -9,7 +9,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * 静态 Door 世界模板（静态数据/XML）。
+ * 静态门世界模板（静态数据/XML）。
  * XML template.
  *
  * @author xTz
@@ -24,14 +24,20 @@ public class StaticDoorWorld {
 	protected List<StaticDoorTemplate> staticDoorTemplate;
 
 	/**
-	 * @return the world
+	 * 返回世界 ID。
+	 * Returns the world id.
+	 *
+	 * @return 世界 ID / the world id
 	 */
 	public int getWorld() {
 		return world;
 	}
 
 	/**
-	 * @return the List<StaticDoorTemplate>
+	 * 返回该世界的静态门模板列表。
+	 * Returns the static door templates of this world.
+	 *
+	 * @return 静态门模板列表 / the list of static door templates
 	 */
 	public List<StaticDoorTemplate> getStaticDoors() {
 		return staticDoorTemplate;

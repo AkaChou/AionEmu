@@ -50,7 +50,7 @@ public class GatherableData {
 	 * 返回采集物模板数量。
 	 * Returns the number of gatherable templates.
 	 *
-	 * template count
+	 * @return 采集物模板数量 / Returns the number of gatherable templates.
 	 */
 	public int size() {
 		return gatherableData.size();

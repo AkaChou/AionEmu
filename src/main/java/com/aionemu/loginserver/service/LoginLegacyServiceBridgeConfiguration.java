@@ -96,7 +96,7 @@ public class LoginLegacyServiceBridgeConfiguration {
      * IP 封禁服务 Bean。
      * Banned IP service bean.
      *
-     * banned IP service
+     * @return IP 封禁服务 / banned IP service
      */
     @Bean
     @Lazy
@@ -120,7 +120,7 @@ public class LoginLegacyServiceBridgeConfiguration {
      * 洪水攻击防护 Bean。
      * Flood protector bean.
      *
-     * flood protector
+     * @return 洪水防护 / flood protector
      */
     @Bean
     @Lazy

@@ -9,6 +9,10 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * 石化效果：使目标石化，中断当前施法，非 NPC 目标中止移动，效果结束时解除石化状态。
+ * Petrification effect: petrifies the target, cancels its current skill and aborts movement for non-NPC targets; the petrification state is removed when the effect ends.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PetrificationEffect")
 public class PetrificationEffect extends BuffEffect {

@@ -31,7 +31,7 @@ public class DuplicateAionObjectException extends RuntimeException {
 	 * 使用指定消息与原因构造异常。
 	 * Constructs an exception with the specified message and cause.
 	 *
-	 * exception description
+	 * @param message 异常描述 / exception description
 	 * @param cause 异常原因 / reason of this exception
 	 */
 	public DuplicateAionObjectException(String message, Throwable cause) {

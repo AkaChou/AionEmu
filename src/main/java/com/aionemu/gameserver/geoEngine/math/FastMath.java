@@ -56,9 +56,7 @@ public final class FastMath {
 	 * 返回不小于给定值的最近 2 的幂。
 	 * Returns the nearest power of two not less than the given value.
 	 *
-	 * input value
-	 *
-	 * @param number
+	 * @param number 输入值 / input value
 	 * @return 最近的 2 的幂 / nearest power of two
 	 */
 	public static int nearestPowerOfTwo(int number) {
@@ -70,9 +68,9 @@ public final class FastMath {
 	 * Linear interpolation.
 	 *
 	 * @param scale 插值系数（0~1） / interpolation factor (0~1)
-	 * start value
-	 * end value
-	 * interpolated result
+	 * @param startValue 起始值 / start value
+	 * @param endValue 结束值 / end value
+	 * @return 插值结果 / interpolated result
 	 */
 	public static float interpolateLinear(float scale, float startValue, float endValue) {
 		if (startValue == endValue) {
@@ -92,8 +90,8 @@ public final class FastMath {
 	 * Linearly interpolates between two 3D vectors.
 	 *
 	 * @param scale 插值系数（0~1） / interpolation factor (0~1)
-	 * start vector
-	 * end vector
+	 * @param startValue 起始向量 / start vector
+	 * @param endValue 结束向量 / end vector
 	 * @return 插值后的新向量 / newly interpolated vector
 	 */
 	public static Vector3f interpolateLinear(float scale, Vector3f startValue, Vector3f endValue) {
@@ -114,7 +112,7 @@ public final class FastMath {
 	 * @param p1 控制点 1 / control point 1
 	 * @param p2 控制点 2 / control point 2
 	 * @param p3 控制点 3 / control point 3
-	 * interpolated result
+	 * @return 插值结果 / interpolated result
 	 */
 	public static float interpolateCatmullRom(float u, float T, float p0, float p1, float p2, float p3) {
 		double c1 = p1;
@@ -148,9 +146,7 @@ public final class FastMath {
 	 * 反余弦，输入超出 [-1, 1] 时进行钳制。
 	 * Arc cosine with clamping for values outside [-1, 1].
 	 *
-	 * input value
-	 *
-	 * @param fValue
+	 * @param fValue 输入值 / input value
 	 * @return 反余弦结果（弧度） / arccosine in radians
 	 */
 	public static float acos(float fValue) {
@@ -167,9 +163,7 @@ public final class FastMath {
 	 * 反正弦，输入超出 [-1, 1] 时进行钳制。
 	 * Arc sine with clamping for values outside [-1, 1].
 	 *
-	 * input value
-	 *
-	 * @param fValue
+	 * @param fValue 输入值 / input value
 	 * @return 反正弦结果（弧度） / arcsine in radians
 	 */
 	public static float asin(float fValue) {
@@ -186,9 +180,7 @@ public final class FastMath {
 	 * 反正切。
 	 * Arc tangent.
 	 *
-	 * input value
-	 *
-	 * @param fValue
+	 * @param fValue 输入值 / input value
 	 * @return 反正切结果（弧度） / arctangent in radians
 	 */
 	public static float atan(float fValue) {
@@ -211,9 +203,7 @@ public final class FastMath {
 	 * 向上取整。
 	 * Ceiling function.
 	 *
-	 * input value
-	 *
-	 * @param fValue
+	 * @param fValue 输入值 / input value
 	 * @return 不小于输入的最小整数 / smallest integer not less than the input
 	 */
 	public static float ceil(float fValue) {
@@ -224,9 +214,7 @@ public final class FastMath {
 	 * 将角度归约到适合 sin 计算的范围。
 	 * Reduces an angle into a range suitable for sine computation.
 	 *
-	 * input radians
-	 *
-	 * @param radians
+	 * @param radians 输入弧度 / input radians
 	 * @return 归约后的角度 / reduced angle
 	 */
 	public static float reduceSinAngle(float radians) {
@@ -243,8 +231,8 @@ public final class FastMath {
 	 * 优化的正弦计算（先归约角度）。
 	 * Optimized sine computation (with prior angle reduction).
 	 *
-	 * input radians
-	 * sine value
+	 * @param fValue 输入弧度 / input radians
+	 * @return 正弦值 / sine value
 	 */
 	public static float sin2(float fValue) {
 		if ((double) Math.abs(fValue = FastMath.reduceSinAngle(fValue)) <= 0.7853981633974483) {
@@ -257,8 +245,8 @@ public final class FastMath {
 	 * 优化的余弦计算（基于 sin2）。
 	 * Optimized cosine computation (based on sin2).
 	 *
-	 * input radians
-	 * cosine value
+	 * @param fValue 输入弧度 / input radians
+	 * @return 余弦值 / cosine value
 	 */
 	public static float cos2(float fValue) {
 		return FastMath.sin2(fValue + 1.5707964f);
@@ -269,7 +257,7 @@ public final class FastMath {
 	 * Cosine.
 	 *
 	 * @param v 输入弧度 / input radians
-	 * cosine value
+	 * @return 余弦值 / cosine value
 	 */
 	public static float cos(float v) {
 		return (float) Math.cos(v);
@@ -280,7 +268,7 @@ public final class FastMath {
 	 * Sine.
 	 *
 	 * @param v 输入弧度 / input radians
-	 * sine value
+	 * @return 正弦值 / sine value
 	 */
 	public static float sin(float v) {
 		return (float) Math.sin(v);
@@ -290,8 +278,8 @@ public final class FastMath {
 	 * 自然指数 e^x。
 	 * Natural exponential e^x.
 	 *
-	 * exponent
-	 * e raised to the power of fValue
+	 * @param fValue 指数 / exponent
+	 * @return e 的 fValue 次幂 / e raised to the power of fValue
 	 */
 	public static float exp(float fValue) {
 		return (float) Math.exp(fValue);
@@ -301,8 +289,8 @@ public final class FastMath {
 	 * 绝对值。
 	 * Absolute value.
 	 *
-	 * input value
-	 * absolute value
+	 * @param fValue 输入值 / input value
+	 * @return 绝对值 / absolute value
 	 */
 	public static float abs(float fValue) {
 		if (fValue < 0.0f) {
@@ -315,9 +303,7 @@ public final class FastMath {
 	 * 向下取整。
 	 * Floor function.
 	 *
-	 * input value
-	 *
-	 * @param fValue
+	 * @param fValue 输入值 / input value
 	 * @return 不大于输入的最大整数 / largest integer not greater than the input
 	 */
 	public static float floor(float fValue) {
@@ -328,9 +314,7 @@ public final class FastMath {
 	 * 平方根倒数 1/√x。
 	 * Inverse square root 1/√x.
 	 *
-	 * input value
-	 *
-	 * @param fValue
+	 * @param fValue 输入值 / input value
 	 * @return 平方根倒数 / inverse square root
 	 */
 	public static float invSqrt(float fValue) {
@@ -357,8 +341,8 @@ public final class FastMath {
 	 * 自然对数 ln(x)。
 	 * Natural logarithm ln(x).
 	 *
-	 * input value
-	 * natural logarithm
+	 * @param fValue 输入值 / input value
+	 * @return 自然对数 / natural logarithm
 	 */
 	public static float log(float fValue) {
 		return (float) Math.log(fValue);
@@ -368,9 +352,9 @@ public final class FastMath {
 	 * 指定底数的对数。
 	 * Logarithm with a given base.
 	 *
-	 * argument
-	 * base
-	 * logarithm result
+	 * @param value 真数 / argument
+	 * @param base 底数 / base
+	 * @return 对数结果 / logarithm result
 	 */
 	public static float log(float value, float base) {
 		return (float) (Math.log(value) / Math.log(base));
@@ -380,9 +364,9 @@ public final class FastMath {
 	 * 幂运算。
 	 * Power function.
 	 *
-	 * base
-	 * exponent
-	 * power result
+	 * @param fBase 底数 / base
+	 * @param fExponent 指数 / exponent
+	 * @return 幂结果 / power result
 	 */
 	public static float pow(float fBase, float fExponent) {
 		return (float) Math.pow(fBase, fExponent);
@@ -392,8 +376,8 @@ public final class FastMath {
 	 * 平方。
 	 * Square.
 	 *
-	 * input value
-	 * squared value
+	 * @param fValue 输入值 / input value
+	 * @return 平方值 / squared value
 	 */
 	public static float sqr(float fValue) {
 		return fValue * fValue;
@@ -403,8 +387,8 @@ public final class FastMath {
 	 * 平方根。
 	 * Square root.
 	 *
-	 * input value
-	 * square root
+	 * @param fValue 输入值 / input value
+	 * @return 平方根 / square root
 	 */
 	public static float sqrt(float fValue) {
 		return (float) Math.sqrt(fValue);
@@ -414,8 +398,8 @@ public final class FastMath {
 	 * 正切。
 	 * Tangent.
 	 *
-	 * input radians
-	 * tangent value
+	 * @param fValue 输入弧度 / input radians
+	 * @return 正切值 / tangent value
 	 */
 	public static float tan(float fValue) {
 		return (float) Math.tan(fValue);
@@ -425,8 +409,8 @@ public final class FastMath {
 	 * 整数符号函数。
 	 * Integer signum function.
 	 *
-	 * input integer
-	 * 1, 0 or -1
+	 * @param iValue 输入整数 / input integer
+	 * @return 1、0 或 -1 / 1, 0 or -1
 	 */
 	public static int sign(int iValue) {
 		if (iValue > 0) {
@@ -442,8 +426,8 @@ public final class FastMath {
 	 * 浮点符号函数。
 	 * Floating-point signum function.
 	 *
-	 * input value
-	 * sign (1.0, 0.0 or -1.0)
+	 * @param fValue 输入值 / input value
+	 * @return 符号（1.0、0.0 或 -1.0） / sign (1.0, 0.0 or -1.0)
 	 */
 	public static float sign(float fValue) {
 		return Math.signum(fValue);
@@ -530,7 +514,7 @@ public final class FastMath {
 	 * @param m31 矩阵元素 (3,1) / matrix element (3,1)
 	 * @param m32 矩阵元素 (3,2) / matrix element (3,2)
 	 * @param m33 矩阵元素 (3,3) / matrix element (3,3)
-	 * determinant value
+	 * @return 行列式值 / determinant value
 	 */
 	public static float determinant(double m00, double m01, double m02, double m03, double m10, double m11, double m12,
 			double m13, double m20, double m21, double m22, double m23, double m30, double m31, double m32,
@@ -562,7 +546,7 @@ public final class FastMath {
 	 *
 	 * @param min 最小值（含） / minimum (inclusive)
 	 * @param max 最大值（含） / maximum (inclusive)
-	 * random integer
+	 * @return 随机整数 / random integer
 	 */
 	public static int nextRandomInt(int min, int max) {
 		return (int) (FastMath.nextRandomFloat() * (float) (max - min + 1)) + min;
@@ -572,7 +556,7 @@ public final class FastMath {
 	 * 生成随机整数。
 	 * Generates a random integer.
 	 *
-	 * random integer
+	 * @return 随机整数 / random integer
 	 */
 	public static int nextRandomInt() {
 		return rand.nextInt();
@@ -584,7 +568,7 @@ public final class FastMath {
 	 *
 	 * @param sphereCoords 球坐标 (半径, 方位角, 仰角) / spherical coords (radius, azimuth, elevation)
 	 * @param store 存储结果的向量 / vector to store the result
-	 * the store vector
+	 * @return 存储结果的向量 / the store vector
 	 */
 	public static Vector3f sphericalToCartesian(Vector3f sphereCoords, Vector3f store) {
 		store.y = sphereCoords.x * FastMath.sin(sphereCoords.z);
@@ -600,7 +584,7 @@ public final class FastMath {
 	 *
 	 * @param cartCoords 笛卡尔坐标 / Cartesian coordinates
 	 * @param store 存储结果的向量 (半径, 方位角, 仰角) / vector to store (radius, azimuth, elevation)
-	 * the store vector
+	 * @return 存储结果的向量 / the store vector
 	 */
 	public static Vector3f cartesianToSpherical(Vector3f cartCoords, Vector3f store) {
 		if (cartCoords.x == 0.0f) {
@@ -622,7 +606,7 @@ public final class FastMath {
 	 *
 	 * @param sphereCoords 球坐标 (半径, 方位角, 仰角) / spherical coords (radius, azimuth, elevation)
 	 * @param store 存储结果的向量 / vector to store the result
-	 * the store vector
+	 * @return 存储结果的向量 / the store vector
 	 */
 	public static Vector3f sphericalToCartesianZ(Vector3f sphereCoords, Vector3f store) {
 		store.z = sphereCoords.x * FastMath.sin(sphereCoords.z);
@@ -638,7 +622,7 @@ public final class FastMath {
 	 *
 	 * @param cartCoords 笛卡尔坐标 / Cartesian coordinates
 	 * @param store 存储结果的向量 (半径, 方位角, 仰角) / vector to store (radius, azimuth, elevation)
-	 * the store vector
+	 * @return 存储结果的向量 / the store vector
 	 */
 	public static Vector3f cartesianZToSpherical(Vector3f cartCoords, Vector3f store) {
 		if (cartCoords.x == 0.0f) {
@@ -658,11 +642,9 @@ public final class FastMath {
 	 * 将值归一化到指定区间（循环折返）。
 	 * Normalizes a value into the given range (wrapping around).
 	 *
-	 * input value
-	 *
+	 * @param val 输入值 / input value
 	 * @param min 区间下限 / range minimum
 	 * @param max 区间上限 / range maximum
-	 * @param max
 	 * @return 归一化后的值 / normalized value
 	 */
 	public static float normalize(float val, float min, float max) {
@@ -701,9 +683,9 @@ public final class FastMath {
 	 * 将输入钳制到 [min, max]。
 	 * Clamps the input to the range [min, max].
 	 *
-	 * input value
-	 * lower bound
-	 * upper bound
+	 * @param input 输入值 / input value
+	 * @param min 区间下限 / lower bound
+	 * @param max 区间上限 / upper bound
 	 * @return 钳制后的值 / clamped value
 	 */
 	public static float clamp(float input, float min, float max) {
@@ -714,9 +696,7 @@ public final class FastMath {
 	 * 将输入饱和到 [0, 1]。
 	 * Saturates the input to the range [0, 1].
 	 *
-	 * input value
-	 *
-	 * @param input
+	 * @param input 输入值 / input value
 	 * @return 饱和后的值 / saturated value
 	 */
 	public static float saturate(float input) {
@@ -755,7 +735,7 @@ public final class FastMath {
 	 *
 	 * @param flt 单精度浮点数 / single-precision float
 	 * @return 半精度位模式 / half-precision bit pattern
-	 * when the input is NaN。
+	 * @throws IllegalArgumentException 输入为 NaN 时 / when the input is NaN.
 	 */
 	public static short convertFloatToHalf(float flt) {
 		if (Float.isNaN(flt)) {

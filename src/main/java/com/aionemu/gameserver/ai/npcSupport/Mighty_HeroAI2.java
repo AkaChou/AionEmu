@@ -20,11 +20,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @AIName("mighty")
 public class Mighty_HeroAI2 extends GeneralNpcAI2
 {
-    @Override
+    /**
+	 * 打开对话窗口：特定支援 NPC 使用默认对话，其余打开通用对话。
+	 * Opens the dialog window: default dialog for specific support NPCs, generic dialog otherwise.
+	 */
+	@Override
 	protected void handleDialogStart(Player player) {
         switch (getNpcId()) {
-			case 832884: //Mighty Lovely.
-			case 832885: { //Mighty Mister.
+			case 832884: //技能支援 NPC：Lovely / Mighty Lovely.
+			case 832885: { //技能支援 NPC：Mister / Mighty Mister.
 				super.handleDialogStart(player);
 				break;
 			} default: {
@@ -34,6 +38,10 @@ public class Mighty_HeroAI2 extends GeneralNpcAI2
 		}
 	}
 	
+	/**
+	 * 对话选择处理：处理任务对话，并为玩家施加对应 NPC 的助威技能。
+	 * Handles dialog selection: processes quest dialogs and applies the matching cheer skill of the NPC.
+	 */
 	@Override
     public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
@@ -43,11 +51,11 @@ public class Mighty_HeroAI2 extends GeneralNpcAI2
 		} if (dialogId == 10000) {
 			int skillId = 0;
 			switch (getNpcId()) {
-				case 832884: //Mighty Lovely.
-				    skillId = 21796; //Mighty's Passionate Cheer I.
+				case 832884: //技能支援 NPC：Lovely / Mighty Lovely.
+				    skillId = 21796; //Mighty 的热情助威 I / Mighty's Passionate Cheer I.
 				break;
-				case 832885: //Mighty Mister.
-					skillId = 21797; //Mighty's Energetic Cheer I.
+				case 832885: //技能支援 NPC：Mister / Mighty Mister.
+					skillId = 21797; //Mighty 的活力助威 I / Mighty's Energetic Cheer I.
 				break;
 			}
 			GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 1, player).useNoAnimationSkill();

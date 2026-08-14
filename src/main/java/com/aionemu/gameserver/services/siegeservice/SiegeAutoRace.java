@@ -34,7 +34,7 @@ public class SiegeAutoRace {
 	 * 执行自动种族切换。
 	 * Runs auto race switch.
 	 *
-	 * locid
+	 * @param locid 据点 ID / location id
 	 */
 	public static void AutoSiegeRace(final int locid) {
 		final SiegeLocation loc = GameFeatureServices.siegeService().getSiegeLocation(locid);
@@ -90,11 +90,11 @@ public class SiegeAutoRace {
 	}
 
 	/**
-	 * isAutoSiege 方法。
-	 * isAutoSiege method.
+	 * 判断据点是否参与自动攻城。
+	 * Returns whether the location is auto-sieged.
 	 *
-	 * locId
-	 * result
+	 * @param locId 据点 ID / location id
+	 * @return 是否自动攻城 / whether auto siege
 	 */
 	public static boolean isAutoSiege(int locId) {
 		return ElyosAutoSiege(locId) || AsmoAutoSiege(locId);
@@ -104,8 +104,8 @@ public class SiegeAutoRace {
 	 * 光之部自动归属。
 	 * Elyos auto ownership.
 	 *
-	 * locId
-	 * result
+	 * @param locId 据点 ID / location id
+	 * @return 是否天族自动归属 / whether Elyos auto ownership
 	 */
 	public static boolean ElyosAutoSiege(int locId) {
 		for (String id : siegeIds[0].split(",")) {
@@ -120,8 +120,8 @@ public class SiegeAutoRace {
 	 * 暗之部自动归属。
 	 * Asmodian auto ownership.
 	 *
-	 * locId
-	 * result
+	 * @param locId 据点 ID / location id
+	 * @return 是否魔族自动归属 / whether Asmodian auto ownership
 	 */
 	public static boolean AsmoAutoSiege(int locId) {
 		for (String id : siegeIds[1].split(",")) {

@@ -9,7 +9,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 战团 Invite，用于团队2相关逻辑。
+ * 战团邀请，用于团队2相关逻辑。
  * League Invite for team 2 logic.
  */
 

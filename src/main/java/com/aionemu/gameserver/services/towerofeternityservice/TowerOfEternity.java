@@ -38,7 +38,7 @@ public abstract class TowerOfEternity<TE extends TowerOfEternityLocation> {
 	 * 绑定永恒之塔地点。
 	 * Binds the tower location.
 	 *
-	 * location
+	 * @param towerOfEternityLocation 永恒之塔地点 / tower location
 	 */
 	public TowerOfEternity(TE towerOfEternityLocation) {
 		this.towerOfEternityLocation = towerOfEternityLocation;
@@ -105,7 +105,7 @@ public abstract class TowerOfEternity<TE extends TowerOfEternityLocation> {
 	 * 获取绑定地点。
 	 * Returns the bound location.
 	 *
-	 * location
+	 * @return 绑定地点 / location
 	 */
 	public TE getTowerOfEternityLocation() {
 		return towerOfEternityLocation;
@@ -115,7 +115,7 @@ public abstract class TowerOfEternity<TE extends TowerOfEternityLocation> {
 	 * 获取地点 ID。
 	 * Returns the location id.
 	 *
-	 * location id
+	 * @return 地点 ID / location id
 	 */
 	public int getTowerOfEternityLocationId() {
 		return towerOfEternityLocation.getId();

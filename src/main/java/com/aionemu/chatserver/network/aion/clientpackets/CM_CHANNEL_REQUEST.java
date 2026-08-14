@@ -31,9 +31,9 @@ public class CM_CHANNEL_REQUEST extends AbstractClientPacket {
      * 构造频道请求客户端包。
      * Constructs a channel request client packet.
      *
-     * packet reader
+     * @param packetReader 包读取器 / packet reader
      * @param gameChannelHandler 客户端通道处理器 / client channel handler
-     * chat service
+     * @param chatService 聊天服务 / chat service
      */
     public CM_CHANNEL_REQUEST(PacketReader packetReader, ClientChannelHandler gameChannelHandler, ChatService chatService) {
         super(packetReader, gameChannelHandler, 0x10);

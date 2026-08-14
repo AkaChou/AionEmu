@@ -41,43 +41,43 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 {
     /** 刷怪种族 / spawn race */
     private Race spawnRace;
-	/** raid 任务 / raid task */
+		/** raid 任务 / raid task */
 		private Future<?> raidTask;
-	/** keybox 任务 / key box task */
+		/** keybox 任务 / key box task */
 		private Future<?> keyBoxTask;
-	/** prison 任务 / prison task */
+		/** prison 任务 / prison task */
 		private Future<?> prisonTask;
-	/**
-	 * whether timer1 started
-	 */
+		/**
+		 * whether timer1 started
+		 */
 		private boolean isStartTimer1 = false;
-	/** 是否启动计时器2 / is start timer2 */
+		/** 是否启动计时器2 / is start timer2 */
 		private boolean isStartTimer2 = false;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
 	// 小游戏 1 / Mini Game 1
-	/** ancient box1 / ancient box1 */
+		/** ancient box1 / ancient box1 */
 		private List<Npc> AncientBox1 = new ArrayList<Npc>();
-	/** ancient box2 / ancient box2 */
+		/** ancient box2 / ancient box2 */
 		private List<Npc> AncientBox2 = new ArrayList<Npc>();
 	// 小游戏 2 / Mini Game 2
-	/** test subject48012c / test subject48012c */
+		/** test subject48012c / test subject48012c */
 		private List<Npc> TestSubject48012C = new ArrayList<Npc>();
-	/** test subject48013c / test subject48013c */
+		/** test subject48013c / test subject48013c */
 		private List<Npc> TestSubject48013C = new ArrayList<Npc>();
-	/** test subject48015c / test subject48015c */
+		/** test subject48015c / test subject48015c */
 		private List<Npc> TestSubject48015C = new ArrayList<Npc>();
-	/** test subject48023b / test subject48023b */
+		/** test subject48023b / test subject48023b */
 		private List<Npc> TestSubject48023B = new ArrayList<Npc>();
-	/** test subject48027b / test subject48027b */
+		/** test subject48027b / test subject48027b */
 		private List<Npc> TestSubject48027B = new ArrayList<Npc>();
-	/** test subject48025b / test subject48025b */
+		/** test subject48025b / test subject48025b */
 		private List<Npc> TestSubject48025B = new ArrayList<Npc>();
-	/** test subject48039a / test subject48039a */
+		/** test subject48039a / test subject48039a */
 		private List<Npc> TestSubject48039A = new ArrayList<Npc>();
-	/** test subject48123a / test subject48123a */
+		/** test subject48123a / test subject48123a */
 		private List<Npc> TestSubject48123A = new ArrayList<Npc>();
 	
 	/**
@@ -95,7 +95,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -165,7 +165,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDie(Npc npc) {
@@ -274,16 +274,16 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
 			case 219979: //Ancient Danuar Relic.
-			    /**
-	 * Start Mini Game 3
-	 */
+				/**
+				 * Start Mini Game 3
+				 */
 				// 在增援到达前，保护古代达努阿尔神器免受贝里特拉部队攻击。 / Protect the ancient Danuar artifacts from Beritra's troops until reinforcements arrive.
 				sendMsgByRace(1402821, Race.PC_ALL, 0); 
 				// 怪物即将进攻。 / Monsters will attack in a moment.
@@ -553,14 +553,14 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
 	 *
-	 * 玩家 / player
-	 * zone
+	 * @param player 玩家 / player
+	 * @param zone 区域 / zone
 	 */
 	@Override
     public void onEnterZone(Player player, ZoneInstance zone) {
-	   /**
-	 * Start Mini Game 1
-	 */
+	    /**
+	     * Start Mini Game 1
+	     */
 	    if (zone.getAreaTemplate().getZoneName() == ZoneName.get("DANUAR_MYSTICARIUM_300480000")) {
 		    if (!isStartTimer1) {
 			    isStartTimer1 = true;
@@ -611,9 +611,9 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
             AncientBox2.add((Npc) spawn(702702, 217.0f, 160.0f, 213.896f, (byte) 78));
             AncientBox2.add((Npc) spawn(702702, 255.0f, 213.0f, 188.69994f, (byte) 69));
 		}
-	   /**
-	 * Start Mini Game 2
-	 */
+		/**
+		 * Start Mini Game 2
+		 */
 		else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("TEST_SUBJECT_PRISON_300480000")) {
 		    if (!isStartTimer2) {
 			    isStartTimer2 = true;
@@ -847,9 +847,9 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

@@ -39,25 +39,25 @@ import java.util.concurrent.Future;
 @InstanceID(302330000)
 public class KumukiCaveInstance extends GeneralInstanceHandler
 {
-	/** poppy saved / poppy saved */
+		/** poppy saved / poppy saved */
 		private int poppySaved;
-	/** 副本时间戳 / instance timestamp */
+		/** 副本时间戳 / instance timestamp */
 		private long instanceTime;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-	/** poppy / poppy */
+		/** poppy / poppy */
 		private List<Npc> Poppy = new ArrayList<Npc>();
 	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	/** kumukicave 任务 / kumuki cave task */
+		/** kumukicave 任务 / kumuki cave task */
 		private final List<Future<?>> kumukiCaveTask = new ArrayList<Future<?>>();
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -250,7 +250,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
      * 处理死亡事件。
      * Handle a death event.
      *
-     * npc
+     * @param npc NPC / npc
      */
     @Override
     public void onDie(Npc npc) {
@@ -298,8 +298,8 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
@@ -403,48 +403,48 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	 * 处理 sp。
 	 * Handle sp.
 	 *
-	 * NPC
+	 * @param npcId NPC / NPC
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * time
+	 * @param time 时间 / time
 	 */
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
-	/**
-	 * 处理 sp。
-	 * Handle sp.
-	 *
-	 * NPC
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * time
-	 * message
-	 * 阵营 / race
-	 */
+    /**
+     * 处理 sp。
+     * Handle sp.
+     * 
+     * @param npcId NPC / NPC
+     * @param x X 坐标 / X
+     * @param y Y 坐标 / Y
+     * @param z Z 坐标 / Z
+     * @param h 朝向 / h
+     * @param time 时间 / time
+     * @param msg 消息 / message
+     * @param race 阵营 / race
+     */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
-	/**
-	 * 处理 sp。
-	 * Handle sp.
-	 *
-	 * NPC
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * entity id
-	 * time
-	 * message
-	 * 阵营 / race
-	 */
+    /**
+     * 处理 sp。
+     * Handle sp.
+     * 
+     * @param npcId NPC / NPC
+     * @param x X 坐标 / X
+     * @param y Y 坐标 / Y
+     * @param z Z 坐标 / Z
+     * @param h 朝向 / h
+     * @param entityId 实体 ID / entity id
+     * @param time 时间 / time
+     * @param msg 消息 / message
+     * @param race 阵营 / race
+     */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -463,18 +463,18 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	/**
-	 * 处理 sp。
-	 * Handle sp.
-	 *
-	 * NPC
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * time
-	 * walkerId
-	 */
+    /**
+     * 处理 sp。
+     * Handle sp.
+     * 
+     * @param npcId NPC / NPC
+     * @param x X 坐标 / X
+     * @param y Y 坐标 / Y
+     * @param z Z 坐标 / Z
+     * @param h 朝向 / h
+     * @param time 时间 / time
+     * @param walkerId 寻路器 ID / walkerId
+     */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -527,9 +527,9 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

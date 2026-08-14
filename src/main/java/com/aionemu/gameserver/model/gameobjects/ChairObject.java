@@ -15,7 +15,7 @@ public class ChairObject extends HouseObject<HousingChair> {
 		super(owner, objId, templateId);
 	}
 
-	/** 使用时 / on Use. */
+	/** 使用时 / On use. */
 	@Override
 	public void onUse(Player player) {
 	}

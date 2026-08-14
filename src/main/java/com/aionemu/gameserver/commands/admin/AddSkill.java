@@ -25,7 +25,6 @@ public class AddSkill extends AdminCommand {
 	 * 执行添加技能：解析技能 ID/等级并授予目标玩家。
 	 * Executes add-skill: parses skill id/level and grants it to the target player.
 	 *
-	 * admin
 	 * @param params 参数：技能 ID、技能等级 / skill id, skill level
 	 */
 	@Override
@@ -61,8 +60,6 @@ public class AddSkill extends AdminCommand {
 	 * 参数错误时输出 {@code //addskill} 用法。
 	 * Prints {@code //addskill} usage on invalid arguments.
 	 *
-	 * admin
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

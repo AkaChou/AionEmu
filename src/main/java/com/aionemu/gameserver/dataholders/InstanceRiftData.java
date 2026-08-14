@@ -44,7 +44,7 @@ public class InstanceRiftData {
 	 * 返回已加载的副本裂隙地点数量。
 	 * Returns the number of loaded instance rift locations.
 	 *
-	 * location count
+	 * @return 已加载的副本裂缝地点数量 / Returns the number of loaded instance rift locations.
 	 */
 	public int size() {
 		return instanceRift.size();

@@ -27,7 +27,6 @@ public class Map extends AdminCommand {
 	 * Handle freeze, unfreeze or stats subcommands.
 	 *
 	 * @param admin 执行命令的管理员 / Admin executing the command
-	 * Subcommand
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -53,7 +52,6 @@ public class Map extends AdminCommand {
 	 * Show command syntax on invalid arguments.
 	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

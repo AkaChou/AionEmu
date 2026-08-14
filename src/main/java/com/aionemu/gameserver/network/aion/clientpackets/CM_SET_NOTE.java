@@ -47,12 +47,12 @@ public class CM_SET_NOTE extends AionClientPacket {
 			activePlayer.getCommonData().setNote(note);
 			activePlayer.getClientConnection().sendPacket(new SM_UPDATE_NOTE(activePlayer.getObjectId(), note));
 
-			for (Friend friend : activePlayer.getFriendList()) // For all my friends
+			for (Friend friend : activePlayer.getFriendList()) // 遍历我的所有好友 / For all my friends
 			{
 				Player frienPlayer = friend.getPlayer();
-				if (friend.isOnline() && frienPlayer != null) // If the player is online
+				if (friend.isOnline() && frienPlayer != null) // 若玩家在线 / If the player is online
 				{
-					friend.getPlayer().getClientConnection().sendPacket(new SM_FRIEND_LIST()); // Send him a new friend
+					friend.getPlayer().getClientConnection().sendPacket(new SM_FRIEND_LIST()); // 向他发送新的好友列表 / Send him a new friend
 																								// 列表 / list
 
 				}

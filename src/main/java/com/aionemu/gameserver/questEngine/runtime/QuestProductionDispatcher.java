@@ -99,12 +99,12 @@ public final class QuestProductionDispatcher {
 		return catalog instanceof QuestCatalogRegistry registry ? registry : new QuestCatalogRegistry(catalog);
 	}
 
-	/** Returns the exact immutable metadata/owner snapshot used by this dispatcher's event index. */
+	/** 返回此 dispatcher 事件索引使用的精确不可变元数据/owner 快照。 / Returns the exact immutable metadata/owner snapshot used by this dispatcher's event index. */
 	public QuestCatalogRegistry catalogRegistry() {
 		return catalog;
 	}
 
-	/** Returns canonical quest drops from the same immutable snapshot as event routing. */
+	/** 从与事件路由相同的不可变快照返回规范任务掉落。 / Returns canonical quest drops from the same immutable snapshot as event routing. */
 	public List<QuestCatalogDrop> questDrops(int npcId) {
 		return npcId <= 0 ? List.of() : dropIndex.dropsFor(npcId);
 	}
@@ -114,13 +114,13 @@ public final class QuestProductionDispatcher {
 		return questId > 0 && catalog.findExecutable(questId).isPresent();
 	}
 
-	/** Returns whether the catalog has a route for the supplied event key. */
+	/** 返回目录是否拥有指定事件键的路由。 / Returns whether the catalog has a route for the supplied event key. */
 	public boolean hasRoutes(QuestEvent event) {
 		Objects.requireNonNull(event, "event");
 		return !index.routesFor(event).isEmpty();
 	}
 
-	/** Returns whether the named typed owner has a route for the supplied event key. */
+	/** 返回命名的类型化 owner 是否拥有指定事件键的路由。 / Returns whether the named typed owner has a route for the supplied event key. */
 	public boolean hasRoutes(QuestEvent event, int questId) {
 		Objects.requireNonNull(event, "event");
 		if (questId <= 0) {
@@ -139,7 +139,7 @@ public final class QuestProductionDispatcher {
 	 * Returns the unique animation duration required by the item-play entry point.
 	 *
 	 * @param itemId 物品模板 ID / item template id
-	 * 播放时长；没有 typed owner 时为空 / duration, or empty without a typed owner
+	 * @return 播放时长；没有 typed owner 时为空 / duration, or empty without a typed owner
 	 */
 	public OptionalInt itemPlayAnimationMillis(int itemId) {
 		return index.itemPlayAnimationMillis(itemId);
@@ -171,6 +171,9 @@ public final class QuestProductionDispatcher {
 	}
 
 	/**
+	 * 向每个命名 owner 分发一个事件，并报告每个目标是否可路由且无失败。
+	 * 路由条件不匹配是成功投递；路由缺失或执行失败则不是。
+	 * 即使前面的目标失败，也会尝试每个目标。
 	 * Dispatches one event to every named owner and reports whether every target was routable without failure.
 	 * A routed condition mismatch is a successful delivery; an absent route or a failed execution is not.
 	 * Every target is attempted even after an earlier target fails.
@@ -187,7 +190,7 @@ public final class QuestProductionDispatcher {
 		return success;
 	}
 
-	/** Executes a server-authorized, targetless share acceptance through the owner's typed acquisition route. */
+	/** 通过 owner 的类型化获取路由执行服务器授权、无目标的共享接受。 / Executes a server-authorized, targetless share acceptance through the owner's typed acquisition route. */
 	public boolean dispatchSharedQuestAccept(int playerId, int questId, int dialogId) {
 		if (playerId <= 0 || questId <= 0 || (dialogId != 1002 && dialogId != 20000)) {
 			return false;
@@ -242,6 +245,8 @@ public final class QuestProductionDispatcher {
 
 	private QuestRouteResult execute(LazyConnection connection, int playerId, QuestEvent event,
 		QuestEventIndex.Route route, QuestDispatchContract contract, boolean sharedQuestAccept) {
+		// 索引刻意用一个宽键路由一个 NPC 的所有对话。
+		// 其他对话的候选是普通不匹配而非执行失败；保持非结论性，让路由器尝试下一个转换。
 		// The index deliberately routes all dialogs for one NPC through one broad key.
 		// A candidate with another dialog is an ordinary non-match, not an execution
 		// failure; keep it non-conclusive so the router can try the next transition.

@@ -102,7 +102,7 @@ public class MapRegion {
 	 * 返回世界地图 ID。
 	 * Return the world map id.
 	 *
-	 * map id
+	 * @return 地图 ID / the map id
 	 */
 	public Integer getMapId() {
 		return getParent().getMapId();
@@ -112,7 +112,7 @@ public class MapRegion {
 	 * 返回所属世界。
 	 * Return the owning world.
 	 *
-	 * world
+	 * @return 所属世界 / the owning world
 	 */
 	public World getWorld() {
 		return getParent().getWorld();
@@ -122,7 +122,7 @@ public class MapRegion {
 	 * 返回区域 ID（非世界地图 ID）。
 	 * Return the region id (not world map id).
 	 *
-	 * region id
+	 * @return 区域 ID / the region id
 	 */
 	public int getRegionId() {
 		return regionId;
@@ -132,7 +132,7 @@ public class MapRegion {
 	 * 返回父地图实例。
 	 * Return the parent map instance.
 	 *
-	 * parent instance
+	 * @return 父地图实例 / the parent instance
 	 */
 	public WorldMapInstance getParent() {
 		return parent;
@@ -142,7 +142,7 @@ public class MapRegion {
 	 * 返回本区域对象表。
 	 * Return the object map of this region.
 	 *
-	 * object map
+	 * @return 本区域对象表 / the object map
 	 */
 	public Map<Integer, VisibleObject> getObjects() {
 		return objects;
@@ -152,7 +152,7 @@ public class MapRegion {
 	 * 对象值快照。
 	 * Snapshot of object values.
 	 *
-	 * object list
+	 * @return 对象值列表 / the object list
 	 */
 	public List<VisibleObject> getObjectsSnapshot() {
 		synchronized (objects) {
@@ -164,7 +164,7 @@ public class MapRegion {
 	 * 本区域内的静态门。
 	 * Static doors in this region.
 	 *
-	 * @return entityId → door。
+	 * @return entityId → 门映射 / entity id to door map
 	 */
 	public Map<Integer, StaticDoor> getDoors() {
 		Map<Integer, StaticDoor> doors = new HashMap<Integer, StaticDoor>();
@@ -181,7 +181,7 @@ public class MapRegion {
 	 * 返回邻接区域数组。
 	 * Return neighbour region array.
 	 *
-	 * neighbours
+	 * @return 邻接区域数组 / the neighbour regions
 	 */
 	public MapRegion[] getNeighbours() {
 		return neighbours;
@@ -191,7 +191,7 @@ public class MapRegion {
 	 * 添加邻接区域。
 	 * Add a neighbour region.
 	 *
-	 * neighbour region
+	 * @param neighbour 邻接区域 / the neighbour region
 	 */
 	void addNeighbourRegion(MapRegion neighbour) {
 		neighbours = Arrays.copyOf(neighbours, neighbours.length + 1);
@@ -202,7 +202,7 @@ public class MapRegion {
 	 * 将对象加入本区域；玩家增减触发激活检查。
 	 * Add an object to this region; player changes trigger activeness checks.
 	 *
-	 * visible object
+	 * @param object 可见对象 / the visible object
 	 */
 	void add(VisibleObject object) {
 		if (objects.put(object.getObjectId(), object) == null) {
@@ -230,7 +230,7 @@ public class MapRegion {
 	 * 从本区域移除对象。
 	 * Remove an object from this region.
 	 *
-	 * visible object
+	 * @param object 可见对象 / the visible object
 	 */
 	void remove(VisibleObject object) {
 		if (objects.remove(object.getObjectId()) != null) {
@@ -374,7 +374,7 @@ public class MapRegion {
 	 * 重校验生物所在全部 Zone 的 enter/leave。
 	 * Revalidate enter/leave for all zones covering the creature.
 	 *
-	 * creature
+	 * @param creature 生物 / the creature
 	 */
 	public void revalidateZones(Creature creature) {
 		for (Entry<Integer, TreeSet<ZoneInstance>> e : zoneMap.entrySet()) {
@@ -403,8 +403,8 @@ public class MapRegion {
 	 * 返回包含该生物的 Zone 列表。
 	 * Return zones that contain the creature.
 	 *
-	 * creature
-	 * zone list
+	 * @param creature 生物 / the creature
+	 * @return 包含生物的 Zone 列表 / the zone list
 	 */
 	public List<ZoneInstance> getZones(Creature creature) {
 		List<ZoneInstance> z = new ArrayList<ZoneInstance>();
@@ -423,9 +423,8 @@ public class MapRegion {
 	 * 将死亡事件分发给包含目标的 Zone。
 	 * Dispatch death event to zones containing the target.
 	 *
-	 * attacker
-	 * target
-	 *
+	 * @param attacker 攻击者 / the attacker
+	 * @param target 目标 / the target
 	 * @return 任一 Zone 处理返回 true / true if any zone handled it
 	 */
 	public boolean onDie(Creature attacker, Creature target) {
@@ -446,12 +445,11 @@ public class MapRegion {
 	 * 判断坐标是否在指定 Zone 内。
 	 * Whether coordinates lie inside the named zone.
 	 *
-	 * zone name
-	 *
+	 * @param zoneName Zone 名称 / the zone name
 	 * @param x 坐标 X / X coordinate
 	 * @param y 坐标 Y / Y coordinate
 	 * @param z 坐标 Z / Z coordinate
-	 * @param z 若 inside 则为 true / true if inside
+	 * @return 若 inside 则为 true / true if inside
 	 */
 	public boolean isInsideZone(ZoneName zoneName, float x, float y, float z) {
 		for (Entry<Integer, TreeSet<ZoneInstance>> e : zoneMap.entrySet()) {
@@ -470,9 +468,8 @@ public class MapRegion {
 	 * 判断生物是否在指定 Zone 内。
 	 * Whether the creature is inside the named zone.
 	 *
-	 * zone name
-	 * creature
-	 *
+	 * @param zoneName Zone 名称 / the zone name
+	 * @param creature 生物 / the creature
 	 * @return 若 inside 则为 true / true if inside
 	 */
 	public boolean isInsideZone(ZoneName zoneName, Creature creature) {
@@ -492,9 +489,8 @@ public class MapRegion {
 	 * 物品使用 Zone 校验（按 xml 名前缀匹配，因实例名不唯一）。
 	 * Item-use zone check (prefix-matches xml names because instance names are not unique).
 	 *
-	 * zone name
-	 * creature
-	 *
+	 * @param zoneName Zone 名称 / the zone name
+	 * @param creature 生物 / the creature
 	 * @return 若 inside 则为 true / true if inside
 	 */
 	public boolean isInsideItemUseZone(ZoneName zoneName, Creature creature) {
@@ -517,7 +513,7 @@ public class MapRegion {
 	 * 按优先级/类型构建 Zone 分类表。
 	 * Build zone category map by priority/type.
 	 *
-	 * zone array
+	 * @param zones Zone 数组 / the zone array
 	 */
 	private void createZoneMap(ZoneInstance[] zones) {
 		zoneMap = new LinkedHashMap<Integer, TreeSet<ZoneInstance>>();
@@ -540,7 +536,7 @@ public class MapRegion {
 	 * 返回 Zone 数量。
 	 * Return zone count.
 	 *
-	 * zone count
+	 * @return Zone 数量 / the zone count
 	 */
 	public int getZoneCount() {
 		return zoneCount;

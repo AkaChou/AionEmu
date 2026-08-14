@@ -46,7 +46,6 @@ public class ChargeSkillTemplate {
 	 * 获取充能技能 ID。
 	 * Gets charge skill id.
 	 *
-	 * id
 	 */
 	public int getId() {
 		return id;
@@ -56,7 +55,6 @@ public class ChargeSkillTemplate {
 	 * 获取充能集合名称。
 	 * Gets charge set name.
 	 *
-	 * set name
 	 */
 	public String getChargeSetName() {
 		return charge_set_name;
@@ -66,7 +64,6 @@ public class ChargeSkillTemplate {
 	 * 获取第一阶段技能 ID。
 	 * Gets first-stage skill id.
 	 *
-	 * skill id
 	 */
 	public int getFirstId() {
 		return first;
@@ -76,7 +73,6 @@ public class ChargeSkillTemplate {
 	 * 获取第二阶段技能 ID。
 	 * Gets second-stage skill id.
 	 *
-	 * skill id
 	 */
 	public int getSecondId() {
 		return second;
@@ -86,7 +82,6 @@ public class ChargeSkillTemplate {
 	 * 获取第三阶段技能 ID。
 	 * Gets third-stage skill id.
 	 *
-	 * skill id
 	 */
 	public int getThirdId() {
 		return third;
@@ -96,7 +91,6 @@ public class ChargeSkillTemplate {
 	 * 获取最小充能值。
 	 * Gets minimum charge value.
 	 *
-	 * min charge
 	 */
 	public int getMinCharge() {
 		return min_charge;
@@ -106,7 +100,6 @@ public class ChargeSkillTemplate {
 	 * 获取充能阶段列表。
 	 * Gets charge stage list.
 	 *
-	 * charges
 	 */
 	public List<ChargeTemplate> getCharges() {
 		return charges;
@@ -116,7 +109,6 @@ public class ChargeSkillTemplate {
 	 * 获取充能加成类型。
 	 * Gets bonus charge type.
 	 *
-	 * bonus type
 	 */
 	public BonusChargeType getBonusChargeType() {
 		return type;

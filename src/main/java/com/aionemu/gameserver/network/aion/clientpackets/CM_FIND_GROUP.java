@@ -51,41 +51,41 @@ public class CM_FIND_GROUP extends AionClientPacket {
 		action = readC();
 
 		switch (action) {
-		case 0x00: // recruit list
+		case 0x00: // 招募列表 / recruit list
 			break;
-		case 0x01: // offer delete
+		case 0x01: // 删除邀请 / offer delete
 			playerObjId = readD();
 			unk = readD(); // unk(65557)
 			break;
-		case 0x02: // send offer
+		case 0x02: // 发送邀请 / send offer
 			playerObjId = readD();
 			message = readS();
 			groupType = readC();
 			break;
-		case 0x03: // recruit update
+		case 0x03: // 更新招募 / recruit update
 			playerObjId = readD();
 			unk = readD(); // unk(65557)
 			message = readS();
 			groupType = readC();
 			break;
-		case 0x04: // apply list
+		case 0x04: // 申请列表 / apply list
 			break;
-		case 0x05: // post delete
+		case 0x05: // 删除帖子 / post delete
 			playerObjId = readD();
 			break;
-		case 0x06: // apply create
-		case 0x07: // apply update
+		case 0x06: // 创建申请 / apply create
+		case 0x07: // 更新申请 / apply update
 			playerObjId = readD();
 			message = readS();
 			groupType = readC();
 			classId = readC();
 			level = readC();
 			break;
-		case 0x08: // register InstanceGroup
+		case 0x08: // 登记副本队伍 / register InstanceGroup
 			instanceId = readD();
-			groupType = readC();// need to be tested
-			message = readS();// text
-			minMembers = readC();// minMembers chosen by writer
+			groupType = readC();// 需测试 / need to be tested
+			message = readS();// 文本 / text
+			minMembers = readC();// 由写入方选择的最小成员数 / minMembers chosen by writer
 			break;
 		case 0x0A:
 			break;

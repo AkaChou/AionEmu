@@ -74,7 +74,7 @@ public class VanktristAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19567, 46, getOwner()).useNoAnimationSkill(); //Gravitational Shift.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19567, 46, getOwner()).useNoAnimationSkill(); // 重力偏移 / Gravitational Shift
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -106,7 +106,7 @@ public class VanktristAI2 extends AggressiveNpcAI2
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
-						spawn(217804, x, y, z, (byte) 0); //Weakened Dimensional Vortex.
+						spawn(217804, x, y, z, (byte) 0); // 削弱的空间漩涡 / Weakened Dimensional Vortex
 					}
 				}
 			}, 3000);
@@ -147,7 +147,7 @@ public class VanktristAI2 extends AggressiveNpcAI2
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
 		if (p != null) {
-			deleteNpcs(p.getWorldMapInstance().getNpcs(217804)); //Vortex.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(217804)); // 空间漩涡 / Vortex
 		}
 		cancelPhaseTask();
 		super.handleDied();

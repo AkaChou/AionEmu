@@ -17,7 +17,7 @@ public class BeritoraAI2 extends AggressiveNpcAI2
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
 		if (p != null) {
-			spawn(832262, p.getX(), p.getY(), p.getZ(), (byte) 0); //Treasure Chest.
+			spawn(832262, p.getX(), p.getY(), p.getZ(), (byte) 0); // 宝箱 / Treasure Chest.
 		}
 		super.handleDied();
 	}

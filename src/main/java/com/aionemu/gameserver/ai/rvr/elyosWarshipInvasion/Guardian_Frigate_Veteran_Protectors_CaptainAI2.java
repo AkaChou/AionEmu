@@ -25,11 +25,11 @@ public class Guardian_Frigate_Veteran_Protectors_CaptainAI2 extends AggressiveNp
 		despawnNpc(240757);
 		despawnNpc(240758);
 		despawnNpc(240759);
-		spawn(240760, 1391.9437f, 1615.8804f, 1010.55457f, (byte) 27); //Guardian Frigate Special Grade Combat Captain.
-		spawn(240761, 1395.8307f, 1620.0297f, 1010.55457f, (byte) 15); //Guardian Frigate Special Grade Assault Leader.
-		spawn(240761, 1387.7642f, 1611.8877f, 1010.55457f, (byte) 75); //Guardian Frigate Special Grade Assault Leader.
-		spawn(240761, 1394.0009f, 1610.4152f, 1010.55457f, (byte) 98); //Guardian Frigate Special Grade Assault Leader.
-		spawn(240761, 1389.7134f, 1621.1094f, 1010.55457f, (byte) 37); //Guardian Frigate Special Grade Assault Leader.
+		spawn(240760, 1391.9437f, 1615.8804f, 1010.55457f, (byte) 27); // 特等护卫舰战斗队长 / Guardian Frigate Special Grade Combat Captain.
+		spawn(240761, 1395.8307f, 1620.0297f, 1010.55457f, (byte) 15); // 特等护卫舰突击队长 / Guardian Frigate Special Grade Assault Leader.
+		spawn(240761, 1387.7642f, 1611.8877f, 1010.55457f, (byte) 75); // 特等护卫舰突击队长 / Guardian Frigate Special Grade Assault Leader.
+		spawn(240761, 1394.0009f, 1610.4152f, 1010.55457f, (byte) 98); // 特等护卫舰突击队长 / Guardian Frigate Special Grade Assault Leader.
+		spawn(240761, 1389.7134f, 1621.1094f, 1010.55457f, (byte) 37); // 特等护卫舰突击队长 / Guardian Frigate Special Grade Assault Leader.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

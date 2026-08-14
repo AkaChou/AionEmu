@@ -13,7 +13,7 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 
 /**
  * 阿诺哈刷新点模板（静态数据/XML）。
- * XML template.
+ * Anoha spawn template (static data/XML).
  *
  * @author Rinzler (Encom)
  */
@@ -32,7 +32,7 @@ public class AnohaSpawn {
 	@XmlElement(name = "anoha_type")
 	private List<AnohaSpawn.AnohaStateTemplate> AnohaStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回要塞模式模板 / Returns the siege mod templates */
 	public List<AnohaStateTemplate> getSiegeModTemplates() {
 		return AnohaStateTemplate;
 	}

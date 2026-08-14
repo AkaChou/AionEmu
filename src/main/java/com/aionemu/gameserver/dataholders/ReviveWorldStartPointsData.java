@@ -46,9 +46,9 @@ public class ReviveWorldStartPointsData {
 	 * 按世界、阵营与玩家等级查找匹配的复活起始点。
 	 * Finds a matching revive start point by world, race and player level.
 	 *
-	 * 世界 ID / world id
-	 * 阵营 / race
-	 * player level
+	 * @param worldId 世界 ID / world id
+	 * @param race 阵营 / race
+	 * @param playerLevel 玩家等级 / player level
 	 * @return 复活起始点，不匹配则为 null / revive start point or null
 	 */
 	public WorldReviveStartPoints getReviveStartPoint(int worldId, Race race, int playerLevel) {

@@ -21,7 +21,7 @@ public class AI2Logger {
 	 * Logs an AI info message (gated by {@link AbstractAI#isLogging()}).
 	 *
 	 * @param ai AI 实例 / AI instance
-	 * log message
+	 * @param message 日志消息 / log message
 	 */
 	public static final void info(AbstractAI ai, String message) {
 		if (ai.isLogging()) {
@@ -34,7 +34,7 @@ public class AI2Logger {
 	 * Logs an AI info message (casts {@link AI2} to {@link AbstractAI}).
 	 *
 	 * @param ai AI 实例 / AI instance
-	 * log message
+	 * @param message 日志消息 / log message
 	 */
 	public static final void info(AI2 ai, String message) {
 		info((AbstractAI) ai, message);
@@ -45,7 +45,7 @@ public class AI2Logger {
 	 * Logs movement-related debug info (gated by {@link AIConfig#MOVE_DEBUG} and AI logging).
 	 *
 	 * @param owner 生物所有者 / creature owner
-	 * log message
+	 * @param message 日志消息 / log message
 	 */
 	public static void moveinfo(Creature owner, String message) {
 		if (AIConfig.MOVE_DEBUG && owner.getAi2().isLogging()) {

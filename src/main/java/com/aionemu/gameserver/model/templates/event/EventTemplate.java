@@ -37,7 +37,7 @@ import com.aionemu.gameserver.world.World;
 
 /**
  * 活动模板（静态数据/XML）。
- * XML template.
+ * Event Template (static data/XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -92,17 +92,17 @@ public class EventTemplate {
 		return eventDrops;
 	}
 
-	/** 返回开始日期 / Returns the start date*/
+	/** 返回开始日期 / Returns the start date */
 	public ZonedDateTime getStartDate() {
 		return DateTimeUtil.fromCalendar(startDate.toGregorianCalendar());
 	}
 
-	/** 返回结束日期 / Returns the end date*/
+	/** 返回结束日期 / Returns the end date */
 	public ZonedDateTime getEndDate() {
 		return DateTimeUtil.fromCalendar(endDate.toGregorianCalendar());
 	}
 
-	/** 返回 startable quests / Returns the startable quests */
+	/** 返回可开始任务列表 / Returns the startable quests */
 	public List<Integer> getStartableQuests() {
 		if (quests == null) {
 			return new ArrayList<Integer>();
@@ -110,7 +110,7 @@ public class EventTemplate {
 		return quests.getStartableQuests();
 	}
 
-	/** 返回 maintainable quests / Returns the maintainable quests */
+	/** 返回可保持任务列表 / Returns the maintainable quests */
 	public List<Integer> getMaintainableQuests() {
 		if (quests == null) {
 			return new ArrayList<Integer>();
@@ -125,7 +125,7 @@ public class EventTemplate {
 	}
 
 	/**
-	 * @return Whether expired
+	 * @return 是否已过期 / whether expired
 	 */
 	public boolean isExpired() {
 		return !isActive();
@@ -134,13 +134,13 @@ public class EventTemplate {
 	@XmlTransient
 	volatile boolean isStarted = false;
 
-	/** 设置 started / Sets the started */
+	/** 设置已启动标志 / Sets the started flag */
 	public void setStarted() {
 		isStarted = true;
 	}
 
 	/**
-	 * @return Whether started
+	 * @return 是否已启动 / whether started
 	 */
 	public boolean isStarted() {
 		return isStarted;
@@ -244,7 +244,7 @@ public class EventTemplate {
 		isStarted = false;
 	}
 
-	/** Adds 已刷新对象 / Adds spawned object */
+	/** 添加已刷新的对象。 / Adds a spawned object. */
 	public void addSpawnedObject(VisibleObject object) {
 		if (spawnedObjects == null) {
 			spawnedObjects = new ArrayList<VisibleObject>();

@@ -29,21 +29,31 @@ public class AgentSpawn {
 		return id;
 	}
 
+	/**
+	 * 代理状态模板列表。
+	 * Agent state template list.
+	 */
 	@XmlElement(name = "agent_type")
 	private List<AgentSpawn.AgentStateTemplate> AgentStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回代理状态模板列表 / Returns the agent state templates */
 	public List<AgentStateTemplate> getSiegeModTemplates() {
 		return AgentStateTemplate;
 	}
 
+	/**
+	 * 代理状态模板：绑定状态类型与对应的刷新列表。
+	 * Agent state template: binds a state type with its spawn list.
+	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "AgentStateTemplate")
 	public static class AgentStateTemplate {
 
+		/** 刷新列表。 / Spawn list. */
 		@XmlElement(name = "spawn")
 		private List<Spawn> spawns;
 
+		/** 代理状态类型。 / Agent state type. */
 		@XmlAttribute(name = "astate")
 		private AgentStateType agentType;
 

@@ -64,7 +64,7 @@ public class RecipeList {
 		}
 	}
 
-	/** Auto Learn Recipe / Auto Learn Recipe */
+	/** 自动学习配方 / Auto Learn Recipe */
 	public void autoLearnRecipe(Player player, int skillId, int skillLvl) {
 		for (RecipeTemplate recipe : DataManager.RECIPE_DATA.getAutolearnRecipes(player.getRace(), skillId, skillLvl)) {
 			player.getRecipeList().addRecipe(player, recipe);
@@ -72,7 +72,7 @@ public class RecipeList {
 	}
 
 	/**
-	 * @param recipeId Whether recipe present
+	 * @param recipeId 要查询的配方 ID / Whether recipe present
 	 */
 	public boolean isRecipePresent(int recipeId) {
 		return recipeList.contains(recipeId);

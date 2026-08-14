@@ -32,8 +32,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("ragnarok")
 public class RagnarokAI2 extends AggressiveNpcAI2
 {
+	// 阶段定时任务：周期性施放自伤技能并召唤诸神黄昏仆从。 / Phase task: periodically casts the self-harm skill and spawns Ragnarok minions.
 	private Future<?> phaseTask;
+	// 是否已进入攻击状态（首次受到攻击置位）。 / Whether already aggroed (set on first attack).
 	private AtomicBoolean isAggred = new AtomicBoolean(false);
+	// 各血量阶段事件是否已启动。 / Whether the phase event for a given HP threshold has started.
 	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
 	
 	@Override

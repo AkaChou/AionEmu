@@ -34,12 +34,12 @@ public class HouseSpawns implements Comparable<HouseSpawns> {
 		return spawns;
 	}
 
-	/** 返回 address / Returns the address */
+	/** 返回地址 / Returns the address */
 	public int getAddress() {
 		return address;
 	}
 
-	/** 设置 address / Sets the address */
+	/** 设置地址 / Sets the address */
 	public void setAddress(int value) {
 		address = value;
 	}

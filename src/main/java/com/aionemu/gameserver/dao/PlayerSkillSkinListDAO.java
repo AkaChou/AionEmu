@@ -17,7 +17,7 @@ public abstract class PlayerSkillSkinListDAO implements DAO {
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
 	 *
-	 * fully qualified class name
+	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -28,7 +28,7 @@ public abstract class PlayerSkillSkinListDAO implements DAO {
 	 * 加载玩家技能皮肤列表。
 	 * Loads the skill skin list for the player.
 	 *
-	 * player object id
+	 * @param playerId 玩家对象 ID / player object id
 	 * @return 技能皮肤列表 / skill skin list
 	 */
 	public abstract SkillSkinList loadSkillSkinList(int playerId);
@@ -37,7 +37,7 @@ public abstract class PlayerSkillSkinListDAO implements DAO {
 	 * 保存玩家一条技能皮肤记录。
 	 * Stores a skill skin entry for the player.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param entry 技能皮肤条目 / skill skin entry
 	 * @return 是否保存成功 / true if stored
 	 */
@@ -47,8 +47,8 @@ public abstract class PlayerSkillSkinListDAO implements DAO {
 	 * 移除玩家一条技能皮肤。
 	 * Removes a skill skin from the player.
 	 *
-	 * player object id
-	 * skin id
+	 * @param playerId 玩家对象 ID / player object id
+	 * @param skinId 皮肤 ID / skin id
 	 * @return 是否移除成功 / true if removed
 	 */
 	public abstract boolean removeSkillSkin(int playerId, int skinId);
@@ -57,8 +57,8 @@ public abstract class PlayerSkillSkinListDAO implements DAO {
 	 * 激活玩家指定技能皮肤。
 	 * Activates a skill skin for the player.
 	 *
-	 * player object id
-	 * skin id
+	 * @param playerId 玩家对象 ID / player object id
+	 * @param skinId 皮肤 ID / skin id
 	 * @return 是否激活成功 / true if activated
 	 */
 	public abstract boolean setActive(int playerId, int skinId);
@@ -67,8 +67,8 @@ public abstract class PlayerSkillSkinListDAO implements DAO {
 	 * 取消激活玩家指定技能皮肤。
 	 * Deactivates a skill skin for the player.
 	 *
-	 * player object id
-	 * skin id
+	 * @param playerId 玩家对象 ID / player object id
+	 * @param skinId 皮肤 ID / skin id
 	 * @return 是否取消成功 / true if deactivated
 	 */
 	public abstract boolean setDeactive(int playerId, int skinId);

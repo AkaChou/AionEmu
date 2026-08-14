@@ -42,7 +42,7 @@ public class GoodsList {
 	}
 
 	/**
-	 * return the limitedItems
+	 * @return 限量物品列表 / the limited items
 	 */
 	public List<LimitedItem> getLimitedItems() {
 		List<LimitedItem> limitedItems = new ArrayList<>();
@@ -56,16 +56,16 @@ public class GoodsList {
 		return limitedItems;
 	}
 
-	 /**
-	  * 获取 id 属性值。
-	  * Gets the value of the id property
-	  */
+	/**
+	 * 获取 id 属性值。
+	 * Gets the value of the id property
+	 */
 	public int getId() {
 		return id;
 	}
 
 	/**
-	 * @return the itemIdList
+	 * @return 物品 ID 列表 / the item id list
 	 */
 	public List<Integer> getItemIdList() {
 		return itemIdList;
@@ -85,24 +85,24 @@ public class GoodsList {
 		@XmlAttribute(name = "buy_limit")
 		private Integer buyLimit;
 
-	 /**
-	  * 获取 id 属性值。
-	  * Gets the value of the id property
-	  */
+	/**
+	 * 获取 id 属性值。
+	 * Gets the value of the id property
+	 */
 		public int getId() {
 			return id;
 		}
 
 		/**
-	 * return sellLimit
-	 */
+		 * @return 出售上限 / the sell limit
+		 */
 		public Integer getSellLimit() {
 			return sellLimit;
 		}
 
 		/**
-	 * return buyLimit
-	 */
+		 * @return 购买上限 / the buy limit
+		 */
 		public Integer getBuyLimit() {
 			return buyLimit;
 		}

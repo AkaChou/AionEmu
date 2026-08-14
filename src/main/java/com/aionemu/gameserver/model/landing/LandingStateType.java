@@ -6,6 +6,22 @@ package com.aionemu.gameserver.model.landing;
  */
 
 public enum LandingStateType {
-	/** Lvl1 / Lvl1 */
-	LVL1, LVL2, LVL3, LVL4, LVL5, LVL6, LVL7, LVL8, NONE
+	/** 等级 1 / Lvl1 */
+	LVL1,
+	/** 等级 2 / Lvl2 */
+	LVL2,
+	/** 等级 3 / Lvl3 */
+	LVL3,
+	/** 等级 4 / Lvl4 */
+	LVL4,
+	/** 等级 5 / Lvl5 */
+	LVL5,
+	/** 等级 6 / Lvl6 */
+	LVL6,
+	/** 等级 7 / Lvl7 */
+	LVL7,
+	/** 等级 8 / Lvl8 */
+	LVL8,
+	/** 无 / None */
+	NONE
 }

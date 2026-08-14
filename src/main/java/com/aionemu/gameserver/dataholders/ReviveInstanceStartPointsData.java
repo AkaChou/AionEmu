@@ -34,9 +34,7 @@ public class ReviveInstanceStartPointsData {
 	 * 按世界 ID 获取副本复活起始点。
 	 * Returns the instance revive start point for the given world id.
 	 *
-	 * 世界 ID / world id
-	 *
-	 * @param worldId
+	 * @param worldId 世界 ID / world id
 	 * @return 复活起始点，不存在则为 null / revive start point or null
 	 */
 	public InstanceReviveStartPoints getReviveStartPoint(int worldId) {

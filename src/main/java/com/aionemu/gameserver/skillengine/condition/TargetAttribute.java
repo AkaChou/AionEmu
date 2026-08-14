@@ -39,7 +39,7 @@ public enum TargetAttribute {
 	 * Parses a target attribute from its name string.
 	 *
 	 * @param v 名称 / name
-	 * target attribute
+	 * @return 目标属性 / target attribute
 	 */
 	public static TargetAttribute fromValue(String v) {
 		return valueOf(v);

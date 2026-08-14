@@ -7,7 +7,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-/** Deterministic immutable catalog; duplicate owners fail during construction. */
+/**
+ * 确定性不可变目录；构造期间遇到重复条目即失败。
+ * Deterministic immutable catalog; duplicate owners fail during construction.
+ */
 public final class ImmutableQuestCatalog implements QuestCatalog {
 	private final Map<Integer, QuestCatalogEntry> entries;
 	private final Collection<CompiledQuestDefinition> executables;

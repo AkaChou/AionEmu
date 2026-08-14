@@ -27,7 +27,8 @@ public class LegionMemberEx extends LegionMember {
 	private boolean online = false;
 
 	/**
-	 * If player is immediately after this constructor is called
+	 * 立即使用玩家对象数据构造。
+	 * Constructs immediately from the player object.
 	 */
 	public LegionMemberEx(Player player, LegionMember legionMember, boolean online) {
 		super(player.getObjectId(), legionMember.getLegion(), legionMember.getRank());
@@ -76,14 +77,14 @@ public class LegionMemberEx extends LegionMember {
 		this.playerClass = playerClass;
 	}
 
-	/** 返回 last online / Returns the last online */
+	/** 返回最后在线时间。 / Returns the last online time. */
 	public int getLastOnline() {
 		if (lastOnline == null || isOnline())
 			return 0;
 		return (int) (lastOnline.getTime() / 1000);
 	}
 
-	/** 设置 last online / Sets the last online */
+	/** 设置最后在线时间。 / Sets the last online time. */
 	public void setLastOnline(Timestamp timestamp) {
 		lastOnline = timestamp;
 	}
@@ -94,9 +95,10 @@ public class LegionMemberEx extends LegionMember {
 	}
 
 	/**
-	 * 设置经验值。 / sets the exp value
+	 * 按经验值计算并设置等级。
+	 * Sets the level based on the exp value.
 	 *
-	 * @param exp : enable decrease level
+	 * @param exp 经验值 / exp value
 	 */
 	public void setExp(long exp) {
 		// maxLevel 为 51，但游戏中 50 级应显示满经验条 / maxLevel is 51 but in game 50 should be shown with full XP bar
@@ -120,12 +122,12 @@ public class LegionMemberEx extends LegionMember {
 		this.level = level;
 	}
 
-	/** 返回世界 ID / Returns the world id */
+	/** 返回世界 ID。 / Returns the world id. */
 	public int getWorldId() {
 		return worldId;
 	}
 
-	/** 设置 world id / Sets the world id */
+	/** 设置世界 ID。 / Sets the world id. */
 	public void setWorldId(int worldId) {
 		this.worldId = worldId;
 	}
@@ -144,15 +146,16 @@ public class LegionMemberEx extends LegionMember {
 		return online;
 	}
 
-	/** 相同对象 ID / Same Object Id */
+	/** 是否为相同对象 ID。 / Whether the object ids match. */
 	public boolean sameObjectId(int objectId) {
 		return getObjectId() == objectId;
 	}
 
 	/**
-	 * 检查是否 LegionMemberEx 为有效与否。 / Checks if a LegionMemberEx is valid or not
+	 * 检查 LegionMemberEx 是否有效。
+	 * Checks whether this LegionMemberEx is valid.
 	 *
-	 * @return true if LegionMemberEx is valid
+	 * @return 若有效则为 true / true if valid
 	 */
 	public boolean isValidLegionMemberEx() {
 		if (getObjectId() < 1) {

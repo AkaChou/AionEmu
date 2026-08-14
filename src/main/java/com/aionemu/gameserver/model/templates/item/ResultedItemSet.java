@@ -12,8 +12,8 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 
 /**
- * Resulted 物品 Set 模板（静态数据/XML）。
- * XML template.
+ * 合成产物物品组模板：数量与随机范围。
+ * Resulted item set template: count and random range.
  */
 @XmlType(name = "ResultedItemSet")
 @Slf4j(topic = "com.aionemu.gameserver.model.templates.item.ResultedItem")
@@ -46,12 +46,12 @@ public class ResultedItemSet {
 		return count;
 	}
 
-	/** 返回 rnd min / Returns the rnd min */
+	/** 返回随机下限 / Returns the rnd min */
 	public int getRndMin() {
 		return rndMin;
 	}
 
-	/** 返回 rnd max / Returns the rnd max */
+	/** 返回随机上限 / Returns the rnd max */
 	public int getRndMax() {
 		return rndMax;
 	}

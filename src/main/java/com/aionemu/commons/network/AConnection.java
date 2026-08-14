@@ -127,7 +127,7 @@ public abstract class AConnection {
      * 获取连接 IP。
      * Get connection IP.
      *
-     * IP address
+     * @return IP 地址 / IP address
      */
     public final String getIP() {
         return this.ip;
@@ -174,7 +174,7 @@ public abstract class AConnection {
      * 向缓冲写出待发送数据。
      * Write pending data into the buffer.
      *
-     * Write buffer
+     * @param buf 写缓冲 / Write buffer
      * @return 是否还有后续数据 / Whether more data remains
      */
     protected abstract boolean writeData(ByteBuffer buf);

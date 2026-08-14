@@ -3,7 +3,10 @@ package com.aionemu.gameserver.questEngine.definition;
 import java.util.List;
 import java.util.Objects;
 
-/** Static sequential kill target metadata. */
+/**
+ * 静态的顺序击杀目标元数据。
+ * Static sequential kill target metadata.
+ */
 public record QuestKill(int sequence, List<Integer> npcIds) {
 	public QuestKill {
 		if (sequence <= 0) {

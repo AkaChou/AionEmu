@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 游戏内商城，用于 ingameshop 相关逻辑。
- * In Game Shop for ingameshop logic.
+ * 游戏内商城分类信息（子分类与分类 ID）。
+ * In-game shop category info (sub-category and category id).
  */
 
 @Getter

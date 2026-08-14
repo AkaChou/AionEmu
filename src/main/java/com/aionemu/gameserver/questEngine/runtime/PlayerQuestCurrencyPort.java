@@ -26,6 +26,8 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
+ * 真实 {@link QuestCurrencyPort}：将货币奖励（基纳、AP、GP、DP）应用到在线玩家，
+ * 并通过各货币的事务 DAO 在调用方持有的连接上持久化，与任务状态原子提交。
  * Real {@link QuestCurrencyPort}: applies currency rewards (kinah, AP, GP, DP)
  * to the live player and persists them through each currency's transactional
  * DAO on the caller-owned connection, so they commit atomically with the quest
@@ -316,6 +318,7 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 				player.getInventory().setPersistentState(PersistentState.UPDATE_REQUIRED);
 			}
 			if (ap > 0) {
+				// 直接变更军阶投影；服务包装器会在调用方持有的 JDBC 事务提交前发送数据包。
 				// Mutate the rank projection directly; the service wrapper sends packets before
 				// the caller-owned JDBC transaction commits.
 				int expectedAp = player.getAbyssRank().getAp() - ap;
@@ -411,7 +414,7 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 			if (seen.put(set.kind(), Boolean.TRUE) != null) {
 				throw new SQLException("multiple exact writes for " + set.kind() + " in one quest transition");
 			}
-			// Force the capture check without treating the balance as a fabricated zero.
+			// 强制执行捕获检查，不把余额当作虚构的零。 / Force the capture check without treating the balance as a fabricated zero.
 			snapshot.balance(set.kind());
 		}
 	}

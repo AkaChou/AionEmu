@@ -5,7 +5,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestPvpCreditSource;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
-/** Production boundary for authoritative PvP quest events. */
+/** 权威 PvP 任务事件的生产边界。 / Production boundary for authoritative PvP quest events. */
 public interface QuestPvpEventPort {
 	QuestEvent.KillRanked killRanked(QuestEnv env, Player killer, int victimRankId,
 		QuestPvpCreditSource creditSource);

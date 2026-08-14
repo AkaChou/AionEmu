@@ -16,7 +16,7 @@ public abstract class PlayerEmotionListDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public String getClassName() {
@@ -27,7 +27,7 @@ public abstract class PlayerEmotionListDAO implements DAO {
 	 * 加载玩家表情列表。
 	 * Loads the player's emotion list.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void loadEmotions(Player player);
 
@@ -35,8 +35,8 @@ public abstract class PlayerEmotionListDAO implements DAO {
 	 * 为玩家插入一条表情。
 	 * Inserts an emotion for the player.
 	 *
-	 * 玩家 / player
-	 * emotion
+	 * @param player 玩家 / player
+	 * @param emotion 表情 / emotion
 	 */
 	public abstract void insertEmotion(Player player, Emotion emotion);
 
@@ -44,8 +44,8 @@ public abstract class PlayerEmotionListDAO implements DAO {
 	 * 删除玩家的指定表情。
 	 * Deletes the given emotion for the player.
 	 *
-	 * player id
-	 * emotion id
+	 * @param playerId 玩家 ID / player id
+	 * @param emotionId 表情 ID / emotion id
 	 */
 	public abstract void deleteEmotion(int playerId, int emotionId);
 }

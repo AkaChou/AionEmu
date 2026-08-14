@@ -10,7 +10,7 @@ interface StartupProgressReporter {
 	 * 开始报告某分组的加载。
 	 * Start reporting load of a group.
 	 *
-	 * Group name
+	 * @param groupName 分组名 / Group name
 	 */
 	void start(String groupName);
 
@@ -18,7 +18,7 @@ interface StartupProgressReporter {
 	 * 某步骤开始。
 	 * A step has started.
 	 *
-	 * 步骤名 / Step name
+	 * @param stepName 步骤名 / Step name
 	 */
 	void stepStarted(String stepName);
 
@@ -26,7 +26,7 @@ interface StartupProgressReporter {
 	 * 某步骤完成。
 	 * A step has finished.
 	 *
-	 * 步骤名 / Step name
+	 * @param stepName 步骤名 / Step name
 	 */
 	void stepFinished(String stepName);
 
@@ -34,8 +34,8 @@ interface StartupProgressReporter {
 	 * 结束某分组并报告耗时。
 	 * Finish a group and report elapsed time.
 	 *
-	 * Group name
-	 * Elapsed milliseconds
+	 * @param groupName 分组名 / Group name
+	 * @param elapsedMillis 耗时毫秒 / Elapsed milliseconds
 	 */
 	void finish(String groupName, long elapsedMillis);
 

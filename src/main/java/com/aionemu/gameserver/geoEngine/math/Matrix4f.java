@@ -112,7 +112,7 @@ public final class Matrix4f implements Cloneable {
 	 * 拷贝构造。
 	 * Copy constructor.
 	 *
-	 * source matrix
+	 * @param mat 源矩阵 / source matrix
 	 */
 	public Matrix4f(Matrix4f mat) {
 		this.copy(mat);
@@ -122,7 +122,7 @@ public final class Matrix4f implements Cloneable {
 	 * 从另一矩阵拷贝元素；null 时加载单位矩阵。
 	 * Copies elements from another matrix; loads identity if null.
 	 *
-	 * source matrix
+	 * @param matrix 源矩阵 / source matrix
 	 */
 	public void copy(Matrix4f matrix) {
 		if (null == matrix) {
@@ -211,7 +211,7 @@ public final class Matrix4f implements Cloneable {
 	 *
 	 * @param i 行索引（0–3） / row index (0–3)
 	 * @param j 列索引（0–3） / column index (0–3)
-	 * matrix element
+	 * @return 矩阵元素 / matrix element
 	 */
 	public float get(int i, int j) {
 		switch (i) {
@@ -301,7 +301,7 @@ public final class Matrix4f implements Cloneable {
 	 *
 	 * @param i 列索引（0–3） / column index (0–3)
 	 * @param store 结果存储（null 时分配） / result storage (allocated if null)
-	 * column vector
+	 * @return 列向量 / column vector
 	 */
 	public float[] getColumn(int i, float[] store) {
 		if (store == null) {
@@ -398,7 +398,7 @@ public final class Matrix4f implements Cloneable {
 	 *
 	 * @param i 行索引（0–3） / row index (0–3)
 	 * @param j 列索引（0–3） / column index (0–3)
-	 * new value
+	 * @param value 新值 / new value
 	 */
 	public void set(int i, int j, float value) {
 		switch (i) {
@@ -491,7 +491,7 @@ public final class Matrix4f implements Cloneable {
 	 * 从 4×4 二维数组设置矩阵。
 	 * Sets the matrix from a 4×4 two-dimensional array.
 	 *
-	 * @param matrix 4×4 source array。
+	 * @param matrix 4×4 源数组 / 4×4 source array
 	 */
 	public void set(float[][] matrix) {
 		if (matrix.length != 4 || matrix[0].length != 4) {
@@ -519,8 +519,8 @@ public final class Matrix4f implements Cloneable {
 	 * 从另一矩阵设置全部元素，返回自身。
 	 * Sets all elements from another matrix and returns this.
 	 *
-	 * source matrix
-	 * this matrix
+	 * @param matrix 源矩阵 / source matrix
+	 * @return 本矩阵（链式调用） / this matrix
 	 */
 	public Matrix4f set(Matrix4f matrix) {
 		this.m00 = matrix.m00;
@@ -604,7 +604,7 @@ public final class Matrix4f implements Cloneable {
 	 * 返回转置矩阵（新实例；内部以行优先数组构造，实际未做转置）。
 	 * Returns a transposed matrix (new instance; built from row-major array without actual transposition).
 	 *
-	 * new matrix
+	 * @return 新矩阵 / new matrix
 	 */
 	public Matrix4f transpose() {
 		float[] tmp = new float[16];
@@ -617,7 +617,7 @@ public final class Matrix4f implements Cloneable {
 	 * 原地转置本矩阵。
 	 * Transposes this matrix in place.
 	 *
-	 * this matrix
+	 * @return 本矩阵（链式调用） / this matrix
 	 */
 	public Matrix4f transposeLocal() {
 		float tmp = this.m01;
@@ -749,7 +749,7 @@ public final class Matrix4f implements Cloneable {
 	 * Reads the matrix from a FloatBuffer (row-major).
 	 *
 	 * @param fb 源缓冲区 / source buffer
-	 * this matrix
+	 * @return 本矩阵（链式调用） / this matrix
 	 */
 	public Matrix4f readFloatBuffer(FloatBuffer fb) {
 		return this.readFloatBuffer(fb, false);
@@ -761,7 +761,7 @@ public final class Matrix4f implements Cloneable {
 	 *
 	 * @param fb 源缓冲区 / source buffer
 	 * @param columnMajor true 为列优先，false 为行优先 / true for column-major, false for row-major
-	 * this matrix
+	 * @return 本矩阵（链式调用） / this matrix
 	 */
 	public Matrix4f readFloatBuffer(FloatBuffer fb, boolean columnMajor) {
 		if (columnMajor) {
@@ -831,10 +831,10 @@ public final class Matrix4f implements Cloneable {
 	 *
 	 * @param near 近裁剪面 / near clip plane
 	 * @param far 远裁剪面 / far clip plane
-	 * left bound
-	 * right bound
-	 * top bound
-	 * bottom bound
+	 * @param right 左边界 / left bound
+	 * @param near 右边界 / right bound
+	 * @param far 上边界 / top bound
+	 * @param left 下边界 / bottom bound
 	 * @param parallel true 为正交投影，false 为透视投影 / true for orthographic, false for perspective
 	 */
 	public void fromFrustum(float near, float far, float left, float right, float top, float bottom, boolean parallel) {
@@ -864,7 +864,7 @@ public final class Matrix4f implements Cloneable {
 	 * Builds a rotation matrix from an axis and angle (axis is normalized first).
 	 *
 	 * @param angle 旋转角（弧度） / rotation angle in radians
-	 * rotation axis
+	 * @param axis 旋转轴 / rotation axis
 	 */
 	public void fromAngleAxis(float angle, Vector3f axis) {
 		Vector3f normAxis = axis.normalize();
@@ -908,7 +908,7 @@ public final class Matrix4f implements Cloneable {
 	 * 原地将矩阵各元素乘以标量。
 	 * Multiplies each matrix element by a scalar in place.
 	 *
-	 * scalar
+	 * @param scalar 标量 / scalar
 	 */
 	public void multLocal(float scalar) {
 		this.m00 *= scalar;
@@ -933,8 +933,8 @@ public final class Matrix4f implements Cloneable {
 	 * 返回本矩阵乘以标量的新矩阵。
 	 * Returns a new matrix equal to this times a scalar.
 	 *
-	 * scalar
-	 * new matrix
+	 * @param scalar 标量 / scalar
+	 * @return 新矩阵 / new matrix
 	 */
 	public Matrix4f mult(float scalar) {
 		Matrix4f out = new Matrix4f();
@@ -947,9 +947,9 @@ public final class Matrix4f implements Cloneable {
 	 * 将本矩阵乘以标量的结果写入 store。
 	 * Stores this matrix times a scalar into store.
 	 *
-	 * scalar
+	 * @return 标量 / scalar
 	 * @param store 结果存储 / result storage
-	 * store itself
+	 * @param scalar store 自身（链式调用） / store itself
 	 */
 	public Matrix4f mult(float scalar, Matrix4f store) {
 		store.set(this);
@@ -962,7 +962,7 @@ public final class Matrix4f implements Cloneable {
 	 * Returns a new matrix equal to this times another matrix.
 	 *
 	 * @param in2 右乘矩阵 / right-hand matrix
-	 * product matrix
+	 * @return 乘积矩阵 / product matrix
 	 */
 	public Matrix4f mult(Matrix4f in2) {
 		return this.mult(in2, null);
@@ -974,7 +974,7 @@ public final class Matrix4f implements Cloneable {
 	 *
 	 * @param in2 右乘矩阵 / right-hand matrix
 	 * @param store 结果存储（null 时分配） / result storage (allocated if null)
-	 * store itself
+	 * @return store 自身（链式调用） / store itself
 	 */
 	public Matrix4f mult(Matrix4f in2, Matrix4f store) {
 		if (store == null) {
@@ -1020,7 +1020,7 @@ public final class Matrix4f implements Cloneable {
 	 * Multiplies this matrix by another matrix in place.
 	 *
 	 * @param in2 右乘矩阵 / right-hand matrix
-	 * this matrix
+	 * @return 本矩阵（链式调用） / this matrix
 	 */
 	public Matrix4f multLocal(Matrix4f in2) {
 		return this.mult(in2, this);
@@ -1031,7 +1031,7 @@ public final class Matrix4f implements Cloneable {
 	 * Transforms a 3D vector by this matrix (including translation), allocating a new vector.
 	 *
 	 * @param vec 输入向量 / input vector
-	 * transformed vector
+	 * @return 变换后的向量 / transformed vector
 	 */
 	public Vector3f mult(Vector3f vec) {
 		return this.mult(vec, null);
@@ -1043,7 +1043,7 @@ public final class Matrix4f implements Cloneable {
 	 *
 	 * @param vec 输入向量 / input vector
 	 * @param store 结果存储（null 时分配） / result storage (allocated if null)
-	 * store itself
+	 * @return store 自身（链式调用） / store itself
 	 */
 	public Vector3f mult(Vector3f vec, Vector3f store) {
 		if (store == null) {
@@ -1064,7 +1064,7 @@ public final class Matrix4f implements Cloneable {
 	 *
 	 * @param vec 输入法线 / input normal
 	 * @param store 结果存储（null 时分配） / result storage (allocated if null)
-	 * store itself
+	 * @return store 自身（链式调用） / store itself
 	 */
 	public Vector3f multNormal(Vector3f vec, Vector3f store) {
 		if (store == null) {
@@ -1085,7 +1085,7 @@ public final class Matrix4f implements Cloneable {
 	 *
 	 * @param vec 输入法线 / input normal
 	 * @param store 结果存储（null 时分配） / result storage (allocated if null)
-	 * store itself
+	 * @return store 自身（链式调用） / store itself
 	 */
 	public Vector3f multNormalAcross(Vector3f vec, Vector3f store) {
 		if (store == null) {
@@ -1106,7 +1106,7 @@ public final class Matrix4f implements Cloneable {
 	 *
 	 * @param vec 输入向量 / input vector
 	 * @param store 三维结果存储 / 3D result storage
-	 * homogeneous W component
+	 * @return 齐次 W 分量 / homogeneous W component
 	 */
 	public float multProj(Vector3f vec, Vector3f store) {
 		float vx = vec.x;
@@ -1124,7 +1124,7 @@ public final class Matrix4f implements Cloneable {
 	 *
 	 * @param vec 输入向量（null 时记录日志并返回 null） / input vector (null logs and returns null)
 	 * @param store 结果存储（null 时分配） / result storage (allocated if null)
-	 * store itself, or null
+	 * @return store 自身，或 null（新建时） / store itself, or null
 	 */
 	public Vector3f multAcross(Vector3f vec, Vector3f store) {
 		if (null == vec) {
@@ -1193,9 +1193,7 @@ public final class Matrix4f implements Cloneable {
 	 * 返回本矩阵的逆矩阵（新实例）。
 	 * Returns the inverse of this matrix (new instance).
 	 *
-	 * inverse matrix
-	 *
-	 * @return
+	 * @return 逆矩阵 / inverse matrix
 	 * @throws ArithmeticException 矩阵不可逆 / if the matrix is singular
 	 */
 	public Matrix4f invert() {
@@ -1207,10 +1205,7 @@ public final class Matrix4f implements Cloneable {
 	 * Stores the inverse of this matrix into store.
 	 *
 	 * @param store 结果存储（null 时分配） / result storage (allocated if null)
-	 * store itself
-	 *
-	 * @param store
-	 *
+	 * @return store 自身（链式调用） / store itself
 	 * @throws ArithmeticException 矩阵不可逆 / if the matrix is singular
 	 */
 	public Matrix4f invert(Matrix4f store) {
@@ -1265,7 +1260,7 @@ public final class Matrix4f implements Cloneable {
 	 * 原地求逆；若不可逆则置为零矩阵。
 	 * Inverts this matrix in place; zeros the matrix if singular.
 	 *
-	 * this matrix
+	 * @return 本矩阵（链式调用） / this matrix
 	 */
 	public Matrix4f invertLocal() {
 		float fA0 = this.m00 * this.m11 - this.m01 * this.m10;
@@ -1325,7 +1320,7 @@ public final class Matrix4f implements Cloneable {
 	 * 返回伴随矩阵（新实例）。
 	 * Returns the adjoint matrix (new instance).
 	 *
-	 * adjoint matrix
+	 * @return 伴随矩阵 / adjoint matrix
 	 */
 	public Matrix4f adjoint() {
 		return this.adjoint(null);
@@ -1336,7 +1331,7 @@ public final class Matrix4f implements Cloneable {
 	 * Stores the adjoint matrix into store.
 	 *
 	 * @param store 结果存储（null 时分配） / result storage (allocated if null)
-	 * store itself
+	 * @return store 自身（链式调用） / store itself
 	 */
 	public Matrix4f adjoint(Matrix4f store) {
 		if (store == null) {
@@ -1377,7 +1372,7 @@ public final class Matrix4f implements Cloneable {
 	 * 计算矩阵行列式。
 	 * Computes the matrix determinant.
 	 *
-	 * determinant value
+	 * @return 行列式值 / determinant value
 	 */
 	public float determinant() {
 		float fA0 = this.m00 * this.m11 - this.m01 * this.m10;
@@ -1400,7 +1395,7 @@ public final class Matrix4f implements Cloneable {
 	 * 将矩阵全部元素置零。
 	 * Zeros all matrix elements.
 	 *
-	 * this matrix
+	 * @return 本矩阵（链式调用） / this matrix
 	 */
 	public Matrix4f zero() {
 		this.m03 = 0.0f;
@@ -1427,7 +1422,7 @@ public final class Matrix4f implements Cloneable {
 	 * Returns the element-wise sum of this and another matrix (new instance).
 	 *
 	 * @param mat 另一矩阵 / other matrix
-	 * sum matrix
+	 * @return 和矩阵 / sum matrix
 	 */
 	public Matrix4f add(Matrix4f mat) {
 		Matrix4f result = new Matrix4f();
@@ -1479,7 +1474,7 @@ public final class Matrix4f implements Cloneable {
 	 * 提取平移分量，分配新向量。
 	 * Extracts the translation component, allocating a new vector.
 	 *
-	 * translation vector
+	 * @return 平移向量 / translation vector
 	 */
 	public Vector3f toTranslationVector() {
 		return new Vector3f(this.m03, this.m13, this.m23);
@@ -1489,7 +1484,7 @@ public final class Matrix4f implements Cloneable {
 	 * 提取平移分量到已有向量。
 	 * Extracts the translation component into an existing vector.
 	 *
-	 * destination vector
+	 * @param vector 目标向量 / destination vector
 	 */
 	public void toTranslationVector(Vector3f vector) {
 		vector.set(this.m03, this.m13, this.m23);
@@ -1499,7 +1494,7 @@ public final class Matrix4f implements Cloneable {
 	 * 提取左上 3×3 旋转矩阵（新实例）。
 	 * Extracts the upper-left 3×3 rotation matrix (new instance).
 	 *
-	 * rotation matrix
+	 * @return 旋转矩阵 / rotation matrix
 	 */
 	public Matrix3f toRotationMatrix() {
 		return new Matrix3f(this.m00, this.m01, this.m02, this.m10, this.m11, this.m12, this.m20, this.m21, this.m22);
@@ -1600,7 +1595,7 @@ public final class Matrix4f implements Cloneable {
 	 * 从向量设置平移。
 	 * Sets the translation from a vector.
 	 *
-	 * translation vector
+	 * @param translation 平移向量 / translation vector
 	 */
 	public void setTranslation(Vector3f translation) {
 		this.m03 = translation.x;
@@ -1627,7 +1622,7 @@ public final class Matrix4f implements Cloneable {
 	 * 按欧拉角（度，顺序 Z-Y-X）设置旋转部分。
 	 * Sets the rotation part from Euler angles in degrees (order Z-Y-X).
 	 *
-	 * @param angles Euler angles in degrees: x=roll, y=pitch, z=yaw。
+	 * @param angles 欧拉角（度，x=roll, y=pitch, z=yaw） / Euler angles in degrees: x=roll, y=pitch, z=yaw
 	 */
 	public void angleRotation(Vector3f angles) {
 		float angle = angles.z * ((float) Math.PI / 180);
@@ -1816,7 +1811,7 @@ public final class Matrix4f implements Cloneable {
 	 * 计算矩阵哈希码。
 	 * Computes the matrix hash code.
 	 *
-	 * hash value
+	 * @return 哈希值 / hash value
 	 */
 	public int hashCode() {
 		int hash = 37;
@@ -1906,7 +1901,7 @@ public final class Matrix4f implements Cloneable {
 	 * 返回运行时类标签。
 	 * Returns the runtime class tag.
 	 *
-	 * class object
+	 * @return 类对象 / class object
 	 */
 	public Class<? extends Matrix4f> getClassTag() {
 		return this.getClass();
@@ -2027,7 +2022,7 @@ public final class Matrix4f implements Cloneable {
 	 * 浅克隆本矩阵。
 	 * Shallow-clones this matrix.
 	 *
-	 * clone instance
+	 * @return 克隆实例 / clone instance
 	 */
 	public Matrix4f clone() {
 		try {

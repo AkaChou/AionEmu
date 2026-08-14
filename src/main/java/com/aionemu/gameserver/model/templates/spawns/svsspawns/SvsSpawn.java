@@ -32,7 +32,7 @@ public class SvsSpawn {
 	@XmlElement(name = "svs_type")
 	private List<SvsSpawn.SvsStateTemplate> SvsStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回要塞模式模板 / Returns the siege mod templates */
 	public List<SvsStateTemplate> getSiegeModTemplates() {
 		return SvsStateTemplate;
 	}

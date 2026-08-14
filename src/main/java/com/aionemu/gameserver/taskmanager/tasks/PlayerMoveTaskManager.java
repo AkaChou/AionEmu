@@ -40,7 +40,7 @@ public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
 	 * 将玩家加入移动跟踪集合。
 	 * Add a player to the moving set.
 	 *
-	 * Player or creature
+	 * @param player 玩家或生物 / Player or creature
 	 */
 	public void addPlayer(Creature player) {
 		movingPlayers.put(player.getObjectId(), player);
@@ -50,7 +50,7 @@ public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
 	 * 将玩家移出移动跟踪集合。
 	 * Remove a player from the moving set.
 	 *
-	 * Player or creature
+	 * @param player 玩家或生物 / Player or creature
 	 */
 	public void removePlayer(Creature player) {
 		movingPlayers.remove(player.getObjectId());
@@ -85,7 +85,7 @@ public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
 	 *
-	 * Provider
+	 * @param provider 实例提供者 / Provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<PlayerMoveTaskManager> provider) {
 		instanceProvider = provider;

@@ -75,11 +75,8 @@ public class GeoWorldLoader {
 	 * 从网格二进制文件加载命名 Spatial 模型表。
 	 * Loads a name→Spatial model table from a mesh binary file.
 	 *
-	 * relative geo path
-	 *
-	 * @param fileName
+	 * @param fileName 相对地理数据路径 / relative geo path
 	 * @return 小写名称到模型的映射 / lowercase name to model map
-	 * @return
 	 * @throws IOException 读文件失败 / on I/O failure
 	 */
 	public static Map<String, Spatial> loadMeshs(String fileName) throws IOException {
@@ -175,13 +172,10 @@ public class GeoWorldLoader {
 	 * 加载指定世界的放置物体到 GeoMap。
 	 * Loads placed world objects for a world into the GeoMap.
 	 *
-	 * 世界 ID / world id
-	 *
+	 * @param worldId 世界 ID / world id
 	 * @param models 已加载模型表 / loaded model table
 	 * @param map 目标地图 / target geo map
 	 * @param missingMeshes 缺失 mesh 名称收集器 / collector for missing mesh names
-	 * @param missingMeshes
-	 *
 	 * @throws IOException 读文件失败 / on I/O failure
 	 */
 	public static void loadWorldObjects(int worldId, Map<String, Spatial> models, GeoMap map, Set<String> missingMeshes) throws IOException {
@@ -245,7 +239,7 @@ public class GeoWorldLoader {
 	 * Loads height and material PNGs from the geo directory into maps.
 	 *
 	 * @param maps 地图集合 / geo maps
-	 * on I/O failure
+	 * @throws IOException 读文件失败 / on I/O failure
 	 */
 	public static void loadTerrains(Collection<GeoMap> maps) throws IOException {
 		File geoDir = Config.geoFile(GEO_DIR);
@@ -292,9 +286,7 @@ public class GeoWorldLoader {
 	 * 文件名是否为单地图直接地形（无逗号别名）。
 	 * Whether the file name is a direct single-map terrain (no comma aliases).
 	 *
-	 * file name
-	 *
-	 * @param fileName
+	 * @param fileName 文件名 / file name
 	 * @return 是否直接地形文件 / true if direct terrain
 	 */
 	private static boolean isDirectTerrainFile(String fileName) {
@@ -307,12 +299,12 @@ public class GeoWorldLoader {
 	 * 将普通节点包装为可消隐节点。
 	 * Wraps a node as a DespawnableNode with type/id/level metadata.
 	 *
-	 * source node
+	 * @param node 源节点 / source node
 	 * @param type 消隐类型 ID / despawnable type id
 	 * @param id 实体 ID / entity id
 	 * @param level 城镇等级 / town level
 	 * @return 可消隐节点 / despawnable node
-	 * on clone failure
+	 * @throws CloneNotSupportedException 克隆失败 / on clone failure
 	 */
 	private static DespawnableNode despawnable(Node node, byte type, int id, byte level) throws CloneNotSupportedException {
 		DespawnableNode despawnable = new DespawnableNode();
@@ -335,15 +327,15 @@ public class GeoWorldLoader {
 	 * Loads higher-level town entity variants sharing the same placement.
 	 *
 	 * @param map 目标地图 / target map
-	 * model table
+	 * @param models 模型表 / model table
 	 * @param townEntity 当前城镇实体 / current town entity
-	 * model name
-	 * rotation matrix
-	 * location
-	 * scale
+	 * @param name 模型名 / model name
+	 * @param matrix 旋转矩阵 / rotation matrix
+	 * @param loc 位置 / location
+	 * @param scale 缩放 / scale
 	 * @param level 当前等级 / current level
-	 * 世界 ID / world id
-	 * on clone failure
+	 * @param worldId 世界 ID / world id
+	 * @throws CloneNotSupportedException 克隆失败 / on clone failure
 	 */
 	private static void loadTownLevelEntities(GeoMap map, Map<String, Spatial> models, DespawnableNode townEntity,
 			String name, Matrix3f matrix, Vector3f loc, Vector3f scale, byte level, int worldId)
@@ -368,10 +360,10 @@ public class GeoWorldLoader {
 	 * 从光栅读取高度 short 数组（行列转置存储）。
 	 * Reads height shorts from a raster (transposed storage order).
 	 *
-	 * image raster
-	 * width
-	 * height
-	 * height data
+	 * @param raster 图像光栅 / image raster
+	 * @param width 宽度 / width
+	 * @param height 高度 / height
+	 * @return 高度数据 / height data
 	 */
 	private static short[] readHeightData(Raster raster, int width, int height) {
 		short[] terrainData = new short[width * height];
@@ -387,10 +379,10 @@ public class GeoWorldLoader {
 	 * 从光栅读取材质 byte 数组（行列转置存储）。
 	 * Reads material bytes from a raster (transposed storage order).
 	 *
-	 * image raster
-	 * width
-	 * height
-	 * material data
+	 * @param raster 图像光栅 / image raster
+	 * @param width 宽度 / width
+	 * @param height 高度 / height
+	 * @return 材质数据 / material data
 	 */
 	private static byte[] readMaterialData(Raster raster, int width, int height) {
 		byte[] materialData = new byte[width * height];
@@ -407,13 +399,13 @@ public class GeoWorldLoader {
 	 * Attaches a spatial to the map and creates material zones for children.
 	 *
 	 * @param map 目标地图 / target map
-	 * source spatial
-	 * rotation
-	 * location
-	 * scale
-	 * 世界 ID / world id
+	 * @param node 源空间节点 / source spatial
+	 * @param matrix 旋转 / rotation
+	 * @param location 位置 / location
+	 * @param scale 缩放 / scale
+	 * @param worldId 世界 ID / world id
 	 * @return 克隆后的节点 / attached clone
-	 * on clone failure
+	 * @throws CloneNotSupportedException 克隆失败 / on clone failure
 	 */
 	private static Spatial attachToMapAndCreateZones(GeoMap map, Spatial node, Matrix3f matrix, Vector3f location,
 			Vector3f scale, int worldId) throws CloneNotSupportedException {
@@ -434,12 +426,12 @@ public class GeoWorldLoader {
 	 * Clones the node, applies transform and attaches it to the map.
 	 *
 	 * @param map 目标地图 / target map
-	 * source spatial
-	 * rotation
-	 * location
-	 * scale
-	 * clone
-	 * on clone failure
+	 * @param node 源空间节点 / source spatial
+	 * @param matrix 旋转 / rotation
+	 * @param location 位置 / location
+	 * @param scale 缩放 / scale
+	 * @return 克隆节点 / clone
+	 * @throws CloneNotSupportedException 克隆失败 / on clone failure
 	 */
 	private static Spatial attachChild(GeoMap map, Spatial node, Matrix3f matrix, Vector3f location, Vector3f scale)
 			throws CloneNotSupportedException {
@@ -454,8 +446,8 @@ public class GeoWorldLoader {
 	 * 为带材质意图的节点创建材质区域模板。
 	 * Creates a material zone template for nodes with material collision intention.
 	 *
-	 * spatial
-	 * 世界 ID / world id
+	 * @param node 空间节点 / spatial
+	 * @param worldId 世界 ID / world id
 	 * @param childNumber 子序号（0 表示无后缀） / child number (0 = no suffix)
 	 */
 	private static void createZone(Spatial node, int worldId, int childNumber) {
@@ -491,7 +483,7 @@ public class GeoWorldLoader {
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
-	 * hash
+	 * @return 哈希值 / hash
 	 */
 	private static int getVectorHash(float x, float y, float z) {
 		long xIntBits = Float.floatToIntBits(x);
@@ -504,10 +496,10 @@ public class GeoWorldLoader {
 	 * 将文件通道只读映射为 ByteBuffer（小端视图，调用方可改序）。
 	 * Memory-maps a file channel read-only as a ByteBuffer (little-endian view; caller may reorder).
 	 *
-	 * file channel
-	 * foreign Arena
-	 * mapped buffer
-	 * on map failure or oversized file。
+	 * @param channel 文件通道 / file channel
+	 * @param arena 外部 Arena / foreign Arena
+	 * @return 映射缓冲区 / mapped buffer
+	 * @throws IOException 映射失败或文件过大 / on map failure or oversized file
 	 */
 	private static ByteBuffer mapReadOnly(FileChannel channel, Arena arena) throws IOException {
 		long size = channel.size();

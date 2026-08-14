@@ -26,16 +26,16 @@ public class Hangar_ControllerAI2 extends NpcAI2
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
 			switch (getNpcId()) {
-				case 297310: //Chariot Hangar I Controller.
+				case 297310: // 战车机库 I 控制器 / Chariot Hangar I Controller
 				    announceGAB1SubTankA();
 				break;
-				case 297311: //Chariot Hangar II Controller.
+				case 297311: // 战车机库 II 控制器 / Chariot Hangar II Controller
 				    announceGAB1SubTankB();
 				break;
-				case 297312: //Ignus Engine Hangar I Controller.
+				case 297312: // 伊格努斯引擎机库 I 控制器 / Ignus Engine Hangar I Controller
 					announceGAB1SubTankC();
 				break;
-				case 297313: //Ignus Engine Hangar II Controller.
+				case 297313: // 伊格努斯引擎机库 II 控制器 / Ignus Engine Hangar II Controller
 					announceGAB1SubTankD();
 				break;
 			}

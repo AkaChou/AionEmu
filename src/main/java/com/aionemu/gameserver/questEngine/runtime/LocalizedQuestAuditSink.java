@@ -3,7 +3,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
-/** Localized audit adapter; routing never depends on an exception message or stack text. */
+/** 本地化审计适配器：路由逻辑绝不依赖异常消息或堆栈文本。 / Localized audit adapter; routing never depends on an exception message or stack text. */
 @Slf4j(topic = "QUEST_AUDIT")
 public final class LocalizedQuestAuditSink implements QuestAuditSink {
 	@Override

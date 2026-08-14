@@ -1,6 +1,9 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-/** A statically declared quest drop. */
+/**
+ * 静态声明的任务掉落。
+ * A statically declared quest drop.
+ */
 public record QuestDrop(int npcId, int itemId, int chance, boolean eachMember, int collectingStep,
 	QuestDropScope scope) {
 	public QuestDrop(int npcId, int itemId, int chance, boolean eachMember, int collectingStep) {

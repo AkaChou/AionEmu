@@ -9,8 +9,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Assembly 物品模板（静态数据/XML）。
- * XML template.
+ * 组装配方模板：部件列表与组装数量。
+ * Assembly recipe template: parts list and assembly count.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

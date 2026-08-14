@@ -29,7 +29,7 @@ public class WorkStealThreadFactory extends PriorityThreadFactory implements For
 	 * 设置默认 ForkJoin 池；若为 null 则使用公共池。
 	 * Sets the default ForkJoin pool; uses the common pool when null.
 	 *
-	 * ForkJoin pool
+	 * @param pool ForkJoin 池 / ForkJoin pool
 	 */
 	public void setDefaultPool(ForkJoinPool pool) {
 		if (pool == null) {
@@ -42,7 +42,7 @@ public class WorkStealThreadFactory extends PriorityThreadFactory implements For
 	 * 获取默认 ForkJoin 池。
 	 * Returns the default ForkJoin pool.
 	 *
-	 * Default pool
+	 * @return 默认池 / Default pool
 	 */
 	@Override
 	public ForkJoinPool getDefaultPool() {
@@ -53,8 +53,8 @@ public class WorkStealThreadFactory extends PriorityThreadFactory implements For
 	 * 为指定池创建工作窃取线程。
 	 * Creates a work-stealing worker thread for the given pool.
 	 *
-	 * ForkJoin pool
-	 * Worker thread
+	 * @param pool ForkJoin 池 / ForkJoin pool
+	 * @return 工作线程 / Worker thread
 	 */
 	@Override
 	public ForkJoinWorkerThread newThread(ForkJoinPool pool) {
@@ -72,7 +72,7 @@ public class WorkStealThreadFactory extends PriorityThreadFactory implements For
 		 * 绑定到指定池创建工作线程。
 		 * Creates a worker thread bound to the given pool.
 		 *
-		 * ForkJoin pool
+		 * @param pool ForkJoin 池 / ForkJoin pool
 		 */
 		public WorkStealThread(ForkJoinPool pool) {
 			super(pool);

@@ -21,13 +21,13 @@ public class EnumTransformer implements PropertyTransformer<Enum<?>> {
     public static final EnumTransformer SHARED_INSTANCE = new EnumTransformer();
 
     /**
- * 将字符串值转换为 Enum 对象
+     * 将字符串值转换为 Enum 对象
      * Transforms string value into Enum object
      *
-     * @param value 要转换的字符串值（枚举常量名称）String value to transform (enum constant name)
-     * @param field 字段对象（必须是枚举类型）Field that will be transformed (must be an enum type)
- * @return 转换后的 Enum 对象 Transformed Enum object
-     * @throws TransformationException 如果找不到指定的枚举常量 if specified enum constant cannot be found
+     * @param value 要转换的字符串值（枚举常量名称）/ String value to transform (enum constant name)
+     * @param field 字段对象（必须是枚举类型）/ Field that will be transformed (must be an enum type)
+     * @return 转换后的 Enum 对象 / Transformed Enum object
+     * @throws TransformationException 如果找不到指定的枚举常量 / if specified enum constant cannot be found
      */
     public Enum<?> transform(String value, Field field) throws TransformationException {
         Class<?> clazz = field.getType();

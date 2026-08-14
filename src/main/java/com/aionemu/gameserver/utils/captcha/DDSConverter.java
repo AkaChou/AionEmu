@@ -12,7 +12,7 @@ import java.nio.ByteOrder;
  */
 public class DDSConverter {
 
-	/** DDS 头标志：包含 CAPS / DDS header flag: CAPS present */
+	/** DDS 头标志：包含 CAPS。 / DDS header flag: CAPS present. */
 	private static final int DDSD_CAPS = 0x0001;
 	/** DDS 头标志：包含高度。 / DDS header flag: height present. */
 	private static final int DDSD_HEIGHT = 0x0002;
@@ -20,7 +20,7 @@ public class DDSConverter {
 	private static final int DDSD_WIDTH = 0x0004;
 	/** DDS 头标志：包含像素格式。 / DDS header flag: pixel format present. */
 	private static final int DDSD_PIXELFORMAT = 0x1000;
-	/** DDSheaderflagmipmap 次数 present / DDS header flag: mipmap count present */
+	/** DDS 头标志：包含 mipmap 次数。 / DDS header flag: mipmap count present. */
 	private static final int DDSD_MIPMAPCOUNT = 0x20000;
 	/** DDS 头标志：线性尺寸。 / DDS header flag: linear size. */
 	private static final int DDSD_LINEARSIZE = 0x80000;
@@ -99,7 +99,7 @@ public class DDSConverter {
 	 * Converts an image to a no-transparency DXT1 DDS byte buffer.
 	 *
 	 * @param image 源图；null 则返回 null / source image; null yields null
-	 * DDS buffer
+	 * @return DDS 缓冲 / DDS buffer
 	 */
 	public static ByteBuffer convertToDxt1NoTransparency(BufferedImage image) {
 		if (image == null) {
@@ -146,9 +146,9 @@ public class DDSConverter {
 	 * 写入 DXT1 DDS 文件头。
 	 * Writes the DXT1 DDS file header.
 	 *
-	 * target buffer
-	 * width
-	 * height
+	 * @param buffer 目标缓冲 / target buffer
+	 * @param width 宽度 / width
+	 * @param height 高度 / height
 	 */
 	protected static void buildHeaderDxt1(ByteBuffer buffer, int width, int height) {
 		buffer.rewind();
@@ -185,8 +185,8 @@ public class DDSConverter {
 	 * 在 4x4 块中找欧氏距离最远的两个颜色索引。
 	 * Finds the two color indices with the largest Euclidean distance in a 4x4 block.
 	 *
-	 * 16 colors
-	 * endpoint indices
+	 * @param colors 16 个颜色 / 16 colors
+	 * @return 端点索引 / endpoint indices
 	 */
 	protected static int[] determineExtremeColors(Color[] colors) {
 		int farthest = Integer.MIN_VALUE;
@@ -209,8 +209,8 @@ public class DDSConverter {
 	 * 按两端点插值调色板，为每像素选择最近索引并打包位掩码。
 	 * Builds interpolated palette from endpoints and packs nearest-index bitmask.
 	 *
-	 * block colors
-	 * endpoint indices
+	 * @param colors 块内颜色 / block colors
+	 * @param extremaIndices 端点索引 / endpoint indices
 	 * @return 32 位索引掩码 / 32-bit index mask
 	 */
 	protected static long computeBitMask(Color[] colors, int[] extremaIndices) {
@@ -247,8 +247,8 @@ public class DDSConverter {
 	 * RGB888 颜色压成 RGB565 像素值。
 	 * Packs an RGB888 color into an RGB565 pixel value.
 	 *
-	 * color
-	 * RGB565 value
+	 * @param color 颜色 / color
+	 * @return RGB565 值 / RGB565 value
 	 */
 	protected static int getPixel565(Color color) {
 		int r = color.r >> 3;
@@ -261,8 +261,8 @@ public class DDSConverter {
 	 * 从 RGB565 像素还原颜色分量。
 	 * Expands an RGB565 pixel into color components.
 	 *
-	 * RGB565 value
-	 * color
+	 * @param pixel RGB565 值 / RGB565 value
+	 * @return 颜色 / color
 	 */
 	protected static Color getColor565(int pixel) {
 		Color color = new Color();
@@ -278,8 +278,8 @@ public class DDSConverter {
 	 * 从 ARGB 像素数组提取 RGB888 颜色。
 	 * Extracts RGB888 colors from ARGB pixel array.
 	 *
-	 * ARGB pixels
-	 * color array
+	 * @param pixels ARGB 像素 / ARGB pixels
+	 * @return 颜色数组 / color array
 	 */
 	protected static Color[] getColors888(int[] pixels) {
 		Color[] colors = new Color[pixels.length];
@@ -299,7 +299,7 @@ public class DDSConverter {
 	 *
 	 * @param ca 颜色 A / color A
 	 * @param cb 颜色 B / color B
-	 * squared distance
+	 * @return 平方距离 / squared distance
 	 */
 	protected static int distance(Color ca, Color cb) {
 		return (cb.r - ca.r) * (cb.r - ca.r) + (cb.g - ca.g) * (cb.g - ca.g) + (cb.b - ca.b) * (cb.b - ca.b);

@@ -78,10 +78,10 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {
@@ -94,7 +94,7 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
      *
      * house object id
      *
-     * @param houseObjectId
+     * @param houseObjectId 房屋对象 ID / house object id
      * @return 是否已使用 / whether used
      */
     @Override
@@ -119,7 +119,7 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
      * 持久化房屋（按状态执行插入或更新）。
      * Persists a house (insert or update depending on persistent state).
      *
-     * house
+     * @param house 房屋 / house
      */
     @Override
     public void storeHouse(House house) {
@@ -135,7 +135,7 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
      * 插入新房屋记录。
      * Inserts a new house record.
      *
-     * house
+     * @param house 房屋 / house
      */
     private void insertNewHouse(House house) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -186,7 +186,7 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
      * 更新已有房屋记录。
      * Updates an existing house record.
      *
-     * house
+     * @param house 房屋 / house
      */
     private void updateHouse(House house) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -238,7 +238,7 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
      *
      * @param lands 地块模板集合 / housing land templates
      * @param studios 是否加载工作室 / whether to load studios
-     * house map
+     * @return 房屋地图 / house map
      */
     @Override
     public Map<Integer, House> loadHouses(Collection<HousingLand> lands, boolean studios) {
@@ -339,7 +339,7 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
      * 删除指定玩家的房屋记录。
      * Deletes house records for the given player.
      *
-     * player id
+     * @param playerId 玩家 ID / player id
      */
     @Override
     public void deleteHouse(int playerId) {

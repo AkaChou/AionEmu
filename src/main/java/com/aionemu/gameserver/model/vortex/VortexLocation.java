@@ -133,7 +133,7 @@ public class VortexLocation implements ZoneHandler {
 		return start.getWorldId();
 	}
 
-	/** 返回是否已刷新 / Returns the spawned */
+	/** 返回已生成的对象列表 / Returns the spawned objects */
 	public List<VisibleObject> getSpawned() {
 		return spawned;
 	}
@@ -149,14 +149,22 @@ public class VortexLocation implements ZoneHandler {
 	}
 
 	/**
-	 * @param objId Whether invader inside
+	 * 该对象 ID 是否已通过裂隙并处于入侵者名单中。
+	 * Whether the object id is a passed invader of the vortex.
+	 *
+	 * @param objId 对象 ID / object id
+	 * @return 是入侵者则为 true / true if invader
 	 */
 	public boolean isInvaderInside(int objId) {
 		return isActive() && getVortexController().getPassedPlayers().containsKey(objId);
 	}
 
 	/**
-	 * @param player Whether inside active vortex
+	 * 玩家是否处于激活的漩涡区域内。
+	 * Whether the player is inside the active vortex.
+	 *
+	 * @param player 玩家 / player
+	 * @return 在激活漩涡内则为 true / true if inside the active vortex
 	 */
 	public boolean isInsideActiveVortex(Player player) {
 		return isActive() && isInsideLocation(player);
@@ -169,7 +177,11 @@ public class VortexLocation implements ZoneHandler {
 	}
 
 	/**
-	 * @param creature Whether inside location
+	 * 生物是否位于漩涡的任一区域中。
+	 * Whether the creature is inside any of the vortex zones.
+	 *
+	 * @param creature 生物 / creature
+	 * @return 在区域内则为 true / true if inside a zone
 	 */
 	public boolean isInsideLocation(Creature creature) {
 		if (zones.isEmpty()) {
@@ -188,7 +200,7 @@ public class VortexLocation implements ZoneHandler {
 		return zones;
 	}
 
-	/** 在 EnterZone / On Enter Zone */
+	/** 进入区域：登记入侵方奇斯克与玩家，激活时加入战斗。 / On zone enter: registers invader kisks and players, joining the vortex when active. */
 	@Override
 	public void onEnterZone(Creature creature, ZoneInstance zone) {
 		if (creature instanceof Kisk) {
@@ -213,7 +225,7 @@ public class VortexLocation implements ZoneHandler {
 		}
 	}
 
-	/** 在 LeaveZone / On Leave Zone */
+	/** 离开区域：移除奇斯克与玩家，10 秒后仍未返回则踢出漩涡。 / On zone leave: removes kisks and players, kicking them from the vortex if not back within 10 seconds. */
 	@Override
 	public void onLeaveZone(Creature creature, ZoneInstance zone) {
 		if (!isInsideLocation(creature)) {

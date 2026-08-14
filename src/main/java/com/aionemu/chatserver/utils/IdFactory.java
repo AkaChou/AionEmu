@@ -20,7 +20,7 @@ public class IdFactory {
      * 在锁保护下分配下一个未使用的 ID。
      * Allocate the next unused ID under lock.
      *
-     * Newly allocated ID
+     * @return 新分配的 ID / newly allocated ID
      */
     public int nextId() {
         try {
@@ -38,7 +38,7 @@ public class IdFactory {
      * 遗留单例访问入口。
      * Legacy singleton access point.
      *
-     * Singleton {@link IdFactory}。
+     * @return {@link IdFactory} 单例 / the singleton instance
      * @deprecated boot 迁移后请使用 Spring Bean / Prefer the Spring bean after boot migration
      */
     @Deprecated(since = "boot-migration")

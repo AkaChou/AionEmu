@@ -7,7 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-/** Immutable checked layout for the 32-bit quest_vars projection. */
+/**
+ * 32 位 quest_vars 投影的不可变校验布局。
+ * Immutable checked layout for the 32-bit quest_vars projection.
+ */
 public final class ProgressLayout {
 	private final List<BitField> fields;
 	private final Map<String, BitField> byName;

@@ -30,7 +30,6 @@ public class Cooldown extends AdminCommand {
      * 重置自身或指定在线玩家的全部冷却。
      * Resets all cooldowns for self or a named online player.
      *
-     * admin
      * @param params 可选玩家名 / optional player name
      */
     @Override
@@ -59,7 +58,6 @@ public class Cooldown extends AdminCommand {
      * 重置技能与物品的全部冷却时间。
      * Resets all skill and item cooldowns.
      *
-     * target player
      */
     private void resetAllCooldowns(Player player) {
         List<Integer> delayIds = new ArrayList<Integer>();
@@ -92,8 +90,6 @@ public class Cooldown extends AdminCommand {
      * 执行失败时的语法提示。
      * Syntax hint on failure.
      *
-     * admin
-     * error message
      */
     @Override
     public void onFail(Player player, String message) {

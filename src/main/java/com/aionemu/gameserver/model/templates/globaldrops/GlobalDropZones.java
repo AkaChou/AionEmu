@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 全局掉落 Zones 模板（静态数据/XML）。
- * XML template.
+ * Global drop zones template (static data/XML).
  *
  * @author Wnkrz
  */
@@ -20,7 +20,7 @@ public class GlobalDropZones {
 	@XmlElement(name = "gd_zone")
 	protected List<GlobalDropZone> gdZones;
 
-	/** 返回 global drop zones / Returns the global drop zones */
+	/** 返回全局掉落区域。 / Returns the global drop zones. */
 	public List<GlobalDropZone> getGlobalDropZones() {
 		if (gdZones == null) {
 			gdZones = new ArrayList<GlobalDropZone>();

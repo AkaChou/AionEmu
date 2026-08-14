@@ -19,7 +19,7 @@ public @interface InstanceID {
 	 * 该处理器绑定的副本地图 ID。
 	 * Instance map id bound to the annotated handler.
 	 *
-	 * map id
+	 * @return 地图 ID / map id
 	 */
 	int value();
 }

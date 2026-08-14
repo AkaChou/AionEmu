@@ -18,10 +18,13 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 public class Trap extends SummonedObject<Creature> {
 
 	/**
-	 * @param objId
-	 * @param controller
-	 * @param spawnTemplate
-	 * @param objectTemplate
+	 * 构造陷阱。
+	 * Constructs a trap.
+	 *
+	 * @param objId 对象 ID / object id
+	 * @param controller NPC 控制器 / NPC controller
+	 * @param spawnTemplate 生成模板 / spawn template
+	 * @param objectTemplate NPC 模板 / NPC template
 	 */
 	public Trap(int objId, NpcController controller, SpawnTemplate spawnTemplate, NpcTemplate objectTemplate) {
 		super(objId, controller, spawnTemplate, objectTemplate, objectTemplate.getLevel());
@@ -39,14 +42,18 @@ public class Trap extends SummonedObject<Creature> {
 		return (getCreator() == null ? 1 : getCreator().getLevel());
 	}
 
-	/** 是否敌对。 / Whether Enemy. */
+	/** 是否敌对。 / Whether enemy. */
 	@Override
 	public boolean isEnemy(Creature creature) {
 		return getCreator().isEnemy(creature);
 	}
 
 	/**
-	 * @param player 是否为敌对目标。 / Whether enemy from
+	 * 判断玩家是否为敌对目标。
+	 * Whether the player is an enemy.
+	 *
+	 * @param player 玩家 / player
+	 * @return 是否敌对 / whether enemy
 	  */
 	@Override
 	public boolean isEnemyFrom(Player player) {
@@ -54,14 +61,17 @@ public class Trap extends SummonedObject<Creature> {
 	}
 
 	/**
-	 * @return NpcObjectType.TRAP
+	 * 返回 NPC 对象类型 TRAP。
+	 * Returns NpcObjectType.TRAP.
+	 *
+	 * @return NPC 对象类型 / NpcObjectType.TRAP
 	 */
 	@Override
 	public NpcObjectType getNpcObjectType() {
 		return NpcObjectType.TRAP;
 	}
 
-	/** 返回大师名称 / Returns the master name */
+	/** 返回主人名称 / Returns the master name */
 	@Override
 	public String getMasterName() {
 		return StringUtils.EMPTY;

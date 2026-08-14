@@ -460,7 +460,7 @@ public class GameRuntimeServiceBridge {
      * 解析管理服务。
      * Resolve the admin service.
      *
-     * Admin service
+     * @return 管理服务 / Admin service
      */
     public AdminService adminService() {
         return getIfAvailable(adminServiceProvider, AdminService::getInstance);
@@ -480,7 +480,7 @@ public class GameRuntimeServiceBridge {
      * 解析领地服务。
      * Resolve the territory service.
      *
-     * Territory service
+     * @return 领地服务 / Territory service
      */
     public TerritoryService territoryService() {
         return getIfAvailable(territoryServiceProvider, TerritoryService::getInstance);
@@ -500,7 +500,7 @@ public class GameRuntimeServiceBridge {
      * 解析公告服务。
      * Resolve the announcement service.
      *
-     * Announcement service
+     * @return 公告服务 / Announcement service
      */
     public AnnouncementService announcementService() {
         return getIfAvailable(announcementServiceProvider, AnnouncementService::getInstance);
@@ -510,7 +510,7 @@ public class GameRuntimeServiceBridge {
      * 解析调试服务。
      * Resolve the debug service.
      *
-     * Debug service
+     * @return 调试服务 / Debug service
      */
     public DebugService debugService() {
         return getIfAvailable(debugServiceProvider, DebugService::getInstance);
@@ -520,7 +520,7 @@ public class GameRuntimeServiceBridge {
      * 解析天气服务。
      * Resolve the weather service.
      *
-     * Weather service
+     * @return 天气服务 / Weather service
      */
     public WeatherService weatherService() {
         return getIfAvailable(weatherServiceProvider, WeatherService::getInstance);
@@ -540,7 +540,7 @@ public class GameRuntimeServiceBridge {
      * 解析军团服务。
      * Resolve the legion service.
      *
-     * Legion service
+     * @return 军团服务 / Legion service
      */
     public LegionService legionService() {
         return getIfAvailable(legionServiceProvider, LegionService::getInstance);
@@ -560,7 +560,7 @@ public class GameRuntimeServiceBridge {
      * 解析交易服务。
      * Resolve the exchange service.
      *
-     * Exchange service
+     * @return 交易服务 / Exchange service
      */
     public ExchangeService exchangeService() {
         return getIfAvailable(exchangeServiceProvider, ExchangeService::getInstance);
@@ -570,7 +570,7 @@ public class GameRuntimeServiceBridge {
      * 解析请愿服务。
      * Resolve the petition service.
      *
-     * Petition service
+     * @return 请愿服务 / Petition service
      */
     public PetitionService petitionService() {
         return getIfAvailable(petitionServiceProvider, PetitionService::getInstance);
@@ -648,7 +648,7 @@ public class GameRuntimeServiceBridge {
      * 解析网店服务。
      * Resolve the webshop service.
      *
-     * Webshop service
+     * @return 网店服务 / Webshop service
      */
     public WebshopService webshopService() {
         return getIfAvailable(webshopServiceProvider, WebshopService::getInstance);
@@ -658,7 +658,7 @@ public class GameRuntimeServiceBridge {
      * 解析问卷服务。
      * Resolve the survey service.
      *
-     * Survey service
+     * @return 问卷服务 / Survey service
      */
     public SurveyService surveyService() {
         return getIfAvailable(surveyServiceProvider, SurveyService::getInstance);
@@ -668,7 +668,7 @@ public class GameRuntimeServiceBridge {
      * 解析找队服务。
      * Resolve the find-group service.
      *
-     * Find-group service
+     * @return 找队服务 / Find-group service
      */
     public FindGroupService findGroupService() {
         return getIfAvailable(findGroupServiceProvider, FindGroupService::getInstance);
@@ -699,7 +699,7 @@ public class GameRuntimeServiceBridge {
      * @param provider 可选提供者 / Optional provider
      * @param fallback 单例回退供应器 / Singleton fallback supplier
      * @param <T> 服务类型 / Service type
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private static <T> T getIfAvailable(ObjectProvider<T> provider, Supplier<T> fallback) {
         if (provider == null) {

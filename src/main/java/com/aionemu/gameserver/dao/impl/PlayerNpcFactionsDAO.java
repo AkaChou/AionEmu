@@ -93,8 +93,8 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 	 * 插入 NPC 阵营记录。
 	 * Inserts an NPC faction record.
 	 *
-	 * player object id
-	 * faction
+	 * @param playerObjectId 玩家对象 ID / player object id
+	 * @param faction 阵营 / faction
 	 */
 	private void insertNpcFaction(int playerObjectId, NpcFaction faction) {
 		try (Connection con = DatabaseFactory.getConnection();
@@ -116,8 +116,8 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 	 * 更新 NPC 阵营记录。
 	 * Updates an NPC faction record.
 	 *
-	 * player object id
-	 * faction
+	 * @param playerObjectId 玩家对象 ID / player object id
+	 * @param faction 阵营 / faction
 	 */
 	private void updateNpcFaction(int playerObjectId, NpcFaction faction) {
 		try (Connection con = DatabaseFactory.getConnection();
@@ -140,9 +140,10 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 	 * Whether the current database is supported.
 	 *
 	 * @param arg0 数据库名 / database name
-	 * major version
-	 * minor version
-	 * whether supported
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
 	 */
 	@Override
 	public boolean supports(String arg0, int arg1, int arg2) {

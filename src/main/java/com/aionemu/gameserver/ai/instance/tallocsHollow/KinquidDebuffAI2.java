@@ -22,7 +22,7 @@ public class KinquidDebuffAI2 extends AggressiveNpcAI2
 		super.handleCreatureMoved(creature);
 		if (creature instanceof Npc && isInRange(creature, 10)) {
 			Npc npc = (Npc) creature;
-			if (npc.getNpcId() == 215467) { //Kindquid.
+			if (npc.getNpcId() == 215467) { // 金基德 / Kindquid.
 				GameEngineServices.skillEngine().getSkill(getOwner(), getNpcId() == 282008 ? 19235 : 19236, 46, getOwner()).useNoAnimationSkill();
 			}
 		}

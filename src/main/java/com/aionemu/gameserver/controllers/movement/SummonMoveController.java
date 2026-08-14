@@ -14,7 +14,7 @@ public class SummonMoveController extends PlayableMoveController<Summon> {
 	 * 使用指定召唤物构造控制器。
 	 * Construct the controller for the given summon.
 	 *
-	 * Summon owner
+	 * @param owner 召唤物 / Summon owner
 	 */
 	public SummonMoveController(Summon owner) {
 		super(owner);

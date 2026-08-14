@@ -24,7 +24,7 @@ final class GameEngineServiceFallbacks {
      * 返回任务引擎回退实例。
      * Return the quest-engine fallback instance.
      *
-     * Quest engine
+     * @return 任务引擎 / Quest engine
      */
     static QuestEngine questEngine() {
         return QuestEngineFallback.INSTANCE;
@@ -34,7 +34,7 @@ final class GameEngineServiceFallbacks {
      * 返回技能引擎回退实例。
      * Return the skill-engine fallback instance.
      *
-     * Skill engine
+     * @return 技能引擎 / Skill engine
      */
     static SkillEngine skillEngine() {
         return SkillEngineFallback.INSTANCE;
@@ -44,7 +44,7 @@ final class GameEngineServiceFallbacks {
      * 返回副本引擎回退实例。
      * Return the instance-engine fallback instance.
      *
-     * Instance engine
+     * @return 副本引擎 / Instance engine
      */
     static InstanceEngine instanceEngine() {
         return InstanceEngineFallback.INSTANCE;
@@ -54,7 +54,7 @@ final class GameEngineServiceFallbacks {
      * 返回 AI2 引擎回退实例。
      * Return the AI2-engine fallback instance.
      *
-     * AI2 engine
+     * @return AI2 引擎 / AI2 engine
      */
     static AI2Engine ai2Engine() {
         return Ai2EngineFallback.INSTANCE;

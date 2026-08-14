@@ -19,20 +19,20 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  */
 public abstract class ItemBlobEntry extends PacketWriteHelper {
 
-	/** Blob 类型。Blob type. */
+	/** Blob 类型。 / Blob type. */
 	private final ItemBlobType type;
 	/** 所属玩家。 / Owning player. */
 	Player owner;
 	/** 所属物品。 / Owning item. */
 	Item ownerItem;
-	/** Associated stat modifier (for bonus blobs) / Associated stat modifier (for bonus blobs) */
+	/** 关联属性修正（用于加成条目）。 / Associated stat modifier (for bonus blobs). */
 	IStatFunction modifier;
 
 	/**
 	 * 以指定 Blob 类型构造条目。
 	 * Constructs an entry with the given blob type.
 	 *
-	 * blob type
+	 * @param type blob 类型 / blob type
 	 */
 	ItemBlobEntry(ItemBlobType type) {
 		this.type = type;

@@ -20,10 +20,10 @@ public class ChainSkills {
 	 * 获取指定类别的当前连击计数（冷却过期时清零）。
 	 * Gets current chain count for a category (resets when cooldown expired).
 	 *
-	 * 玩家 / player
-	 * skill template
-	 * chain category
-	 * chain count
+	 * @param player 玩家 / player
+	 * @param template 技能模板 / skill template
+	 * @param category 连锁类别 / chain category
+	 * @return 连击计数 / chain count
 	 */
 	public int getChainCount(Player player, SkillTemplate template, String category) {
 		if (category == null) {
@@ -43,9 +43,7 @@ public class ChainSkills {
 	 * 获取指定类别最近连击使用时间。
 	 * Gets last chain use time for a category.
 	 *
-	 * chain category
-	 *
-	 * @param category
+	 * @param category 连锁类别 / chain category
 	 * @return 毫秒时间戳，无则 0 / epoch millis, or 0 if none
 	 */
 	public long getLastChainUseTime(String category) {
@@ -62,9 +60,9 @@ public class ChainSkills {
 	 * 判断类别在给定时间窗内是否仍处于连击有效期。
 	 * Whether the category is still within the chain time window.
 	 *
-	 * chain category
+	 * @param category 连锁类别 / chain category
 	 * @param time 有效窗口（毫秒） / window millis
-	 * whether enabled
+	 * @return 是否有效 / whether enabled
 	 */
 	public boolean chainSkillEnabled(String category, int time) {
 		long useTime = 0;
@@ -84,7 +82,7 @@ public class ChainSkills {
 	 * 记录/推进一次连锁使用。
 	 * Records or advances one chain use.
 	 *
-	 * chain category
+	 * @param category 连锁类别 / chain category
 	 * @param multiCast 是否多次连击 / whether multi-cast chain
 	 */
 	public void addChainSkill(String category, boolean multiCast) {

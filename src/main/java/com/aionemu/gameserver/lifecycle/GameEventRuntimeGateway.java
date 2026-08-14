@@ -144,7 +144,7 @@ public class GameEventRuntimeGateway {
      * 解析事件服务。
      * Resolve the event service.
      *
-     * Event service
+     * @return 事件服务 / Event service
      */
     private EventService eventService() {
         if (eventServiceProvider == null) {

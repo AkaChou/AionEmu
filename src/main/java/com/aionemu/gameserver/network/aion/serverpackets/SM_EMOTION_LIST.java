@@ -15,6 +15,13 @@ public class SM_EMOTION_LIST extends AionServerPacket {
 	byte action;
 	Collection<Emotion> emotions;
 
+	/**
+	 * 构造已解锁表情列表包。
+	 * Creates an unlocked-emotion list packet.
+	 *
+	 * @param action 列表动作类型 / list action type
+	 * @param emotions 已解锁表情集合 / collection of unlocked emotions
+	 */
 	public SM_EMOTION_LIST(byte action, Collection<Emotion> emotions) {
 		this.action = action;
 		this.emotions = emotions;

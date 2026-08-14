@@ -31,8 +31,8 @@ public abstract class MailServicePacket extends AionServerPacket {
 	 * 写入邮件列表。
 	 * Writes a letter list.
 	 *
-	 * letter collection
-	 * 玩家 / player
+	 * @param letters 信件集合 / letter collection
+	 * @param player 玩家 / player
 	 * @param isPostman 是否邮差快递视图 / whether postman/express view
 	 * @param showCount 邮差视图展示数量 / postman view show count
 	 */
@@ -69,7 +69,7 @@ public abstract class MailServicePacket extends AionServerPacket {
 	 * 写入邮件操作结果消息 ID。
 	 * Writes a mail operation message id.
 	 *
-	 * message id
+	 * @param messageId 消息 ID / message id
 	 */
 	protected void writeMailMessage(int messageId) {
 		writeC(messageId);
@@ -79,10 +79,10 @@ public abstract class MailServicePacket extends AionServerPacket {
 	 * 写入邮箱状态计数。
 	 * Writes mailbox state counters.
 	 *
-	 * total count
-	 * unread count
-	 * express count
-	 * black cloud count
+	 * @param totalCount 总数量 / total count
+	 * @param unreadCount 未读数量 / unread count
+	 * @param expressCount 快递数量 / express count
+	 * @param blackCloudCount 黑云数量 / black cloud count
 	 */
 	protected void writeMailboxState(int totalCount, int unreadCount, int expressCount, int blackCloudCount) {
 		writeH(totalCount);
@@ -95,12 +95,12 @@ public abstract class MailServicePacket extends AionServerPacket {
 	 * 写入单封已读信件详情。
 	 * Writes a single letter read detail.
 	 *
-	 * letter
+	 * @param letter 信件 / letter
 	 * @param time 时间戳（毫秒） / timestamp in ms
-	 * total count
-	 * unread count
-	 * express count
-	 * black cloud count
+	 * @param totalCount 总数量 / total count
+	 * @param unreadCount 未读数量 / unread count
+	 * @param expressCount 快递数量 / express count
+	 * @param blackCloudCount 黑云数量 / black cloud count
 	 */
 	protected void writeLetterRead(Letter letter, long time, int totalCount, int unreadCount, int expressCount,
 			int blackCloudCount) {
@@ -138,8 +138,8 @@ public abstract class MailServicePacket extends AionServerPacket {
 	 * 写入信件状态（附件类型等）。
 	 * Writes letter state (attachment type, etc.).
 	 *
-	 * letter id
-	 * attachment type
+	 * @param letterId 信件 ID / letter id
+	 * @param attachmentType 附件类型 / attachment type
 	 */
 	protected void writeLetterState(int letterId, int attachmentType) {
 		writeD(letterId);
@@ -151,11 +151,11 @@ public abstract class MailServicePacket extends AionServerPacket {
 	 * 写入删除信件结果。
 	 * Writes letter delete result.
 	 *
-	 * total count
-	 * unread count
-	 * express count
-	 * black cloud count
-	 * deleted letter ids
+	 * @param totalCount 总数量 / total count
+	 * @param unreadCount 未读数量 / unread count
+	 * @param expressCount 快递数量 / express count
+	 * @param blackCloudCount 黑云数量 / black cloud count
+	 * @param letterIds 被删除的信件 ID / deleted letter ids
 	 */
 	protected void writeLetterDelete(int totalCount, int unreadCount, int expressCount, int blackCloudCount,
 			int... letterIds) {

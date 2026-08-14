@@ -1,11 +1,13 @@
 package com.aionemu.gameserver.model.stats.container;
 
 /**
- * CombatMode 枚举。
- * Combat Mode enumeration.
+ * 战斗模式：PVE 或 PvP。
+ * Combat mode: PVE or PvP.
  */
 
 public enum CombatMode {
-	/** Pvp / Pvp */
-	PVP, PVE
+	/** PvP 模式 / PvP mode */
+	PVP,
+	/** PvE 模式 / PvE mode */
+	PVE
 }

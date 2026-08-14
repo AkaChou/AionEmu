@@ -73,14 +73,14 @@ public final class GameServerNetworkServices implements DisposableBean {
      * 构造并绑定各网络服务的 instance provider。
      * Construct and bind instance providers for network services.
      *
-     * Login server
-     * Chat server
-     * Banned MAC
-     * @param networkControllerProvider 网络控制器 / Network controller
-     * Packet logger
-     * @param aionPacketHandlerFactoryProvider Aion 包处理工厂 / Aion packet-handler factory
-     * Packet flood filter
-     * @param lsPacketHandlerFactoryProvider 登录服包处理工厂 / LS packet-handler factory
+     * @param loginServerProvider 登录服连接提供者 / Login-server provider
+     * @param chatServerProvider 聊天服连接提供者 / Chat-server provider
+     * @param bannedMacManagerProvider MAC 封禁管理器提供者 / Banned-MAC manager provider
+     * @param networkControllerProvider 网络控制器提供者 / Network-controller provider
+     * @param packetLoggerServiceProvider 数据包日志服务提供者 / Packet-logger service provider
+     * @param aionPacketHandlerFactoryProvider Aion 数据包处理器工厂提供者 / Aion packet-handler factory provider
+     * @param packetFloodFilterProvider 数据包洪水过滤器提供者 / Packet flood-filter provider
+     * @param lsPacketHandlerFactoryProvider 登录服数据包处理器工厂提供者 / LS packet-handler factory provider
      */
     public GameServerNetworkServices(ObjectProvider<LoginServer> loginServerProvider, ObjectProvider<ChatServer> chatServerProvider,
             ObjectProvider<BannedMacManager> bannedMacManagerProvider, ObjectProvider<NetworkController> networkControllerProvider,
@@ -151,7 +151,7 @@ public final class GameServerNetworkServices implements DisposableBean {
      * 解析登录服连接。
      * Resolve the login-server connection.
      *
-     * Login server
+     * @return 登录服连接 / Login server
      */
     public static LoginServer loginServer() {
         ObjectProvider<LoginServer> provider = loginServerProvider;
@@ -165,7 +165,7 @@ public final class GameServerNetworkServices implements DisposableBean {
      * 解析聊天服连接。
      * Resolve the chat-server connection.
      *
-     * Chat server
+     * @return 聊天服连接 / Chat server
      */
     public static ChatServer chatServer() {
         ObjectProvider<ChatServer> provider = chatServerProvider;

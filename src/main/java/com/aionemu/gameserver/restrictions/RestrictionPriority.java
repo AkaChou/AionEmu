@@ -27,7 +27,7 @@ public @interface RestrictionPriority {
 	 * 优先级值。
 	 * Priority value.
 	 *
-	 * priority
+	 * @return 优先级值 / priority
 	 */
 	double value() default DEFAULT_PRIORITY;
 }

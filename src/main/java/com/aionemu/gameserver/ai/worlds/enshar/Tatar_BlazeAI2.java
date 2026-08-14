@@ -51,7 +51,7 @@ public class Tatar_BlazeAI2 extends AggressiveNpcAI2
 	}
 	
 	private void darkLordBlessing() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 22664, 1, getOwner()).useNoAnimationSkill(); //Dark Lord's Blessing.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 22664, 1, getOwner()).useNoAnimationSkill(); // 黑暗之主的祝福 / Dark Lord's Blessing.
 	}
 	
 	@Override
@@ -68,6 +68,12 @@ public class Tatar_BlazeAI2 extends AggressiveNpcAI2
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(),false, 0, 0);
 	}
 	
+	/**
+	 * 按血量百分比触发阶段行为：特定阈值打断思考并释放压制技能，其余阈值启动阶段任务。
+	 * Triggers phase behavior by HP percentage: certain thresholds interrupt thinking and cast a crush skill, others start the phase task.
+	 *
+	 * @param hpPercentage 当前血量百分比 / current HP percentage
+	 */
 	private synchronized void checkPercentage(int hpPercentage) {
 		curentPercent = hpPercentage;
 		for (Integer percent: percents) {

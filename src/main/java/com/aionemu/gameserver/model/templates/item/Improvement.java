@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Improvement 模板（静态数据/XML）。
- * XML template.
+ * 物品改进（强化）模板：充能方式、价格与燃烧加成。
+ * Item improvement template: charge way, prices and burn bonuses.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -35,28 +35,28 @@ public class Improvement {
 	private int recommend_rank;
 
 	/**
-	 * @return the level
+	 * @return 强化等级 / the level
 	 */
 	public int getLevel() {
 		return level;
 	}
 
 	/**
-	 * @return the way
+	 * @return 充能方式 / the charge way
 	 */
 	public int getChargeWay() {
 		return way;
 	}
 
 	/**
-	 * @return the price1
+	 * @return 价格 1 / the price1
 	 */
 	public int getPrice1() {
 		return price1;
 	}
 
 	/**
-	 * @return the price2
+	 * @return 价格 2 / the price2
 	 */
 	public int getPrice2() {
 		return price2;
@@ -73,13 +73,13 @@ public class Improvement {
 	}
 
 	/**
-	 * @return the recommend_rank
+	 * @return 推荐军阶 / the recommend rank
 	 */
 	public int getRecomendRank() {
 		return recommend_rank;
 	}
 
-	/** Verify Recomend Rank / Verify Recomend Rank */
+	/** 校验军阶是否达标 / Verify recommend rank */
 	public boolean verifyRecomendRank(int rank) {
 		return recommend_rank <= rank;
 	}

@@ -250,12 +250,12 @@ public class BanditService {
 	 */
 	public void morphBandit(Player player, boolean die) {
 		if (!die) {
-			player.getTransformModel().setModelId(219655); // Bloodthirsty Vampidaru.
+			player.getTransformModel().setModelId(219655); // 嗜血的瓦姆皮达鲁 / Bloodthirsty Vampidaru.
 			player.getTransformModel().setPanelId(0);
 			player.getTransformModel().setTransformType(TransformType.PC);
 			PacketSendUtility.sendPacket(player, new SM_TRANSFORM(player, 0, true, 0));
 			player.setTransformed(true);
-			player.setTransformedModelId(219655); // Bloodthirsty Vampidaru.
+			player.setTransformedModelId(219655); // 嗜血的瓦姆皮达鲁 / Bloodthirsty Vampidaru.
 		} else {
 			player.getTransformModel().setModelId(0);
 			player.getTransformModel().setPanelId(0);

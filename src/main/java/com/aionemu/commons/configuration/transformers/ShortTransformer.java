@@ -23,13 +23,13 @@ public class ShortTransformer implements PropertyTransformer<Short> {
     public static final ShortTransformer SHARED_INSTANCE = new ShortTransformer();
 
     /**
- * 将字符串值转换为 Short 对象
+     * 将字符串值转换为 Short 对象
      * Transforms string value into Short object
      *
-     * @param value 要转换的字符串值 String value to transform
-     * @param field 字段对象 Field that will be transformed
- * @return 转换后的 Short 对象 Transformed Short object
-     * @throws TransformationException 如果转换失败 if transformation fails
+     * @param value 要转换的字符串值 / String value to transform
+     * @param field 字段对象 / Field that will be transformed
+     * @return 转换后的 Short 对象 / Transformed Short object
+     * @throws TransformationException 如果转换失败 / if transformation fails
      */
     public Short transform(String value, Field field) throws TransformationException {
         try {

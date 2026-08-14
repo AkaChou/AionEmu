@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 风道模板（静态数据/XML）。
- * XML template.
+ * Windstream template (static data/XML).
  *
  * @author LokiReborn
  */

@@ -39,9 +39,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 @InstanceID(300170000)
 public class BeshmundirTempleInstance extends GeneralInstanceHandler
 {
-	/** macunbello soul / macunbello soul */
+		/** macunbello soul / macunbello soul */
 		private int macunbelloSoul;
-	/** warrior monument / warrior monument */
+		/** warrior monument / warrior monument */
 		private int warriorMonument;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
@@ -49,13 +49,13 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	/** beshmundir 任务 / beshmundir task */
+		/** beshmundir 任务 / beshmundir task */
 		private final List<Future<?>> beshmundirTask = new ArrayList<Future<?>>();
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -269,8 +269,8 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void handleUseItemFinish(Player player, Npc npc) {
@@ -316,15 +316,15 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDie(Npc npc) {
         Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
-		   /**
-	 * Path To Watcher's Nexus
-	 */
+			/**
+			 * Path To Watcher's Nexus
+			 */
 			case 216238: //Captain Lakhara.
 			    doors.get(470).setOpen(true);
 				//某处沉重的门已打开。 / A heavy door has opened somewhere.
@@ -347,9 +347,9 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 				sendMsgByRace(1401839, Race.PC_ALL, 0);
             break;
 			
-		   /**
-	 * Path To Macunbello's Refuge
-	 */
+			/**
+			 * Path To Macunbello's Refuge
+			 */
 			case 216583: //Brutal Soulwatcher (1st Island)
 				sp(799518, 933.982971f, 444.269104f, 222.00f, (byte) 21, 3000, 0, null); //Plegeton Boatman II.
 			break;
@@ -395,9 +395,9 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
 			break;
 			
-		   /**
-	 * Path To Garden Of The Entombed
-	 */
+			/**
+			 * Path To Garden Of The Entombed
+			 */
 			case 216246: //The Great Virhana.
 				doors.get(473).setOpen(true);
 				//某处沉重的门已打开。 / A heavy door has opened somewhere.
@@ -409,9 +409,9 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 				deleteNpc(281649); //Chopper.
 			break;
 			
-		   /**
-	 * Path To The Prison Of Ice
-	 */
+			/**
+			 * Path To The Prison Of Ice
+			 */
 			case 216263: //Isbariya The Resolute.
 				sendMovie(player, 439);
 				// 封印守护者已倒下。裂隙宝珠发光，封印削弱。 / The Seal Protector has fallen. The Rift Orb shines while the seal weakens.
@@ -455,48 +455,48 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	 * 处理 sp。
 	 * Handle sp.
 	 *
-	 * NPC
+	 * @param npcId NPC / NPC
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * time
+	 * @param time 时间 / time
 	 */
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
-	/**
-	 * 处理 sp。
-	 * Handle sp.
-	 *
-	 * NPC
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * time
-	 * message
-	 * 阵营 / race
-	 */
+    /**
+     * 处理 sp。
+     * Handle sp.
+     * 
+     * @param npcId NPC / NPC
+     * @param x X 坐标 / X
+     * @param y Y 坐标 / Y
+     * @param z Z 坐标 / Z
+     * @param h 朝向 / h
+     * @param time 时间 / time
+     * @param msg 消息 / message
+     * @param race 阵营 / race
+     */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
-	/**
-	 * 处理 sp。
-	 * Handle sp.
-	 *
-	 * NPC
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * entity id
-	 * time
-	 * message
-	 * 阵营 / race
-	 */
+    /**
+     * 处理 sp。
+     * Handle sp.
+     * 
+     * @param npcId NPC / NPC
+     * @param x X 坐标 / X
+     * @param y Y 坐标 / Y
+     * @param z Z 坐标 / Z
+     * @param h 朝向 / h
+     * @param entityId 实体 ID / entity id
+     * @param time 时间 / time
+     * @param msg 消息 / message
+     * @param race 阵营 / race
+     */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         beshmundirTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -515,18 +515,18 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	/**
-	 * 处理 sp。
-	 * Handle sp.
-	 *
-	 * NPC
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * time
-	 * walkerId
-	 */
+    /**
+     * 处理 sp。
+     * Handle sp.
+     * 
+     * @param npcId NPC / NPC
+     * @param x X 坐标 / X
+     * @param y Y 坐标 / Y
+     * @param z Z 坐标 / Z
+     * @param h 朝向 / h
+     * @param time 时间 / time
+     * @param walkerId 寻路器 ID / walkerId
+     */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         beshmundirTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -563,9 +563,9 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

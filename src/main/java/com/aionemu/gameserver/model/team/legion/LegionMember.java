@@ -15,14 +15,16 @@ public class LegionMember {
 	protected LegionRank rank = LegionRank.VOLUNTEER;
 
 	/**
-	 * 若稍后定义玩家则调用此构造。 / If player is defined later on this constructor is called
+	 * 若玩家稍后定义则调用此构造。
+	 * Called when the player is defined later.
 	 */
 	public LegionMember(int objectId) {
 		this.objectId = objectId;
 	}
 
 	/**
-	 * This constructor is called when a legion is created
+	 * 创建军团时调用此构造。
+	 * Called when a legion is created.
 	 */
 	public LegionMember(int objectId, Legion legion, LegionRank rank) {
 		this.setObjectId(objectId);
@@ -31,7 +33,8 @@ public class LegionMember {
 	}
 
 	/**
-	 * This constructor is called when a LegionMemberEx is called
+	 * 创建 LegionMemberEx 时调用此构造。
+	 * Called when a LegionMemberEx is created.
 	 */
 	public LegionMember() {
 	}
@@ -65,8 +68,8 @@ public class LegionMember {
 	}
 
 	/**
-	 * @return 是否军团长。 / Whether brigade general
-	  */
+	 * @return 是否军团长 / Whether brigade general
+	 */
 	public boolean isBrigadeGeneral() {
 		return rank == LegionRank.BRIGADE_GENERAL;
 	}
@@ -135,7 +138,11 @@ public class LegionMember {
 	}
 
 	/**
-	 * @param permissions Whether rights
+	 * 检查成员是否拥有指定权限。
+	 * Checks whether the member has the given rights.
+	 *
+	 * @param permissions 权限掩码 / permissions mask
+	 * @return 是否拥有权限 / whether the member has the rights
 	 */
 	public boolean hasRights(LegionPermissionsMask permissions) {
 		int legionarPermission = 0;

@@ -5,7 +5,7 @@ import com.aionemu.gameserver.model.idiandepths.IdianDepthsStateType;
 
 /**
  * 伊迪安深渊默认实现：切入 OPEN / 回到 CLOSED。
- * back to CLOSED.
+ * Idian Depths default implementation: switch to OPEN / back to CLOSED.
  *
  * @author Rinzler (Encom)
  */
@@ -15,7 +15,7 @@ public class Idian extends IdianDepths<IdianDepthsLocation> {
 	 * 绑定伊迪安深渊地点。
 	 * Binds the Idian Depths location.
 	 *
-	 * location
+	 * @param idianDepths 伊迪安深渊地点 / Idian Depths location
 	 */
 	public Idian(IdianDepthsLocation idianDepths) {
 		super(idianDepths);

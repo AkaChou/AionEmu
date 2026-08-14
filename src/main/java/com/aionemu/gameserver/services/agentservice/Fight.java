@@ -15,7 +15,7 @@ public class Fight extends AgentFight<AgentLocation> {
 	 * 绑定代理地点。
 	 * Binds the agent location.
 	 *
-	 * location
+	 * @param agent 位置 / location
 	 */
 	public Fight(AgentLocation agent) {
 		super(agent);

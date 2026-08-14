@@ -1,6 +1,9 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-/** Immutable movement facts captured after the server accepts a flight action. */
+/**
+ * 服务器接受飞行动作后捕获的不可变移动事实。
+ * Immutable movement facts captured after the server accepts a flight action.
+ */
 public record QuestMovementFacts(int playerId, int worldId, int instanceId,
 		float x, float y, float z, boolean spawned, boolean flying, String actionId) {
 	public QuestMovementFacts {

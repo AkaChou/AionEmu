@@ -219,9 +219,9 @@ public class RvrService {
 					// 返回。 / returned.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_RVR_TIMER_NOTICE_06,
 							3540000);
-					// 炽天使防御商人维里内克已出现在海隆要塞。 / Seraphim Defender Merchant Wirinerk has appeared at Heiron Fortress.
+					// 炽天使防御商人维里内克已出现在因特尔蒂卡要塞。 / Seraphim Defender Merchant Wirinerk has appeared at Heiron Fortress.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_RVR_L_WIN, 3558000);
-					// 谢迪姆防御商人吉鲁内克已出现在贝卢斯兰要塞。 / Shedim Defender Merchant Girunerk has appeared at Beluslan Fortress.
+					// 谢迪姆防御商人吉鲁内克已出现在贝鲁斯兰要塞。 / Shedim Defender Merchant Girunerk has appeared at Beluslan Fortress.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_RVR_D_WIN, 3600000);
 				}
 			});
@@ -453,7 +453,7 @@ public class RvrService {
 		}
 	}
 
-	// 诺斯沃尔德。 / Norsvold.
+	// 诺斯珀德。 / Norsvold.
 	/**
 	 * 广播 DF6 G1 阶段 1 刷怪系统消息。
 	 * Broadcasts DF6 G1 phase-1 spawn system messages.
@@ -692,7 +692,7 @@ public class RvrService {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Raid_Start_LF6);
 					// 古代武器入侵。 / Ancient's Weapon Invasion.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Raid_Start_DF6);
-					// 诺斯沃尔德塔碎片回收行动。 / Norsvold Tower Fragment Retrieval Operation.
+					// 诺斯珀德塔碎片回收行动。 / Norsvold Tower Fragment Retrieval Operation.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Raid_InvasionStart_Light);
 					// 伊卢玛塔碎片回收行动。 / Iluma Tower Fragment Retrieval Operation.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Raid_InvasionStart_Dark);

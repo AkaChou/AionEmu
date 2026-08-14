@@ -20,7 +20,7 @@ public class TerritoryBuff implements StatOwner {
 	 * 对玩家施加领地增益效果。
 	 * Applies the territory buff effect to the player.
 	 *
-	 * target player
+	 * @param player 目标玩家 / target player
 	 */
 	public void applyEffect(Player player) {
 		int addvalue = 60;
@@ -45,7 +45,7 @@ public class TerritoryBuff implements StatOwner {
 	 * 结束并移除玩家身上的领地增益。
 	 * Ends and removes the territory buff from the player.
 	 *
-	 * target player
+	 * @param player 目标玩家 / target player
 	 */
 	public void endEffect(Player player) {
 		functions.clear();

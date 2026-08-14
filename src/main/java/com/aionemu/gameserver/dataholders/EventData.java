@@ -150,9 +150,7 @@ public class EventData {
 	 * 判断指定名称的活动是否处于激活状态。
 	 * Checks whether the named event is currently active.
 	 *
-	 * event name
-	 *
-	 * @param eventName
+	 * @param eventName 活动名称 / event name
 	 * @return 若激活返回 true / true if the event is active
 	 */
 	public boolean Contains(String eventName) {

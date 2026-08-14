@@ -56,7 +56,7 @@ public class CAPTCHAUtil {
 	 * Creates a DXT1 byte buffer CAPTCHA for the given word.
 	 *
 	 * @param word 验证码文本 / CAPTCHA word
-	 * DXT1 buffer
+	 * @return DXT1 缓冲 / DXT1 buffer
 	 */
 	public static ByteBuffer createCAPTCHA(String word) {
 		ByteBuffer byteBuffer = null;
@@ -78,11 +78,11 @@ public class CAPTCHAUtil {
 		BufferedImage bImg = null;
 
 		try {
-			// 创建图像 / image create
+			// 创建图像 / image creation
 			bImg = new BufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB_PRE);
 			Graphics2D g2 = bImg.createGraphics();
 
-			// 设置背景颜色 / set backgroup color
+			// 设置背景颜色 / set background color
 			g2.setColor(Color.BLACK);
 			g2.fillRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 
@@ -115,7 +115,7 @@ public class CAPTCHAUtil {
 	 * 生成默认长度的随机验证码词。
 	 * Returns a random CAPTCHA word of default length.
 	 *
-	 * random word
+	 * @return 随机验证码词 / random word
 	 */
 	public static String getRandomWord() {
 		return randomWord(DEFAULT_WORD_LENGTH);
@@ -125,8 +125,8 @@ public class CAPTCHAUtil {
 	 * 按指定长度生成随机验证码词。
 	 * Builds a random CAPTCHA word of the given length.
 	 *
-	 * word length
-	 * random word
+	 * @param wordLength 词长度 / word length
+	 * @return 随机验证码词 / random word
 	 */
 	private static String randomWord(int wordLength) {
 		StringBuffer word = new StringBuffer();

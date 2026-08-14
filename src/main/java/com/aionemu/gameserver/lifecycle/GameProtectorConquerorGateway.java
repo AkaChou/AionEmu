@@ -61,7 +61,7 @@ public class GameProtectorConquerorGateway {
      * 解析守护者/征服者服务：优先 Spring，否则经运行时桥回退。
      * Resolve protector/conqueror service: prefer Spring, otherwise fall back via runtime bridge.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private ProtectorConquerorService protectorConquerorService() {
         if (protectorConquerorServiceProvider == null) {

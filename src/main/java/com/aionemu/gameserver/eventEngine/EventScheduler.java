@@ -67,7 +67,7 @@ public class EventScheduler implements Runnable {
 	 * 延迟投递事件（先 reset）。
 	 * Schedules an event after delay (resets first).
 	 *
-	 * 事件 / event
+	 * @param event 事件 / event
 	 * @param delay 延迟毫秒 / delay millis
 	 */
 	public void schedule(final Event event, int delay) {
@@ -79,10 +79,10 @@ public class EventScheduler implements Runnable {
 	 * 固定周期调度事件。
 	 * Schedules an event at fixed rate.
 	 *
-	 * 事件 / event
+	 * @param event 事件 / event
 	 * @param delay 首次延迟毫秒 / initial delay millis
-	 * period millis
-	 * scheduled future
+	 * @param period 周期毫秒 / period millis
+	 * @return 调度 future / scheduled future
 	 */
 	public ScheduledFuture<?> scheduleAtFixedRate(Event event, int delay, int period) {
 		ScheduledFuture<?> future = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new EventScheduleWrapper(event),
@@ -113,7 +113,7 @@ public class EventScheduler implements Runnable {
 	 * 异步执行事件并启动超时监控。
 	 * Executes the event asynchronously and starts timeout watch.
 	 *
-	 * 事件 / event
+	 * @param event 事件 / event
 	 */
 	private void execute(Event event) {
 		GameThreadPoolServices.threadPoolManager().schedule(event, 0);
@@ -126,7 +126,7 @@ public class EventScheduler implements Runnable {
 	 * 等待事件完成或超时，然后按冷却重新进入调度循环。
 	 * Waits for finish or timeout, then re-enters the loop after cooldown.
 	 *
-	 * 事件 / event
+	 * @param event 事件 / event
 	 */
 	private void waitForExecution(Event event) {
 		if (event.isFinished()) {
@@ -154,7 +154,10 @@ public class EventScheduler implements Runnable {
 		private final Event event;
 
 		/**
-		 * 事件 / event
+		 * 构造等待任务。
+		 * Constructs the wait task.
+		 *
+		 * @param event 事件 / event
 		 */
 		public WaitForExecutionRunnable(Event event) {
 			this.event = event;
@@ -187,7 +190,7 @@ public class EventScheduler implements Runnable {
 	 * 获取调度器实例（优先 Spring provider）。
 	 * Returns scheduler instance (prefers Spring provider).
 	 *
-	 * scheduler
+	 * @return 调度器 / scheduler
 	 */
 	static public EventScheduler getInstance() {
 		ObjectProvider<EventScheduler> provider = instanceProvider;

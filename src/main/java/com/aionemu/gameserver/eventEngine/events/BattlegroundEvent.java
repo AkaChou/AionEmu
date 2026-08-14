@@ -34,7 +34,7 @@ public class BattlegroundEvent extends Event {
 	 * 当前进行中战场数量。
 	 * Number of live battlegrounds.
 	 *
-	 * bg count
+	 * @return 进行中战场数量 / live bg count
 	 */
 	public int getBgCount() {
 		return battlegrounds.size();
@@ -44,7 +44,7 @@ public class BattlegroundEvent extends Event {
 	 * 战场创建回调，记录战场 ID。
 	 * Callback when a BG is created; records the id.
 	 *
-	 * battleground id
+	 * @param bgId 战场 ID / battleground id
 	 */
 	public void onCreate(Integer bgId) {
 		if (!battlegrounds.contains(bgId)) {
@@ -56,7 +56,7 @@ public class BattlegroundEvent extends Event {
 	 * 单个战场结束回调；全部结束后结束事件。
 	 * Callback when one BG ends; finishes the event when none remain.
 	 *
-	 * battleground id
+	 * @param bgId 战场 ID / battleground id
 	 */
 	public void onEnd(Integer bgId) {
 		battlegrounds.remove(bgId);
@@ -86,8 +86,8 @@ public class BattlegroundEvent extends Event {
 	 * 不支持取消。
 	 * Cancel is not supported.
 	 *
-	 * ignored
-	 * always false
+	 * @param mayInterruptIfRunning 忽略参数 / ignored
+	 * @return 始终为 false / always false
 	 */
 	@Override
 	public boolean cancel(boolean mayInterruptIfRunning) {

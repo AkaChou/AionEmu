@@ -13,6 +13,9 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum AreaType {
 
-	/** 多边形。 / Polygon. */
+	/**
+	 * 区域形状类型：多边形 / 圆柱体 / 球体 / 半球体。
+	 * Area shape types: polygon / cylinder / sphere / semisphere.
+	 */
 	POLYGON, CYLINDER, SPHERE, SEMISPHERE;
 }

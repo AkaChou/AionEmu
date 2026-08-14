@@ -6,8 +6,16 @@ package com.aionemu.gameserver.model.house;
  */
 
 public enum HousePermissions {
-	/** 非设置 / Not Set*/
-	NOT_SET(0), SHOW_OWNER(1 << 0), DOOR_OPENED_ALL(1 << 8), DOOR_OPENED_FRIENDS(2 << 8), DOOR_CLOSED(3 << 8);
+	/** 未设置 / Not set */
+	NOT_SET(0),
+	/** 显示房主 / Show owner */
+	SHOW_OWNER(1 << 0),
+	/** 门对所有人开放 / Door opened to all */
+	DOOR_OPENED_ALL(1 << 8),
+	/** 门对好友开放 / Door opened to friends */
+	DOOR_OPENED_FRIENDS(2 << 8),
+	/** 门关闭 / Door closed */
+	DOOR_CLOSED(3 << 8);
 
 	private int value;
 

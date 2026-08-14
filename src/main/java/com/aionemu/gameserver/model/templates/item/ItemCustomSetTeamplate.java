@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * 物品自定义 SetTeamplate 模板（静态数据/XML）。
- * XML template.
+ * 物品自定义套装模板：自定义强化值。
+ * Custom item set template: custom enchant value.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -32,7 +32,7 @@ public class ItemCustomSetTeamplate {
 		return this.name;
 	}
 
-	/** 返回 custom enchant value / Returns the custom enchant value */
+	/** 返回自定义强化值 / Returns the custom enchant value */
 	public int getCustomEnchantValue() {
 		return this.custom_enchant_value;
 	}

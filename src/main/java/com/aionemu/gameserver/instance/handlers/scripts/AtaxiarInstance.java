@@ -23,8 +23,8 @@ public class AtaxiarInstance extends GeneralInstanceHandler
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
 	 *
-	 * 玩家 / player
-	 * zone
+	 * @param player 玩家 / player
+	 * @param zone 区域 / zone
 	 */
 	@Override
     public void onEnterZone(Player player, ZoneInstance zone) {

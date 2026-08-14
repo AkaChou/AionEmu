@@ -98,7 +98,7 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
                             int stoneType = rset.getInt("category");
 
                             switch (stoneType) {
-                                case 0: // ManaStone
+                                case 0: //魔石。 / ManaStone
                                     if (item.getSockets(false) <= item.getItemStonesSize()) {
                                         if (EnchantsConfig.CLEAN_STONE) {
                                             deleteItemStone(con, item.getObjectId(), slot, stoneType);
@@ -108,11 +108,11 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
                                     item.getItemStones().add(new ManaStone(item.getObjectId(), itemId, slot, PersistentState.UPDATED));
                                     break;
 
-                                case 1: // GodStone
+                                case 1: //神石。 / GodStone
                                     item.setGodStone(new GodStone(item.getObjectId(), itemId, rset.getInt("proc_count"), PersistentState.UPDATED));
                                     break;
 
-                                case 2: // FusionStone
+                                case 2: //融合石。 / FusionStone
                                     if (item.getSockets(true) <= item.getFusionStonesSize()) {
                                         if (EnchantsConfig.CLEAN_STONE) {
                                             deleteItemStone(con, item.getObjectId(), slot, stoneType);
@@ -184,7 +184,7 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
      * 持久化 Mana 石集合。
      * Persists a set of mana stones.
      *
-     * mana stone set
+     * @param manaStones 魔石集合 / mana stone set
      */
     @Override
     public void storeManaStones(Set<ManaStone> manaStones) {
@@ -382,8 +382,8 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
      *
      * @param con 数据库连接 / database connection
      * @param uid 物品唯一 ID / item unique id
-     * slot
-     * category
+     * @param slot 槽位 / slot
+     * @param category 类别 / category
      * SQL exception
      */
     private void deleteItemStone(Connection con, int uid, int slot, int category)
@@ -403,10 +403,10 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

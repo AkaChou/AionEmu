@@ -12,7 +12,7 @@ public interface AIAnswer {
 	 * 判断该回答是否为肯定。
 	 * Whether this answer is positive.
 	 *
-	 * {@code true} if positive。
+	 * @return 肯定时为 {@code true} / {@code true} if positive
 	 */
 	boolean isPositive();
 
@@ -20,7 +20,7 @@ public interface AIAnswer {
 	 * 返回回答的具体结果对象。
 	 * Return the concrete result object of this answer.
 	 *
-	 * Result object
+	 * @return 结果对象 / Result object
 	 */
 	Object getResult();
 }

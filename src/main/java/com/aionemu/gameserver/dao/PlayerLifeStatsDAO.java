@@ -15,7 +15,7 @@ public abstract class PlayerLifeStatsDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -26,7 +26,7 @@ public abstract class PlayerLifeStatsDAO implements DAO {
 	 * 加载玩家生命状态。
 	 * Loads player life stats.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void loadPlayerLifeStat(Player player);
 
@@ -34,7 +34,7 @@ public abstract class PlayerLifeStatsDAO implements DAO {
 	 * 插入玩家生命状态记录。
 	 * Inserts a player life-stat record.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void insertPlayerLifeStat(Player player);
 
@@ -42,7 +42,7 @@ public abstract class PlayerLifeStatsDAO implements DAO {
 	 * 更新玩家生命状态记录。
 	 * Updates a player life-stat record.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void updatePlayerLifeStat(Player player);
 }

@@ -8,7 +8,7 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
- * Poly 区域，用于几何相关逻辑。
+ * 多边形区域，用于几何相关逻辑。
  * Poly Area for geometry logic.
  *
  * @author SoulKeeper
@@ -16,27 +16,34 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 public class PolyArea extends AbstractArea {
 
 	/**
-	 * 用于计算 isInside() 的多边形。 / Polygon used to calculate isInside()
+	 * 用于计算 isInside() 的多边形。
+	 * Polygon used to calculate isInside().
 	 */
 	private final Polygon2D poly;
 
 	/**
-	 * 创建新 area 从给定 points。 / Creates new area from given points
+	 * 由给定点创建新的多边形区域。
+	 * Creates new area from given points.
 	 *
-	 * @param zoneName list of points
-	 * @param worldId   minimal z
-	 * @param points   maximal z
+	 * @param zoneName 区域名称 / zone name
+	 * @param worldId 世界 ID / world id
+	 * @param points 点列表 / list of points
+	 * @param zMin 最小 Z 坐标 / minimal z
+	 * @param zMax 最大 Z 坐标 / maximal z
 	 */
 	public PolyArea(ZoneName zoneName, int worldId, Collection<Point2D> points, float zMin, float zMax) {
 		this(zoneName, worldId, points.toArray(new Point2D[points.size()]), zMin, zMax);
 	}
 
 	/**
-	 * 创建新 area 从给定 points。 / Creates new area from given points
+	 * 由给定点创建新的多边形区域。
+	 * Creates new area from given points.
 	 *
-	 * @param zoneName list of points
-	 * @param worldId   minimal z
-	 * @param points   maximal z
+	 * @param zoneName 区域名称 / zone name
+	 * @param worldId 世界 ID / world id
+	 * @param points 点数组 / array of points
+	 * @param zMin 最小 Z 坐标 / minimal z
+	 * @param zMax 最大 Z 坐标 / maximal z
 	 */
 	public PolyArea(ZoneName zoneName, int worldId, Point2D[] points, float zMin, float zMax) {
 		super(zoneName, worldId, zMin, zMax);

@@ -13,6 +13,12 @@ public class SM_EXCHANGE_REQUEST extends AionServerPacket {
 
 	private String receiver;
 
+	/**
+	 * 按发起者名称构造交易请求包。
+	 * Creates an exchange request packet for the given requester name.
+	 *
+	 * @param receiver 发起交易玩家名 / name of the requesting player
+	 */
 	public SM_EXCHANGE_REQUEST(String receiver) {
 		this.receiver = receiver;
 	}

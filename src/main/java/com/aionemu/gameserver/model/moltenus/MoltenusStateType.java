@@ -9,5 +9,7 @@ package com.aionemu.gameserver.model.moltenus;
 
 public enum MoltenusStateType {
 	/** 战斗 / Fight. */
-	FIGHT, PEACE;
+	FIGHT,
+	/** 和平 / Peace. */
+	PEACE;
 }

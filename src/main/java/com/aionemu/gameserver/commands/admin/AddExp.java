@@ -25,7 +25,6 @@ public class AddExp extends AdminCommand {
 	 * 执行增加经验：解析经验值并叠加到目标玩家。
 	 * Executes add-exp: parses the amount and adds it to the target player.
 	 *
-	 * admin
 	 * @param params 参数：经验值 / experience amount
 	 */
 	@Override
@@ -61,8 +60,6 @@ public class AddExp extends AdminCommand {
 	 * 参数错误时输出 {@code //addexp} 用法。
 	 * Prints {@code //addexp} usage on invalid arguments.
 	 *
-	 * admin
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

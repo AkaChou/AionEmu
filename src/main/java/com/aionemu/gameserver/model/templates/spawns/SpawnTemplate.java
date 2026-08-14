@@ -108,32 +108,32 @@ public class SpawnTemplate {
 		spawnGroup.addSpawnTemplate(this);
 	}
 
-	/** 返回 x / Returns the x */
+	/** 返回 x 坐标 / Returns the x */
 	public float getX() {
 		return x;
 	}
 
-	/** 设置 x / Sets the x */
+	/** 设置 x 坐标 / Sets the x */
 	public void setX(float x) {
 		this.x = x;
 	}
 
-	/** 返回 y / Returns the y */
+	/** 返回 y 坐标 / Returns the y */
 	public float getY() {
 		return y;
 	}
 
-	/** 设置 y / Sets the y */
+	/** 设置 y 坐标 / Sets the y */
 	public void setY(float y) {
 		this.y = y;
 	}
 
-	/** 返回 z / Returns the z */
+	/** 返回 z 坐标 / Returns the z */
 	public float getZ() {
 		return z;
 	}
 
-	/** 设置 z / Sets the z */
+	/** 设置 z 坐标 / Sets the z */
 	public void setZ(float z) {
 		this.z = z;
 	}
@@ -143,12 +143,12 @@ public class SpawnTemplate {
 		return h;
 	}
 
-	/** 返回 entity id / Returns the entity id */
+	/** 返回实体 ID / Returns the entity id */
 	public int getEntityId() {
 		return entityId;
 	}
 
-	/** 设置 entity id / Sets the entity id */
+	/** 设置实体 ID / Sets the entity id */
 	public void setEntityId(int entityId) {
 		this.entityId = entityId;
 	}
@@ -163,7 +163,7 @@ public class SpawnTemplate {
 		this.entityId = staticId;
 	}
 
-	/** 返回 random walk / Returns the random walk */
+	/** 返回随机行走 / Returns the random walk */
 	public int getRandomWalk() {
 		return randomWalk;
 	}
@@ -213,12 +213,12 @@ public class SpawnTemplate {
 		return spawnGroup.getRndTemplate(instanceId);
 	}
 
-	/** 返回 respawn time / Returns the respawn time */
+	/** 返回重生时间 / Returns the respawn time */
 	public int getRespawnTime() {
 		return spawnGroup.getRespawnTime();
 	}
 
-	/** 设置 respawn time / Sets the respawn time */
+	/** 设置重生时间 / Sets the respawn time */
 	public void setRespawnTime(int respawnTime) {
 		spawnGroup.setRespawnTime(respawnTime);
 	}
@@ -233,7 +233,7 @@ public class SpawnTemplate {
 		return spawnGroup.getHandlerType();
 	}
 
-	/** 返回 anchor / Returns the anchor */
+	/** 返回锚点 / Returns the anchor */
 	public String getAnchor() {
 		return anchor;
 	}
@@ -259,17 +259,17 @@ public class SpawnTemplate {
 		return spawnGroup.hasPool();
 	}
 
-	/** 返回 walker id / Returns the walker id */
+	/** 返回巡游者 ID / Returns the walker id */
 	public String getWalkerId() {
 		return walkerId;
 	}
 
-	/** 设置 walker id / Sets the walker id */
+	/** 设置巡游者 ID / Sets the walker id */
 	public void setWalkerId(String walkerId) {
 		this.walkerId = walkerId;
 	}
 
-	/** 返回 walker index / Returns the walker index */
+	/** 返回巡游者索引 / Returns the walker index */
 	public int getWalkerIndex() {
 		return walkerIdx;
 	}
@@ -296,7 +296,7 @@ public class SpawnTemplate {
 		this.eventTemplate = eventTemplate;
 	}
 
-	/** 返回 model / Returns the model */
+	/** 返回模型 / Returns the model */
 	public SpawnModel getModel() {
 		return model;
 	}
@@ -311,77 +311,77 @@ public class SpawnTemplate {
 		return astate;
 	}
 
-	/** 返回 b state / Returns the b state */
+	/** 返回 b 状态 / Returns the b state */
 	public int getBState() {
 		return bstate;
 	}
 
-	/** 返回 c state / Returns the c state */
+	/** 返回 c 状态 / Returns the c state */
 	public int getCState() {
 		return cstate;
 	}
 
-	/** 返回 d state / Returns the d state */
+	/** 返回 d 状态 / Returns the d state */
 	public int getDState() {
 		return dstate;
 	}
 
-	/** 返回 e state / Returns the e state */
+	/** 返回 e 状态 / Returns the e state */
 	public int getEState() {
 		return estate;
 	}
 
-	/** 返回 i state / Returns the i state */
+	/** 返回 i 状态 / Returns the i state */
 	public int getIState() {
 		return istate;
 	}
 
-	/** 返回 m state / Returns the m state */
+	/** 返回 m 状态 / Returns the m state */
 	public int getMState() {
 		return mstate;
 	}
 
-	/** 返回 n state / Returns the n state */
+	/** 返回 n 状态 / Returns the n state */
 	public int getNState() {
 		return nstate;
 	}
 
-	/** 返回 o state / Returns the o state */
+	/** 返回 o 状态 / Returns the o state */
 	public int getOState() {
 		return ostate;
 	}
 
-	/** 返回 p state / Returns the p state */
+	/** 返回 p 状态 / Returns the p state */
 	public int getPState() {
 		return pstate;
 	}
 
-	/** 返回 r state / Returns the r state */
+	/** 返回 r 状态 / Returns the r state */
 	public int getRState() {
 		return rstate;
 	}
 
-	/** 返回 t state / Returns the t state */
+	/** 返回 t 状态 / Returns the t state */
 	public int getTState() {
 		return tstate;
 	}
 
-	/** 返回 z state / Returns the z state */
+	/** 返回 z 状态 / Returns the z state */
 	public int getZState() {
 		return zstate;
 	}
 
-	/** 返回 iu state / Returns the iu state */
+	/** 返回 IU 状态 / Returns the iu state */
 	public int getIUState() {
 		return iustate;
 	}
 
-	/** 返回 op state / Returns the op state */
+	/** 返回 OP 状态 / Returns the op state */
 	public int getOPState() {
 		return opstate;
 	}
 
-	/** 返回 alternate ids / Returns the alternate ids */
+	/** 返回备用 ID / Returns the alternate ids */
 	public int[] getAlternateIds() {
 		int[] alternateIds;
 		if (alternateIdValues!=null){
@@ -398,7 +398,7 @@ public class SpawnTemplate {
 		return alternateIds;
 	}
 
-	/** 返回 select probs / Returns the select probs */
+	/** 返回选择概率 / Returns the select probs */
 	public int[] getSelectProbs() {
 		int[] selectProbs;
 		if (selectprobValues!=null){

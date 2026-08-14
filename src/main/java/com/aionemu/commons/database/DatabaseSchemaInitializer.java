@@ -48,9 +48,9 @@ final class DatabaseSchemaInitializer {
      * 使用指定 JDBC 连接信息在缺失表时初始化 schema
      * Initialize schema when tables are missing using the given JDBC settings
      *
-     * JDBC URL
-     * Username
-     * Password
+     * @param jdbcUrl JDBC URL / JDBC URL
+     * @param user 用户名 / Username
+     * @param password 密码 / Password
      */
     static void initializeIfMissing(String jdbcUrl, String user, String password) {
         JdbcTarget target = JdbcTarget.from(jdbcUrl);
@@ -62,7 +62,8 @@ final class DatabaseSchemaInitializer {
 
         try (Connection connection = DriverManager.getConnection(target.serverUrl(), user, password)) {
             if (hasTables(connection, target.database())) {
-                // TODO(compat-20260728): Remove this repair and its test after three production releases.
+                // TODO(compat-20260728): 三个生产版本发布后移除该修复及其测试。
+                // Remove this repair and its test after three production releases.
                 repairRolledBackInstanceSchema(connection, target.database());
                 migrateGodstoneProcCount(connection, target.database());
                 migrateLimitedQuestCounters(connection, target.database());
@@ -212,9 +213,7 @@ final class DatabaseSchemaInitializer {
      * 根据库名解析内置基线 schema 资源路径
      * Resolve the bundled baseline schema resource path by database name
      *
-     * Database name
-     *
-     * @param database
+     * @param database 数据库名 / Database name
      * @return 资源路径，未配置时返回 null / Resource path, or null when not configured
      */
     static String schemaResource(String database) {
@@ -226,11 +225,8 @@ final class DatabaseSchemaInitializer {
      * Check whether the given schema already contains tables
      *
      * @param connection 服务器级连接 / Server-level connection
-     * Database name
-     *
-     * @param connection
+     * @param database 数据库名 / Database name
      * @return 已有表返回 true / True when tables exist
-     * @param database
      * @throws SQLException 查询失败时 / When the query fails
      */
     private static boolean hasTables(Connection connection, String database) throws SQLException {
@@ -249,11 +245,8 @@ final class DatabaseSchemaInitializer {
      * Execute the SQL script from a classpath resource
      *
      * @param connection 数据库连接 / Database connection
-     * Schema resource path
-     *
-     * @param connection
+     * @param schemaResource 资源路径 / Schema resource path
      * @throws SQLException 执行 SQL 失败时 / When SQL execution fails
-     * @param schemaResource
      * @throws IOException 读取资源失败时 / When reading the resource fails
      */
     private static void executeScript(Connection connection, String schemaResource) throws SQLException, IOException {
@@ -268,10 +261,8 @@ final class DatabaseSchemaInitializer {
      * 读取 classpath 中的 schema 资源文本
      * Read schema resource text from the classpath
      *
-     * Resource path
-     * Script text
-     *
-     * @param schemaResource
+     * @param schemaResource 资源路径 / Resource path
+     * @return 脚本文本 / Script text
      * @throws IOException 资源缺失或读取失败时 / When the resource is missing or unreadable
      */
     private static String readResource(String schemaResource) throws IOException {
@@ -298,8 +289,8 @@ final class DatabaseSchemaInitializer {
      * 按分号拆分 SQL 脚本，忽略引号内的分号
      * Split a SQL script by semicolons while ignoring semicolons inside quotes
      *
-     * Script text
-     * Statement list
+     * @param script 脚本文本 / Script text
+     * @return 语句列表 / Statement list
      */
     static List<String> splitStatements(String script) {
         List<String> statements = new ArrayList<>();
@@ -346,7 +337,7 @@ final class DatabaseSchemaInitializer {
      * 将非空语句追加到列表
      * Append a non-empty statement to the list
      *
-     * Statement list
+     * @param statements 语句列表 / Statement list
      * @param current 当前缓冲区 / Current buffer
      */
     private static void addStatement(List<String> statements, StringBuilder current) {
@@ -361,7 +352,7 @@ final class DatabaseSchemaInitializer {
      * Parsed JDBC URL target: server URL and database name
      *
      * @param serverUrl 不含库名的服务器 URL / Server URL without database name
-     * Database name
+     * @param database 数据库名 / Database name
      */
     record JdbcTarget(String serverUrl, String database) {
 
@@ -371,8 +362,8 @@ final class DatabaseSchemaInitializer {
          * 从 MySQL JDBC URL 解析服务器地址与库名
          * Parse server URL and database name from a MySQL JDBC URL
          *
-         * JDBC URL
-         * Parsed target
+         * @param jdbcUrl JDBC URL / JDBC URL
+         * @return 解析后的目标 / Parsed target
          */
         static JdbcTarget from(String jdbcUrl) {
             if (jdbcUrl == null || !jdbcUrl.startsWith(MYSQL_PREFIX)) {

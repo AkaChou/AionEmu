@@ -19,7 +19,7 @@ import java.sql.*;
 public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO {
 
 
-    /** Mergeinsert 更新 scriptSQL / Merge insert or update script SQL */
+    /** 合并插入或更新脚本 SQL / Merge insert or update script SQL */
     private static final String MERGE_QUERY = "INSERT INTO `house_scripts` (`house_id`, `index`, `script`) VALUES (?, ?, ?) " + "ON DUPLICATE KEY UPDATE `script` = VALUES(`script`)";
     /** 删除脚本 SQL / Delete script SQL */
     private static final String DELETE_QUERY = "DELETE FROM `house_scripts` WHERE `house_id` = ? AND `index` = ?";
@@ -34,13 +34,13 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
      * 添加房屋脚本（合并写入）。
      * Adds a house script (merge write).
      *
-     * house id
-     * script slot
+     * @param houseId 房屋 ID / house id
+     * @param position script slot
      * script XML
      */
     @Override
     public void addScript(int houseId, int position, String scriptXML) {
-        updateScript(houseId, position, scriptXML); // Use merge approach
+        updateScript(houseId, position, scriptXML); // 使用合并写入方式。 / Use merge approach.
     }
 
     /**
@@ -49,7 +49,7 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
      *
      * house id
      *
-     * @param houseId
+     * @param houseId 房屋 ID / house id
      * @return 玩家脚本集合 / player scripts
      */
     @Override
@@ -80,8 +80,8 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
      * 更新房屋脚本。
      * Updates a house script.
      *
-     * house id
-     * script slot
+     * @param houseId 房屋 ID / house id
+     * @param position script slot
      * script XML
      */
     @Override
@@ -109,8 +109,8 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
      * 删除指定槽位脚本。
      * Deletes the script at the given slot.
      *
-     * house id
-     * script slot
+     * @param houseId 房屋 ID / house id
+     * @param position script slot
      */
     @Override
     public void deleteScript(int houseId, int position) {
@@ -130,7 +130,7 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
      * 删除房屋全部脚本。
      * Deletes all scripts of a house.
      *
-     * house id
+     * @param houseId 房屋 ID / house id
      */
     public void deleteAllScripts(int houseId) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -148,8 +148,8 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
      * 获取房屋脚本数量。
      * Gets the script count of a house.
      *
-     * house id
-     * script count
+     * @param houseId 房屋 ID / house id
+     * @return script count
      */
     public int getScriptCount(int houseId) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -174,10 +174,10 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

@@ -11,6 +11,10 @@ import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.stats.NpcStatsTemplate;
 
+/**
+ * 从 XML 加载 NPC 战斗属性定义（伤害范围、属性比率、属性削弱上限）。
+ * Loads NPC combat attribute definitions (damage range, stat ratios, attribute reduction caps) from XML.
+ */
 final class NpcCombatDefinitionLoader {
 
 	static int apply(File file, NpcData npcData) {

@@ -12,9 +12,23 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum PartType {
 	/** 屋顶 / Roof. */
-	ROOF(1, 1), OUTWALL(2, 2), FRAME(3, 3), DOOR(4, 4), GARDEN(5, 5), FENCE(6, 6), INWALL_ANY(8, 13),
-	/** Infloor Any / Infloor Any */
-	INFLOOR_ANY(14, 19), ADDON(27, 27);
+	ROOF(1, 1),
+	/** 外墙 / Outwall. */
+	OUTWALL(2, 2),
+	/** 框架 / Frame. */
+	FRAME(3, 3),
+	/** 门 / Door. */
+	DOOR(4, 4),
+	/** 花园 / Garden. */
+	GARDEN(5, 5),
+	/** 篱笆 / Fence. */
+	FENCE(6, 6),
+	/** 内墙（任意）/ Inwall (any). */
+	INWALL_ANY(8, 13),
+	/** 内地板（任意）/ Infloor (any). */
+	INFLOOR_ANY(14, 19),
+	/** 附加 / Addon. */
+	ADDON(27, 27);
 
 	private int lineNrStart;
 	private int lineNrEnd;

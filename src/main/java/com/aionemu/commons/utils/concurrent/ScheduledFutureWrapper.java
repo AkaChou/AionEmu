@@ -25,7 +25,7 @@ public final class ScheduledFutureWrapper implements ScheduledFuture<Object> {
      * Get remaining delay.
      *
      * @param unit 时间单位 / Time unit
-     * Remaining delay
+     * @return 剩余延迟 / Remaining delay
      */
     @Override
     public long getDelay(TimeUnit unit) {
@@ -37,7 +37,7 @@ public final class ScheduledFutureWrapper implements ScheduledFuture<Object> {
      * Compare by remaining delay.
      *
      * @param o 另一延迟对象 / Other delayed object
-     * Comparison result
+     * @return 比较结果 / Comparison result
      */
     @Override
     public int compareTo(Delayed o) {
@@ -60,9 +60,9 @@ public final class ScheduledFutureWrapper implements ScheduledFuture<Object> {
      * 阻塞获取结果。
      * Block until result is available.
      *
-     * Result
-     * If interrupted
-     * If computation failed
+     * @return 结果 / Result
+     * @throws InterruptedException 线程被中断 / If interrupted
+     * @throws ExecutionException 计算失败 / If computation failed
      */
     @Override
     public Object get() throws InterruptedException, ExecutionException {
@@ -73,12 +73,12 @@ public final class ScheduledFutureWrapper implements ScheduledFuture<Object> {
      * 限时获取结果。
      * Get result with timeout.
      *
-     * Timeout
+     * @param timeout 超时时间 / Timeout
      * @param unit    时间单位 / Time unit
-     * Result
-     * If interrupted
-     * If computation failed
-     * If timed out
+     * @return 结果 / Result
+     * @throws InterruptedException 线程被中断 / If interrupted
+     * @throws ExecutionException 计算失败 / If computation failed
+     * @throws TimeoutException 超时 / If timed out
      */
     @Override
     public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {

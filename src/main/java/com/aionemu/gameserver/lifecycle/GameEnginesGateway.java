@@ -129,7 +129,7 @@ public class GameEnginesGateway {
      * 返回待加载的游戏引擎列表。
      * Return the list of game engines to load.
      *
-     * Engine list
+     * @return 引擎列表 / Engine list
      */
     public List<GameEngine> engines() {
         return List.of(
@@ -154,7 +154,7 @@ public class GameEnginesGateway {
      * 解析任务引擎。
      * Resolve the quest engine.
      *
-     * Quest engine
+     * @return 任务引擎 / Quest engine
      */
     private QuestEngine questEngine() {
         if (questEngineProvider == null) {
@@ -167,7 +167,7 @@ public class GameEnginesGateway {
      * 解析副本引擎。
      * Resolve the instance engine.
      *
-     * Instance engine
+     * @return 副本引擎 / Instance engine
      */
     private InstanceEngine instanceEngine() {
         if (instanceEngineProvider == null) {
@@ -180,7 +180,7 @@ public class GameEnginesGateway {
      * 解析 AI2 引擎。
      * Resolve the AI2 engine.
      *
-     * AI2 engine
+     * @return AI2 引擎 / AI2 engine
      */
     private AI2Engine ai2Engine() {
         if (ai2EngineProvider == null) {

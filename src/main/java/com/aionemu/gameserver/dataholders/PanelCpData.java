@@ -49,7 +49,7 @@ public class PanelCpData {
 	 * 返回已加载的面板 CP 数量。
 	 * Returns the number of loaded panel CP entries.
 	 *
-	 * template count
+	 * @return 已加载的面板 CP 条目数量 / Returns the number of loaded panel CP entries.
 	 */
 	public int size() {
 		return cpData.size();

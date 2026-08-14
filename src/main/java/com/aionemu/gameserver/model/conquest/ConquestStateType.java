@@ -9,5 +9,7 @@ package com.aionemu.gameserver.model.conquest;
 
 public enum ConquestStateType {
 	/** 征服。 / Conquest. */
-	CONQUEST, PEACE;
+	CONQUEST,
+	/** 和平。 / Peace. */
+	PEACE;
 }

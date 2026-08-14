@@ -28,10 +28,10 @@ public final class CompiledScriptLoader {
 	 * 加载指定包下的全部顶层类（排除内部类）
 	 * Load all top-level classes under the given packages (excluding inner classes)
 	 *
-	 * Package names
+	 * @param packageNames 包名列表 / Package names
 	 * @return 按类名排序后的 Class 数组 / Sorted Class array by class name
-	 * When resource scanning fails。
-	 * When a class cannot be loaded。
+	 * @throws IOException 资源扫描失败时 / When resource scanning fails
+	 * @throws ClassNotFoundException 类无法加载时 / When a class cannot be loaded
 	 */
 	public static Class<?>[] load(String... packageNames) throws IOException, ClassNotFoundException {
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();

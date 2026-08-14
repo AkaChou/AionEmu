@@ -25,7 +25,7 @@ public class PlayerAggroList extends AggroList {
 	 * Returns whether this list is aware of the creature: non-null and not self.
 	 *
 	 * @param creature 待判断生物 / creature to check
-	 * whether aware
+	 * @return 是否感知 / whether aware
 	 */
 	@Override
 	protected boolean isAware(Creature creature) {

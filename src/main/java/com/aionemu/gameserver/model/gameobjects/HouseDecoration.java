@@ -46,12 +46,12 @@ public class HouseDecoration extends AionObject {
 		return getTemplate().getName();
 	}
 
-	/** 返回 floor / Returns the floor */
+	/** 返回楼层 / Returns the floor */
 	public byte getFloor() {
 		return floor;
 	}
 
-	/** 设置 floor / Sets the floor */
+	/** 设置楼层 / Sets the floor */
 	public void setFloor(int value) {
 		if (value != floor) {
 			floor = (byte) value;
@@ -61,12 +61,12 @@ public class HouseDecoration extends AionObject {
 		}
 	}
 
-	/** 是否已用 / Whether used*/
+	/** 是否已用 / Whether used. */
 	public boolean isUsed() {
 		return isUsed;
 	}
 
-	/** 设置 used / Sets the used */
+	/** 设置是否使用 / Sets whether used */
 	public void setUsed(boolean isUsed) {
 		if (this.isUsed != isUsed && persistentState != PersistentState.DELETED) {
 			this.isUsed = isUsed;

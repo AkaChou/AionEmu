@@ -4,8 +4,8 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.stats.calc.Stat2;
 
 /**
- * Summoned 对象游戏属性，用于属性相关逻辑。
- * Summoned Object Game Stats for stats logic.
+ * 召唤物（如陷阱、追踪弹）的游戏属性：按比例继承主人的属性加成。
+ * Game stats for summoned objects: inherits a portion of the master's stat bonus.
  *
  * @author ATracer
  */

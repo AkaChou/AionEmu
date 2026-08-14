@@ -15,7 +15,7 @@ public class Huge_EggAI2 extends NpcAI2
 {
     @Override
 	protected void handleDied() {
-		spawn(217097, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Lightwing Coiren.
+		spawn(217097, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 光翼 Coiren / Lightwing Coiren.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);

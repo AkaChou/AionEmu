@@ -37,8 +37,8 @@ public class Daeva_Day_CakeAI2 extends NpcAI2
 		PlayerEffectController effectController = player.getEffectController();
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(186000188, 1)) { //[Event] Aether Flame.
 			switch (getNpcId()) {
-			    case 832180: //Daeva's Day Cake E.
-				case 832181: //Daeva's Day Cake A.
+			    case 832180: // 守护者日蛋糕 E / Daeva's Day Cake E
+				case 832181: // 守护者日蛋糕 A / Daeva's Day Cake A
 				    switch (Rnd.get(1, 3)) {
 						case 1:
 							GameEngineServices.skillEngine().applyEffectDirectly(20884, player, player, 14400000 * 1);

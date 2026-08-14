@@ -110,7 +110,7 @@ public class LoginConnection extends AConnection {
      * 基于传输创建登录连接。
      * Create a login connection on the given transport.
      *
-     * Connection transport
+     * @param transport 连接传输 / Connection transport
      */
     public LoginConnection(ConnectionTransport transport) {
         super(transport, 8192 * 2, 8192 * 2);
@@ -120,9 +120,7 @@ public class LoginConnection extends AConnection {
      * 传输层回调：处理缓冲中的一包数据（解密、解析并投递执行）。
      * Transport callback: process one packet from the buffer (decrypt, parse, execute).
      *
-     * Packet data
-     *
-     * @param data
+     * @param data 包数据 / Packet data
      * @return 成功为 true；失败需立即关闭连接 / True on success; false means close now
      */
     @Override
@@ -169,7 +167,7 @@ public class LoginConnection extends AConnection {
      * 连接可关闭时由传输调用；返回调用 onDisconnect 前的延迟（毫秒）。
      * Called by transport when close is ready; delay in ms before onDisconnect.
      *
-     * Always 0
+     * @return 恒为 0 / always 0
      */
     @Override
     protected final long getDisconnectionDelay() {
@@ -204,7 +202,7 @@ public class LoginConnection extends AConnection {
      * Decrypt inbound packet.
      *
      * @param buf 数据缓冲 / Data buffer
-     * True on success
+     * @return 解密成功为 true / true on success
      */
     private boolean decrypt(ByteBuffer buf) {
         int size = buf.remaining();
@@ -279,7 +277,7 @@ public class LoginConnection extends AConnection {
      * 返回加扰后的 RSA 模数。
      * Return scrambled RSA modulus.
      *
-     * Scrambled modulus
+     * @return 加扰后的模数 / scrambled modulus
      */
     public final byte[] getEncryptedModulus() {
         return encryptedRSAKeyPair.getEncryptedModulus();
@@ -289,7 +287,7 @@ public class LoginConnection extends AConnection {
      * 返回 RSA 私钥。
      * Return RSA private key.
      *
-     * RSA private key
+     * @return RSA 私钥 / RSA private key
      */
     public final RSAPrivateKey getRSAPrivateKey() {
         return (RSAPrivateKey) encryptedRSAKeyPair.getRSAKeyPair().getPrivate();
@@ -315,7 +313,7 @@ public class LoginConnection extends AConnection {
      * 勿改：hashCode 用于保证连接唯一 ID。
      * Do not change: hashCode ensures each connection has a unique id.
      *
-     * Unique identifier
+     * @return 唯一标识 / unique identifier
      */
     @Override
     public int hashCode() {

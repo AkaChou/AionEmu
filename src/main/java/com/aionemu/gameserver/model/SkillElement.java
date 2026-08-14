@@ -11,7 +11,19 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 public enum SkillElement {
 
 	/** 无 / None. */
-	NONE(0), FIRE(1), WATER(2), WIND(3), EARTH(4), LIGHT(5), DARK(6);
+	NONE(0),
+	/** 火 / Fire */
+	FIRE(1),
+	/** 水 / Water */
+	WATER(2),
+	/** 风 / Wind */
+	WIND(3),
+	/** 地 / Earth */
+	EARTH(4),
+	/** 光 / Light */
+	LIGHT(5),
+	/** 暗 / Dark */
+	DARK(6);
 
 	private int element;
 

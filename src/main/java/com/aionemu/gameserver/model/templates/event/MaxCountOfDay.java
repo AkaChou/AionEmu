@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.model.templates.event;
 
 /**
- * Max 计数 OfDay 模板（静态数据/XML）。
- * XML template.
+ * 每日最大计数模板（静态数据/XML）。
+ * Max Count Of Day Template (static data/XML).
  */
 
 public class MaxCountOfDay {
@@ -12,12 +12,12 @@ public class MaxCountOfDay {
 		this.thisCount = thisCount;
 	}
 
-	/** 返回数量 / Returns the this count*/
+	/** 返回当前次数 / Returns the this count */
 	public int getThisCount() {
 		return thisCount;
 	}
 
-	/** 设置数量 / Sets the this count*/
+	/** 设置当前次数 / Sets the this count */
 	public void setThisCount(int thisCount) {
 		this.thisCount = thisCount;
 	}

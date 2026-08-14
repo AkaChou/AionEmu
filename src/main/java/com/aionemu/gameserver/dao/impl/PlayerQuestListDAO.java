@@ -106,7 +106,7 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	 * 将玩家任务状态列表持久化到数据库（按 NEW/UPDATE/DELETED 批量处理）。
 	 * Persists the player's quest state list (batch insert/update/delete by persistent state).
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	@Override
 	public void store(Player player) {
@@ -177,7 +177,7 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	 * Batch-inserts newly created quest states.
 	 *
 	 * @param con 数据库连接 / database connection
-	 * player id
+	 * @param playerId 玩家 ID / player id
 	 * @param states 任务状态集合 / quest state collection
 	 */
 	private void addQuests(Connection con, int playerId, Collection<QuestState> states) throws SQLException {
@@ -209,7 +209,7 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	 * Sets parameters for the insert prepared statement.
 	 *
 	 * @param ps 预处理语句 / prepared statement
-	 * player id
+	 * @param playerId 玩家 ID / player id
 	 * @param qs 任务状态 / quest state
 	 * SQL exception
 	 */
@@ -240,7 +240,7 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	 * Batch-updates quest states that require update.
 	 *
 	 * @param con 数据库连接 / database connection
-	 * player id
+	 * @param playerId 玩家 ID / player id
 	 * @param states 任务状态集合 / quest state collection
 	 */
 	private void updateQuests(Connection con, int playerId, Collection<QuestState> states) throws SQLException {
@@ -272,7 +272,7 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	 * Sets parameters for the update prepared statement.
 	 *
 	 * @param ps 预处理语句 / prepared statement
-	 * player id
+	 * @param playerId 玩家 ID / player id
 	 * @param qs 任务状态 / quest state
 	 * SQL exception
 	 */
@@ -313,7 +313,7 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	 * Batch-deletes quest states marked as DELETED.
 	 *
 	 * @param con 数据库连接 / database connection
-	 * player id
+	 * @param playerId 玩家 ID / player id
 	 * @param states 任务状态集合 / quest state collection
 	 */
 	private void deleteQuest(Connection con, int playerId, Collection<QuestState> states) throws SQLException {
@@ -345,10 +345,10 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	 * 判断当前数据库是否受本 DAO 支持。
 	 * Checks whether the given database is supported by this DAO.
 	 *
-	 * @param databaseName 数据库名称 / database name
-	 * major version
-	 * minor version
-	 * whether supported
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
 	 */
 	@Override
 	public boolean supports(String databaseName, int majorVersion, int minorVersion) {

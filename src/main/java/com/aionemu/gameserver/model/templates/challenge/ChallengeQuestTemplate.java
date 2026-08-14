@@ -22,12 +22,12 @@ public class ChallengeQuestTemplate {
 	@XmlAttribute(required = true)
 	protected int id;
 
-	/** 返回 score / Returns the score */
+	/** 返回分数 / Returns the score */
 	public int getScore() {
 		return this.score;
 	}
 
-	/** 返回 repeat count / Returns the repeat count */
+	/** 返回重复次数 / Returns the repeat count */
 	public int getRepeatCount() {
 		return this.repeatCount;
 	}

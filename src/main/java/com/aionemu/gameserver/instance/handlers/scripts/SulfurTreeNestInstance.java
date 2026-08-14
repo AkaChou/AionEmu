@@ -26,9 +26,9 @@ import java.util.concurrent.Future;
 @InstanceID(300060000)
 public class SulfurTreeNestInstance extends GeneralInstanceHandler
 {
-	/** sulfurtreenest 任务 / sulfur tree nest task */
+		/** sulfurtreenest 任务 / sulfur tree nest task */
 		private Future<?> sulfurTreeNestTask;
-	/** 是否启动计时器 / is start timer */
+		/** 是否启动计时器 / is start timer */
 		private boolean isStartTimer = false;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
@@ -49,9 +49,9 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param flyingRing 飞行环标识 / flying-ring id
-	 * result
+	 * @return 结果 / result
 	 */
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {

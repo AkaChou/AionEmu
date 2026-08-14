@@ -49,7 +49,7 @@ public class CraftSkillUpdateService {
 	 * 获取服务单例（优先 Spring ObjectProvider）。
 	 * Get the service singleton (prefer Spring ObjectProvider when available).
 	 *
-	 * Service instance
+	 * @return 服务实例 / Service instance
 	 */
 	public static final CraftSkillUpdateService getInstance() {
 		ObjectProvider<CraftSkillUpdateService> provider = instanceProvider;
@@ -75,78 +75,78 @@ public class CraftSkillUpdateService {
 	 */
 	public CraftSkillUpdateService() {
 		// 魔族制作。 / CRAFT ASMODIANS.
-		npcBySkill.put(204096, new CraftLearnTemplate(30002, false, "Essencetapping")); // Essencetapping (You can obtain materials through extracting the vitality of objects)
+		npcBySkill.put(204096, new CraftLearnTemplate(30002, false, "Essencetapping")); // 精华采集：从物体中提取精华获得材料。 / Essencetapping (You can obtain materials through extracting the vitality of objects)
 
-		npcBySkill.put(830158, new CraftLearnTemplate(30002, false, "Essencetapping")); // Essencetapping (You can obtain materials through extracting the vitality of objects)
+		npcBySkill.put(830158, new CraftLearnTemplate(30002, false, "Essencetapping")); // 精华采集：从物体中提取精华获得材料。 / Essencetapping (You can obtain materials through extracting the vitality of objects)
 
-		npcBySkill.put(204257, new CraftLearnTemplate(30003, false, "Aethertapping")); // Aethertapping (You can obtain the Aether Crystals floating in the sky)
+		npcBySkill.put(204257, new CraftLearnTemplate(30003, false, "Aethertapping")); // 奥德采集：获取漂浮在天空中的奥德水晶。 / Aethertapping (You can obtain the Aether Crystals floating in the sky)
 
-		npcBySkill.put(830148, new CraftLearnTemplate(30003, false, "Aethertapping")); // Aethertapping (You can obtain the Aether Crystals floating in the sky)
+		npcBySkill.put(830148, new CraftLearnTemplate(30003, false, "Aethertapping")); // 奥德采集：获取漂浮在天空中的奥德水晶。 / Aethertapping (You can obtain the Aether Crystals floating in the sky)
 
-		npcBySkill.put(204100, new CraftLearnTemplate(40001, true, "Cooking")); // Cooking (Allows you to make food and beverages that have effects when consumed. You may also purify contaminated materials)
+		npcBySkill.put(204100, new CraftLearnTemplate(40001, true, "Cooking")); // 料理：可制作有食用效果的食物和饮料，还能净化受污染的材料。 / Cooking (Allows you to make food and beverages that have effects when consumed. You may also purify contaminated materials)
 
-		npcBySkill.put(830142, new CraftLearnTemplate(40001, true, "Cooking")); // Cooking (Allows you to make food and  beverages that have effects when consumed. You may also purify contaminated materials)
+		npcBySkill.put(830142, new CraftLearnTemplate(40001, true, "Cooking")); // 料理：可制作有食用效果的食物和饮料，还能净化受污染的材料。 / Cooking (Allows you to make food and  beverages that have effects when consumed. You may also purify contaminated materials)
 
-		npcBySkill.put(204104, new CraftLearnTemplate(40002, true, "Weaponsmithing")); // Weaponsmithing (Allows you to craft metal weapons)
+		npcBySkill.put(204104, new CraftLearnTemplate(40002, true, "Weaponsmithing")); // 武器制作：可制作金属武器。 / Weaponsmithing (Allows you to craft metal weapons)
 
-		npcBySkill.put(830146, new CraftLearnTemplate(40002, true, "Weaponsmithing")); // Weaponsmithing (Allows you to craft metal weapons)
+		npcBySkill.put(830146, new CraftLearnTemplate(40002, true, "Weaponsmithing")); // 武器制作：可制作金属武器。 / Weaponsmithing (Allows you to craft metal weapons)
 
-		npcBySkill.put(204106, new CraftLearnTemplate(40003, true, "Armorsmithing")); // Armorsmithing (Allows you to craft metal armor, helmets and shields)
+		npcBySkill.put(204106, new CraftLearnTemplate(40003, true, "Armorsmithing")); // 防具制作：可制作金属防具、头盔和盾牌。 / Armorsmithing (Allows you to craft metal armor, helmets and shields)
 
-		npcBySkill.put(830144, new CraftLearnTemplate(40003, true, "Armorsmithing")); // Armorsmithing (Allows you to craft metal armor, helmets and shields)
+		npcBySkill.put(830144, new CraftLearnTemplate(40003, true, "Armorsmithing")); // 防具制作：可制作金属防具、头盔和盾牌。 / Armorsmithing (Allows you to craft metal armor, helmets and shields)
 
-		npcBySkill.put(204110, new CraftLearnTemplate(40004, true, "Tailoring")); // Tailoring (Allows you to make cloth armor, leather armor and clothing with cloth and leather)
+		npcBySkill.put(204110, new CraftLearnTemplate(40004, true, "Tailoring")); // 裁缝：可用布料和皮革制作布甲、皮甲和服装。 / Tailoring (Allows you to make cloth armor, leather armor and clothing with cloth and leather)
 
-		npcBySkill.put(830136, new CraftLearnTemplate(40004, true, "Tailoring")); // Tailoring (Allows you to make cloth armor, leather armor and clothing with cloth and leather)
+		npcBySkill.put(830136, new CraftLearnTemplate(40004, true, "Tailoring")); // 裁缝：可用布料和皮革制作布甲、皮甲和服装。 / Tailoring (Allows you to make cloth armor, leather armor and clothing with cloth and leather)
 
-		npcBySkill.put(204102, new CraftLearnTemplate(40007, true, "Alchemy")); // Alchemy (Allows you to make items that enhance various magical weapons, items and equipment)
+		npcBySkill.put(204102, new CraftLearnTemplate(40007, true, "Alchemy")); // 炼金：可制作强化各种魔法武器、物品和装备的道具。 / Alchemy (Allows you to make items that enhance various magical weapons, items and equipment)
 
-		npcBySkill.put(830138, new CraftLearnTemplate(40007, true, "Alchemy")); // Alchemy (Allows you to make items that enhance various magical weapons, items and equipment)
+		npcBySkill.put(830138, new CraftLearnTemplate(40007, true, "Alchemy")); // 炼金：可制作强化各种魔法武器、物品和装备的道具。 / Alchemy (Allows you to make items that enhance various magical weapons, items and equipment)
 
-		npcBySkill.put(204108, new CraftLearnTemplate(40008, true, "Handicrafting")); // Handicrafting (Allows you to craft precious metal, wooden  weapons and small parts)
+		npcBySkill.put(204108, new CraftLearnTemplate(40008, true, "Handicrafting")); // 手工制作：可制作贵金属、木质武器和小零件。 / Handicrafting (Allows you to craft precious metal, wooden  weapons and small parts)
 
-		npcBySkill.put(830140, new CraftLearnTemplate(40008, true, "Handicrafting")); // Handicrafting (Allows you to craft precious metal, wooden weapons and small parts)
+		npcBySkill.put(830140, new CraftLearnTemplate(40008, true, "Handicrafting")); // 手工制作：可制作贵金属、木质武器和小零件。 / Handicrafting (Allows you to craft precious metal, wooden weapons and small parts)
 
-		npcBySkill.put(798452, new CraftLearnTemplate(40010, true, "Construction")); // Construction Asmodians Pandaemonium.
+		npcBySkill.put(798452, new CraftLearnTemplate(40010, true, "Construction")); // 建筑工程：魔族万魔城。 / Construction Asmodians Pandaemonium.
 
-		npcBySkill.put(798456, new CraftLearnTemplate(40010, true, "Construction")); // Construction Asmodians Pernon.
+		npcBySkill.put(798456, new CraftLearnTemplate(40010, true, "Construction")); // 建筑工程：魔族佩尔农。 / Construction Asmodians Pernon.
 
 		// 天族制作。 / CRAFT ELYOS.
-		npcBySkill.put(203780, new CraftLearnTemplate(30002, false, "Essencetapping")); // Essencetapping (You can obtain materials through extracting the vitality of objects)
+		npcBySkill.put(203780, new CraftLearnTemplate(30002, false, "Essencetapping")); // 精华采集：从物体中提取精华获得材料。 / Essencetapping (You can obtain materials through extracting the vitality of objects)
 
-		npcBySkill.put(830066, new CraftLearnTemplate(30002, false, "Essencetapping")); // Essencetapping (You can obtain materials through extracting the vitality of objects)
+		npcBySkill.put(830066, new CraftLearnTemplate(30002, false, "Essencetapping")); // 精华采集：从物体中提取精华获得材料。 / Essencetapping (You can obtain materials through extracting the vitality of objects)
 
-		npcBySkill.put(203782, new CraftLearnTemplate(30003, false, "Aethertapping")); // Aethertapping (You can obtain the Aether Crystals floating in the sky)
+		npcBySkill.put(203782, new CraftLearnTemplate(30003, false, "Aethertapping")); // 奥德采集：获取漂浮在天空中的奥德水晶。 / Aethertapping (You can obtain the Aether Crystals floating in the sky)
 
-		npcBySkill.put(830064, new CraftLearnTemplate(30003, false, "Aethertapping")); // Aethertapping (You can obtain the Aether Crystals floating in the sky)
+		npcBySkill.put(830064, new CraftLearnTemplate(30003, false, "Aethertapping")); // 奥德采集：获取漂浮在天空中的奥德水晶。 / Aethertapping (You can obtain the Aether Crystals floating in the sky)
 
-		npcBySkill.put(203784, new CraftLearnTemplate(40001, true, "Cooking")); // Cooking (Allows you to make food and beverages that have effects when consumed. You may also purify contaminated materials)
+		npcBySkill.put(203784, new CraftLearnTemplate(40001, true, "Cooking")); // 料理：可制作有食用效果的食物和饮料，还能净化受污染的材料。 / Cooking (Allows you to make food and beverages that have effects when consumed. You may also purify contaminated materials)
 
-		npcBySkill.put(830058, new CraftLearnTemplate(40001, true, "Cooking")); // Cooking (Allows you to make food and beverages that have effects when consumed. You may also purify contaminated materials)
+		npcBySkill.put(830058, new CraftLearnTemplate(40001, true, "Cooking")); // 料理：可制作有食用效果的食物和饮料，还能净化受污染的材料。 / Cooking (Allows you to make food and beverages that have effects when consumed. You may also purify contaminated materials)
 
-		npcBySkill.put(203788, new CraftLearnTemplate(40002, true, "Weaponsmithing")); // Weaponsmithing (Allows you to craft metal weapons)
+		npcBySkill.put(203788, new CraftLearnTemplate(40002, true, "Weaponsmithing")); // 武器制作：可制作金属武器。 / Weaponsmithing (Allows you to craft metal weapons)
 
-		npcBySkill.put(830062, new CraftLearnTemplate(40002, true, "Weaponsmithing")); // Weaponsmithing (Allows you to craft metal weapons)
+		npcBySkill.put(830062, new CraftLearnTemplate(40002, true, "Weaponsmithing")); // 武器制作：可制作金属武器。 / Weaponsmithing (Allows you to craft metal weapons)
 
-		npcBySkill.put(203790, new CraftLearnTemplate(40003, true, "Armorsmithing")); // Armorsmithing (Allows you to craft metal armor, helmets and shields)
+		npcBySkill.put(203790, new CraftLearnTemplate(40003, true, "Armorsmithing")); // 防具制作：可制作金属防具、头盔和盾牌。 / Armorsmithing (Allows you to craft metal armor, helmets and shields)
 
-		npcBySkill.put(830060, new CraftLearnTemplate(40003, true, "Armorsmithing")); // Armorsmithing (Allows you to craft metal armor, helmets and shields)
+		npcBySkill.put(830060, new CraftLearnTemplate(40003, true, "Armorsmithing")); // 防具制作：可制作金属防具、头盔和盾牌。 / Armorsmithing (Allows you to craft metal armor, helmets and shields)
 
-		npcBySkill.put(203793, new CraftLearnTemplate(40004, true, "Tailoring")); // Tailoring (Allows you to make cloth armor, leather armor and clothing with cloth and leather)
+		npcBySkill.put(203793, new CraftLearnTemplate(40004, true, "Tailoring")); // 裁缝：可用布料和皮革制作布甲、皮甲和服装。 / Tailoring (Allows you to make cloth armor, leather armor and clothing with cloth and leather)
 
-		npcBySkill.put(830052, new CraftLearnTemplate(40004, true, "Tailoring")); // Tailoring (Allows you to make cloth armor, leather armor and clothing with cloth and leather)
+		npcBySkill.put(830052, new CraftLearnTemplate(40004, true, "Tailoring")); // 裁缝：可用布料和皮革制作布甲、皮甲和服装。 / Tailoring (Allows you to make cloth armor, leather armor and clothing with cloth and leather)
 
-		npcBySkill.put(203786, new CraftLearnTemplate(40007, true, "Alchemy")); // Alchemy (Allows you to make items that enhance various magical weapons, items and equipment)
+		npcBySkill.put(203786, new CraftLearnTemplate(40007, true, "Alchemy")); // 炼金：可制作强化各种魔法武器、物品和装备的道具。 / Alchemy (Allows you to make items that enhance various magical weapons, items and equipment)
 
-		npcBySkill.put(830054, new CraftLearnTemplate(40007, true, "Alchemy")); // Alchemy (Allows you to make items that enhance various magical weapons, items and equipment)
+		npcBySkill.put(830054, new CraftLearnTemplate(40007, true, "Alchemy")); // 炼金：可制作强化各种魔法武器、物品和装备的道具。 / Alchemy (Allows you to make items that enhance various magical weapons, items and equipment)
 
-		npcBySkill.put(203792, new CraftLearnTemplate(40008, true, "Handicrafting")); // Handicrafting (Allows you to craft precious metal, wooden weapons and small parts)
+		npcBySkill.put(203792, new CraftLearnTemplate(40008, true, "Handicrafting")); // 手工制作：可制作贵金属、木质武器和小零件。 / Handicrafting (Allows you to craft precious metal, wooden weapons and small parts)
 
-		npcBySkill.put(830056, new CraftLearnTemplate(40008, true, "Handicrafting")); // Handicrafting (Allows you to craft precious metal, wooden weapons and small parts)
+		npcBySkill.put(830056, new CraftLearnTemplate(40008, true, "Handicrafting")); // 手工制作：可制作贵金属、木质武器和小零件。 / Handicrafting (Allows you to craft precious metal, wooden weapons and small parts)
 
-		npcBySkill.put(798450, new CraftLearnTemplate(40010, true, "Construction")); // Construction Elyos Sanctum.
+		npcBySkill.put(798450, new CraftLearnTemplate(40010, true, "Construction")); // 建筑工程：天族圣天界。 / Construction Elyos Sanctum.
 
-		npcBySkill.put(798454, new CraftLearnTemplate(40010, true, "Construction")); // Construction Elyos Oriel.
+		npcBySkill.put(798454, new CraftLearnTemplate(40010, true, "Construction")); // 建筑工程：天族奥里尔。 / Construction Elyos Oriel.
 
 		// 制作价格 基纳。 / PRICE CRAFT KINAH.
 		cost.put(0, 3500);
@@ -180,28 +180,28 @@ public class CraftSkillUpdateService {
 			RecipeList recipelist = null;
 			recipelist = DAOManager.getDAO(PlayerRecipesDAO.class).load(object);
 			if (race == Race.ELYOS) {
-				if (!recipelist.isRecipePresent(155000005)) { // Morph Method: Iron Ore.
+				if (!recipelist.isRecipePresent(155000005)) { // 变形方法：铁矿石。 / Morph Method: Iron Ore.
 					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155000005);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155000005));
 				}
-				if (!recipelist.isRecipePresent(155000002)) { // Morph Method: Inina.
+				if (!recipelist.isRecipePresent(155000002)) { // 变形方法：伊尼纳。 / Morph Method: Inina.
 					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155000002);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155000002));
 				}
-				if (!recipelist.isRecipePresent(155000001)) { // Morph Method: Aria.
+				if (!recipelist.isRecipePresent(155000001)) { // 变形方法：阿丽亚。 / Morph Method: Aria.
 					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155000001);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155000001));
 				}
 			} else if (race == Race.ASMODIANS) {
-				if (!recipelist.isRecipePresent(155005005)) { // Morph Method: Iron Ore.
+				if (!recipelist.isRecipePresent(155005005)) { // 变形方法：铁矿石。 / Morph Method: Iron Ore.
 					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155005005);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155005005));
 				}
-				if (!recipelist.isRecipePresent(155005002)) { // Morph Method: Conide.
+				if (!recipelist.isRecipePresent(155005002)) { // 变形方法：柯尼德。 / Morph Method: Conide.
 					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155005002);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155005002));
 				}
-				if (!recipelist.isRecipePresent(155005001)) { // Morph Method: Azpha.
+				if (!recipelist.isRecipePresent(155005001)) { // 变形方法：阿兹法。 / Morph Method: Azpha.
 					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155005001);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155005001));
 				}
@@ -253,18 +253,18 @@ public class CraftSkillUpdateService {
 		}
 
 		// 精华采集 / ESSENCETAPPING
-		if (skillLvl == 399 && ((skillId == 30002 && (!player.isCompleteQuest(19001) || !player.isCompleteQuest(29001))))) { // Essencetapping [Journeyman]
+		if (skillLvl == 399 && ((skillId == 30002 && (!player.isCompleteQuest(19001) || !player.isCompleteQuest(29001))))) { // 精华采集 [熟练工] / Essencetapping [Journeyman]
 			// 须通过专家试炼才能晋升。 / You must pass the Expert test in order to be promoted.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400284));
 			return;
 		}
-		if (skillLvl == 499 && (skillId == 30002)) { // Essencetapping [Artisan]
+		if (skillLvl == 499 && (skillId == 30002)) { // 精华采集 [工匠] / Essencetapping [Artisan]
 			// 你无法再晋升。 / You cannot be promoted any more.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1330069));
 			return;
 		}
 		// 奥德采集 / AETHERTAPPING
-		if (skillLvl == 399 && ((skillId == 30003 && (!player.isCompleteQuest(19003) || !player.isCompleteQuest(29003))))) { // [Journeyman]
+		if (skillLvl == 399 && ((skillId == 30003 && (!player.isCompleteQuest(19003) || !player.isCompleteQuest(29003))))) { // [熟练工] / [Journeyman]
 			// 须通过专家试炼才能晋升。 / You must pass the Expert test in order to be promoted.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400284));
 			return;
@@ -273,18 +273,18 @@ public class CraftSkillUpdateService {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390233));
 			return;
 		}
-		if (skillLvl == 499 && (skillId == 30003)) { // Aethertapping [Artisan]
+		if (skillLvl == 499 && (skillId == 30003)) { // 奥德采集 [工匠] / Aethertapping [Artisan]
 			// 你无法再晋升。 / You cannot be promoted any more.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1330069));
 			return;
 		}
 		// 制作 / CRAFTING
 		// 须先完成任务才能购买大师更新（499 到 500）。 / You must do quest before being able to buy master update (499 to 500)
-		if (skillLvl == 499 && ((skillId == 40001 && (!player.isCompleteQuest(29039) || !player.isCompleteQuest(19039))) || (skillId == 40002 && (!player.isCompleteQuest(29009) || !player.isCompleteQuest(19009))) || (skillId == 40003 && (!player.isCompleteQuest(29015) || !player.isCompleteQuest(19015))) || (skillId == 40004 && (!player.isCompleteQuest(29021) || !player.isCompleteQuest(19021))) || (skillId == 40007 && (!player.isCompleteQuest(29033) || !player.isCompleteQuest(19033))) || (skillId == 40008 && (!player.isCompleteQuest(29027) || !player.isCompleteQuest(19027))) || (skillId == 40010 && (!player.isCompleteQuest(29058) || !player.isCompleteQuest(19058))))) { //[Artisan]
+		if (skillLvl == 499 && ((skillId == 40001 && (!player.isCompleteQuest(29039) || !player.isCompleteQuest(19039))) || (skillId == 40002 && (!player.isCompleteQuest(29009) || !player.isCompleteQuest(19009))) || (skillId == 40003 && (!player.isCompleteQuest(29015) || !player.isCompleteQuest(19015))) || (skillId == 40004 && (!player.isCompleteQuest(29021) || !player.isCompleteQuest(19021))) || (skillId == 40007 && (!player.isCompleteQuest(29033) || !player.isCompleteQuest(19033))) || (skillId == 40008 && (!player.isCompleteQuest(29027) || !player.isCompleteQuest(19027))) || (skillId == 40010 && (!player.isCompleteQuest(29058) || !player.isCompleteQuest(19058))))) { // [工匠] / [Artisan]
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400286));
 			return;
 		}
-		if (skillLvl == 549) { // [Master]
+		if (skillLvl == 549) { // [大师] / [Master]
 			// 你无法再晋升。 / You cannot be promoted any more.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1330069));
 			return;
@@ -321,9 +321,7 @@ public class CraftSkillUpdateService {
 	 * 判断技能 ID 是否为可计名额的制作技能。
 	 * Check whether the skill id is a craft skill counted for expert/master slots.
 	 *
-	 * Skill id
-	 *
-	 * @param skillId
+	 * @param skillId 技能 ID / Skill id
 	 * @return 是否为制作技能 / Whether it is a craft skill
 	 */
 	public static boolean isCraftingSkill(int skillId) {

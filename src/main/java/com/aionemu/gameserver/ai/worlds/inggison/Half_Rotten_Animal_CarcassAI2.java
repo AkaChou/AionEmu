@@ -62,7 +62,7 @@ public class Half_Rotten_Animal_CarcassAI2 extends NpcAI2
 	}
 	
 	protected void handleUseItemFinish(Player player) {
-		spawn(216614, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Twister.
+		spawn(216614, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 龙卷风 / Twister.
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);
 	}

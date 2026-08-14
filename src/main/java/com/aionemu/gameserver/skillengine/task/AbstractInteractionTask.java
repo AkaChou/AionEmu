@@ -35,7 +35,7 @@ public abstract class AbstractInteractionTask {
 	 * 构造交互任务。
 	 * Creates an interaction task.
 	 *
-	 * requesting player
+	 * @param requestor 发起交互的玩家 / requesting player
 	 * @param responder 响应目标，null 时回退为 requestor / responder, falls back to requestor if null
 	 */
 	public AbstractInteractionTask(Player requestor, VisibleObject responder) {

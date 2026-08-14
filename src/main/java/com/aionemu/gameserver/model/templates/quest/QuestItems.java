@@ -21,7 +21,8 @@ public class QuestItems {
 	protected Integer count;
 
 	/**
-	 * Constructor used by unmarshaller
+	 * 供解组器使用的构造方法（默认数量为 1）。
+	 * Constructor used by the unmarshaller (default count is 1).
 	 */
 	public QuestItems() {
 		this.count = 1;
@@ -34,18 +35,20 @@ public class QuestItems {
 	}
 
 	 /**
-	  * 获取 itemId 属性值。
-	  * Gets the value of the itemId property
-	  * @return possible object is {@link Integer }
+	  * 返回物品 ID。
+	  * Returns the item id.
+	  *
+	  * @return 物品 ID / possible object is {@link Integer}
 	  */
 	public Integer getItemId() {
 		return itemId;
 	}
 
 	/**
-	 * 获取 value 的数量 property。 / Gets the value of the count property
+	 * 返回物品数量。
+	 * Returns the item count.
 	 *
-	 * @return possible object is {@link Integer }
+	 * @return 数量 / possible object is {@link Integer}
 	 */
 	public Integer getCount() {
 		return count;

@@ -29,7 +29,7 @@ public class TaskFromDBDAO extends com.aionemu.gameserver.dao.TaskFromDBDAO {
 	 * 加载全部数据库任务。
 	 * Loads all database-driven tasks.
 	 *
-	 * task list
+	 * @return 任务列表 / task list
 	 */
 	@Override
 	public ArrayList<TaskFromDB> getAllTasks() {
@@ -79,10 +79,10 @@ public class TaskFromDBDAO extends com.aionemu.gameserver.dao.TaskFromDBDAO {
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
 	 *
-	 * @param s 数据库名 / database name
-	 * @param i 主版本 / major version
-	 * @param i1 次版本 / minor version
-	 * whether supported
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
 	 */
 	@Override
 	public boolean supports(String s, int i, int i1) {

@@ -40,6 +40,7 @@ public class HousingUseableItem extends PlaceableHouseObject {
 	}
 
 	/**
+	 * 对象是否仅限所有者使用，还是访客也可使用。
 	 * Can the object be used only by the owner or visitors too
 	 */
 	public boolean isOwnerOnly() {
@@ -47,26 +48,26 @@ public class HousingUseableItem extends PlaceableHouseObject {
 	}
 
 	/**
-	 * @return null if no Cooltime is used
+	 * @return 无冷却时为 null / null if no cooltime is used
 	 */
 	public Integer getCd() {
 		return cd;
 	}
 
-	/** 返回延迟 / Returns the delay*/
+	/** 返回延迟 / Returns the delay. */
 	public int getDelay() {
 		return delay;
 	}
 
 	/**
-	 * @return null if use is not restricted
+	 * @return 使用次数不受限时为 null / null if use is not restricted
 	 */
 	public Integer getUseCount() {
 		return useCount;
 	}
 
 	/**
-	 * @return null if no item is required
+	 * @return 无需物品时为 null / null if no item is required
 	 */
 	public Integer getRequiredItem() {
 		return requiredItem;

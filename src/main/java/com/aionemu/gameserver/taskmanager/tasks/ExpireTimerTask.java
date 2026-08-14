@@ -40,7 +40,7 @@ public class ExpireTimerTask extends AbstractPeriodicTaskManager {
 	 * 获取单例：优先 Spring 提供者，否则静态 holder。
 	 * Get the singleton: prefer Spring provider, otherwise the static holder.
 	 *
-	 * Task instance
+	 * @return 任务实例 / Task instance
 	 */
 	public static ExpireTimerTask getInstance() {
 		ObjectProvider<ExpireTimerTask> provider = instanceProvider;
@@ -54,7 +54,7 @@ public class ExpireTimerTask extends AbstractPeriodicTaskManager {
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
 	 *
-	 * Provider
+	 * @param provider 实例提供者 / Provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<ExpireTimerTask> provider) {
 		instanceProvider = provider;

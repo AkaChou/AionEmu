@@ -46,8 +46,6 @@ public class Bk extends AdminCommand {
 	 * 执行书签操作：{@code add|del|tele|list}。
 	 * Executes bookmark actions: {@code add|del|tele|list}.
 	 *
-	 * admin
-	 * parameters
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -234,8 +232,6 @@ public class Bk extends AdminCommand {
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
 	 *
-	 * admin
-	 * error message
 	 */
 	@Override
 	public void onFail(Player player, String message) {
@@ -277,7 +273,6 @@ class Bookmark {
 	 * 获取书签名称。
 	 * Gets the bookmark name.
 	 *
-	 * name
 	 */
 	public String getName() {
 		return name;
@@ -287,7 +282,6 @@ class Bookmark {
 	 * 获取 X 坐标。
 	 * Gets the X coordinate.
 	 *
-	 * X 坐标 / X coordinate
 	 */
 	public float getX() {
 		return x;
@@ -297,7 +291,6 @@ class Bookmark {
 	 * 获取 Y 坐标。
 	 * Gets the Y coordinate.
 	 *
-	 * Y 坐标 / Y coordinate
 	 */
 	public float getY() {
 		return y;
@@ -307,7 +300,6 @@ class Bookmark {
 	 * 获取 Z 坐标。
 	 * Gets the Z coordinate.
 	 *
-	 * Z 坐标 / Z coordinate
 	 */
 	public float getZ() {
 		return z;
@@ -317,7 +309,6 @@ class Bookmark {
 	 * 获取世界地图 ID。
 	 * Gets the world map id.
 	 *
-	 * 世界 ID / world id
 	 */
 	public int getWorld_id() {
 		return world_id;

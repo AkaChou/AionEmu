@@ -45,7 +45,7 @@ public class AtreianPassportData {
 	 * 返回已加载的通行证数量。
 	 * Returns the number of loaded passports.
 	 *
-	 * template count
+	 * @return 已加载的通行证数量 / Returns the number of loaded passports.
 	 */
 	public int size() {
 		return passportData.size();

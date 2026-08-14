@@ -27,12 +27,12 @@ public class PlayerLimitService {
 	private static volatile ObjectProvider<PlayerLimitService> instanceProvider;
 
 	/**
-	 * 更新出售限额。
-	 * Updates sell limit.
+	 * 更新出售限额，超出限额则拒绝并提示。
+	 * Updates the sell limit, rejecting and notifying when exceeded.
 	 *
-	 * 玩家 / player
-	 * reward
-	 * result
+	 * @param player 玩家 / player
+	 * @param reward 本次出售所得 / reward gained
+	 * @return 是否允许出售 / whether selling is allowed
 	 */
 	public static boolean updateSellLimit(Player player, long reward) {
 		if (!CustomConfig.LIMITS_ENABLED) {
@@ -83,7 +83,8 @@ public class PlayerLimitService {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 * result
+	 *
+	 * @return 服务单例 / service singleton
 	 */
 	public static PlayerLimitService getInstance() {
 		ObjectProvider<PlayerLimitService> provider = instanceProvider;

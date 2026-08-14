@@ -29,7 +29,7 @@ public class DiseaseEffect extends EffectTemplate {
 		super.calculate(effect, StatEnum.DISEASE_RESISTANCE, null);
 	}
 
-	// skillId 18386
+	// 技能 ID 18386 / skillId 18386
 	/**
 	 * 将效果加入受影响者的效果控制器。
 	 * Adds the effect to the effected creature's effect controller.

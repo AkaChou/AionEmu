@@ -143,7 +143,7 @@ public final class GameCreativityServices implements DisposableBean {
      * 获取创造力精华服务。
      * Obtain the creativity essence service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static CreativityEssenceService creativityEssenceService() {
         ObjectProvider<CreativityEssenceService> provider = creativityEssenceServiceProvider;
@@ -157,7 +157,7 @@ public final class GameCreativityServices implements DisposableBean {
      * 获取创造力技能服务。
      * Obtain the creativity skill service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static CreativitySkillService creativitySkillService() {
         ObjectProvider<CreativitySkillService> provider = creativitySkillServiceProvider;
@@ -171,7 +171,7 @@ public final class GameCreativityServices implements DisposableBean {
      * 获取创造力属性服务。
      * Obtain the creativity stats service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static CreativityStatsService creativityStatsService() {
         ObjectProvider<CreativityStatsService> provider = creativityStatsServiceProvider;
@@ -185,7 +185,7 @@ public final class GameCreativityServices implements DisposableBean {
      * 获取创造力变身服务。
      * Obtain the creativity transfo service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static CreativityTransfoService creativityTransfoService() {
         ObjectProvider<CreativityTransfoService> provider = creativityTransfoServiceProvider;
@@ -199,7 +199,7 @@ public final class GameCreativityServices implements DisposableBean {
      * 获取精准属性。
      * Obtain Accuracy.
      *
-     * Stat instance
+     * @return 属性实例 / Stat instance
      */
     public static Accuracy accuracy() {
         ObjectProvider<Accuracy> provider = accuracyProvider;
@@ -213,7 +213,7 @@ public final class GameCreativityServices implements DisposableBean {
      * 获取敏捷属性。
      * Obtain Agility.
      *
-     * Stat instance
+     * @return 属性实例 / Stat instance
      */
     public static Agility agility() {
         ObjectProvider<Agility> provider = agilityProvider;
@@ -227,7 +227,7 @@ public final class GameCreativityServices implements DisposableBean {
      * 获取生命属性。
      * Obtain Health.
      *
-     * Stat instance
+     * @return 属性实例 / Stat instance
      */
     public static Health health() {
         ObjectProvider<Health> provider = healthProvider;
@@ -241,7 +241,7 @@ public final class GameCreativityServices implements DisposableBean {
      * 获取知识属性。
      * Obtain Knowledge.
      *
-     * Stat instance
+     * @return 属性实例 / Stat instance
      */
     public static Knowledge knowledge() {
         ObjectProvider<Knowledge> provider = knowledgeProvider;
@@ -255,7 +255,7 @@ public final class GameCreativityServices implements DisposableBean {
      * 获取力量属性。
      * Obtain Power.
      *
-     * Stat instance
+     * @return 属性实例 / Stat instance
      */
     public static Power power() {
         ObjectProvider<Power> provider = powerProvider;
@@ -269,7 +269,7 @@ public final class GameCreativityServices implements DisposableBean {
      * 获取精密度属性。
      * Obtain Precision.
      *
-     * Stat instance
+     * @return 属性实例 / Stat instance
      */
     public static Precision precision() {
         ObjectProvider<Precision> provider = precisionProvider;
@@ -283,7 +283,7 @@ public final class GameCreativityServices implements DisposableBean {
      * 获取意志属性。
      * Obtain Will.
      *
-     * Stat instance
+     * @return 属性实例 / Stat instance
      */
     public static Will will() {
         ObjectProvider<Will> provider = willProvider;

@@ -13,17 +13,17 @@ import com.google.common.base.Preconditions;
  */
 public enum TeamCommand {
 
-	/** 小队封禁成员 / Group Ban Member */
+	/** 小队封禁成员、设置队长、移除成员、设置招募 / Group ban member, set leader, remove member, set LFG */
 	GROUP_BAN_MEMBER(2), GROUP_SET_LEADER(3), GROUP_REMOVE_MEMBER(6), GROUP_SET_LFG(9),
-	/** 小队 StartMentoring / Group Start Mentoring */
+	/** 小队开始指导、结束指导；联盟离开、封禁成员 / Group start mentoring, end mentoring; alliance leave, ban member */
 	GROUP_START_MENTORING(10), GROUP_END_MENTORING(11), ALLIANCE_LEAVE(14), ALLIANCE_BAN_MEMBER(16),
-	/** 联盟设置 Captain / Alliance Set Captain */
+	/** 联盟设置队长、取消确认、开始确认 / Alliance set captain, checkready cancel, checkready start */
 	ALLIANCE_SET_CAPTAIN(17), ALLIANCE_CHECKREADY_CANCEL(20), ALLIANCE_CHECKREADY_START(21),
-	/** 联盟 CheckreadyAutocancel / Alliance Checkready Autocancel */
+	/** 联盟自动取消确认、确认就绪、确认未就绪 / Alliance checkready autocancel, ready, notready */
 	ALLIANCE_CHECKREADY_AUTOCANCEL(22), ALLIANCE_CHECKREADY_READY(23), ALLIANCE_CHECKREADY_NOTREADY(24),
-	/** 联盟设置 Vicecaptain / Alliance Set Vicecaptain */
+	/** 联盟设置副队长、取消副队长、调整分组；联盟军团离开 / Alliance set/unset vicecaptain, change group; league leave */
 	ALLIANCE_SET_VICECAPTAIN(25), ALLIANCE_UNSET_VICECAPTAIN(26), ALLIANCE_CHANGE_GROUP(27), LEAGUE_LEAVE(29),
-	/** League Expel / League Expel */
+	/** 联盟军团驱逐 / League expel */
 	LEAGUE_EXPEL(30);
 
 	private static Map<Integer, TeamCommand> teamCommands;

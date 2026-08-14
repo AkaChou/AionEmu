@@ -15,7 +15,7 @@ public class Thickhorn_WendigoAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(242903, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Thickhorn Runt.
+		spawn(242903, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 年幼 Thickhorn / Thickhorn Runt.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

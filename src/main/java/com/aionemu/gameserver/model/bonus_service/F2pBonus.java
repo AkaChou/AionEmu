@@ -15,7 +15,7 @@ import com.aionemu.gameserver.skillengine.change.Func;
 
 /**
  * F2p 加成，用于加成服务相关逻辑。
- * F 2 p Bonus for bonus service logic.
+ * F2p Bonus for bonus service logic.
  */
 
 public class F2pBonus implements StatOwner {

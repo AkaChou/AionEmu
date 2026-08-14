@@ -17,7 +17,7 @@ interface ChatServerDependencies {
      * 提供启动桥接；默认新建空桥接实例。
      * Provide the startup bridge; defaults to a new empty bridge instance.
      *
-     * Startup bridge
+     * @return 启动桥 / Startup bridge
      */
     default ChatServerStartupBridge startupBridge() {
         return new ChatServerStartupBridge();

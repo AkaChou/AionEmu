@@ -78,7 +78,7 @@ public class ChatClient {
      * 加入指定频道（按频道类型覆盖）。
      * Joins the given channel (overwrites by channel type).
      *
-     * target channel
+     * @param channel 目标频道 / target channel
      */
     public void addChannel(Channel channel) {
         channelsList.put(channel.getChannelType(), channel);
@@ -98,7 +98,7 @@ public class ChatClient {
      * 获取客户端 ID。
      * Returns the client id.
      *
-     * client id
+     * @return 客户端 ID / client id
      */
     public int getClientId() {
         return clientId;
@@ -108,7 +108,7 @@ public class ChatClient {
      * 获取发送标识字节。
      * Returns the sender identifier bytes.
      *
-     * identifier bytes
+     * @return 标识字节 / identifier bytes
      */
     public byte[] getIdentifier() {
         return identifier;
@@ -118,7 +118,7 @@ public class ChatClient {
      * 获取玩家真实昵称。
      * Returns the player real nickname.
      *
-     * nickname
+     * @return 昵称 / nickname
      */
     public String getRealName() {
         return realName;
@@ -128,7 +128,7 @@ public class ChatClient {
      * 获取鉴权令牌。
      * Returns the auth token.
      *
-     * token bytes
+     * @return 令牌字节 / token bytes
      */
     public byte[] getToken() {
         return token;
@@ -159,7 +159,7 @@ public class ChatClient {
      * 设置发送标识字节。
      * Sets the sender identifier bytes.
      *
-     * identifier bytes
+     * @param identifier 标识字节 / identifier bytes
      */
     public void setIdentifier(byte[] identifier) {
         this.identifier = identifier;
@@ -230,7 +230,7 @@ public class ChatClient {
      * Compares the nickname with the session name and accepts admin tags starting with a private-use glyph.
      *
      * @param nick 待比较昵称 / nickname to compare
-     * comparison result
+     * @return 匹配返回 true / true if matching
      */
     public boolean same(String nick) {
         boolean matches = this.realName.equals(nick)

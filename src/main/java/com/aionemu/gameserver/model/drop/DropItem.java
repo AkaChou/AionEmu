@@ -39,49 +39,50 @@ public class DropItem {
 	}
 
 	/**
-	 * Regenerates item count from the drop template range
+	 * 按掉落模板的数量范围重新生成物品数量。
+	 * Regenerates item count from the drop template range.
 	 */
 	public void calculateCount() {
 		count = Rnd.get(dropTemplate.getMinAmount(), dropTemplate.getMaxAmount());
 	}
 
 	/**
-	 * @return the index
+	 * @return 索引 / the index
 	 */
 	public int getIndex() {
 		return index;
 	}
 
 	/**
-	 * @param index the index to set
+	 * @param index 要设置的索引 / the index to set
 	 */
 	public void setIndex(int index) {
 		this.index = index;
 	}
 
 	/**
-	 * @return the count
+	 * @return 数量 / the count
 	 */
 	public long getCount() {
 		return count;
 	}
 
 	/**
-	 * @param count
+	 * @param count 要设置的数量 / the count to set
 	 */
 	public void setCount(long count) {
 		this.count = count;
 	}
 
 	/**
-	 * @return the dropTemplate
+	 * @return 掉落模板 / the dropTemplate
 	 */
 	public Drop getDropTemplate() {
 		return dropTemplate;
 	}
 
 	/**
-	 * @return the playerObjId
+	 * @return 玩家对象 ID 列表 / the playerObjId
 	 */
 	public List<Integer> getPlayerObjIds() {
 		return playerObjIds;
@@ -93,7 +94,7 @@ public class DropItem {
 	}
 
 	/**
-	 * @param playerObjId the playerObjId to set
+	 * @param playerObjId 要设置的玩家对象 ID / the playerObjId to set
 	 */
 	public void setPlayerObjId(int playerObjId) {
 		if (playerObjId > 0 && !playerObjIds.contains(playerObjId)) {
@@ -102,35 +103,35 @@ public class DropItem {
 	}
 
 	/**
-	 * @param isFreeForAll to set
+	 * @param isFreeForAll 是否自由拾取 / whether free for all
 	 */
 	public void isFreeForAll(boolean isFreeForAll) {
 		this.isFreeForAll = isFreeForAll;
 	}
 
 	/**
-	 * @return isFreeForAll
+	 * @return 是否自由拾取 / whether free for all
 	 */
 	public boolean isFreeForAll() {
 		return isFreeForAll;
 	}
 
 	/**
-	 * @return highestValue
+	 * @return 最高出价 / highestValue
 	 */
 	public long getHighestValue() {
 		return highestValue;
 	}
 
 	/**
-	 * @param highestValue to set
+	 * @param highestValue 要设置的最高出价 / the highestValue to set
 	 */
 	public void setHighestValue(long highestValue) {
 		this.highestValue = highestValue;
 	}
 
 	/**
-	 * @param winningPlayer to set
+	 * @param winningPlayer 要设置的中奖玩家 / the winningPlayer to set
 	 */
 	public void setWinningPlayer(Player winningPlayer) {
 		this.winningPlayer = winningPlayer;
@@ -138,7 +139,7 @@ public class DropItem {
 	}
 
 	/**
-	 * @return winningPlayer
+	 * @return 中奖玩家 / the winningPlayer
 	 */
 	public Player getWinningPlayer() {
 		if (winningPlayer != null && !winningPlayer.isOnline()) {
@@ -151,28 +152,28 @@ public class DropItem {
 	}
 
 	/**
-	 * @param isItemWonNotCollected to set
+	 * @param isItemWonNotCollected 是否已中奖但未拾取 / whether won but not collected
 	 */
 	public void isItemWonNotCollected(boolean isItemWonNotCollected) {
 		this.isItemWonNotCollected = isItemWonNotCollected;
 	}
 
 	/**
-	 * @return isItemWonNotCollected
+	 * @return 是否已中奖但未拾取 / whether won but not collected
 	 */
 	public boolean isItemWonNotCollected() {
 		return isItemWonNotCollected;
 	}
 
 	/**
-	 * @param isDistributeItem to set
+	 * @param isDistributeItem 是否分配物品 / whether to distribute the item
 	 */
 	public void isDistributeItem(boolean isDistributeItem) {
 		this.isDistributeItem = isDistributeItem;
 	}
 
 	/**
-	 * @return isDistributeItem
+	 * @return 是否分配物品 / whether to distribute the item
 	 */
 	public boolean isDistributeItem() {
 		return isDistributeItem;
@@ -194,7 +195,11 @@ public class DropItem {
 	}
 
 	/**
-	 * @param player 是否仅 possiblelooter。 / Whether only possible looter
+	 * 是否只有该玩家是可能的拾取者（单人归属的掉落）。
+	 * Whether only this player is a possible looter (solo-owned drops).
+	 *
+	 * @param player 玩家 / player
+	 * @return 是否仅该玩家可拾取 / whether only this player may loot
 	  */
 	public boolean isOnlyPossibleLooter(Player player) {
 		return playerObjIds.size() == 1 && playerObjIds.contains(player.getObjectId());

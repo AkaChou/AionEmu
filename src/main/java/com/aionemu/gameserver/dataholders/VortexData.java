@@ -48,7 +48,7 @@ public class VortexData {
 	 * 返回已加载的漩涡点位数量。
 	 * Returns the number of loaded vortex locations.
 	 *
-	 * location count
+	 * @return 已加载的漩涡地点数量 / Returns the number of loaded vortex locations.
 	 */
 	public int size() {
 		return vortex.size();
@@ -58,9 +58,7 @@ public class VortexData {
 	 * 按入侵世界 ID 获取漩涡点位。
 	 * Returns the vortex location for the given invasion world id.
 	 *
-	 * invasion world id
-	 *
-	 * @param invasionWorldId
+	 * @param invasionWorldId 入侵世界 ID / invasion world id
 	 * @return 漩涡点位，不存在则为 null / vortex location or null
 	 */
 	public VortexLocation getVortexLocation(int invasionWorldId) {
@@ -71,7 +69,7 @@ public class VortexData {
 	 * 返回全部漩涡点位映射。
 	 * Returns the full map of vortex locations.
 	 *
-	 * location map
+	 * @return 完整的漩涡地点映射 / Returns the full map of vortex locations.
 	 */
 	public Map<Integer, VortexLocation> getVortexLocations() {
 		return vortex;

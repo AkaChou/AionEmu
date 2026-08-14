@@ -25,7 +25,6 @@ public class BanIp extends AdminCommand {
 	 * 执行 IP 封禁：解析掩码与时长后发送封禁包。
 	 * Executes IP ban: parses mask and duration, then sends the ban packet.
 	 *
-	 * admin
 	 * @param params 参数：IP 掩码、时长（分钟） / ip mask, duration in minutes
 	 */
 	@Override
@@ -55,8 +54,6 @@ public class BanIp extends AdminCommand {
 	 * 参数错误时输出 {@code //banip} 用法。
 	 * Prints {@code //banip} usage on invalid arguments.
 	 *
-	 * admin
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

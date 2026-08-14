@@ -115,7 +115,7 @@ public class TahabataPyrelordAI2 extends AggressiveNpcAI2
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
-						spawn(281258, x, y, z, (byte) 0); //Faithful Subordinate.
+						spawn(281258, x, y, z, (byte) 0); // 忠实的部下。 / Faithful Subordinate.
 					}
 				}
 			}, 3000);
@@ -150,7 +150,7 @@ public class TahabataPyrelordAI2 extends AggressiveNpcAI2
 	private void deleteHelpers() {
 		WorldMapInstance instance = getPosition().getWorldMapInstance();
 		if (instance != null) {
-			deleteNpcs(instance.getNpcs(281258)); //Faithful Subordinate.
+			deleteNpcs(instance.getNpcs(281258)); // 忠实的部下。 / Faithful Subordinate.
 		}
 	}
 	
@@ -161,7 +161,7 @@ public class TahabataPyrelordAI2 extends AggressiveNpcAI2
 		sendMsg(1401151);
 		final WorldPosition p = getPosition();
 		if (p != null) {
-			deleteNpcs(p.getWorldMapInstance().getNpcs(281258)); //Faithful Subordinate.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(281258)); // 忠实的部下。 / Faithful Subordinate.
 		}
 		super.handleDied();
 	}

@@ -10,9 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 
-/**
- * @author Falke_34
- */
 @AIName("immortal_orissan_quest")
 // 237230
 

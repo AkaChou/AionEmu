@@ -91,9 +91,9 @@ public class TeleportService2 {
 	 *
 	 * @param template 传送员模板 / Teleporter template
 	 * @param locId 目标地点 ID / Target location id
-	 * 玩家 / Player
-	 * Interacting NPC
-	 * Teleport animation
+	 * @param player 玩家 / Player
+	 * @param npc 交互 NPC / Interacting NPC
+	 * @param animation 传送动画 / Teleport animation
 	 */
 	public static void teleport(TeleporterTemplate template, int locId, Player player, Npc npc, TeleportAnimation animation) {
 		TribeClass tribe = npc.getTribe();
@@ -306,13 +306,13 @@ public class TeleportService2 {
 	 * 以死亡状态将玩家传送到指定坐标（不复活）。
 	 * Teleports a dead player to coordinates without reviving.
 	 *
-	 * 玩家 / Player
-	 * 世界 ID / World id
-	 * Instance id
+	 * @param player 玩家 / Player
+	 * @param worldId 世界 ID / World id
+	 * @param instanceId 实例 ID / Instance id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
-	 * 朝向 / Heading
+	 * @param heading 朝向 / Heading
 	 */
 	public static void teleportDeadTo(Player player, int worldId, int instanceId, float x, float y, float z, byte heading) {
 		player.getController().onLeaveWorld();
@@ -331,8 +331,8 @@ public class TeleportService2 {
 	 * 传送到指定世界坐标（使用玩家当前朝向）。
 	 * Teleports to world coordinates (uses player heading).
 	 *
-	 * 玩家 / Player
-	 * 世界 ID / World id
+	 * @param player 玩家 / Player
+	 * @param worldId 世界 ID / World id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
@@ -346,8 +346,8 @@ public class TeleportService2 {
 	 * 传送到指定世界坐标与朝向（默认光束动画）。
 	 * Teleports to world coordinates with heading (default beam animation).
 	 *
-	 * 玩家 / Player
-	 * 世界 ID / World id
+	 * @param player 玩家 / Player
+	 * @param worldId 世界 ID / World id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
@@ -366,13 +366,13 @@ public class TeleportService2 {
 	 * 传送到指定世界坐标与朝向，可指定动画。
 	 * Teleports to world coordinates with heading and animation.
 	 *
-	 * 玩家 / Player
-	 * 世界 ID / World id
+	 * @param player 玩家 / Player
+	 * @param worldId 世界 ID / World id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / Heading
-	 * Teleport animation
+	 * @param animation 传送动画 / Teleport animation
 	 *
 	 * @return 是否发起传送 / Whether teleport was initiated
 	 */
@@ -388,9 +388,9 @@ public class TeleportService2 {
 	 * 传送到指定世界/实例坐标（默认光束动画）。
 	 * Teleports to world/instance coordinates (default beam animation).
 	 *
-	 * 玩家 / Player
-	 * 世界 ID / World id
-	 * Instance id
+	 * @param player 玩家 / Player
+	 * @param worldId 世界 ID / World id
+	 * @param instanceId 实例 ID / Instance id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
@@ -405,9 +405,9 @@ public class TeleportService2 {
 	 * 传送到指定世界/实例坐标（使用玩家朝向与默认动画）。
 	 * Teleports to world/instance coordinates (player heading, default animation).
 	 *
-	 * 玩家 / Player
-	 * 世界 ID / World id
-	 * Instance id
+	 * @param player 玩家 / Player
+	 * @param worldId 世界 ID / World id
+	 * @param instanceId 实例 ID / Instance id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
@@ -421,14 +421,14 @@ public class TeleportService2 {
 	 * 完整传送入口：处理决斗中断、离图与动画/无动画换位。
 	 * Full teleport entry: ends duel, leave-world and animated/no-anim position change.
 	 *
-	 * 玩家 / Player
-	 * 世界 ID / World id
-	 * Instance id
+	 * @param player 玩家 / Player
+	 * @param worldId 世界 ID / World id
+	 * @param instanceId 实例 ID / Instance id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
-	 * 朝向 / Heading
-	 * Teleport animation
+	 * @param heading 朝向 / Heading
+	 * @param animation 传送动画 / Teleport animation
 	 *
 	 * @return 是否发起传送；死亡中返回 {@code false} / Whether initiated; {@code false} if dead
 	 */
@@ -588,9 +588,9 @@ public class TeleportService2 {
 	 * 向玩家打开传送员地图界面。
 	 * Opens the teleporter map UI for the player.
 	 *
-	 * 玩家 / Player
-	 * Target object id
-	 * Teleporter NPC id
+	 * @param player 玩家 / Player
+	 * @param targetObjectId 目标对象 ID / Target object id
+	 * @param npcId 传送员 NPC ID / Teleporter NPC id
 	 */
 	public static void showMap(Player player, int targetObjectId, int npcId) {
 		if (player.isInFlyingState()) {
@@ -612,9 +612,7 @@ public class TeleportService2 {
 	 * 按 NPC ID 获取传送员模板。
 	 * Returns teleporter template by NPC id.
 	 *
-	 * NPC id
-	 *
-	 * @param npcId
+	 * @param npcId NPC ID / NPC id
 	 * @return 传送员模板 / Teleporter template
 	 */
 	public static TeleporterTemplate getTeleporterTemplate(int npcId) {
@@ -625,8 +623,8 @@ public class TeleportService2 {
 	 * 将玩家传送到 Kisk（复活石）位置。
 	 * Teleports the player to a Kisk location.
 	 *
-	 * 玩家 / Player
-	 * Kisk position
+	 * @param player 玩家 / Player
+	 * @param kisk Kisk 位置 / Kisk position
 	 */
 	public static void moveToKiskLocation(Player player, WorldPosition kisk) {
 		int mapId = kisk.getMapId();
@@ -655,8 +653,8 @@ public class TeleportService2 {
 	 * 将玩家传送到当前世界中指定 NPC 的生成点。
 	 * Teleports the player to the spawn of the given NPC in the current world.
 	 *
-	 * 玩家 / Player
-	 * NPC id
+	 * @param player 玩家 / Player
+	 * @param npcId NPC ID / NPC id
 	 */
 	public static void teleportToNpc(Player player, int npcId) {
 		int worldId = player.getWorldId();
@@ -668,7 +666,8 @@ public class TeleportService2 {
 		teleportToNpc(player, searchResult);
 	}
 
-	/** 将 GM 传送到存活 NPC 当前坐标，避免移动 NPC 的静态刷怪点不可达。 */
+	/** 将 GM 传送到存活 NPC 当前坐标，避免移动 NPC 的静态刷怪点不可达。
+	 * Teleports a GM to the live NPC's current position, since moving NPCs' static spawn spots may be unreachable. */
 	public static void teleportToNpc(Player player, Npc npc) {
 		if (player == null || npc == null || !npc.isSpawned()
 				|| (npc.getLifeStats() != null && npc.getLifeStats().isAlreadyDead())) {
@@ -678,7 +677,8 @@ public class TeleportService2 {
 				npc.getHeading());
 	}
 
-	/** 将玩家传送到已解析的 NPC 刷新点，确保地图标记与 GM 传送目标一致。 */
+	/** 将玩家传送到已解析的 NPC 刷新点，确保地图标记与 GM 传送目标一致。
+	 * Teleports the player to a resolved NPC spawn spot, keeping map markers and GM teleport targets consistent. */
 	public static void teleportToNpc(Player player, SpawnSearchResult searchResult) {
 		if (player == null || searchResult == null || searchResult.getSpot() == null) {
 			return;
@@ -730,7 +730,7 @@ public class TeleportService2 {
 	 * Moves the player to bind point; optionally via full teleport.
 	 *
 	 * @param player 玩家 / Player
-	 * @param useTeleport {@code true} use teleport path。
+	 * @param useTeleport {@code true} 使用传送路径 / {@code true} to use teleport path
 	 */
 	public static void moveToBindLocation(Player player, boolean useTeleport) {
 		float x, y, z;
@@ -765,8 +765,8 @@ public class TeleportService2 {
 	 * 将玩家传送到副本出口；无配置时回绑定点。
 	 * Teleports the player to instance exit; falls back to bind point.
 	 *
-	 * 玩家 / Player
-	 * Instance world id
+	 * @param player 玩家 / Player
+	 * @param worldId 副本世界 ID / Instance world id
 	 * @param race 玩家种族 / Player race
 	 */
 	public static void moveToInstanceExit(Player player, int worldId, Race race) {
@@ -786,10 +786,10 @@ public class TeleportService2 {
 	}
 
 	/**
-	 * 登出时处理敌对地图（伊鲁玛/诺斯沃尔德）的位置修正。
+	 * 登出时处理敌对地图（阿斯泰拉/诺斯珀德）的位置修正。
 	 * On logout, corrects position when on the opposite-race map (Iluma/Norsvold).
 	 *
-	 * 玩家 / Player
+	 * @param player 玩家 / Player
 	 */
 	public static void onLogOutOppositeMap(Player player) {
 		switch (player.getWorldId()) {
@@ -810,9 +810,9 @@ public class TeleportService2 {
 	 * 获取副本出口模板。
 	 * Returns instance-exit template.
 	 *
-	 * 世界 ID / World id
-	 * 阵营 / Race
-	 * Exit template
+	 * @param worldId 世界 ID / World id
+	 * @param race 阵营 / Race
+	 * @return 出口模板 / exit template
 	 */
 	public static InstanceExit getInstanceExit(int worldId, Race race) {
 		return DataManager.INSTANCE_EXIT_DATA.getInstanceExit(worldId, race);
@@ -822,8 +822,8 @@ public class TeleportService2 {
 	 * 获取副本复活起点模板。
 	 * Returns instance revive start-point template.
 	 *
-	 * 世界 ID / World id
-	 * Revive start point
+	 * @param worldId 世界 ID / World id
+	 * @return 复活起点 / revive start point
 	 */
 	public static InstanceReviveStartPoints getReviveInstanceStartPoints(int worldId) {
 		return DataManager.REVIVE_INSTANCE_START_POINTS.getReviveStartPoint(worldId);
@@ -833,10 +833,10 @@ public class TeleportService2 {
 	 * 获取世界复活起点模板。
 	 * Returns world revive start-point template.
 	 *
-	 * 世界 ID / World id
-	 * 阵营 / Race
-	 * Level
-	 * Revive start point
+	 * @param worldId 世界 ID / World id
+	 * @param race 阵营 / Race
+	 * @param level 等级 / Level
+	 * @return 复活起点 / revive start point
 	 */
 	public static WorldReviveStartPoints getReviveWorldStartPoints(int worldId, Race race, int level) {
 		return DataManager.REVIVE_WORLD_START_POINTS.getReviveStartPoint(worldId, race, level);
@@ -846,9 +846,9 @@ public class TeleportService2 {
 	 * 使用传送卷轴按门户名传送到目标世界。
 	 * Uses a portal scroll to teleport by portal name into a world.
 	 *
-	 * 玩家 / Player
-	 * Portal name
-	 * Target world id
+	 * @param player 玩家 / Player
+	 * @param portalName 门户名称 / Portal name
+	 * @param worldId 目标世界 ID / Target world id
 	 */
 	public static void useTeleportScroll(Player player, String portalName, int worldId) {
 		PortalScroll template = DataManager.PORTAL2_DATA.getPortalScroll(portalName);
@@ -879,8 +879,8 @@ public class TeleportService2 {
 	 * 将玩家置于世界复活起点（无完整传送动画）。
 	 * Places the player at the world revive start point (no full teleport anim).
 	 *
-	 * 玩家 / Player
-	 * 世界 ID / World id
+	 * @param player 玩家 / Player
+	 * @param worldId 世界 ID / World id
 	 */
 	public static void teleportWorldStartPoint(Player player, int worldId) {
 		player.getController().onLeaveWorld();
@@ -907,8 +907,8 @@ public class TeleportService2 {
 	 * 将玩家置于副本复活起点。
 	 * Places the player at the instance revive start point.
 	 *
-	 * 玩家 / Player
-	 * 世界 ID / World id
+	 * @param player 玩家 / Player
+	 * @param worldId 世界 ID / World id
 	 */
 	public static void teleportInstanceStartPoint(Player player, int worldId) {
 		player.getController().onLeaveWorld();
@@ -953,7 +953,7 @@ public class TeleportService2 {
 	 * 处理 A-Station 跨服进出位置同步。
 	 * Handles A-Station cross-server enter/leave position sync.
 	 *
-	 * 玩家 / Player
+	 * @param player 玩家 / Player
 	 * @param serverId 对方服务器 ID / Peer server id
 	 * @param back {@code true} 返回本服 / {@code true} return to home server
 	 */

@@ -4,8 +4,8 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.stats.calc.Stat2;
 
 /**
- * 陷阱游戏属性，用于属性相关逻辑。
- * Trap Game Stats for stats logic.
+ * 陷阱的游戏属性：继承主人的魔法技能加成。
+ * Game stats for traps: inherits the master's magical skill bonus.
  *
  * @author ATracer
  */

@@ -15,7 +15,7 @@ public abstract class PlayerEquipmentSettingDAO implements DAO {
 	 * 加载玩家装备方案设置。
 	 * Loads the player's equipment settings.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void loadEquipmentSetting(Player player);
 
@@ -23,8 +23,8 @@ public abstract class PlayerEquipmentSettingDAO implements DAO {
 	 * 插入一条装备方案设置。
 	 * Inserts an equipment setting entry.
 	 *
-	 * 玩家 / player
-	 * equipment setting
+	 * @param player 玩家 / player
+	 * @param equipmentSetting 装备设置 / equipment setting
 	 */
 	public abstract void insertEquipmentSetting(Player player, EquipmentSetting equipmentSetting);
 
@@ -49,7 +49,7 @@ public abstract class PlayerEquipmentSettingDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public String getClassName() {

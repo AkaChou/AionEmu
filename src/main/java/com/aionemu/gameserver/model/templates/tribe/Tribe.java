@@ -13,7 +13,7 @@ import com.aionemu.gameserver.model.TribeClass;
 
 /**
  * 部落模板（静态数据/XML）。
- * XML template.
+ * Tribe template (static data / XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,7 +43,7 @@ public class Tribe {
 	@XmlAttribute(required = true)
 	protected TribeClass name;
 
-	/** 返回敌对 / Returns the aggressive*/
+	/** 返回敌对 / Returns the aggressive */
 	public List<TribeClass> getAggressive() {
 		if (aggressive == null) {
 			aggressive = Collections.emptyList();
@@ -75,7 +75,7 @@ public class Tribe {
 		return this.neutral;
 	}
 
-	/** 返回无 / Returns the none*/
+	/** 返回无 / Returns the none */
 	public List<TribeClass> getNone() {
 		if (none == null) {
 			none = Collections.emptyList();

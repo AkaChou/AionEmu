@@ -134,13 +134,13 @@ public class VeteranRewardsService {
 	 *
 	 * @param id      奖励记录 ID / Reward record ID
 	 * @param Player  接收玩家名 / Recipient player name
-	 * Mail type
-	 * Item ID
-	 * Item count
-	 * Kinah amount
-	 * Sender
+	 * @param typeID  邮件类型 / Mail type
+	 * @param itemID  物品 ID / Item ID
+	 * @param countID 物品数量 / Item count
+	 * @param kinahID 基纳数量 / Kinah amount
+	 * @param sender  发件人 / Sender
 	 * @param title   邮件标题 / Mail title
-	 * Mail body
+	 * @param message 邮件正文 / Mail body
 	 */
 	private void VerifyVeteranReward(int id, String Player, int typeID, int itemID, int countID, int kinahID,
 			String sender, String title, String message) {

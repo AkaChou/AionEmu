@@ -104,7 +104,7 @@ public class TemperingAction extends AbstractItemAction {
 	                        PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId()));
 							
 						} else if (targetItem.getItemTemplate().isPlume()) {
-							targetItem.setAuthorize(targetItem.getAuthorize()); // Plume doesn't decrease
+							targetItem.setAuthorize(targetItem.getAuthorize()); // 羽饰淬炼失败不掉级 / plume doesn't decrease
 							// %0 的淬炼失败，淬炼等级降至 0。 / Tempering of %0 has failed and the temperance level has decreased to 0.
 	                        PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId()));
 							
@@ -163,7 +163,8 @@ public class TemperingAction extends AbstractItemAction {
 	}
 
 	/**
-	 * Check tempering
+	 * 检查淬炼等级并调整附加插槽数。
+	 * Checks the tempering level and adjusts the optional socket count.
 	 */
 	public void checkTempering(Player player, Item item) {
 		if (item.getAuthorize() >= 5 && item.getAuthorize() <= 7) {
@@ -181,7 +182,12 @@ public class TemperingAction extends AbstractItemAction {
 	}
 
 	/**
-	 * @return Whether tempering success
+	 * 判定淬炼是否成功（按部位概率）。
+	 * Determines whether the tempering succeeds (per-slot probability).
+	 *
+	 * @param player 淬炼玩家 / the tempering player
+	 * @param item 被淬炼物品 / the item being tempered
+	 * @return 成功则为 true / true if successful
 	 */
 	public boolean isTemperingSuccess(Player player, Item item) {
 		if (item.getItemTemplate().isBracelet()) {

@@ -68,7 +68,7 @@ public class BannedIpController {
      * Checks if IP (or matching mask) is banned.
      *
      * @param ip 待检查 IP / IP address to check
-     * Whether banned
+     * @return 是否被封禁 / whether banned
      */
     public boolean isBanned(String ip) {
         for (BannedIP ipBan : banList) {
@@ -160,7 +160,7 @@ public class BannedIpController {
      * 获取 {@link BannedIpDAO} 快捷方法。
      * Shortcut for {@link BannedIpDAO}.
      *
-     * Banned IP DAO
+     * @return BannedIpDAO 实例 / Banned IP DAO
      */
     private BannedIpDAO getDAO() {
         return DAOManager.getDAO(BannedIpDAO.class);

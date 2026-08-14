@@ -21,7 +21,7 @@ public class SM_GS_CHARACTER_RESPONSE extends GsServerPacket {
      * 构造角色应答包。
      * Constructs a character response packet.
      *
-     * 账号 ID / account id
+     * @param accountId 账号 ID / account id
      */
     public SM_GS_CHARACTER_RESPONSE(int accountId) {
         this.accountId = accountId;

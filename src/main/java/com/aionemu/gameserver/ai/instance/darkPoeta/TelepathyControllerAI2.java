@@ -48,7 +48,7 @@ public class TelepathyControllerAI2 extends AggressiveNpcAI2
 						nrNpc = 281150; //Anuhart Escort.
 					break;
 					case 2:
-						nrNpc = 281334; //Bionic Clodworm.
+						nrNpc = 281334; // 仿生噬人虫。 / Bionic Clodworm.
 					break;
 				}
 				rndSpawnInRange(nrNpc, distance);

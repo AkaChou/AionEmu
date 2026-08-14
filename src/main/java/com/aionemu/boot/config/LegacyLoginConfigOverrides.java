@@ -19,7 +19,7 @@ public class LegacyLoginConfigOverrides {
      * 构建登录服可消费的 {@link Properties} 覆盖集。
      * Builds the login-server {@link Properties} override set.
      *
-     * override properties
+     * @return 覆盖属性集 / override properties
      */
     public Properties loginProperties() {
         Properties properties = new Properties();

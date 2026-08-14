@@ -3,7 +3,10 @@ package com.aionemu.gameserver.questEngine.definition;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/** Explicit legacy XML path to canonical metadata path mapping. */
+/**
+ * 旧版 XML 路径到规范元数据路径的显式映射。
+ * Explicit legacy XML path to canonical metadata path mapping.
+ */
 public final class QuestMetadataFieldMapping {
 	private static final Map<String, String> MAPPING;
 

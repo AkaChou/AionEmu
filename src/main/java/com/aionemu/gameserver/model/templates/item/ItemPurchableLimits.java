@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * 物品 PurchableLimits 模板（静态数据/XML）。
- * XML template.
+ * 物品购买限制模板：最低军阶要求。
+ * Item purchasable limits template: minimum rank requirement.
  *
  * @author Ranastic (Encom)
  */
@@ -18,12 +18,12 @@ public class ItemPurchableLimits {
 	@XmlAttribute(name = "rank_min")
 	private int minRank;
 
-	/** 返回最小军阶 / Returns the min rank*/
+	/** 返回最小军阶 / Returns the min rank */
 	public int getMinRank() {
 		return minRank;
 	}
 
-	/** 校验军阶 / Verify Rank */
+	/** 校验军阶是否达标 / Verify rank */
 	public boolean verifyRank(int rank) {
 		return minRank <= rank;
 	}

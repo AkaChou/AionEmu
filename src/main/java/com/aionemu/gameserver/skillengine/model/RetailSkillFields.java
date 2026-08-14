@@ -9,7 +9,10 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
-/** 真端技能中尚未编译进现有运行模型的无损字段。 */
+/**
+ * 真端技能中尚未编译进现有运行模型的无损字段。
+ * Lossless fields from retail skills not yet compiled into the current runtime model.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RetailSkillFields", propOrder = "fields")
 public class RetailSkillFields {

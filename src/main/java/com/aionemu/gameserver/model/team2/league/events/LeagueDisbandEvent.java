@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.team2.league.events.LeagueLeftEvent.LeaveRes
 import com.google.common.base.Predicate;
 
 /**
- * 战团 Disband 活动，用于团队2相关逻辑。
+ * 战团解散事件，用于团队2相关逻辑。
  * League Disband Event for team 2 logic.
  */
 

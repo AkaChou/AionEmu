@@ -12,8 +12,8 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityStateType;
 
 /**
- * 高塔 Of 永恒刷新点模板（静态数据/XML）。
- * XML template.
+ * 永恒之塔刷新点模板（静态数据/XML）。
+ * Tower of Eternity spawn template (static data/XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -22,7 +22,7 @@ public class TowerOfEternitySpawn {
 	@XmlAttribute(name = "id")
 	private int id;
 
-	/** 返回 ID / Returns the id */
+	/** 返回 ID。 / Returns the id. */
 	public int getId() {
 		return id;
 	}
@@ -30,7 +30,7 @@ public class TowerOfEternitySpawn {
 	@XmlElement(name = "tower_of_eternity_type")
 	private List<TowerOfEternitySpawn.TowerOfEternityStateTemplate> TowerOfEternityStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回永恒之塔状态模板。 / Returns the tower of eternity state templates. */
 	public List<TowerOfEternityStateTemplate> getSiegeModTemplates() {
 		return TowerOfEternityStateTemplate;
 	}
@@ -50,7 +50,7 @@ public class TowerOfEternitySpawn {
 			return spawns;
 		}
 
-		/** 返回 tower of eternity type / Returns the tower of eternity type */
+		/** 返回永恒之塔状态类型。 / Returns the tower of eternity type. */
 		public TowerOfEternityStateType getTowerOfEternityType() {
 			return towerOfEternityType;
 		}

@@ -15,7 +15,7 @@ public class Venerable_Sea_GiantAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(219788, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Primeval Sea Giant.
+		spawn(219788, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 生成远古海巨人 / Primeval Sea Giant.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);

@@ -52,9 +52,7 @@ public final class ServiceContext {
      * 使用当前上下文包装 Runnable
      * Wrap a Runnable with the current context
      *
-     * Original runnable
-     *
-     * @param runnable
+     * @param runnable 原始任务 / original runnable
      * @return 带上下文的任务 / Context-aware runnable
      */
     public static Runnable wrap(Runnable runnable) {
@@ -65,10 +63,8 @@ public final class ServiceContext {
      * 使用指定上下文包装 Runnable
      * Wrap a Runnable with the given context
      *
-     * Original runnable
-     *
+     * @param runnable 原始任务 / original runnable
      * @param context 上下文名称 / Context name
-     * @param context
      * @return 带上下文的任务 / Context-aware runnable
      */
     public static Runnable wrap(Runnable runnable, String context) {

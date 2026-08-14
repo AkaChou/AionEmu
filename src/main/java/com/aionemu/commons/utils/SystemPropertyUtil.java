@@ -20,9 +20,9 @@ public class SystemPropertyUtil {
      * 判断系统属性是否存在。
      * Whether a system property exists.
      *
-     * Property key
+     * @param key 属性键 / Property key
      *
-     * @param key 存在则为 true / True if present
+     * @return 存在则为 true / True if present
      */
     public boolean contains(String key) {
         return get(key) != null;
@@ -32,8 +32,8 @@ public class SystemPropertyUtil {
      * 读取系统属性，不存在返回 null。
      * Read a system property, or null if missing.
      *
-     * Property key
-     * Value or null
+     * @param key 属性键 / Property key
+     * @return 属性值或 null / Value or null
      */
     public String get(String key) {
         return get(key, (String) null);
@@ -43,8 +43,8 @@ public class SystemPropertyUtil {
      * 读取系统属性，不存在返回默认值。
      * Read a system property with a default.
      *
-     * Property key
-     * Default value
+     * @param key 属性键 / Property key
+     * @param def 默认值 / Default value
      * @return 属性值或默认值 / Value or default
      */
     public String get(String key, String def) {
@@ -72,8 +72,8 @@ public class SystemPropertyUtil {
      * 读取布尔系统属性。
      * Read a boolean system property.
      *
-     * Property key
-     * Default value
+     * @param key 属性键 / Property key
+     * @param def 默认值 / Default value
      * @return 布尔值或默认值 / Boolean or default
      */
     public boolean getBoolean(String key, boolean def) {
@@ -101,8 +101,8 @@ public class SystemPropertyUtil {
      * 读取整型系统属性。
      * Read an integer system property.
      *
-     * Property key
-     * Default value
+     * @param key 属性键 / Property key
+     * @param def 默认值 / Default value
      * @return 整型值或默认值 / Int or default
      */
     public int getInt(String key, int def) {
@@ -127,8 +127,8 @@ public class SystemPropertyUtil {
      * 读取长整型系统属性。
      * Read a long system property.
      *
-     * Property key
-     * Default value
+     * @param key 属性键 / Property key
+     * @param def 默认值 / Default value
      * @return 长整型值或默认值 / Long or default
      */
     public long getLong(String key, long def) {
@@ -153,7 +153,7 @@ public class SystemPropertyUtil {
      * 记录警告日志。
      * Log a warning message.
      *
-     * Message
+     * @param msg 日志消息 / Log message
      */
     private void log(String msg) {
         log.warn(msg);
@@ -163,7 +163,7 @@ public class SystemPropertyUtil {
      * 记录带异常的警告日志。
      * Log a warning with exception.
      *
-     * Message
+     * @param msg 日志消息 / Log message
      * @param e   异常 / Exception
      */
     private void log(String msg, Exception e) {

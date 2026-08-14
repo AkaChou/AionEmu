@@ -25,7 +25,7 @@ public abstract class VeteranRewardsDAO implements DAO {
 	 * 删除指定老兵奖励。
 	 * Deletes a veteran reward by id.
 	 *
-	 * veteran reward id
+	 * @param id_veteran_reward 老兵奖励 ID / veteran reward id
 	 */
 	public abstract void delVeteranReward(final int id_veteran_reward);
 
@@ -37,7 +37,7 @@ public abstract class VeteranRewardsDAO implements DAO {
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
 	 *
-	 * fully qualified class name
+	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
 	public final String getClassName() {

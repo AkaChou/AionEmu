@@ -19,8 +19,9 @@ public class AccountantCabinExitAI2 extends ActionItemNpcAI2 {
 
 	@Override
 	protected void handleUseItemFinish(Player player) {
+		// 按阵营把玩家传送出副本：魔族→贝鲁斯兰，天族→海洛恩。 / Teleport the player out by race: Asmodians to Beluslan, Elyos to Heiron.
 		switch (getNpcId()) {
-		    case 730766: //Accountant's Cabin Exit.
+		    case 730766: // 会计室出口 / Accountant's Cabin Exit.
 				switch (player.getWorldId()) {
 					case 300100000: //Steel Rake 1.5
 					    if (player.getCommonData().getRace() == Race.ASMODIANS) {

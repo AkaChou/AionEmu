@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * 代理人模板（静态数据/XML）。
- * XML template.
+ * 代理人（Agent）模板：静态数据/XML 映射。
+ * Agent template: static data/XML mapping.
  *
  * @author Rinzler (Encom)
  */

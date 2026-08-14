@@ -31,10 +31,10 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	 * 校验技能是否可作用于目标（骑乘、保护、飞行传送、复活目标等）。
 	 * Validates whether a skill may affect the target (ride, protection, fly teleport, resurrect target, etc.).
 	 *
-	 * caster
-	 * target
-	 * skill
-	 * true when allowed
+	 * @param player 施法者 / caster
+	 * @param target 目标 / target
+	 * @param skill 技能 / skill
+	 * @return 允许时为 true / true when allowed
 	 */
 	@Override
 	public boolean canAffectBySkill(Player player, VisibleObject target, Skill skill) {
@@ -95,11 +95,11 @@ public class PlayerRestrictions extends AbstractRestrictions {
 
 	/**
 	 * 自身或目标处于飞行传送/气流时禁止。
-	 * windstreaming.
+	 * Whether the player or target is fly-teleporting or windstreaming.
 	 *
-	 * 玩家 / player
-	 * target, may be null
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @param target 目标，可能为 null / target, may be null
+	 * @return 允许时为 true / true when allowed
 	 */
 	private boolean checkFly(Player player, VisibleObject target) {
 		if ((player.isUsingFlyTeleport()) || (player.isInPlayerMode(PlayerMode.WINDSTREAM))) {
@@ -119,9 +119,9 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	 * 校验是否可使用技能（飞行、施法中、骑乘、负重、沉默/束缚、变身、复活目标等）。
 	 * Validates skill use (fly, casting, ride, overweight, silence/bind, transform, resurrect target, etc.).
 	 *
-	 * 玩家 / player
-	 * skill
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @param skill 技能 / skill
+	 * @return 允许时为 true / true when allowed
 	 */
 	@Override
 	public boolean canUseSkill(Player player, Skill skill) {
@@ -192,9 +192,9 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	 * 校验是否可邀请目标进组。
 	 * Validates group invite against target.
 	 *
-	 * inviter
-	 * target
-	 * true when allowed
+	 * @param player 邀请者 / inviter
+	 * @param target 目标 / target
+	 * @return 允许时为 true / true when allowed
 	 */
 	@Override
 	public boolean canInviteToGroup(Player player, Player target) {
@@ -245,9 +245,9 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	 * 校验是否可邀请目标进联盟。
 	 * Validates alliance invite against target.
 	 *
-	 * inviter
-	 * target
-	 * true when allowed
+	 * @param player 邀请者 / inviter
+	 * @param target 目标 / target
+	 * @return 允许时为 true / true when allowed
 	 */
 	public boolean canInviteToAlliance(Player player, Player target) {
 		int level = player.getLevel();
@@ -323,9 +323,9 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	 * 校验是否可邀请目标进军团联盟。
 	 * Validates league invite against target.
 	 *
-	 * inviter
-	 * target
-	 * true when allowed
+	 * @param player 邀请者 / inviter
+	 * @param target 目标 / target
+	 * @return 允许时为 true / true when allowed
 	 */
 	public boolean canInviteToLeague(Player player, Player target) {
 		if (target == null) {
@@ -381,9 +381,9 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	 * 校验是否可攻击目标。
 	 * Validates whether the player may attack the target.
 	 *
-	 * 玩家 / player
-	 * target
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @param target 目标 / target
+	 * @return 允许时为 true / true when allowed
 	 */
 	@Override
 	public boolean canAttack(Player player, VisibleObject target) {
@@ -420,8 +420,8 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	 * 校验是否可使用仓库（在线、非交易中、等级限制）。
 	 * Validates warehouse use (online, not trading, level gate).
 	 *
-	 * 玩家 / player
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @return 允许时为 true / true when allowed
 	 */
 	@Override
 	public boolean canUseWarehouse(Player player) {
@@ -446,8 +446,8 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	 * 校验是否可交易（在线、未在交易、非隐身）。
 	 * Validates trade (online, not already trading, not invisible).
 	 *
-	 * 玩家 / player
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @return 允许时为 true / true when allowed
 	 */
 	@Override
 	public boolean canTrade(Player player) {
@@ -472,8 +472,8 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	 * 异常状态（无法攻击）下禁止换装。
 	 * Forbids equip change under cant-attack abnormal.
 	 *
-	 * 玩家 / player
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @return 允许时为 true / true when allowed
 	 */
 	@Override
 	public boolean canChangeEquip(Player player) {
@@ -487,8 +487,8 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	 * 在线且未禁言时可聊天。
 	 * Chat allowed when online and not gagged.
 	 *
-	 * 玩家 / player
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @return 允许时为 true / true when allowed
 	 */
 	@Override
 	public boolean canChat(Player player) {
@@ -502,9 +502,9 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	 * 校验是否可使用物品（异常状态、大天使、区域限制）。
 	 * Validates item use (abnormal, Archdaeva, area restriction).
 	 *
-	 * 玩家 / player
-	 * item
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @param item 物品 / item
+	 * @return 允许时为 true / true when allowed
 	 */
 	@Override
 	public boolean canUseItem(Player player, Item item) {

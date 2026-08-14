@@ -29,7 +29,6 @@ public class Rift extends AdminCommand
 	 * Executes this admin command.
 	 *
 	 * @param player 执行指令的管理员 / admin executing the command
-	 * command arguments
 	 */
 	@Override
 	public void execute(Player player, String... params) {

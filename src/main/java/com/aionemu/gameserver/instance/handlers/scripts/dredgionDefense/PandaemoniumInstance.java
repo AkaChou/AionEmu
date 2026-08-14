@@ -37,7 +37,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 /**
- * 潘达蒙尼姆防御副本事件处理器。
+ * 伏魔殿防御副本事件处理器。
  * Instance event handler for Pandaemonium.
  *
  * @author Encom
@@ -64,7 +64,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -80,7 +80,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -458,8 +458,8 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
@@ -822,7 +822,10 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	}
 	
    /**
-	 * 奖励：高级弗里吉达军团战利品箱等。 / Rewards: Premium Frigida Legion Loot Box (3 Generators destroyed) Major Frigida Legion Loot Box (2 Generators destroyed) Major Frigida Legion Supply Box Greater Frigida Legion Loot Box Greater Frigida Legion Supply Box Lesser Frigida Legion Loot Box Lesser Frigida Legion Supply Box Minor Frigida Legion Loot Box Minor Frigida Legion Supply Box
+	 * 奖励：高级弗里吉达军团战利品箱等。
+	 * Rewards: Premium Frigida Legion Loot Box (3 Generators destroyed) Major Frigida Legion Loot Box (2 Generators destroyed) Major Frigida Legion Supply Box Greater Frigida Legion Loot Box Greater Frigida Legion Supply Box Lesser Frigida Legion Loot Box Lesser Frigida Legion Supply Box Minor Frigida Legion Loot Box Minor Frigida Legion Supply Box
+	 *
+	 * @param player 获得奖励的玩家 / player receiving rewards
 	 */
 	@Override
 	public void doReward(Player player) {
@@ -1085,9 +1088,9 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param lastAttacker 最后攻击者 / last attacker
-	 * result
+	 * @return 是否已处理死亡事件 / whether the death was handled
 	 */
 	@Override
 	public boolean onDie(final Player player, Creature lastAttacker) {

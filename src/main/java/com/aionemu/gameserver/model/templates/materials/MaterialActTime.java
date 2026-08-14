@@ -13,15 +13,17 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum MaterialActTime {
 
-	/** 天 / Day. */
-	DAY, NIGHT;
+	/** 白天 / Day. */
+	DAY,
+	/** 夜晚 / Night. */
+	NIGHT;
 
 	/** 值。 / Value. */
 	public String value() {
 		return name();
 	}
 
-	/** 值 / From Value*/
+	/** 从值转换 / From value */
 	public static MaterialActTime fromValue(String value) {
 		return valueOf(value);
 	}

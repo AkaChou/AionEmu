@@ -168,7 +168,7 @@ public abstract class TransformEffect extends EffectTemplate {
 	 * 获取变身类型。
 	 * Returns the transform type.
 	 *
-	 * transform type
+	 * @return 变身类型 / transform type
 	 */
 	public TransformType getTransformType() {
 		return type;
@@ -178,7 +178,7 @@ public abstract class TransformEffect extends EffectTemplate {
 	 * 获取变身模型 ID。
 	 * Returns the transform model id.
 	 *
-	 * model id
+	 * @return 模型 ID / model id
 	 */
 	public int getTransformId() {
 		return model;
@@ -188,7 +188,7 @@ public abstract class TransformEffect extends EffectTemplate {
 	 * 获取变身面板 ID。
 	 * Returns the transform panel id.
 	 *
-	 * panel id
+	 * @return 面板 ID / panel id
 	 */
 	public int getPanelId() {
 		return panelid;

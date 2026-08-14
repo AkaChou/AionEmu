@@ -4,8 +4,8 @@ import com.aionemu.gameserver.model.conquest.ConquestLocation;
 import com.aionemu.gameserver.model.conquest.ConquestStateType;
 
 /**
- * 征服/供奉默认实现：切入 CONQUEST 并初始化 BOSS / 回到 PEACE。
- * back to PEACE.
+ * 征服/供奉默认实现：切入 CONQUEST 并初始化 BOSS，或回到 PEACE。
+ * Default Conquest/Offering implementation: switches to CONQUEST and inits the boss, or back to PEACE.
  *
  * @author Rinzler (Encom)
  */

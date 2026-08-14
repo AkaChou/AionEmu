@@ -93,7 +93,9 @@ public class LoginStartupGateway {
     }
 
     /**
-     * Synchronize missing independent VIP rows before accepting connections.
+     * 在接收连接前同步缺失的独立 VIP 行。
+ * 在接收连接前同步缺失的独立 VIP 行。
+ * Synchronize missing independent VIP rows before accepting connections.
      */
     public void synchronizeVipAccounts() {
         runtimeBridge().synchronizeVipAccounts();
@@ -119,7 +121,7 @@ public class LoginStartupGateway {
      * 初始化加密密钥生成器。
      * Initialize the crypto key generator.
      *
-     * thrown when key generation fails。
+     * @throws Exception 密钥生成失败时抛出 / thrown when key generation fails
      */
     public void initializeKeyGenerator() throws Exception {
         runtimeBridge().initializeKeyGenerator();

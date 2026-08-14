@@ -18,7 +18,7 @@ public interface DAOClassProvider {
 	 * 获取该上下文下的 DAO 实现类数组
 	 * Get DAO implementation classes for this context
 	 *
-	 * Array of DAO classes
+	 * @return DAO 实现类数组 / Array of DAO classes
 	 */
 	Class<?>[] daoClasses();
 }

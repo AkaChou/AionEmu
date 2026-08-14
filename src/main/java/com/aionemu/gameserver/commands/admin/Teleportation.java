@@ -24,8 +24,6 @@ public class Teleportation extends AdminCommand {
 	 * 启用或禁用管理员传送状态。
 	 * Enables or disables admin teleportation state.
 	 *
-	 * 执行 GM / Admin player
-	 * Unused
 	 */
 	@Override
 	public void execute(Player player, String... params) {

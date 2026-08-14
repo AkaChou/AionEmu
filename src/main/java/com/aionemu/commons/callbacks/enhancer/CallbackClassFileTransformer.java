@@ -24,21 +24,20 @@ public abstract class CallbackClassFileTransformer implements ClassFileTransform
     
 
     /**
- * 实现 ClassFileTransformer 接口的 transform 方法
-     * Implements the transform method of ClassFileTransformer interface
+     * 实现 ClassFileTransformer 接口的 transform 方法。
+     * Implements the transform method of ClassFileTransformer interface.
      *
-     * Class loader
-     * Class name
-     * @param classBeingRedefined 重定义的类 / Class being redefined
-     * Protection domain
-     * @param classfileBuffer 类文件字节码 / Class file bytecode
-     * Transformed bytecode, or null if no transformation needed
-     * If bytecode format is illegal。
+     * @param loader 类加载器 / class loader
+     * @param className 类名 / class name
+     * @param classBeingRedefined 重定义的类 / class being redefined
+     * @param protectionDomain 保护域 / protection domain
+     * @param classfileBuffer 类文件字节码 / class file bytecode
+     * @return 转换后的字节码，无需转换时返回 null / transformed bytecode, or null if no transformation needed
+     * @throws IllegalClassFormatException 字节码格式非法时 / if bytecode format is illegal
      */
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
             ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
         try {
-            // 跳过平台/引导类加载器加载的系统类
             // 跳过平台/引导类加载器加载的系统类 / Skip system classes loaded by the platform/bootstrap class loaders
             if (shouldTransform(loader)) {
                 return this.transformClass(loader, classfileBuffer);
@@ -49,7 +48,6 @@ public abstract class CallbackClassFileTransformer implements ClassFileTransform
         } catch (Exception var8) {
             Error e1 = new Error("Can't transform class " + className, var8);
             log.error(e1.getMessage(), e1);
-            // 系统类加载器加载失败时强制退出
             // 系统类加载器加载失败时强制退出 / Force exit when the system class loader fails to load
             if (isSystemClassLoader(loader)) {
                 AionProcessExit.halt(1);
@@ -59,26 +57,22 @@ public abstract class CallbackClassFileTransformer implements ClassFileTransform
     }
 
     /**
-     * 判断是否应对该 ClassLoader 下的类执行增强
-     * Decide whether classes of this ClassLoader should be transformed
+     * 判断是否应对该 ClassLoader 下的类执行增强。
+     * Decide whether classes of this ClassLoader should be transformed.
      *
-     * Class loader
-     *
-     * @param loader
-     * @return 需要增强返回 true / True when transformation should run
+     * @param loader 类加载器 / class loader
+     * @return 需要增强返回 true / true when transformation should run
      */
     private boolean shouldTransform(ClassLoader loader) {
         return loader != null && loader != ClassLoader.getPlatformClassLoader();
     }
 
     /**
-     * 判断是否为系统 ClassLoader
-     * Check whether the loader is the system ClassLoader
+     * 判断是否为系统 ClassLoader。
+     * Check whether the loader is the system ClassLoader.
      *
-     * Class loader
-     *
-     * @param loader
-     * @return 是系统加载器返回 true / True if it is the system class loader
+     * @param loader 类加载器 / class loader
+     * @return 是系统加载器返回 true / true if it is the system class loader
      */
     private boolean isSystemClassLoader(ClassLoader loader) {
         return loader != null && loader == ClassLoader.getSystemClassLoader();
@@ -88,10 +82,10 @@ public abstract class CallbackClassFileTransformer implements ClassFileTransform
      * 执行实际的类转换操作，由子类实现具体的转换逻辑
      * Perform actual class transformation, concrete transformation logic to be implemented by subclasses
      *
-     * Class loader
+     * @param loader 类加载器 / Class loader
      * @param classfileBuffer 类文件字节码 / Class file bytecode
-     * @return 转换后的字节码 / Transformed bytecode
-     * Exception during transformation。
+     * @return 转换后的字节码 / transformed bytecode
+     * @throws Exception 转换过程中的异常 / exception during transformation
      */
     protected abstract byte[] transformClass(ClassLoader loader, byte[] classfileBuffer) throws Exception;
 }

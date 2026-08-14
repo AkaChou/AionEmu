@@ -33,8 +33,6 @@ public class WhatsInside extends AdminCommand
 	 * 解析物品链接并输出分解组与掉落概率。
 	 * Parses an item link and prints disassembly groups and rates.
 	 *
-	 * 执行 GM / Admin player
-	 * Item link
 	 */
 	@Override
 	public void execute(Player player, String... params)

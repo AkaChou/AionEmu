@@ -49,9 +49,9 @@ public class Unstable_DayshadeAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					// 1 分钟内击败埃本索尔将出现宝箱。 / A treasure chest will appear if you defeat Ebonsoul within one minute.
+					// 在 1 分钟内消灭掉暗黑之阿特拉，宝物箱子就会出现。 / A treasure chest will appear if you defeat Ebonsoul within one minute.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_Light_Die, 0);
-					// 1 分钟内击败鲁克里尔将出现宝箱。 / A treasure chest will appear if you defeat Rukril within one minute.
+					// 在 1 分钟内消灭掉光辉之卢克利尔，宝物箱子就会出现。 / A treasure chest will appear if you defeat Rukril within one minute.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_Dark_Die, 5000);
 				}
 			}

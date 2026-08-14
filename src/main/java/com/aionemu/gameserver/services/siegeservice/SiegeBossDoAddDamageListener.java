@@ -20,8 +20,8 @@ public class SiegeBossDoAddDamageListener extends AddDamageValueCallback {
 	 * 伤害累计回调。
 	 * Callback when damage is added.
 	 *
-	 * creature
-	 * hate
+	 * @param creature 攻击者 / attacker
+	 * @param hate 伤害值 / damage amount
 	 */
 	public void onDamageAdded(Creature creature, int hate) {
 		siege.addBossDamage(creature, hate);

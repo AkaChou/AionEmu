@@ -38,8 +38,8 @@ public class MaterialZoneHandler implements ZoneHandler {
 	 * 创建材质区域处理器。
 	 * Create a material zone handler.
 	 *
-	 * geometry
-	 * material template
+	 * @param geometry 材质几何体 / geometry
+	 * @param template 材质模板 / material template
 	 */
 	public MaterialZoneHandler(Spatial geometry, MaterialTemplate template) {
 		this.geometry = geometry;
@@ -57,8 +57,8 @@ public class MaterialZoneHandler implements ZoneHandler {
 	 * 进入材质区：为匹配目标挂载碰撞材质观察者。
 	 * Enter material zone: attach a collision-material observer for matching targets.
 	 *
-	 * creature
-	 * @param zone     区域实例 / zone instance
+	 * @param creature 进入的生物 / creature
+	 * @param zone 区域实例 / zone instance
 	 */
 	@Override
 	public void onEnterZone(Creature creature, ZoneInstance zone) {
@@ -89,8 +89,8 @@ public class MaterialZoneHandler implements ZoneHandler {
 	 * 离开材质区：移除并中止材质观察者。
 	 * Leave material zone: remove and abort the material observer.
 	 *
-	 * creature
-	 * @param zone     区域实例 / zone instance
+	 * @param creature 离开的生物 / creature
+	 * @param zone 区域实例 / zone instance
 	 */
 	@Override
 	public void onLeaveZone(Creature creature, ZoneInstance zone) {

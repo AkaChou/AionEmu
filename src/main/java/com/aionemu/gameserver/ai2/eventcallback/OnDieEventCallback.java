@@ -15,8 +15,8 @@ public abstract class OnDieEventCallback extends OnHandleAIGeneralEvent {
 	 * 通用事件处理前：仅在事件为 {@link AIEventType#DIED} 时调用 {@link #onBeforeDie}。
 	 * Before general-event handling: call {@link #onBeforeDie} only when the event is {@link AIEventType#DIED}.
 	 *
-	 * AI instance
-	 * Event type
+	 * @param obj AI 实例 / AI instance
+	 * @param eventType 事件类型 / Event type
 	 */
 	@Override
 	protected void onBeforeHandleGeneralEvent(AbstractAI obj, AIEventType eventType) {
@@ -29,8 +29,8 @@ public abstract class OnDieEventCallback extends OnHandleAIGeneralEvent {
 	 * 通用事件处理后：仅在事件为 {@link AIEventType#DIED} 时调用 {@link #onAfterDie}。
 	 * After general-event handling: call {@link #onAfterDie} only when the event is {@link AIEventType#DIED}.
 	 *
-	 * AI instance
-	 * Event type
+	 * @param obj AI 实例 / AI instance
+	 * @param eventType 事件类型 / Event type
 	 */
 	@Override
 	protected void onAfterHandleGeneralEvent(AbstractAI obj, AIEventType eventType) {

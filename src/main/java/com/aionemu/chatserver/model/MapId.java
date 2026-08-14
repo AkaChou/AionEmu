@@ -31,8 +31,8 @@ public enum MapId {
     GELKMAROS(220070000),
     SILENTERA_CANYON(600010000),
     // 监狱 / Prison
-    DE_PRISON(510010000), // For ELYOS
-    DF_PRISON(520010000), // For ASMODIANS
+    DE_PRISON(510010000), // 供天族使用 / For ELYOS
+    DF_PRISON(520010000), // 供魔族使用 / For ASMODIANS
 
     RESHANTA(400010000),
     // 副本 / Instances
@@ -198,7 +198,10 @@ public enum MapId {
     private int mapId;
 
     /**
-     * map id
+     * 构造地图 ID 枚举。
+     * Constructs a map id enum value.
+     *
+     * @param mapId 地图 ID / map id
      */
     private MapId(int mapId) {
         this.mapId = mapId;

@@ -34,7 +34,7 @@ public class ChainCondition extends Condition {
 	 * Validates whether the skill environment satisfies this condition.
 	 *
 	 * @param env 技能环境 / skill environment
-	 * whether valid
+	 * @return 是否有效 / whether valid
 	 */
 	@Override
 	public boolean validate(Skill env) {
@@ -89,7 +89,7 @@ public class ChainCondition extends Condition {
 	 * 获取本技能所属连锁类别。
 	 * Gets the chain category this skill belongs to.
 	 *
-	 * chain category
+	 * @return 连锁类别 / chain category
 	 */
 	public String getCategory() {
 		return category;

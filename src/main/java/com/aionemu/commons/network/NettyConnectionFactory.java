@@ -12,9 +12,9 @@ public interface NettyConnectionFactory {
      * 创建连接实例。
      * Create a connection instance.
      *
-     * Transport layer
+     * @param transport 传输层 / Transport layer
      * @return 连接实例，拒绝时可为 null / Connection instance, or null when rejected
-     * Creation failure
+     * @throws IOException 连接创建失败 / Connection creation failure
      */
     AConnection create(ConnectionTransport transport) throws IOException;
 }

@@ -46,14 +46,18 @@ public class FortressLocation extends SiegeLocation {
 	}
 
 	/**
-	 * @return isEnemy
+	 * 判断生物是否与要塞阵营敌对。
+	 * Checks whether the creature is hostile to the fortress race.
+	 *
+	 * @param creature 待判断的生物 / creature to check
+	 * @return 是否敌对 / isEnemy
 	 */
 	public boolean isEnemy(Creature creature) {
 		return creature.getRace().getRaceId() != getRace().getRaceId();
 	}
 
 	/**
-	 * @return isUnderShield
+	 * @return 是否处于护盾下 / isUnderShield
 	 */
 	@Override
 	public boolean isUnderShield() {
@@ -61,7 +65,7 @@ public class FortressLocation extends SiegeLocation {
 	}
 
 	/**
-	 * @param value new undershield value
+	 * @param value 新的护盾状态值 / new undershield value
 	 */
 	@Override
 	public void setUnderShield(boolean value) {
@@ -69,7 +73,11 @@ public class FortressLocation extends SiegeLocation {
 	}
 
 	/**
-	 * @return isCanTeleport
+	 * 判断玩家是否可传送（同阵营限制）。
+	 * Checks whether the player can teleport (limited to the owning race).
+	 *
+	 * @param player 待判断的玩家 / player to check
+	 * @return 是否可传送 / isCanTeleport
 	 */
 	@Override
 	public boolean isCanTeleport(Player player) {
@@ -79,7 +87,7 @@ public class FortressLocation extends SiegeLocation {
 	}
 
 	/**
-	 * @param status Teleportation status
+	 * @param status 传送状态 / Teleportation status
 	 */
 	@Override
 	public void setCanTeleport(boolean status) {
@@ -87,20 +95,20 @@ public class FortressLocation extends SiegeLocation {
 	}
 
 	/**
-	 * @return DescriptionId object with fortress name
+	 * @return 含要塞名称的 DescriptionId / DescriptionId object with fortress name
 	 */
 	public DescriptionId getNameAsDescriptionId() {
 		return new DescriptionId(template.getNameId());
 	}
 
-	/** 在 EnterZone / On Enter Zone */
+	/** 进入区域时 / On Enter Zone */
 	public void onEnterZone(Creature creature, ZoneInstance zone) {
 		super.onEnterZone(creature, zone);
 		if (isVulnerable())
 			creature.setInsideZoneType(ZoneType.SIEGE);
 	}
 
-	/** 在 LeaveZone / On Leave Zone */
+	/** 离开区域时 / On Leave Zone */
 	@Override
 	public void onLeaveZone(Creature creature, ZoneInstance zone) {
 		super.onLeaveZone(creature, zone);

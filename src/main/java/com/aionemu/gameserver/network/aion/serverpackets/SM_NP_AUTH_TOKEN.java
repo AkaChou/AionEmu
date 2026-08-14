@@ -5,7 +5,10 @@ import java.nio.charset.StandardCharsets;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
-/** Starts the China client's local STS membership flow. */
+/**
+ * 启动国服客户端的本地 STS 会员流程。
+ * Starts the China client's local STS membership flow.
+ */
 public class SM_NP_AUTH_TOKEN extends AionServerPacket {
 
 	@Override

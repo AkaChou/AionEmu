@@ -124,7 +124,12 @@ public class XMLStartCondition {
 	}
 
 	/**
-	 * Check all conditions
+	 * 检查所有开始条件。
+	 * Checks all start conditions.
+	 *
+	 * @param player 玩家 / player
+	 * @param warn 不满足时是否发送警告消息 / whether to warn on failure
+	 * @return 条件是否全部满足 / whether all conditions hold
 	 */
 	public boolean check(Player player, boolean warn) {
 		QuestStateList qsl = player.getQuestStateList();
@@ -140,7 +145,7 @@ public class XMLStartCondition {
 		return true;
 	}
 
-	/** 返回 finished preconditions / Returns the finished preconditions */
+	/** 返回已完成任务前置条件 / Returns the finished preconditions */
 	public List<FinishedQuestCond> getFinishedPreconditions() {
 		return finished;
 	}

@@ -8,7 +8,15 @@ package com.aionemu.gameserver.model.templates.housing;
  */
 public enum HouseType {
 	/** 地产 / Estate. */
-	ESTATE(0, 3, "a"), MANSION(1, 2, "b"), HOUSE(2, 1, "c"), STUDIO(3, 0, "d"), PALACE(4, 4, "s");
+	ESTATE(0, 3, "a"),
+	/** 公馆 / Mansion. */
+	MANSION(1, 2, "b"),
+	/** 住宅 / House. */
+	HOUSE(2, 1, "c"),
+	/** 单间 / Studio. */
+	STUDIO(3, 0, "d"),
+	/** 宫殿 / Palace. */
+	PALACE(4, 4, "s");
 
 	private HouseType(int index, int id, String abbrev) {
 		this.abbrev = abbrev;
@@ -40,7 +48,7 @@ public enum HouseType {
 		return name();
 	}
 
-	/** 值 / From Value*/
+	/** 值 / From Value. */
 	public static HouseType fromValue(String value) {
 		return valueOf(value);
 	}

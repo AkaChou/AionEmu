@@ -30,7 +30,6 @@ public class AddSet extends AdminCommand {
 	 * 执行添加套装：解析玩家与套装 ID 后逐件发放。
 	 * Executes add-set: resolves player and set id, then grants each part.
 	 *
-	 * admin
 	 * @param params 参数：玩家名（可选）、套装 ID / optional player name, item-set id
 	 */
 	@Override
@@ -98,8 +97,6 @@ public class AddSet extends AdminCommand {
 	 * 参数错误时输出 {@code //addset} 用法。
 	 * Prints {@code //addset} usage on invalid arguments.
 	 *
-	 * admin
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

@@ -48,7 +48,7 @@ public class MultiReturnItemData {
 	 * 返回已加载的多目标返回物品数量。
 	 * Returns the number of loaded multi-return items.
 	 *
-	 * item count
+	 * @return 已加载的多重返回物品数量 / Returns the number of loaded multi-return items.
 	 */
 	public int size() {
 		return ItemLocationList.size();

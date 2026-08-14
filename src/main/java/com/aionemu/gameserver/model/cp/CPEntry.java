@@ -4,7 +4,6 @@ package com.aionemu.gameserver.model.cp;
  * 创造点条目。
  * CP Entry model.
  */
-
 public class CPEntry {
 
 	private int slot;

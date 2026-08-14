@@ -24,7 +24,6 @@ public class Res extends AdminCommand {
 	 * Executes this admin command.
 	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
-	 * command arguments
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

@@ -47,7 +47,6 @@ public class SkillLearnTemplate {
 	 * 获取职业。
 	 * Gets player class.
 	 *
-	 * class
 	 */
 	public PlayerClass getClassId() {
 		return classId;
@@ -57,7 +56,6 @@ public class SkillLearnTemplate {
 	 * 获取技能 ID。
 	 * Gets skill id.
 	 *
-	 * skill id
 	 */
 	public int getSkillId() {
 		return skillId;
@@ -67,7 +65,6 @@ public class SkillLearnTemplate {
 	 * 获取技能等级。
 	 * Gets skill level.
 	 *
-	 * level
 	 */
 	public int getSkillLevel() {
 		return skillLevel;
@@ -77,7 +74,6 @@ public class SkillLearnTemplate {
 	 * 获取技能名称。
 	 * Gets skill name.
 	 *
-	 * name
 	 */
 	public String getName() {
 		return name;
@@ -87,7 +83,6 @@ public class SkillLearnTemplate {
 	 * 获取最低学习等级。
 	 * Gets minimum learn level.
 	 *
-	 * min level
 	 */
 	public int getMinLevel() {
 		return minLevel;
@@ -107,7 +102,6 @@ public class SkillLearnTemplate {
 	 * 获取技能分组。
 	 * Gets skill group.
 	 *
-	 * group
 	 */
 	public String getSkillGroup() {
 		return skill_group;
@@ -117,7 +111,6 @@ public class SkillLearnTemplate {
 	 * 是否自动学习。
 	 * Whether auto-learned.
 	 *
-	 * auto learn
 	 */
 	public boolean isAutoLearn() {
 		return autoLearn;
@@ -127,7 +120,6 @@ public class SkillLearnTemplate {
 	 * 是否烙印技能。
 	 * Whether this is a stigma skill.
 	 *
-	 * stigma flag
 	 */
 	public boolean isStigma() {
 		return stigma;

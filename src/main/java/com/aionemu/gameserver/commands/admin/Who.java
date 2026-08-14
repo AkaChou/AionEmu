@@ -26,8 +26,6 @@ public class Who extends AdminCommand {
 	 * 输出在线角色名、种族与账号；可选 ely/asmo/member 过滤。
 	 * Prints online characters with race and account; optional ely/asmo/member filter.
 	 *
-	 * 执行 GM / Admin player
-	 * Optional ely|asmo|member|premium。
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

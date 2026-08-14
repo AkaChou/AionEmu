@@ -26,7 +26,7 @@ public class IdianChargeCondition extends ChargeCondition {
 	 * Validates and consumes polish charge from Idian stones on equipped weapons.
 	 *
 	 * @param env 技能环境 / skill environment
-	 * always true
+	 * @return 恒为 true / always true
 	 */
 	@Override
 	public boolean validate(Skill env) {

@@ -34,7 +34,7 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
      * Loads base location data into the given map; missing records are auto-inserted with default NPC race.
      *
      * @param locations 基地位置映射 / base location map
-     * whether successful
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean loadBaseLocations(Map<Integer, BaseLocation> locations) {
@@ -74,8 +74,8 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
      * 更新单个基地位置的所属阵营。
      * Updates the race ownership of a single base location.
      *
-     * base location
-     * whether successful
+     * @param location 基地位置 / base location
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean updateBaseLocation(BaseLocation location) {
@@ -98,8 +98,8 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
      * 插入基地位置（默认 NPC 阵营）。
      * Inserts a base location with default NPC race.
      *
-     * base location
-     * whether successful
+     * @param location 基地位置 / base location
+     * @return 是否成功 / whether successful
      */
     private boolean insertBaseLocation(BaseLocation location) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -122,7 +122,7 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
      * Batch-updates race ownership for multiple base locations.
      *
      * @param locations 基地位置映射 / base location map
-     * whether successful
+     * @return 是否成功 / whether successful
      */
     public boolean updateBaseLocations(Map<Integer, BaseLocation> locations) {
         try (Connection con = DatabaseFactory.getConnection()) {
@@ -189,7 +189,7 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
      * 将全部基地位置重置为 NPC 阵营。
      * Resets all base locations to NPC race ownership.
      *
-     * whether successful
+     * @return 是否成功 / whether successful
      */
     public boolean resetBaseLocations() {
         try (Connection con = DatabaseFactory.getConnection();
@@ -223,10 +223,10 @@ public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

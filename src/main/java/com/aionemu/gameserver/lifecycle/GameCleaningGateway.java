@@ -77,7 +77,7 @@ public class GameCleaningGateway {
      * 解析数据库清理服务：优先 Spring，否则经运行时桥回退。
      * Resolve database cleaning service: prefer Spring, otherwise fall back via runtime bridge.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private DatabaseCleaningService databaseCleaningService() {
         if (databaseCleaningServiceProvider == null) {
@@ -90,7 +90,7 @@ public class GameCleaningGateway {
      * 解析欧比斯排名清理服务。
      * Resolve abyss-rank cleaning service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private AbyssRankCleaningService abyssRankCleaningService() {
         if (abyssRankCleaningServiceProvider == null) {
@@ -103,7 +103,7 @@ public class GameCleaningGateway {
      * 解析运维服务运行时桥：优先 Spring，否则新建。
      * Resolve maintenance-services runtime bridge: prefer Spring, otherwise create new.
      *
-     * Runtime bridge
+     * @return 运行时桥 / Runtime bridge
      */
     private GameMaintenanceServicesRuntimeBridge runtimeBridge() {
         if (runtimeBridgeProvider == null) {

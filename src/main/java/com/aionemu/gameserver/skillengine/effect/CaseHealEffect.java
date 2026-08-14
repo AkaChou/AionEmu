@@ -45,7 +45,7 @@ public class CaseHealEffect extends AbstractHealEffect {
 	 * Returns max HP/MP.
 	 *
 	 * @param effect 运行时效果 / runtime effect
-	 * max stat value
+	 * @return 属性上限 / max stat value
 	 */
 	protected int getMaxStatValue(Effect effect) {
 		if (type == HealType.HP) {

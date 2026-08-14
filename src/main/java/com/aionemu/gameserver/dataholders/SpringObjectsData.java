@@ -42,7 +42,7 @@ public class SpringObjectsData {
 	 * 返回已加载的泉水对象数量。
 	 * Returns the number of loaded spring objects.
 	 *
-	 * template count
+	 * @return 已加载的泉水物件数量 / Returns the number of loaded spring objects.
 	 */
 	public int size() {
 		return springObjects.size();

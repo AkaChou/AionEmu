@@ -93,7 +93,7 @@ public abstract class AionServerPacket extends BaseServerPacket {
 	 * 获取内部写缓冲区。
 	 * Returns the internal write buffer.
 	 *
-	 * buffer
+	 * @return 内部缓冲区 / buffer
 	 */
 	public final ByteBuffer getBuf() {
 		return this.buf;
@@ -103,7 +103,7 @@ public abstract class AionServerPacket extends BaseServerPacket {
 	 * 写入定长字符串（不足部分补 0）。
 	 * Writes a fixed-size string (zero-padded).
 	 *
-	 * text
+	 * @param text 文本 / text
 	 * @param size 字段字节数 / field size in bytes
 	 */
 	protected final void writeS(String text, int size) {
@@ -122,7 +122,7 @@ public abstract class AionServerPacket extends BaseServerPacket {
 	 * 写入名称 ID 块（固定头 + nameId + 尾）。
 	 * Writes a name-id block (fixed header + nameId + trailer).
 	 *
-	 * name id
+	 * @param nameId 名称 ID / name id
 	 */
 	protected void writeNameId(int nameId) {
 		writeH(0x24);

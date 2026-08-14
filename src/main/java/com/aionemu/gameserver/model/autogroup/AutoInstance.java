@@ -84,7 +84,7 @@ public abstract class AutoInstance extends AbstractLockManager implements AutoIn
 		return result;
 	}
 
-	/** 初始化 / initsialize. */
+	/** 初始化 / Initialize. */
 	@Override
 	public void initsialize(int instanceMaskId) {
 		this.instanceMaskId = instanceMaskId;

@@ -10,7 +10,7 @@ import com.aionemu.gameserver.model.svs.SvsLocation;
  * 帕内斯特拉（SVS）活动启动定时任务。
  * Start runnable for Panesterra (SVS) events.
  *
- * <p>广播前进走廊消息、延迟刷出走廊刷怪并启动对应地点。
+ * <p>广播进阶走廊消息、延迟刷出走廊刷怪并启动对应地点。
  * Broadcasts advance-corridor messages, delayed corridor spawns, then starts the matching location.</p>
  *
  * @author Rinzler (Encom)

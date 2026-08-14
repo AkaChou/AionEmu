@@ -23,7 +23,7 @@ public class TargetRelationProperty {
 	 *
 	 * @param skill 技能上下文 / skill context
 	 * @param properties 目标筛选属性 / target filter properties
-	 * always true
+	 * @return 恒为 true / always true
 	 */
 	public static boolean set(Skill skill, Properties properties) {
 		TargetRelationAttribute value = properties.getTargetRelation();
@@ -104,9 +104,7 @@ public class TargetRelationProperty {
 	 * 判断目标是否允许被增益（排除部分攻城 NPC 类型）。
 	 * Returns whether the target may receive buffs (excludes some siege NPC types).
 	 *
-	 * effected creature
-	 *
-	 * @param effected
+	 * @param effected 被施法目标 / effected creature
 	 * @return 是否允许增益 / true if buff is allowed
 	 */
 	public static boolean isBuffAllowed(Creature effected) {

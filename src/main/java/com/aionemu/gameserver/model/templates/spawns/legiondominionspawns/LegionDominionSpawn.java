@@ -14,7 +14,7 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 
 /**
  * 军团领地刷新点模板（静态数据/XML）。
- * XML template.
+ * Legion dominion spawn template (static data/XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

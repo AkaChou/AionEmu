@@ -20,7 +20,7 @@ public class TowerNpc extends Npc {
 		this.towerId = spawnTemplate.getId();
 	}
 
-	/** 返回 eternity tower id / Returns the eternity tower id */
+	/** 返回永恒之塔塔 ID / Returns the eternity tower id */
 	public int getEternityTowerId() {
 		return towerId;
 	}
@@ -32,8 +32,12 @@ public class TowerNpc extends Npc {
 	}
 
 	/**
-	 * @param creature 是否为敌对目标。 / Whether enemy from
-	  */
+	 * 判断目标是否为敌对（同为塔 NPC 视为敌对）。
+	 * Whether the given creature is an enemy (another TowerNpc is always an enemy).
+	 *
+	 * @param creature 待判断的目标 / Creature to check
+	 * @return 敌对为 {@code true} / {@code true} if enemy
+	 */
 	@Override
 	public boolean isEnemyFrom(Creature creature) {
 		if (creature instanceof TowerNpc) {

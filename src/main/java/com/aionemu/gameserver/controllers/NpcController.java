@@ -244,7 +244,8 @@ public class NpcController extends CreatureController<Npc> {
 			owner.getPosition().getWorldMapInstance().getInstanceHandler().onDie(owner);
 			owner.getAi2().onCreatureEvent(AIEventType.DIED, lastAttacker);
 			owner.getAi2().onGeneralEvent(AIEventType.DIED);
-		} finally { // always make sure npc is scheduled to respawn
+		} finally {
+			// 确保 NPC 始终安排了重生计划。 / always make sure npc is scheduled to respawn
 			if (owner.getAi2().poll(AIQuestion.SHOULD_DECAY)) {
 				addTask(TaskId.DECAY, RespawnService.scheduleDecayTask(owner));
 				if (owner.getSpawn() != null && owner.getSpawn().getStaticId() > 0) {
@@ -437,12 +438,13 @@ public class NpcController extends CreatureController<Npc> {
 	 * NPC 受到攻击时的处理。
 	 * Handles the NPC being attacked.
 	 *
-	 * attacker
-	 * skill id
+	 * @param creature 攻击者 / attacker
+	 * @param skillId 技能 ID / skill id
 	 * @param type 伤害类型 / damage type
-	 * damage
+	 * @param damage 伤害值 / damage
 	 * @param notifyAttack 是否通知攻击 / whether to notify attack
 	 * @param log 日志类型 / log type
+	 * @param attackStatus 攻击状态 / attack status
 	 */
 	@Override
 	public void onAttack(Creature creature, int skillId, TYPE type, int damage, boolean notifyAttack, LOG log,

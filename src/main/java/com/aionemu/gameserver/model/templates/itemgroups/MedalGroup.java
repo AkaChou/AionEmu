@@ -11,8 +11,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.rewards.MedalItem;
 
 /**
- * Medal 队伍模板（静态数据/XML）。
- * XML template.
+ * 勋章奖励组：勋章物品条目。
+ * Medal reward group: medal item entries.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

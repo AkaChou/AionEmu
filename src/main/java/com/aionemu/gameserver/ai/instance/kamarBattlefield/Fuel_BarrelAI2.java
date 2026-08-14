@@ -27,9 +27,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @AIName("fuel_barrel")
 public class Fuel_BarrelAI2 extends ActionItemNpcAI2
 {
-    private boolean isRewarded;
-	protected int startBarAnimation = 1;
-	protected int cancelBarAnimation = 2;
+    private boolean isRewarded; // 是否已发放过奖励 / whether the reward was already granted
+	protected int startBarAnimation = 1; // 读条开始动画 ID / start cast bar animation ID
+	protected int cancelBarAnimation = 2; // 读条取消动画 ID / cancel cast bar animation ID
 	
     @Override
     protected void handleDialogStart(Player player) {
@@ -41,6 +41,10 @@ public class Fuel_BarrelAI2 extends ActionItemNpcAI2
         super.handleDialogStart(player);
     }
 	
+	/**
+	 * 带读条的物品交互：延迟结束后触发使用完成逻辑，交互中断则取消任务。
+	 * Item use with a cast bar: triggers the finish logic after the delay, cancels the task on abort.
+	 */
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {
@@ -72,6 +76,8 @@ public class Fuel_BarrelAI2 extends ActionItemNpcAI2
 	
     @Override
     protected void handleUseItemFinish(Player player) {
+		// 仅首次使用生效：触发使用完成并删除燃料桶。
+		// Applies only on first use: triggers use finish and deletes the fuel barrel.
 		if (!isRewarded) {
             isRewarded = true;
             AI2Actions.handleUseItemFinish(this, player);

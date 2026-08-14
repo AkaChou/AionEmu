@@ -44,7 +44,7 @@ public class MoltenusData {
 	 * 返回已加载的 Moltenus 地点数量。
 	 * Returns the number of loaded Moltenus locations.
 	 *
-	 * location count
+	 * @return 已加载的Moltenus 地点数量 / Returns the number of loaded Moltenus locations.
 	 */
 	public int size() {
 		return moltenus.size();

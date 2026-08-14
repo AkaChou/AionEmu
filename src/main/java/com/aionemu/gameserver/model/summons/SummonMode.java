@@ -1,13 +1,21 @@
 package com.aionemu.gameserver.model.summons;
 
 /**
- * 召唤物 Mode 枚举。
- * Summon Mode enumeration.
+ * 召唤物模式：攻击/守护/休息/释放。
+ * Summon mode: attack/guard/rest/release.
  */
 
 public enum SummonMode {
-	/** 攻击 / Attack. */
-	ATTACK(0), GUARD(1), REST(2), RELEASE(3), UNK(5);
+	/** 攻击 / Attack */
+	ATTACK(0),
+	/** 守护 / Guard */
+	GUARD(1),
+	/** 休息 / Rest */
+	REST(2),
+	/** 释放 / Release */
+	RELEASE(3),
+	/** 未知 / Unknown */
+	UNK(5);
 
 	private int id;
 
@@ -20,7 +28,7 @@ public enum SummonMode {
 		return id;
 	}
 
-	/** 按 ID 返回 summon mode / Returns the summon mode by id */
+	/** 按 ID 返回召唤物模式 / Returns the summon mode by id */
 	public static SummonMode getSummonModeById(int id) {
 		for (SummonMode mode : values()) {
 			if (mode.getId() == id) {

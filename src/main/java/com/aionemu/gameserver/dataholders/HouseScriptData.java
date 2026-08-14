@@ -82,8 +82,8 @@ public class HouseScriptData {
 	 * Builds a script XML fragment for the given position and icon from a default script template.
 	 *
 	 * @param scriptId 默认脚本模板 ID / default script template id
-	 * script position id
-	 * icon id
+	 * @param position 脚本位置 ID / script position id
+	 * @param iconId 图标 ID / icon id
 	 * @return 格式化后的脚本 XML 字符串 / formatted script XML string
 	 */
 	public String createScript(int scriptId, int position, int iconId) {
@@ -106,7 +106,7 @@ public class HouseScriptData {
 	 * 返回默认脚本模板数量。
 	 * Returns the number of default script templates.
 	 *
-	 * template count
+	 * @return 默认脚本模板数量 / Returns the number of default script templates.
 	 */
 	public int size() {
 		return defaultTemplates.size();
@@ -163,7 +163,7 @@ public class HouseScriptData {
 		 * Parses an XML string into a DOM document.
 		 *
 		 * @param in XML 输入字符串 / XML input string
-		 * DOM document
+		 * @return DOM 文档 / DOM document
 		 */
 		private static Document parseXmlFile(String in) {
 			try {

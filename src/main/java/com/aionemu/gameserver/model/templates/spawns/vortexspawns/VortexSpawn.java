@@ -13,7 +13,7 @@ import com.aionemu.gameserver.model.vortex.VortexStateType;
 
 /**
  * 漩涡刷新点模板（静态数据/XML）。
- * XML template.
+ * Vortex spawn template (static data / XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -30,7 +30,7 @@ public class VortexSpawn {
 	@XmlElement(name = "state_type")
 	private List<VortexSpawn.VortexStateTemplate> VortexStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回状态模板列表 / Returns the state templates */
 	public List<VortexStateTemplate> getSiegeModTemplates() {
 		return VortexStateTemplate;
 	}

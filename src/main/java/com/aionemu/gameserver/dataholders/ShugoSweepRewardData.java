@@ -50,8 +50,8 @@ public class ShugoSweepRewardData {
 	 * 按棋盘 ID 与奖励序号获取奖励。
 	 * Returns the reward for the given board id and reward number.
 	 *
-	 * board id
-	 * reward number
+	 * @param boardId 棋盘 ID / board id
+	 * @param rewardNum 奖励序号 / reward number
 	 * @return 奖励，不存在则为 null / reward or null
 	 */
 	public ShugoSweepReward getRewardBoard(int boardId, int rewardNum) {
@@ -62,7 +62,7 @@ public class ShugoSweepRewardData {
 	 * 返回已加载的奖励数量。
 	 * Returns the number of loaded rewards.
 	 *
-	 * reward count
+	 * @return 已加载的奖励数量 / Returns the number of loaded rewards.
 	 */
 	public int size() {
 		return ShugoSweepRewardList.size();

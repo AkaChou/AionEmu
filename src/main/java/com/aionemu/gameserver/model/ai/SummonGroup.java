@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * 召唤物队伍，用于 ai 相关逻辑。
- * Summon Group for ai logic.
+ * 召唤物队伍模板：定义召唤数量、位置与调度间隔。
+ * Summon group template: defines summoned counts, position and schedule interval.
  *
  * @author xTz
  */

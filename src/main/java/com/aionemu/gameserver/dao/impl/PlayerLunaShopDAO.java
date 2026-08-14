@@ -62,11 +62,11 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
      * 新增玩家 Luna 商店记录。
      * Adds a player Luna shop record.
      *
-     * player id
+     * @param playerId 玩家 ID / player id
      * @param freeUnderpath 免费地下通道 / free underpath
-     * free factory
-     * free chest
-     * whether succeeded
+     * @param freeFactory free factory
+     * @param freeChest free chest
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean add(final int playerId, final boolean freeUnderpath, final boolean freeFactory, final boolean freeChest) {
@@ -89,7 +89,7 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
      * 清空全部 Luna 商店记录。
      * Deletes all Luna shop records.
      *
-     * whether succeeded
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean delete() {
@@ -108,8 +108,8 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
      * 持久化玩家 Luna 商店数据。
      * Stores player Luna shop data.
      *
-     * 玩家 / player
-     * whether succeeded
+     * @param player 玩家 / player
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean store(Player player) {
@@ -146,8 +146,8 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
      * Updates player Luna shop record.
      *
      * @param con 数据库连接 / database connection
-     * 玩家 / player
-     * whether succeeded
+     * @param player 玩家 / player
+     * @return 是否成功 / whether succeeded
      */
     private boolean updateLunaShop(Connection con, Player player) {
         try (PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
@@ -175,9 +175,9 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
      *
      * @param obj 玩家对象 ID / player object id
      * @param freeUnderpath 免费地下通道 / free underpath
-     * free factory
-     * free chest
-     * whether succeeded
+     * @param freeFactory free factory
+     * @param freeChest free chest
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean setLunaShopByObjId(int obj, final boolean freeUnderpath, final boolean freeFactory, final boolean freeChest) {
@@ -200,10 +200,10 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

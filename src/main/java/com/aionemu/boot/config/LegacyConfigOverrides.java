@@ -20,7 +20,7 @@ public class LegacyConfigOverrides {
      * 构建游戏服可消费的 {@link Properties} 覆盖集（含进度开关别名）。
      * Builds the game-server {@link Properties} override set (including progress-toggle aliases).
      *
-     * override properties
+     * @return 覆盖属性集 / override properties
      */
     public Properties gameProperties() {
         Properties properties = new Properties();

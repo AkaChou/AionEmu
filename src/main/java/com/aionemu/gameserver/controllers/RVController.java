@@ -62,7 +62,7 @@ public class RVController extends NpcController {
 	 * Constructs the controller from a slave NPC and rift template.
 	 *
 	 * @param slave 从端 NPC，主端时非 null / slave NPC, non-null on master side
-	 * rift template
+	 * @param riftTemplate 裂隙模板 / rift template
 	 */
 	public RVController(Npc slave, RiftEnum riftTemplate) {
 		this.riftTemplate = riftTemplate;
@@ -86,7 +86,7 @@ public class RVController extends NpcController {
 	 * 处理玩家对话请求，弹出通行确认窗。
 	 * Handles player dialog requests and shows the entry confirmation window.
 	 *
-	 * requesting player
+	 * @param player 请求的玩家 / requesting player
 	 */
 	@Override
 	public void onDialogRequest(Player player) {
@@ -100,7 +100,7 @@ public class RVController extends NpcController {
 	 * 按旋涡或普通裂隙弹出确认并在同意后传送。
 	 * Shows vortex or normal-rift confirmation and teleports on accept.
 	 *
-	 * requesting player
+	 * @param player 请求的玩家 / requesting player
 	 */
 	private void onRequest(Player player) {
 		if (isVortex) {
@@ -167,9 +167,7 @@ public class RVController extends NpcController {
 	 * 校验玩家是否允许通行（等级、人数、接受状态等）。
 	 * Validates whether the player is allowed to pass (level, capacity, accepting state, etc.).
 	 *
-	 * requesting player
-	 *
-	 * @param player
+	 * @param player 请求的玩家 / requesting player
 	 * @return 是否允许通行 / whether passage is allowed
 	 */
 	private boolean onAccept(Player player) {
@@ -184,6 +182,7 @@ public class RVController extends NpcController {
 			return false;
 		}
 		if (isVortex && getUsedEntries() >= getMaxEntries()) {
+			// TODO 发送使用欧比斯点请求（尚未实现）。
 			// To Do ==> sendRequestUseAp(player);
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_INVADE_DIRECT_PORTAL_USE_COUNT_LIMIT);
 			return false;
@@ -196,7 +195,7 @@ public class RVController extends NpcController {
 	 * Handles player denial of the entry confirmation.
 	 *
 	 * @param player 拒绝的玩家 / denying player
-	 * always true
+	 * @return 恒为 true / always true
 	 */
 	private boolean onDeny(Player player) {
 		return true;
@@ -247,7 +246,7 @@ public class RVController extends NpcController {
 	 * 获取欧比斯点消耗。
 	 * Gets the abyss point cost.
 	 *
-	 * abyss points
+	 * @return 欧比斯点数 / abyss points
 	 */
 	public Integer getAbyssPoint() {
 		return abyssPoint;
@@ -257,7 +256,7 @@ public class RVController extends NpcController {
 	 * 获取最低等级限制。
 	 * Gets the minimum level limit.
 	 *
-	 * min level
+	 * @return 最低等级限制 / min level
 	 */
 	public Integer getMinLevel() {
 		return minLevel;
@@ -267,7 +266,7 @@ public class RVController extends NpcController {
 	 * 获取最高等级限制。
 	 * Gets the maximum level limit.
 	 *
-	 * max level
+	 * @return 最高等级限制 / max level
 	 */
 	public Integer getMaxLevel() {
 		return maxLevel;
@@ -277,7 +276,7 @@ public class RVController extends NpcController {
 	 * 获取裂隙模板。
 	 * Gets the rift template.
 	 *
-	 * rift template
+	 * @return 裂隙模板 / rift template
 	 */
 	public RiftEnum getRiftTemplate() {
 		return riftTemplate;
@@ -287,7 +286,7 @@ public class RVController extends NpcController {
 	 * 获取从端 NPC。
 	 * Gets the slave NPC.
 	 *
-	 * slave NPC
+	 * @return 从端 NPC / slave NPC
 	 */
 	public Npc getSlave() {
 		return slave;
@@ -297,8 +296,7 @@ public class RVController extends NpcController {
 	 * 获取已使用通行次数。
 	 * Gets the used entry count.
 	 *
-	 * 已使用次数。
-	 * used entries.
+	 * @return 已使用通行次数 / used entries
 	 */
 	public int getUsedEntries() {
 		return usedEntries;
@@ -340,7 +338,7 @@ public class RVController extends NpcController {
 	 * Builds the list of world ids that need sync.
 	 *
 	 * @param controller 裂隙控制器 / rift controller
-	 * world id array
+	 * @return 世界 ID 数组 / world id array
 	 */
 	private int[] getWorldsList(RVController controller) {
 		int first = controller.getOwner().getWorldId();

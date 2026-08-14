@@ -82,7 +82,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 拷贝构造。
 	 * Copy constructor.
 	 *
-	 * Source vector
+	 * @param copy 源向量 / Source vector
 	 */
 	public Vector3f(Vector3f copy) {
 		this.set(copy);
@@ -95,7 +95,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * @param x X 分量 / X component
 	 * @param y Y 分量 / Y component
 	 * @param z Z 分量 / Z component
-	 * This vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f set(float x, float y, float z) {
 		this.x = x;
@@ -108,8 +108,8 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 从另一向量拷贝分量。
 	 * Copies components from another vector.
 	 *
-	 * Source vector
-	 * This vector
+	 * @param vect 源向量 / Source vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f set(Vector3f vect) {
 		this.x = vect.x;
@@ -138,8 +138,8 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * Adds another vector and stores the result.
 	 *
 	 * @param vec 另一向量 / Other vector
-	 * Result store
-	 * Result vector
+	 * @param result 结果存储 / Result store
+	 * @return 结果向量 / Result vector
 	 */
 	public Vector3f add(Vector3f vec, Vector3f result) {
 		result.x = this.x + vec.x;
@@ -170,10 +170,10 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 加上给定分量，返回新向量。
 	 * Adds the given components and returns a new vector.
 	 *
-	 * X increment
-	 * Y increment
-	 * Z increment
-	 * Result vector
+	 * @param addX X 增量 / X increment
+	 * @param addY Y 增量 / Y increment
+	 * @param addZ Z 增量 / Z increment
+	 * @return 结果向量 / Result vector
 	 */
 	public Vector3f add(float addX, float addY, float addZ) {
 		return new Vector3f(this.x + addX, this.y + addY, this.z + addZ);
@@ -183,10 +183,10 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 就地加上给定分量。
 	 * Adds the given components in place.
 	 *
-	 * X increment
-	 * Y increment
-	 * Z increment
-	 * This vector
+	 * @param addX X 增量 / X increment
+	 * @param addY Y 增量 / Y increment
+	 * @param addZ Z 增量 / Z increment
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f addLocal(float addX, float addY, float addZ) {
 		this.x += addX;
@@ -199,9 +199,9 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 就地执行 {@code this = this * scalar + add}。
 	 * Performs {@code this = this * scalar + add} in place.
 	 *
-	 * Scalar
+	 * @return 标量 / Scalar
 	 * @param add 加数向量 / Addend vector
-	 * This vector
+	 * @param scalar 本向量 / This vector
 	 */
 	public Vector3f scaleAdd(float scalar, Vector3f add) {
 		this.x = this.x * scalar + add.x;
@@ -214,10 +214,10 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 就地执行 {@code this = mult * scalar + add}。
 	 * Performs {@code this = mult * scalar + add} in place.
 	 *
-	 * Scalar
+	 * @return 标量 / Scalar
 	 * @param mult 被乘向量 / Multiplicand vector
 	 * @param add 加数向量 / Addend vector
-	 * This vector
+	 * @param scalar 本向量 / This vector
 	 */
 	public Vector3f scaleAdd(float scalar, Vector3f mult, Vector3f add) {
 		this.x = mult.x * scalar + add.x;
@@ -246,7 +246,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * Cross product returning a new vector.
 	 *
 	 * @param v 另一向量 / Other vector
-	 * Cross-product result
+	 * @return 叉积结果 / Cross-product result
 	 */
 	public Vector3f cross(Vector3f v) {
 		return this.cross(v, null);
@@ -258,7 +258,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 *
 	 * @param v 另一向量 / Other vector
 	 * @param result 结果存储；为 null 时新建 / Result store; created if null
-	 * Result vector
+	 * @return 结果向量 / Result vector
 	 */
 	public Vector3f cross(Vector3f v, Vector3f result) {
 		return this.cross(v.x, v.y, v.z, result);
@@ -268,11 +268,11 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 与给定分量叉积，结果写入指定存储向量。
 	 * Cross product with given components, stored into the result.
 	 *
-	 * Other X
-	 * Other Y
-	 * Other Z
+	 * @param otherX 另一 X / Other X
+	 * @param otherY 另一 Y / Other Y
+	 * @param otherZ 另一 Z / Other Z
 	 * @param result 结果存储；为 null 时新建 / Result store; created if null
-	 * Result vector
+	 * @return 结果向量 / Result vector
 	 */
 	public Vector3f cross(float otherX, float otherY, float otherZ, Vector3f result) {
 		if (result == null) {
@@ -290,7 +290,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * Cross product in place.
 	 *
 	 * @param v 另一向量 / Other vector
-	 * This vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f crossLocal(Vector3f v) {
 		return this.crossLocal(v.x, v.y, v.z);
@@ -300,10 +300,10 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 与给定分量就地叉积。
 	 * Cross product with given components in place.
 	 *
-	 * Other X
-	 * Other Y
-	 * Other Z
-	 * This vector
+	 * @param otherX 另一 X / Other X
+	 * @param otherY 另一 Y / Other Y
+	 * @param otherZ 另一 Z / Other Z
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f crossLocal(float otherX, float otherY, float otherZ) {
 		float tempx = this.y * otherZ - this.z * otherY;
@@ -319,7 +319,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * Projects onto another vector and returns a new vector.
 	 *
 	 * @param other 投影方向 / Projection direction
-	 * Projection result
+	 * @return 投影结果 / Projection result
 	 */
 	public Vector3f project(Vector3f other) {
 		float n = this.dot(other);
@@ -331,7 +331,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 向量长度（模）。
 	 * Vector length (magnitude).
 	 *
-	 * Length
+	 * @return 长度 / Length
 	 */
 	public float length() {
 		return FastMath.sqrt(this.lengthSquared());
@@ -341,7 +341,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 长度平方。
 	 * Squared length.
 	 *
-	 * Squared length
+	 * @return 长度平方 / Squared length
 	 */
 	public float lengthSquared() {
 		return this.x * this.x + this.y * this.y + this.z * this.z;
@@ -352,7 +352,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * Squared distance to another vector.
 	 *
 	 * @param v 另一向量 / Other vector
-	 * Squared distance
+	 * @return 距离平方 / Squared distance
 	 */
 	public float distanceSquared(Vector3f v) {
 		double dx = this.x - v.x;
@@ -366,7 +366,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * Euclidean distance to another vector.
 	 *
 	 * @param v 另一向量 / Other vector
-	 * Distance
+	 * @return 距离 / Distance
 	 */
 	public float distance(Vector3f v) {
 		return FastMath.sqrt(this.distanceSquared(v));
@@ -376,8 +376,8 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 标量乘法，返回新向量。
 	 * Multiplies by a scalar and returns a new vector.
 	 *
-	 * Scalar
-	 * Result vector
+	 * @param scalar 标量 / Scalar
+	 * @return 结果向量 / Result vector
 	 */
 	public Vector3f mult(float scalar) {
 		return new Vector3f(this.x * scalar, this.y * scalar, this.z * scalar);
@@ -387,9 +387,9 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 标量乘法，结果写入指定存储向量。
 	 * Multiplies by a scalar and stores the result.
 	 *
-	 * Scalar
+	 * @return 标量 / Scalar
 	 * @param product 结果存储；为 null 时新建 / Result store; created if null
-	 * Result vector
+	 * @param scalar 结果向量 / Result vector
 	 */
 	public Vector3f mult(float scalar, Vector3f product) {
 		if (null == product) {
@@ -405,8 +405,8 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 就地标量乘法。
 	 * Multiplies by a scalar in place.
 	 *
-	 * Scalar
-	 * This vector
+	 * @param scalar 标量 / Scalar
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f multLocal(float scalar) {
 		this.x *= scalar;
@@ -440,7 +440,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * @param x X 乘数 / X multiplier
 	 * @param y Y 乘数 / Y multiplier
 	 * @param z Z 乘数 / Z multiplier
-	 * This vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f multLocal(float x, float y, float z) {
 		this.x *= x;
@@ -487,8 +487,8 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 标量除法，返回新向量。
 	 * Divides by a scalar and returns a new vector.
 	 *
-	 * Scalar
-	 * Result vector
+	 * @param scalar 标量 / Scalar
+	 * @return 结果向量 / Result vector
 	 */
 	public Vector3f divide(float scalar) {
 		scalar = 1.0f / scalar;
@@ -499,8 +499,8 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 就地标量除法。
 	 * Divides by a scalar in place.
 	 *
-	 * Scalar
-	 * This vector
+	 * @param scalar 标量 / Scalar
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f divideLocal(float scalar) {
 		scalar = 1.0f / scalar;
@@ -514,8 +514,8 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 分量除法，返回新向量。
 	 * Divides component-wise and returns a new vector.
 	 *
-	 * Divisor vector
-	 * Result vector
+	 * @param scalar 除数向量 / Divisor vector
+	 * @return 结果向量 / Result vector
 	 */
 	public Vector3f divide(Vector3f scalar) {
 		return new Vector3f(this.x / scalar.x, this.y / scalar.y, this.z / scalar.z);
@@ -525,8 +525,8 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 就地分量除法。
 	 * Divides component-wise in place.
 	 *
-	 * Divisor vector
-	 * This vector
+	 * @param scalar 除数向量 / Divisor vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f divideLocal(Vector3f scalar) {
 		this.x /= scalar.x;
@@ -549,7 +549,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 就地取反。
 	 * Negates in place.
 	 *
-	 * This vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f negateLocal() {
 		this.x = -this.x;
@@ -563,7 +563,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * Subtracts another vector and returns a new vector.
 	 *
 	 * @param vec 另一向量 / Other vector
-	 * Result vector
+	 * @return 结果向量 / Result vector
 	 */
 	public Vector3f subtract(Vector3f vec) {
 		return new Vector3f(this.x - vec.x, this.y - vec.y, this.z - vec.z);
@@ -593,7 +593,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 *
 	 * @param vec 另一向量 / Other vector
 	 * @param result 结果存储；为 null 时新建 / Result store; created if null
-	 * Result vector
+	 * @return 结果向量 / Result vector
 	 */
 	public Vector3f subtract(Vector3f vec, Vector3f result) {
 		if (result == null) {
@@ -609,10 +609,10 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 减去给定分量，返回新向量。
 	 * Subtracts the given components and returns a new vector.
 	 *
-	 * X to subtract
-	 * Y to subtract
-	 * Z to subtract
-	 * Result vector
+	 * @param subtractX 要减去的 X / X to subtract
+	 * @param subtractY 要减去的 Y / Y to subtract
+	 * @param subtractZ 要减去的 Z / Z to subtract
+	 * @return 结果向量 / Result vector
 	 */
 	public Vector3f subtract(float subtractX, float subtractY, float subtractZ) {
 		return new Vector3f(this.x - subtractX, this.y - subtractY, this.z - subtractZ);
@@ -622,10 +622,10 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 就地减去给定分量。
 	 * Subtracts the given components in place.
 	 *
-	 * X to subtract
-	 * Y to subtract
-	 * Z to subtract
-	 * This vector
+	 * @param subtractX 要减去的 X / X to subtract
+	 * @param subtractY 要减去的 Y / Y to subtract
+	 * @param subtractZ 要减去的 Z / Z to subtract
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f subtractLocal(float subtractX, float subtractY, float subtractZ) {
 		this.x -= subtractX;
@@ -638,7 +638,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 归一化，返回新单位向量。
 	 * Returns a new normalized unit vector.
 	 *
-	 * Unit vector
+	 * @return 单位向量 / Unit vector
 	 */
 	public Vector3f normalize() {
 		float length = this.x * this.x + this.y * this.y + this.z * this.z;
@@ -653,7 +653,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 就地归一化。
 	 * Normalizes in place.
 	 *
-	 * This vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f normalizeLocal() {
 		float length = this.x * this.x + this.y * this.y + this.z * this.z;
@@ -694,7 +694,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 将本向量置零。
 	 * Sets this vector to zero.
 	 *
-	 * This vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f zero() {
 		this.z = 0.0f;
@@ -707,8 +707,8 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 与另一向量的夹角（弧度，基于点积）。
 	 * Angle to another vector in radians (via dot product).
 	 *
-	 * Other vector
-	 * Angle in radians
+	 * @param otherVector 另一向量 / Other vector
+	 * @return 夹角（弧度） / Angle in radians
 	 */
 	public float angleBetween(Vector3f otherVector) {
 		float dotProduct = this.dot(otherVector);
@@ -720,9 +720,9 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 向目标向量线性插值（就地）。
 	 * Linearly interpolates toward a target vector in place.
 	 *
-	 * Target vector
-	 * Interpolation factor [0,1]
-	 * This vector
+	 * @param finalVec 目标向量 / Target vector
+	 * @param changeAmnt 插值因子 [0,1] / Interpolation factor [0,1]
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f interpolate(Vector3f finalVec, float changeAmnt) {
 		this.x = (1.0f - changeAmnt) * this.x + changeAmnt * finalVec.x;
@@ -735,10 +735,10 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 在起止向量之间线性插值，结果写入本向量。
 	 * Linearly interpolates between two vectors into this.
 	 *
-	 * Start vector
-	 * End vector
-	 * Interpolation factor [0,1]
-	 * This vector
+	 * @param beginVec 起始向量 / Start vector
+	 * @param finalVec 结束向量 / End vector
+	 * @param changeAmnt 插值因子 [0,1] / Interpolation factor [0,1]
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f interpolate(Vector3f beginVec, Vector3f finalVec, float changeAmnt) {
 		this.x = (1.0f - changeAmnt) * beginVec.x + changeAmnt * finalVec.x;
@@ -809,7 +809,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 浅克隆。
 	 * Shallow clone.
 	 *
-	 * Cloned vector
+	 * @return 克隆向量 / Cloned vector
 	 */
 	public Vector3f clone() {
 		try {
@@ -861,7 +861,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 哈希码。
 	 * Hash code.
 	 *
-	 * Hash value
+	 * @return 哈希值 / Hash value
 	 */
 	public int hashCode() {
 		int hash = 37;
@@ -875,7 +875,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 字符串表示，形如 {@code (x, y, z)}。
 	 * String representation of the form {@code (x, y, z)}.
 	 *
-	 * String
+	 * @return 字符串表示 / String
 	 */
 	public String toString() {
 		return "(" + this.x + ", " + this.y + ", " + this.z + ")";
@@ -885,7 +885,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 获取 X 分量。
 	 * Gets the X component.
 	 *
-	 * X component
+	 * @return X 分量 / X component
 	 */
 	public float getX() {
 		return this.x;
@@ -896,7 +896,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * Sets the X component.
 	 *
 	 * @param x X 分量 / X component
-	 * This vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f setX(float x) {
 		this.x = x;
@@ -907,7 +907,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 获取 Y 分量。
 	 * Gets the Y component.
 	 *
-	 * Y component
+	 * @return Y 分量 / Y component
 	 */
 	public float getY() {
 		return this.y;
@@ -918,7 +918,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * Sets the Y component.
 	 *
 	 * @param y Y 分量 / Y component
-	 * This vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f setY(float y) {
 		this.y = y;
@@ -929,7 +929,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * 获取 Z 分量。
 	 * Gets the Z component.
 	 *
-	 * Z component
+	 * @return Z 分量 / Z component
 	 */
 	public float getZ() {
 		return this.z;
@@ -940,7 +940,7 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * Sets the Z component.
 	 *
 	 * @param z Z 分量 / Z component
-	 * This vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector3f setZ(float z) {
 		this.z = z;
@@ -952,8 +952,8 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * Gets a component by index (0=x, 1=y, 2=z).
 	 *
 	 * @param index 分量索引 / Component index
-	 * Component value
-	 * Invalid index
+	 * @return 分量值 / Component value
+	 * @throws IllegalArgumentException 索引非法 / Invalid index
 	 */
 	public float get(int index) {
 		switch (index) {
@@ -975,8 +975,8 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * Sets a component by index (0=x, 1=y, 2=z).
 	 *
 	 * @param index 分量索引 / Component index
-	 * Component value
-	 * Invalid index
+	 * @param value 分量值 / Component value
+	 * @throws IllegalArgumentException 索引非法 / Invalid index
 	 */
 	public void set(int index, float value) {
 		switch (index) {

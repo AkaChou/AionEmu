@@ -42,6 +42,7 @@ public class TamerAnikikiAI2 extends AggressiveNpcAI2
 		if (creature instanceof Player) {
 			final Player player = (Player) creature;
 		    if (MathUtil.getDistance(getOwner(), player) <= 8) {
+			    // 玩家靠近 8 码内时启动一次行走事件并生成巡逻怪。 / When a player comes within 8 yards, start the walk event once and spawn patrol mobs.
 			    if (isStartedWalkEvent.compareAndSet(false, true)) {
 				    getSpawnTemplate().setWalkerId("3001000001");
 				    WalkManager.startWalking(this);
@@ -62,11 +63,13 @@ public class TamerAnikikiAI2 extends AggressiveNpcAI2
 	protected void handleMoveArrived() {
 		int point = getOwner().getMoveController().getCurrentPoint();
 		super.handleMoveArrived();
-		if (getNpcId() == 215412) { //Tamer Anikiki.
+		if (getNpcId() == 215412) { // 驯兽师阿尼基基 / Tamer Anikiki.
 			if (point == 8) {
+				// 到达 8 号点播放表情。 / Play emote at point 8.
 				getOwner().setState(64);
 				PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
 			} if (point == 12) {
+				// 到达 12 号点停止行走并删除自身。 / Stop walking and delete self at point 12.
 				getSpawnTemplate().setWalkerId(null);
 				WalkManager.stopWalking(this);
 				AI2Actions.deleteOwner(this);
@@ -77,7 +80,8 @@ public class TamerAnikikiAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		if (getNpcId() != 215412) { //Tamer Anikiki.
+		if (getNpcId() != 215412) { // 驯兽师阿尼基基 / Tamer Anikiki.
+			// 生成的巡逻怪 5 秒后获得增益并回满血。 / Spawned patrol mobs get the buff and full HP after 5 seconds.
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {

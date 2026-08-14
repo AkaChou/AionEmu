@@ -71,29 +71,32 @@ public class Drop {
 		return itemId;
 	}
 
-	/** 返回 min amount / Returns the min amount */
+	/** 返回最小数量 / Returns the min amount */
 	public int getMinAmount() {
 		return minAmount;
 	}
 
-	/** 返回 max amount / Returns the max amount */
+	/** 返回最大数量 / Returns the max amount */
 	public int getMaxAmount() {
 		return maxAmount;
 	}
 
-	/** 返回概率 / Returns the chance*/
+	/** 返回概率 / Returns the chance */
 	public float getChance() {
 		return chance;
 	}
 
 	/**
-	 * @return Whether no reduction
+	 * 是否不受基于等级的掉率衰减影响。
+	 * Whether reduction is disabled for this drop.
+	 *
+	 * @return 是否不衰减 / whether no reduction
 	 */
 	public boolean isNoReduction() {
 		return noReduce;
 	}
 
-	/** Whethereach 成员 / Whether each member */
+	/** 是否每人一份 / Whether each member */
 	public Boolean isEachMember() {
 		return aionServerEachMember == null ? eachMember : aionServerEachMember;
 	}

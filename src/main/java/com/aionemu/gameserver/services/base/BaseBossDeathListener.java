@@ -59,7 +59,8 @@ public class BaseBossDeathListener extends OnDieEventCallback {
 		if (winner instanceof Creature) {
 			final Creature kill = (Creature) winner;
 			applyBaseBuff();
-			// 检查 kill 是否为 Player 类型 Check if kill is of Player type
+			// 检查 kill 是否为 Player 类型。
+			// Check if kill is of Player type.
 			if (CustomConfig.ENABLE_BASE_REWARDS && kill instanceof Player) {
 				giveBaseRewardsToPlayers((Player) kill); // 确保 kill 是 Player 类型 / Ensure kill is of Player type
 			}
@@ -77,7 +78,8 @@ public class BaseBossDeathListener extends OnDieEventCallback {
 			}
 			announceCapture(team, null);
 		} else {
-			// 处理其他类型的 winner 对象 Handle other types of winner objects
+			// 处理其他类型的 winner 对象。
+			// Handle other types of winner objects.
 			base.setRace(Race.NPC);
 		}
 		if (base.getBaseLocation().getWorldId() == 400010000) {

@@ -47,7 +47,7 @@ public class ItemStorage {
 		return true;
 	}
 
-	/** 按 ID 返回 first item / Returns the first item by id */
+	/** 按物品 ID 返回第一件物品 / Returns the first item by id */
 	public Item getFirstItemById(int itemId) {
 		for (Item item : items.values()) {
 			if (item.getItemTemplate().getTemplateId() == itemId) {
@@ -73,7 +73,7 @@ public class ItemStorage {
 		return this.items.get(itemObjId);
 	}
 
-	/** 按物品 ID 返回 slot id / Returns the slot id by item id */
+	/** 按物品 ID 返回槽位 ID / Returns the slot id by item id */
 	public long getSlotIdByItemId(int itemId) {
 		for (Item item : this.items.values()) {
 			if (item.getItemTemplate().getTemplateId() == itemId) {
@@ -83,7 +83,7 @@ public class ItemStorage {
 		return -1;
 	}
 
-	/** 按 slot id 返回 item / Returns the item by slot id */
+	/** 按槽位 ID 返回物品 / Returns the item by slot id */
 	public Item getItemBySlotId(short slotId) {
 		for (Item item : getCubeItems()) {
 			if (item.getEquipmentSlot() == slotId) {
@@ -93,7 +93,7 @@ public class ItemStorage {
 		return null;
 	}
 
-	/** 按 slot id 返回 special item / Returns the special item by slot id */
+	/** 按槽位 ID 返回特殊物品 / Returns the special item by slot id */
 	public Item getSpecialItemBySlotId(short slotId) {
 		for (Item item : getSpecialCubeItems()) {
 			if (item.getEquipmentSlot() == slotId) {
@@ -103,7 +103,7 @@ public class ItemStorage {
 		return null;
 	}
 
-	/** 按 obj id 返回 slot id / Returns the slot id by obj id */
+	/** 按对象 ID 返回槽位 ID / Returns the slot id by obj id */
 	public long getSlotIdByObjId(int objId) {
 		Item item = this.getItemByObjId(objId);
 		if (item != null) {
@@ -113,7 +113,7 @@ public class ItemStorage {
 		}
 	}
 
-	/** 返回 next available slot / Returns the next available slot */
+	/** 返回下一个可用槽位 / Returns the next available slot */
 	public long getNextAvailableSlot() {
 		return FIRST_AVAILABLE_SLOT;
 	}
@@ -138,13 +138,13 @@ public class ItemStorage {
 	}
 
 	/**
-	 * @return Whether full special cube
+	 * @return 特殊魔立方是否已满 / whether the special cube is full
 	 */
 	public boolean isFullSpecialCube() {
 		return getSpecialCubeItems().size() >= specialLimit;
 	}
 
-	/** 返回 special cube items / Returns the special cube items */
+	/** 返回特殊魔立方物品 / Returns the special cube items */
 	public List<Item> getSpecialCubeItems() {
 		List<Item> result = new ArrayList<Item>();
 		for (Item item : items.values()) {
@@ -166,17 +166,17 @@ public class ItemStorage {
 		return result;
 	}
 
-	/** 返回 free slots / Returns the free slots */
+	/** 返回可用槽位数 / Returns the free slots */
 	public int getFreeSlots() {
 		return limit - getCubeItems().size();
 	}
 
-	/** 返回 special cube free slots / Returns the special cube free slots */
+	/** 返回特殊魔立方可用槽位数 / Returns the special cube free slots */
 	public int getSpecialCubeFreeSlots() {
 		return specialLimit - getSpecialCubeItems().size();
 	}
 
-	/** 大小 / size. */
+	/** 物品数量。 / Size. */
 	public int size() {
 		return this.items.size();
 	}

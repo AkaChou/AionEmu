@@ -9,8 +9,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Resulted 物品 Collection 模板（静态数据/XML）。
- * XML template.
+ * 产物物品集合模板：普通产物、随机产物与产物组。
+ * Resulted items collection template: regular, random and set outputs.
  *
  * @author antness
  */
@@ -34,7 +34,7 @@ public class ResultedItemsCollection {
 		return item_set != null ? item_set : Collections.<ResultedItemSet>emptyList();
 	}
 
-	/** 返回 random items / Returns the random items */
+	/** 返回随机物品列表 / Returns the random items */
 	public List<RandomItem> getRandomItems() {
 		if (randomItems != null) {
 			return randomItems;

@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 技能外观模板（静态数据/XML）。
- * XML template.
+ * Skill skin template (static data / XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -40,7 +40,7 @@ public class SkillSkinTemplate {
 		return skillgroup;
 	}
 
-	/** 返回动作名称 / Returns the motion name*/
+	/** 返回动作名称 / Returns the motion name */
 	public String getMotionName() {
 		return motionName;
 	}

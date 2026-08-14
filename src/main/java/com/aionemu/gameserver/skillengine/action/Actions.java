@@ -34,7 +34,7 @@ public class Actions {
 	 * 获取动作列表（活动列表，非快照；修改会反映到 JAXB 对象）。
 	 * Returns the live action list (not a snapshot; mutations affect the JAXB object).
 	 *
-	 * list of actions
+	 * @return 动作列表 / list of actions
 	 */
 	public List<Action> getActions() {
 		if (actions == null) {

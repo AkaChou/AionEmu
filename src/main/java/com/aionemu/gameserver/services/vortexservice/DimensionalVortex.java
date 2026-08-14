@@ -48,8 +48,8 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 * 将玩家加入攻方或守方。
 	 * Adds a player as invader or defender.
 	 *
-	 * 玩家 / player
-	 * true for invader
+	 * @param player 玩家 / player
+	 * @param isInvader 是否攻方 / true for invader
 	 */
 	public abstract void addPlayer(Player player, boolean isInvader);
 
@@ -57,8 +57,8 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 * 将玩家踢出攻方或守方。
 	 * Kicks a player from invader or defender side.
 	 *
-	 * 玩家 / player
-	 * true for invader
+	 * @param player 玩家 / player
+	 * @param isInvader 是否攻方 / true for invader
 	 */
 	public abstract void kickPlayer(Player player, boolean isInvader);
 
@@ -66,7 +66,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 * 尝试将玩家登记为守方（可含确认弹窗）。
 	 * Tries to register a player as defender (may prompt confirmation).
 	 *
-	 * defender
+	 * @param defender 守方玩家 / defender
 	 */
 	public abstract void updateDefenders(Player defender);
 
@@ -74,7 +74,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 * 将玩家登记为攻方。
 	 * Registers a player as invader.
 	 *
-	 * invader
+	 * @param invader 攻方玩家 / invader
 	 */
 	public abstract void updateInvaders(Player invader);
 
@@ -82,7 +82,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 * 守方玩家表。
 	 * Defender player map.
 	 *
-	 * defenders
+	 * @return 守方玩家表 / defenders
 	 */
 	public abstract Map<Integer, Player> getDefenders();
 
@@ -90,7 +90,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 * 攻方玩家表。
 	 * Invader player map.
 	 *
-	 * invaders
+	 * @return 攻方玩家表 / invaders
 	 */
 	public abstract Map<Integer, Player> getInvaders();
 
@@ -98,7 +98,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 * 绑定漩涡地点。
 	 * Binds the vortex location.
 	 *
-	 * vortex location
+	 * @param vortexLocation 漩涡地点 / vortex location
 	 */
 	public DimensionalVortex(VL vortexLocation) {
 		this.vortexLocation = vortexLocation;
@@ -204,7 +204,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 * 设置生成器摧毁状态。
 	 * Sets the generator destroyed flag.
 	 *
-	 * state
+	 * @param state 状态 / state
 	 */
 	public void setGeneratorDestroyed(boolean state) {
 		this.generatorDestroyed = state;
@@ -214,7 +214,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 * 获取裂隙生成器 NPC。
 	 * Returns the rift generator NPC.
 	 *
-	 * generator
+	 * @return 生成器 NPC / generator
 	 */
 	public Npc getGenerator() {
 		return generator;
@@ -224,7 +224,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 * 设置裂隙生成器 NPC。
 	 * Sets the rift generator NPC.
 	 *
-	 * generator
+	 * @param generator 生成器 NPC / generator
 	 */
 	public void setGenerator(Npc generator) {
 		this.generator = generator;
@@ -234,7 +234,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 * 获取生成器摧毁监听器。
 	 * Returns the generator destroy listener.
 	 *
-	 * listener
+	 * @return 生成器摧毁监听器 / listener
 	 */
 	public GeneratorDestroyListener getGeneratorDestroyListener() {
 		return generatorDestroyListener;
@@ -254,7 +254,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 * 获取绑定的漩涡地点。
 	 * Returns the bound vortex location.
 	 *
-	 * location
+	 * @return 绑定的漩涡地点 / location
 	 */
 	public VL getVortexLocation() {
 		return vortexLocation;
@@ -264,7 +264,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 * 获取地点 ID。
 	 * Returns the location id.
 	 *
-	 * location id
+	 * @return 地点 ID / location id
 	 */
 	public int getVortexLocationId() {
 		return vortexLocation.getId();

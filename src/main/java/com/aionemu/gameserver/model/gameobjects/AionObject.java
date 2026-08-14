@@ -30,9 +30,10 @@ public abstract class AionObject {
 	}
 
 	/**
-	 * Returns unique ObjectId of AionObject
+	 * 返回该游戏对象的唯一对象 ID。
+	 * Returns unique ObjectId of AionObject.
 	 *
-	 * @return Int ObjectId
+	 * @return 对象 ID / object id
 	 */
 	public Integer getObjectId() {
 		return objectId;

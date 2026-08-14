@@ -32,7 +32,7 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 	private Future<?> task;
 
 	/**
-	 * creature
+	 * @param creature 被观察生物 / observed creature
 	 */
 	public TerrainZoneCollisionMaterialActor(Creature creature) {
 		super(ObserverType.MOVE_OR_DIE);
@@ -63,9 +63,7 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 	 * 按材质 ID 查找适用于当前生物的技能。
 	 * Find skills applicable to the creature for the given material id.
 	 *
-	 * material id
-	 *
-	 * @param materialId
+	 * @param materialId 材质 ID / material id
 	 * @return 匹配技能列表 / matching skill list
 	 */
 	private List<MaterialSkill> findSkills(int materialId) {
@@ -89,7 +87,7 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 	 * 启动材质技能周期任务。
 	 * Start the material skill periodic task.
 	 *
-	 * material skills
+	 * @param materialSkills 材质技能列表 / material skills
 	 */
 	private void start(final List<MaterialSkill> materialSkills) {
 		if (materialSkills.isEmpty()) {
@@ -137,7 +135,7 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 	 * 是否存在由本行为者持有的活跃任务。
 	 * Whether an active task owned by this actor exists.
 	 *
-	 * whether active
+	 * @return 是否活跃 / whether active
 	 */
 	private boolean hasActiveTask() {
 		synchronized (creature.getController()) {

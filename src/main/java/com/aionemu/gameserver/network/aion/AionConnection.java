@@ -118,7 +118,7 @@ public class AionConnection extends AConnection {
 	 * 基于传输层创建连接并初始化。
 	 * Creates a connection from the transport and initializes it.
 	 *
-	 * connection transport
+	 * @param transport 连接传输 / connection transport
 	 */
 	public AionConnection(ConnectionTransport transport) {
 		super(transport, 8192 * 2, 0xFFFF);
@@ -181,9 +181,7 @@ public class AionConnection extends AConnection {
 	 * 由传输帧处理器调用：解密并处理一个客户端包。
 	 * Called by the transport frame handler; decrypts and processes one client packet.
 	 *
-	 * packet data
-	 *
-	 * @param data
+	 * @param data 包数据 / packet data
 	 * @return true 处理成功；false 表示应立即关闭连接 / true if ok, false to close now
 	 */
 	@Override
@@ -292,7 +290,7 @@ public class AionConnection extends AConnection {
 	@Override
 	protected final void onDisconnect() {
 		/**
-		 * 客户端开始认证流程时的清理。
+		 * 断开连接时的清理。
 		 * disconnects.
 		 */
 		pingChecker.stop();
@@ -372,7 +370,7 @@ public class AionConnection extends AConnection {
 	 * 获取当前连接状态。
 	 * Returns the current state of this connection.
 	 *
-	 * state
+	 * @return 连接状态 / state
 	 */
 	public final State getState() {
 		return state;
@@ -392,7 +390,7 @@ public class AionConnection extends AConnection {
 	 * 返回与本连接关联的账号。
 	 * Returns the account associated with this connection.
 	 *
-	 * account object
+	 * @return 账号对象 / account object
 	 */
 	public Account getAccount() {
 		return account;
@@ -402,7 +400,7 @@ public class AionConnection extends AConnection {
 	 * 设置与本连接关联的账号（不可为 null）。
 	 * Sets the account associated with this connection (must not be null).
 	 *
-	 * account object
+	 * @param account 账号对象 / account object
 	 */
 	public void setAccount(Account account) {
 		Preconditions.checkArgument(account != null, "Account can't be null");
@@ -443,7 +441,7 @@ public class AionConnection extends AConnection {
 	 * 获取最近一次 Ping 时间（毫秒）。
 	 * Returns the last ping time in milliseconds.
 	 *
-	 * last ping time ms
+	 * @return 最近 Ping 时间（毫秒）/ last ping time ms
 	 */
 	public long getLastPingTimeMS() {
 		return lastPingTimeMS;
@@ -453,7 +451,7 @@ public class AionConnection extends AConnection {
 	 * 设置最近一次 Ping 时间（毫秒）。
 	 * Sets the last ping time in milliseconds.
 	 *
-	 * last ping time ms
+	 * @param lastPingTimeMS 最近 Ping 时间（毫秒）/ last ping time ms
 	 */
 	public void setLastPingTimeMS(long lastPingTimeMS) {
 		this.lastPingTimeMS = lastPingTimeMS;
@@ -471,7 +469,7 @@ public class AionConnection extends AConnection {
 	 * 设置客户端 MAC 地址。
 	 * Sets the client MAC address.
 	 *
-	 * MAC address
+	 * @param mac MAC 地址 / MAC address
 	 */
 	public void setMacAddress(String mac) {
 		this.macAddress = mac;
@@ -481,7 +479,7 @@ public class AionConnection extends AConnection {
 	 * 获取客户端 MAC 地址。
 	 * Returns the client MAC address.
 	 *
-	 * MAC address
+	 * @return MAC 地址 / MAC address
 	 */
 	public String getMacAddress() {
 		return macAddress;

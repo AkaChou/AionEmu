@@ -43,11 +43,11 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
     private long startTime;
 	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
-	/** hangar barricade / hangar barricade */
+		/** hangar barricade / hangar barricade */
 		private int hangarBarricade;
-	/** 副本计时器 / instance timer */
+		/** 副本计时器 / instance timer */
 		private Future<?> instanceTimer;
-	/** transidium annex base / transidium annex base */
+		/** transidium annex base / transidium annex base */
 		private int transidiumAnnexBase;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
@@ -57,7 +57,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -137,8 +137,8 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
 	 *
-	 * 玩家 / player
-	 * zone
+	 * @param player 玩家 / player
+	 * @param zone 区域 / zone
 	 */
 	@Override
     public void onEnterZone(Player player, ZoneInstance zone) {
@@ -157,7 +157,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDie(Npc npc) {
@@ -402,7 +402,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	 * 打开指定门。
 	 * Open the given door.
 	 *
-	 * doorId
+	 * @param doorId 门 ID / doorId
 	 */
 	
 	protected void openDoor(int doorId) {
@@ -427,8 +427,8 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
@@ -498,7 +498,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	 * 移除指定 NPC。
 	 * Despawn the given NPC.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	protected void despawnNpc(Npc npc) {
@@ -563,9 +563,9 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

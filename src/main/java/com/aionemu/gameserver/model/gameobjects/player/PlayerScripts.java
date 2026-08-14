@@ -54,7 +54,8 @@ public class PlayerScripts {
 			int oldLength = bytes.length;
 			bytes = Arrays.copyOf(bytes, bytes.length + 8);
 			for (int i = oldLength; i < bytes.length; i++) {
-				bytes[i] = -51; // Add NC shit bytes, without which fails to load :)
+				bytes[i] = -51;
+				// 添加 NC 特殊字节，缺失则加载失败。 / Add NC shit bytes, without which fails to load :)
 			}
 			script.setData(bytes, scriptXML.length() * 2);
 		} catch (Exception ex) {

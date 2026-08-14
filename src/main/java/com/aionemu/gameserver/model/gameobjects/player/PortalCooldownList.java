@@ -22,7 +22,7 @@ public class PortalCooldownList {
 	}
 
 	/**
-	 * @param worldId Whether portal use disabled
+	 * @param worldId 传送门是否禁用所查的世界 ID / Whether portal use disabled
 	 */
 	public boolean isPortalUseDisabled(int worldId) {
 		if (portalCooldowns == null || !portalCooldowns.containsKey(worldId)) {
@@ -120,7 +120,7 @@ public class PortalCooldownList {
 		}
 	}
 
-	/** Reduce Entry / Reduce Entry */
+	/** 减少进入次数 / Reduce Entry */
 	public void reduceEntry(int worldId) {
 		if (portalCooldowns != null && portalCooldowns.containsKey(worldId)) {
 			portalCooldowns.get(worldId).setEntryCount(portalCooldowns.get(worldId).getEntryCount() - 1);

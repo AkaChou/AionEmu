@@ -33,7 +33,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
      * 使用默认断开连接执行器构造。
      * Construct with default disconnection executor.
      *
-     * Connection factory
+     * @param connectionFactory 连接工厂 / Connection factory
      */
     public NettyConnectionHandler(NettyConnectionFactory connectionFactory) {
         this(connectionFactory, CommonsNetworkThreadPoolServices.threadPoolManager());
@@ -43,7 +43,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
      * 使用指定断开连接执行器构造。
      * Construct with a disconnection executor.
      *
-     * Connection factory
+     * @param connectionFactory 连接工厂 / Connection factory
      * @param disconnectionExecutor 断开连接执行器 / Disconnection executor
      */
     public NettyConnectionHandler(NettyConnectionFactory connectionFactory, Executor disconnectionExecutor) {
@@ -54,7 +54,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
      * 完整构造。
      * Full constructor.
      *
-     * Connection factory
+     * @param connectionFactory 连接工厂 / Connection factory
      * @param disconnectionExecutor 断开连接执行器 / Disconnection executor
      * @param serviceContext 服务上下文 / Service context
      */
@@ -69,7 +69,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
      * Create business connection and initialize on channel active.
      *
      * @param context 通道上下文 / Channel context
-     * Connection creation failure。
+     * @throws IOException 连接创建失败 / Connection creation failure
      */
     @Override
     public void channelActive(ChannelHandlerContext context) throws IOException {
@@ -94,7 +94,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
      * Read inbound message and process in connection context.
      *
      * @param context 通道上下文 / Channel context
-     * Inbound message
+     * @param message 入站消息 / Inbound message
      */
     @Override
     public void channelRead(ChannelHandlerContext context, Object message) {
@@ -115,7 +115,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
      * Copy ByteBuf data into read buffer and parse complete frames.
      *
      * @param context 通道上下文 / Channel context
-     * Inbound message
+     * @param message 入站消息 / Inbound message
      */
     private void read(ChannelHandlerContext context, Object message) {
         if (!(message instanceof ByteBuf byteBuf)) {
@@ -181,7 +181,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
      * 获取对端 IP。
      * Get remote IP.
      *
-     * IP or "unknown"
+     * @return 对端 IP 或 "unknown" / IP or "unknown"
      */
     @Override
     public String getIP() {
@@ -270,8 +270,8 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
      * 读取帧头中的帧长度。
      * Read frame size from frame header.
      *
-     * Buffer
-     * Frame size
+     * @param buffer 缓冲 / Buffer
+     * @return 帧大小 / Frame size
      */
     private int frameSize(ByteBuffer buffer) {
         return Short.toUnsignedInt(buffer.getShort(buffer.position()));
@@ -281,9 +281,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
      * 解析单帧并交给连接处理。
      * Parse a single frame and hand off to connection.
      *
-     * Buffer
-     *
-     * @param buffer
+     * @param buffer 缓冲 / Buffer
      * @return 是否处理成功 / Whether processing succeeded
      */
     private boolean parse(ByteBuffer buffer) {
@@ -349,7 +347,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
      * 将 NIO 缓冲复制为 ByteBuf 写出并消费源位置。
      * Copy NIO buffer to ByteBuf, write it, and advance source position.
      *
-     * Source buffer
+     * @param source 源缓冲 / Source buffer
      */
     private void writeAndConsume(ByteBuffer source) {
         if (!source.hasRemaining()) {
@@ -374,7 +372,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
      * 在连接绑定的服务上下文中运行任务。
      * Run task in the connection's service context.
      *
-     * Task
+     * @param runnable 任务 / Task
      */
     private void runInConnectionContext(Runnable runnable) {
         try (ServiceContext.Scope ignored = ServiceContext.use(connection.getServiceContext())) {

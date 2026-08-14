@@ -9,8 +9,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * 背包物品模板（静态数据/XML）。
- * XML template.
+ * 背包物品列表模板（静态数据/XML）。
+ * Inventory items template (static data / XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

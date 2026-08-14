@@ -80,8 +80,8 @@ public class RideRobotEffect extends EffectTemplate {
 	 * 根据主手武器皮肤模板解析机甲信息。
 	 * Resolves robot info from the main-hand weapon skin template.
 	 *
-	 * 玩家 / player
-	 * robot info
+	 * @param player 玩家 / player
+	 * @return 机甲信息 / robot info
 	 */
 	public RobotInfo getRobotInfo(Player player) {
 		ItemTemplate template = player.getEquipment().getMainHandWeapon().getItemSkinTemplate();

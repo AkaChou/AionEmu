@@ -10,7 +10,7 @@ import com.aionemu.gameserver.model.templates.TitleTemplate;
  */
 
 public class TitleChangeListener {
-	/** 在 BonusTitleChange / On Bonus Title Change */
+	/** 称号加成变更时 / On bonus title change */
 	public static void onBonusTitleChange(CreatureGameStats<?> cgs, int titleId, boolean isSet) {
 		TitleTemplate tt = DataManager.TITLE_DATA.getTitleTemplate(titleId);
 		if (tt == null) {

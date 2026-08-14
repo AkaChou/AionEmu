@@ -30,7 +30,7 @@ public class GMService {
 	 * 获取服务实例（优先 Spring provider）。
 	 * Returns service instance (prefers Spring provider).
 	 *
-	 * GM service
+	 * @return GM 服务实例 / GM service instance
 	 */
 	public static final GMService getInstance() {
 		ObjectProvider<GMService> provider = instanceProvider;
@@ -59,7 +59,7 @@ public class GMService {
 	 * 返回当前在线 GM 集合。
 	 * Returns the collection of currently online GMs.
 	 *
-	 * online GMs
+	 * @return 当前在线 GM 集合 / collection of online GMs
 	 */
 	public Collection<Player> getGMs() {
 		return gms.values();
@@ -69,7 +69,7 @@ public class GMService {
 	 * 玩家登录：若为 GM 则登记并可全服公告出现。
 	 * Player login: registers GM and may broadcast an appear announce.
 	 *
-	 * logging-in player
+	 * @param player 登录玩家 / logging-in player
 	 */
 	public void onPlayerLogin(Player player) {
 		if (player.isGM()) {
@@ -100,7 +100,7 @@ public class GMService {
 	 * 玩家下线：从在线 GM 列表移除。
 	 * Player logout: removes the player from the online GM map.
 	 *
-	 * logging-out player
+	 * @param player 登出玩家 / logging-out player
 	 */
 	public void onPlayerLogedOut(Player player) {
 		gms.remove(player.getObjectId());
@@ -110,7 +110,7 @@ public class GMService {
 	 * GM 恢复可支援状态并通知全服（含会员标签）。
 	 * Marks a GM available for support and notifies all players (with membership tags).
 	 *
-	 * GM player
+	 * @param player GM 玩家 / GM player
 	 */
 	public void onPlayerAvailable(Player player) {
 		if (player.isGM()) {
@@ -141,7 +141,7 @@ public class GMService {
 	 * GM 进入不可支援状态并通知全服（含管理标签）。
 	 * Marks a GM unavailable for support and notifies all players (with admin tags).
 	 *
-	 * GM player
+	 * @param player GM 玩家 / GM player
 	 */
 	public void onPlayerUnavailable(Player player) {
 		gms.remove(player.getObjectId());
@@ -180,7 +180,7 @@ public class GMService {
 	 * 向所有在线 GM 广播消息。
 	 * Broadcasts a message to all online GMs.
 	 *
-	 * broadcast content
+	 * @param message 广播内容 / broadcast content
 	 */
 	public void broadcastMesage(String message) {
 		SM_MESSAGE packet = new SM_MESSAGE(0, null, message, ChatType.BRIGHT_YELLOW_CENTER);

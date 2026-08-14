@@ -9,7 +9,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 
 /**
- * 玩家队伍 Update 活动，用于团队2相关逻辑。
+ * 队伍成员更新事件（团队2）。
  * Player Group Update Event for team 2 logic.
  *
  * @author ATracer
@@ -26,7 +26,7 @@ public class PlayerGroupUpdateEvent extends AlwaysTrueTeamEvent implements Predi
 		this.groupEvent = groupEvent;
 	}
 
-	/** 处理活动。 / Handle event. */
+	/** 处理事件。 / Handle event. */
 	@Override
 	public void handleEvent() {
 		group.applyOnMembers(this);

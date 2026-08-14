@@ -87,7 +87,7 @@ public class BIHTree implements CollisionData {
 	 * 以网格与每节点最大三角形数构造 BIH 树（尚未建树，需调用 {@link #construct()}）。
 	 * Constructs a BIH tree from a mesh and max-tris-per-node (call {@link #construct()} to build).
 	 *
-	 * mesh
+	 * @param mesh 网格 / mesh
 	 * @param maxTrisPerNode 每节点最大三角形数 / max triangles per node
 	 */
 	public BIHTree(Mesh mesh, int maxTrisPerNode) {
@@ -110,7 +110,7 @@ public class BIHTree implements CollisionData {
 	 * 以网格与默认每节点最大三角形数构造。
 	 * Constructs from a mesh with the default max triangles per node.
 	 *
-	 * mesh
+	 * @param mesh 网格 / mesh
 	 */
 	public BIHTree(Mesh mesh) {
 		this(mesh, MAX_TRIS_PER_NODE);
@@ -138,7 +138,7 @@ public class BIHTree implements CollisionData {
 	 *
 	 * @param l 左下标 / left index
 	 * @param r 右下标 / right index
-	 * bounding box
+	 * @return 包围盒 / bounding box
 	 */
 	private BoundingBox createBox(int l, int r) {
 		Vector3f min = Vector3f.newInstance();
@@ -170,8 +170,8 @@ public class BIHTree implements CollisionData {
 	 * 返回给定树内下标对应的原始三角形下标。
 	 * Returns the original triangle index for the given in-tree index.
 	 *
-	 * in-tree index
-	 * original index
+	 * @param triIndex 树内下标 / in-tree index
+	 * @return 原始下标 / original index
 	 */
 	int getTriangleIndex(int triIndex) {
 		return triIndices[triIndex];
@@ -183,9 +183,9 @@ public class BIHTree implements CollisionData {
 	 *
 	 * @param l 左下标 / left index
 	 * @param r 右下标 / right index
-	 * split value
-	 * axis
-	 * pivot index
+	 * @param split 分割值 / split value
+	 * @param axis 分割轴 / axis
+	 * @return 枢轴下标 / pivot index
 	 */
 	private int sortTriangles(int l, int r, float split, int axis) {
 		int pivot = l;
@@ -215,10 +215,10 @@ public class BIHTree implements CollisionData {
 	 * 设置包围盒在指定轴上的最小或最大边界。
 	 * Sets the min or max bound of a bounding box on the given axis.
 	 *
-	 * bounding box
+	 * @param bbox 包围盒 / bounding box
 	 * @param doMin {@code true} 设置最小，否则最大 / {@code true} for min, else max
-	 * axis
-	 * bound value
+	 * @param axis 轴 / axis
+	 * @param value 边界值 / bound value
 	 */
 	private void setMinMax(BoundingBox bbox, boolean doMin, int axis, float value) {
 		Vector3f min = bbox.getMin(null);
@@ -237,10 +237,10 @@ public class BIHTree implements CollisionData {
 	 * 读取包围盒在指定轴上的最小或最大边界。
 	 * Reads the min or max bound of a bounding box on the given axis.
 	 *
-	 * bounding box
+	 * @param bbox 包围盒 / bounding box
 	 * @param doMin {@code true} 读最小，否则最大 / {@code true} for min, else max
-	 * axis
-	 * bound value
+	 * @param axis 轴 / axis
+	 * @return 边界值 / bound value
 	 */
 	private float getMinMax(BoundingBox bbox, boolean doMin, int axis) {
 		if (doMin) {
@@ -337,7 +337,7 @@ public class BIHTree implements CollisionData {
 	 * @param r 右下标 / right index
 	 * @param nodeBbox 节点包围盒 / node bounding box
 	 * @param depth 当前深度 / current depth
-	 * new node
+	 * @return 新建节点 / new node
 	 */
 	private BIHNode createNode(int l, int r, BoundingBox nodeBbox, int depth) {
 		if ((r - l) < maxTrisPerNode || depth > MAX_TREE_DEPTH) {
@@ -439,8 +439,8 @@ public class BIHTree implements CollisionData {
 	 * 交换两个树内下标的三角形顶点数据与原始下标映射。
 	 * Swaps triangle vertex data and original-index mapping for two in-tree indices.
 	 *
-	 * index 1
-	 * index 2
+	 * @param index1 下标 1 / index 1
+	 * @param index2 下标 2 / index 2
 	 */
 	public void swapTriangles(int index1, int index2) {
 		int p1 = index1 * 9;
@@ -469,7 +469,7 @@ public class BIHTree implements CollisionData {
 	 * @param worldMatrix 世界变换矩阵 / world matrix
 	 * @param worldBound 世界包围体 / world bound
 	 * @param results 结果收集器 / collision results
-	 * hit count
+	 * @return 命中数 / hit count
 	 */
 	private int collideWithRay(Ray r, Matrix4f worldMatrix, BoundingVolume worldBound, CollisionResults results) {
 
@@ -510,8 +510,8 @@ public class BIHTree implements CollisionData {
 	 * @param bv 包围体 / bounding volume
 	 * @param worldMatrix 世界变换矩阵 / world matrix
 	 * @param results 结果收集器 / collision results
-	 * hit count
-	 * not a BoundingBox
+	 * @return 命中数 / hit count
+	 * @throws UnsupportedCollisionException 非 BoundingBox 类型 / not a BoundingBox
 	 */
 	private int collideWithBoundingVolume(BoundingVolume bv, Matrix4f worldMatrix, CollisionResults results) {
 		BoundingBox bbox;
@@ -533,8 +533,8 @@ public class BIHTree implements CollisionData {
 	 * @param worldMatrix 世界变换矩阵 / world matrix
 	 * @param worldBound 世界包围体 / world bound
 	 * @param results 结果收集器 / collision results
-	 * hit count
-	 * unsupported type。
+	 * @return 命中数 / hit count
+	 * @throws UnsupportedCollisionException 不支持的类型 / unsupported type
 	 */
 	@Override
 	public int collideWith(Collidable other, Matrix4f worldMatrix, BoundingVolume worldBound,

@@ -51,7 +51,7 @@ public class PanelSkillsData {
 	 * 返回已加载的技能面板数量。
 	 * Returns the number of loaded skill panels.
 	 *
-	 * panel count
+	 * @return 已加载的技能面板数量 / Returns the number of loaded skill panels.
 	 */
 	public int size() {
 		return skillPanels.size();

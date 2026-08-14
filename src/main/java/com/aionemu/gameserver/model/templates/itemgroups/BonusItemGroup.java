@@ -9,8 +9,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.rewards.BonusType;
 
 /**
- * 加成物品队伍模板（静态数据/XML）。
- * XML template.
+ * 加成物品组抽象基类：加成类型、概率与奖励条目。
+ * Abstract bonus item group: bonus type, chance and reward entries.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -30,7 +30,7 @@ public abstract class BonusItemGroup {
 		return bonusType;
 	}
 
-	/** 返回概率 / Returns the chance*/
+	/** 返回概率 / Returns the chance */
 	public float getChance() {
 		if (chance == null) {
 			return 0.0f;

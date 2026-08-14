@@ -42,7 +42,7 @@ public class LandingData {
 	 * 返回已加载的登陆据点数量。
 	 * Returns the number of loaded landing locations.
 	 *
-	 * location count
+	 * @return 已加载的着陆点数量 / Returns the number of loaded landing locations.
 	 */
 	public int size() {
 		return landing.size();

@@ -62,9 +62,9 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 	 * 构造空实现的客户端包（仅用于离线反序列化，不走网络收发）。
 	 * Construct a stub client packet used only for offline deserialization (not network I/O).
 	 *
-	 * Opcode
-	 * @param state      连接状态 / Connection state
-	 * Additional states
+	 * @param opcode 操作码 / opcode
+	 * @param state 连接状态 / Connection state
+	 * @param restStates 其他状态 / additional states
 	 */
 	protected CMT_CHARACTER_INFORMATION(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -82,12 +82,12 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 	 * 从当前 buffer 读取完整角色数据并在目标账户下创建新角色。
 	 * Read a full character from the current buffer and create it under the target account.
 	 *
-	 * Character name
-	 * Target account ID
-	 * Account name
-	 * @param rsList        转移时需剔除的技能 ID 列表 / Skill IDs to strip on transfer
-	 * Text logger
-	 * @return 新建玩家；失败返回 null / New player, or null on failure
+	 * @param name 角色名 / character name
+	 * @param targetAccount 目标账号 ID / target account ID
+	 * @param accountName 账号名 / account name
+	 * @param rsList 转移时需剔除的技能 ID 列表 / skill IDs to strip on transfer
+	 * @param textLog 文本日志器 / text logger
+	 * @return 新建玩家；失败返回 null / new player, or null on failure
 	 */
 	public Player readInfo(String name, int targetAccount, String accountName, List<Integer> rsList, Logger textLog) {
 

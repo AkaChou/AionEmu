@@ -5,7 +5,7 @@ import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityStateType;
 
 /**
  * 永恒之塔默认实现：切入 OPEN / 回到 CLOSED。
- * back to CLOSED.
+ * Default Tower Of Eternity implementation: transitions to OPEN and back to CLOSED.
  *
  * @author Wnkrz
  */
@@ -15,7 +15,7 @@ public class Tower extends TowerOfEternity<TowerOfEternityLocation> {
 	 * 绑定永恒之塔地点。
 	 * Binds the tower location.
 	 *
-	 * location
+	 * @param towerOfEternity 永恒之塔地点 / tower location
 	 */
 	public Tower(TowerOfEternityLocation towerOfEternity) {
 		super(towerOfEternity);

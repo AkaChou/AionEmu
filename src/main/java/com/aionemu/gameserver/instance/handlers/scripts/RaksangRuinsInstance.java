@@ -37,33 +37,33 @@ import java.util.concurrent.Future;
 public class RaksangRuinsInstance extends GeneralInstanceHandler {
 
 	// 恐怖宝库突袭 / Terror's Vault Raid
-	/** raksangraid 任务 a1 / raksang raid task a1 */
+		/** raksangraid 任务 a1 / raksang raid task a1 */
 		private Future<?> raksangRaidTaskA1;
-	/** raksangraid 任务 a2 / raksang raid task a2 */
+		/** raksangraid 任务 a2 / raksang raid task a2 */
 		private Future<?> raksangRaidTaskA2;
-	/** raksha solo spakle a161an / raksha solo spakle a161an */
+		/** raksha solo spakle a161an / raksha solo spakle a161an */
 		private int rakshaSoloSpakleA161An;
-	/** raksha solo skeleton s61an / raksha solo skeleton s61an */
+		/** raksha solo skeleton s61an / raksha solo skeleton s61an */
 		private int rakshaSoloSkeletonS61An;
-	/** raksha solo grave witch sn61an / raksha solo grave witch sn61an */
+		/** raksha solo grave witch sn61an / raksha solo grave witch sn61an */
 		private int rakshaSoloGraveWitchSN61An;
 	// 苦痛熔炉突袭 / Torment's Forge Raid
-	/** raksangraid 任务 b1 / raksang raid task b1 */
+		/** raksangraid 任务 b1 / raksang raid task b1 */
 		private Future<?> raksangRaidTaskB1;
-	/** raksangraid 任务 b2 / raksang raid task b2 */
+		/** raksangraid 任务 b2 / raksang raid task b2 */
 		private Future<?> raksangRaidTaskB2;
-	/** raksha solo skeleton b161an / raksha solo skeleton b161an */
+		/** raksha solo skeleton b161an / raksha solo skeleton b161an */
 		private int rakshaSoloSkeletonB161An;
-	/** raksha solo skeleton b261an / raksha solo skeleton b261an */
+		/** raksha solo skeleton b261an / raksha solo skeleton b261an */
 		private int rakshaSoloSkeletonB261An;
 	// 地狱之路突袭 / Hellpath Raid
-	/** raksangraid 任务 c1 / raksang raid task c1 */
+		/** raksangraid 任务 c1 / raksang raid task c1 */
 		private Future<?> raksangRaidTaskC1;
-	/** raksangraid 任务 c2 / raksang raid task c2 */
+		/** raksangraid 任务 c2 / raksang raid task c2 */
 		private Future<?> raksangRaidTaskC2;
-	/** raksha solo clodworm c161an / raksha solo clodworm c161an */
+		/** raksha solo clodworm c161an / raksha solo clodworm c161an */
 		private int rakshaSoloClodwormC161An;
-	/** raksha solo clodworm c261an / raksha solo clodworm c261an */
+		/** raksha solo clodworm c261an / raksha solo clodworm c261an */
 		private int rakshaSoloClodwormC261An;
 	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
@@ -119,7 +119,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -176,7 +176,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -274,7 +274,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 		}
 	}
 	
-   /**
+	/**
 	 * Terror's Vault Raid A1/A2
 	 */
 	private void startRaksangRaidA1() {
@@ -346,7 +346,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 		}, 20000);
 	}
 	
-   /**
+	/**
 	 * Torment's Forge Raid B1/B2
 	 */
 	@Override
@@ -541,7 +541,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 		}
 	}
 	
-   /**
+	/**
 	 * Torment's Forge Raid B
 	 */
 	public void startRaksangRaidB1() {
@@ -766,9 +766,9 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

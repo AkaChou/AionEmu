@@ -42,7 +42,7 @@ public class TeleLocationData {
 	 * 返回已加载的传送点数量。
 	 * Returns the number of loaded teleport locations.
 	 *
-	 * template count
+	 * @return 已加载的传送地点数量 / Returns the number of loaded teleport locations.
 	 */
 	public int size() {
 		return loctlistData.size();

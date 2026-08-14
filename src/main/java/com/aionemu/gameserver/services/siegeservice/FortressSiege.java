@@ -55,7 +55,10 @@ public class FortressSiege extends Siege<FortressLocation> {
 	/** 欧比斯点数监听器。 / Abyss points listener. */
 	private final AbyssPointsListener addAPListener = new AbyssPointsListener(this);
 	/**
-	 * fortress location
+	 * 为指定要塞据点创建攻城。
+	 * Creates a siege for the given fortress location.
+	 *
+	 * @param fortress 要塞据点 / fortress location
 	 */
 	public FortressSiege(FortressLocation fortress) {
 		super(fortress);
@@ -530,7 +533,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 	 * 要塞攻城有时限，非无限模式。
 	 * Fortress sieges are timed, not endless.
 	 *
-	 * always false
+	 * @return 始终为 false / always false
 	 */
 	@Override
 	public boolean isEndless() {

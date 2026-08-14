@@ -15,6 +15,10 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GameMaintenanceServices implements DisposableBean {
 
+    /**
+     * 术古皇陵生成管理器的 Spring 提供者。
+     * Spring provider for the Shugo Imperial Tomb spawn manager.
+     */
     private static volatile ObjectProvider<ShugoImperialTombSpawnManager> shugoImperialTombSpawnManagerProvider;
 
     /**

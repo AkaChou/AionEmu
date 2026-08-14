@@ -62,7 +62,7 @@ public class Spiritcaller_Incense_BurnerAI2 extends NpcAI2
 	}
 	
 	protected void handleUseItemFinish(Player player) {
-		spawn(216609, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Celodus Twistrings.
+		spawn(216609, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Celodus Twistrings / Celodus Twistrings.
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);
 	}

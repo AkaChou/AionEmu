@@ -34,7 +34,7 @@ public class Forgotten_Store_RoomAI2 extends NpcAI2
 	@Override
     protected void handleDialogStart(Player player) {
         if (player.getRace() == Race.ELYOS) {
-			QuestState qsE = player.getQuestStateList().getQuestState(30211); //[Group] The Rod And The Orb.
+			QuestState qsE = player.getQuestStateList().getQuestState(30211); // 团队任务：The Rod And The Orb / [Group] The Rod And The Orb.
 			if (qsE != null && qsE.getStatus() != QuestStatus.NONE) {
                 handleUseItemStart(player);
             } else {
@@ -42,7 +42,7 @@ public class Forgotten_Store_RoomAI2 extends NpcAI2
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(30211));
             }
         } else if (player.getRace() == Race.ASMODIANS) {
-			QuestState qsA = player.getQuestStateList().getQuestState(30311); //[Group] A Quartz Is A Quartz.
+			QuestState qsA = player.getQuestStateList().getQuestState(30311); // 团队任务：A Quartz Is A Quartz / [Group] A Quartz Is A Quartz.
             if (qsA != null && qsA.getStatus() != QuestStatus.NONE) {
                 handleUseItemStart(player);
             } else {

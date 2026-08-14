@@ -32,8 +32,9 @@ public class OutpostNpc extends Npc {
 	}
 
 	/**
-	 * @param creature 是否为敌对目标。 / Whether enemy from
-	  */
+	 * @param creature 待判断的生物 / creature to check
+	 * @return 是否为敌对目标 / Whether enemy from
+	 */
 	@Override
 	public boolean isEnemyFrom(Creature creature) {
 		if (creature instanceof OutpostNpc) {

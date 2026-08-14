@@ -12,7 +12,7 @@ import com.aionemu.gameserver.model.stats.calc.StatOwner;
 
 /**
  * 物品升级模板（静态数据/XML）。
- * XML template.
+ * Item upgrade template (static data/XML).
  *
  * @author Ranastic (Encom)
  */
@@ -33,7 +33,7 @@ public class ItemUpgradeTemplate implements StatOwner {
 		return upgrade_result_item;
 	}
 
-	/** 返回 upgrade base item id / Returns the upgrade base item id */
+	/** 返回升级基础物品 ID / Returns the upgrade base item id */
 	public int getUpgrade_base_item_id() {
 		return upgrade_base_item_id;
 	}

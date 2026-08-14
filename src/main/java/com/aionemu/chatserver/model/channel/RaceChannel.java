@@ -23,8 +23,8 @@ public abstract class RaceChannel extends Channel {
      * 创建种族频道。
      * Creates a race-scoped channel.
      *
-     * channel type
-     * 阵营 / race
+     * @param channelType 频道类型 / channel type
+     * @param race 阵营 / race
      * @param identifier 字符串标识 / string identifier
      */
     public RaceChannel(ChannelType channelType, Race race, String identifier) {

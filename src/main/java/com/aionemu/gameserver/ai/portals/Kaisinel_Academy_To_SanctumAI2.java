@@ -32,9 +32,9 @@ public class Kaisinel_Academy_To_SanctumAI2 extends NpcAI2
 		if (dialogId == 10000) {
 			TeleportService2.teleportTo(player, 110010000, 1366.7853f, 1539.8356f, 569.0382f, (byte) 91, TeleportAnimation.BEAM_ANIMATION);
 		} else if (dialogId == 10001) {
-			QuestState qs = player.getQuestStateList().getQuestState(10521); // ? .
+			QuestState qs = player.getQuestStateList().getQuestState(10521); // 检查房产任务是否完成。 / Checks whether the housing quest is completed.
 			if (qs == null || qs.getStatus() != QuestStatus.COMPLETE) {
-                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(10521)); // ? .
+                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(10521)); // 未完成任务提示。 / Not-completed quest message.
 				return true;
 			} else {
                 TeleportService2.teleportTo(player, 210100000, 1451.8922f, 1297.8304f, 335.6076f, (byte) 65, TeleportAnimation.BEAM_ANIMATION);

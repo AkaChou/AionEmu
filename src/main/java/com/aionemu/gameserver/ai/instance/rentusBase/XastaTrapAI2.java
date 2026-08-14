@@ -29,7 +29,7 @@ public class XastaTrapAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19922, 60, getOwner()).useNoAnimationSkill(); //Restraint Charm.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19922, 60, getOwner()).useNoAnimationSkill(); // 束缚咒 / Restraint Charm.
 				startLifeTask();
 			}
 		}, 1000);

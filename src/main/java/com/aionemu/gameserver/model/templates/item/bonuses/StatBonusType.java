@@ -21,7 +21,7 @@ public enum StatBonusType {
 		return name();
 	}
 
-	/** 值 / From Value*/
+	/** 按值解析枚举项 / From Value */
 	public static StatBonusType fromValue(String v) {
 		return valueOf(v);
 	}

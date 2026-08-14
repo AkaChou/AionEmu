@@ -29,11 +29,11 @@ public class AuronosAI2 extends AggressiveNpcAI2
 	}
 
 	private void removeTerraShield() {
-		getOwner().getEffectController().removeEffect(22847); //Terrashield.
+		getOwner().getEffectController().removeEffect(22847); // 大地护盾 / Terrashield.
 	}
 
 	private void terraShield() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 22847, 1, getOwner()).useNoAnimationSkill(); //Terrashield.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 22847, 1, getOwner()).useNoAnimationSkill(); // 大地护盾 / Terrashield.
 	}
 
 	@Override

@@ -71,10 +71,10 @@ public abstract class Siege<SL extends SiegeLocation> {
 	}
 
 	/**
-	 * 开始攻城。
-	 * Starts the siege.
+	 * 按指定据点 ID 开始攻城。
+	 * Starts the siege for the given location id.
 	 *
-	 * locationId
+	 * @param locationId 据点 ID / location id
 	 */
 	public final void startSiege(int locationId) {
 		GameFeatureServices.siegeService().startSiege(locationId);
@@ -96,27 +96,30 @@ public abstract class Siege<SL extends SiegeLocation> {
 	}
 
 	/**
-	 * getSiegeLocation 方法。
-	 * getSiegeLocation method.
-	 * result
+	 * 返回攻城据点。
+	 * Returns the siege location.
+	 *
+	 * @return 攻城据点 / siege location
 	 */
 	public SL getSiegeLocation() {
 		return siegeLocation;
 	}
 
 	/**
-	 * getSiegeLocationId 方法。
-	 * getSiegeLocationId method.
-	 * result
+	 * 返回攻城据点 ID。
+	 * Returns the siege location id.
+	 *
+	 * @return 据点 ID / location id
 	 */
 	public int getSiegeLocationId() {
 		return siegeLocation.getLocationId();
 	}
 
 	/**
-	 * isBossKilled 方法。
-	 * isBossKilled method.
-	 * result
+	 * 返回攻城首领是否已被击杀。
+	 * Returns whether the siege boss has been killed.
+	 *
+	 * @return 是否已击杀首领 / whether boss was killed
 	 */
 	public boolean isBossKilled() {
 		return bossKilled;
@@ -133,46 +136,50 @@ public abstract class Siege<SL extends SiegeLocation> {
 	}
 
 	/**
-	 * getBoss 方法。
-	 * getBoss method.
-	 * result
+	 * 返回攻城首领 NPC。
+	 * Returns the siege boss NPC.
+	 *
+	 * @return 首领 NPC / boss NPC
 	 */
 	public SiegeNpc getBoss() {
 		return boss;
 	}
 
 	/**
-	 * setBoss 方法。
-	 * setBoss method.
+	 * 设置攻城首领 NPC。
+	 * Sets the siege boss NPC.
 	 *
-	 * boss
+	 * @param boss 首领 NPC / boss NPC
 	 */
 	public void setBoss(SiegeNpc boss) {
 		this.boss = boss;
 	}
 
 	/**
-	 * getSiegeBossDoAddDamageListener 方法。
-	 * getSiegeBossDoAddDamageListener method.
-	 * result
+	 * 返回首领伤害监听器。
+	 * Returns the boss damage listener.
+	 *
+	 * @return 伤害监听器 / damage listener
 	 */
 	public SiegeBossDoAddDamageListener getSiegeBossDoAddDamageListener() {
 		return siegeBossDoAddDamageListener;
 	}
 
 	/**
-	 * getSiegeBossDeathListener 方法。
-	 * getSiegeBossDeathListener method.
-	 * result
+	 * 返回首领死亡监听器。
+	 * Returns the boss death listener.
+	 *
+	 * @return 死亡监听器 / death listener
 	 */
 	public SiegeBossDeathListener getSiegeBossDeathListener() {
 		return siegeBossDeathListener;
 	}
 
 	/**
-	 * getSiegeCounter 方法。
-	 * getSiegeCounter method.
-	 * result
+	 * 返回攻城计数器。
+	 * Returns the siege counter.
+	 *
+	 * @return 攻城计数器 / siege counter
 	 */
 	public SiegeCounter getSiegeCounter() {
 		return siegeCounter;
@@ -186,8 +193,8 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 * 累计 BOSS 伤害。
 	 * Adds boss damage.
 	 *
-	 * attacker
-	 * damage
+	 * @param attacker 攻击者 / attacker
+	 * @param damage 伤害量 / damage
 	 */
 	public void addBossDamage(Creature attacker, int damage) {
 		if (isFinished()) {
@@ -205,27 +212,30 @@ public abstract class Siege<SL extends SiegeLocation> {
 	public abstract void addAbyssPoints(Player player, int abysPoints);
 
 	/**
-	 * isStarted 方法。
-	 * isStarted method.
-	 * result
+	 * 返回攻城是否已开始。
+	 * Returns whether the siege has started.
+	 *
+	 * @return 是否已开始 / whether started
 	 */
 	public boolean isStarted() {
 		return started;
 	}
 
 	/**
-	 * isFinished 方法。
-	 * isFinished method.
-	 * result
+	 * 返回攻城是否已结束。
+	 * Returns whether the siege has finished.
+	 *
+	 * @return 是否已结束 / whether finished
 	 */
 	public boolean isFinished() {
 		return finished.get();
 	}
 
 	/**
-	 * getStartTime 方法。
-	 * getStartTime method.
-	 * result
+	 * 返回攻城开始时间。
+	 * Returns the siege start time.
+	 *
+	 * @return 开始时间 / start time
 	 */
 	public Date getStartTime() {
 		return startTime;
@@ -281,9 +291,9 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 * 刷出 NPC。
 	 * Spawns NPCs.
 	 *
-	 * locationId
-	 * 阵营 / race
-	 * type
+	 * @param locationId 据点 ID / location id
+	 * @param race 阵营 / race
+	 * @param type 攻城模式 / siege mod type
 	 */
 	protected void spawnNpcs(int locationId, SiegeRace race, SiegeModType type) {
 		GameFeatureServices.siegeService().spawnNpcs(locationId, race, type);
@@ -293,7 +303,7 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 * 移除 NPC。
 	 * Despawns NPCs.
 	 *
-	 * locationId
+	 * @param locationId 据点 ID / location id
 	 */
 	protected void deSpawnNpcs(int locationId) {
 		GameFeatureServices.siegeService().deSpawnNpcs(locationId);
@@ -303,7 +313,7 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 * 广播攻城状态。
 	 * Broadcasts siege state.
 	 *
-	 * location
+	 * @param location 攻城据点 / siege location
 	 */
 	protected void broadcastState(SiegeLocation location) {
 		GameFeatureServices.siegeService().broadcast(new SM_SIEGE_LOCATION_STATE(location), null);
@@ -313,18 +323,18 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 * 广播攻城更新。
 	 * Broadcasts siege update.
 	 *
-	 * location
+	 * @param location 攻城据点 / siege location
 	 */
 	protected void broadcastUpdate(SiegeLocation location) {
 		GameFeatureServices.siegeService().broadcastUpdate(location);
 	}
 
 	/**
-	 * 广播攻城更新。
-	 * Broadcasts siege update.
+	 * 广播攻城更新（带名称 ID）。
+	 * Broadcasts siege update (with name id).
 	 *
-	 * location
-	 * nameId
+	 * @param location 攻城据点 / siege location
+	 * @param nameId 名称 ID / name id
 	 */
 	protected void broadcastUpdate(SiegeLocation location, int nameId) {
 		GameFeatureServices.siegeService().broadcastUpdate(location, new DescriptionId(nameId));

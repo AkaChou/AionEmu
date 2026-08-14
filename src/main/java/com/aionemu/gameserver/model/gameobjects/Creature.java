@@ -71,11 +71,14 @@ public abstract class Creature extends VisibleObject {
 	private int statRatio = 1000;
 
 	/**
-	 * @param objId
-	 * @param controller
-	 * @param spawnTemplate
-	 * @param objectTemplate
-	 * @param position
+	 * 构造生物。
+	 * Constructs a creature.
+	 *
+	 * @param objId 对象 ID / object id
+	 * @param controller 生物控制器 / creature controller
+	 * @param spawnTemplate 生成模板 / spawn template
+	 * @param objectTemplate 对象模板 / object template
+	 * @param position 世界位置 / world position
 	 */
 	public Creature(int objId, CreatureController<? extends Creature> controller, SpawnTemplate spawnTemplate,
 			VisibleObjectTemplate objectTemplate, WorldPosition position) {
@@ -90,7 +93,7 @@ public abstract class Creature extends VisibleObject {
 		this.aggroList = createAggroList();
 	}
 
-	/** 返回 move controller / Returns the move controller */
+	/** 返回移动控制器 / Returns the move controller */
 	public MoveController getMoveController() {
 		return this.moveController;
 	}
@@ -100,9 +103,10 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * Return CreatureController of this Creature object
+	 * 返回此生物的控制器。
+	 * Returns the controller of this Creature object.
 	 *
-	 * @return CreatureController.
+	 * @return 生物控制器 / creature controller
 	 */
 	@Override
 	public CreatureController<? extends Creature> getController() {
@@ -110,28 +114,40 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return the lifeStats
+	 * 返回生命属性。
+	 * Returns the life stats.
+	 *
+	 * @return 生命属性 / the lifeStats
 	 */
 	public CreatureLifeStats<? extends Creature> getLifeStats() {
 		return lifeStats;
 	}
 
 	/**
-	 * @param lifeStats the lifeStats to set
+	 * 设置生命属性。
+	 * Sets the life stats.
+	 *
+	 * @param lifeStats 要设置的生命属性 / the lifeStats to set
 	 */
 	public void setLifeStats(CreatureLifeStats<? extends Creature> lifeStats) {
 		this.lifeStats = lifeStats;
 	}
 
 	/**
-	 * @return the gameStats
+	 * 返回游戏属性。
+	 * Returns the game stats.
+	 *
+	 * @return 游戏属性 / the gameStats
 	 */
 	public CreatureGameStats<? extends Creature> getGameStats() {
 		return gameStats;
 	}
 
 	/**
-	 * @param gameStats the gameStats to set
+	 * 设置游戏属性。
+	 * Sets the game stats.
+	 *
+	 * @param gameStats 要设置的游戏属性 / the gameStats to set
 	 */
 	public void setGameStats(CreatureGameStats<? extends Creature> gameStats) {
 		this.gameStats = gameStats;
@@ -141,58 +157,70 @@ public abstract class Creature extends VisibleObject {
 	public abstract byte getLevel();
 
 	/**
-	 * @return the effectController
+	 * 返回效果控制器。
+	 * Returns the effect controller.
+	 *
+	 * @return 效果控制器 / the effectController
 	 */
 	public EffectController getEffectController() {
 		return effectController;
 	}
 
 	/**
-	 * @param effectController the effectController to set
+	 * 设置效果控制器。
+	 * Sets the effect controller.
+	 *
+	 * @param effectController 要设置的效果控制器 / the effectController to set
 	 */
 	public void setEffectController(EffectController effectController) {
 		this.effectController = effectController;
 	}
 
-	/** 返回 ai 2 / Returns the ai 2 */
+	/** 返回 AI 2 / Returns the ai 2 */
 	public AI2 getAi2() {
 		return ai2 != null ? ai2 : GameEngineServices.ai2Engine().setupAI("dummy", this);
 	}
 
-	/** 设置 ai 2 / Sets the ai 2 */
+	/** 设置 AI 2 / Sets the ai 2 */
 	public void setAi2(AI2 ai2) {
 		this.ai2 = ai2;
 	}
 
 	/**
-	 * @return 是否删除 delayed。 / Whether delete delayed
+	 * 是否延迟删除。
+	 * Whether the despawn is delayed.
+	 *
+	 * @return 是否延迟删除 / whether delete delayed
 	  */
 	public boolean isDeleteDelayed() {
 		return isDespawnDelayed;
 	}
 
-	/** 设置 despawn delayed / Sets the despawn delayed */
+	/** 设置延迟消失 / Sets whether the despawn is delayed */
 	public void setDespawnDelayed(boolean delayed) {
 		isDespawnDelayed = delayed;
 	}
 
-	/** 是否标志 / Whether flag*/
+	/** 是否旗帜 / Whether flag. */
 	public boolean isFlag() {
 		return false;
 	}
 
 	/**
-	 * @return 生物是否正在施放技能。 / Is creature casting some skill
+	 * 生物是否正在施放技能。
+	 * Whether the creature is casting some skill.
+	 *
+	 * @return 是否正在施放 / whether casting
 	 */
 	public boolean isCasting() {
 		return castingSkill != null;
 	}
 
 	/**
-	 * 设置当前 casting 技能或 nullwhen 技能 ends。
-	 * Set current casting skill or null when skill ends
+	 * 设置当前施放技能，技能结束时为 null。
+	 * Sets the current casting skill, or null when the skill ends.
 	 *
-	 * @param castingSkill
+	 * @param castingSkill 当前施放技能 / current casting skill
 	 */
 	public void setCasting(Skill castingSkill) {
 		if (castingSkill != null) {
@@ -202,20 +230,26 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return 当前施放技能 ID。 / Current casting skill id
+	 * 返回当前施放技能 ID。
+	 * Returns the current casting skill id.
+	 *
+	 * @return 技能 ID / current casting skill id
 	 */
 	public int getCastingSkillId() {
 		return castingSkill != null ? castingSkill.getSkillTemplate().getSkillId() : 0;
 	}
 
 	/**
-	 * @return 当前施放技能。 / Current casting skill
+	 * 返回当前施放技能。
+	 * Returns the current casting skill.
+	 *
+	 * @return 施放技能 / current casting skill
 	 */
 	public Skill getCastingSkill() {
 		return castingSkill;
 	}
 
-	/** 返回 skill number / Returns the skill number */
+	/** 返回技能编号 / Returns the skill number */
 	public int getSkillNumber() {
 		return skillNumber;
 	}
@@ -225,57 +259,66 @@ public abstract class Creature extends VisibleObject {
 		this.skillNumber = skillNumber;
 	}
 
-	/** 返回 attacked count / Returns the attacked count */
+	/** 返回被攻击次数 / Returns the attacked count */
 	public int getAttackedCount() {
 		return this.attackedCount;
 	}
 
-	/** 递增 attacked count / Increment Attacked Count */
+	/** 递增被攻击次数 / Increments the attacked count. */
 	public void incrementAttackedCount() {
 		this.attackedCount++;
 	}
 
-	/** 清除 attacked 次数 / Clear attacked count */
+	/** 清除被攻击次数 / Clears the attacked count. */
 	public void clearAttackedCount() {
 		attackedCount = 0;
 	}
 
 	/**
-	 * @return 是否正在使用物品。 / Is using item
+	 * 是否正在使用物品。
+	 * Whether the creature is using an item.
+	 *
+	 * @return 是否正在使用物品 / whether using an item
 	 */
 	public boolean isUsingItem() {
 		return usingItem != null;
 	}
 
 	/**
-	 * 设置 using 物品。
-	 * Set using item
+	 * 设置正在使用的物品。
+	 * Sets the item being used.
 	 *
-	 * @param usingItem
+	 * @param usingItem 正在使用的物品 / item being used
 	 */
 	public void setUsingItem(Item usingItem) {
 		this.usingItem = usingItem;
 	}
 
 	/**
-	 * 获取 usingitemid。
-	 * get Using ItemId
+	 * 获取正在使用的物品 ID。
+	 * Gets the id of the item being used.
 	 *
-	 * @return
+	 * @return 物品 ID / item id
 	 */
 	public int getUsingItemId() {
 		return usingItem != null ? usingItem.getItemTemplate().getTemplateId() : 0;
 	}
 
 	/**
-	 * @return 正在使用的物品。 / Using Item
+	 * 返回正在使用的物品。
+	 * Returns the item being used.
+	 *
+	 * @return 正在使用的物品 / item being used
 	 */
 	public Item getUsingItem() {
 		return usingItem;
 	}
 
 	/**
-	 * @return 检查是否有禁用移动的异常效果。 / All abnormal effects are checked that disable movements
+	 * 是否有禁用移动的异常效果。
+	 * Whether any abnormal effect disables movement.
+	 *
+	 * @return 是否禁用移动 / whether movement is disabled
 	 */
 	public boolean canPerformMove() {
 		return !(getEffectController().isAbnormalState(AbnormalState.CANT_MOVE_STATE)
@@ -283,7 +326,10 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return 检查是否有禁用攻击的异常效果。 / All abnormal effects are checked that disable attack
+	 * 是否有禁用攻击的异常效果。
+	 * Whether any abnormal effect disables attack.
+	 *
+	 * @return 是否禁用攻击 / whether attack is disabled
 	 */
 	public boolean canAttack() {
 		return !(getEffectController().isAbnormalState(AbnormalState.CANT_ATTACK_STATE) || isCasting()
@@ -311,32 +357,41 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return state
+	 * 返回状态。
+	 * Returns the state.
+	 *
+	 * @return 状态 / state
 	 */
 	public int getState() {
 		return state;
 	}
 
 	/**
-	 * @param state the state to set
+	 * 设置状态。
+	 * Sets the state.
+	 *
+	 * @param state 要设置的状态 / the state to set
 	 */
 	public void setState(CreatureState state) {
 		this.state |= state.getId();
 	}
 
 	/**
-	 * @param state taken usually from templates
+	 * 设置状态（通常取自模板）。
+	 * Sets the state, usually taken from templates.
+	 *
+	 * @param state 状态 / state
 	 */
 	public void setState(int state) {
 		this.state = state;
 	}
 
-	/** 取消设置 state / Unset State */
+	/** 取消状态 / Unset state. */
 	public void unsetState(CreatureState state) {
 		this.state &= ~state.getId();
 	}
 
-	/** 是否状态 / Whether in state*/
+	/** 是否处于状态 / Whether in state. */
 	public boolean isInState(CreatureState state) {
 		int isState = this.state & state.getId();
 
@@ -347,26 +402,36 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return visualState
+	 * 返回可视状态。
+	 * Returns the visual state.
+	 *
+	 * @return 可视状态 / visualState
 	 */
 	public int getVisualState() {
 		return visualState;
 	}
 
 	/**
-	 * @param visualState the visualState to set
+	 * 设置可视状态。
+	 * Sets the visual state.
+	 *
+	 * @param visualState 要设置的可视状态 / the visualState to set
 	 */
 	public void setVisualState(CreatureVisualState visualState) {
 		this.visualState |= visualState.getId();
 	}
 
-	/** 取消设置 visual state / Unset Visual State */
+	/** 取消可视状态 / Unsets the visual state. */
 	public void unsetVisualState(CreatureVisualState visualState) {
 		this.visualState &= ~visualState.getId();
 	}
 
 	/**
-	 * @param visualState 是否处于指定可视状态。 / Whether in visual state
+	 * 是否处于指定可视状态。
+	 * Whether in the given visual state.
+	 *
+	 * @param visualState 可视状态 / visual state
+	 * @return 是否处于该状态 / whether in that state
 	  */
 	public boolean isInVisualState(CreatureVisualState visualState) {
 		int isVisualState = this.visualState & visualState.getId();
@@ -378,26 +443,36 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return seeState
+	 * 返回感知状态。
+	 * Returns the see state.
+	 *
+	 * @return 感知状态 / seeState
 	 */
 	public int getSeeState() {
 		return seeState;
 	}
 
 	/**
-	 * @param seeState the seeState to set
+	 * 设置感知状态。
+	 * Sets the see state.
+	 *
+	 * @param seeState 要设置的感知状态 / the seeState to set
 	 */
 	public void setSeeState(CreatureSeeState seeState) {
 		this.seeState |= seeState.getId();
 	}
 
-	/** 取消设置 see state / Unset See State */
+	/** 取消感知状态 / Unsets the see state. */
 	public void unsetSeeState(CreatureSeeState seeState) {
 		this.seeState &= ~seeState.getId();
 	}
 
 	/**
-	 * @param seeState 是否处于指定可见状态。 / Whether in see state
+	 * 是否处于指定感知状态。
+	 * Whether in the given see state.
+	 *
+	 * @param seeState 感知状态 / see state
+	 * @return 是否处于该状态 / whether in that state
 	  */
 	public boolean isInSeeState(CreatureSeeState seeState) {
 		int isSeeState = this.seeState & seeState.getId();
@@ -409,21 +484,30 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return the transformModel
+	 * 返回变身模型。
+	 * Returns the transform model.
+	 *
+	 * @return 变身模型 / the transformModel
 	 */
 	public TransformModel getTransformModel() {
 		return transformModel;
 	}
 
 	/**
-	 * @param model the transformedModel to set
+	 * 设置变身模型。
+	 * Sets the transform model.
+	 *
+	 * @param model 要设置的变身模型 / the transformedModel to set
 	 */
 	public final void setTransformModel(TransformModel model) {
 		this.transformModel = model;
 	}
 
 	/**
-	 * @return the aggroList
+	 * 返回仇恨列表。
+	 * Returns the aggro list.
+	 *
+	 * @return 仇恨列表 / the aggroList
 	 */
 	public final AggroList getAggroList() {
 		return aggroList;
@@ -435,7 +519,8 @@ public abstract class Creature extends VisibleObject {
 	private volatile byte packetBroadcastMask;
 
 	/**
-	 * This is adding broadcast to player
+	 * 为玩家添加广播。
+	 * This is adding a broadcast to the player.
 	 */
 	public final synchronized void addPacketBroadcastMask(BroadcastMode mode) {
 		packetBroadcastMask |= mode.mask();
@@ -449,7 +534,8 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * This is removing broadcast from player
+	 * 移除玩家的广播。
+	 * This is removing the broadcast from the player.
 	 */
 	public final synchronized void removePacketBroadcastMask(BroadcastMode mode) {
 		packetBroadcastMask &= ~mode.mask();
@@ -461,14 +547,18 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * Broadcast getter
+	 * 广播获取器。
+	 * Broadcast getter.
 	 */
 	public final byte getPacketBroadcastMask() {
 		return packetBroadcastMask;
 	}
 
 	/**
-	 * @return the observeController
+	 * 返回观察控制器。
+	 * Returns the observe controller.
+	 *
+	 * @return 观察控制器 / the observeController
 	 */
 	public ObserveController getObserveController() {
 		return observeController;
@@ -486,23 +576,33 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param creature
+	 * 判断生物是否为敌对目标。
+	 * Whether the creature is an enemy.
+	 *
+	 * @param creature 生物 / creature
+	 * @return 是否敌对 / whether enemy
 	 */
 	public boolean isEnemyFrom(Creature creature) {
 		return false;
 	}
 
 	/**
-	 * @param player
-	 * @return
+	 * 判断玩家是否为敌对目标。
+	 * Whether the player is an enemy.
+	 *
+	 * @param player 玩家 / player
+	 * @return 是否敌对 / whether enemy
 	 */
 	public boolean isEnemyFrom(Player player) {
 		return false;
 	}
 
 	/**
-	 * @param npc
-	 * @return
+	 * 判断 NPC 是否为敌对目标。
+	 * Whether the NPC is an enemy.
+	 *
+	 * @param npc NPC / NPC
+	 * @return 是否敌对 / whether enemy
 	 */
 	public boolean isEnemyFrom(Npc npc) {
 		return false;
@@ -525,31 +625,44 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param creature
-	 * @return
+	 * 判断生物是否为敌对目标。
+	 * Whether the creature is an enemy.
+	 *
+	 * @param creature 生物 / creature
+	 * @return 是否敌对 / whether enemy
 	 */
 	public boolean isAggroFrom(Creature creature) {
 		return false;
 	}
 
 	/**
-	 * @param npc
-	 * @return
+	 * 判断 NPC 是否为敌对目标。
+	 * Whether the NPC is an enemy.
+	 *
+	 * @param npc NPC / NPC
+	 * @return 是否敌对 / whether enemy
 	 */
 	public boolean isAggroFrom(Npc npc) {
 		return false;
 	}
 
 	/**
-	 * @param npc
-	 * @return
+	 * 判断 NPC 是否为敌对目标。
+	 * Whether the NPC is an enemy.
+	 *
+	 * @param npc NPC / NPC
+	 * @return 是否敌对 / whether enemy
 	 */
 	public boolean isHostileFrom(Npc npc) {
 		return false;
 	}
 
 	/**
-	 * @param npc
+	 * 判断 NPC 是否会支援本生物。
+	 * Whether the NPC supports this creature.
+	 *
+	 * @param npc NPC / NPC
+	 * @return 是否会支援 / whether support
 	 */
 	public boolean isSupportFrom(Npc npc) {
 		return false;
@@ -563,8 +676,11 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param creature
-	 * @return
+	 * 判断生物是否为敌对目标。
+	 * Whether the creature is an enemy.
+	 *
+	 * @param creature 生物 / creature
+	 * @return 是否敌对 / whether enemy
 	 */
 
 	@Override
@@ -586,7 +702,10 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return NpcObjectType.NORMAL
+	 * 返回 NPC 对象类型 NORMAL。
+	 * Returns NpcObjectType.NORMAL.
+	 *
+	 * @return NPC 对象类型 / NpcObjectType.NORMAL
 	 */
 	public NpcObjectType getNpcObjectType() {
 		return NpcObjectType.NORMAL;
@@ -607,8 +726,11 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param template
-	 * @return
+	 * 是否可施放指定技能。
+	 * Whether the given skill can be used.
+	 *
+	 * @param template 技能模板 / skill template
+	 * @return 是否可施放 / whether usable
 	 */
 	public boolean isSkillDisabled(SkillTemplate template) {
 
@@ -641,8 +763,11 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param delayId
-	 * @return
+	 * 检查指定冷却 ID 是否处于冷却中。
+	 * Checks whether the given cooldown id is active.
+	 *
+	 * @param delayId 冷却 ID / cooldown id
+	 * @return 是否在冷却中 / whether on cooldown
 	 */
 	public long getSkillCoolDown(int delayId) {
 		if (skillCoolDowns == null || !skillCoolDowns.containsKey(delayId)) {
@@ -656,8 +781,11 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param delayId
-	 * @param time
+	 * 设置技能冷却。
+	 * Sets a skill cooldown.
+	 *
+	 * @param delayId 冷却 ID / cooldown id
+	 * @param time 冷却时间 / cooldown time
 	 */
 	public void setSkillCoolDown(int delayId, long time) {
 
@@ -672,14 +800,20 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return the skillCoolDowns
+	 * 返回技能冷却表。
+	 * Returns the skill cooldowns.
+	 *
+	 * @return 技能冷却表 / the skillCoolDowns
 	 */
 	public Map<Integer, Long> getSkillCoolDowns() {
 		return skillCoolDowns;
 	}
 
 	/**
-	 * @param delayId
+	 * 移除指定冷却。
+	 * Removes the cooldown for the given id.
+	 *
+	 * @param delayId 冷却 ID / cooldown id
 	 */
 	public void removeSkillCoolDown(int delayId) {
 		if (skillCoolDowns == null) {
@@ -707,34 +841,46 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return isAdminNeutral value
+	 * 返回管理员中立值。
+	 * Returns the admin neutral value.
+	 *
+	 * @return 管理员中立值 / isAdminNeutral value
 	 */
 	public int getAdminNeutral() {
 		return adminFlags >> 4;
 	}
 
 	/**
-	 * @param newValue
+	 * 设置管理员中立值。
+	 * Sets the admin neutral value.
+	 *
+	 * @param newValue 新值 / new value
 	 */
 	public void setAdminNeutral(int newValue) {
 		adminFlags = (byte) ((adminFlags & 0xF) | (newValue & 0xF) << 4);
 	}
 
 	/**
-	 * @return isAdminEnmity value
+	 * 返回管理员仇恨值。
+	 * Returns the admin enmity value.
+	 *
+	 * @return 管理员仇恨值 / isAdminEnmity value
 	 */
 	public int getAdminEnmity() {
 		return adminFlags & 0xF;
 	}
 
 	/**
-	 * @param newValue
+	 * 设置管理员中立值。
+	 * Sets the admin neutral value.
+	 *
+	 * @param newValue 新值 / new value
 	 */
 	public void setAdminEnmity(int newValue) {
 		adminFlags = (byte) ((adminFlags & 0xF0) | (newValue & 0xF));
 	}
 
-	/** 返回碰撞 / Returns the collision */
+	/** 返回碰撞半径 / Returns the collision */
 	public float getCollision() {
 		return getObjectTemplate().getBoundRadius().getCollision();
 	}
@@ -746,13 +892,16 @@ public abstract class Creature extends VisibleObject {
 		return false;
 	}
 
-	/** 返回攻击类型 / Returns the attack type*/
+	/** 返回攻击类型 / Returns the attack type. */
 	public ItemAttackType getAttackType() {
 		return ItemAttackType.PHYSICAL;
 	}
 
 	/**
-	 * @return 生物正在飞行（FLY 或 GLIDE 状态）。 / Creature is flying (FLY or GLIDE states)
+	 * 生物是否正在飞行（FLY 或 GLIDE 状态）。
+	 * Whether the creature is flying (FLY or GLIDE states).
+	 *
+	 * @return 是否正在飞行 / whether flying
 	 */
 	public boolean isFlying() {
 		return (isInState(CreatureState.FLYING) && !isInState(CreatureState.RESTING))
@@ -760,18 +909,21 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return 是否处于飞行状态。 / Whether in flying state
+	 * 是否处于飞行状态。
+	 * Whether the creature is in flying state.
+	 *
+	 * @return 是否处于飞行状态 / whether in flying state
 	  */
 	public boolean isInFlyingState() {
 		return isInState(CreatureState.FLYING) && !isInState(CreatureState.RESTING);
 	}
 
-	/** 是否玩家。 / Whether Player. */
+	/** 是否玩家。 / Whether player. */
 	public byte isPlayer() {
 		return 0;
 	}
 
-	/** 是否为物理职业 / Whether phys class */
+	/** 是否为物理职业 / Whether physical class. */
 	public boolean isPhysClass(Creature creature) {
 		if (creature instanceof Player) {
 			switch (((Player) creature).getPlayerClass()) {
@@ -789,7 +941,7 @@ public abstract class Creature extends VisibleObject {
 		return false;
 	}
 
-	/** 是否为魔法职业 / Whether magic class */
+	/** 是否为魔法职业 / Whether magic class. */
 	public boolean isMagicClass(Creature creature) {
 		if (creature instanceof Player) {
 			switch (((Player) creature).getPlayerClass()) {
@@ -807,13 +959,17 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param creature 是否为 PvP 目标。 / Whether pvp target
+	 * 是否为 PvP 目标。
+	 * Whether the creature is a PvP target.
+	 *
+	 * @param creature 生物 / creature
+	 * @return 是否为 PvP 目标 / whether pvp target
 	  */
 	public boolean isPvpTarget(Creature creature) {
 		return getActingCreature() instanceof Player && creature.getActingCreature() instanceof Player;
 	}
 
-	/** 重校验区域 / revalidate Zones. */
+	/** 重新校验区域 / Revalidates zones. */
 	public void revalidateZones() {
 		MapRegion mapRegion = this.getPosition().getMapRegion();
 		if (mapRegion != null) {
@@ -822,7 +978,11 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param zoneName Whether inside zone
+	 * 是否处于指定区域。
+	 * Whether the creature is inside the given zone.
+	 *
+	 * @param zoneName 区域名 / zone name
+	 * @return 是否在区域内 / whether inside zone
 	 */
 	public boolean isInsideZone(ZoneName zoneName) {
 		if (!isSpawned()) {
@@ -863,17 +1023,17 @@ public abstract class Creature extends VisibleObject {
 		return template.getUseLimits().getDelayTime();
 	}
 
-	/** 是否新刷新 / Whether new spawn*/
+	/** 是否新生成 / Whether new spawn. */
 	public boolean isNewSpawn() {
 		return System.currentTimeMillis() - spawnTime < 1500;
 	}
 
-	/** 返回 pulled multi / Returns the pulled multi */
+	/** 返回拉取倍率 / Returns the pulled multi */
 	public int getPulledMulti() {
 		return PulledMulti;
 	}
 
-	/** 设置 pulled multi / Sets the pulled multi */
+	/** 设置拉取倍率 / Sets the pulled multi */
 	public void setPulledMulti(int pulledMulti) {
 		PulledMulti = pulledMulti;
 	}

@@ -51,7 +51,7 @@ public class SvsSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether svs peace
+	 * @return 是否势力战和平状态 / whether svs peace
 	 */
 	public final boolean isSvsPeace() {
 		return svsType.equals(SvsStateType.PEACE);

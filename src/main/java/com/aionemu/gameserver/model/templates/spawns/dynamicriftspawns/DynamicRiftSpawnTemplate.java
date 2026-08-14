@@ -7,11 +7,10 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 动态裂隙刷新点模板（静态数据/XML）。
- * XML template.
+ * Dynamic rift spawn template (static data/XML).
  *
  * @author Rinzler (Encom)
  */
-
 public class DynamicRiftSpawnTemplate extends SpawnTemplate {
 	private int id;
 	private DynamicRiftStateType dynamicRiftType;

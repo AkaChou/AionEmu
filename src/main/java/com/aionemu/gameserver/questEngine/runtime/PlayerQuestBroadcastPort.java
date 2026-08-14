@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 真实 {@link QuestBroadcastPort}：提交后通过生产分发器向每个任务广播区域任务结束。
  * Real {@link QuestBroadcastPort}: after commit, dispatches zone-mission-end to
  * each listed quest via the production dispatcher. The dispatcher callback is
  * injected after the dispatcher is constructed (break the composition cycle).
@@ -56,7 +57,7 @@ public final class PlayerQuestBroadcastPort implements QuestBroadcastPort {
 		Objects.requireNonNull(questIds, "questIds");
 		Player player = players.find(snapshot.playerId());
 		if (player == null) {
-			// 提交已成功但玩家已登出:无可分发对象,best-effort 跳过。
+			// 提交已成功但玩家已登出：无可分发对象，best-effort 跳过。 / Commit succeeded but player logged out: nothing to dispatch to, best-effort skip.
 			return false;
 		}
 		return broadcast.broadcast(player, questIds);

@@ -22,7 +22,7 @@ public enum CounterSkillStatus {
 	 * 构造反击技能状态。
 	 * Constructs a counter-skill status.
 	 *
-	 * type id
+	 * @param type 类型 ID / type id
 	 */
 	private CounterSkillStatus(int type) {
 		this.type = type;
@@ -32,7 +32,7 @@ public enum CounterSkillStatus {
 	 * 返回状态类型 ID。
 	 * Returns the status type id.
 	 *
-	 * type id
+	 * @return 类型 ID / type id
 	 */
 	public final int getId() {
 		return type;

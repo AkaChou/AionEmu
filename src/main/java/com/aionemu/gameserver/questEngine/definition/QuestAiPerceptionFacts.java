@@ -1,6 +1,9 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-/** Immutable facts captured when an NPC's authoritative aggro list observes a player. */
+/**
+ * NPC 权威仇恨列表观察到玩家时捕获的不可变事实。
+ * Immutable facts captured when an NPC's authoritative aggro list observes a player.
+ */
 public record QuestAiPerceptionFacts(int recipientId, int npcObjectId, int npcTemplateId,
 		int aggroSourceObjectId, boolean sourceHostile, boolean sourceSpawned,
 		int recipientWorldId, int npcWorldId, int recipientInstanceId, int npcInstanceId,

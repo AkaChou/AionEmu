@@ -31,9 +31,9 @@ public class CM_PLAYER_AUTH extends AbstractClientPacket {
      * 构造玩家鉴权客户端包。
      * Constructs a player auth client packet.
      *
-     * packet reader
+     * @param packetReader 包读取器 / packet reader
      * @param clientChannelHandler 客户端通道处理器 / client channel handler
-     * chat service
+     * @param chatService 聊天服务 / chat service
      */
     public CM_PLAYER_AUTH(PacketReader packetReader, ClientChannelHandler clientChannelHandler, ChatService chatService) {
         super(packetReader, clientChannelHandler, 0x05);
@@ -46,7 +46,7 @@ public class CM_PLAYER_AUTH extends AbstractClientPacket {
      */
     @Override
     protected void readImpl() {
-        readB(29); //AION stuff
+        readB(29); // AION 相关固定字段 / AION stuff
         this.playerId = readD();
         readD(); // 0x00
         readD(); // 0x00

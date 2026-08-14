@@ -37,7 +37,7 @@ public enum GsAuthResponse {
      * 构造应答枚举项。
      * Construct response enum constant.
      *
-     * Response message id
+     * @param responseId 响应消息 ID / response message id
      */
     GsAuthResponse(int responseId) {
         this.responseId = (byte) responseId;

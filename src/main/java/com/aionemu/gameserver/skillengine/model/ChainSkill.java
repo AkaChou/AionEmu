@@ -14,8 +14,8 @@ public class ChainSkill {
 	 * 构造连锁技能状态。
 	 * Constructs a chain-skill state.
 	 *
-	 * chain category
-	 * chain count
+	 * @param category 连锁类别 / chain category
+	 * @param chainCount 连击计数 / chain count
 	 * @param useTime 使用时间戳 / use timestamp
 	 */
 	public ChainSkill(String category, int chainCount, long useTime) {
@@ -40,7 +40,7 @@ public class ChainSkill {
 	 * 获取连锁类别。
 	 * Gets chain category.
 	 *
-	 * category
+	 * @return 类别 / category
 	 */
 	public String getCategory() {
 		return category;
@@ -50,7 +50,7 @@ public class ChainSkill {
 	 * 设置连锁类别。
 	 * Sets chain category.
 	 *
-	 * category name
+	 * @param name 类别名 / category name
 	 */
 	public void setCategory(String name) {
 		category = name;
@@ -60,7 +60,7 @@ public class ChainSkill {
 	 * 获取连击计数。
 	 * Gets chain count.
 	 *
-	 * chain count
+	 * @return 连击计数 / chain count
 	 */
 	public int getChainCount() {
 		return chainCount;
@@ -70,7 +70,7 @@ public class ChainSkill {
 	 * 设置连击计数。
 	 * Sets chain count.
 	 *
-	 * chain count
+	 * @param chainCount 连击计数 / chain count
 	 */
 	public void setChainCount(int chainCount) {
 		this.chainCount = chainCount;

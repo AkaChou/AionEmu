@@ -17,6 +17,8 @@ import java.util.Objects;
 import java.util.function.BiFunction;
 
 /**
+ * 真实 {@link QuestInventoryPort}：从在线玩家背包移除所需物品并发放任务工作物品，
+ * 通过 {@link InventoryDAO} 的调用方连接事务内钩子持久化脏物品，使变更与任务状态原子提交。
  * Real {@link QuestInventoryPort}: removes required items from and grants quest
  * work items to the live player inventory, persisting dirty items through
  * {@link InventoryDAO}'s transaction-in-progress hook on the caller-owned

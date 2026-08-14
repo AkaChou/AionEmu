@@ -22,8 +22,8 @@ public class SM_FRIEND_NOTIFY extends AionServerPacket {
 	private final String name;
 
 	/**
-	 * event code
-	 * 好友名称 / friend name
+	 * @param code 事件码 / event code
+	 * @param name 好友名称 / friend name
 	 */
 	public SM_FRIEND_NOTIFY(int code, String name) {
 		this.code = code;

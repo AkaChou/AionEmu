@@ -17,6 +17,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @AIName("arminos_draky")
 public class ArminosDrakyAI2 extends GeneralNpcAI2
 {
+    // 漫游路线 ID / walker route id
     private String walkerId = "300300001";
     private boolean isStart = true;
 	

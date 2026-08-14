@@ -14,14 +14,18 @@ import jakarta.xml.bind.annotation.XmlType;
 public enum PlaceArea {
 
 	/** 全部 / All. */
-	ALL, INTERIOR, EXTERIOR;
+	ALL,
+	/** 室内 / Interior. */
+	INTERIOR,
+	/** 室外 / Exterior. */
+	EXTERIOR;
 
 	/** 值。 / Value. */
 	public String value() {
 		return name();
 	}
 
-	/** 值 / From Value*/
+	/** 值 / From Value. */
 	public static PlaceArea fromValue(String value) {
 		return valueOf(value);
 	}

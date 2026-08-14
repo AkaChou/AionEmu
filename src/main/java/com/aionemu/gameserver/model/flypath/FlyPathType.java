@@ -6,7 +6,7 @@ package com.aionemu.gameserver.model.flypath;
  */
 
 public enum FlyPathType {
-	/** 喷泉 / Geyser. */
+	/** 喷泉。 / Geyser. */
 	GEYSER(0), ONE_WAY(1), TWO_WAY(2);
 
 	private int id;
@@ -15,7 +15,7 @@ public enum FlyPathType {
 		this.id = id;
 	}
 
-	/** 返回 ID / Returns the id */
+	/** 返回 ID。 / Returns the id. */
 	public int getId() {
 		return id;
 	}

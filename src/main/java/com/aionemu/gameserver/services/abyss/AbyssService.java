@@ -10,7 +10,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 欧比斯通用工具：PvP 地图判定与军阶击杀/技能全服广播。
- * skill world announcements.
+ * Abyss utilities: PvP-map check and rank kill/skill world announcements.
  */
 public class AbyssService {
 	private static final int[] abyssMapList = {
@@ -53,7 +53,7 @@ public class AbyssService {
 	 * 判断玩家是否位于欧比斯/PvP 地图列表中。
 	 * Whether the player is on a listed abyss/PvP map.
 	 *
-	 * 玩家 / Player
+	 * @param player 玩家 / Player
 	 * @return 在列表内则为 {@code true} / {@code true} if on a listed map
 	 */
 	public static final boolean isOnPvpMap(Player player) {
@@ -89,7 +89,7 @@ public class AbyssService {
 	 * 向同世界类型非副本玩家广播欧比斯技能释放。
 	 * Announce abyss-skill cast to non-instance players of the same world type.
 	 *
-	 * Caster
+	 * @param player 施法玩家 / Caster
 	 * @param nameId 技能名称描述 ID / Skill name description id
 	 */
 	public static final void rankerSkillAnnounce(final Player player, final int nameId) {

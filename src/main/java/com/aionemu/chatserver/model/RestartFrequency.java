@@ -45,7 +45,7 @@ public enum RestartFrequency {
      * 获取频率 ID。
      * Returns the frequency id.
      *
-     * frequency id
+     * @return 频率 ID / frequency id
      */
     public int getID() {
         return id;

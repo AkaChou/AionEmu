@@ -16,7 +16,7 @@ public final class CompressUtil {
 	 *
 	 * @param bytes 压缩数据 / Compressed bytes
 	 * @return 解压后的文本 / Decompressed text
-	 * On decompress failure。
+	 * @throws Exception 解压失败时 / On decompress failure
 	 */
 	public static String Decompress(byte[] bytes) throws Exception {
 		Inflater decompressor = new Inflater();
@@ -49,10 +49,9 @@ public final class CompressUtil {
 	 * 将文本以 UTF-16LE 编码后 Deflate 压缩。
 	 * Encode text as UTF-16LE and Deflate-compress it.
 	 *
-	 * Source text
-	 * Compressed bytes
+	 * @param text 源文本 / Source text
+	 * @return 压缩字节 / Compressed bytes
 	 *
-	 * @param text
 	 * @throws Exception 压缩失败时 / On compress failure
 	 */
 	public static byte[] Compress(String text) throws Exception {

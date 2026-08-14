@@ -102,14 +102,17 @@ public class Npc extends Creature {
 		lastShoutedSeconds = System.currentTimeMillis() / 1000;
 	}
 
-	/** 返回 move controller / Returns the move controller */
+	/** 返回移动控制器 / Returns the move controller */
 	@Override
 	public NpcMoveController getMoveController() {
 		return (NpcMoveController) super.getMoveController();
 	}
 
 	/**
-	 * @param level
+	 * 初始化属性容器。
+	 * Sets up the stat containers.
+	 *
+	 * @param level 等级 / level
 	 */
 	protected void setupStatContainers(byte level) {
 		setGameStats(new NpcGameStats(this));
@@ -143,7 +146,7 @@ public class Npc extends Creature {
 		return getObjectTemplate().getLevel();
 	}
 
-	/** 返回 life stats / Returns the life stats */
+	/** 返回生命属性 / Returns the life stats */
 	@Override
 	public NpcLifeStats getLifeStats() {
 		return (NpcLifeStats) super.getLifeStats();
@@ -155,7 +158,7 @@ public class Npc extends Creature {
 		return (NpcGameStats) super.getGameStats();
 	}
 
-	/** 返回 controller / Returns the controller */
+	/** 返回控制器 / Returns the controller */
 	@Override
 	public NpcController getController() {
 		return (NpcController) super.getController();
@@ -166,20 +169,23 @@ public class Npc extends Creature {
 		return this.skillList;
 	}
 
-	/** 返回攻击类型 / Returns the attack type*/
+	/** 返回攻击类型 / Returns the attack type. */
 	@Override
 	public ItemAttackType getAttackType() {
 		return this.ai2.modifyAttackType(attacktype);
 	}
 
 	/**
-	 * @return Whether walk routes
+	 * 是否有巡逻路线。
+	 * Whether the NPC has walk routes.
+	 *
+	 * @return 是否有巡逻路线 / whether walk routes
 	 */
 	public boolean hasWalkRoutes() {
 		return getSpawn().getWalkerId() != null;
 	}
 
-	/** 返回 rating / Returns the rating */
+	/** 返回等级评定 / Returns the rating */
 	public NpcRating getRating() {
 		return getObjectTemplate().getRating();
 	}
@@ -194,19 +200,22 @@ public class Npc extends Creature {
 		return getObjectTemplate().getAbyssNpcType();
 	}
 
-	/** 返回 hp gauge / Returns the hp gauge */
+	/** 返回血条档位 / Returns the hp gauge */
 	public int getHpGauge() {
 		return getObjectTemplate().getHpGaugeLevel();
 	}
 
 	/**
-	 * @return 是否处于和平状态。 / Whether peace
+	 * 是否处于和平状态。
+	 * Whether the NPC is in peace state.
+	 *
+	 * @return 是否和平 / whether peace
 	  */
 	public boolean isPeace() {
 		return getNpcType().equals(NpcType.PEACE);
 	}
 
-	/** 是否好友到 / Whether friend to*/
+	/** 是否友好于 / Whether friend to. */
 	public boolean isFriendTo(Player player) {
 		if (this.getTribe() == TribeClass.NOFIGHT) {
 			return false;
@@ -257,7 +266,11 @@ public class Npc extends Creature {
 	}
 
 	/**
-	 * @param npc 是否会对其产生仇恨。 / Whether aggro from
+	 * NPC 是否会对本 NPC 产生仇恨。
+	 * Whether the NPC aggroes on this NPC.
+	 *
+	 * @param npc NPC / NPC
+	 * @return 是否产生仇恨 / whether aggro
 	  */
 	@Override
 	public boolean isAggroFrom(Npc npc) {
@@ -287,7 +300,11 @@ public class Npc extends Creature {
 	}
 
 	/**
-	 * @param player Whether none relation
+	 * 与玩家是否无任何关系。
+	 * Whether there is no relation with the player.
+	 *
+	 * @param player 玩家 / player
+	 * @return 是否无关系 / whether none relation
 	 */
 	public boolean isNoneRelation(Player player) {
 		return DataManager.TRIBE_RELATIONS_DATA.isNoneRelation(getTribe(), player.getTribe());
@@ -303,28 +320,32 @@ public class Npc extends Creature {
 		return this.getObjectTemplate().getTribe();
 	}
 
-	/** 返回 aggro range / Returns the aggro range */
+	/** 返回仇恨范围 / Returns the aggro range */
 	public int getAggroRange() {
 		return ai2.modifySensoryRange(sensoryRange);
 	}
 
 	/**
-	 * Check whether npc located near initial spawn location
+	 * 检查 NPC 是否位于初始生成点附近。
+	 * Checks whether the NPC is located near its initial spawn location.
 	 *
-	 * @return true or false
+	 * @return 是否在生成点附近 / true or false
 	 */
 	public boolean isAtSpawnLocation() {
 		return getDistanceToSpawnLocation() < 3;
 	}
 
 	/**
-	 * @return distance to spawn location
+	 * 返回到生成点的距离。
+	 * Returns the distance to the spawn location.
+	 *
+	 * @return 到生成点的距离 / distance to spawn location
 	 */
 	public double getDistanceToSpawnLocation() {
 		return MathUtil.getDistance(getSpawn().getX(), getSpawn().getY(), getSpawn().getZ(), getX(), getY(), getZ());
 	}
 
-	/** 是否敌对。 / Whether Enemy. */
+	/** 是否敌对。 / Whether enemy. */
 	@Override
 	public boolean isEnemy(Creature creature) {
 		if (creature instanceof Player) {
@@ -336,7 +357,11 @@ public class Npc extends Creature {
 	}
 
 	/**
-	 * @param npc 是否为敌对目标。 / Whether enemy from
+	 * 判断 NPC 是否为敌对目标。
+	 * Whether the NPC is an enemy.
+	 *
+	 * @param npc NPC / NPC
+	 * @return 是否敌对 / whether enemy
 	  */
 	@Override
 	public boolean isEnemyFrom(Npc npc) {
@@ -347,14 +372,18 @@ public class Npc extends Creature {
 	}
 
 	/**
-	 * @param player 是否为敌对目标。 / Whether enemy from
+	 * 判断玩家是否为敌对目标。
+	 * Whether the player is an enemy.
+	 *
+	 * @param player 玩家 / player
+	 * @return 是否敌对 / whether enemy
 	  */
 	@Override
 	public boolean isEnemyFrom(Player player) {
 		return isAttackableNpc() || player.isAggroIconTo(this);
 	}
 
-	/** 返回 see state / Returns the see state */
+	/** 返回感知状态 / Returns the see state */
 	@Override
 	public int getSeeState() {
 		int skillSeeState = super.getSeeState();
@@ -362,18 +391,21 @@ public class Npc extends Creature {
 		return Math.max(skillSeeState, congenitalSeeState);
 	}
 
-	/** 返回 is quest busy / Returns the is quest busy */
+	/** 返回任务占用状态 / Returns whether the NPC is quest-busy */
 	public boolean getIsQuestBusy() {
 		return isQuestBusy;
 	}
 
-	/** 设置 is quest busy / Sets the is quest busy */
+	/** 设置任务占用状态 / Sets whether the NPC is quest-busy */
 	public void setIsQuestBusy(boolean busy) {
 		isQuestBusy = busy;
 	}
 
 	/**
-	 * @return Whether attackable npc
+	 * 是否是可攻击 NPC。
+	 * Whether the NPC is attackable.
+	 *
+	 * @return 是否可攻击 / whether attackable
 	 */
 	@Override
 	public boolean isAttackableNpc() {
@@ -381,26 +413,31 @@ public class Npc extends Creature {
 	}
 
 	/**
-	 * @return Name of the Master
+	 * 返回主人名称。
+	 * Returns the name of the master.
+	 *
+	 * @return 主人名称 / name of the master
 	 */
 	public String getMasterName() {
 		return masterName;
 	}
 
-	/** 设置 master name / Sets the master name */
+	/** 设置主人名称 / Sets the master name */
 	public void setMasterName(String masterName) {
 		this.masterName = masterName;
 	}
 
 	/**
-	 * @return UniqueId of the VisibleObject which created this Npc (could be player
-	 *         or house)
+	 * 返回创建此 NPC 的对象的唯一 ID（可能是玩家或房屋）。
+	 * Returns the unique id of the VisibleObject which created this Npc (player or house).
+	 *
+	 * @return 创建者唯一 ID / unique id of the creator
 	 */
 	public int getCreatorId() {
 		return creatorId;
 	}
 
-	/** 设置 creator id / Sets the creator id */
+	/** 设置创建者 ID / Sets the creator id */
 	public void setCreatorId(int creatorId) {
 		this.creatorId = creatorId;
 	}
@@ -430,7 +467,7 @@ public class Npc extends Creature {
 		this.abyssId = abyssId;
 	}
 
-	/** 返回 creator / Returns the creator */
+	/** 返回创建者 / Returns the creator */
 	public VisibleObject getCreator() {
 		return null;
 	}
@@ -458,28 +495,31 @@ public class Npc extends Creature {
 		return walkerGroup;
 	}
 
-	/** 设置 walker group shift / Sets the walker group shift */
+	/** 设置巡逻队伍偏移 / Sets the walker group shift */
 	public void setWalkerGroupShift(WalkerGroupShift shift) {
 		this.walkerGroupShift = shift;
 	}
 
-	/** 返回 walker group shift / Returns the walker group shift */
+	/** 返回巡逻队伍偏移 / Returns the walker group shift */
 	public WalkerGroupShift getWalkerGroupShift() {
 		return walkerGroupShift;
 	}
 
-	/** 是否首领 / Whether boss*/
+	/** 是否首领 / Whether boss. */
 	public boolean isBoss() {
 		return getObjectTemplate().getRank() == NpcRank.EXPERT;
 	}
 
-	/** 是否标志 / Whether flag*/
+	/** 是否旗帜 / Whether flag. */
 	public boolean isFlag() {
 		return getObjectTemplate().getNpcTemplateType() == NpcTemplateType.FLAG;
 	}
 
 	/**
-	 * @return Whether entity
+	 * 是否关联实体。
+	 * Whether the NPC has an associated entity.
+	 *
+	 * @return 是否有关联实体 / whether entity
 	 */
 	public boolean hasEntity() {
 		return getSpawn().getEntityId() != 0;
@@ -491,17 +531,17 @@ public class Npc extends Creature {
 		return this.getObjectTemplate().getRace();
 	}
 
-	/** 返回 npc drop / Returns the npc drop */
+	/** 返回 NPC 掉落 / Returns the npc drop */
 	public NpcDrop getNpcDrop() {
 		return getObjectTemplate().getNpcDrop();
 	}
 
-	/** 返回 npc type / Returns the npc type */
+	/** 返回 NPC 类型 / Returns the npc type */
 	public NpcType getNpcType() {
 		return npcType;
 	}
 
-	/** SetsNPC 类型 / Sets the npc type */
+	/** 设置 NPC 类型 / Sets the npc type */
 	public void setNpcType(NpcType newType) {
 		npcType = newType;
 	}
@@ -522,7 +562,7 @@ public class Npc extends Creature {
 		return false;
 	}
 
-	/** 可喊话 / may Shout. */
+	/** 是否可以喊话 / Whether the NPC may shout. */
 	public boolean mayShout(int delaySeconds) {
 		if (!DataManager.NPC_SHOUT_DATA.hasAnyShout(getPosition().getMapId(), getNpcId())) {
 			return false;
@@ -530,7 +570,7 @@ public class Npc extends Creature {
 		return (System.currentTimeMillis() - lastShoutedSeconds) / 1000 >= delaySeconds;
 	}
 
-	/** 喊话 / shout. */
+	/** 执行喊话 / Shouts a message. */
 	public void shout(final NpcShout shout, final Creature target, final Object param, int delaySeconds) {
 		if (shout.getWhen() != ShoutEventType.DIED && shout.getWhen() != ShoutEventType.BEFORE_DESPAWN
 				&& getLifeStats().isAlreadyDead() || !mayShout(delaySeconds)) {
@@ -553,7 +593,7 @@ public class Npc extends Creature {
 
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
-			/** 运行 / run. */
+			/** 运行 / Run. */
 			@Override
 			public void run() {
 				if (thisNpc.getLifeStats().isAlreadyDead() && shout.getWhen() != ShoutEventType.DIED

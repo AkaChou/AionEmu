@@ -30,16 +30,16 @@ public class Defense_Turret_PlatformAI2 extends NpcAI2
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		// 速射多管火炮安装（1 明亮奥德）。 / Rapid Fire Multiple Fire Cannon Installation (1 Bright Aether).
-		if (dialogId == 10000 && player.getInventory().decreaseByItemId(182007405, 1)) { //Bright Aether.
-			spawn(833808, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Single Fire Cannon.
+		if (dialogId == 10000 && player.getInventory().decreaseByItemId(182007405, 1)) { // 明亮奥德 / Bright Aether.
+			spawn(833808, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 单发火焰加农 / Single Fire Cannon.
 		}
 		// 远程加农安装（2 明亮奥德） / Ranged Cannon Installation (2 Bright Aether)
-		else if (dialogId == 10001 && player.getInventory().decreaseByItemId(182007405, 2)) { //Bright Aether.
-			spawn(833809, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Area Antiaircraft Gun.
+		else if (dialogId == 10001 && player.getInventory().decreaseByItemId(182007405, 2)) { // 明亮奥德 / Bright Aether.
+			spawn(833809, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 区域防空炮 / Area Antiaircraft Gun.
 		}
 		// 强力魔法加农安装（2 明亮奥德）。 / Powerful Magic Cannon Installation (2 Bright Aether).
-		else if (dialogId == 10002 && player.getInventory().decreaseByItemId(182007405, 2)) { //Bright Aether.
-			spawn(833810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Wide Area Capture Device.
+		else if (dialogId == 10002 && player.getInventory().decreaseByItemId(182007405, 2)) { // 明亮奥德 / Bright Aether.
+			spawn(833810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 广域捕获装置 / Wide Area Capture Device.
 		}
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 		AI2Actions.deleteOwner(this);

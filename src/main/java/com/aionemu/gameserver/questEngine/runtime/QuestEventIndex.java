@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.OptionalInt;
 
-/** Deterministic event-to-owner index built only from compiled definitions. */
+/** 仅由编译定义构建的确定性事件到拥有者索引。 / Deterministic event-to-owner index built only from compiled definitions. */
 public final class QuestEventIndex {
 	private final Map<QuestEvent, List<Route>> routes;
 
@@ -75,7 +75,7 @@ public final class QuestEventIndex {
 	 * Returns the unique play duration for an item; conflicting owner declarations fail startup.
 	 *
 	 * @param itemId 物品模板 ID / item template id
-	 * 播放时长；未注册时为空 / play duration, or empty when unregistered
+	 * @return 播放时长；未注册时为空 / play duration, or empty when unregistered
 	 */
 	public OptionalInt itemPlayAnimationMillis(int itemId) {
 		if (itemId <= 0) {

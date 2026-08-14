@@ -158,7 +158,7 @@ public class LandingUpdateService {
 	 * 获取单例（优先 Spring {@link ObjectProvider}）。
 	 * Obtain the singleton (prefer Spring {@link ObjectProvider}).
 	 *
-	 * Service instance
+	 * @return 服务实例 / service instance
 	 */
 	public static LandingUpdateService getInstance() {
 		ObjectProvider<LandingUpdateService> provider = instanceProvider;

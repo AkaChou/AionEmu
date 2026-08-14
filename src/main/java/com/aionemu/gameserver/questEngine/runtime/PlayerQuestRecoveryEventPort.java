@@ -5,7 +5,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestRecoveryFacts;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
-/** Captures logout facts and owns only typed runtime-resource cleanup. */
+/** 捕获登出事实，并只拥有类型化运行时资源清理。 / Captures logout facts and owns only typed runtime-resource cleanup. */
 public final class PlayerQuestRecoveryEventPort implements QuestRecoveryEventPort {
 	@Override
 	public QuestEvent.LogOut logOut(QuestEnv env) {

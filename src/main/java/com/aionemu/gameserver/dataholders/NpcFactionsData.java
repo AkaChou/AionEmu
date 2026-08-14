@@ -56,9 +56,7 @@ public class NpcFactionsData {
 	 * 按关联 NPC ID 获取势力模板。
 	 * Returns the faction template associated with the given npc id.
 	 *
-	 * npc id
-	 *
-	 * @param id
+	 * @param id NPC ID / npc id
 	 * @return 势力模板或 null / faction template or null
 	 */
 	public NpcFactionTemplate getNpcFactionByNpcId(int id) {
@@ -79,7 +77,7 @@ public class NpcFactionsData {
 	 * 返回已加载的势力模板数量。
 	 * Returns the number of loaded faction templates.
 	 *
-	 * template count
+	 * @return 已加载的阵营模板数量 / Returns the number of loaded faction templates.
 	 */
 	public int size() {
 		return npcFactionsData.size();

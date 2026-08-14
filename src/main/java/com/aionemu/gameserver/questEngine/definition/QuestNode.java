@@ -2,7 +2,10 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import java.util.Objects;
 
-/** A compile-time label; it is never persisted as a graph node. */
+/**
+ * 编译期标签，绝不作为图节点持久化。
+ * A compile-time label; it is never persisted as a graph node.
+ */
 public record QuestNode(String label, NodeProjection projection) {
 	public QuestNode {
 		if (label == null || label.isBlank()) {

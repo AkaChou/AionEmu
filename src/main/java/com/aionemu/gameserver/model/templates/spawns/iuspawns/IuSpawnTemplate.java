@@ -30,7 +30,7 @@ public class IuSpawnTemplate extends SpawnTemplate {
 		return id;
 	}
 
-	/** 返回 iu state type / Returns the iu state type */
+	/** 返回 IU 状态类型 / Returns the iu state type */
 	public IuStateType getIUStateType() {
 		return iuType;
 	}
@@ -40,12 +40,12 @@ public class IuSpawnTemplate extends SpawnTemplate {
 		this.id = id;
 	}
 
-	/** 设置 iu state type / Sets the iu state type */
+	/** 设置 IU 状态类型 / Sets the iu state type */
 	public void setIUStateType(IuStateType iuType) {
 		this.iuType = iuType;
 	}
 
-	/** 是否打开 / Whether open*/
+	/** 是否开启 / Whether open. */
 	public final boolean isOpen() {
 		return iuType.equals(IuStateType.OPEN);
 	}

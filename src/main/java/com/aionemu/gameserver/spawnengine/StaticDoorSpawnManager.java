@@ -31,8 +31,8 @@ public class StaticDoorSpawnManager {
 	 * 在指定世界与实例中刷出所有静态门。
 	 * Spawns all static doors for the world and instance.
 	 *
-	 * 世界 ID / world id
-	 * instance index
+	 * @param worldId 世界 ID / world id
+	 * @param instanceIndex 实例索引 / instance index
 	 */
 	public static void spawnTemplate(int worldId, int instanceIndex) {
 		StaticDoorWorld staticDoorWorld = DataManager.STATICDOOR_DATA.getStaticDoorWorlds(worldId);
@@ -63,9 +63,9 @@ public class StaticDoorSpawnManager {
 	 * 将门对象登记、定位并刷入世界。
 	 * Stores, positions and spawns a door into the world.
 	 *
-	 * visible object
+	 * @param visibleObject 可见对象 / the visible object
 	 * @param spawn 刷怪模板 / spawn template
-	 * instance index
+	 * @param instanceIndex 实例索引 / instance index
 	 */
 	private static void bringIntoWorld(VisibleObject visibleObject, SpawnTemplate spawn, int instanceIndex) {
 		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();

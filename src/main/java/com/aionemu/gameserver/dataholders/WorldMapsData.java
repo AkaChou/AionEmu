@@ -53,7 +53,7 @@ public class WorldMapsData implements Iterable<WorldMapTemplate> {
 	 * 返回已加载的地图数量。
 	 * Returns the number of loaded maps.
 	 *
-	 * map count
+	 * @return 已加载的地图数量 / Returns the number of loaded maps.
 	 */
 	public int size() {
 		return worldMaps == null ? 0 : worldMaps.size();
@@ -63,9 +63,7 @@ public class WorldMapsData implements Iterable<WorldMapTemplate> {
 	 * 按世界 ID 获取地图模板。
 	 * Returns the world map template for the given world id.
 	 *
-	 * 世界 ID / world id
-	 *
-	 * @param worldId
+	 * @param worldId 世界 ID / world id
 	 * @return 地图模板，不存在则为 null / map template or null
 	 */
 	public WorldMapTemplate getTemplate(int worldId) {

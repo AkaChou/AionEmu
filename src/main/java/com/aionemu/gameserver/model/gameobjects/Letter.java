@@ -49,22 +49,22 @@ public class Letter extends AionObject {
 		return String.valueOf(attachedItem.getItemTemplate().getNameId());
 	}
 
-	/** 返回 recipient id / Returns the recipient id */
+	/** 返回收件人 ID / Returns the recipient id */
 	public int getRecipientId() {
 		return recipientId;
 	}
 
-	/** 返回 attached item / Returns the attached item */
+	/** 返回附带的物品 / Returns the attached item */
 	public Item getAttachedItem() {
 		return attachedItem;
 	}
 
-	/** 返回 attached kinah / Returns the attached kinah */
+	/** 返回附带的基纳 / Returns the attached kinah */
 	public long getAttachedKinah() {
 		return attachedKinahCount;
 	}
 
-	/** 返回 attached ap / Returns the attached ap */
+	/** 返回附带的 AP / Returns the attached ap */
 	public long getAttachedAp() {
 		return attachedAPCount;
 	}
@@ -79,7 +79,7 @@ public class Letter extends AionObject {
 		return message;
 	}
 
-	/** 返回 sender name / Returns the sender name */
+	/** 返回发件人名称 / Returns the sender name */
 	public String getSenderName() {
 		return senderName;
 	}
@@ -89,25 +89,28 @@ public class Letter extends AionObject {
 		return letterType;
 	}
 
-	/** Whether 未读 / Whether unread */
+	/** 是否未读 / Whether unread */
 	public boolean isUnread() {
 		return unread;
 	}
 
-	/** 设置 read letter / Sets the read letter */
+	/** 标记为已读 / Marks the letter as read */
 	public void setReadLetter() {
 		this.unread = false;
 		this.persistentState = PersistentState.UPDATE_REQUIRED;
 	}
 
 	/**
-	 * @return Whether express
+	 * 是否急件。
+	 * Whether the letter is express.
+	 *
+	 * @return 是否急件 / whether express
 	 */
 	public boolean isExpress() {
 		return express;
 	}
 
-	/** 设置 express / Sets the express */
+	/** 设置是否急件 / Sets whether express */
 	public void setExpress(boolean express) {
 		this.express = express;
 		this.persistentState = PersistentState.UPDATE_REQUIRED;
@@ -123,29 +126,38 @@ public class Letter extends AionObject {
 		}
 	}
 
-	/** 返回 letter persistent state / Returns the letter persistent state */
+	/** 返回信件持久化状态 / Returns the letter persistent state */
 	public PersistentState getLetterPersistentState() {
 		return persistentState;
 	}
 
-	/** 移除附件物品 / Removes attached item */
+	/** 移除附带的物品 / Removes the attached item */
 	public void removeAttachedItem() {
 		this.attachedItem = null;
 		this.persistentState = PersistentState.UPDATE_REQUIRED;
 	}
 
-	/** 移除 attached kinah / Removes attached kinah */
+	/** 移除附带的基纳 / Removes the attached kinah */
 	public void removeAttachedKinah() {
 		this.attachedKinahCount = 0;
 		this.persistentState = PersistentState.UPDATE_REQUIRED;
 	}
 
-	/** 移除 attached ap / Removes attached ap */
+	/** 移除附带的 AP / Removes the attached ap */
 	public void removeAttachedAP() {
 		this.attachedAPCount = 0;
 		this.persistentState = PersistentState.UPDATE_REQUIRED;
 	}
 
+	/**
+	 * 恢复信件附件与持久化状态（用于数据修复场景）。
+	 * Restores the letter's attachments and persistent state (used for data repair).
+	 *
+	 * @param item 附带的物品 / attached item
+	 * @param kinah 附带的基纳 / attached Kinah
+	 * @param ap 附带的 AP / attached AP
+	 * @param state 持久化状态 / persistent state
+	 */
 	public void restoreAttachments(Item item, long kinah, long ap, PersistentState state) {
 		this.attachedItem = item;
 		this.attachedKinahCount = kinah;
@@ -158,12 +170,12 @@ public class Letter extends AionObject {
 		this.persistentState = PersistentState.DELETED;
 	}
 
-	/** 设置 persist state / Sets the persist state */
+	/** 设置持久化状态 / Sets the persist state */
 	public void setPersistState(PersistentState state) {
 		this.persistentState = state;
 	}
 
-	/** 返回时间盖章 / Returns the time stamp*/
+	/** 返回时间戳 / Returns the time stamp. */
 	public Timestamp getTimeStamp() {
 		return timeStamp;
 	}

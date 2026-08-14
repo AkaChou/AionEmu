@@ -47,40 +47,40 @@ public class CM_CHARACTER_EDIT extends AionClientPacket {
 		int gender = readD();
 		gender_change = playerCommonData.getGender().getGenderId() == gender ? false : true;
 		if (!gender_change) {
-			if (player.getInventory().getItemCountByItemId(169650000) == 0 && // Plastic Surgery Ticket
-					player.getInventory().getItemCountByItemId(169650001) == 0 && // [Event] Plastic Surgery Ticket
-					player.getInventory().getItemCountByItemId(169650002) == 0 && // [Special] Plastic Surgery Ticket
-					player.getInventory().getItemCountByItemId(169650003) == 0 && // [Special] Plastic Surgery Ticket
-					player.getInventory().getItemCountByItemId(169650004) == 0 && // Plastic Surgery Ticket (60 mins)
-					player.getInventory().getItemCountByItemId(169650005) == 0 && // [Event] Plastic Surgery Ticket
-					player.getInventory().getItemCountByItemId(169650006) == 0 && // [Event] Plastic Surgery Ticket
-					player.getInventory().getItemCountByItemId(169650007) == 0 && // [Event] Plastic Surgery Ticket
-					player.getInventory().getItemCountByItemId(169650008) == 0 && // Plastic Surgery Ticket
-					player.getInventory().getItemCountByItemId(169650009) == 0 && // Plastic Surgery Ticket
-					player.getInventory().getItemCountByItemId(169650010) == 0 && // Plastic Surgery Ticket (60 mins)
-					player.getInventory().getItemCountByItemId(169650011) == 0 && // [Stamp] Plastic Surgery Ticket
-					player.getInventory().getItemCountByItemId(169691000) == 0) { // Plastic Surgery Ticket
+			if (player.getInventory().getItemCountByItemId(169650000) == 0 && // 整形手术门票 / Plastic Surgery Ticket
+					player.getInventory().getItemCountByItemId(169650001) == 0 && // [活动] 整形手术门票 / [Event] Plastic Surgery Ticket
+					player.getInventory().getItemCountByItemId(169650002) == 0 && // [特殊] 整形手术门票 / [Special] Plastic Surgery Ticket
+					player.getInventory().getItemCountByItemId(169650003) == 0 && // [特殊] 整形手术门票 / [Special] Plastic Surgery Ticket
+					player.getInventory().getItemCountByItemId(169650004) == 0 && // 整形手术门票（60 分钟）/ Plastic Surgery Ticket (60 mins)
+					player.getInventory().getItemCountByItemId(169650005) == 0 && // [活动] 整形手术门票 / [Event] Plastic Surgery Ticket
+					player.getInventory().getItemCountByItemId(169650006) == 0 && // [活动] 整形手术门票 / [Event] Plastic Surgery Ticket
+					player.getInventory().getItemCountByItemId(169650007) == 0 && // [活动] 整形手术门票 / [Event] Plastic Surgery Ticket
+					player.getInventory().getItemCountByItemId(169650008) == 0 && // 整形手术门票 / Plastic Surgery Ticket
+					player.getInventory().getItemCountByItemId(169650009) == 0 && // 整形手术门票 / Plastic Surgery Ticket
+					player.getInventory().getItemCountByItemId(169650010) == 0 && // 整形手术门票（60 分钟）/ Plastic Surgery Ticket (60 mins)
+					player.getInventory().getItemCountByItemId(169650011) == 0 && // [印花] 整形手术门票 / [Stamp] Plastic Surgery Ticket
+					player.getInventory().getItemCountByItemId(169691000) == 0) { // 整形手术门票 / Plastic Surgery Ticket
 				check_ticket = false;
 				return;
 			}
 		} else {
-			if (player.getInventory().getItemCountByItemId(169660000) == 0 && // Gender Switch Ticket
-					player.getInventory().getItemCountByItemId(169660001) == 0 && // [Event] Gender Switch Ticket
-					player.getInventory().getItemCountByItemId(169660002) == 0 && // Gender Switch Ticket (60 min)
-					player.getInventory().getItemCountByItemId(169660003) == 0 && // [Event] Gender Switch Ticket
-					player.getInventory().getItemCountByItemId(169660004) == 0 && // Gender Switch Ticket
-					player.getInventory().getItemCountByItemId(169660005) == 0) { // Gender Switch Ticket
+			if (player.getInventory().getItemCountByItemId(169660000) == 0 && // 性别转换门票 / Gender Switch Ticket
+					player.getInventory().getItemCountByItemId(169660001) == 0 && // [活动] 性别转换门票 / [Event] Gender Switch Ticket
+					player.getInventory().getItemCountByItemId(169660002) == 0 && // 性别转换门票（60 分钟）/ Gender Switch Ticket (60 min)
+					player.getInventory().getItemCountByItemId(169660003) == 0 && // [活动] 性别转换门票 / [Event] Gender Switch Ticket
+					player.getInventory().getItemCountByItemId(169660004) == 0 && // 性别转换门票 / Gender Switch Ticket
+					player.getInventory().getItemCountByItemId(169660005) == 0) { // 性别转换门票 / Gender Switch Ticket
 				check_ticket = false;
 				return;
 			}
 		}
 		playerCommonData.setGender(gender == 0 ? Gender.MALE : Gender.FEMALE);
-		readD(); // race
-		readD(); // player class
+		readD(); // 种族 / race
+		readD(); // 职业 / player class
 		playerAppearance.setVoice(readD());
 		playerAppearance.setSkinRGB(readD());
 		playerAppearance.setHairRGB(readD());
-		playerAppearance.setEyeRGB(readD()); // left eye
+		playerAppearance.setEyeRGB(readD()); // 左眼 / left eye
 		playerAppearance.setLipRGB(readD());
 		playerAppearance.setFace(readC());
 		playerAppearance.setHair(readC());
@@ -92,7 +92,7 @@ public class CM_CHARACTER_EDIT extends AionClientPacket {
 		playerAppearance.setRemoveMane(readC());
 		playerAppearance.setRightEyeRGB(readD());
 		playerAppearance.setEyeLashShape(readC());
-		readC();// UNK 6
+		readC();// 未知 6 / UNK 6
 		playerAppearance.setJawLine(readC());
 		playerAppearance.setForehead(readC());
 		playerAppearance.setEyeHeight(readC());
@@ -122,7 +122,7 @@ public class CM_CHARACTER_EDIT extends AionClientPacket {
 		playerAppearance.setNeckLength(readC());
 		playerAppearance.setShoulderSize(readC());
 		playerAppearance.setTorso(readC());
-		playerAppearance.setChest(readC()); // only woman
+		playerAppearance.setChest(readC()); // 仅女性 / only woman
 		playerAppearance.setWaist(readC());
 		playerAppearance.setHips(readC());
 		playerAppearance.setArmThickness(readC());
@@ -130,7 +130,7 @@ public class CM_CHARACTER_EDIT extends AionClientPacket {
 		playerAppearance.setLegThickness(readC());
 		playerAppearance.setFootSize(readC());
 		playerAppearance.setFacialRate(readC());
-		readC(); // Unk
+		readC(); // 未知 / Unk
 		playerAppearance.setArmLength(readC());
 		playerAppearance.setLegLength(readC());
 		playerAppearance.setShoulders(readC());
@@ -140,9 +140,9 @@ public class CM_CHARACTER_EDIT extends AionClientPacket {
 		playerAppearance.setForeArmThickness(readC());
 		playerAppearance.setHandSpan(readC());
 		playerAppearance.setCalfThickness(readC());
-		readC();// always 0 may be acessLevel
-		readC();// always 0
-		readC();// always 0
+		readC();// 恒为 0，可能为访问等级 / always 0, may be accessLevel
+		readC();// 恒为 0 / always 0
+		readC();// 恒为 0 / always 0
 		playerAppearance.setHeight(readF());
 	}
 
@@ -159,7 +159,7 @@ public class CM_CHARACTER_EDIT extends AionClientPacket {
 			}
 		} else {
 			if (!gender_change) {
-				if (player.getInventory().getItemCountByItemId(169650000) > 0) { // Plastic Surgery Ticket
+				if (player.getInventory().getItemCountByItemId(169650000) > 0) { // 整形手术门票 / Plastic Surgery Ticket
 					player.getInventory().decreaseByItemId(169650000, 1);
 				} else if (player.getInventory().getItemCountByItemId(169650001) > 0) { // [Event] Plastic Surgery
 																						// 门票 / Ticket
@@ -170,10 +170,10 @@ public class CM_CHARACTER_EDIT extends AionClientPacket {
 				} else if (player.getInventory().getItemCountByItemId(169650003) > 0) { // [Special] Plastic Surgery
 																						// 门票 / Ticket
 					player.getInventory().decreaseByItemId(169650003, 1);
-				} else if (player.getInventory().getItemCountByItemId(169650004) > 0) { // Plastic Surgery Ticket (60
+				} else if (player.getInventory().getItemCountByItemId(169650004) > 0) { // 整形手术门票（60 分钟）/ Plastic Surgery Ticket (60
 																						// mins)
 					player.getInventory().decreaseByItemId(169650004, 1);
-				} else if (player.getInventory().getItemCountByItemId(169650005) > 0) { // Plastic Surgery Ticket (60
+				} else if (player.getInventory().getItemCountByItemId(169650005) > 0) { // 整形手术门票（60 分钟）/ Plastic Surgery Ticket (60
 																						// mins)
 					player.getInventory().decreaseByItemId(169650005, 1);
 				} else if (player.getInventory().getItemCountByItemId(169650006) > 0) { // [Event] Plastic Surgery
@@ -182,31 +182,31 @@ public class CM_CHARACTER_EDIT extends AionClientPacket {
 				} else if (player.getInventory().getItemCountByItemId(169650007) > 0) { // [Event] Plastic Surgery
 																						// 门票 / Ticket
 					player.getInventory().decreaseByItemId(169650007, 1);
-				} else if (player.getInventory().getItemCountByItemId(169650008) > 0) { // Plastic Surgery Ticket
+				} else if (player.getInventory().getItemCountByItemId(169650008) > 0) { // 整形手术门票 / Plastic Surgery Ticket
 					player.getInventory().decreaseByItemId(169650008, 1);
-				} else if (player.getInventory().getItemCountByItemId(169650009) > 0) { // Plastic Surgery Ticket
+				} else if (player.getInventory().getItemCountByItemId(169650009) > 0) { // 整形手术门票 / Plastic Surgery Ticket
 					player.getInventory().decreaseByItemId(169650009, 1);
-				} else if (player.getInventory().getItemCountByItemId(169650010) > 0) { // Plastic Surgery Ticket (60
+				} else if (player.getInventory().getItemCountByItemId(169650010) > 0) { // 整形手术门票（60 分钟）/ Plastic Surgery Ticket (60
 																						// mins)
 					player.getInventory().decreaseByItemId(169650010, 1);
 				} else if (player.getInventory().getItemCountByItemId(169650011) > 0) { // [Stamp] Plastic Surgery
 																						// 门票 / Ticket
 					player.getInventory().decreaseByItemId(169650011, 1);
-				} else if (player.getInventory().getItemCountByItemId(169691000) > 0) { // Plastic Surgery Ticket
+				} else if (player.getInventory().getItemCountByItemId(169691000) > 0) { // 整形手术门票 / Plastic Surgery Ticket
 					player.getInventory().decreaseByItemId(169691000, 1);
 				}
 			} else {
-				if (player.getInventory().getItemCountByItemId(169660000) > 0) { // Gender Switch Ticket
+				if (player.getInventory().getItemCountByItemId(169660000) > 0) { // 性别转换门票 / Gender Switch Ticket
 					player.getInventory().decreaseByItemId(169660000, 1);
-				} else if (player.getInventory().getItemCountByItemId(169660001) > 0) { // [Event] Gender Switch Ticket.
+				} else if (player.getInventory().getItemCountByItemId(169660001) > 0) { // [活动] 性别转换门票 / [Event] Gender Switch Ticket.
 					player.getInventory().decreaseByItemId(169660001, 1);
-				} else if (player.getInventory().getItemCountByItemId(169660002) > 0) { // Gender Switch Ticket (60 min)
+				} else if (player.getInventory().getItemCountByItemId(169660002) > 0) { // 性别转换门票（60 分钟）/ Gender Switch Ticket (60 min)
 					player.getInventory().decreaseByItemId(169660002, 1);
-				} else if (player.getInventory().getItemCountByItemId(169660003) > 0) { // [Event] Gender Switch Ticket
+				} else if (player.getInventory().getItemCountByItemId(169660003) > 0) { // [活动] 性别转换门票 / [Event] Gender Switch Ticket
 					player.getInventory().decreaseByItemId(169660003, 1);
-				} else if (player.getInventory().getItemCountByItemId(169660004) > 0) { // Gender Switch Ticket
+				} else if (player.getInventory().getItemCountByItemId(169660004) > 0) { // 性别转换门票 / Gender Switch Ticket
 					player.getInventory().decreaseByItemId(169660004, 1);
-				} else if (player.getInventory().getItemCountByItemId(169660005) > 0) { // Gender Switch Ticket
+				} else if (player.getInventory().getItemCountByItemId(169660005) > 0) { // 性别转换门票 / Gender Switch Ticket
 					player.getInventory().decreaseByItemId(169660005, 1);
 				}
 				DAOManager.getDAO(PlayerDAO.class).storePlayer(player);

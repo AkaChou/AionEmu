@@ -31,7 +31,7 @@ public final class DB {
      * 执行查询操作
      * Execute a select query
      *
- * @param query 查询 SQL 语句 / The SQL query statement
+     * @param query 查询 SQL 语句 / The SQL query statement
      * @param reader 结果集处理器 / The result set handler
      * @return 查询是否成功 / Whether the query was successful
      */
@@ -43,9 +43,9 @@ public final class DB {
      * 执行查询操作，支持错误消息
      * Execute a select query with error message support
      *
- * @param query 查询 SQL 语句 / The SQL query statement
+     * @param query 查询 SQL 语句 / The SQL query statement
      * @param reader 结果集处理器 / The result set handler
-     * Error message
+     * @param errMsg 错误消息 / Error message
      *
      * @return 查询是否成功 / Whether the query was successful
      */
@@ -102,7 +102,7 @@ public final class DB {
      *
      * @param query 存储过程调用语句 / The stored procedure call statement
      * @param reader 结果集处理器 / The result set handler
-     * Error message
+     * @param errMsg 错误消息 / Error message
      *
      * @return 调用是否成功 / Whether the call was successful
      */
@@ -145,9 +145,7 @@ public final class DB {
      * 执行插入或更新操作
      * Execute an insert or update operation
      *
- * The SQL statement
-     *
-     * @param query
+     * @param query 查询 SQL 语句 / The SQL statement
      * @return 操作是否成功 / Whether the operation was successful
      */
     public static boolean insertUpdate(String query) {
@@ -158,8 +156,8 @@ public final class DB {
      * 执行插入或更新操作，支持错误消息
      * Execute an insert or update operation with error message support
      *
- * The SQL statement
-     * Error message
+     * @param query 查询 SQL 语句 / The SQL statement
+     * @param errMsg 错误消息 / Error message
      *
      * @return 操作是否成功 / Whether the operation was successful
      */
@@ -171,10 +169,9 @@ public final class DB {
      * 执行插入或更新操作，支持批处理
      * Execute an insert or update operation with batch support
      *
- * The SQL statement
+     * @param query 查询 SQL 语句 / The SQL statement
      *
      * @param batch 批处理处理器 / The batch handler
-     * @param batch
      * @return 操作是否成功 / Whether the operation was successful
      */
     public static boolean insertUpdate(String query, IUStH batch) {
@@ -185,9 +182,9 @@ public final class DB {
      * 执行插入或更新操作，支持批处理和错误消息
      * Execute an insert or update operation with batch and error message support
      *
- * The SQL statement
+     * @param query 查询 SQL 语句 / The SQL statement
      * @param batch 批处理处理器 / The batch handler
-     * Error message
+     * @param errMsg 错误消息 / Error message
      *
      * @return 操作是否成功 / Whether the operation was successful
      */
@@ -229,9 +226,7 @@ public final class DB {
      * 开始一个新的事务
      * Begin a new transaction
      *
-     * Transaction object
-     *
-     * @return
+     * @return 事务对象 / Transaction object
      * @throws SQLException 如果创建事务失败 / If creating transaction fails
      */
     public static Transaction beginTransaction() throws SQLException {
@@ -243,9 +238,7 @@ public final class DB {
      * 创建预处理语句
      * Create a prepared statement
      *
- * The SQL statement
-     *
-     * @param sql
+     * @param sql 查询 SQL 语句 / The SQL statement
      * @return 预处理语句对象 / PreparedStatement object
      */
     public static PreparedStatement prepareStatement(String sql) {
@@ -256,11 +249,9 @@ public final class DB {
      * 创建预处理语句，支持结果集类型和并发性设置
      * Create a prepared statement with result set type and concurrency settings
      *
- * The SQL statement
-     *
+     * @param sql 查询 SQL 语句 / The SQL statement
      * @param resultSetType 结果集类型 / Result set type
      * @param resultSetConcurrency 结果集并发性 / Result set concurrency
-     * @param resultSetConcurrency
      * @return 预处理语句对象 / PreparedStatement object
      */
     public static PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) {

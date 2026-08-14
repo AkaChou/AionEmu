@@ -66,9 +66,7 @@ public final class LoginPremiumServices implements DisposableBean {
      * 缓存已解析的控制器并返回。
      * Remember the resolved controller and return it.
      *
-     * controller
-     *
-     * @param premiumController
+     * @param premiumController 控制器 / controller
      * @return 同一控制器 / same controller
      */
     private static PremiumController remember(PremiumController premiumController) {

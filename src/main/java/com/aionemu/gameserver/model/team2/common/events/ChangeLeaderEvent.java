@@ -21,7 +21,8 @@ public abstract class ChangeLeaderEvent<T extends TemporaryPlayerTeam<?>> extend
 	}
 
 	/**
-	 * New leader either is null or should be online
+	 * 新队长要么为空，要么应当在线。
+	 * New leader either is null or should be online.
 	 */
 	@Override
 	public boolean checkCondition() {
@@ -39,7 +40,7 @@ public abstract class ChangeLeaderEvent<T extends TemporaryPlayerTeam<?>> extend
 	}
 
 	/**
-	 * @param oldLeader
+	 * @param oldLeader 旧队长 / old leader
 	 */
 	protected void checkLeaderChanged(Player oldLeader) {
 		if (team.isLeader(oldLeader)) {

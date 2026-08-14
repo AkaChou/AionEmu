@@ -10,8 +10,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Stigma 模板（静态数据/XML）。
- * XML template.
+ * 烙印之石模板：技能、所需技能与碎片消耗。
+ * Stigma template: skills, required skills and shard cost.
  *
  * @author Rinzler
  */
@@ -38,7 +38,7 @@ public class Stigma {
 		return list;
 	}
 
-	/** 返回技能 IDonly / Returns the skill id only */
+	/** 返回技能 ID 列表（仅 ID）/ Returns the skill ids only */
 	public List<Integer> getSkillIdOnly() {
 		List<Integer> ids = new ArrayList<Integer>();
 		List<String> skill = this.skill;
@@ -57,12 +57,12 @@ public class Stigma {
 		return ids;
 	}
 
-	/** 返回碎片 / Returns the shard*/
+	/** 返回烙印之石碎片 / Returns the shard */
 	public int getShard() {
 		return shard;
 	}
 
-	/** 返回 require skill / Returns the require skill */
+	/** 返回所需技能 / Returns the require skill */
 	public List<RequireSkill> getRequireSkill() {
 		if (requireSkill == null) {
 			requireSkill = new ArrayList<RequireSkill>();
@@ -79,7 +79,7 @@ public class Stigma {
 			this.skillLvl = skillLvl;
 		}
 
-		/** 返回 skill lvl / Returns the skill lvl */
+		/** 返回技能等级 / Returns the skill lvl */
 		public int getSkillLvl() {
 			return this.skillLvl;
 		}

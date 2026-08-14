@@ -38,7 +38,10 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class ArtifactSiege extends Siege<ArtifactLocation> {
 
 	/**
-	 * artifact location
+	 * 为指定神器据点创建攻城。
+	 * Creates a siege for the given artifact location.
+	 *
+	 * @param siegeLocation 神器据点 / artifact location
 	 */
 	public ArtifactSiege(ArtifactLocation siegeLocation) {
 		super(siegeLocation);
@@ -162,7 +165,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 			}
 		}
 
-		// 伊卢玛/诺斯沃尔德神器 5.8 / Iluma/Norsvold Artifact 5.8
+		// 伊卢玛/诺斯珀德神器 5.8 / Iluma/Norsvold Artifact 5.8
 		if (getSiegeLocation().getLocationId() == 8021 || getSiegeLocation().getLocationId() == 9021) {
 			if (SiegeRace.BALAUR != getSiegeLocation().getRace()) {
 				switch (getSiegeLocation().getLocationId()) {
@@ -172,7 +175,8 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
-								// 마족이 아스테라의 모든 기지를 점령하자 아스테라 수비대 지원 병력이 추가로 파견되었습니다.
+							// 魔族占领了阿斯特拉的所有基地，因此追加派遣了阿斯特拉守备队支援兵力。
+							// After the Asmodians captured all bases in Asteria, additional Asteria garrison reinforcements were dispatched.
 								PacketSendUtility.playerSendPacketTime(player,
 										SM_SYSTEM_MESSAGE.STR_MSG_LF6_Occupy_All_Start_MSG, 0);
 							}
@@ -182,7 +186,8 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
-								// 마족이 점령하고 있던 아스테라의 기지를 탈환하자 아스테라 수비대 지원 병력이 복귀했습니다.
+							// 夺回被魔族占领的阿斯特拉基地后，阿斯特拉守备队支援兵力返回了。
+							// After recapturing Asteria bases held by the Asmodians, the Asteria garrison reinforcements returned.
 								PacketSendUtility.playerSendPacketTime(player,
 										SM_SYSTEM_MESSAGE.STR_MSG_LF6_Occupy_All_End_MSG, 0);
 							}
@@ -195,7 +200,8 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
-								// 천족이 노스폴드의 모든 기지를 점령하자 노스폴드 수비대 지원 병력이 추가로 파견되었습니다.
+							// 天族占领了诺斯珀德的全部基地，因此追加派遣了诺斯珀德守备队支援兵力。
+							// After the Elyos captured all bases in Norsvold, additional Norsvold garrison reinforcements were dispatched.
 								PacketSendUtility.playerSendPacketTime(player,
 										SM_SYSTEM_MESSAGE.STR_MSG_DF6_Occupy_All_Start_MSG, 0);
 							}
@@ -205,7 +211,8 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
-								// 천족이 점령하고 있던 노스폴드의 기지를 탈환하자 노스폴드 수비대 지원 병력이 복귀했습니다.
+							// 夺回被天族占领的诺斯珀德基地后，诺斯珀德守备队支援兵力返回了。
+							// After recapturing Norsvold bases held by the Elyos, the Norsvold garrison reinforcements returned.
 								PacketSendUtility.playerSendPacketTime(player,
 										SM_SYSTEM_MESSAGE.STR_MSG_DF6_Occupy_All_End_MSG, 0);
 							}
@@ -221,7 +228,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 	 * 神器攻城为无限模式。
 	 * Artifact sieges are endless.
 	 *
-	 * always true
+	 * @return 始终为 true / always true
 	 */
 	@Override
 	public boolean isEndless() {

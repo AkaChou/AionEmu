@@ -48,7 +48,7 @@ public final class CommonsNetworkThreadPoolServices implements DisposableBean {
      * Remember resolved thread pool manager.
      *
      * @param threadPoolManager 线程池管理器 / Thread pool manager
-     * Same instance
+     * @return 同一实例 / Same instance
      */
     static ThreadPoolManager rememberThreadPoolManager(ThreadPoolManager threadPoolManager) {
         resolvedThreadPoolManager = threadPoolManager;
@@ -68,7 +68,7 @@ public final class CommonsNetworkThreadPoolServices implements DisposableBean {
      * 回退线程池管理器。
      * Fallback thread pool manager.
      *
-     * Fallback instance
+     * @return 回退实例 / Fallback instance
      */
     private static ThreadPoolManager fallbackThreadPoolManager() {
         return Fallbacks.THREAD_POOL_MANAGER;

@@ -78,11 +78,11 @@ public class CmdDeleteSkill extends AbstractGMHandler {
 	}
 
 	/**
-	 * 从技能名后缀解析 G1–G7 等级序号。
-	 * Parses the G1–G7 rank suffix from a skill name.
+	 * 从技能名后缀解析 G1–G10 等级序号。
+	 * Parses the G1–G10 rank suffix from a skill name.
 	 *
-	 * skill name
-	 * rank number, default 1
+	 * @param string 技能名 / skill name
+	 * @return 等级序号，默认 1 / rank number, default 1
 	 */
 	private int checkLevel(String string) {
 		if (string.endsWith("G1")) {

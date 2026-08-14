@@ -131,7 +131,7 @@ public class SpawnsData2 {
 	 * After JAXB unmarshalling, indexes all spawn templates into runtime maps.
 	 *
 	 * @param u Unmarshaller
-	 * parent object
+	 * @param parent 父对象 / parent object
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void afterUnmarshal(Unmarshaller u, Object parent) {
@@ -656,7 +656,7 @@ public class SpawnsData2 {
 	 * @param directory 刷怪数据目录 / spawn data directory
 	 * @param schema XSD Schema
 	 * @return 已索引的刷怪数据 / indexed spawn data
-	 * on load failure
+	 * @throws Exception 加载失败 / on load failure
 	 */
 	static SpawnsData2 load(File directory, Schema schema) throws Exception {
 		JAXBContext context = JAXBContext.newInstance(SpawnsData2.class);
@@ -685,9 +685,7 @@ public class SpawnsData2 {
 	 * 按世界地图 ID 获取全部刷怪组。
 	 * Returns all spawn groups for the given world map id.
 	 *
-	 * world map id
-	 *
-	 * @param worldId
+	 * @param worldId 世界地图 ID / world map id
 	 * @return 刷怪组列表，不存在则为空列表 / spawn groups, or empty list
 	 */
 	public List<SpawnGroup2> getSpawnsByWorldId(int worldId) {
@@ -705,8 +703,8 @@ public class SpawnsData2 {
 	 * 按世界与 NPC ID 获取刷怪定义。
 	 * Returns the spawn definition for the given world and npc id.
 	 *
-	 * world map id
-	 * NPC 模板 ID / npc template id
+	 * @param worldId 世界地图 ID / world map id
+	 * @param npcId NPC 模板 ID / npc template id
 	 * @return 刷怪定义，不存在则为 null / spawn or null
 	 */
 	public Spawn getSpawnsForNpc(int worldId, int npcId) {
@@ -720,9 +718,7 @@ public class SpawnsData2 {
 	 * 按地点 ID 获取攻城据点刷怪组列表。
 	 * Returns siege location spawn groups for the given location id.
 	 *
-	 * siege location id
-	 *
-	 * @param siegeId
+	 * @param siegeId 攻城地点 ID / siege location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
 	public List<SpawnGroup2> getSiegeSpawnsByLocId(int siegeId) {
@@ -733,9 +729,7 @@ public class SpawnsData2 {
 	 * 按地点 ID 获取军团领地刷怪组列表。
 	 * Returns legion dominion spawn groups for the given location id.
 	 *
-	 * legion dominion id
-	 *
-	 * @param legionDominionId
+	 * @param legionDominionId 军团领地 ID / legion dominion id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
 	public List<SpawnGroup2> getLegionDominionSpawnsByLocId(int legionDominionId) {
@@ -967,12 +961,9 @@ public class SpawnsData2 {
 	 * Saves a visible object's position as custom spawn XML, or deletes the matching spot.
 	 *
 	 * @param admin 操作管理员 / admin player
-	 * target visible object
-	 *
+	 * @param visibleObject 目标可见对象 / target visible object
 	 * @param delete true 表示删除点位 / true to delete the spot
-	 * @param visibleObject
 	 * @return 是否保存成功 / whether the save succeeded
-	 * @param delete
 	 * @throws IOException 文件读写失败 / on file I/O failure
 	 */
 	public synchronized boolean saveSpawn(Player admin, VisibleObject visibleObject, boolean delete)
@@ -1117,8 +1108,8 @@ public class SpawnsData2 {
 	 * 计算自定义刷怪 XML 相对 spawns 目录的路径。
 	 * Computes the relative path under the spawns directory for a custom spawn XML.
 	 *
-	 * target visible object
-	 * relative path
+	 * @param visibleObject 目标可见对象 / target visible object
+	 * @return 相对路径 / relative path
 	 */
 	String getRelativePath(VisibleObject visibleObject) {
 		String path;
@@ -1142,7 +1133,7 @@ public class SpawnsData2 {
 	 * 返回已索引的世界地图数量。
 	 * Returns the number of indexed world maps.
 	 *
-	 * map count
+	 * @return 已索引的世界地图数量 / Returns the number of indexed world maps.
 	 */
 	public int size() {
 		return allSpawnMaps.size();

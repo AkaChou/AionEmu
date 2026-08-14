@@ -52,7 +52,7 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 	 * 获取单例：优先 Spring 提供者，否则静态 holder。
 	 * Get the singleton: prefer Spring provider, otherwise the static holder.
 	 *
-	 * Task instance
+	 * @return 任务实例 / Task instance
 	 */
 	public static TemporaryTradeTimeTask getInstance() {
 		ObjectProvider<TemporaryTradeTimeTask> provider = instanceProvider;
@@ -66,7 +66,7 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
 	 *
-	 * Provider
+	 * @param provider 实例提供者 / Provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<TemporaryTradeTimeTask> provider) {
 		instanceProvider = provider;
@@ -76,7 +76,7 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 	 * 注册临时可交易物品及其允许的玩家列表。
 	 * Register a temporarily tradable item and its allowed player list.
 	 *
-	 * Item
+	 * @param item 物品 / Item
 	 * @param players 允许交易的玩家 Id 集合 / Allowed trader player ids
 	 */
 	public void addTask(Item item, Collection<Integer> players) {
@@ -93,9 +93,8 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 	 * 判断指定玩家是否可交易该物品。
 	 * Whether the given player may trade the item.
 	 *
-	 * Item
-	 * Player object id
-	 *
+	 * @param item 物品 / Item
+	 * @param playerObjectId 玩家对象 ID / Player object id
 	 * @return 可交易则为 true / True if allowed
 	 */
 	public boolean canTrade(Item item, int playerObjectId) {
@@ -109,9 +108,7 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 	 * 判断物品是否仍在临时交易窗口中。
 	 * Whether the item is still under a temporary-trade window.
 	 *
-	 * Item
-	 *
-	 * @param item 若 tracked 则为 true / True if tracked
+	 * @param item 物品 / Item
 	 */
 	public boolean hasItem(Item item) {
 		readLock();
@@ -126,9 +123,7 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 	 * 按 objectId 查询临时交易中的物品。
 	 * Look up a temporarily tradable item by objectId.
 	 *
-	 * Item object id
-	 *
-	 * @param objectId
+	 * @param objectId 物品对象 ID / Item object id
 	 * @return 物品；不存在则为 null / Item, or null if absent
 	 */
 	public Item getItem(int objectId) {

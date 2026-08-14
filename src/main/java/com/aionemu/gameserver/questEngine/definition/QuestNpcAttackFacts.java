@@ -1,6 +1,9 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-/** Immutable NPC combat facts captured at the authoritative attack callback. */
+/**
+ * 在权威攻击回调处捕获的不可变 NPC 战斗事实。
+ * Immutable NPC combat facts captured at the authoritative attack callback.
+ */
 public record QuestNpcAttackFacts(int attackerId, int npcObjectId, int npcTemplateId,
 		int currentHp, int maxHp, int worldId, int instanceId) {
 	public QuestNpcAttackFacts {
@@ -14,6 +17,10 @@ public record QuestNpcAttackFacts(int attackerId, int npcObjectId, int npcTempla
 		positive(instanceId, "instanceId");
 	}
 
+	/**
+	 * 当前生命值是否低于给定百分比。
+	 * Whether current HP is below the given percentage.
+	 */
 	public boolean belowPercent(int percent) {
 		if (percent < 0 || percent > 100) {
 			throw new IllegalArgumentException("percent must be between 0 and 100");

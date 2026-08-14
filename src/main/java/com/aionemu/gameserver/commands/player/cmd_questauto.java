@@ -36,7 +36,7 @@ public class cmd_questauto extends PlayerCommand {
 	 * If the quest is supported and START, switches it to REWARD and syncs the client.
 	 *
 	 * @param player 执行命令的玩家 / invoking player
-	 * quest id
+	 * @param params 任务 ID / quest id
 	 */
 	@Override
 	public void execute(Player player, String... params) {

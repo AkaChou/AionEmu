@@ -26,7 +26,7 @@ public class MinionMoveController extends CreatureMoveController<Minion> {
 	 * Construct a placeholder controller (owner not bound yet).
 	 */
 	public MinionMoveController() {
-		super(null);// not used yet
+		super(null); // 尚未使用 / not used yet
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class MinionMoveController extends CreatureMoveController<Minion> {
 	 * 返回目标 X 坐标。
 	 * Return the target X coordinate.
 	 *
-	 * Target X
+	 * @return 目标 X 坐标 / Target X
 	 */
 	@Override
 	public float getTargetX2() {
@@ -52,7 +52,7 @@ public class MinionMoveController extends CreatureMoveController<Minion> {
 	 * 返回目标 Y 坐标。
 	 * Return the target Y coordinate.
 	 *
-	 * Target Y
+	 * @return 目标 Y 坐标 / Target Y
 	 */
 	@Override
 	public float getTargetY2() {
@@ -63,7 +63,7 @@ public class MinionMoveController extends CreatureMoveController<Minion> {
 	 * 返回目标 Z 坐标。
 	 * Return the target Z coordinate.
 	 *
-	 * Target Z
+	 * @return 目标 Z 坐标 / Target Z
 	 */
 	@Override
 	public float getTargetZ2() {
@@ -120,7 +120,7 @@ public class MinionMoveController extends CreatureMoveController<Minion> {
 	 * 返回当前移动掩码。
 	 * Return the current movement mask.
 	 *
-	 * Movement mask
+	 * @return 移动掩码 / Movement mask
 	 */
 	@Override
 	public byte getMovementMask() {
@@ -131,7 +131,7 @@ public class MinionMoveController extends CreatureMoveController<Minion> {
 	 * 是否处于移动中（固定返回 true）。
 	 * Whether currently in move (always true).
 	 *
-	 * Always true
+	 * @return 恒为 true / Always true
 	 */
 	@Override
 	public boolean isInMove() {

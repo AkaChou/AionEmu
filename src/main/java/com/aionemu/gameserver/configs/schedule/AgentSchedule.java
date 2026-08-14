@@ -68,8 +68,8 @@ public class AgentSchedule {
 	@XmlRootElement(name = "agent")
 	public static class Agent {
 		/**
-	 * 代理人 ID / Agent ID
-	 */
+		 * 代理人 ID / Agent ID
+		 */
 		@XmlAttribute(required = true)
 		private int id;
 

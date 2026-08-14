@@ -54,7 +54,8 @@ public abstract class PlaceableHouseObject extends AbstractHouseObject {
 	}
 
 	/**
-	 * 对象允许如何放置（堆叠、地面、墙面）？。 / How the object is allowed to be placed (stacks, ground, wall) ?.
+	 * 对象允许如何放置（堆叠、地面、墙面）。
+	 * How the object is allowed to be placed (stacks, ground, wall).
 	 */
 	public PlaceLocation getLocation() {
 		return location;

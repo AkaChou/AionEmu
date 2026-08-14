@@ -13,7 +13,7 @@ public abstract class HouseScriptsDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
 	 *
-	 * class name
+	 * @return 类名 / class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -25,7 +25,7 @@ public abstract class HouseScriptsDAO implements DAO {
 	 * Gets player house scripts.
 	 *
 	 * @param paramInt 房屋/玩家相关 ID / house or player related ID
-	 * player scripts
+	 * @return 玩家脚本 / player scripts
 	 */
 	public abstract PlayerScripts getPlayerScripts(int paramInt);
 
@@ -34,8 +34,8 @@ public abstract class HouseScriptsDAO implements DAO {
 	 * Adds a house script.
 	 *
 	 * @param paramInt1 房屋/玩家相关 ID / house or player related ID
-	 * script index
-	 * script content
+	 * @param paramInt2 脚本索引 / script index
+	 * @param paramString 脚本内容 / script content
 	 */
 	public abstract void addScript(int paramInt1, int paramInt2, String paramString);
 
@@ -44,8 +44,8 @@ public abstract class HouseScriptsDAO implements DAO {
 	 * Updates a house script.
 	 *
 	 * @param paramInt1 房屋/玩家相关 ID / house or player related ID
-	 * script index
-	 * script content
+	 * @param paramInt2 脚本索引 / script index
+	 * @param paramString 脚本内容 / script content
 	 */
 	public abstract void updateScript(int paramInt1, int paramInt2, String paramString);
 
@@ -54,7 +54,7 @@ public abstract class HouseScriptsDAO implements DAO {
 	 * Deletes a house script.
 	 *
 	 * @param paramInt1 房屋/玩家相关 ID / house or player related ID
-	 * script index
+	 * @param paramInt2 脚本索引 / script index
 	 */
 	public abstract void deleteScript(int paramInt1, int paramInt2);
 }

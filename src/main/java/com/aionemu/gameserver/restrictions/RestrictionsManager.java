@@ -33,7 +33,7 @@ public final class RestrictionsManager {
 	 * 激活限制：扫描未禁用方法并按优先级插入对应桶。
 	 * Activates a restriction by scanning non-disabled methods and inserting into priority-ordered buckets.
 	 *
-	 * restriction implementation
+	 * @param restriction 限制实现 / restriction implementation
 	 */
 	public synchronized static void activate(Restrictions restriction) {
 		for (Method method : restriction.getClass().getMethods()) {
@@ -58,7 +58,7 @@ public final class RestrictionsManager {
 	 * 从所有模式桶中移除限制实现。
 	 * Removes the restriction from all mode buckets.
 	 *
-	 * restriction implementation
+	 * @param restriction 限制实现 / restriction implementation
 	 */
 	public synchronized static void deactivate(Restrictions restriction) {
 		for (RestrictionMode mode : RestrictionMode.VALUES) {
@@ -103,9 +103,9 @@ public final class RestrictionsManager {
 	 * 是否允许攻击目标。
 	 * Whether the player may attack the target.
 	 *
-	 * 玩家 / player
-	 * target
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @param target 目标 / target
+	 * @return 允许时为 true / true when allowed
 	 */
 	public static boolean canAttack(Player player, VisibleObject target) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canAttack.ordinal()]) {
@@ -120,10 +120,10 @@ public final class RestrictionsManager {
 	 * 是否允许技能影响目标。
 	 * Whether a skill may affect the target.
 	 *
-	 * 玩家 / player
-	 * target
-	 * skill
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @param target 目标 / target
+	 * @param skill 技能 / skill
+	 * @return 允许时为 true / true when allowed
 	 */
 	public static boolean canAffectBySkill(Player player, VisibleObject target, Skill skill) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canAffectBySkill.ordinal()]) {
@@ -138,9 +138,9 @@ public final class RestrictionsManager {
 	 * 是否允许使用技能。
 	 * Whether the player may use the skill.
 	 *
-	 * 玩家 / player
-	 * skill
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @param skill 技能 / skill
+	 * @return 允许时为 true / true when allowed
 	 */
 	public static boolean canUseSkill(Player player, Skill skill) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canUseSkill.ordinal()]) {
@@ -155,8 +155,8 @@ public final class RestrictionsManager {
 	 * 是否允许聊天。
 	 * Whether the player may chat.
 	 *
-	 * 玩家 / player
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @return 允许时为 true / true when allowed
 	 */
 	public static boolean canChat(Player player) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canChat.ordinal()]) {
@@ -171,9 +171,9 @@ public final class RestrictionsManager {
 	 * 是否允许邀请进组。
 	 * Whether the player may invite to a group.
 	 *
-	 * 玩家 / player
-	 * target player
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @param target 目标 / target player
+	 * @return 允许时为 true / true when allowed
 	 */
 	public static boolean canInviteToGroup(Player player, Player target) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canInviteToGroup.ordinal()]) {
@@ -188,9 +188,9 @@ public final class RestrictionsManager {
 	 * 是否允许邀请进联盟。
 	 * Whether the player may invite to an alliance.
 	 *
-	 * 玩家 / player
-	 * target player
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @param target 目标 / target player
+	 * @return 允许时为 true / true when allowed
 	 */
 	public static boolean canInviteToAlliance(Player player, Player target) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canInviteToAlliance.ordinal()]) {
@@ -205,9 +205,9 @@ public final class RestrictionsManager {
 	 * 是否允许邀请进军团联盟。
 	 * Whether the player may invite to a league.
 	 *
-	 * 玩家 / player
-	 * target player
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @param target 目标 / target player
+	 * @return 允许时为 true / true when allowed
 	 */
 	public static boolean canInviteToLeague(Player player, Player target) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canInviteToLeague.ordinal()]) {
@@ -222,8 +222,8 @@ public final class RestrictionsManager {
 	 * 是否允许更换装备。
 	 * Whether the player may change equipment.
 	 *
-	 * 玩家 / player
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @return 允许时为 true / true when allowed
 	 */
 	public static boolean canChangeEquip(Player player) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canChangeEquip.ordinal()]) {
@@ -238,8 +238,8 @@ public final class RestrictionsManager {
 	 * 是否允许交易；已死亡时额外禁止。
 	 * Whether the player may trade; also forbids when already dead.
 	 *
-	 * 玩家 / player
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @return 允许时为 true / true when allowed
 	 */
 	public static boolean canTrade(Player player) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canTrade.ordinal()]) {
@@ -257,8 +257,8 @@ public final class RestrictionsManager {
 	 * 是否允许使用仓库。
 	 * Whether the player may use warehouse.
 	 *
-	 * 玩家 / player
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @return 允许时为 true / true when allowed
 	 */
 	public static boolean canUseWarehouse(Player player) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canUseWarehouse.ordinal()]) {
@@ -273,9 +273,9 @@ public final class RestrictionsManager {
 	 * 是否允许使用物品。
 	 * Whether the player may use the item.
 	 *
-	 * 玩家 / player
-	 * item
-	 * true when allowed
+	 * @param player 玩家 / player
+	 * @param item 物品 / item
+	 * @return 允许时为 true / true when allowed
 	 */
 	public static boolean canUseItem(Player player, Item item) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canUseItem.ordinal()]) {

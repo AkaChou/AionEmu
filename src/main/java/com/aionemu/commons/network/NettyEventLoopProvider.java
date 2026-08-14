@@ -25,8 +25,8 @@ public final class NettyEventLoopProvider {
      * 注册进程级共享事件循环组。
      * Register process-wide shared event loop groups.
      *
-     * Boss group
-     * Worker group
+     * @param bossGroup Boss 组 / Boss group
+     * @param workerGroup Worker 组 / Worker group
      */
     public static synchronized void useShared(EventLoopGroup bossGroup, EventLoopGroup workerGroup) {
         sharedBossGroup = Objects.requireNonNull(bossGroup, "bossGroup");
@@ -37,8 +37,8 @@ public final class NettyEventLoopProvider {
      * 清除匹配的共享事件循环组引用。
      * Clear shared event loop group references when they match.
      *
-     * Boss group
-     * Worker group
+     * @param bossGroup Boss 组 / Boss group
+     * @param workerGroup Worker 组 / Worker group
      */
     public static synchronized void clearShared(EventLoopGroup bossGroup, EventLoopGroup workerGroup) {
         if (sharedBossGroup == bossGroup && sharedWorkerGroup == workerGroup) {
@@ -64,7 +64,7 @@ public final class NettyEventLoopProvider {
      * 创建单线程 Boss 组。
      * Create a single-thread boss group.
      *
-     * Boss group
+     * @return Boss 组 / Boss group
      */
     public static EventLoopGroup newBossGroup() {
         return new MultiThreadIoEventLoopGroup(1, NioIoHandler.newFactory());
@@ -74,7 +74,7 @@ public final class NettyEventLoopProvider {
      * 创建默认 Worker 组。
      * Create a default worker group.
      *
-     * Worker group
+     * @return Worker 组 / Worker group
      */
     public static EventLoopGroup newWorkerGroup() {
         return new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
@@ -84,10 +84,8 @@ public final class NettyEventLoopProvider {
      * 事件循环分配结果。
      * Event-loop allocation result.
      *
-     * Boss group
-     * Worker group
-     *
-     * @return
+     * @param bossGroup Boss 组 / Boss group
+     * @param workerGroup Worker 组 / Worker group
      * @param owned 是否由调用方负责关闭 / Whether caller owns shutdown
      */
     public record Allocation(EventLoopGroup bossGroup, EventLoopGroup workerGroup, boolean owned) {

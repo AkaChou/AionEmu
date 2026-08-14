@@ -302,9 +302,7 @@ public class ItemGroupsData {
 	 * 按技能 ID 获取制作材料奖励。
 	 * Returns craft material rewards for the given skill id.
 	 *
-	 * skill id
-	 *
-	 * @param skillId
+	 * @param skillId 技能 ID / skill id
 	 * @return 制作材料奖励集合 / craft material rewards
 	 */
 	public Collection<CraftReward> getCraftMaterials(int skillId) {
@@ -322,7 +320,7 @@ public class ItemGroupsData {
 	 * 返回制作材料组掉落概率。
 	 * Returns the craft materials group chance.
 	 *
-	 * drop chance
+	 * @return 制作材料组概率 / Returns the craft materials group chance.
 	 */
 	public float getCraftMaterialsChance() {
 		return craftMaterials.getChance();
@@ -332,9 +330,7 @@ public class ItemGroupsData {
 	 * 按技能 ID 获取制作商店物品奖励。
 	 * Returns craft shop item rewards for the given skill id.
 	 *
-	 * skill id
-	 *
-	 * @param skillId
+	 * @param skillId 技能 ID / skill id
 	 * @return 制作商店物品奖励集合 / craft shop item rewards
 	 */
 	public Collection<CraftReward> getCraftShopItems(int skillId) {
@@ -352,7 +348,7 @@ public class ItemGroupsData {
 	 * 返回制作商店物品组掉落概率。
 	 * Returns the craft shop items group chance.
 	 *
-	 * drop chance
+	 * @return 制作商店物品组概率 / Returns the craft shop items group chance.
 	 */
 	public float getCraftShopItemsChance() {
 		return craftShop.getChance();
@@ -362,9 +358,7 @@ public class ItemGroupsData {
 	 * 按技能 ID 获取制作礼包奖励。
 	 * Returns craft bundle rewards for the given skill id.
 	 *
-	 * skill id
-	 *
-	 * @param skillId
+	 * @param skillId 技能 ID / skill id
 	 * @return 制作礼包奖励集合 / craft bundle rewards
 	 */
 	public Collection<CraftReward> getCraftBundles(int skillId) {
@@ -382,7 +376,7 @@ public class ItemGroupsData {
 	 * 返回制作礼包组掉落概率。
 	 * Returns the craft bundles group chance.
 	 *
-	 * drop chance
+	 * @return 制作捆绑包组概率 / Returns the craft bundles group chance.
 	 */
 	public float getCraftBundlesChance() {
 		return craftBundles.getChance();
@@ -392,9 +386,7 @@ public class ItemGroupsData {
 	 * 按技能 ID 获取制作配方奖励。
 	 * Returns craft recipe rewards for the given skill id.
 	 *
-	 * skill id
-	 *
-	 * @param skillId
+	 * @param skillId 技能 ID / skill id
 	 * @return 制作配方奖励集合 / craft recipe rewards
 	 */
 	public Collection<CraftReward> getCraftRecipes(int skillId) {
@@ -412,7 +404,7 @@ public class ItemGroupsData {
 	 * 返回制作配方组掉落概率。
 	 * Returns the craft recipes group chance.
 	 *
-	 * drop chance
+	 * @return 制作配方组概率 / Returns the craft recipes group chance.
 	 */
 	public float getCraftRecipesChance() {
 		return craftRecipes.getChance();
@@ -699,10 +691,9 @@ public class ItemGroupsData {
 	 * 判断物品是否属于指定宠物饲料类型（排除黑名单与臭食）。
 	 * Returns whether the item is food of the given pet food type (excluding blacklist and stinky items).
 	 *
-	 * item id
-	 * food type
-	 *
-	 * @return 若 the item matches the food type 则为 true / true if the item matches the food type
+	 * @param itemId 物品 ID / item id
+	 * @param foodType 宠物饲料类型 / pet food type
+	 * @return 若物品匹配该饲料类型则为 true / true if the item matches the food type
 	 */
 	public boolean isFood(int itemId, FoodType foodType) {
 		Set<Integer> food = petFood.get(FoodType.EXCLUDES);

@@ -66,7 +66,7 @@ public class Virulent_UkahimAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 60, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 60, getOwner()).useNoAnimationSkill(); // 贝里特拉的恩宠。 / Beritra's Favor.
 		}
 	}
 	
@@ -81,10 +81,10 @@ public class Virulent_UkahimAI2 extends AggressiveNpcAI2
 	}
 	
 	private void skill() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 18158, 100, getOwner()).useNoAnimationSkill(); //Wrathful Venom Burst.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 18158, 100, getOwner()).useNoAnimationSkill(); // 狂怒毒爆。 / Wrathful Venom Burst.
 		   GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
-                GameEngineServices.skillEngine().getSkill(getOwner(), 18160, 100, getOwner()).useNoAnimationSkill(); //Virulence.
+                GameEngineServices.skillEngine().getSkill(getOwner(), 18160, 100, getOwner()).useNoAnimationSkill(); // 剧毒。 / Virulence.
 			}
 		}, 4000);
 	}

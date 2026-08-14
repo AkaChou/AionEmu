@@ -5,13 +5,19 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
  * 融合（Coalescence）启动/就绪包。
- * ready state.
+ * Server packet notifying that coalescence is ready to start.
  *
  * @author Ranastic
  */
 public class SM_COALESCENCE_STARTUP extends AionServerPacket {
 	private int unk;
 
+	/**
+	 * 构造融合启动包。
+	 * Creates a coalescence startup packet.
+	 *
+	 * @param unk 未知字段 / unknown field
+	 */
 	public SM_COALESCENCE_STARTUP(int unk) {
 		this.unk = unk;
 	}

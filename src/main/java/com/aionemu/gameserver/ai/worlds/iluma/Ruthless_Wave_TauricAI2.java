@@ -15,7 +15,7 @@ public class Ruthless_Wave_TauricAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(242723, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Tyro Tauric Stoneheart.
+		spawn(242723, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 新手 Tauric Stoneheart / Tyro Tauric Stoneheart.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

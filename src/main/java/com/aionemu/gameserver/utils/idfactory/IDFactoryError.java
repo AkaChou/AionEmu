@@ -21,7 +21,7 @@ public class IDFactoryError extends Error {
 	 * 带消息构造。
 	 * Construct with a message.
 	 *
-	 * Error message
+	 * @param message 错误消息 / Error message
 	 */
 	public IDFactoryError(String message) {
 		super(message);
@@ -31,8 +31,8 @@ public class IDFactoryError extends Error {
 	 * 带消息与原因构造。
 	 * Construct with a message and cause.
 	 *
-	 * Error message
-	 * Cause
+	 * @param message 错误消息 / Error message
+	 * @param cause 原因 / Cause
 	 */
 	public IDFactoryError(String message, Throwable cause) {
 		super(message, cause);
@@ -42,7 +42,7 @@ public class IDFactoryError extends Error {
 	 * 带原因构造。
 	 * Construct with a cause.
 	 *
-	 * Cause
+	 * @param cause 原因 / Cause
 	 */
 	public IDFactoryError(Throwable cause) {
 		super(cause);

@@ -56,7 +56,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 20657, 1, getOwner()).useNoAnimationSkill(); //Summoning Ritual.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20657, 1, getOwner()).useNoAnimationSkill(); // 召唤仪式。 / Summoning Ritual.
 			ShebanMysticalTyrhund();
 			scheduleDelayStage1(delay);
 		}
@@ -67,8 +67,8 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 		    enrageTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			    public void run() {
 					if (!isAlreadyDead()) {
-					    spawn(284455, 1051.3069f, 694.83075f, 282.0391f, (byte) 14); //Sheban Mystical Tyrhund.
-					    spawn(284455, 1062.1957f, 694.9131f, 282.0391f, (byte) 51); //Sheban Mystical Tyrhund.
+					    spawn(284455, 1051.3069f, 694.83075f, 282.0391f, (byte) 14); // Sheban Mystical Tyrhund 召唤兽。 / Sheban Mystical Tyrhund.
+					    spawn(284455, 1062.1957f, 694.9131f, 282.0391f, (byte) 51); // Sheban Mystical Tyrhund 召唤兽。 / Sheban Mystical Tyrhund.
 					}
 				}
 			}, 3000);
@@ -100,7 +100,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleBackHome() {
 		super.handleBackHome();
-        despawnNpcs(284455); //Sheban Mystical Tyrhund.
+        despawnNpcs(284455); // Sheban Mystical Tyrhund 召唤兽。 / Sheban Mystical Tyrhund.
 		isStart = false;
 		stage = 0;
 	}
@@ -108,7 +108,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		super.handleDied();
-        despawnNpcs(284455); //Sheban Mystical Tyrhund.
+        despawnNpcs(284455); // Sheban Mystical Tyrhund 召唤兽。 / Sheban Mystical Tyrhund.
 		isStart = false;
 		stage = 0;
 	}

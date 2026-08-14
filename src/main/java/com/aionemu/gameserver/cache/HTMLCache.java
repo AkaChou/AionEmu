@@ -57,7 +57,7 @@ public final class HTMLCache {
 	 * HTML 根目录。
 	 * HTML root directory.
 	 *
-	 * root directory
+	 * @return 根目录 / root directory
 	 */
 	private static File htmlRoot() {
 		return Config.dataFile(HTMLConfig.HTML_ROOT);
@@ -76,7 +76,7 @@ public final class HTMLCache {
 	 * 获取缓存实例（优先 Spring provider）。
 	 * Returns cache instance (prefers Spring provider).
 	 *
-	 * cache
+	 * @return 缓存实例 / cache instance
 	 */
 	public static HTMLCache getInstance() {
 		ObjectProvider<HTMLCache> provider = instanceProvider;
@@ -213,7 +213,7 @@ public final class HTMLCache {
 	 * 磁盘缓存文件路径。
 	 * On-disk cache file path.
 	 *
-	 * cache file
+	 * @return 缓存文件 / cache file
 	 */
 	private File getCacheFile() {
 		return Config.cacheFile(HTMLConfig.HTML_CACHE_FILE + ".i18n");
@@ -252,8 +252,8 @@ public final class HTMLCache {
 	 * Compacts HTML whitespace and spaces around tags.
 	 *
 	 * @param sb 可复用缓冲 / reusable buffer
-	 * raw HTML
-	 * compacted HTML
+	 * @param html 原始 HTML / raw HTML
+	 * @return 压缩后的 HTML / compacted HTML
 	 */
 	private String compactHtml(StringBuilder sb, String html) {
 		sb.setLength(0);
@@ -294,8 +294,8 @@ public final class HTMLCache {
 	 * Replaces all matches inside a {@link StringBuilder}.
 	 *
 	 * @param sb 缓冲 / buffer
-	 * pattern
-	 * replacement
+	 * @param pattern 查找模式 / pattern
+	 * @param value 替换内容 / replacement
 	 */
 	private void replaceAll(StringBuilder sb, String pattern, String value) {
 		for (int index = 0; (index = sb.indexOf(pattern, index)) != -1;) {
@@ -319,7 +319,7 @@ public final class HTMLCache {
 	 * 递归解析目录下全部可加载 HTML。
 	 * Recursively parses all loadable HTML under a directory.
 	 *
-	 * directory
+	 * @param dir 目录 / directory
 	 */
 	public void parseDir(File dir) {
 		File[] files = dir.listFiles(HTML_FILTER);
@@ -340,9 +340,7 @@ public final class HTMLCache {
 	 * 加载单个 HTML 文件到缓存。
 	 * Loads a single HTML file into the cache.
 	 *
-	 * file
-	 *
-	 * @param file
+	 * @param file 文件 / file
 	 * @return 内容；不可加载时返回 null / content, or null when not loadable
 	 */
 	public String loadFile(File file) {
@@ -381,7 +379,7 @@ public final class HTMLCache {
 	 * Resolves the localized path by server country code and returns HTML.
 	 *
 	 * @param path 相对路径 / relative path
-	 * HTML or null
+	 * @return HTML 内容或 null / HTML or null
 	 */
 	public String getHTML(String path) {
 		return cache.get(localizedPath(path, GSConfig.SERVER_COUNTRY_CODE));
@@ -392,7 +390,7 @@ public final class HTMLCache {
 	 * Maps {@code .xhtml} to {@code .en.xhtml} when country code is not 5.
 	 *
 	 * @param path 相对路径 / relative path
-	 * country code
+	 * @param countryCode 国家码 / country code
 	 * @return 本地化路径 / localized path
 	 */
 	static String localizedPath(String path, int countryCode) {
@@ -407,8 +405,8 @@ public final class HTMLCache {
 	 * 文件是否可加载。
 	 * Whether the file is loadable.
 	 *
-	 * file
-	 * loadable
+	 * @param file 文件 / file
+	 * @return 是否可加载 / loadable
 	 */
 	private boolean isLoadable(File file) {
 		return file.exists() && !file.isDirectory() && HTML_FILTER.accept(file);
@@ -419,7 +417,7 @@ public final class HTMLCache {
 	 * Whether the localized path exists in cache.
 	 *
 	 * @param path 相对路径 / relative path
-	 * whether present
+	 * @return 是否存在 / whether present
 	 */
 	public boolean pathExists(String path) {
 		return cache.containsKey(localizedPath(path, GSConfig.SERVER_COUNTRY_CODE));
@@ -441,8 +439,8 @@ public final class HTMLCache {
 	 * Computes the URI path of file relative to base.
 	 *
 	 * @param base 基准目录 / base directory
-	 * file
-	 * relative path
+	 * @param file 文件 / file
+	 * @return 相对路径 / relative path
 	 */
 	public static String getRelativePath(File base, File file) {
 		return file.toURI().getPath().substring(base.toURI().getPath().length());

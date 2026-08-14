@@ -26,8 +26,8 @@ public class SM_ACCOUNT_RECONNECT_KEY extends GsServerPacket {
      * 构造账号重连密钥响应包。
      * Constructs an account reconnect key response packet.
      *
-     * 账号 ID / account id
-     * reconnect key
+     * @param accountId 账号 ID / account id
+     * @param reconnectKey 重连密钥 / reconnect key
      */
     public SM_ACCOUNT_RECONNECT_KEY(int accountId, int reconnectKey) {
         this.accountId = accountId;

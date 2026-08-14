@@ -13,7 +13,7 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 
 /**
  * 熔岩魔刷新点模板（静态数据/XML）。
- * XML template.
+ * Moltenus spawn template (static data/XML).
  *
  * @author Rinzler (Encom)
  */
@@ -32,7 +32,7 @@ public class MoltenusSpawn {
 	@XmlElement(name = "moltenus_type")
 	private List<MoltenusSpawn.MoltenusStateTemplate> MoltenusStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回要塞模式模板 / Returns the siege mod templates */
 	public List<MoltenusStateTemplate> getSiegeModTemplates() {
 		return MoltenusStateTemplate;
 	}

@@ -30,7 +30,7 @@ public class cmd_questrestart extends PlayerCommand {
 	 * Parses quest id and restarts the quest when allowed.
 	 *
 	 * @param player 执行命令的玩家 / invoking player
-	 * quest id
+	 * @param params 任务 ID / quest id
 	 */
 	@Override
 	public void execute(Player player, String... params) {

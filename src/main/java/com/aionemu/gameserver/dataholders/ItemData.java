@@ -116,9 +116,7 @@ public class ItemData extends ReloadableData {
 	 * 按物品 ID 获取物品模板。
 	 * Returns the item template for the given item id.
 	 *
-	 * item id
-	 *
-	 * @param itemId
+	 * @param itemId 物品 ID / item id
 	 * @return 物品模板或 null / item template or null
 	 */
 	public ItemTemplate getItemTemplate(int itemId) {
@@ -143,7 +141,7 @@ public class ItemData extends ReloadableData {
 	 * 返回已加载的物品模板数量。
 	 * Returns the number of loaded item templates.
 	 *
-	 * template count
+	 * @return 已加载的物品模板数量 / Returns the number of loaded item templates.
 	 */
 	public int size() {
 		return items.size();
@@ -163,9 +161,7 @@ public class ItemData extends ReloadableData {
 	 * 按宠物 ID 获取宠物蛋模板。
 	 * Returns the pet-egg template for the given pet id.
 	 *
-	 * pet id
-	 *
-	 * @param petId
+	 * @param petId 宠物 ID / pet id
 	 * @return 宠物蛋模板或 null / pet-egg template or null
 	 */
 	public ItemTemplate getPetEggTemplate(int petId) {

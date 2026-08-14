@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-/** Immutable NPC-to-drop index compiled from one canonical catalog snapshot. */
+/** 从单个规范目录快照编译的不可变 NPC 掉落索引。 / Immutable NPC-to-drop index compiled from one canonical catalog snapshot. */
 public final class QuestDropIndex {
 	private final Map<Integer, List<QuestCatalogDrop>> dropsByNpc;
 

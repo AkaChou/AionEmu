@@ -168,7 +168,7 @@ public class MotionLoggingService {
 		Race race = player.getRace();
 		Gender gender = player.getGender();
 
-		// create WeaponTypeWrapper
+		// 创建武器类型包装 / create WeaponTypeWrapper
 		WeaponTypeWrapper weapon = new WeaponTypeWrapper(mainHandWeapon, offHandWeapon);
 		// 检查是否存在 / check if its present
 		if (this.isPresent(motionName, weapon, skillId, currentAttackSpeed, race, gender)) {
@@ -214,7 +214,7 @@ public class MotionLoggingService {
 			if (entry.getValue() == null) {
 				continue;
 			}
-			// loop through weaponType
+			// 遍历武器类型 / loop through weaponType
 			for (Entry<WeaponTypeWrapper, List<SkillTime>> entry2 : entry.getValue().getMotionLog().entrySet()) {
 				WeaponTypeWrapper weapon = entry2.getKey();
 
@@ -265,14 +265,14 @@ public class MotionLoggingService {
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.SWORD_1H, null));
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.SWORD_2H, null));
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.SWORD_1H, WeaponType.SWORD_1H));
-			// 4.3
+			// 4.3 版本 / 4.3
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.GUN_1H, null));
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.CANNON_2H, null));
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.HARP_2H, null));
-			// 4.5
+			// 4.5 版本 / 4.5
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.KEYBLADE_2H, null));
 
-			// create MotionTime
+			// 创建动作时间对象 / create MotionTime
 			MotionTime motion = new MotionTime();
 			motion.setName(entry.getKey());
 
@@ -409,13 +409,13 @@ public class MotionLoggingService {
 			PreparedStatement stmt = con.prepareStatement(INSERT_QUERY);
 			for (Entry<String, MotionLog> entry : motionsMap.entrySet()) {
 				String motionName = entry.getKey();
-				// set motion_name
+				// 设置动作名称 / set motion_name
 				stmt.setString(1, motionName);
 				stmt.setString(9, motionName);
 				if (entry.getValue() == null) {
 					continue;
 				}
-				// loop through weaponType
+				// 遍历武器类型 / loop through weaponType
 				for (Entry<WeaponTypeWrapper, List<SkillTime>> entry2 : entry.getValue().getMotionLog().entrySet()) {
 					String weaponType = (entry2.getKey().getMainHand() != null
 							? entry2.getKey().getMainHand().toString()
@@ -423,14 +423,14 @@ public class MotionLoggingService {
 					String offWeaponType = (entry2.getKey().getOffHand() != null
 							? entry2.getKey().getOffHand().toString()
 							: "null");
-					// set weapon_type
+					// 设置武器类型 / set weapon_type
 					stmt.setString(2, weaponType);
 					stmt.setString(3, offWeaponType);
 
 					if (entry2.getValue() == null) {
 						continue;
 					}
-					// sort by skillId
+					// 按技能 ID 排序 / sort by skillId
 					Collections.sort(entry2.getValue());
 					for (SkillTime st : entry2.getValue()) {
 						stmt.setInt(4, st.getSkillId());

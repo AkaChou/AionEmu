@@ -24,9 +24,9 @@ public class SM_GATHER_UPDATE extends AionServerPacket {
 
 	/**
 	 * @param template 可采集物模板 / Gatherable template
-	 * Material being gathered
-	 * Success progress
-	 * Failure progress
+	 * @param material 正在采集的材料 / Material being gathered
+	 * @param success 成功进度 / Success progress
+	 * @param failure 失败进度 / Failure progress
 	 * @param action 采集动作类型 / Gathering action type
 	 */
 	public SM_GATHER_UPDATE(GatherableTemplate template, Material material, int success, int failure, int action) {
@@ -91,7 +91,7 @@ public class SM_GATHER_UPDATE extends AionServerPacket {
 			writeH(0);
 			break;
 		}
-		case 5: // you have stopped gathering
+		case 5: // 已停止采集 / you have stopped gathering
 		{
 			writeQ(con.getActivePlayer().getRates().getGatheringCountRate());
 			writeD(0);

@@ -75,10 +75,8 @@ public class QuestsData {
 	 * 返回指定 NPC 势力下、玩家当前可接取的任务列表。
 	 * Returns faction quests the player can currently start.
 	 *
-	 * NPC faction id
-	 *
-	 * @param npcFactionId 玩家 / player
-	 * @param player
+	 * @param npcFactionId NPC 势力 ID / NPC faction id
+	 * @param player 玩家 / player
 	 * @return 可接任务列表 / startable quest list
 	 */
 	public List<QuestTemplate> getQuestsByNpcFaction(int npcFactionId, Player player) {
@@ -104,7 +102,7 @@ public class QuestsData {
 	 * 返回已加载的任务模板数量。
 	 * Returns the number of loaded quest templates.
 	 *
-	 * quest count
+	 * @return 已加载的任务模板数量 / Returns the number of loaded quest templates.
 	 */
 	public int size() {
 		return questData.size();

@@ -32,7 +32,6 @@ public class Beritra extends AdminCommand
 	 * 执行贝里特拉入侵启停。
 	 * Executes Beritra invasion start/stop.
 	 *
-	 * admin
 	 * @param params 参数：start|stop 与地点 ID / start|stop and location id
 	 */
 	@Override
@@ -49,8 +48,6 @@ public class Beritra extends AdminCommand
 	 * 处理指定地点的入侵开始或停止。
 	 * Handles starting or stopping invasion at a location.
 	 *
-	 * admin
-	 * parameters
 	 */
 	protected void handleStartStopInvasion(Player player, String... params) {
 		if (params.length != 2 || !NumberUtils.isDigits(params[1])) {
@@ -83,8 +80,6 @@ public class Beritra extends AdminCommand
 	 * 校验贝里特拉地点 ID 是否有效。
 	 * Validates whether the Beritra location id is valid.
 	 *
-	 * admin
-	 * location id
 	 *
 	 * @return 若 valid 则为 true / true if valid
 	 */
@@ -100,7 +95,6 @@ public class Beritra extends AdminCommand
 	 * 显示命令用法帮助。
 	 * Shows command usage help.
 	 *
-	 * admin
 	 */
 	protected void showHelp(Player player) {
 		PacketSendUtility.sendMessage(player, "AdminCommand //beritra start|stop <Id>");

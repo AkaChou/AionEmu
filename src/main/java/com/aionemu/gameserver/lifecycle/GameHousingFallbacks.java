@@ -43,7 +43,7 @@ final class GameHousingFallbacks {
      * 返回城镇服务回退实例。
      * Return the town-service fallback instance.
      *
-     * Town service
+     * @return 城镇服务 / Town service
      */
     static TownService townService() {
         return TownServiceFallback.INSTANCE;
@@ -53,7 +53,7 @@ final class GameHousingFallbacks {
      * 返回房屋服务回退实例。
      * Return the housing-service fallback instance.
      *
-     * Housing service
+     * @return 房屋服务 / Housing service
      */
     static HousingService housingService() {
         return HousingServiceFallback.INSTANCE;

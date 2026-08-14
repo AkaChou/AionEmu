@@ -55,7 +55,7 @@ public class PlayerTransferService {
 	 * 获取服务单例（优先 Spring ObjectProvider，否则回退本地单例）。
 	 * Get the service singleton (prefer Spring ObjectProvider, otherwise local holder).
 	 *
-	 * Service instance
+	 * @return 服务单例 / service instance
 	 */
 	public static PlayerTransferService getInstance() {
 		ObjectProvider<PlayerTransferService> provider = instanceProvider;
@@ -135,11 +135,11 @@ public class PlayerTransferService {
 	 * Start transfer on the source server: validate account ownership, legion, online state, cooldown and asset
 	 * limits, then package character data.
 	 *
-	 * Source account ID
-	 * Target account ID
-	 * Character ID
-	 * @param targetServerId  目标服务器 ID / Target server ID
-	 * Task ID
+	 * @param accountId 源账号 ID / Source account ID
+	 * @param targetAccountId 目标账号 ID / Target account ID
+	 * @param playerId 角色 ID / Character ID
+	 * @param targetServerId 目标服务器 ID / Target server ID
+	 * @param taskId 任务 ID / Task ID
 	 */
 	public void startTransfer(int accountId, int targetAccountId, int playerId, byte targetServerId, int taskId) {
 		boolean exist = false;
@@ -211,11 +211,11 @@ public class PlayerTransferService {
 	 * 在目标服根据源服下发的角色二进制数据克隆角色。
 	 * Clone a character on the target server from the binary payload delivered by the source server.
 	 *
-	 * Task ID
-	 * Target account ID
-	 * Character name
-	 * Account name
-	 * @param db             角色二进制数据 / Character binary payload
+	 * @param taskId 任务 ID / Task ID
+	 * @param targetAccountId 目标账号 ID / Target account ID
+	 * @param name 角色名 / Character name
+	 * @param account 账号名 / Account name
+	 * @param db 角色二进制数据 / Character binary payload
 	 */
 	public void cloneCharacter(int taskId, int targetAccountId, String name, String account, byte[] db) {
 		if (!PlayerService.isFreeName(name)) {
@@ -261,7 +261,7 @@ public class PlayerTransferService {
 	 * 目标服确认成功后，在源服删除原角色。
 	 * After target-server confirmation, delete the original character on the source server.
 	 *
-	 * Task ID
+	 * @param taskId 任务 ID / Task ID
 	 */
 	public void onOk(int taskId) {
 		TransferablePlayer tplayer = this.transfers.remove(taskId);
@@ -273,8 +273,8 @@ public class PlayerTransferService {
 	 * 目标服返回错误时清理源服转移任务。
 	 * Clean up the source-side transfer task when the target server reports an error.
 	 *
-	 * Task ID
-	 * Failure reason
+	 * @param taskId 任务 ID / Task ID
+	 * @param reason 失败原因 / Failure reason
 	 */
 	public void onError(int taskId, String reason) {
 		this.transfers.remove(taskId);

@@ -35,16 +35,16 @@ public class Asmodian_Elite_Combat_MageAI2 extends NpcAI2
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
-				case 220574: //Asmodian Elite Combat Mage.
+				case 220574: // 魔族精英战斗法师 / Asmodian Elite Combat Mage.
 					announce1StDefense();
 				break;
-				case 220576: //Asmodian Elite Combat Mage.
+				case 220576: // 魔族精英战斗法师 / Asmodian Elite Combat Mage.
 					announce2NdDefense();
 				break;
-				case 220578: //Asmodian Elite Combat Mage.
+				case 220578: // 魔族精英战斗法师 / Asmodian Elite Combat Mage.
 					announce3RdDefense();
 				break;
-				case 220580: //Asmodian Elite Combat Mage.
+				case 220580: // 魔族精英战斗法师 / Asmodian Elite Combat Mage.
 					announce4ThDefense();
 			    break;
 			}

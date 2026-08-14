@@ -10,7 +10,7 @@ import com.aionemu.gameserver.geoEngine.bounding.BoundingBox;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 
 /**
- * 静态 DoorBounds 模板（静态数据/XML）。
+ * 静态门边界模板（静态数据/XML）。
  * XML template.
  *
  * @author Rolandas
@@ -40,7 +40,7 @@ public class StaticDoorBounds {
 	@XmlTransient
 	private BoundingBox boundingBox;
 
-	/** 返回 bounding box / Returns the bounding box */
+	/** 返回包围盒 / Returns the bounding box */
 	public BoundingBox getBoundingBox() {
 		if (boundingBox == null) {
 			boundingBox = new BoundingBox(new Vector3f(x1, y1, z1), new Vector3f(x2, y2, z2));

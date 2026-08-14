@@ -51,7 +51,7 @@ public abstract class AbstractHealEffect extends EffectTemplate {
 	 * Calculates final heal (boost/deboost, disease block) and stores it in reserved values.
 	 *
 	 * @param effect 运行时效果 / runtime effect
-	 * heal type
+	 * @param healType 治疗类型 / heal type
 	 */
 	public void calculate(Effect effect, HealType healType) {
 		if (!super.calculate(effect, null, null)) {
@@ -110,7 +110,7 @@ public abstract class AbstractHealEffect extends EffectTemplate {
 	 * Applies the calculated heal value to the effected creature by heal type.
 	 *
 	 * @param effect 运行时效果 / runtime effect
-	 * heal type
+	 * @param healType 治疗类型 / heal type
 	 */
 	public void applyEffect(Effect effect, HealType healType) {
 		Creature effected = effect.getEffected();
@@ -170,7 +170,7 @@ public abstract class AbstractHealEffect extends EffectTemplate {
 	 * Returns the effected creature's max stat for this heal type.
 	 *
 	 * @param effect 运行时效果 / runtime effect
-	 * max stat value
+	 * @return 属性上限 / max stat value
 	 */
 	protected abstract int getMaxStatValue(Effect effect);
 }

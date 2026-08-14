@@ -48,7 +48,7 @@ public class ItemSkillEnhanceData {
 	 * Returns the skill-enhance template for the given id and class; falls back to {@link PlayerClass#ALL}.
 	 *
 	 * @param id 强化 ID / enhance id
-	 * player class
+	 * @param playerClass 职业 / player class
 	 * @return 技能强化模板或 null / skill-enhance template or null
 	 */
 	public ItemSkillEnhance getSkillEnhance(int id, PlayerClass playerClass) {
@@ -83,7 +83,7 @@ public class ItemSkillEnhanceData {
 	 * 返回已加载的技能强化数量。
 	 * Returns the number of loaded skill enhances.
 	 *
-	 * template count
+	 * @return 已加载的技能强化数量 / Returns the number of loaded skill enhances.
 	 */
 	public int size() {
 		return enhanceSkillsById.size();

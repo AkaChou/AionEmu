@@ -27,8 +27,8 @@ public enum WorldMapType {
     GELKMAROS(220070000),
     SILENTERA_CANYON(600010000),
     // 监狱 / Prison
-    DE_PRISON(510010000), // For ELYOS
-    DF_PRISON(520010000), // For ASMODIANS
+    DE_PRISON(510010000), // 供天族使用 / For ELYOS
+    DF_PRISON(520010000), // 供魔族使用 / For ASMODIANS
 
     RESHANTA(400010000),
     // 副本 / Instances
@@ -132,13 +132,13 @@ public enum WorldMapType {
     // 地图 3.5 / Map 3.5
     ARENA_OF_HARMONY(300450000),
     IDTiamat_Solo(300490000),
-    IDTiamat_Israphel(300500000), //Israphel's Space
+    IDTiamat_Israphel(300500000), // 伊斯拉佩尔的空间 / Israphel's Space
     TIAMAT_STRONGHOLD(300510000),
-    DRAGON_LORDS_REFUGE(300520000), //Dragon Lord's Refuge instance
+    DRAGON_LORDS_REFUGE(300520000), // 龙帝避难所副本 / Dragon Lord's Refuge instance
     IDArena_Glory(300550000),
-    IDDF2Flying_Event01(300560000), //Sky Temple of Arkanis
+    IDDF2Flying_Event01(300560000), // 阿尔卡尼斯天空神殿 / Sky Temple of Arkanis
     IDArena_Team01_T(300570000),
-    UNSTABLE_SPLINTER(300600000), //Unstable Abyssal Splinter
+    UNSTABLE_SPLINTER(300600000), // 不稳定的深渊碎片 / Unstable Abyssal Splinter
     HEXWAY(300700000),
     // 副本 4.3 北美 / Instances 4.3 NA
     IDLDF5Re_02(300530000),

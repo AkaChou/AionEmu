@@ -36,7 +36,7 @@ public class Illusion_GateAI2 extends NpcAI2
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	@Override
 	protected void handleDialogStart(Player player) {

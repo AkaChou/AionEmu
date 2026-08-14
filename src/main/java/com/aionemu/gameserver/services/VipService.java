@@ -3,7 +3,7 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.model.bonus_service.ServiceBuff;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
-/** Applies independent China VIP benefits from service_bonusattr data. */
+/** 应用独立的中国区 VIP 福利（来自 service_bonusattr 数据）。 / Applies independent China VIP benefits from service_bonusattr data. */
 public final class VipService {
 
 	private static final int[] BUFF_BASE_IDS = { 1000000, 1000006, 1000012 };

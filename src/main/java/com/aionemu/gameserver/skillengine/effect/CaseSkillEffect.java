@@ -12,6 +12,10 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
+/**
+ * 条件技能效果：当目标生命值（HP/MP）降至阈值以下且概率命中时，对目标施放指定技能（仅触发一次）。
+ * Conditional skill effect: casts the specified skill on the target when its HP/MP drops below the threshold and the probability check succeeds (triggers only once).
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CaseSkillEffect")
 public class CaseSkillEffect extends EffectTemplate {

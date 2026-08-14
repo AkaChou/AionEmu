@@ -61,14 +61,14 @@ public class SM_ACCOUNT_AUTH_RESPONSE extends GsServerPacket {
      * 构造账号鉴权响应包。
      * Constructs an account authentication response packet.
      *
-     * 账号 ID / account id
+     * @param accountId 账号 ID / account id
      * @param ok 是否鉴权通过 / whether authentication succeeded
-     * account name
+     * @param accountName 账号名 / account name
      * @param accessLevel 访问权限等级 / access level
-     * membership level
+     * @param membership 会员等级 / membership level
      * @param toll 通行点数 / toll points
-     * luna currency
-     * return-player flag
+     * @param luna 露娜货币 / luna currency
+     * @param isReturn 返回玩家标志 / return-player flag
      */
     public SM_ACCOUNT_AUTH_RESPONSE(int accountId, boolean ok, String accountName, byte accessLevel, byte membership,
             long toll, long luna, byte isReturn, int vipLevel, long vipExp, long vipExpireTime) {

@@ -52,12 +52,12 @@ public class ChallengeTaskTemplate {
 	@XmlAttribute(required = true)
 	protected int id;
 
-	/** 返回 quests / Returns the quests */
+	/** 返回挑战任务列表 / Returns the quests */
 	public List<ChallengeQuestTemplate> getQuests() {
 		return this.quest;
 	}
 
-	/** 返回 contrib / Returns the contrib */
+	/** 返回贡献奖励列表 / Returns the contrib */
 	public List<ContributionReward> getContrib() {
 		return this.contrib;
 	}
@@ -68,14 +68,20 @@ public class ChallengeTaskTemplate {
 	}
 
 	/**
-	 * @return Whether repeatable
+	 * 是否可重复完成。
+	 * Whether the task is repeatable.
+	 *
+	 * @return 可重复时为 {@code true} / {@code true} if repeatable
 	 */
 	public boolean isRepeatable() {
 		return this.repeat != null && this.repeat == true;
 	}
 
 	/**
-	 * @return Whether town residence
+	 * 是否为城镇居住任务。
+	 * Whether the task is a town residence task.
+	 *
+	 * @return 是城镇居住任务时为 {@code true} / {@code true} if town residence
 	 */
 	public boolean isTownResidence() {
 		return this.townResidence != null && this.townResidence == true;
@@ -96,7 +102,7 @@ public class ChallengeTaskTemplate {
 		return this.minLevel;
 	}
 
-	/** 返回 prev task / Returns the prev task */
+	/** 返回前置任务 / Returns the prev task */
 	public Integer getPrevTask() {
 		return this.prevTask;
 	}

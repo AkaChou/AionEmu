@@ -2,7 +2,10 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import java.util.Objects;
 
-/** A statically declared reward; delivery is owned by the reward port. */
+/**
+ * 静态声明的奖励；交付由奖励端口负责。
+ * A statically declared reward; delivery is owned by the reward port.
+ */
 public record QuestReward(String kind, int id, long amount) {
 	public QuestReward {
 		kind = requireText(kind, "kind");

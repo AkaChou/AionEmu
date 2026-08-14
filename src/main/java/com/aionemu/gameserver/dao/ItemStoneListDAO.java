@@ -43,7 +43,7 @@ public abstract class ItemStoneListDAO implements DAO {
 	 * 存储伊迪安石。
 	 * Stores an Idian stone.
 	 *
-	 * Idian stone
+	 * @param idianStone Idian stone / Idian stone
 	 */
 	public abstract void storeIdianStones(IdianStone idianStone);
 
@@ -69,7 +69,7 @@ public abstract class ItemStoneListDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
 	 *
-	 * class name
+	 * @return 类名 / class name
 	 */
 	@Override
 	public String getClassName() {

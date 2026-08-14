@@ -83,7 +83,7 @@ public class LoginStartupSequenceLifecycle {
      * 最近一次启动序列耗时（毫秒）；未执行过为 -1。
      * Elapsed millis of the last startup sequence; -1 if never run.
      *
-     * elapsed milliseconds
+     * @return 上次启动耗时毫秒 / elapsed milliseconds
      */
     public synchronized long getLoadTimeMillis() {
         return loadTimeMillis;
@@ -93,7 +93,7 @@ public class LoginStartupSequenceLifecycle {
      * 最近一次启动失败的异常；成功则为 null。
      * Exception from the last failed startup; null on success.
      *
-     * last failure, or null
+     * @return 上次失败异常；成功则为 null / last failure, or null
      */
     public synchronized Throwable getLastFailure() {
         return lastFailure;

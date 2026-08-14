@@ -65,9 +65,9 @@ public class RunnableStatsManager {
          * 获取或创建方法统计。
          * Get or create method statistics.
          *
-         * Method name
+         * @param methodName 方法名 / Method name
          * @param synchronizedAlready 是否已同步 / Whether already synchronized
-         * Method statistics
+         * @return 方法统计 / Method statistics
          */
         private MethodStat getMethodStat(String methodName, boolean synchronizedAlready) {
             if ("run()".equals(methodName)) {
@@ -123,7 +123,7 @@ public class RunnableStatsManager {
          * 累加一次运行耗时。
          * Accumulate one runtime sample.
          *
-         * Runtime
+         * @param runTime 耗时（纳秒） / Runtime in nanoseconds
          */
         private void handleStats(long runTime) {
             lock.lock();
@@ -142,9 +142,9 @@ public class RunnableStatsManager {
      * 获取或创建类统计。
      * Get or create class statistics.
      *
-     * Class
+     * @param clazz 类 / Class
      * @param synchronizedAlready 是否已同步 / Whether already synchronized
-     * Class statistics
+     * @return 类统计 / Class statistics
      */
     private ClassStat getClassStat(Class<?> clazz, boolean synchronizedAlready) {
         ClassStat classStat = classStats.get(clazz);
@@ -166,8 +166,8 @@ public class RunnableStatsManager {
      * 记录 Runnable 类的运行统计。
      * Record runtime statistics for a Runnable class.
      *
-     * Runnable class
-     * Runtime
+     * @param clazz 可运行类 / Runnable class
+     * @param runTime 耗时（纳秒） / Runtime in nanoseconds
      */
     public void handleStats(Class<? extends Runnable> clazz, long runTime) {
         if (!CommonsConfig.RUNNABLESTATS_ENABLE) {
@@ -180,9 +180,9 @@ public class RunnableStatsManager {
      * 记录指定方法的运行统计。
      * Record runtime statistics for a named method.
      *
-     * Class
-     * Method name
-     * Runtime
+     * @param clazz 类 / Class
+     * @param methodName 方法名 / Method name
+     * @param runTime 耗时（纳秒） / Runtime in nanoseconds
      */
     public void handleStats(Class<?> clazz, String methodName, long runTime) {
         if (!CommonsConfig.RUNNABLESTATS_ENABLE) {
@@ -429,9 +429,9 @@ public class RunnableStatsManager {
      * Append an XML attribute with column padding.
      *
      * @param sb     输出 / Output builder
-     * Field
-     * Value
-     * Column width
+     * @param sortBy 排序字段 / Sort field
+     * @param value  值 / Value
+     * @param fillTo 列宽 / Column width
      */
     private void appendAttribute(StringBuilder sb, SortBy sortBy, String value, int fillTo) {
         sb.append(sortBy.xmlAttributeName);

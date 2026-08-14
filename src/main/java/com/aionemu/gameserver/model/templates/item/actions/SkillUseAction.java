@@ -99,7 +99,7 @@ public class SkillUseAction extends AbstractItemAction {
 				}
 			}
 		}
-		if (skill.getSkillId() == 11072) { // add Golden Star Energy
+		if (skill.getSkillId() == 11072) { // 添加金色星能量 / add Golden Star Energy
 			PlayerCommonData pcd = player.getCommonData();
 			if (pcd.getBerdinStar() == pcd.getMaxBerdinStar()) {
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402615));

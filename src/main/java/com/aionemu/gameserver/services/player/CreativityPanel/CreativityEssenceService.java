@@ -86,7 +86,7 @@ public class CreativityEssenceService {
 	 * Grants creativity essence points in stages based on current exp progress.
 	 * http://aionpowerbook.com/powerbook/Creativity
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public void pointPerExp(Player player) {
 		float current = player.getCommonData().getExpShown();
@@ -174,7 +174,7 @@ public class CreativityEssenceService {
 	 * KR - Update December 30th 2015
 	 * http://aionpowerbook.com/powerbook/KR_-_Update_December_30th_2015
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public void pointPerLevel(Player player) {
 		if (player.isArchDaeva()) {
@@ -217,7 +217,7 @@ public class CreativityEssenceService {
 				point = player.getCreativityPoint() + 71;
 			}
 
-			if (player.getCPStep() < 6) { // to make sure all steps are granted
+			if (player.getCPStep() < 6) { // 确保所有阶段都已发放 / to make sure all steps are granted
 				point = point + 6 - player.getCPStep();
 			}
 			player.setCPStep(1);
@@ -253,9 +253,9 @@ public class CreativityEssenceService {
 	 * 计算经验进度百分比。
 	 * Calculates exp progress percentage.
 	 *
-	 * current exp
+	 * @param current 当前经验 / current exp
 	 * @param total 升级所需经验 / exp needed
-	 * percentage
+	 * @return 百分比 / percentage
 	 */
 	private float getPercentage(float current, float total) {
 		float percentCounter;
@@ -271,8 +271,8 @@ public class CreativityEssenceService {
 	 * Applies creativity allocation to base stat slots.
 	 *
 	 * 玩家 / player
-	 * type
-	 * slot size
+	 * @param type 类型 / type
+	 * @param size 槽位大小 / slot size
 	 * @param id 槽位 ID / slot id
 	 * @param point 分配点数 / allocated points
 	 */
@@ -359,8 +359,8 @@ public class CreativityEssenceService {
 	 * Applies skill-type creativity allocation (vessel/avatar or class skills).
 	 *
 	 * 玩家 / player
-	 * type
-	 * slot size
+	 * @param type 类型 / type
+	 * @param size 槽位大小 / slot size
 	 * @param id 槽位 ID / slot id
 	 * @param point 分配点数 / allocated points
 	 */
@@ -404,60 +404,60 @@ public class CreativityEssenceService {
 		if (point >= 5) {
 			switch (id) {
 			case 8:
-				player.getSkillList().addSkill(player, 4696, 1); // Transformation: Vessel Of Wind.
-				player.getSkillList().addSkill(player, 4697, 1); // Mercurial Blast.
+				player.getSkillList().addSkill(player, 4696, 1); // 变形：风之容器 / Transformation: Vessel Of Wind.
+				player.getSkillList().addSkill(player, 4697, 1); // 水银爆裂 / Mercurial Blast.
 				player.getCP().addPoint(player, 7, 1);
 				break;
 			case 10:
 				if (player.getRace() == Race.ELYOS) {
-					player.getSkillList().addSkill(player, 4700, 1); // Transformation: Vessel Of Fire.
-					player.getSkillList().addSkill(player, 4701, 1); // Detonate (Elyos)
+					player.getSkillList().addSkill(player, 4700, 1); // 变形：火之容器 / Transformation: Vessel Of Fire.
+					player.getSkillList().addSkill(player, 4701, 1); // 引爆（天族） / Detonate (Elyos)
 				} else if (player.getRace() == Race.ASMODIANS) {
-					player.getSkillList().addSkill(player, 4700, 1); // Transformation: Vessel Of Fire.
-					player.getSkillList().addSkill(player, 4704, 1); // Detonate (Asmodians)
+					player.getSkillList().addSkill(player, 4700, 1); // 变形：火之容器 / Transformation: Vessel Of Fire.
+					player.getSkillList().addSkill(player, 4704, 1); // 引爆（魔族） / Detonate (Asmodians)
 				}
 				player.getCP().addPoint(player, 9, 1);
 				break;
 			case 12:
-				player.getSkillList().addSkill(player, 4702, 1); // Transformation: Vessel Of Water.
-				player.getSkillList().addSkill(player, 4703, 1); // Waterbind.
+				player.getSkillList().addSkill(player, 4702, 1); // 变形：水之容器 / Transformation: Vessel Of Water.
+				player.getSkillList().addSkill(player, 4703, 1); // 水缚 / Waterbind.
 				player.getCP().addPoint(player, 11, 1);
 				break;
 			case 14:
-				player.getSkillList().addSkill(player, 4698, 1); // Transformation: Vessel Of Earth.
-				player.getSkillList().addSkill(player, 4699, 1); // Terraform.
+				player.getSkillList().addSkill(player, 4698, 1); // 变形：地之容器 / Transformation: Vessel Of Earth.
+				player.getSkillList().addSkill(player, 4699, 1); // 地形改造 / Terraform.
 				player.getCP().addPoint(player, 13, 1);
 				break;
 			// 版本：5.1 / Ver: 5.1
 			case 402:
 				if (player.getRace() == Race.ELYOS) {
-					player.getSkillList().addSkill(player, 4768, 1); // Transformation: Avatar Of Wind (Elyos)
+					player.getSkillList().addSkill(player, 4768, 1); // 变形：风之化身（天族） / Transformation: Avatar Of Wind (Elyos)
 				} else if (player.getRace() == Race.ASMODIANS) {
-					player.getSkillList().addSkill(player, 4807, 1); // Transformation: Avatar Of Wind (Asmodians)
+					player.getSkillList().addSkill(player, 4807, 1); // 变形：风之化身（魔族） / Transformation: Avatar Of Wind (Asmodians)
 				}
 				player.getCP().addPoint(player, 401, 1);
 				break;
 			case 404:
 				if (player.getRace() == Race.ELYOS) {
-					player.getSkillList().addSkill(player, 4752, 1); // Transformation: Avatar Of Fire (Elyos)
+					player.getSkillList().addSkill(player, 4752, 1); // 变形：火之化身（天族） / Transformation: Avatar Of Fire (Elyos)
 				} else if (player.getRace() == Race.ASMODIANS) {
-					player.getSkillList().addSkill(player, 4804, 1); // Transformation: Avatar Of Fire (Asmodians)
+					player.getSkillList().addSkill(player, 4804, 1); // 变形：火之化身（魔族） / Transformation: Avatar Of Fire (Asmodians)
 				}
 				player.getCP().addPoint(player, 403, 1);
 				break;
 			case 406:
 				if (player.getRace() == Race.ELYOS) {
-					player.getSkillList().addSkill(player, 4757, 1); // Transformation: Avatar Of Water (Elyos)
+					player.getSkillList().addSkill(player, 4757, 1); // 变形：水之化身（天族） / Transformation: Avatar Of Water (Elyos)
 				} else if (player.getRace() == Race.ASMODIANS) {
-					player.getSkillList().addSkill(player, 4805, 1); // Transformation: Avatar Of Water (Asmodians)
+					player.getSkillList().addSkill(player, 4805, 1); // 变形：水之化身（魔族） / Transformation: Avatar Of Water (Asmodians)
 				}
 				player.getCP().addPoint(player, 405, 1);
 				break;
 			case 408:
 				if (player.getRace() == Race.ELYOS) {
-					player.getSkillList().addSkill(player, 4762, 1); // Transformation: Avatar Of Earth (Elyos)
+					player.getSkillList().addSkill(player, 4762, 1); // 变形：地之化身（天族） / Transformation: Avatar Of Earth (Elyos)
 				} else if (player.getRace() == Race.ASMODIANS) {
-					player.getSkillList().addSkill(player, 4806, 1); // Transformation: Avatar Of Earth (Asmodians)
+					player.getSkillList().addSkill(player, 4806, 1); // 变形：地之化身（魔族） / Transformation: Avatar Of Earth (Asmodians)
 				}
 				player.getCP().addPoint(player, 407, 1);
 				break;
@@ -466,59 +466,59 @@ public class CreativityEssenceService {
 		} else if (point == 0) {
 			switch (id) {
 			case 8:
-				SkillLearnService.removeSkill(player, 4696); // Transformation: Vessel Of Wind.
-				SkillLearnService.removeSkill(player, 4697); // Mercurial Blast.
+				SkillLearnService.removeSkill(player, 4696); // 变形：风之容器 / Transformation: Vessel Of Wind.
+				SkillLearnService.removeSkill(player, 4697); // 水银爆裂 / Mercurial Blast.
 				player.getCP().removePoint(player, 7);
 				break;
 			case 10:
 				if (player.getRace() == Race.ELYOS) {
-					SkillLearnService.removeSkill(player, 4700); // Transformation: Vessel Of Fire.
-					SkillLearnService.removeSkill(player, 4701); // Detonate (Elyos)
+					SkillLearnService.removeSkill(player, 4700); // 变形：火之容器 / Transformation: Vessel Of Fire.
+					SkillLearnService.removeSkill(player, 4701); // 引爆（天族） / Detonate (Elyos)
 				} else if (player.getRace() == Race.ASMODIANS) {
-					SkillLearnService.removeSkill(player, 4700); // Transformation: Vessel Of Fire.
-					SkillLearnService.removeSkill(player, 4704); // Detonate (Asmodians)
+					SkillLearnService.removeSkill(player, 4700); // 变形：火之容器 / Transformation: Vessel Of Fire.
+					SkillLearnService.removeSkill(player, 4704); // 引爆（魔族） / Detonate (Asmodians)
 				}
 				player.getCP().removePoint(player, 9);
 				break;
 			case 12:
-				SkillLearnService.removeSkill(player, 4702); // Transformation: Vessel Of Water.
-				SkillLearnService.removeSkill(player, 4703); // Waterbind.
+				SkillLearnService.removeSkill(player, 4702); // 变形：水之容器 / Transformation: Vessel Of Water.
+				SkillLearnService.removeSkill(player, 4703); // 水缚 / Waterbind.
 				player.getCP().removePoint(player, 11);
 				break;
 			case 14:
-				SkillLearnService.removeSkill(player, 4698); // Transformation: Vessel Of Earth.
-				SkillLearnService.removeSkill(player, 4699); // Terraform.
+				SkillLearnService.removeSkill(player, 4698); // 变形：地之容器 / Transformation: Vessel Of Earth.
+				SkillLearnService.removeSkill(player, 4699); // 地形改造 / Terraform.
 				player.getCP().removePoint(player, 13);
 				break;
 			case 402:
 				if (player.getRace() == Race.ELYOS) {
-					SkillLearnService.removeSkill(player, 4768); // Transformation: Avatar Of Wind (Elyos)
+					SkillLearnService.removeSkill(player, 4768); // 变形：风之化身（天族） / Transformation: Avatar Of Wind (Elyos)
 				} else if (player.getRace() == Race.ASMODIANS) {
-					SkillLearnService.removeSkill(player, 4807); // Transformation: Avatar Of Wind (Asmodians)
+					SkillLearnService.removeSkill(player, 4807); // 变形：风之化身（魔族） / Transformation: Avatar Of Wind (Asmodians)
 				}
 				player.getCP().removePoint(player, 401);
 				break;
 			case 404:
 				if (player.getRace() == Race.ELYOS) {
-					SkillLearnService.removeSkill(player, 4752); // Transformation: Avatar Of Fire (Elyos)
+					SkillLearnService.removeSkill(player, 4752); // 变形：火之化身（天族） / Transformation: Avatar Of Fire (Elyos)
 				} else if (player.getRace() == Race.ASMODIANS) {
-					SkillLearnService.removeSkill(player, 4804); // Transformation: Avatar Of Fire (Asmodians)
+					SkillLearnService.removeSkill(player, 4804); // 变形：火之化身（魔族） / Transformation: Avatar Of Fire (Asmodians)
 				}
 				player.getCP().removePoint(player, 403);
 				break;
 			case 406:
 				if (player.getRace() == Race.ELYOS) {
-					SkillLearnService.removeSkill(player, 4757); // Transformation: Avatar Of Water (Elyos)
+					SkillLearnService.removeSkill(player, 4757); // 变形：水之化身（天族） / Transformation: Avatar Of Water (Elyos)
 				} else if (player.getRace() == Race.ASMODIANS) {
-					SkillLearnService.removeSkill(player, 4805); // Transformation: Avatar Of Water (Asmodians)
+					SkillLearnService.removeSkill(player, 4805); // 变形：水之化身（魔族） / Transformation: Avatar Of Water (Asmodians)
 				}
 				player.getCP().removePoint(player, 405);
 				break;
 			case 408:
 				if (player.getRace() == Race.ELYOS) {
-					SkillLearnService.removeSkill(player, 4762); // Transformation: Avatar Of Earth (Elyos)
+					SkillLearnService.removeSkill(player, 4762); // 变形：地之化身（天族） / Transformation: Avatar Of Earth (Elyos)
 				} else if (player.getRace() == Race.ASMODIANS) {
-					SkillLearnService.removeSkill(player, 4806); // Transformation: Avatar Of Earth (Asmodians)
+					SkillLearnService.removeSkill(player, 4806); // 变形：地之化身（魔族） / Transformation: Avatar Of Earth (Asmodians)
 				}
 				player.getCP().removePoint(player, 407);
 				break;
@@ -572,7 +572,7 @@ public class CreativityEssenceService {
 	 * Removes CP granted by an Estima item; force-resets if spent CP exceeds remaining total.
 	 *
 	 * 玩家 / player
-	 * Estima item
+	 * @param item Estima 物品 / Estima item
 	 */
 	public void removeEstimaCp(Player player, Item item) {
 		estimaCp = 0;
@@ -607,7 +607,7 @@ public class CreativityEssenceService {
 	 * 获取服务单例，优先走 Spring ObjectProvider。
 	 * Returns the service singleton, preferring Spring ObjectProvider when available.
 	 *
-	 * service instance
+	 * @return 服务实例 / service instance
 	 */
 	public static CreativityEssenceService getInstance() {
 		ObjectProvider<CreativityEssenceService> provider = instanceProvider;
@@ -621,7 +621,7 @@ public class CreativityEssenceService {
 	 * 注入 Spring ObjectProvider 以覆盖默认单例。
 	 * Injects a Spring ObjectProvider to override the default singleton.
 	 *
-	 * provider
+	 * @param provider 提供者 / provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<CreativityEssenceService> provider) {
 		instanceProvider = provider;

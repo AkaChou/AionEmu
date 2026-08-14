@@ -93,7 +93,7 @@ public class LunaData {
 	 * 返回已加载的露娜配方数量。
 	 * Returns the number of loaded Luna templates.
 	 *
-	 * template count
+	 * @return 已加载的Luna 模板数量 / Returns the number of loaded Luna templates.
 	 */
 	public int size() {
 		return lunaData.size();

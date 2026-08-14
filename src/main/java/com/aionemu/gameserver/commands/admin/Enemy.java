@@ -26,8 +26,6 @@ public class Enemy extends AdminCommand {
 	 * 切换对玩家、NPC 或全部的敌对显示，或取消。
 	 * Toggles enmity appearance toward players, NPCs, all, or cancels it.
 	 *
-	 * admin
-	 * players|npcs|all|cancel|help。
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -89,8 +87,6 @@ public class Enemy extends AdminCommand {
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
 	 *
-	 * admin
-	 * error message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

@@ -18,7 +18,7 @@ public class CallbackPriorityComparator implements Comparator<Callback<?>> {
      *
      * @param o1 第一个回调对象 / First callback object
      * @param o2 第二个回调对象 / Second callback object
- * @return 负数表示 o1 优先级高于 o2，0表示优先级相等，正数表示 o1 优先级低于 o2
+     * @return 负数表示 o1 优先级高于 o2，0 表示优先级相等，正数表示 o1 优先级低于 o2
      *         Negative if o1 has higher priority, 0 if equal, positive if o1 has lower priority
      */
     public int compare(Callback<?> o1, Callback<?> o2) {

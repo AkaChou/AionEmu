@@ -9,8 +9,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 
 /**
- * 物品 Enchant 加成模板（静态数据/XML）。
- * XML template.
+ * 物品强化加成模板：按等级附加属性修正。
+ * Item enchant bonus template: attribute modifiers per level.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

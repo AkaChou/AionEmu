@@ -12,9 +12,14 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
+ * 提供给纯条件求值的不可变事实快照。
  * Immutable fact snapshot supplied to pure condition evaluation.
  *
- * <p>Inventory and currency balances carry an explicit capture flag: a snapshot
+ * <p>背包与货币余额携带显式捕获标志：事实未被捕获的快照（例如玩家登出）
+ * 会将 {@code inventoryCaptured()}/{@code currenciesCaptured()} 报告为 false，
+ * 并使 {@link #itemCount}/{@link #balance} 失败关闭而非返回虚构的零。
+ * 捕获标志为 true 的空 map 表示「已知为零」，绝不会与「未捕获」混淆。
+ * Inventory and currency balances carry an explicit capture flag: a snapshot
  * where the facts were not captured (for example a player being logged out)
  * reports {@code inventoryCaptured()}/{@code currenciesCaptured()} as false and
  * makes {@link #itemCount}/{@link #balance} fail closed instead of returning a
@@ -32,7 +37,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		Boolean eventActive, Set<Integer> activeQuestIds, Race race,
 		Map<Integer, Boolean> eventActivities) {
 
-	/** Compatibility constructor matching the canonical shape before player-race/external-event facts. */
+	/** 匹配玩家种族/外部事件事实之前规范形状的兼容构造器。 / Compatibility constructor matching the canonical shape before player-race/external-event facts. */
 	public QuestSnapshot(int playerId, int questId, QuestStatus status, int packedVariables,
 			Map<Integer, Integer> inventory, Map<QuestRewardKind, Long> currencies,
 			boolean inventoryCaptured, boolean currenciesCaptured, int interactionObjectId,
@@ -49,7 +54,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			eventActive, activeQuestIds, null, null);
 	}
 
-	/** Compatibility constructor matching the pre-event-active canonical record shape. */
+	/** 匹配事件活动前规范记录形状的兼容构造器。 / Compatibility constructor matching the pre-event-active canonical record shape. */
 	public QuestSnapshot(int playerId, int questId, QuestStatus status, int packedVariables,
 			Map<Integer, Integer> inventory, Map<QuestRewardKind, Long> currencies,
 			boolean inventoryCaptured, boolean currenciesCaptured, int interactionObjectId,
@@ -65,7 +70,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			null, null, null, null);
 	}
 
-	/** Compatibility constructor for callers that predate completed-quest facts. */
+	/** 早于完成任务事实的调用方的兼容构造器。 / Compatibility constructor for callers that predate completed-quest facts. */
 	public QuestSnapshot(int playerId, int questId, QuestStatus status, int packedVariables,
 			Map<Integer, Integer> inventory, Map<QuestRewardKind, Long> currencies,
 			boolean inventoryCaptured, boolean currenciesCaptured, int interactionObjectId,
@@ -241,7 +246,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			eventActivities);
 	}
 
-	/** Captures the player's completed quest ids for prerequisite evaluation. */
+	/** 捕获玩家已完成任务 ID 以用于前置条件求值。 / Captures the player's completed quest ids for prerequisite evaluation. */
 	public QuestSnapshot withCompletedQuestIds(Set<Integer> questIds) {
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
@@ -251,7 +256,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			activeQuestIds, race, eventActivities);
 	}
 
-	/** Captures equipped item-set facts for equipment-dependent dialog conditions. */
+	/** 捕获已装备套装事实以用于装备依赖的对话条件。 / Captures equipped item-set facts for equipment-dependent dialog conditions. */
 	public QuestSnapshot withEquipmentFacts(QuestEquipmentFacts facts) {
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
@@ -261,7 +266,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			activeQuestIds, race, eventActivities);
 	}
 
-	/** Captures typed membership permissions for permission-dependent quest routes. */
+	/** 捕获类型化会员权限以用于权限依赖的任务路由。 / Captures typed membership permissions for permission-dependent quest routes. */
 	public QuestSnapshot withMembershipFacts(QuestMembershipFacts facts) {
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
@@ -271,7 +276,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			activeQuestIds, race, eventActivities);
 	}
 
-	/** Captures the player's maximum DP for a {@code dp-at-max} condition. */
+	/** 捕获玩家的最大 DP 以用于 {@code dp-at-max} 条件。 / Captures the player's maximum DP for a {@code dp-at-max} condition. */
 	public QuestSnapshot withMaxDp(int value) {
 		if (value < 0) {
 			throw new IllegalArgumentException("maxDp must be non-negative");
@@ -284,12 +289,12 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			eventActivities);
 	}
 
-	/** Captures whether the current event service includes this quest. */
+	/** 捕获当前事件服务是否包含此任务。 / Captures whether the current event service includes this quest. */
 	public QuestSnapshot withEventActive(boolean active) {
 		return withEventActive(Boolean.valueOf(active));
 	}
 
-	/** Captures an event-activity fact; {@code null} means the source was unavailable. */
+	/** 捕获事件活动事实；{@code null} 表示来源不可用。 / Captures an event-activity fact; {@code null} means the source was unavailable. */
 	public QuestSnapshot withEventActive(Boolean active) {
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
@@ -299,12 +304,12 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			eventActivities);
 	}
 
-	/** Returns whether event-active facts were captured for this snapshot. */
+	/** 返回此快照是否捕获了事件活动事实。 / Returns whether event-active facts were captured for this snapshot. */
 	public boolean eventActiveCaptured() {
 		return eventActive != null;
 	}
 
-	/** Captures the player's in-progress (START/REWARD) quest ids for prerequisite evaluation. */
+	/** 捕获玩家进行中（START/REWARD）任务 ID 以用于前置条件求值。 / Captures the player's in-progress (START/REWARD) quest ids for prerequisite evaluation. */
 	public QuestSnapshot withActiveQuestIds(Set<Integer> questIds) {
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
@@ -314,7 +319,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			Objects.requireNonNull(questIds, "questIds"), race, eventActivities);
 	}
 
-	/** Captures the player's authoritative race. */
+	/** 捕获玩家的权威种族。 / Captures the player's authoritative race. */
 	public QuestSnapshot withRace(Race race) {
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
@@ -324,7 +329,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			Objects.requireNonNull(race, "race"), eventActivities);
 	}
 
-	/** Captures event-service membership for explicitly referenced quest ids. */
+	/** 为显式引用的任务 ID 捕获事件服务成员资格。 / Captures event-service membership for explicitly referenced quest ids. */
 	public QuestSnapshot withEventActivities(Map<Integer, Boolean> activities) {
 		return new QuestSnapshot(playerId, questId, status, packedVariables, inventory, currencies,
 			inventoryCaptured, currenciesCaptured, interactionObjectId, targetObjectId,
@@ -334,7 +339,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 			Objects.requireNonNull(activities, "activities"));
 	}
 
-	/** Returns an explicitly captured event-activity fact, or null when unavailable. */
+	/** 返回显式捕获的事件活动事实，不可用时返回 null。 / Returns an explicitly captured event-activity fact, or null when unavailable. */
 	public Boolean eventActivity(int requiredQuestId) {
 		if (requiredQuestId <= 0) {
 			throw new IllegalArgumentException("requiredQuestId must be positive");
@@ -342,12 +347,12 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		return eventActivities == null ? null : eventActivities.get(requiredQuestId);
 	}
 
-	/** Whether active-quest facts were captured for this snapshot. */
+	/** 此快照是否捕获了进行中任务事实。 / Whether active-quest facts were captured for this snapshot. */
 	public boolean activeQuestsCaptured() {
 		return activeQuestIds != null;
 	}
 
-	/** Returns true only when captured facts contain the requested in-progress quest. */
+	/** 仅当捕获的事实包含请求的进行中任务时返回 true。 / Returns true only when captured facts contain the requested in-progress quest. */
 	public boolean hasActiveQuest(int requiredQuestId) {
 		return activeQuestIds != null && activeQuestIds.contains(requiredQuestId);
 	}
@@ -421,12 +426,12 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		return currenciesCaptured;
 	}
 
-	/** Whether completed-quest facts were captured for this snapshot. */
+	/** 此快照是否捕获了完成任务事实。 / Whether completed-quest facts were captured for this snapshot. */
 	public boolean completedQuestsCaptured() {
 		return completedQuestIds != null;
 	}
 
-	/** Returns true only when captured facts contain the requested completed quest. */
+	/** 仅当捕获的事实包含请求的已完成任务时返回 true。 / Returns true only when captured facts contain the requested completed quest. */
 	public boolean hasCompletedQuest(int requiredQuestId) {
 		return completedQuestIds != null && completedQuestIds.contains(requiredQuestId);
 	}
@@ -449,12 +454,13 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		if (exact != null) {
 			return exact;
 		}
-		// GOLD and KINAH are two wire names for the same persistent kinah field.
+		// GOLD 与 KINAH 是同一持久化基纳字段的两个线上名称。 / GOLD and KINAH are two wire names for the same persistent kinah field.
 		if (kind == QuestRewardKind.GOLD || kind == QuestRewardKind.KINAH) {
 			return currencies.getOrDefault(kind == QuestRewardKind.GOLD
 				? QuestRewardKind.KINAH : QuestRewardKind.GOLD, 0L);
 		}
 		if (kind == QuestRewardKind.CP || kind == QuestRewardKind.ABYSS_OP) {
+			// 这些线上货币还没有捕获的生产余额来源。不要把缺失来源解释为已知的零余额。
 			// These wire currencies have no captured production balance source yet.
 			// Do not interpret an absent source as a known zero balance.
 			throw new IllegalStateException("currency facts are not captured for " + kind);
@@ -466,12 +472,12 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		return craftFacts != null;
 	}
 
-	/** Returns whether maximum-DP facts were captured. */
+	/** 返回是否捕获了最大 DP 事实。 / Returns whether maximum-DP facts were captured. */
 	public boolean maxDpCaptured() {
 		return maxDp != null;
 	}
 
-	/** Matches a captured current DP balance against the captured maximum DP. */
+	/** 将捕获的当前 DP 余额与捕获的最大 DP 匹配。 / Matches a captured current DP balance against the captured maximum DP. */
 	public boolean dpAtMax() {
 		if (maxDp == null) {
 			return false;
@@ -501,7 +507,7 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 		return pvpFacts;
 	}
 
-	/** World facts may be absent; callers null-check (absence means "not captured"). */
+	/** 世界事实可能缺失；调用方做 null 检查（缺失表示「未捕获」）。 / World facts may be absent; callers null-check (absence means "not captured"). */
 	public QuestWorldFacts worldFacts() {
 		return worldFacts;
 	}

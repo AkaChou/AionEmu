@@ -26,6 +26,10 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 神石：镶嵌在武器上的触发式魔法宝石，攻击时按概率激活附带技能，激活次数达到上限后可能碎裂。
+ * Godstone: a trigger gem socketed into a weapon, activating an attached skill on attack with a chance and possibly breaking after enough activations.
+ */
 @Slf4j
 public class GodStone extends ItemStone {
 

@@ -16,7 +16,7 @@ import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 
 /**
  * 艾特里亚 Passport 模板（静态数据/XML）。
- * XML template.
+ * Atreian Passport Template (static data/XML).
  *
  * @author Ghostfur (Aion-Unique)
  */
@@ -49,7 +49,7 @@ public class AtreianPassport {
 
 	protected List<AtreianPassportRewards> atreian_passport_reward;
 
-	/** 返回当前 / Returns the active */
+	/** 返回激活标志 / Returns the active flag */
 	public int getActive() {
 		return active;
 	}
@@ -59,7 +59,7 @@ public class AtreianPassport {
 		return attendType;
 	}
 
-	/** 返回 attend num / Returns the attend num */
+	/** 返回签到次数 / Returns the attend num */
 	public int getAttendNum() {
 		return attendNum;
 	}
@@ -74,17 +74,17 @@ public class AtreianPassport {
 		return name;
 	}
 
-	/** 返回 period start / Returns the period start */
+	/** 返回周期开始时间 / Returns the period start */
 	public ZonedDateTime getPeriodStart() {
 		return DateTimeUtil.fromCalendar(pStart.toGregorianCalendar());
 	}
 
-	/** 返回 period end / Returns the period end */
+	/** 返回周期结束时间 / Returns the period end */
 	public ZonedDateTime getPeriodEnd() {
 		return DateTimeUtil.fromCalendar(pEnd.toGregorianCalendar());
 	}
 
-	/** 返回 atreian passport rewards / Returns the atreian passport rewards */
+	/** 返回艾特里亚通行证奖励列表 / Returns the atreian passport rewards */
 	public List<AtreianPassportRewards> getAtreianPassportRewards() {
 		if (atreian_passport_reward == null) {
 			atreian_passport_reward = new ArrayList<AtreianPassportRewards>();

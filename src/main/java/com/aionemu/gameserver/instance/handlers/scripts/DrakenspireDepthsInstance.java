@@ -45,13 +45,13 @@ import java.util.concurrent.Future;
 @InstanceID(301390000)
 public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 
-	/** death char / death char */
+		/** death char / death char */
 		private int deathChar;
-	/** sealscene 种族 / seal scene race */
+		/** sealscene 种族 / seal scene race */
 		private Race sealSceneRace;
-	/** drakenspire protector / drakenspire protector */
+		/** drakenspire protector / drakenspire protector */
 		private int drakenspireProtector;
-	/** drakenspire 任务 / drakenspire task */
+		/** drakenspire 任务 / drakenspire task */
 		private Future<?> drakenspireTask;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
@@ -59,7 +59,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	protected boolean isInstanceDestroyed = false;
 	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	/** 对象 / objects */
+		/** 对象 / objects */
 		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	
 	/**
@@ -106,7 +106,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -148,7 +148,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {

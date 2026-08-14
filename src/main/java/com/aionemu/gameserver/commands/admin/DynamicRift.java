@@ -29,7 +29,6 @@ public class DynamicRift extends AdminCommand
 	 * 执行动态裂隙启停。
 	 * Executes Dynamic Rift start/stop.
 	 *
-	 * admin
 	 * @param params 参数：start|stop 与地点 ID / start|stop and location id
 	 */
 	@Override
@@ -46,8 +45,6 @@ public class DynamicRift extends AdminCommand
 	 * 处理指定地点的动态裂隙开始或停止。
 	 * Handles starting or stopping Dynamic Rift at a location.
 	 *
-	 * admin
-	 * parameters
 	 */
 	protected void handleStartStopDynamic(Player player, String... params) {
 		if (params.length != 2 || !NumberUtils.isDigits(params[1])) {
@@ -79,8 +76,6 @@ public class DynamicRift extends AdminCommand
 	 * 校验动态裂隙地点 ID 是否有效。
 	 * Validates whether the Dynamic Rift location id is valid.
 	 *
-	 * admin
-	 * location id
 	 *
 	 * @return 若 valid 则为 true / true if valid
 	 */
@@ -96,7 +91,6 @@ public class DynamicRift extends AdminCommand
 	 * 显示命令用法帮助。
 	 * Shows command usage help.
 	 *
-	 * admin
 	 */
 	protected void showHelp(Player player) {
 		PacketSendUtility.sendMessage(player, "AdminCommand //dynamicrift start|stop <Id>");

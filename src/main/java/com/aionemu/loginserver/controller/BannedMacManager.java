@@ -32,7 +32,7 @@ public class BannedMacManager {
      * Returns singleton (legacy entry, deprecated after boot migration).
      *
      * @return 管理器实例 / Manager instance
-     * Prefer injection
+     * @deprecated 优先使用注入 / prefer injection
      */
     @Deprecated(since = "boot-migration")
     public static BannedMacManager getInstance() {
@@ -51,7 +51,7 @@ public class BannedMacManager {
      * 解除 MAC 封禁并写库。
      * Unbans MAC and removes from database.
      *
-     * MAC address
+     * @param address MAC 地址 / MAC address
      * @param details 备注（保留参数） / Details (kept for API)
      */
     public void unban(String address, String details) {
@@ -65,9 +65,9 @@ public class BannedMacManager {
      * 封禁 MAC 并持久化。
      * Bans MAC and persists the entry.
      *
-     * MAC address
+     * @param address MAC 地址 / MAC address
      * @param time 到期时间戳（毫秒） / Expiration epoch millis
-     * Details
+     * @param details 备注 / Details
      */
     public void ban(String address, long time, String details) {
         BannedMacEntry mac = new BannedMacEntry(address, new Timestamp(time), details);
@@ -79,7 +79,7 @@ public class BannedMacManager {
      * 返回封禁映射（兼容旧 API）。
      * Returns ban map (legacy API alias).
      *
-     * Banned MAC map
+     * @return 封禁映射 / banned MAC map
      */
     public final Map<String, BannedMacEntry> getMap() {
         return this.bannedList;

@@ -31,8 +31,6 @@ public class Moltenus extends AdminCommand
 	 * 执行启停：无参数时显示帮助；{@code start|stop <Id>} 时切换对应熔岩领主活动。
 	 * Execute start/stop: show help with no args; toggle the Moltenus event for {@code start|stop <Id>}.
 	 *
-	 * 执行 GM / Admin player
-	 * Command parameters
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -87,8 +85,6 @@ public class Moltenus extends AdminCommand
 	 * 校验熔岩领主地点 ID 是否已注册。
 	 * Validate whether the Moltenus location id is registered.
 	 *
-	 * 执行 GM / Admin player
-	 * Location id
 	 *
 	 * @return 若 valid 则为 true / True if valid
 	 */

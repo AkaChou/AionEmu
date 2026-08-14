@@ -46,10 +46,7 @@ public class Test_Weapon_DynatoumAI2 extends AggressiveNpcAI2
 		if (isAggred.compareAndSet(false, true)) {
 			switch (getNpcId()) {
 				case 233740: //Test Weapon Dynatoum.
-					/**
-					 * 约有 6 分钟击杀首领，启动封印前全队须就绪。
-	 * You have about 6 minutes to finish the boss, so all party members must be ready before activating the seal.
-					 */
+					// 约有 6 分钟击杀首领，启动封印前全队须就绪。 / You have about 6 minutes to finish the boss, so all party members must be ready before activating the seal.
 					// 试验武器迪纳图姆的炸弹计时已开始倒计时。 / The Test Weapon Dynatoum's bomb timer has begun its countdown.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402143, 0);
 					// 试验武器迪纳图姆将在 5 分钟后引爆。 / Test Weapon Dynatoum will go off in 5 minutes.

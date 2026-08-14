@@ -29,7 +29,7 @@ public class Plane implements Cloneable {
 	 * Constructs a plane from normal and constant.
 	 *
 	 * @param normal 平面法线（null 时警告并替换为零向量） / plane normal (null warns and becomes zero)
-	 * plane constant
+	 * @param constant 平面常数项 / plane constant
 	 */
 	public Plane(Vector3f normal, float constant) {
 		if (normal == null) {
@@ -44,7 +44,7 @@ public class Plane implements Cloneable {
 	 * 设置平面法线（拷贝分量；null 时警告并置为零向量）。
 	 * Sets the plane normal (copies components; null warns and becomes zero).
 	 *
-	 * new normal
+	 * @param normal 新法线 / new normal
 	 */
 	public void setNormal(Vector3f normal) {
 		if (normal == null) {
@@ -74,7 +74,7 @@ public class Plane implements Cloneable {
 	 * 返回平面法线（内部引用）。
 	 * Returns the plane normal (internal reference).
 	 *
-	 * normal
+	 * @return 法线 / normal
 	 */
 	public Vector3f getNormal() {
 		return this.normal;
@@ -84,7 +84,7 @@ public class Plane implements Cloneable {
 	 * 设置平面常数项。
 	 * Sets the plane constant term.
 	 *
-	 * constant
+	 * @param constant 常数项 / constant
 	 */
 	public void setConstant(float constant) {
 		this.constant = constant;
@@ -94,7 +94,7 @@ public class Plane implements Cloneable {
 	 * 返回平面常数项。
 	 * Returns the plane constant term.
 	 *
-	 * constant
+	 * @return 常数项 / constant
 	 */
 	public float getConstant() {
 		return this.constant;
@@ -104,9 +104,9 @@ public class Plane implements Cloneable {
 	 * 计算点到平面的最近点，结果写入 store。
 	 * Computes the closest point on the plane to the given point into store.
 	 *
-	 * query point
+	 * @return 查询点 / query point
 	 * @param store 结果存储 / result storage
-	 * store itself
+	 * @param point store 自身（链式调用） / store itself
 	 */
 	public Vector3f getClosestPoint(Vector3f point, Vector3f store) {
 		float t = (this.constant - this.normal.dot(point)) / this.normal.dot(this.normal);
@@ -117,8 +117,8 @@ public class Plane implements Cloneable {
 	 * 计算点到平面的最近点（分配新向量）。
 	 * Computes the closest point on the plane (allocates a new vector).
 	 *
-	 * query point
-	 * closest point
+	 * @param point 查询点 / query point
+	 * @return 最近点 / closest point
 	 */
 	public Vector3f getClosestPoint(Vector3f point) {
 		return this.getClosestPoint(point, new Vector3f());
@@ -146,9 +146,7 @@ public class Plane implements Cloneable {
 	 * 计算点到平面的伪距离（有符号，N·P − constant）。
 	 * Computes signed pseudo-distance from point to plane (N·P − constant).
 	 *
-	 * query point
-	 *
-	 * @param point
+	 * @param point 查询点 / query point
 	 * @return 有符号伪距离 / signed pseudo-distance
 	 */
 	public float pseudoDistance(Vector3f point) {
@@ -159,8 +157,8 @@ public class Plane implements Cloneable {
 	 * 判断点相对平面的侧别。
 	 * Determines which side of the plane the point lies on.
 	 *
-	 * query point
-	 * side
+	 * @param point 查询点 / query point
+	 * @return 点的侧别 / side
 	 */
 	public Side whichSide(Vector3f point) {
 		float dis = this.pseudoDistance(point);
@@ -177,9 +175,7 @@ public class Plane implements Cloneable {
 	 * 判断点是否近似落在平面上（epsilon ≈ Float.MIN_NORMAL）。
 	 * Tests whether the point lies approximately on the plane (epsilon ≈ Float.MIN_NORMAL).
 	 *
-	 * query point
-	 *
-	 * @param point
+	 * @param point 查询点 / query point
 	 * @return 是否在平面上 / whether on plane
 	 */
 	public boolean isOnPlane(Vector3f point) {
@@ -202,7 +198,7 @@ public class Plane implements Cloneable {
 	 * Defines this plane from an origin point and normal (constant = N·origin).
 	 *
 	 * @param origin 平面上一点 / a point on the plane
-	 * normal
+	 * @param normal 法线 / normal
 	 */
 	public void setOriginNormal(Vector3f origin, Vector3f normal) {
 		this.normal.set(normal);
@@ -237,7 +233,7 @@ public class Plane implements Cloneable {
 	 * 返回运行时类标签。
 	 * Returns the runtime class tag.
 	 *
-	 * class object
+	 * @return 类对象 / class object
 	 */
 	public Class<? extends Plane> getClassTag() {
 		return this.getClass();
@@ -247,7 +243,7 @@ public class Plane implements Cloneable {
 	 * 深拷贝本平面（法线独立克隆）。
 	 * Deep-clones this plane (normal cloned independently).
 	 *
-	 * clone
+	 * @return 克隆 / clone
 	 */
 	public Plane clone() {
 		try {

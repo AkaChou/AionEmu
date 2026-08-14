@@ -120,7 +120,7 @@ public class ObserveController {
 	 * Notifies all matching observers of the given type.
 	 *
 	 * @param type 观察类型 / observer type
-	 * notification arguments
+	 * @param object 通知参数 / notification arguments
 	 */
 	public void notifyObservers(ObserverType type, Object... object) {
 		List<ActionObserver> tempOnceused = Collections.emptyList();
@@ -164,7 +164,7 @@ public class ObserveController {
 	 *
 	 * @param type 观察类型 / observer type
 	 * @param observer 目标观察者 / target observer
-	 * notification arguments
+	 * @param object 通知参数 / notification arguments
 	 */
 	private void notifyAction(ObserverType type, ActionObserver observer, Object... object) {
 		switch (type) {
@@ -300,7 +300,7 @@ public class ObserveController {
 	 * Notifies item-equip observers.
 	 *
 	 * @param item 装备物品 / equipped item
-	 * equipping player
+	 * @param owner 装备玩家 / equipping player
 	 */
 	public void notifyItemEquip(Item item, Player owner) {
 		notifyObservers(ObserverType.EQUIP, item, owner);
@@ -311,7 +311,7 @@ public class ObserveController {
 	 * Notifies item-unequip observers.
 	 *
 	 * @param item 卸下物品 / unequipped item
-	 * unequipping player
+	 * @param owner 卸下玩家 / unequipping player
 	 */
 	public void notifyItemUnEquip(Item item, Player owner) {
 		notifyObservers(ObserverType.UNEQUIP, item, owner);
@@ -458,8 +458,8 @@ public class ObserveController {
 	 * Processes shield mitigation via observers.
 	 *
 	 * @param attackList 攻击结果列表 / attack result list
-	 * related effect
-	 * attacker
+	 * @param effect 关联效果 / related effect
+	 * @param attacker 攻击者 / attacker
 	 */
 	public void checkShieldStatus(List<AttackResult> attackList, Effect effect, Creature attacker) {
 		if (attackCalcObservers.size() > 0) {
@@ -475,7 +475,7 @@ public class ObserveController {
 	 * Gets the base physical damage multiplier (product of observers).
 	 *
 	 * @param isSkill 是否技能攻击 / whether it is a skill attack
-	 * damage multiplier
+	 * @return 伤害倍率 / damage multiplier
 	 */
 	public float getBasePhysicalDamageMultiplier(boolean isSkill) {
 		float multiplier = 1;

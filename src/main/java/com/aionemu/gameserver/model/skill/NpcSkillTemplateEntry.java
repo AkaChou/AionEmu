@@ -74,7 +74,7 @@ class NpcSkillTemplateEntry extends NpcSkillEntry {
 		return SkillConfig.scaleCooldown(template.getCooldown()) > (System.currentTimeMillis() - lastTimeUsed);
 	}
 
-	/** 刷新时使用 / Use In Spawned. */
+	/** 生成时使用 / Use in spawned. */
 	@Override
 	public boolean UseInSpawned() {
 		return template.getUseInSpawned();

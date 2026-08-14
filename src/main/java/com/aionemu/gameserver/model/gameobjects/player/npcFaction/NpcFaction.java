@@ -20,11 +20,14 @@ public class NpcFaction {
 	private PersistentState persistentState;
 
 	/**
-	 * @param id
-	 * @param time
-	 * @param active
-	 * @param state
-	 * @param questId
+	 * 创建 NPC 势力实例。
+	 * Create a NpcFaction instance.
+	 *
+	 * @param id 势力 ID / Faction ID
+	 * @param time 剩余计时（秒） / Remaining time in seconds
+	 * @param active 是否激活 / Whether active
+	 * @param state 关联任务状态 / Quest state
+	 * @param questId 关联任务 ID / Associated quest ID
 	 */
 	public NpcFaction(int id, int time, boolean active, ENpcFactionQuestState state, int questId) {
 		this.id = id;
@@ -37,42 +40,42 @@ public class NpcFaction {
 	}
 
 	/**
-	 * @return the id
+	 * @return 势力 ID / Faction ID
 	 */
 	public int getId() {
 		return id;
 	}
 
 	/**
-	 * @return the time
+	 * @return 剩余计时（秒） / Remaining time in seconds
 	 */
 	public int getTime() {
 		return time;
 	}
 
 	/**
-	 * @return the active
+	 * @return 是否激活 / Whether active
 	 */
 	public boolean isActive() {
 		return active;
 	}
 
 	/**
-	 * @return the mentor
+	 * @return 是否导师 NPC / Whether mentor
 	 */
 	public boolean isMentor() {
 		return mentor;
 	}
 
 	/**
-	 * @return the state
+	 * @return 关联任务状态 / Quest state
 	 */
 	public ENpcFactionQuestState getState() {
 		return state;
 	}
 
 	/**
-	 * @param time the time to set
+	 * @param time 设置的剩余计时（秒） / Remaining time to set in seconds
 	 */
 	public void setTime(int time) {
 		this.time = time;
@@ -80,7 +83,7 @@ public class NpcFaction {
 	}
 
 	/**
-	 * @param active the active to set
+	 * @param active 设置的激活状态 / Active state to set
 	 */
 	public void setActive(boolean active) {
 		this.active = active;
@@ -88,7 +91,7 @@ public class NpcFaction {
 	}
 
 	/**
-	 * @param state the state to set
+	 * @param state 设置的任务状态 / Quest state to set
 	 */
 	public void setState(ENpcFactionQuestState state) {
 		this.setPersistentState(PersistentState.UPDATE_REQUIRED);
@@ -96,14 +99,14 @@ public class NpcFaction {
 	}
 
 	/**
-	 * @return the questId
+	 * @return 关联任务 ID / Associated quest ID
 	 */
 	public int getQuestId() {
 		return questId;
 	}
 
 	/**
-	 * @param questId the questId to set
+	 * @param questId 设置的关联任务 ID / Associated quest ID to set
 	 */
 	public void setQuestId(int questId) {
 		this.questId = questId;
@@ -111,14 +114,14 @@ public class NpcFaction {
 	}
 
 	/**
-	 * @return the persistentState
+	 * @return 持久化状态 / Persistent state
 	 */
 	public PersistentState getPersistentState() {
 		return persistentState;
 	}
 
 	/**
-	 * @param persistentState the persistentState to set
+	 * @param persistentState 设置的持久化状态 / Persistent state to set
 	 */
 	public void setPersistentState(PersistentState persistentState) {
 		switch (persistentState) {

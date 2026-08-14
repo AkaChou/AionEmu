@@ -10,10 +10,10 @@ import java.lang.instrument.Instrumentation;
  */
 public class JavaAgentEnhancer {
     /**
- * JVM 启动时的代理入口方法
+     * JVM 启动时的代理入口方法
      * Agent entry point method called during JVM startup
      *
- * JVM arguments
+     * @param args JVM 参数 / JVM arguments
      * @param instrumentation 字节码增强工具 / Bytecode instrumentation tool
      */
     public static void premain(String args, Instrumentation instrumentation) {

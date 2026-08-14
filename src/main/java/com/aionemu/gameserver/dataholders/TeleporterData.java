@@ -44,7 +44,7 @@ public class TeleporterData {
 	 * 返回已加载的传送员模板数量。
 	 * Returns the number of loaded teleporter templates.
 	 *
-	 * template count
+	 * @return 已加载的传送器模板数量 / Returns the number of loaded teleporter templates.
 	 */
 	public int size() {
 		return npctlistData.size();
@@ -54,9 +54,7 @@ public class TeleporterData {
 	 * 按 NPC ID 查找包含该 NPC 的传送员模板。
 	 * Finds the teleporter template that contains the given npc id.
 	 *
-	 * npc id
-	 *
-	 * @param npcId
+	 * @param npcId NPC ID / npc id
 	 * @return 传送员模板，未找到则为 null / teleporter template or null
 	 */
 	public TeleporterTemplate getTeleporterTemplateByNpcId(int npcId) {
@@ -72,9 +70,7 @@ public class TeleporterData {
 	 * 按传送 ID 获取传送员模板。
 	 * Returns the teleporter template for the given teleport id.
 	 *
-	 * teleport id
-	 *
-	 * @param teleportId
+	 * @param teleportId 传送 ID / teleport id
 	 * @return 传送员模板，不存在则为 null / teleporter template or null
 	 */
 	public TeleporterTemplate getTeleporterTemplateByTeleportId(int teleportId) {

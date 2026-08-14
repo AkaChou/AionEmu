@@ -2,7 +2,10 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import java.util.Locale;
 
-/** 正式 typed runtime 可执行的封闭奖励类型。 Closed reward kinds executable by the typed runtime. */
+/**
+ * 正式 typed runtime 可执行的封闭奖励类型。
+ * Closed reward kinds executable by the typed runtime.
+ */
 public enum QuestRewardKind {
 	ITEM,
 	SELECTABLE_ITEM,

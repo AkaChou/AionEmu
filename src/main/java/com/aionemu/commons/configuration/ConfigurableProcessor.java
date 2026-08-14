@@ -65,7 +65,7 @@ public class ConfigurableProcessor {
     }
 
     /**
- * 处理类的所有带有@Property 注解的字段
+     * 处理类的所有带有@Property 注解的字段
      * Process all fields with @Property annotation in the class
      *
      * @param clazz 要处理的类
@@ -127,7 +127,7 @@ public class ConfigurableProcessor {
      *
      * @param field 要获取值的字段
      * @param props 配置属性数组
-     * @return 转换后的字段值
+     * @return 转换后的字段值 / transformed field value
      * @throws TransformationException 如果值转换失败
      */
     private static Object getFieldValue(Field field, Properties[] props) throws TransformationException {
@@ -158,7 +158,7 @@ public class ConfigurableProcessor {
      *
      * @param key 要查找的键
      * @param props 配置属性数组
- * @return 找到的值，如果未找到则返回 null
+     * @return 找到的值，如果未找到则返回 null / found value, or null if not found
      */
     private static String findPropertyByKey(String key, Properties[] props) {
         Properties[] arr$ = props;
@@ -180,7 +180,7 @@ public class ConfigurableProcessor {
      *
      * @param key 要检查的键
      * @param props 配置属性数组
- * @return 如果键存在则返回 true，否则返回 false
+     * @return 如果键存在则返回 true，否则返回 false / true if the key exists, false otherwise
      */
     private static boolean isKeyPresent(String key, Properties[] props) {
         return findPropertyByKey(key, props) != null;

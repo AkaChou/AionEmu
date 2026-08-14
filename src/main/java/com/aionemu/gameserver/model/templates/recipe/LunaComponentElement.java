@@ -19,12 +19,12 @@ public class LunaComponentElement {
 	@XmlAttribute
 	protected int quantity;
 
-	/** 返回物品 ID / Returns the itemid */
+	/** 返回物品 ID / Returns the item id */
 	public Integer getItemid() {
 		return itemid;
 	}
 
-	/** 返回 quantity / Returns the quantity */
+	/** 返回数量 / Returns the quantity */
 	public Integer getQuantity() {
 		return quantity;
 	}

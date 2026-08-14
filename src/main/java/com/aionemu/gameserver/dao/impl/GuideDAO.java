@@ -38,9 +38,10 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	 * Whether the current database is supported.
 	 *
 	 * @param arg0 数据库名 / database name
-	 * major version
-	 * minor version
-	 * whether supported
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
 	 */
 	@Override
 	public boolean supports(String arg0, int arg1, int arg2) {
@@ -51,8 +52,8 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	 * 删除引导。
 	 * Deletes a guide.
 	 *
-	 * guide id
-	 * whether successful
+	 * @param guide_id 指南 ID / guide id
+	 * @return 是否成功 / whether successful
 	 */
 	@Override
 	public boolean deleteGuide(int guide_id) {
@@ -71,8 +72,8 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	 * 加载玩家全部引导。
 	 * Loads all guides of a player.
 	 *
-	 * player id
-	 * guide list
+	 * @param playerId 玩家 ID / player id
+	 * @return 指南列表 / guide list
 	 */
 	@Override
 	public List<Guide> loadGuides(int playerId) {
@@ -102,9 +103,9 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	 * 加载单条引导。
 	 * Loads a single guide.
 	 *
-	 * player id
-	 * guide id
-	 * guide
+	 * @param player_id 玩家 ID / player id
+	 * @param guide_id 指南 ID / guide id
+	 * @return 指南 / guide
 	 */
 	@Override
 	public Guide loadGuide(int player_id, int guide_id) {
@@ -132,9 +133,9 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	 * 保存引导。
 	 * Saves a guide.
 	 *
-	 * guide id
-	 * 玩家 / player
-	 * title
+	 * @param guide_id 指南 ID / guide id
+	 * @param player 玩家 / player
+	 * @param title 称号 / title
 	 */
 	@Override
 	public void saveGuide(int guide_id, Player player, String title) {
@@ -154,7 +155,7 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	 * 获取已使用的引导 ID 数组。
 	 * Gets the array of used guide ids.
 	 *
-	 * used id array
+	 * @return 已用 ID 数组 / used id array
 	 */
 	@Override
 	public int[] getUsedIDs() {

@@ -235,7 +235,7 @@ public class WalkManager {
 	 * 到达路径点/随机点后的处理：切换下一步、等待组或中止交谈移动。
 	 * Handles arrival at a route/random point: next step, wait-group, or abort on talk.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void targetReached(final NpcAI2 npcAI) {
 		int npcObjectId = npcAI.getOwner().getObjectId();
@@ -391,7 +391,7 @@ public class WalkManager {
 	 * 停止行走：取消挂起任务、清理状态并中止移动。
 	 * Stops walking: cancels pending tasks, cleans state, and aborts movement.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void stopWalking(NpcAI2 npcAI) {
 		int npcObjectId = npcAI.getOwner().getObjectId();

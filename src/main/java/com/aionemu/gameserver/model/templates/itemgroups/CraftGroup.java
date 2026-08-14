@@ -14,8 +14,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * 制作队伍模板（静态数据/XML）。
- * XML template.
+ * 制作奖励组：按等级范围索引的制作奖励。
+ * Craft reward group: craft rewards indexed by level range.
  *
  * @author Rolandas
  */

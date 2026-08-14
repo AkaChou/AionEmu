@@ -71,7 +71,7 @@ public class PriorityThreadFactory implements ThreadFactory {
      * 设置默认线程池。
      * Set the default thread pool.
      *
-     * Thread pool
+     * @param pool 线程池 / Thread pool
      */
     protected void setDefaultPool(ExecutorService pool) {
         this.threadPool = pool;
@@ -81,7 +81,7 @@ public class PriorityThreadFactory implements ThreadFactory {
      * 获取默认线程池。
      * Get the default thread pool.
      *
-     * Thread pool
+     * @return 线程池 / Thread pool
      */
     protected ExecutorService getDefaultPool() {
         return this.threadPool;
@@ -92,7 +92,7 @@ public class PriorityThreadFactory implements ThreadFactory {
      * Create a new thread.
      *
      * @param r 任务 / Runnable task
-     * New thread
+     * @return 新线程 / New thread
      */
     @Override
     public Thread newThread(Runnable r) {

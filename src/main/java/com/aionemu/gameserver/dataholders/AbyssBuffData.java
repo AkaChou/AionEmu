@@ -46,7 +46,7 @@ public class AbyssBuffData {
 	 * 返回已加载的模板数量。
 	 * Returns the number of loaded templates.
 	 *
-	 * template count
+	 * @return 已加载的模板数量 / Returns the number of loaded templates.
 	 */
 	public int size() {
 		return templates.size();
@@ -56,9 +56,7 @@ public class AbyssBuffData {
 	 * 按 buff ID 获取欧比斯服务属性模板。
 	 * Returns the abyss service attribute template for the given buff id.
 	 *
-	 * buff id
-	 *
-	 * @param buffId
+	 * @param buffId 增益 ID / buff id
 	 * @return 属性模板，不存在则为 null / attribute template or null
 	 */
 	public AbyssServiceAttr getInstanceBonusattr(int buffId) {

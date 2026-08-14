@@ -67,7 +67,7 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
      *
      * player id
      *
-     * @param playerId
+     * @param playerId 玩家 ID / player id
      * @return 已装备灵魂石列表 / equipped stigma list
      */
     @Override
@@ -96,8 +96,8 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
      * 持久化玩家已装备灵魂石（含新增、更新与删除）。
      * Persists the player's equipped stigmas (insert, update, and delete).
      *
-     * 玩家 / player
-     * whether successful
+     * @param player 玩家 / player
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean storeItems(Player player) {
@@ -157,8 +157,8 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
      * Batch-updates stigma entries that require update.
      *
      * @param con 数据库连接 / database connection
-     * 玩家 / player
-     * entry list
+     * @param player 玩家 / player
+     * @param skills 入场列表 / entry list
      */
     private void updateItems(Connection con, Player player, List<EquippedStigmasEntry> skills) throws SQLException {
         Collection<EquippedStigmasEntry> skillsToUpdate = Collections2.filter(skills, itemsToUpdatePredicate);
@@ -182,8 +182,8 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
      * Batch-deletes stigma entries marked as deleted.
      *
      * @param con 数据库连接 / database connection
-     * 玩家 / player
-     * entry list
+     * @param player 玩家 / player
+     * @param skills 入场列表 / entry list
      */
     private void deleteItems(Connection con, Player player, List<EquippedStigmasEntry> skills) throws SQLException {
         Collection<EquippedStigmasEntry> skillsToDelete = Collections2.filter(skills, itemsToDeletePredicate);
@@ -206,10 +206,10 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

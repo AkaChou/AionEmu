@@ -15,7 +15,7 @@ public abstract class CsClientPacket extends BaseClientPacket<ChatServerConnecti
 	 * 使用指定操作码构造客户端包。
 	 * Constructs a client packet with the given opcode.
 	 *
-	 * packet opcode
+	 * @param opcode 包操作码 / packet opcode
 	 */
 	protected CsClientPacket(int opcode) {
 		super(opcode);

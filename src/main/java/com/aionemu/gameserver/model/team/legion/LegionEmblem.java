@@ -188,8 +188,8 @@ public class LegionEmblem {
 	}
 
 	/**
-	 * 将 clearout 全部 upload 数据。
-	 * This method will clear out all upload data
+	 * 清空全部上传数据。
+	 * Clears out all upload data.
 	 */
 	public void resetUploadSettings() {
 		this.isUploading = false;

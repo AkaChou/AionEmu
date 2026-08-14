@@ -29,23 +29,23 @@ public class ArtifactLocation extends SiegeLocation {
 		setVulnerable(true);
 	}
 
-	/** 返回 next state / Returns the next state */
+	/** 返回下一个状态 / Returns the next state */
 	@Override
 	public int getNextState() {
 		return STATE_VULNERABLE;
 	}
 
-	/** 返回 last activation / Returns the last activation */
+	/** 返回上次激活时间 / Returns the last activation */
 	public long getLastActivation() {
 		return this.lastArtifactActivation;
 	}
 
-	/** 设置 last activation / Sets the last activation */
+	/** 设置上次激活时间 / Sets the last activation */
 	public void setLastActivation(long paramLong) {
 		this.lastArtifactActivation = paramLong;
 	}
 
-	/** 返回 cool down / Returns the cool down */
+	/** 返回冷却时间 / Returns the cool down */
 	public int getCoolDown() {
 		long i = this.template.getActivation().getCd();
 		long l = System.currentTimeMillis() - this.lastArtifactActivation;
@@ -57,9 +57,10 @@ public class ArtifactLocation extends SiegeLocation {
 	}
 
 	/**
-	 * 返回 DescriptionIddescribes 名称的此 artifact.<br>。 / Returns DescriptionId that describes name of this artifact.<br>
+	 * 返回描述此神器名称的 DescriptionId。
+	 * Returns DescriptionId that describes the name of this artifact.
 	 *
-	 * @return DescriptionId with name
+	 * @return 含名称的 DescriptionId / DescriptionId with name
 	 */
 	public DescriptionId getNameAsDescriptionId() {
 		// 获取每个神器定义的技能 ID、物品、数量与目标。 / Get Skill id, item, count and target defined for each artifact.
@@ -70,26 +71,35 @@ public class ArtifactLocation extends SiegeLocation {
 	}
 
 	/**
-	 * @return Whether stand alone
+	 * 判断神器是否独立存在（不属于任何要塞）。
+	 * Checks whether the artifact stands alone (not owned by any fortress).
+	 *
+	 * @return 是否独立 / Whether stand alone
 	 */
 	public boolean isStandAlone() {
 		return !GameFeatureServices.siegeService().getFortresses().containsKey(getLocationId());
 	}
 
-	/** 返回 owning fortress / Returns the owning fortress */
+	/** 返回所属要塞 / Returns the owning fortress */
 	public FortressLocation getOwningFortress() {
 		return GameFeatureServices.siegeService().getFortress(getLocationId());
 	}
 
 	/**
-	 * @return the status
+	 * 获取当前状态，空值时回落为空闲。
+	 * Gets the current status, falling back to IDLE when unset.
+	 *
+	 * @return 当前状态 / the status
 	 */
 	public ArtifactStatus getStatus() {
 		return status != null ? status : ArtifactStatus.IDLE;
 	}
 
 	/**
-	 * @param status the status to set
+	 * 设置神器状态。
+	 * Sets the artifact status.
+	 *
+	 * @param status 要设置的状态 / the status to set
 	 */
 	public void setStatus(ArtifactStatus status) {
 		this.status = status;

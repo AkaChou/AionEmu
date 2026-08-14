@@ -83,9 +83,9 @@ public class EnchantService {
 	 * 拆解物品为强化石粉末等材料。
 	 * Breaks an item into materials such as enchantment stone dust.
 	 *
-	 * 玩家 / player
-	 * target item
-	 * whether successful
+	 * @param player 玩家 / player
+	 * @param targetItem 目标物品 / target item
+	 * @return 是否成功 / whether successful
 	 */
 	public static boolean breakItem(Player player, Item targetItem) {
 		Storage inventory = player.getInventory();
@@ -159,8 +159,8 @@ public class EnchantService {
 	 * 拆解所需基纳。
 	 * Kinah cost for breaking an item.
 	 *
-	 * item
-	 * kinah amount
+	 * @param item 目标物品 / item
+	 * @return 所需基纳 / kinah amount
 	 */
 	public static int BreakKinah(Item item) {
 		return 22600;
@@ -170,9 +170,9 @@ public class EnchantService {
 	 * 执行 Estima 附魔流程。
 	 * Runs the Estima enchant flow.
 	 *
-	 * 玩家 / player
-	 * parent item
-	 * target item
+	 * @param player 玩家 / player
+	 * @param parentItem 主物品 / parent item
+	 * @param targetItem 目标物品 / target item
 	 */
 	public static void estimaEnchant(final Player player, final Item parentItem, final Item targetItem) {
 		int estimaKinah = 34323;
@@ -233,11 +233,11 @@ public class EnchantService {
 	 * 尝试对装备进行强化，计算成功率。
 	 * Attempts to enchant equipment and computes success chance.
 	 *
-	 * 玩家 / player
-	 * enchant stone
-	 * target item
-	 * supplement
-	 * whether successful
+	 * @param player 玩家 / player
+	 * @param parentItem 强化石 / enchant stone
+	 * @param targetItem 目标物品 / target item
+	 * @param supplementItem 辅助道具 / supplement
+	 * @return 是否成功 / whether successful
 	 */
 	public static boolean enchantItem(Player player, Item parentItem, Item targetItem, Item supplementItem) {
 		ItemTemplate enchantStone = parentItem.getItemTemplate();
@@ -337,12 +337,12 @@ public class EnchantService {
 	 * 应用强化结果（成功加等级或失败处理）。
 	 * Applies enchant result (level-up on success or failure handling).
 	 *
-	 * 玩家 / player
-	 * enchant stone
-	 * target item
-	 * supplement
+	 * @param player 玩家 / player
+	 * @param parentItem 强化石 / enchant stone
+	 * @param targetItem 目标物品 / target item
+	 * @param supplementItem 辅助道具 / supplement
 	 * @param currentEnchant 当前强化等级 / current enchant
-	 * success flag
+	 * @param result 是否成功 / success flag
 	 */
 	public static void enchantItemAct(Player player, Item parentItem, Item targetItem, Item supplementItem, int currentEnchant, boolean result) {
         int oldEnchant = currentEnchant; 
@@ -580,8 +580,8 @@ public class EnchantService {
 	 * 按物品类型随机获取技能 ID。
 	 * Picks a random skill id for the item type.
 	 *
-	 * item
-	 * skill id
+	 * @param item 目标物品 / item
+	 * @return 技能 ID / skill id
 	 */
 	public static int getRndSkills(Item item) {
 		if (item.getItemTemplate().getArmorType() == ArmorType.WING) {
@@ -622,8 +622,8 @@ public class EnchantService {
 	 * 强化所需基纳。
 	 * Kinah cost for enchanting.
 	 *
-	 * item
-	 * kinah amount
+	 * @param item 目标物品 / item
+	 * @return 所需基纳 / kinah amount
 	 */
 	public static int EnchantKinah(Item item) {
 		if (EnchantsConfig.ENCHANT_ITEM_KINAH >= 0) {
@@ -725,12 +725,12 @@ public class EnchantService {
 	 * 尝试镶嵌魔力石并计算成功率。
 	 * Attempts manastone socketing and computes success chance.
 	 *
-	 * 玩家 / player
-	 * manastone
-	 * target item
-	 * supplement
+	 * @param player 玩家 / player
+	 * @param parentItem 魔力石 / manastone
+	 * @param targetItem 目标物品 / target item
+	 * @param supplementItem 辅助道具 / supplement
 	 * @param targetWeapon 目标武器槽位标识 / target weapon flag
-	 * whether successful
+	 * @return 是否成功 / whether successful
 	 */
 	public static boolean socketManastone(Player player, Item parentItem, Item targetItem, Item supplementItem, int targetWeapon) {
 		int targetItemLevel = 1;
@@ -822,12 +822,12 @@ public class EnchantService {
 	 * 应用魔力石镶嵌结果。
 	 * Applies the manastone socketing result.
 	 *
-	 * 玩家 / player
-	 * manastone
-	 * target item
-	 * supplement
+	 * @param player 玩家 / player
+	 * @param parentItem 魔力石 / manastone
+	 * @param targetItem 目标物品 / target item
+	 * @param supplementItem 辅助道具 / supplement
 	 * @param targetWeapon 目标武器槽位标识 / target weapon flag
-	 * success flag
+	 * @param result 是否成功 / success flag
 	 */
 	public static void socketManastoneAct(Player player, Item parentItem, Item targetItem, Item supplementItem, int targetWeapon, boolean result) {
 		player.updateSupplements();
@@ -864,9 +864,9 @@ public class EnchantService {
 	 * 手镯穿戴/卸下时应用或移除相关属性。
 	 * Applies or removes bracelet modifiers on equip/unequip.
 	 *
-	 * 玩家 / player
-	 * bracelet
-	 * equipped flag
+	 * @param player 玩家 / player
+	 * @param item 手镯 / bracelet
+	 * @param isEquipped 是否穿戴 / equipped flag
 	 */
 	public static void onBraceletEquip(Player player, Item item, boolean isEquipped) {
 		List<IStatFunction> modifiers = new ArrayList<IStatFunction>();
@@ -976,8 +976,8 @@ public class EnchantService {
 	 * 装备穿戴时应用强化相关属性修正。
 	 * Applies enchant-related stat modifiers when an item is equipped.
 	 *
-	 * 玩家 / player
-	 * item
+	 * @param player 玩家 / player
+	 * @param item 物品 / item
 	 */
 	public static void onItemEquip(Player player, Item item) {
 		List<IStatFunction> modifiers = new ArrayList<IStatFunction>();
@@ -1161,8 +1161,8 @@ public class EnchantService {
 	 * 计算强化相关等级系数。
 	 * Computes an enchant-related level factor.
 	 *
-	 * item
-	 * level factor
+	 * @param item 目标物品 / item
+	 * @return 等级系数 / level factor
 	 */
 	public static int EnchantLevel(Item item) {
 		if (item.getItemTemplate().isWeapon() || item.getItemTemplate().getArmorType() == ArmorType.SHIELD) {
@@ -1367,8 +1367,8 @@ public class EnchantService {
 	 * 是否为执政官改装达努亚系列。
 	 * Whether the item is Archdaeva remodeled Danuar gear.
 	 *
-	 * target item
-	 * whether matched
+	 * @param targetItem 目标物品 / target item
+	 * @return 是否匹配 / whether matched
 	 */
 	public static boolean isArchdaevaRemodeledDanuar(Item targetItem) {
 		switch (targetItem.getItemId()) {
@@ -1418,8 +1418,8 @@ public class EnchantService {
 	 * 是否为执政官重构达努亚系列。
 	 * Whether the item is Archdaeva restructured Danuar gear.
 	 *
-	 * target item
-	 * whether matched
+	 * @param targetItem 目标物品 / target item
+	 * @return 是否匹配 / whether matched
 	 */
 	public static boolean isArchdaevaRestructuredDanuar(Item targetItem) {
 		switch (targetItem.getItemId()) {
@@ -1504,12 +1504,12 @@ public class EnchantService {
 	 * 应用物品推荐等级削减结果。
 	 * Applies recommended-level reduction result on an item.
 	 *
-	 * 玩家 / player
-	 * parent item
-	 * target item
+	 * @param player 玩家 / player
+	 * @param parentItem 主物品 / parent item
+	 * @param targetItem 目标物品 / target item
 	 * @param currentReduction 当前削减值 / current reduction
-	 * success flag
-	 * count
+	 * @param result 是否成功 / success flag
+	 * @param count 数量 / count
 	 */
 	public static void reductItemAct(Player player, Item parentItem, Item targetItem, int currentReduction, boolean result, int count) {
 		if (!result) {

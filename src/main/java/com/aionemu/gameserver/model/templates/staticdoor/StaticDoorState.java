@@ -10,7 +10,15 @@ import java.util.EnumSet;
  */
 public enum StaticDoorState {
 	/** 无 / None. */
-	NONE(0), OPENED(1 << 0), CLICKABLE(1 << 1), CLOSEABLE(1 << 2), ONEWAY(1 << 3);
+	NONE(0),
+	/** 打开 / Opened. */
+	OPENED(1 << 0),
+	/** 可点击 / Clickable. */
+	CLICKABLE(1 << 1),
+	/** 可关闭 / Closeable. */
+	CLOSEABLE(1 << 2),
+	/** 单向 / One-way. */
+	ONEWAY(1 << 3);
 
 	private StaticDoorState(int flag) {
 		this.flag = flag;
@@ -23,7 +31,7 @@ public enum StaticDoorState {
 		return flag;
 	}
 
-	/** 设置 states / Sets the states */
+	/** 按标志位设置状态 / Sets the states */
 	public static void setStates(int flags, EnumSet<StaticDoorState> state) {
 		for (StaticDoorState states : StaticDoorState.values()) {
 			if (states == NONE) {
@@ -37,7 +45,7 @@ public enum StaticDoorState {
 		}
 	}
 
-	/** 返回 flags / Returns the flags */
+	/** 返回标志位 / Returns the flags */
 	public static int getFlags(EnumSet<StaticDoorState> doorStates) {
 		int result = 0;
 		for (StaticDoorState state : StaticDoorState.values()) {

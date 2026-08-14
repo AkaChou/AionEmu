@@ -57,7 +57,7 @@ public class PlayerAccountData {
 	 * 获取 deletiondate。
 	 * Get deletion date
 	 *
-	 * @return Timestamp date when char should be deleted.
+	 * @return 角色应被删除的时间戳 / Timestamp date when char should be deleted
 	 */
 	public Timestamp getDeletionDate() {
 		return deletionDate;
@@ -77,7 +77,7 @@ public class PlayerAccountData {
 	}
 
 	/**
-	 * @return the playerCommonData
+	 * @return 角色公共数据 / the playerCommonData
 	 */
 	public PlayerCommonData getPlayerCommonData() {
 		return playerCommonData;
@@ -90,36 +90,40 @@ public class PlayerAccountData {
 		this.playerCommonData = playerCommonData;
 	}
 
-	/** 返回 appereance / Returns the appereance */
+	/**
+	 * 返回外观。
+	 * Returns the appearance
+	 */
 	public PlayerAppearance getAppereance() {
 		return appereance;
 	}
 
 	/**
-	 * @param creationDate
+	 * @param creationDate 创建时间 / creation date
 	 */
 	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
 	}
 
 	/**
-	 * @return the legionMember
+	 * @return 军团成员 / the legionMember
 	 */
 	public Legion getLegion() {
 		return legionMember.getLegion();
 	}
 
 	/**
-	 * 返回若为真则玩家为军团成员。 / Returns true if player is a legion member
+	 * 返回该角色是否为军团成员。
+	 * Returns true if player is a legion member
 	 *
-	 * @return true or false
+	 * @return true 或 false / true or false
 	 */
 	public boolean isLegionMember() {
 		return legionMember != null;
 	}
 
 	/**
-	 * @return the equipment
+	 * @return 装备列表 / the equipment
 	 */
 	public List<Item> getEquipment() {
 		return equipment;

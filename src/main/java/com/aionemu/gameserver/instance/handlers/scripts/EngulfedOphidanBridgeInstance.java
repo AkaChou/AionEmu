@@ -64,19 +64,19 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 {
 	/** 副本时间戳 / instance timestamp */
 	private long instanceTime;
-	/** 能量发生器 / power generator */
+		/** 能量发生器 / power generator */
 		private int powerGenerator;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-    /** engulfed ophidan bridge reward / engulfed ophidan bridge reward */
+        /** engulfed ophidan bridge reward / engulfed ophidan bridge reward */
         protected EngulfedOphidanBridgeReward engulfedOphidanBridgeReward;
-    /** 败方倍率 / losing-group multiplier */
+        /** 败方倍率 / losing-group multiplier */
         private float loosingGroupMultiplier = 1;
     /** 副本是否已销毁 / whether the instance is destroyed */
     private boolean isInstanceDestroyed = false;
-    /** 副本是否已开始 / whether the instance started */
+        /** 副本是否已开始 / whether the instance started */
         protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    /** ophidan 任务 / ophidan task */
+        /** ophidan 任务 / ophidan task */
         private final List<Future<?>> ophidanTask = new ArrayList<Future<?>>();
 	
     protected EngulfedOphidanBridgePlayerReward getPlayerReward(Player player) {
@@ -92,7 +92,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -295,7 +295,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
              * 处理 visit。
              * Handle visit.
              *
-             * opponent
+             * @param opponent 对手 / opponent
              */
             @Override
             public void visit(Player opponent) {
@@ -456,8 +456,8 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
      * 处理玩家复活事件。
      * Handle a player revive event.
      *
-     * 玩家 / player
-     * result
+     * @param player 玩家 / player
+     * @return 结果 / result
      */
     @Override
     public boolean onReviveEvent(Player player) {
@@ -472,9 +472,9 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
      * 处理死亡事件。
      * Handle a death event.
      *
-     * 玩家 / player
+     * @param player 玩家 / player
      * @param lastAttacker 最后攻击者 / last attacker
-     * result
+     * @return 结果 / result
      */
     @Override
     public boolean onDie(Player player, Creature lastAttacker) {
@@ -569,8 +569,8 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
 	 *
-	 * 玩家 / player
-	 * zone
+	 * @param player 玩家 / player
+	 * @param zone 区域 / zone
 	 */
 	@Override
     public void onEnterZone(Player player, ZoneInstance zone) {
@@ -589,7 +589,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
      * 处理死亡事件。
      * Handle a death event.
      *
-     * npc
+     * @param npc NPC / npc
      */
     @Override
 	public void onDie(Npc npc) {
@@ -625,12 +625,12 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 			    point = 300;
 				despawnNpc(npc);
 			break;
-			case 233846: //圣骑士后卫。 / Templar Rearguard.
-			case 233847: //牧师后卫。 / Cleric Rearguard.
-			case 233848: //巫师后卫。 / Sorcerer Rearguard.
-			case 233849: //圣骑士后卫。 / Templar Rearguard.
-			case 233850: //牧师后卫。 / Cleric Rearguard.
-			case 233851: //巫师后卫。 / Sorcerer Rearguard.
+			case 233846: //守护星后卫。 / Templar Rearguard.
+			case 233847: //治愈星后卫。 / Cleric Rearguard.
+			case 233848: //魔道星后卫。 / Sorcerer Rearguard.
+			case 233849: //守护星后卫。 / Templar Rearguard.
+			case 233850: //治愈星后卫。 / Cleric Rearguard.
+			case 233851: //魔道星后卫。 / Sorcerer Rearguard.
 			    point = 1500;
 				despawnNpc(npc);
 			break;
@@ -663,10 +663,10 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 					    sp(802034, 667.11389f, 474.22995f, 600.48346f, (byte) 0, 0); //Chokepoint Defense Post Flag.
 						sp(701944, 667.11389f, 474.22995f, 600.48346f, (byte) 0, 173); //Asmodians Power Generator.
 						sp(701969, 762.6721f, 544.30493f, 577.7007f, (byte) 91, 0); //Chokepoint Defense Post Mortar.
-						sp(233849, 672.62286f, 467.2902f, 599.53894f, (byte) 107, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233849, 663.40594f, 483.60574f, 599.7871f, (byte) 37, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233850, 660.30194f, 466.5498f, 599.8218f, (byte) 77, 0); //牧师后卫。 / Cleric Rearguard.
-						sp(233851, 674.94977f, 478.36877f, 599.5594f, (byte) 8, 0); //巫师后卫。 / Sorcerer Rearguard.
+						sp(233849, 672.62286f, 467.2902f, 599.53894f, (byte) 107, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233849, 663.40594f, 483.60574f, 599.7871f, (byte) 37, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233850, 660.30194f, 466.5498f, 599.8218f, (byte) 77, 0); //治愈星后卫。 / Cleric Rearguard.
+						sp(233851, 674.94977f, 478.36877f, 599.5594f, (byte) 8, 0); //魔道星后卫。 / Sorcerer Rearguard.
 				    }
 				} else if (powerGenerator == 2) {
 					if (race.equals(Race.ASMODIANS)) {
@@ -679,9 +679,9 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 						sp(802037, 524.84589f, 427.63959f, 621.21320f, (byte) 0, 0); //Northern Approach Post Flag.
 						sp(701944, 524.84589f, 427.63959f, 621.21320f, (byte) 0, 174); //Asmodians Power Generator.
 						sp(701970, 760.40955f, 544.2923f, 577.7035f, (byte) 90, 0); //Northern Approach Post Mortar.
-						sp(233849, 519.06854f, 434.295f, 620.125f, (byte) 45, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233850, 533.65063f, 428.35898f, 620.25f, (byte) 5, 0); //牧师后卫。 / Cleric Rearguard.
-						sp(233851, 525.0882f, 436.3445f, 620.25f, (byte) 27, 0); //巫师后卫。 / Sorcerer Rearguard.
+						sp(233849, 519.06854f, 434.295f, 620.125f, (byte) 45, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233850, 533.65063f, 428.35898f, 620.25f, (byte) 5, 0); //治愈星后卫。 / Cleric Rearguard.
+						sp(233851, 525.0882f, 436.3445f, 620.25f, (byte) 27, 0); //魔道星后卫。 / Sorcerer Rearguard.
 				    }
 				} else if (powerGenerator == 3) {
 					if (race.equals(Race.ASMODIANS)) {
@@ -694,9 +694,9 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 						sp(802040, 602.73395f, 556.29407f, 591.52533f, (byte) 0, 0); //Southern Approach Post Flag.
 						sp(701944, 602.73395f, 556.29407f, 591.52533f, (byte) 0, 166); //Asmodians Power Generator.
 						sp(701971, 750.75836f, 545.71686f, 577.7213f, (byte) 84, 0); //Southern Approach Post Mortar.
-						sp(233849, 610.57794f, 559.381f, 590.625f, (byte) 5, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233850, 593.646f, 556.11426f, 590.5221f, (byte) 58, 0); //牧师后卫。 / Cleric Rearguard.
-						sp(233851, 607.1519f, 548.563f, 590.5f, (byte) 103, 0); //巫师后卫。 / Sorcerer Rearguard.
+						sp(233849, 610.57794f, 559.381f, 590.625f, (byte) 5, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233850, 593.646f, 556.11426f, 590.5221f, (byte) 58, 0); //治愈星后卫。 / Cleric Rearguard.
+						sp(233851, 607.1519f, 548.563f, 590.5f, (byte) 103, 0); //魔道星后卫。 / Sorcerer Rearguard.
 				    }
 				} else if (powerGenerator == 4) {
 					if (race.equals(Race.ASMODIANS)) {
@@ -709,10 +709,10 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 						sp(802043, 492.81982f, 536.56732f, 598.24933f, (byte) 0, 0); //Bridge Watchpost Flag.
 						sp(701944, 492.81982f, 536.56732f, 598.24933f, (byte) 0, 170); //Asmodians Power Generator.
 						sp(701972, 748.57916f, 546.3481f, 577.72815f, (byte) 84, 0); //Bridge Watchpost Mortar.
-						sp(233849, 483.3327f, 538.1493f, 597.5f, (byte) 58, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233849, 498.373f, 543.4837f, 597.5f, (byte) 9, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233850, 500.20483f, 532.2458f, 597.5f, (byte) 116, 0); //牧师后卫。 / Cleric Rearguard.
-						sp(233851, 484.61765f, 531.6245f, 597.375f, (byte) 70, 0); //巫师后卫。 / Sorcerer Rearguard.
+						sp(233849, 483.3327f, 538.1493f, 597.5f, (byte) 58, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233849, 498.373f, 543.4837f, 597.5f, (byte) 9, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233850, 500.20483f, 532.2458f, 597.5f, (byte) 116, 0); //治愈星后卫。 / Cleric Rearguard.
+						sp(233851, 484.61765f, 531.6245f, 597.375f, (byte) 70, 0); //魔道星后卫。 / Sorcerer Rearguard.
 				    }
 				}
 			break;
@@ -730,10 +730,10 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 					    sp(802033, 667.11389f, 474.22995f, 600.48346f, (byte) 0, 0); //Chokepoint Defense Post Flag.
 						sp(701943, 667.11389f, 474.22995f, 600.48346f, (byte) 0, 172); //Elyos Power Generator.
 						sp(701969, 337.6665f, 498.31458f, 597.0435f, (byte) 3, 0); //Chokepoint Defense Post Mortar.
-						sp(233846, 672.62286f, 467.2902f, 599.53894f, (byte) 107, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233846, 663.40594f, 483.60574f, 599.7871f, (byte) 37, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233847, 660.30194f, 466.5498f, 599.8218f, (byte) 77, 0); //牧师后卫。 / Cleric Rearguard.
-						sp(233848, 674.94977f, 478.36877f, 599.5594f, (byte) 8, 0); //巫师后卫。 / Sorcerer Rearguard.
+						sp(233846, 672.62286f, 467.2902f, 599.53894f, (byte) 107, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233846, 663.40594f, 483.60574f, 599.7871f, (byte) 37, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233847, 660.30194f, 466.5498f, 599.8218f, (byte) 77, 0); //治愈星后卫。 / Cleric Rearguard.
+						sp(233848, 674.94977f, 478.36877f, 599.5594f, (byte) 8, 0); //魔道星后卫。 / Sorcerer Rearguard.
 				    }
 				} else if (powerGenerator == 2) {
 					if (race.equals(Race.ELYOS)) {
@@ -746,9 +746,9 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 						sp(802036, 524.84589f, 427.63959f, 621.21320f, (byte) 0, 0); //Northern Approach Post Flag.
 						sp(701943, 524.84589f, 427.63959f, 621.21320f, (byte) 0, 175); //Elyos Power Generator.
 						sp(701970, 338.08813f, 496.11847f, 597.04626f, (byte) 3, 0); //Northern Approach Post Mortar.
-						sp(233846, 519.06854f, 434.295f, 620.125f, (byte) 45, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233847, 533.65063f, 428.35898f, 620.25f, (byte) 5, 0); //牧师后卫。 / Cleric Rearguard.
-						sp(233848, 525.0882f, 436.3445f, 620.25f, (byte) 27, 0); //巫师后卫。 / Sorcerer Rearguard.
+						sp(233846, 519.06854f, 434.295f, 620.125f, (byte) 45, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233847, 533.65063f, 428.35898f, 620.25f, (byte) 5, 0); //治愈星后卫。 / Cleric Rearguard.
+						sp(233848, 525.0882f, 436.3445f, 620.25f, (byte) 27, 0); //魔道星后卫。 / Sorcerer Rearguard.
 				    }
 				} else if (powerGenerator == 3) {
 					if (race.equals(Race.ELYOS)) {
@@ -761,9 +761,9 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 						sp(802039, 602.73395f, 556.29407f, 591.52533f, (byte) 0, 0); //Southern Approach Post Flag.
 						sp(701943, 602.73395f, 556.29407f, 591.52533f, (byte) 0, 169); //Elyos Power Generator.
 						sp(701971, 338.6412f, 486.42004f, 597.0637f, (byte) 118, 0); //Southern Approach Post Mortar.
-						sp(233846, 610.57794f, 559.381f, 590.625f, (byte) 5, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233847, 593.646f, 556.11426f, 590.5221f, (byte) 58, 0); //牧师后卫。 / Cleric Rearguard.
-						sp(233848, 607.1519f, 548.563f, 590.5f, (byte) 103, 0); //巫师后卫。 / Sorcerer Rearguard.
+						sp(233846, 610.57794f, 559.381f, 590.625f, (byte) 5, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233847, 593.646f, 556.11426f, 590.5221f, (byte) 58, 0); //治愈星后卫。 / Cleric Rearguard.
+						sp(233848, 607.1519f, 548.563f, 590.5f, (byte) 103, 0); //魔道星后卫。 / Sorcerer Rearguard.
 				    }
 				} else if (powerGenerator == 4) {
 					if (race.equals(Race.ELYOS)) {
@@ -776,10 +776,10 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 						sp(802042, 492.81982f, 536.56732f, 598.24933f, (byte) 0, 0); //Bridge Watchpost Flag.
 						sp(701943, 492.81982f, 536.56732f, 598.24933f, (byte) 0, 171); //Elyos Power Generator.
 						sp(701972, 338.46423f, 484.23608f, 597.07074f, (byte) 118, 0); //Bridge Watchpost Mortar.
-						sp(233846, 483.3327f, 538.1493f, 597.5f, (byte) 58, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233846, 498.373f, 543.4837f, 597.5f, (byte) 9, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233847, 500.20483f, 532.2458f, 597.5f, (byte) 116, 0); //牧师后卫。 / Cleric Rearguard.
-						sp(233848, 484.61765f, 531.6245f, 597.375f, (byte) 70, 0); //巫师后卫。 / Sorcerer Rearguard.
+						sp(233846, 483.3327f, 538.1493f, 597.5f, (byte) 58, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233846, 498.373f, 543.4837f, 597.5f, (byte) 9, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233847, 500.20483f, 532.2458f, 597.5f, (byte) 116, 0); //治愈星后卫。 / Cleric Rearguard.
+						sp(233848, 484.61765f, 531.6245f, 597.375f, (byte) 70, 0); //魔道星后卫。 / Sorcerer Rearguard.
 				    }
 				}
 			break;
@@ -801,10 +801,10 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 						sp(802033, 667.11389f, 474.22995f, 600.48346f, (byte) 0, 0); //Chokepoint Defense Post Flag.
 						sp(701943, 667.11389f, 474.22995f, 600.48346f, (byte) 0, 172); //Elyos Power Generator.
 						sp(701969, 337.6665f, 498.31458f, 597.0435f, (byte) 3, 0); //Chokepoint Defense Post Mortar.
-						sp(233846, 672.62286f, 467.2902f, 599.53894f, (byte) 107, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233846, 663.40594f, 483.60574f, 599.7871f, (byte) 37, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233847, 660.30194f, 466.5498f, 599.8218f, (byte) 77, 0); //牧师后卫。 / Cleric Rearguard.
-						sp(233848, 674.94977f, 478.36877f, 599.5594f, (byte) 8, 0); //巫师后卫。 / Sorcerer Rearguard.
+						sp(233846, 672.62286f, 467.2902f, 599.53894f, (byte) 107, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233846, 663.40594f, 483.60574f, 599.7871f, (byte) 37, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233847, 660.30194f, 466.5498f, 599.8218f, (byte) 77, 0); //治愈星后卫。 / Cleric Rearguard.
+						sp(233848, 674.94977f, 478.36877f, 599.5594f, (byte) 8, 0); //魔道星后卫。 / Sorcerer Rearguard.
 					} else if (race.equals(Race.ASMODIANS)) {
 					    deleteNpc(802035);
 						// *龙族* / *Balaur*//
@@ -819,10 +819,10 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 					    sp(802034, 667.11389f, 474.22995f, 600.48346f, (byte) 0, 0); //Chokepoint Defense Post Flag.
 						sp(701944, 667.11389f, 474.22995f, 600.48346f, (byte) 0, 173); //Asmodians Power Generator.
 						sp(701969, 762.6721f, 544.30493f, 577.7007f, (byte) 91, 0); //Chokepoint Defense Post Mortar.
-						sp(233849, 672.62286f, 467.2902f, 599.53894f, (byte) 107, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233849, 663.40594f, 483.60574f, 599.7871f, (byte) 37, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233850, 660.30194f, 466.5498f, 599.8218f, (byte) 77, 0); //牧师后卫。 / Cleric Rearguard.
-						sp(233851, 674.94977f, 478.36877f, 599.5594f, (byte) 8, 0); //巫师后卫。 / Sorcerer Rearguard.
+						sp(233849, 672.62286f, 467.2902f, 599.53894f, (byte) 107, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233849, 663.40594f, 483.60574f, 599.7871f, (byte) 37, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233850, 660.30194f, 466.5498f, 599.8218f, (byte) 77, 0); //治愈星后卫。 / Cleric Rearguard.
+						sp(233851, 674.94977f, 478.36877f, 599.5594f, (byte) 8, 0); //魔道星后卫。 / Sorcerer Rearguard.
 				    }
 				} else if (powerGenerator == 2) {
 					if (race.equals(Race.ELYOS)) {
@@ -838,9 +838,9 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 						sp(802036, 524.84589f, 427.63959f, 621.21320f, (byte) 0, 0); //Northern Approach Post Flag.
 						sp(701943, 524.84589f, 427.63959f, 621.21320f, (byte) 0, 175); //Elyos Power Generator.
 						sp(701970, 338.08813f, 496.11847f, 597.04626f, (byte) 3, 0); //Northern Approach Post Mortar.
-						sp(233846, 519.06854f, 434.295f, 620.125f, (byte) 45, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233847, 533.65063f, 428.35898f, 620.25f, (byte) 5, 0); //牧师后卫。 / Cleric Rearguard.
-						sp(233848, 525.0882f, 436.3445f, 620.25f, (byte) 27, 0); //巫师后卫。 / Sorcerer Rearguard.
+						sp(233846, 519.06854f, 434.295f, 620.125f, (byte) 45, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233847, 533.65063f, 428.35898f, 620.25f, (byte) 5, 0); //治愈星后卫。 / Cleric Rearguard.
+						sp(233848, 525.0882f, 436.3445f, 620.25f, (byte) 27, 0); //魔道星后卫。 / Sorcerer Rearguard.
 					} else if (race.equals(Race.ASMODIANS)) {
 					    deleteNpc(802038);
 						// *龙族* / *Balaur*//
@@ -854,9 +854,9 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 						sp(802037, 524.84589f, 427.63959f, 621.21320f, (byte) 0, 0); //Northern Approach Post Flag.
 						sp(701944, 524.84589f, 427.63959f, 621.21320f, (byte) 0, 174); //Asmodians Power Generator.
 						sp(701970, 760.40955f, 544.2923f, 577.7035f, (byte) 90, 0); //Northern Approach Post Mortar.
-						sp(233849, 519.06854f, 434.295f, 620.125f, (byte) 45, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233850, 533.65063f, 428.35898f, 620.25f, (byte) 5, 0); //牧师后卫。 / Cleric Rearguard.
-						sp(233851, 525.0882f, 436.3445f, 620.25f, (byte) 27, 0); //巫师后卫。 / Sorcerer Rearguard.
+						sp(233849, 519.06854f, 434.295f, 620.125f, (byte) 45, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233850, 533.65063f, 428.35898f, 620.25f, (byte) 5, 0); //治愈星后卫。 / Cleric Rearguard.
+						sp(233851, 525.0882f, 436.3445f, 620.25f, (byte) 27, 0); //魔道星后卫。 / Sorcerer Rearguard.
 				    }
 				} else if (powerGenerator == 3) {
 					if (race.equals(Race.ELYOS)) {
@@ -872,9 +872,9 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 						sp(802039, 602.73395f, 556.29407f, 591.52533f, (byte) 0, 0); //Southern Approach Post Flag.
 						sp(701943, 602.73395f, 556.29407f, 591.52533f, (byte) 0, 169); //Elyos Power Generator.
 						sp(701971, 338.6412f, 486.42004f, 597.0637f, (byte) 118, 0); //Southern Approach Post Mortar.
-						sp(233846, 610.57794f, 559.381f, 590.625f, (byte) 5, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233847, 593.646f, 556.11426f, 590.5221f, (byte) 58, 0); //牧师后卫。 / Cleric Rearguard.
-						sp(233848, 607.1519f, 548.563f, 590.5f, (byte) 103, 0); //巫师后卫。 / Sorcerer Rearguard.
+						sp(233846, 610.57794f, 559.381f, 590.625f, (byte) 5, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233847, 593.646f, 556.11426f, 590.5221f, (byte) 58, 0); //治愈星后卫。 / Cleric Rearguard.
+						sp(233848, 607.1519f, 548.563f, 590.5f, (byte) 103, 0); //魔道星后卫。 / Sorcerer Rearguard.
 					} else if (race.equals(Race.ASMODIANS)) {
 					    deleteNpc(802041);
 						// *龙族* / *Balaur*//
@@ -888,9 +888,9 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 						sp(802040, 602.73395f, 556.29407f, 591.52533f, (byte) 0, 0); //Southern Approach Post Flag.
 						sp(701944, 602.73395f, 556.29407f, 591.52533f, (byte) 0, 166); //Asmodians Power Generator.
 						sp(701971, 750.75836f, 545.71686f, 577.7213f, (byte) 84, 0); //Southern Approach Post Mortar.
-						sp(233849, 610.57794f, 559.381f, 590.625f, (byte) 5, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233850, 593.646f, 556.11426f, 590.5221f, (byte) 58, 0); //牧师后卫。 / Cleric Rearguard.
-						sp(233851, 607.1519f, 548.563f, 590.5f, (byte) 103, 0); //巫师后卫。 / Sorcerer Rearguard.
+						sp(233849, 610.57794f, 559.381f, 590.625f, (byte) 5, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233850, 593.646f, 556.11426f, 590.5221f, (byte) 58, 0); //治愈星后卫。 / Cleric Rearguard.
+						sp(233851, 607.1519f, 548.563f, 590.5f, (byte) 103, 0); //魔道星后卫。 / Sorcerer Rearguard.
 				    }
 				} else if (powerGenerator == 4) {
 					if (race.equals(Race.ELYOS)) {
@@ -907,10 +907,10 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 						sp(802042, 492.81982f, 536.56732f, 598.24933f, (byte) 0, 0); //Bridge Watchpost Flag.
 						sp(701943, 492.81982f, 536.56732f, 598.24933f, (byte) 0, 171); //Elyos Power Generator.
 						sp(701972, 338.46423f, 484.23608f, 597.07074f, (byte) 118, 0); //Bridge Watchpost Mortar.
-						sp(233846, 483.3327f, 538.1493f, 597.5f, (byte) 58, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233846, 498.373f, 543.4837f, 597.5f, (byte) 9, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233847, 500.20483f, 532.2458f, 597.5f, (byte) 116, 0); //牧师后卫。 / Cleric Rearguard.
-						sp(233848, 484.61765f, 531.6245f, 597.375f, (byte) 70, 0); //巫师后卫。 / Sorcerer Rearguard.
+						sp(233846, 483.3327f, 538.1493f, 597.5f, (byte) 58, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233846, 498.373f, 543.4837f, 597.5f, (byte) 9, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233847, 500.20483f, 532.2458f, 597.5f, (byte) 116, 0); //治愈星后卫。 / Cleric Rearguard.
+						sp(233848, 484.61765f, 531.6245f, 597.375f, (byte) 70, 0); //魔道星后卫。 / Sorcerer Rearguard.
 					} else if (race.equals(Race.ASMODIANS)) {
 					    deleteNpc(802044);
 						// *龙族* / *Balaur*//
@@ -925,10 +925,10 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 						sp(802043, 492.81982f, 536.56732f, 598.24933f, (byte) 0, 0); //Bridge Watchpost Flag.
 						sp(701944, 492.81982f, 536.56732f, 598.24933f, (byte) 0, 170); //Asmodians Power Generator.
 						sp(701972, 748.57916f, 546.3481f, 577.72815f, (byte) 84, 0); //Bridge Watchpost Mortar.
-						sp(233849, 483.3327f, 538.1493f, 597.5f, (byte) 58, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233849, 498.373f, 543.4837f, 597.5f, (byte) 9, 0); //圣骑士后卫。 / Templar Rearguard.
-						sp(233850, 500.20483f, 532.2458f, 597.5f, (byte) 116, 0); //牧师后卫。 / Cleric Rearguard.
-						sp(233851, 484.61765f, 531.6245f, 597.375f, (byte) 70, 0); //巫师后卫。 / Sorcerer Rearguard.
+						sp(233849, 483.3327f, 538.1493f, 597.5f, (byte) 58, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233849, 498.373f, 543.4837f, 597.5f, (byte) 9, 0); //守护星后卫。 / Templar Rearguard.
+						sp(233850, 500.20483f, 532.2458f, 597.5f, (byte) 116, 0); //治愈星后卫。 / Cleric Rearguard.
+						sp(233851, 484.61765f, 531.6245f, 597.375f, (byte) 70, 0); //魔道星后卫。 / Sorcerer Rearguard.
 				    }
 				}
 			break;
@@ -940,8 +940,8 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
      * 玩家对 NPC 使用物品完成时处理。
      * Handle item-use finish on an NPC.
      *
-     * 玩家 / player
-     * npc
+     * @param player 玩家 / player
+     * @param npc NPC / npc
      */
     @Override
     public void handleUseItemFinish(Player player, Npc npc) {
@@ -1179,7 +1179,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
      * 返回本副本奖励对象。
      * Return this instance's reward object.
      *
-     * result
+     * @return 结果 / result
      */
     @Override
     public InstanceReward<?> getInstanceReward() {

@@ -53,7 +53,7 @@ public enum QuestStatus {
 	 * 返回状态的数值 ID。
 	 * Returns the numeric status id.
 	 *
-	 * Status id
+	 * @return 状态 ID / Status id
 	 */
 	public int value() {
 		return id;

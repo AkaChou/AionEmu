@@ -40,9 +40,9 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	 * 插入护照记录。
 	 * Inserts a passport record.
 	 *
-	 * 账号 ID / account id
-	 * passport id
-	 * stamps
+	 * @param accountId 账号 ID / account id
+	 * @param passportId 通行证 ID / passport id
+	 * @param stamps 印章 / stamps
 	 * @param last_stamp 最近盖章时间 / last stamp time
 	 */
 	@Override
@@ -64,9 +64,9 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	 * 更新护照记录。
 	 * Updates a passport record.
 	 *
-	 * 账号 ID / account id
-	 * passport id
-	 * stamps
+	 * @param accountId 账号 ID / account id
+	 * @param passportId 通行证 ID / passport id
+	 * @param stamps 印章 / stamps
 	 * @param rewarded 是否已领奖 / whether rewarded
 	 * @param last_stamp 最近盖章时间 / last stamp time
 	 */
@@ -90,9 +90,9 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	 * 获取护照印章数。
 	 * Gets the stamp count of a passport.
 	 *
-	 * 账号 ID / account id
-	 * passport id
-	 * stamps
+	 * @param accountId 账号 ID / account id
+	 * @param passportId 通行证 ID / passport id
+	 * @return 印章 / stamps
 	 */
 	@Override
 	public int getStamps(final int accountId, final int passportId) {
@@ -117,8 +117,8 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	 * 获取护照最近盖章时间。
 	 * Gets the last stamp time of a passport.
 	 *
-	 * 账号 ID / account id
-	 * passport id
+	 * @param accountId 账号 ID / account id
+	 * @param passportId 通行证 ID / passport id
 	 * @return 最近盖章时间 / last stamp time
 	 */
 	@Override
@@ -144,8 +144,8 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	 * 获取账号全部护照 ID。
 	 * Gets all passport ids of an account.
 	 *
-	 * 账号 ID / account id
-	 * passport id list
+	 * @param accountId 账号 ID / account id
+	 * @return 通行证 ID 列表 / passport id list
 	 */
 	@Override
 	public List<Integer> getPassports(final int accountId) {
@@ -171,10 +171,10 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
 	 *
-	 * @param s 数据库名 / database name
-	 * @param i 主版本 / major version
-	 * @param i1 次版本 / minor version
-	 * whether supported
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
 	 */
 	@Override
 	public boolean supports(String s, int i, int i1) {

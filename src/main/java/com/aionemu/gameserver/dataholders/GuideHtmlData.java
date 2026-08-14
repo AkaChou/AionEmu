@@ -45,7 +45,7 @@ public class GuideHtmlData {
 	 * 将单个引导模板加入按职业/种族/等级哈希的索引。
 	 * Adds a single guide template into the class/race/level hash index.
 	 *
-	 * guide template
+	 * @param template 待加入的引导模板 / guide template to add
 	 */
 	private void addTemplate(GuideTemplate template) {
 		Race race = template.getRace();
@@ -105,11 +105,9 @@ public class GuideHtmlData {
 	 * 按职业、种族与等级聚合匹配的引导模板（含通用回退）。
 	 * Aggregates matching guide templates for the given class, race, and level (including general fallbacks).
 	 *
-	 * player class
-	 *
+	 * @param playerClass 玩家职业 / player class
 	 * @param race 玩家种族 / player race
 	 * @param level 玩家等级 / player level
-	 * @param level
 	 * @return 匹配的引导模板数组 / array of matching guide templates
 	 */
 	public GuideTemplate[] getTemplatesFor(PlayerClass playerClass, Race race, int level) {
@@ -142,7 +140,7 @@ public class GuideHtmlData {
 	 *
 	 * @param classType 职业类型序号 / class type ordinal
 	 * @param race 种族序号 / race ordinal
-	 * level
+	 * @param level 等级 / level
 	 * @return 组合哈希键 / composite hash key
 	 */
 	private static int makeHash(int classType, int race, int level) {

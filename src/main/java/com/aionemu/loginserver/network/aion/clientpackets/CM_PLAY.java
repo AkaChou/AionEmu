@@ -40,7 +40,7 @@ public class CM_PLAY extends AionClientPacket {
      * Construct CM_PLAY packet.
      *
      * @param buf 包体数据 / Packet data
-     * Login connection
+     * @param client 登录连接 / Login connection
      */
     public CM_PLAY(ByteBuffer buf, LoginConnection client) {
         super(buf, client, 0x02);

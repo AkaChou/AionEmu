@@ -14,7 +14,7 @@ public class SimpleAIAnswer implements AIAnswer {
 	 * 使用给定布尔结果构造回答。
 	 * Construct an answer with the given boolean result.
 	 *
-	 * Whether the answer is positive
+	 * @param answer 回答是否为肯定 / Whether the answer is positive
 	 */
 	SimpleAIAnswer(boolean answer) {
 		this.answer = answer;

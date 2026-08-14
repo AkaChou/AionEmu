@@ -20,7 +20,6 @@ public class GiveMissingSkills extends AdminCommand
 	 * Grant missing skills to the invoking player.
 	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
-	 * Unused
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -32,7 +31,6 @@ public class GiveMissingSkills extends AdminCommand
 	 * Show command syntax on invalid arguments.
 	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

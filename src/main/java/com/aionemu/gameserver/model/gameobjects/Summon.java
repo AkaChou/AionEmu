@@ -43,12 +43,15 @@ public class Summon extends Creature {
 	private final SkillElement alwaysResistElement;
 
 	/**
-	 * @param objId
-	 * @param controller
-	 * @param spawnTemplate
-	 * @param objectTemplate
-	 * @param level
-	 * @param time
+	 * 构造召唤物。
+	 * Constructs a summon.
+	 *
+	 * @param objId 对象 ID / object id
+	 * @param controller 生物控制器 / creature controller
+	 * @param spawnTemplate 生成模板 / spawn template
+	 * @param objectTemplate NPC 模板 / NPC template
+	 * @param level 等级 / level
+	 * @param time 存活时长（秒），0 表示永久 / lifetime in seconds, 0 for permanent
 	 */
 	public Summon(int objId, CreatureController<? extends Creature> controller, SpawnTemplate spawnTemplate,
 			NpcTemplate objectTemplate, byte level, int time) {
@@ -77,7 +80,7 @@ public class Summon extends Creature {
 		};
 	}
 
-	/** 返回 always resist element / Returns the always resist element */
+	/** 返回常驻免疫属性 / Returns the always resist element */
 	public SkillElement getAlwaysResistElement() {
 		return alwaysResistElement;
 	}
@@ -93,14 +96,17 @@ public class Summon extends Creature {
 		return (SummonGameStats) super.getGameStats();
 	}
 
-	/** 返回大师 / Returns the master*/
+	/** 返回主人 / Returns the master. */
 	@Override
 	public Player getMaster() {
 		return master;
 	}
 
 	/**
-	 * @param master the master to set
+	 * 设置主人。
+	 * Sets the master.
+	 *
+	 * @param master 主人玩家 / the master to set
 	 */
 	public void setMaster(Player master) {
 		this.master = master;
@@ -113,7 +119,10 @@ public class Summon extends Creature {
 	}
 
 	/**
-	 * @return the level
+	 * 返回等级。
+	 * Returns the level.
+	 *
+	 * @return 等级 / the level
 	 */
 	@Override
 	public byte getLevel() {
@@ -137,41 +146,54 @@ public class Summon extends Creature {
 	}
 
 	/**
-	 * @return NpcObjectType.SUMMON
+	 * 返回 NPC 对象类型 SUMMON。
+	 * Returns NpcObjectType.SUMMON.
+	 *
+	 * @return NPC 对象类型 / NpcObjectType.SUMMON
 	 */
 	@Override
 	public NpcObjectType getNpcObjectType() {
 		return NpcObjectType.SUMMON;
 	}
 
-	/** 返回 controller / Returns the controller */
+	/** 返回控制器 / Returns the controller */
 	@Override
 	public SummonController getController() {
 		return (SummonController) super.getController();
 	}
 
 	/**
-	 * @return the mode
+	 * 返回召唤模式。
+	 * Returns the summon mode.
+	 *
+	 * @return 模式 / the mode
 	 */
 	public SummonMode getMode() {
 		return mode;
 	}
 
 	/**
-	 * @param mode the mode to set
+	 * 设置召唤模式。
+	 * Sets the summon mode.
+	 *
+	 * @param mode 要设置的模式 / the mode to set
 	 */
 	public void setMode(SummonMode mode) {
 		this.mode = mode;
 	}
 
-	/** 是否敌对。 / Whether Enemy. */
+	/** 是否敌对。 / Whether enemy. */
 	@Override
 	public boolean isEnemy(Creature creature) {
 		return master != null ? master.isEnemy(creature) : false;
 	}
 
 	/**
-	 * @param npc 是否为敌对目标。 / Whether enemy from
+	 * 判断 NPC 是否为敌对目标。
+	 * Whether the NPC is an enemy.
+	 *
+	 * @param npc NPC / NPC
+	 * @return 是否敌对 / whether enemy
 	  */
 	@Override
 	public boolean isEnemyFrom(Npc npc) {
@@ -179,7 +201,11 @@ public class Summon extends Creature {
 	}
 
 	/**
-	 * @param player 是否为敌对目标。 / Whether enemy from
+	 * 判断玩家是否为敌对目标。
+	 * Whether the player is an enemy.
+	 *
+	 * @param player 玩家 / player
+	 * @return 是否敌对 / whether enemy
 	  */
 	@Override
 	public boolean isEnemyFrom(Player player) {
@@ -196,7 +222,11 @@ public class Summon extends Creature {
 	}
 
 	/**
-	 * @param npc 是否会对其产生仇恨。 / Whether aggro from
+	 * NPC 是否会对召唤物产生仇恨。
+	 * Whether the NPC aggroes on the summon.
+	 *
+	 * @param npc NPC / NPC
+	 * @return 是否产生仇恨 / whether aggro
 	  */
 	@Override
 	public final boolean isAggroFrom(Npc npc) {
@@ -206,13 +236,13 @@ public class Summon extends Creature {
 		return getMaster().isAggroFrom(npc);
 	}
 
-	/** 返回 move controller / Returns the move controller */
+	/** 返回移动控制器 / Returns the move controller */
 	@Override
 	public SummonMoveController getMoveController() {
 		return (SummonMoveController) super.getMoveController();
 	}
 
-	/** 返回 acting creature / Returns the acting creature */
+	/** 返回实际行动的生物 / Returns the acting creature */
 	@Override
 	public Creature getActingCreature() {
 		return getMaster() == null ? this : getMaster();
@@ -225,7 +255,10 @@ public class Summon extends Creature {
 	}
 
 	/**
-	 * @return remaining live time in seconds, or {@code 0} for a permanent summon
+	 * 返回剩余存活秒数，永久召唤物返回 {@code 0}。
+	 * Returns remaining live time in seconds, or {@code 0} for a permanent summon.
+	 *
+	 * @return 剩余存活秒数 / remaining live time in seconds
 	 */
 	public int getLiveTime() {
 		return getLiveTime(System.nanoTime());
@@ -252,7 +285,10 @@ public class Summon extends Creature {
 	}
 
 	/**
-	 * @param liveTime in sec.
+	 * 设置存活时长（秒），0 表示永久。
+	 * Sets the live time in seconds, 0 for permanent.
+	 *
+	 * @param liveTime 存活秒数 / live time in sec.
 	 */
 	public void setLiveTime(int liveTime) {
 		setLiveTime(liveTime, System.nanoTime());
@@ -263,12 +299,12 @@ public class Summon extends Creature {
 		expirationTimeNanos = liveTime > 0 ? currentTimeNanos + liveTime * NANOS_PER_SECOND : 0;
 	}
 
-	/** 设置释放任务 / Sets the release task */
+	/** 设置释放任务 / Sets the release task. */
 	public void setReleaseTask(Future<?> task) {
 		releaseTask = task;
 	}
 
-	/** 取消释放任务 / Cancel release task */
+	/** 取消释放任务 / Cancels the release task. */
 	public void cancelReleaseTask() {
 		if (releaseTask != null && !releaseTask.isDone()) {
 			releaseTask.cancel(true);

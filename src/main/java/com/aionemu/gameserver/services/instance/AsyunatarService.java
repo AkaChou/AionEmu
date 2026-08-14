@@ -23,7 +23,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
 
-/****/
 /**
  * 阿修纳塔副本报名服务，管理开启窗口与冷却。
  * Asyunatar instance registration service managing open windows and cooldowns.
@@ -39,8 +38,8 @@ public class AsyunatarService {
 	public static final int maskId = 121;
 
 	/**
-	 * initAsyunatar 方法。
-	 * initAsyunatar method.
+	 * 初始化阿修纳塔报名：按配置调度开启报名。
+	 * Initializes Asyunatar registration by scheduling open windows per config.
 	 */
 	public void initAsyunatar() {
 		if (AutoGroupConfig.ASHUNATAL_ENABLED) {
@@ -126,20 +125,21 @@ public class AsyunatarService {
 	}
 
 	/**
-	 * isAsyunatarAvailable 方法。
-	 * isAsyunatarAvailable method.
-	 * result
+	 * 报名是否可用。
+	 * Whether registration is available.
+	 *
+	 * @return 是否可用 / result
 	 */
 	public boolean isAsyunatarAvailable() {
 		return this.registerAvailable;
 	}
 
 	/**
-	 * getInstanceMaskId 方法。
-	 * getInstanceMaskId method.
+	 * 获取玩家的报名掩码 ID；等级不符时返回 0。
+	 * Returns the registration mask id for the player, or 0 if level mismatch.
 	 *
-	 * 玩家 / player
-	 * result
+	 * @param player 玩家 / player
+	 * @return 掩码 ID / result
 	 */
 	public byte getInstanceMaskId(Player player) {
 		int level = player.getLevel();
@@ -160,22 +160,22 @@ public class AsyunatarService {
 	}
 
 	/**
-	 * 是否处于冷却。
-	 * Whether cooldown is active.
+	 * 玩家是否处于报名冷却。
+	 * Whether the player is on registration cooldown.
 	 *
-	 * 玩家 / player
-	 * result
+	 * @param player 玩家 / player
+	 * @return 是否冷却中 / result
 	 */
 	public boolean hasCoolDown(Player player) {
 		return this.playersWithCooldown.contains(player.getObjectId());
 	}
 
 	/**
-	 * 显示报名窗口。
-	 * Shows the registration window.
+	 * 向符合条件的玩家显示报名窗口。
+	 * Shows the registration window to eligible players.
 	 *
-	 * 玩家 / player
-	 * instanceMaskId
+	 * @param player 玩家 / player
+	 * @param instanceMaskId 副本掩码 ID / instance mask id
 	 */
 	public void showWindow(Player player, byte instanceMaskId) {
 		if (getInstanceMaskId(player) != instanceMaskId) {
@@ -193,7 +193,8 @@ public class AsyunatarService {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 * result
+	 *
+	 * @return 服务单例 / result
 	 */
 	public static AsyunatarService getInstance() {
 		ObjectProvider<AsyunatarService> provider = instanceProvider;
@@ -204,10 +205,10 @@ public class AsyunatarService {
 	}
 
 	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
+	 * 设置服务提供者。
+	 * Sets the service provider.
 	 *
-	 * @param instanceProvider 副本提供者 / instanceProvider
+	 * @param instanceProvider 服务提供者 / service provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<AsyunatarService> instanceProvider) {
 		AsyunatarService.instanceProvider = instanceProvider;

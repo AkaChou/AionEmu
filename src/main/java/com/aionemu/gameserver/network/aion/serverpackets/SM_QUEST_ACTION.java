@@ -22,27 +22,27 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 
 	}
 
-	/** Creates the protocol action that inserts an accepted quest into the client quest list. */
+	/** 创建将已接任务插入客户端任务列表的动作包。 / Creates the protocol action that inserts an accepted quest into the client quest list. */
 	public static SM_QUEST_ACTION addQuest(int questId, QuestStatus status, int step) {
 		return new SM_QUEST_ACTION(questId, status.value(), step);
 	}
 
-	/** Creates the protocol action that updates a quest already known to the client. */
+	/** 创建更新客户端已知任务状态的动作包。 / Creates the protocol action that updates a quest already known to the client. */
 	public static SM_QUEST_ACTION updateQuest(int questId, QuestStatus status, int step) {
 		return new SM_QUEST_ACTION(questId, status, step);
 	}
 
-	/** Creates the protocol action that removes a quest from the client's active quest list. */
+	/** 创建将任务从客户端活动列表移除的动作包。 / Creates the protocol action that removes a quest from the client's active quest list. */
 	public static SM_QUEST_ACTION removeQuestFromClientList(int questId) {
 		return new SM_QUEST_ACTION(questId);
 	}
 
 	/**
-	 * 使用给定参数构造 SM_QUEST_ACTION 包。
-	 * Creates a SM_QUEST_ACTION packet with the given parameters.
+	 * 构造任务插入动作包（action 1）。
+	 * Creates a quest-add packet (action 1).
 	 *
-	 * quest id
-	 * quest status
+	 * @param questId 任务 ID / quest id
+	 * @param status 任务状态 / quest status
 	 * @param step 任务步骤 / quest step
 	 */
 	public SM_QUEST_ACTION(int questId, int status, int step) {
@@ -53,11 +53,11 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 	}
 
 	/**
-	 * 使用给定参数构造 SM_QUEST_ACTION 包。
-	 * Creates a SM_QUEST_ACTION packet with the given parameters.
+	 * 构造任务更新动作包（action 2）。
+	 * Creates a quest-update packet (action 2).
 	 *
-	 * quest id
-	 * quest status
+	 * @param questId 任务 ID / quest id
+	 * @param status 任务状态 / quest status
 	 * @param step 任务步骤 / quest step
 	 */
 	public SM_QUEST_ACTION(int questId, QuestStatus status, int step) {
@@ -68,10 +68,10 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 	}
 
 	/**
-	 * 使用给定参数构造 SM_QUEST_ACTION 包。
-	 * Creates a SM_QUEST_ACTION packet with the given parameters.
+	 * 构造任务移除动作包（action 3）。
+	 * Creates a quest-removal packet (action 3).
 	 *
-	 * quest id
+	 * @param questId 任务 ID / quest id
 	 */
 	public SM_QUEST_ACTION(int questId) {
 		this.action = 3;
@@ -79,10 +79,10 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 	}
 
 	/**
-	 * 使用给定参数构造 SM_QUEST_ACTION 包。
-	 * Creates a SM_QUEST_ACTION packet with the given parameters.
+	 * 构造任务计时动作包（action 4）。
+	 * Creates a quest-timer packet (action 4).
 	 *
-	 * quest id
+	 * @param questId 任务 ID / quest id
 	 * @param timer 计时秒数 / timer seconds
 	 */
 	public SM_QUEST_ACTION(int questId, int timer) {
@@ -93,11 +93,11 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 	}
 
 	/**
-	 * 使用给定参数构造 SM_QUEST_ACTION 包。
-	 * Creates a SM_QUEST_ACTION packet with the given parameters.
+	 * 构造任务共享动作包（action 5）。
+	 * Creates a quest-share packet (action 5).
 	 *
-	 * quest id
-	 * sharer id
+	 * @param questId 任务 ID / quest id
+	 * @param sharerId 共享者 ID / sharer id
 	 * @param unk 未知字段 / unknown field
 	 */
 	public SM_QUEST_ACTION(int questId, int sharerId, boolean unk) {
@@ -108,10 +108,10 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 	}
 
 	/**
-	 * 使用给定参数构造 SM_QUEST_ACTION 包。
-	 * Creates a SM_QUEST_ACTION packet with the given parameters.
+	 * 构造任务窗口提示动作包（action 6）。
+	 * Creates a quest-notification packet (action 6).
 	 *
-	 * quest id
+	 * @param questId 任务 ID / quest id
 	 * @param fake 是否伪造 / whether fake
 	 */
 	public SM_QUEST_ACTION(int questId, boolean fake) {

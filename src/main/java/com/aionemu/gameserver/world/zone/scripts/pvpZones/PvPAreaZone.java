@@ -7,8 +7,8 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 import com.aionemu.gameserver.world.zone.handler.ZoneNameAnnotation;
 
 /**
- * 具体 PvP 区域：圣殿 / 暗影之城子区域死亡后传送点。
- * Pandaemonium sub-zones.
+ * 具体 PvP 区域：圣所 / 伏魔殿子区域死亡后传送点。
+ * Sanctum / Pandaemonium PvP sub-zones: death teleport points.
  */
 @ZoneNameAnnotation(value = "LC1_PVP_SUB_C DC1_PVP_ZONE")
 public class PvPAreaZone extends PvPZone {
@@ -17,8 +17,8 @@ public class PvPAreaZone extends PvPZone {
 	 * 按区域名称传送到对应复活点。
 	 * Teleport to the matching revive point by zone name.
 	 *
-	 * 玩家 / player
-	 * zone name
+	 * @param player 玩家 / player
+	 * @param zoneName 区域名称 / zone name
 	 */
 	@Override
 	protected void doTeleport(Player player, ZoneName zoneName) {

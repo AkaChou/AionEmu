@@ -30,17 +30,17 @@ public class MaterialSkill {
 	@XmlAttribute(required = true)
 	protected int id;
 
-	/** 返回时间 / Returns the time*/
+	/** 返回时间 / Returns the time */
 	public MaterialActTime getTime() {
 		return time;
 	}
 
-	/** 返回 frequency / Returns the frequency */
+	/** 返回频率 / Returns the frequency */
 	public float getFrequency() {
 		return frequency;
 	}
 
-	/** 返回目标 / Returns the target*/
+	/** 返回目标 / Returns the target */
 	public MaterialTarget getTarget() {
 		if (target == null) {
 			return MaterialTarget.ALL;

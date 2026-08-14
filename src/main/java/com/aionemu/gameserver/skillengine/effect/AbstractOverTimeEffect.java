@@ -35,7 +35,7 @@ public abstract class AbstractOverTimeEffect extends EffectTemplate {
 	 * 返回效果数值。
 	 * Returns the effect value.
 	 *
-	 * value
+	 * @return 效果数值 / value
 	 */
 	public int getValue() {
 		return value;

@@ -5,7 +5,7 @@ import com.aionemu.gameserver.model.rvr.RvrStateType;
 
 /**
  * 种族对抗（RVR）直通门默认实现：切入 RVR / 回到 PEACE。
- * back to PEACE.
+ * Default RVR direct portal implementation: switch to RVR / back to PEACE.
  *
  * @author Rinzler (Encom)
  */
@@ -15,7 +15,7 @@ public class DirectPortal extends Rvrlf3df3<RvrLocation> {
 	 * 绑定 RVR 地点。
 	 * Binds the RVR location.
 	 *
-	 * location
+	 * @param rvr 地点 / location
 	 */
 	public DirectPortal(RvrLocation rvr) {
 		super(rvr);

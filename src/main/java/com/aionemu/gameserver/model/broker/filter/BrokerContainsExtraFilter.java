@@ -15,7 +15,7 @@ public class BrokerContainsExtraFilter extends BrokerFilter {
 	private int[] masks;
 
 	/**
-	 * @param masks
+	 * @param masks 类别掩码（模板 ID / 10000） / category masks (template id / 10000)
 	 */
 	public BrokerContainsExtraFilter(int... masks) {
 		this.masks = masks;

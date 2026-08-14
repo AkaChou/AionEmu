@@ -108,8 +108,6 @@ public class Config {
     /**
      * 解析统一配置根目录。
      * Resolves the shared configuration root directory.
-     *
-     * Config directory
      */
     private static String configDir() {
         return Objects.requireNonNull(System.getProperty("aion.config.dir"), "aion.config.dir is not configured");

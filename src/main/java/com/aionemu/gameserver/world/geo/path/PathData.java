@@ -37,6 +37,10 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.zip.GZIPInputStream;
 
+/**
+ * 路径数据仓库：扫描、加载并缓存各世界的地图路径数据。
+ * Path data store: scans, loads and caches map path data per world.
+ */
 @Slf4j
 public final class PathData {
 
@@ -228,37 +232,65 @@ public final class PathData {
 	}
 
 	@FunctionalInterface
+	/**
+	 * 指定坐标处的地面高度提供者。
+	 * Provides ground height at the given coordinates.
+	 */
 	public interface HeightProvider {
 		float get(float x, float y);
 	}
 
+	/**
+	 * 线段可通过性判定。
+	 * Decides whether a segment is passable.
+	 */
 	@FunctionalInterface
 	public interface EdgePassability {
 		boolean canPass(float startX, float startY, float startZ, float targetX, float targetY, float targetZ);
 	}
 
+	/**
+	 * 点可通过性判定。
+	 * Decides whether a point is passable.
+	 */
 	@FunctionalInterface
 	public interface PointPassability {
 		boolean canPass(float x, float y, float z);
 	}
 
+	/** 路径途经点 / Path waypoint */
 	public record PathPoint(float x, float y, float z) {}
 
+	/** 搜索结果状态 / Search result status */
 	public enum SearchStatus {
+		/** 已找到路径 / Path found */
 		FOUND,
+		/** 无可行路径 / No path */
 		NO_PATH,
+		/** 节点预算耗尽 / Node budget exhausted */
 		NODE_LIMIT,
+		/** 搜索被中断 / Search interrupted */
 		INTERRUPTED,
+		/** 起点或终点无效 / Invalid start or target */
 		INVALID_POSITION
 	}
 
+	/** 搜索模式 / Search mode */
 	public enum SearchMode {
+		/** 直线直达 / Direct */
 		DIRECT,
+		/** 底层网格搜索 / Low-level grid search */
 		LOW_LEVEL,
+		/** 分层搜索 / Hierarchical search */
 		HIERARCHICAL,
+		/** 分层搜索回退 / Hierarchical fallback */
 		HIERARCHICAL_FALLBACK
 	}
 
+	/**
+	 * 搜索结果：状态、路径点、处理节点数与搜索模式。
+	 * Search result: status, waypoints, processed node count and search mode.
+	 */
 	public record SearchResult(SearchStatus status, List<PathPoint> path, int processedNodes, SearchMode mode,
 			int abstractNodes) {
 
@@ -298,6 +330,10 @@ public final class PathData {
 		}
 	}
 
+	/**
+	 * 单张地图的路径数据：分层块（Block）与扇区（Sector）结构。
+	 * Path data for one map: hierarchical block and sector structure.
+	 */
 	public static final class MapData {
 
 		private static final int MAX_PROCESSED_NODES = 49_999;

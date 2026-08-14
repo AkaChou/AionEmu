@@ -15,10 +15,10 @@ public class DAOUtils {
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
 	 *
-	 * @param db 数据库名 / database name
-	 * major version
-	 * minor version
-	 * whether supported
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
 	 */
 	public static boolean supports(String db, int majorVersion, int minorVersion) {
 		return MYSQL_DB_NAME.equals(db) && majorVersion >= 8;

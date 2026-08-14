@@ -62,7 +62,7 @@ public class Pluma_BaitAI2 extends NpcAI2
 	}
 	
 	protected void handleUseItemFinish(Player player) {
-		spawn(216608, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Lightningbeak Pabu.
+		spawn(216608, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 闪电喙 Pabu / Lightningbeak Pabu.
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);
 	}

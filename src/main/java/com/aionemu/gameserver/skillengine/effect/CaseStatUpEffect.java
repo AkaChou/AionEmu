@@ -16,6 +16,10 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
+/**
+ * 条件属性加成效果：根据目标当前生命值百分比，在低血与高血数值之间线性插值属性加成。
+ * Conditional stat-up effect: linearly interpolates stat bonuses between the low-HP and high-HP values based on the target's current HP percentage.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CaseStatUpEffect")
 public class CaseStatUpEffect extends EffectTemplate {
@@ -49,6 +53,18 @@ public class CaseStatUpEffect extends EffectTemplate {
 		effect.getEffected().getGameStats().endEffect(effect);
 	}
 
+	/**
+	 * 线性插值：按当前生命值百分比，在低血与高血数值之间取中间值。
+	 * Linearly interpolates between the low-HP and high-HP values based on the current HP percentage.
+	 *
+	 * @param currentHp 当前生命值 / current HP
+	 * @param maxHp 最大生命值 / max HP
+	 * @param hpMin 采用低血数值的生命值百分比上限 / HP percentage at which the low-HP value fully applies
+	 * @param hpMax 采用高血数值的生命值百分比下限 / HP percentage at which the high-HP value fully applies
+	 * @param valueLowHp 低血时的数值 / value at low HP
+	 * @param valueHighHp 高血时的数值 / value at high HP
+	 * @return 插值结果 / interpolated value
+	 */
 	static int interpolate(int currentHp, int maxHp, int hpMin, int hpMax, int valueLowHp, int valueHighHp) {
 		if (maxHp <= 0) {
 			return valueHighHp;

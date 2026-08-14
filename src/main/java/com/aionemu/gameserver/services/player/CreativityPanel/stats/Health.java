@@ -25,8 +25,8 @@ public class Health implements StatOwner {
 	 * 属性变更时重算。
 	 * Recalculates when the stat changes.
 	 *
-	 * 玩家 / player
-	 * point
+	 * @param player 玩家 / player
+	 * @param point 点数 / point
 	 */
 	public void onChange(Player player, int point) {
 		if (point >= 1) {
@@ -44,7 +44,8 @@ public class Health implements StatOwner {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 * result
+	 *
+	 * @return 服务单例 / service singleton
 	 */
 	public static Health getInstance() {
 		ObjectProvider<Health> provider = instanceProvider;
@@ -58,7 +59,7 @@ public class Health implements StatOwner {
 	 * setInstanceProvider 方法。
 	 * setInstanceProvider method.
 	 *
-	 * provider
+	 * @param provider 提供器 / provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<Health> provider) {
 		instanceProvider = provider;

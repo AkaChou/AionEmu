@@ -234,7 +234,7 @@ public class InvisibleNpcAI2 extends AggressiveNpcAI2
      * 处理受到攻击事件。
      * Handle being attacked.
      *
-     * creature
+     * @param creature 攻击者 / attacker
      */
     @Override
     protected void handleAttack(Creature creature) {

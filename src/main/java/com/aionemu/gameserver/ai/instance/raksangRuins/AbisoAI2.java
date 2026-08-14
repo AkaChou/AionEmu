@@ -23,9 +23,9 @@ public class AbisoAI2 extends GeneralNpcAI2
 	@Override
 	protected void handleDialogStart(Player player) {
         switch (getNpcId()) {
-			case 206378: //Abiso Way A.
-			case 206379: //Abiso Way B.
-			case 206380: { //Abiso Way C.
+			case 206378: // Abiso 通道 A。 / Abiso Way A.
+			case 206379: // Abiso 通道 B。 / Abiso Way B.
+			case 206380: { // Abiso 通道 C。 / Abiso Way C.
 				super.handleDialogStart(player);
 				break;
 			} default: {
@@ -44,13 +44,13 @@ public class AbisoAI2 extends GeneralNpcAI2
 			return true;
 		} if (dialogId == 10000) {
 		    switch (getNpcId()) {
-			    case 206378: //Abiso Way A.
+			    case 206378: // Abiso 通道 A。 / Abiso Way A.
 				    TeleportService2.teleportTo(player, 300610000, instanceId, 519.06165f, 419.07617f, 927.697644f, (byte) 74);
 				break;
-				case 206379: //Abiso Way B.
+				case 206379: // Abiso 通道 B。 / Abiso Way B.
 				    TeleportService2.teleportTo(player, 300610000, instanceId, 810.93933f, 830.2498f, 733.6704f, (byte) 3);
 				break;
-				case 206380: //Abiso Way C.
+				case 206380: // Abiso 通道 C。 / Abiso Way C.
 				    TeleportService2.teleportTo(player, 300610000, instanceId, 384.6957f, 451.9979f, 120.786255f, (byte) 64);
 				break;
 			}

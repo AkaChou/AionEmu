@@ -24,7 +24,6 @@ public class Invis extends AdminCommand {
 	 * Toggle the invoker's invisibility/visibility and broadcast player state.
 	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
-	 * Unused
 	 */
 	@Override
 	public void execute(Player player, String... params) {

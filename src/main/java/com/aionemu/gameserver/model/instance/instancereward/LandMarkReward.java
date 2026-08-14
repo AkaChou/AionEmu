@@ -208,7 +208,7 @@ public class LandMarkReward extends InstanceReward<LandMarkPlayerReward> {
 	}
 
 	/**
-	 * @return Whether cap points
+	 * @return 是否达到上限分 / Whether cap points reached
 	 */
 	public boolean hasCapPoints() {
 		return RewardCollections.maxPoints(getInstanceRewards()) >= capPoints;

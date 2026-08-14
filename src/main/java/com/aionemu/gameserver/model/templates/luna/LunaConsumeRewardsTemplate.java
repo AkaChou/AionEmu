@@ -6,7 +6,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * 月华 Consume 奖励模板（静态数据/XML）。
+ * Luna 消费奖励模板（静态数据/XML）。
  * XML template.
  *
  * @author Ranastic
@@ -37,12 +37,12 @@ public class LunaConsumeRewardsTemplate {
 		return name;
 	}
 
-	/** 返回 sum count / Returns the sum count */
+	/** 返回累计消费次数 / Returns the sum count */
 	public int getSumCount() {
 		return luna_sum_count;
 	}
 
-	/** 返回 gacha cost / Returns the gacha cost */
+	/** 返回抽奖消耗 / Returns the gacha cost */
 	public int getGachaCost() {
 		return gacha_cost;
 	}
@@ -52,7 +52,7 @@ public class LunaConsumeRewardsTemplate {
 		return create_1;
 	}
 
-	/** 返回创建物品数量 / Returns the create item count*/
+	/** 返回创建物品数量 / Returns the create item count */
 	public int getCreateItemCount() {
 		return num_1;
 	}

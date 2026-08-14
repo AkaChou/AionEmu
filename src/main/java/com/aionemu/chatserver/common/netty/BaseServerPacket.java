@@ -12,7 +12,7 @@ public abstract class BaseServerPacket extends AbstractPacket {
      * 使用操作码创建服务端包。
      * Creates a server packet with the given opcode.
      *
-     * Opcode
+     * @param opCode 操作码 / Opcode
      */
     public BaseServerPacket(int opCode) {
         super(opCode);
@@ -23,7 +23,7 @@ public abstract class BaseServerPacket extends AbstractPacket {
      * Writes an int to the buffer.
      *
      * @param buf 数据包写入器 / Packet writer
-     * Integer value
+     * @param value 整数值 / Integer value
      */
     protected final void writeD(PacketWriter buf, int value) {
         buf.writeD(value);
@@ -45,7 +45,7 @@ public abstract class BaseServerPacket extends AbstractPacket {
      * Writes a byte to the buffer.
      *
      * @param buf 数据包写入器 / Packet writer
-     * Byte value
+     * @param value 字节值 / Byte value
      */
     protected final void writeC(PacketWriter buf, int value) {
         buf.writeC(value);

@@ -34,7 +34,7 @@ public class CM_SPLIT_ITEM extends AionClientPacket {
 		sourceItemObjId = readD();
 		itemAmount = readD();
 
-		readB(4); // Nothing
+		readB(4); // 无 / Nothing
 
 		sourceStorageType = readSC();
 		destinationItemObjId = readD();

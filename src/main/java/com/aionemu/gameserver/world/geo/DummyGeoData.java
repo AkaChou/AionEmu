@@ -27,9 +27,7 @@ public class DummyGeoData implements GeoData {
 	 * 返回共享哑地图，忽略世界 ID。
 	 * Returns the shared dummy map, ignoring the world id.
 	 *
-	 * world id (ignored)
-	 *
-	 * @param worldId
+	 * @param worldId 世界 ID（忽略） / world id (ignored)
 	 * @return 空实现地理地图 / the dummy geo map
 	 */
 	@Override

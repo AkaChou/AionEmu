@@ -14,9 +14,9 @@ public class GeomUtil {
 	 * 从源点按角度（度）与距离推算二维目标点。
 	 * Project a 2D target point from a source by angle (degrees) and distance.
 	 *
-	 * Source point
-	 * Angle in degrees
-	 * Distance
+	 * @param source 源点 / Source point
+	 * @param angle 角度（度） / Angle in degrees
+	 * @param distance 距离 / Distance
 	 * @return 目标二维点 / Target 2D point
 	 */
 	public static Vector2f getNextPoint2D(Vector2f source, float angle, float distance) {
@@ -33,7 +33,7 @@ public class GeomUtil {
 	 * @param sY 源 Y / Source Y
 	 * @param vecX 方向 X 分量 / Direction X component
 	 * @param vecY 方向 Y 分量 / Direction Y component
-	 * Distance
+	 * @param distance 距离 / Distance
 	 * @return 目标二维点 / Target 2D point
 	 */
 	public static Vector2f getNextPoint2D(float sX, float sY, float vecX, float vecY, float distance) {
@@ -44,10 +44,8 @@ public class GeomUtil {
 	 * 计算从 {@code from} 指向 {@code to} 的单位方向向量。
 	 * Compute the unit direction vector from {@code from} toward {@code to}.
 	 *
-	 * Origin
-	 *
+	 * @param from 起点 / Origin
 	 * @param to 终点 / Destination
-	 * @param to
 	 * @return 归一化方向向量 / Normalized direction vector
 	 */
 	public static Vector3f getDirection3D(Vector3f from, Vector3f to) {
@@ -59,9 +57,9 @@ public class GeomUtil {
 	 * 从源点沿方向向量按距离推算三维目标点。
 	 * Project a 3D target point from a source along a direction by distance.
 	 *
-	 * Source point
-	 * Direction vector
-	 * Distance
+	 * @param source 源点 / Source point
+	 * @param direction 方向向量 / Direction vector
+	 * @param distance 距离 / Distance
 	 * @return 目标三维点 / Target 3D point
 	 */
 	public static Vector3f getNextPoint3D(Vector3f source, Vector3f direction, float distance) {
@@ -72,11 +70,11 @@ public class GeomUtil {
 	 * 计算源点到指定坐标的三维欧氏距离。
 	 * Compute the 3D Euclidean distance from a source point to given coordinates.
 	 *
-	 * Source point
+	 * @param source 源点 / Source point
 	 * @param x2 目标 X / Target X
 	 * @param y2 目标 Y / Target Y
 	 * @param z2 目标 Z / Target Z
-	 * Distance
+	 * @return 三维欧氏距离 / 3D Euclidean distance
 	 */
 	public static float getDistance3D(Vector3f source, float x2, float y2, float z2) {
 		return GeomUtil.getDistance3D(source.x, source.y, source.z, x2, y2, z2);
@@ -92,7 +90,7 @@ public class GeomUtil {
 	 * @param x2 终点 X / Destination X
 	 * @param y2 终点 Y / Destination Y
 	 * @param z2 终点 Z / Destination Z
-	 * Distance
+	 * @return 三维欧氏距离 / 3D Euclidean distance
 	 */
 	public static float getDistance3D(float x1, float y1, float z1, float x2, float y2, float z2) {
 		double dx = x1 - x2;

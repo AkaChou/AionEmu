@@ -3,8 +3,8 @@ package com.aionemu.gameserver.model.templates.pet;
 import java.util.Arrays;
 
 /**
- * 宠物 DopingBag 模板（静态数据/XML）。
- * XML template.
+ * 宠物兴奋剂包模板（静态数据/XML）。
+ * Pet doping bag template (static data / XML).
  *
  * @author Rolandas
  */
@@ -26,12 +26,12 @@ public class PetDopingBag {
 		return itemBag[0];
 	}
 
-	/** 设置 drink item / Sets the drink item */
+	/** 设置饮品物品 / Sets the drink item */
 	public void setDrinkItem(int itemId) {
 		setItem(itemId, 1);
 	}
 
-	/** 返回 drink item / Returns the drink item */
+	/** 返回饮品物品 / Returns the drink item */
 	public int getDrinkItem() {
 		if (itemBag == null || itemBag.length < 2) {
 			return 0;
@@ -40,10 +40,10 @@ public class PetDopingBag {
 	}
 
 	/**
-	 * 添加或移除物品到 bag。 / Adds or removes item to the bag
+	 * 在指定槽位添加或移除物品。 / Adds or removes an item in the given slot.
 	 *
-	 * @param itemId - item Id, or 0 to remove
-	 * @param slot   - slot number; 0 for food, 1 for drink, the rest are for
+	 * @param itemId 物品 ID，0 表示移除 / item Id, or 0 to remove
+	 * @param slot   槽位编号；0 为食物，1 为饮品，其余为卷轴 / slot number; 0 for food, 1 for drink, the rest for scrolls
 	 */
 	public void setItem(int itemId, int slot) {
 		if (itemBag == null) {
@@ -59,7 +59,7 @@ public class PetDopingBag {
 		}
 	}
 
-	/** 返回 scrolls used / Returns the scrolls used */
+	/** 返回已用卷轴 / Returns the scrolls used */
 	public int[] getScrollsUsed() {
 		if (itemBag == null || itemBag.length < 3) {
 			return new int[0];
@@ -68,7 +68,7 @@ public class PetDopingBag {
 	}
 
 	/**
-	 * @return true if the bag needs saving
+	 * @return 是否需要保存 / true if the bag needs saving
 	 */
 	public boolean isDirty() {
 		return isDirty;

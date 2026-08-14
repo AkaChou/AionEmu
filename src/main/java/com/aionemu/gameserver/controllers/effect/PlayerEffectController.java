@@ -79,7 +79,7 @@ public class PlayerEffectController extends EffectController {
 	 * 非被动效果时更新玩家图标并通知队伍效果更新。
 	 * For non-passive effects, updates player icons and notifies team effect updates.
 	 *
-	 * related effect
+	 * @param effect 相关效果 / related effect
 	 */
 	private void updatePlayerIconsAndGroup(Effect effect) {
 		if (!effect.isPassive()) {
@@ -130,8 +130,8 @@ public class PlayerEffectController extends EffectController {
 	 * 从持久化数据恢复登出前效果。
 	 * Restores a saved effect from logout persistence data.
 	 *
-	 * skill id
-	 * skill level
+	 * @param skillId 技能 ID / skill id
+	 * @param skillLvl 技能等级 / skill level
 	 * @param remainingTime 剩余时间（毫秒） / remaining time in ms
 	 * @param endTime 结束时间戳 / end timestamp
 	 */
@@ -152,6 +152,16 @@ public class PlayerEffectController extends EffectController {
 		}
 	}
 
+	/**
+	 * 计算登出后的效果剩余时间：不可保存、已过期或标记不保存时返回 -1。
+	 * Computes remaining effect time after logout; returns -1 for non-saveable, expired or no-save effects.
+	 *
+	 * @param template 技能模板 / skill template
+	 * @param savedRemainingTime 存档的剩余时间 / saved remaining time
+	 * @param endTime 效果结束时间戳 / effect end timestamp
+	 * @param now 当前时间戳 / current timestamp
+	 * @return 剩余时间（毫秒），不可保存时为 -1 / remaining time in ms, -1 if not saveable
+	 */
 	static int remainingTimeAfterLogout(SkillTemplate template, int savedRemainingTime, long endTime, long now) {
 		if (template == null || template.isNoSaveOnLogout()) {
 			return -1;

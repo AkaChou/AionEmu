@@ -30,7 +30,7 @@ public class SM_CS_PLAYER_AUTH extends CsServerPacket {
 	 * 构造玩家认证请求包。
 	 * Constructs a player auth request packet.
 	 *
-	 * player object id
+	 * @param playerId 玩家对象 ID / player object id
 	 * @param playerLogin 账号登录名 / account login name
 	 * @param nick 角色昵称 / character nick
 	 */

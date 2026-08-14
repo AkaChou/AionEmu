@@ -25,6 +25,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+/**
+ * 真端直达传送门引擎：管理传送门的开启、关闭与使用。
+ * Retail direct-portal engine that manages portal open, close, and use.
+ */
 @Slf4j
 public final class RetailDirectPortalEngine {
 

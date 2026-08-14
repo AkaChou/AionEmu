@@ -167,7 +167,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * Bytes per vertex derived from components * format.getComponentSize().
 	 */
 	protected transient int componentsLength = 0;
-	/** 底层 NIO 数据 / Underlying NIO data*/
+	/** 底层 NIO 数据。 / Underlying NIO data. */
 	protected Buffer data = null;
 	/** 映射的字节缓冲（若有）。 / Mapped byte buffer if any. */
 	protected transient ByteBuffer mappedData;
@@ -215,7 +215,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 返回交错偏移。
 	 * Returns the interleaved offset.
 	 *
-	 * offset
+	 * @return 偏移 / offset
 	 */
 	public int getOffset() {
 		return offset;
@@ -225,7 +225,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 设置交错偏移。
 	 * Sets the interleaved offset.
 	 *
-	 * offset
+	 * @param offset 偏移 / offset
 	 */
 	public void setOffset(int offset) {
 		this.offset = offset;
@@ -235,7 +235,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 返回交错步长。
 	 * Returns the interleaved stride.
 	 *
-	 * stride
+	 * @return 步长 / stride
 	 */
 	public int getStride() {
 		return stride;
@@ -245,7 +245,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 设置交错步长。
 	 * Sets the interleaved stride.
 	 *
-	 * stride
+	 * @param stride 步长 / stride
 	 */
 	public void setStride(int stride) {
 		this.stride = stride;
@@ -255,7 +255,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 返回底层数据缓冲。
 	 * Returns the underlying data buffer.
 	 *
-	 * data buffer
+	 * @return 数据缓冲 / data buffer
 	 */
 	public Buffer getData() {
 		return data;
@@ -265,7 +265,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 返回映射字节缓冲。
 	 * Returns the mapped byte buffer.
 	 *
-	 * mapped buffer
+	 * @return 映射缓冲 / mapped buffer
 	 */
 	public ByteBuffer getMappedData() {
 		return mappedData;
@@ -275,7 +275,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 设置映射字节缓冲。
 	 * Sets the mapped byte buffer.
 	 *
-	 * mapped buffer
+	 * @param mappedData 映射缓冲 / mapped buffer
 	 */
 	public void setMappedData(ByteBuffer mappedData) {
 		this.mappedData = mappedData;
@@ -285,7 +285,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 返回用途提示。
 	 * Returns the usage hint.
 	 *
-	 * usage
+	 * @return 用途提示 / usage
 	 */
 	public Usage getUsage() {
 		return usage;
@@ -295,7 +295,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 设置用途提示。
 	 * Sets the usage hint.
 	 *
-	 * usage
+	 * @param usage 用途提示 / usage
 	 */
 	public void setUsage(Usage usage) {
 		// if (id != -1)
@@ -329,7 +329,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 返回属性类型。
 	 * Returns the attribute type.
 	 *
-	 * buffer type
+	 * @return 属性类型 / buffer type
 	 */
 	public Type getBufferType() {
 		return bufType;
@@ -339,7 +339,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 返回数据格式。
 	 * Returns the data format.
 	 *
-	 * format
+	 * @return 数据格式 / format
 	 */
 	public Format getFormat() {
 		return format;
@@ -349,7 +349,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 返回每顶点分量数。
 	 * Returns the number of components per vertex.
 	 *
-	 * component count
+	 * @return 分量数 / component count
 	 */
 	public int getNumComponents() {
 		return components;
@@ -359,7 +359,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 返回元素（顶点）个数。
 	 * Returns the number of elements (vertices).
 	 *
-	 * element count
+	 * @return 元素（顶点）数 / element count
 	 */
 	public int getNumElements() {
 		int elements = data.capacity() / components;
@@ -373,9 +373,9 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 初始化缓冲数据（数据已上传后不可再次调用）。
 	 * Initializes buffer data (cannot be called again after data has been sent).
 	 *
-	 * usage
+	 * @param usage 用途提示 / usage
 	 * @param components 每顶点分量数 / components per vertex
-	 * data format
+	 * @param format 数据格式 / data format
 	 * @param data 数据缓冲 / data buffer
 	 */
 	public void setupData(Usage usage, int components, Format format, Buffer data) {
@@ -395,11 +395,11 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 更新数据缓冲；容量变化时标记 dataSizeChanged。
 	 * Updates the data buffer; marks dataSizeChanged when capacity differs.
 	 *
-	 * new data
+	 * @param data 新数据 / new data
 	 */
 	public void updateData(Buffer data) {
 		if (id != -1) {
-			// 更新数据请求可以 / request to update data is okay
+			// 允许更新数据请求 / request to update data is okay
 		}
 
 		// 将强制渲染器再次调用 glBufferData / will force renderer to call glBufferData again
@@ -583,10 +583,10 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 按格式与分量数创建可容纳 numElements 个元素的 NIO 缓冲。
 	 * Creates an NIO buffer for the given format/components that holds numElements elements.
 	 *
-	 * data format
+	 * @param format 数据格式 / data format
 	 * @param components 每顶点分量数（1–4） / components per vertex (1–4)
-	 * element count
-	 * newly created buffer
+	 * @param numElements 元素个数 / element count
+	 * @return 新建缓冲 / newly created buffer
 	 */
 	public static final Buffer createBuffer(Format format, int components, int numElements) {
 		if (components < 1 || components > 4) {
@@ -620,7 +620,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 深拷贝本缓冲（含数据克隆，新 ID）。
 	 * Deep-clones this buffer (data cloned, new id).
 	 *
-	 * clone instance
+	 * @return 克隆实例 / clone instance
 	 */
 	@Override
 	public VertexBuffer clone() {
@@ -638,7 +638,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * Clones with an overridden type (data copied, new id, not uploaded).
 	 *
 	 * @param overrideType 覆盖的属性类型 / overridden attribute type
-	 * clone instance
+	 * @return 克隆实例 / clone instance
 	 */
 	public VertexBuffer clone(Type overrideType) {
 		VertexBuffer vb = new VertexBuffer(overrideType);
@@ -687,7 +687,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * 创建仅含 ID 的可销毁浅拷贝。
 	 * Creates a destructable shallow clone holding only the id.
 	 *
-	 * shallow clone
+	 * @return 浅拷贝 / shallow clone
 	 */
 	@Override
 	public GLObject createDestructableClone() {

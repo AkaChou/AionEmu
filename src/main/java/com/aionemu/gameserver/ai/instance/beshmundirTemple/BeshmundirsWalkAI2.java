@@ -76,7 +76,7 @@ public class BeshmundirsWalkAI2 extends ActionItemNpcAI2
 	private boolean isAGroupMemberInInstance(Player player) {
 		if (player.isInGroup2()) {
 			for (Player member : player.getPlayerGroup2().getMembers()) {
-				if (member.getWorldId() == 300170000) { //Beshmundir Temple.
+				if (member.getWorldId() == 300170000) { // 贝斯蒙迪尔神殿 / Beshmundir Temple.
 					return true;
 				}
 			}

@@ -83,10 +83,11 @@ public abstract class Storage implements IStorage {
 	}
 
 	/**
+	 * 增加基纳但不发送客户端封包；事务调用方须在 JDBC 事务提交后才发布物品更新。
 	 * Increases kinah without sending a client packet. Transactional callers must
 	 * publish the item update only after their JDBC transaction commits.
 	 *
-	 * @return the amount that could not fit in the kinah stack
+	 * @return 无法装入基纳堆叠的剩余数量 / the amount that could not fit in the kinah stack
 	 */
 	public long increaseKinahSilently(long amount) {
 		if (amount <= 0) {
@@ -113,7 +114,7 @@ public abstract class Storage implements IStorage {
 	}
 
 	/**
-	 * just decrease kinah without any checks
+	 * 不检查直接减少基纳。 / Just decrease kinah without any checks.
 	 */
 	public void decreaseKinah(long amount, Player actor) {
 		decreaseKinah(amount, ItemUpdateType.DEC_KINAH_BUY, actor);
@@ -130,7 +131,7 @@ public abstract class Storage implements IStorage {
 	}
 
 	/**
-	 * 增加物品数量并返回剩余数量 / increase item count and return left count
+	 * 增加物品数量并返回剩余数量。 / Increase item count and return left count.
 	 */
 	long increaseItemCount(Item item, long count, ItemUpdateType updateType, Player actor) {
 		long leftCount = item.increaseItemCount(count);
@@ -144,7 +145,7 @@ public abstract class Storage implements IStorage {
 	}
 
 	/**
-	 * decrease item count and return left count
+	 * 减少物品数量并返回剩余数量。 / Decrease item count and return left count.
 	 */
 	long decreaseItemCount(Item item, long count, ItemUpdateType updateType, Player actor) {
 		if (item == null) {
@@ -201,7 +202,7 @@ public abstract class Storage implements IStorage {
 	}
 
 	/**
-	 * 移除物品从 storage 无 changing 其 state。 / Remove item from storage without changing its state
+	 * 将物品从仓库移除，不改变其状态。 / Remove item from storage without changing its state
 	 */
 	@Override
 	public Item remove(Item item) {
@@ -209,14 +210,14 @@ public abstract class Storage implements IStorage {
 	}
 
 	/**
-	 * 删除物品从 storage 并 mark 用于 DB 更新 .QUEST_REWARD 删除 type。 / Delete item from storage and mark for DB update. QUEST_REWARD delete type
+	 * 从仓库删除物品并标记 DB 更新，删除类型为 QUEST_REWARD。 / Delete item from storage and mark for DB update. QUEST_REWARD delete type
 	 */
 	Item delete(Item item, Player actor) {
 		return delete(item, ItemDeleteType.QUEST_REWARD, actor);
 	}
 
 	/**
-	 * 删除物品从 storage 并 mark 用于 DB 更新。 / Delete item from storage and mark for DB update
+	 * 从仓库删除物品并标记 DB 更新。 / Delete item from storage and mark for DB update
 	 */
 	Item delete(Item item, ItemDeleteType deleteType, Player actor) {
 		if (remove(item) != null) {
@@ -262,13 +263,13 @@ public abstract class Storage implements IStorage {
 		return decreaseItemCount(item, count, updateType, actor) == 0;
 	}
 
-	/** 按物品 ID 返回 first item / Returns the first item by item id */
+	/** 按物品 ID 返回第一件物品 / Returns the first item by item id */
 	@Override
 	public Item getFirstItemByItemId(int itemId) {
 		return this.itemStorage.getFirstItemById(itemId);
 	}
 
-	/** 返回物品基纳 / Returns the items with kinah*/
+	/** 返回含基纳的物品列表 / Returns the items with kinah */
 	@Override
 	public List<Item> getItemsWithKinah() {
 		List<Item> items = this.itemStorage.getItems();
@@ -323,7 +324,7 @@ public abstract class Storage implements IStorage {
 	}
 
 	/**
-	 * @return Whether full special cube
+	 * @return 特殊魔立方是否已满 / whether the special cube is full
 	 */
 	public boolean isFullSpecialCube() {
 		return this.itemStorage.isFullSpecialCube();
@@ -337,7 +338,7 @@ public abstract class Storage implements IStorage {
 		return isFull();
 	}
 
-	/** 返回 free slots / Returns the free slots */
+	/** 返回可用槽位数 / Returns the free slots */
 	public int getFreeSlots(int inventory) {
 		if (inventory > 0) {
 			return getSpecialCubeFreeSlots();
@@ -345,12 +346,12 @@ public abstract class Storage implements IStorage {
 		return getFreeSlots();
 	}
 
-	/** 返回 special cube free slots / Returns the special cube free slots */
+	/** 返回特殊魔立方可用槽位数 / Returns the special cube free slots */
 	public int getSpecialCubeFreeSlots() {
 		return this.itemStorage.getSpecialCubeFreeSlots();
 	}
 
-	/** 返回 free slots / Returns the free slots */
+	/** 返回可用槽位数 / Returns the free slots */
 	@Override
 	public int getFreeSlots() {
 		return this.itemStorage.getFreeSlots();
@@ -379,7 +380,10 @@ public abstract class Storage implements IStorage {
 		this.persistentState = persistentState;
 	}
 
-	/** Captures the exact live storage state for caller-owned transaction rollback. */
+	/**
+	 * 捕捉存储区的精确实时状态，供调用方自有事务回滚。
+	 * Captures the exact live storage state for caller-owned transaction rollback.
+	 */
 	public TransactionSnapshot transactionSnapshot() {
 		return new TransactionSnapshot();
 	}
@@ -456,7 +460,7 @@ public abstract class Storage implements IStorage {
 		}
 	}
 
-	/** 大小 / size. */
+	/** 物品数量。 / Size. */
 	@Override
 	public int size() {
 		return itemStorage.size();

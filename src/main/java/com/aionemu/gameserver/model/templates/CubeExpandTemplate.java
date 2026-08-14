@@ -11,8 +11,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.templates.expand.Expand;
 
 /**
- * 魔立方 Expand 模板（静态数据/XML）。
- * XML template.
+ * 背包扩展模板（静态数据/XML）。
+ * Cube expand template (static data / XML).
  *
  * @author Simple
  */

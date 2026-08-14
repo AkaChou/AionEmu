@@ -33,12 +33,22 @@ public class DraidogAI2 extends NpcAI2
         }
     }
 	
+	/**
+	 * 处理对话选择：消耗钥匙并打开通往黑暗军团传送门的路。
+	 * Handles dialog selection: consumes the key and opens the Dark Legion portal path.
+	 *
+	 * @param player 对话玩家 / dialog player
+	 * @param dialogId 对话框选项 ID / dialog option ID
+	 * @param questId 任务 ID / quest ID
+	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
+	 * @return 始终为 true / always true
+	 */
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		// 博米尔领地村庄渗透裂隙走廊钥匙。 / Bomire Territory Village Infiltration Rift Corridor Key.
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000235, 1)) {
 		    switch (getNpcId()) {
-				case 804841: //Draidog.
+				case 804841: // 开启黑暗军团传送门的 NPC / Draidog.
 				    announceDarkLegionPortal();
 					spawn(702721, 803.0243f, 1260.2048f, 252.79918f, (byte) 63);
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

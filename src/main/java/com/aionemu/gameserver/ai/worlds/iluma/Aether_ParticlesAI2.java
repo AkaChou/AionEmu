@@ -33,7 +33,7 @@ public class Aether_ParticlesAI2 extends AggressiveNpcAI2
 			final Player player = (Player) creature;
 			if (MathUtil.getDistance(getOwner(), player) <= 5) {
 				if (startedEvent.compareAndSet(false, true)) {
-					GameEngineServices.skillEngine().getSkill(player, 22894, 1, player).useNoAnimationSkill(); //Vanish.
+					GameEngineServices.skillEngine().getSkill(player, 22894, 1, player).useNoAnimationSkill(); // 消失技能 / Vanish.
 					AI2Actions.deleteOwner(Aether_ParticlesAI2.this);
 					AI2Actions.scheduleRespawn(this);
 				}

@@ -71,7 +71,7 @@ public class GameEnginesLifecycle {
      * 等待全部引擎加载完成；中断时记录警告并恢复中断标志。
      * Await completion of all engine loads; on interrupt log a warning and restore the interrupt flag.
      *
-     * Progress latch
+     * @param progressLatch 进度闩 / Progress latch
      */
     private void await(CountDownLatch progressLatch) {
         try {
@@ -86,7 +86,7 @@ public class GameEnginesLifecycle {
      * 是否已成功加载。
      * Whether loading has completed successfully.
      *
-     * @return {@code true} if loaded。
+     * @return 已加载为 {@code true} / {@code true} if loaded
      */
     public synchronized boolean isLoaded() {
         return loaded;

@@ -91,7 +91,7 @@ public class GoodsListData {
 	 * 返回三类商品列表条目总数。
 	 * Returns the total number of entries across all three goods list types.
 	 *
-	 * total entry count
+	 * @return 条目总数 / total entry count
 	 */
 	public int size() {
 		return goodsListData.size() + goodsInListData.size() + goodsPurchaseListData.size();

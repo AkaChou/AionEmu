@@ -24,7 +24,6 @@ public class Kick extends AdminCommand {
 	 * Kick the named character, or All for every non-GM.
 	 *
 	 * @param admin 执行命令的管理员 / Admin executing the command
-	 * Character name or All
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -57,7 +56,6 @@ public class Kick extends AdminCommand {
 	 * Show command syntax on invalid arguments.
 	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

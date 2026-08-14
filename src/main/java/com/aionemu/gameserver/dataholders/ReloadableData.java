@@ -46,7 +46,7 @@ public abstract class ReloadableData {
 	 * 返回当前持有的数据列表（子类实现）。
 	 * Returns the currently held data list (implemented by subclasses).
 	 *
-	 * data list
+	 * @return 当前持有的数据列表（由子类实现） / Returns the currently held data list (implemented by subclasses).
 	 */
 	protected abstract List<?> getData();
 
@@ -63,7 +63,7 @@ public abstract class ReloadableData {
 	 * Loads an XML Schema from the given path.
 	 *
 	 * @param xml_schema Schema 文件相对路径 / schema file relative path
-	 * schema instance
+	 * @return Schema 实例 / schema instance
 	 */
 	protected Schema getSchema(String xml_schema) {
 		Schema schema = null;
@@ -80,10 +80,8 @@ public abstract class ReloadableData {
 	 * 枚举目录下可见的 .xml 文件，忽略以 new 开头的文件与隐藏文件。
 	 * Lists visible .xml files under the root, ignoring files prefixed with "new" and hidden files.
 	 *
-	 * root directory
-	 *
+	 * @param root 根目录 / root directory
 	 * @param recursive 是否递归子目录 / whether to recurse into subdirectories
-	 * @param recursive
 	 * @return 匹配的文件集合 / matching file collection
 	 */
 	protected Collection<File> listFiles(File root, boolean recursive) {

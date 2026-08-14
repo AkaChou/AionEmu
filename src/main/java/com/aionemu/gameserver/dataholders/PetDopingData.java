@@ -52,7 +52,7 @@ public class PetDopingData {
 	 * 返回已加载的药剂条目数量。
 	 * Returns the number of loaded doping entries.
 	 *
-	 * entry count
+	 * @return 已加载的药剂条目数量 / Returns the number of loaded doping entries.
 	 */
 	public int size() {
 		return dopingsById.size();

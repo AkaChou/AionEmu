@@ -22,7 +22,7 @@ public class AuditLogger {
 	 * Logs player audit info; triggers {@link AutoBan} when punishment is enabled.
 	 *
 	 * @param player 玩家（不可为 null） / player (must not be null)
-	 * audit message
+	 * @param message 审计消息 / audit message
 	 */
 	public static final void info(Player player, String message) {
 		Preconditions.checkNotNull(player, "Player should not be null or use different info method");
@@ -38,9 +38,9 @@ public class AuditLogger {
 	 * 按角色名与 objectId 记录审计日志，并可向在线 GM 广播。
 	 * Logs audit by character name and objectId, optionally broadcasting to online GMs.
 	 *
-	 * character name
-	 * object id
-	 * audit message
+	 * @param playerName 角色名 / character name
+	 * @param objectId 对象 ID / object id
+	 * @param message 审计消息 / audit message
 	 */
 	public static final void info(String playerName, int objectId, String message) {
 		message += " Player name: " + playerName + " objectId: " + objectId;

@@ -5,7 +5,21 @@ package com.aionemu.gameserver.services.mail;
  * Auction result enum identifying auction mail settlement outcomes.
  */
 public enum AuctionResult {
-	FAILED_BID(0), CANCELED_BID(1), FAILED_SALE(2), SUCCESS_SALE(3), WIN_BID(4), GRACE_START(5), GRACE_FAIL(6),
+	/** 竞拍失败 / Failed bid. */
+	FAILED_BID(0),
+	/** 竞拍取消 / Canceled bid. */
+	CANCELED_BID(1),
+	/** 出售失败 / Failed sale. */
+	FAILED_SALE(2),
+	/** 出售成功 / Successful sale. */
+	SUCCESS_SALE(3),
+	/** 竞拍成功 / Won bid. */
+	WIN_BID(4),
+	/** 宽限期开始 / Grace start. */
+	GRACE_START(5),
+	/** 宽限期失败 / Grace fail. */
+	GRACE_FAIL(6),
+	/** 宽限期成功 / Grace success. */
 	GRACE_SUCCESS(7);
 
 	private int value;

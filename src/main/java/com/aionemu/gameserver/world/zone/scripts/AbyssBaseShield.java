@@ -19,7 +19,7 @@ public class AbyssBaseShield implements ZoneHandler {
 	 * 进入护盾区：非 GM 敌对种族立即死亡。
 	 * Enter shield zone: non-GM hostile race dies immediately.
 	 *
-	 * creature
+	 * @param creature 进入区域的生物 / creature entering the zone
 	 * @param zone     区域实例 / zone instance
 	 */
 	@Override
@@ -43,7 +43,7 @@ public class AbyssBaseShield implements ZoneHandler {
 	 * 离开护盾区：无额外逻辑。
 	 * Leave shield zone: no additional logic.
 	 *
-	 * creature
+	 * @param player 离开区域的生物 / creature leaving the zone
 	 * @param zone   区域实例 / zone instance
 	 */
 	@Override

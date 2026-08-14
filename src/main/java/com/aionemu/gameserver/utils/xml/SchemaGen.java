@@ -20,9 +20,8 @@ public class SchemaGen {
 	 * 在指定目录生成 static_data1.xsd。
 	 * Generate static_data1.xsd under the given directory.
 	 *
-	 * Output directory
+	 * @param baseDir 输出目录 / Output directory
 	 *
-	 * @param baseDir
 	 * @throws Exception 生成失败时 / On generation failure
 	 */
 	public static void generateStaticDataSchema(File baseDir) throws Exception {
@@ -32,10 +31,10 @@ public class SchemaGen {
 			 * 创建 schema 输出目标。
 			 * Create the schema output target.
 			 *
-			 * Namespace URI
+			 * @param namespaceUri 命名空间 URI / Namespace URI
 			 * @param suggestedFileName 建议文件名 / Suggested file name
-			 * Output Result
-			 * On I/O error
+			 * @return 输出 Result / Output Result
+			 * @throws IOException 发生 I/O 错误时 / On I/O error
 			 */
 			@Override
 			public Result createOutput(String namespaceUri, String suggestedFileName) throws IOException {

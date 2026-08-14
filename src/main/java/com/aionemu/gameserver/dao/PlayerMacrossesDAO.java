@@ -17,7 +17,7 @@ public abstract class PlayerMacrossesDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -28,8 +28,8 @@ public abstract class PlayerMacrossesDAO implements DAO {
 	 * 加载玩家宏列表。
 	 * Restores the list of macros for the player.
 	 *
-	 * player object id
-	 * macro list
+	 * @param playerId 玩家对象 ID / player object id
+	 * @return 宏列表 / macro list
 	 */
 	public abstract MacroList restoreMacrosses(int playerId);
 
@@ -37,9 +37,9 @@ public abstract class PlayerMacrossesDAO implements DAO {
 	 * 向数据库添加一条宏。
 	 * Adds macro information into the database.
 	 *
-	 * player object id
+	 * @param playerId 玩家对象 ID / player object id
 	 * @param macroPosition 宏槽位序号 / macro order number
-	 * macro contents
+	 * @param macro 宏内容 / macro contents
 	 */
 	public abstract void addMacro(int playerId, int macroPosition, String macro);
 
@@ -47,9 +47,9 @@ public abstract class PlayerMacrossesDAO implements DAO {
 	 * 更新数据库中的宏。
 	 * Updates macro information in the database.
 	 *
-	 * player object id
+	 * @param playerId 玩家对象 ID / player object id
 	 * @param macroPosition 宏槽位序号 / macro order number
-	 * macro contents
+	 * @param macro 宏内容 / macro contents
 	 */
 	public abstract void updateMacro(int playerId, int macroPosition, String macro);
 
@@ -57,7 +57,7 @@ public abstract class PlayerMacrossesDAO implements DAO {
 	 * 删除数据库中的宏。
 	 * Removes a macro from the database.
 	 *
-	 * player object id
+	 * @param playerId 玩家对象 ID / player object id
 	 * @param macroPosition 宏槽位序号 / order of macro in macro list
 	 */
 	public abstract void deleteMacro(int playerId, int macroPosition);

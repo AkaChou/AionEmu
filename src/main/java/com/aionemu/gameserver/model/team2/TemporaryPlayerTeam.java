@@ -15,7 +15,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 /**
- * Temporary 玩家团队，用于团队2相关逻辑。
+ * 临时玩家团队，用于团队2相关逻辑。
  * Temporary Player Team for team 2 logic.
  *
  * @author ATracer
@@ -29,12 +29,14 @@ public abstract class TemporaryPlayerTeam<TM extends TeamMember<Player>> extends
 	}
 
 	/**
-	 * Level of the player with lowest exp
+	 * 队伍中经验最低的玩家等级。
+	 * Level of the player with lowest exp.
 	 */
 	public abstract int getMinExpPlayerLevel();
 
 	/**
-	 * Level of the player with highest exp
+	 * 队伍中经验最高的玩家等级。
+	 * Level of the player with highest exp.
 	 */
 	public abstract int getMaxExpPlayerLevel();
 
@@ -56,13 +58,13 @@ public abstract class TemporaryPlayerTeam<TM extends TeamMember<Player>> extends
 		applyOnMembers(new TeamMessageSender(packet, predicate));
 	}
 
-	/** 在线成员 / online Members. */
+	/** 在线成员数 / online Members. */
 	@Override
 	public final int onlineMembers() {
 		return getOnlineMembers().size();
 	}
 
-	/** 返回 online members / Returns the online members */
+	/** 返回在线成员集合 / Returns the online members */
 	@Override
 	public final Collection<Player> getOnlineMembers() {
 		return filterMembers(PlayerFilters.ONLINE);
@@ -72,12 +74,12 @@ public abstract class TemporaryPlayerTeam<TM extends TeamMember<Player>> extends
 		setLeader(leader);
 	}
 
-	/** 返回 loot group rules / Returns the loot group rules */
+	/** 返回战利品分配规则 / Returns the loot group rules */
 	public final LootGroupRules getLootGroupRules() {
 		return lootGroupRules;
 	}
 
-	/** 设置 loot group rules / Sets the loot group rules */
+	/** 设置战利品分配规则 / Sets the loot group rules */
 	public void setLootGroupRules(LootGroupRules lootGroupRules) {
 		this.lootGroupRules = lootGroupRules;
 		if (lootGroupRules != null && lootGroupRules.getLootRule() == LootRuleType.FREEFORALL) {

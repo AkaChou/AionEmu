@@ -8,7 +8,11 @@ package com.aionemu.gameserver.model.broker;
  */
 public enum BrokerMessages {
 	/** 无法登记物品 / Cant Register Item */
-	CANT_REGISTER_ITEM(2), NO_SPACE_AVAIABLE(3), NO_ENOUGHT_KINAH(5);
+	CANT_REGISTER_ITEM(2),
+	/** 背包空间不足 / No Space Available */
+	NO_SPACE_AVAIABLE(3),
+	/** 基纳不足 / Not Enough Kinah */
+	NO_ENOUGHT_KINAH(5);
 
 	private int id;
 

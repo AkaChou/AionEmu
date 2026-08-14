@@ -36,7 +36,7 @@ public class PlayerThievesDAO extends PlayerThievesListDAO {
 	 *
 	 * player id
 	 *
-	 * @param playerId
+	 * @param playerId 玩家 ID / player id
 	 * @return 盗贼状态，不存在则 null / thieves status, or null if missing
 	 */
 	@Override
@@ -73,7 +73,7 @@ public class PlayerThievesDAO extends PlayerThievesListDAO {
 	 *
 	 * thieves status
 	 *
-	 * @param thieves
+	 * @param thieves 窃贼状态 / thieves status
 	 * @return 是否写入成功 / whether the write succeeded
 	 */
 	@Override
@@ -100,7 +100,7 @@ public class PlayerThievesDAO extends PlayerThievesListDAO {
 	 * 更新已有盗贼公会状态。
 	 * Updates an existing thieves guild status entry.
 	 *
-	 * thieves status
+	 * @param thieves 窃贼状态 / thieves status
 	 */
 	@Override
 	public void storeThieves(final ThievesStatusList thieves) {
@@ -125,10 +125,10 @@ public class PlayerThievesDAO extends PlayerThievesListDAO {
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
 	 *
-	 * database name
-	 * major version
-	 * minor version
-	 * whether supported
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
 	 */
 	@Override
 	public boolean supports(String database, int majorVersion, int minorVersion) {

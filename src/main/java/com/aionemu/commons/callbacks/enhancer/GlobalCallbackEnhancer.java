@@ -35,16 +35,13 @@ public class GlobalCallbackEnhancer extends CallbackClassFileTransformer {
     
 
     /**
- * 执行类转换操作，增强带有@GlobalCallback 注解的方法
-     * Perform class transformation to enhance methods with @GlobalCallback annotation
+     * 执行类转换操作，增强带有@GlobalCallback 注解的方法。
+     * Perform class transformation to enhance methods with @GlobalCallback annotation.
      *
-     * Class loader
-     * Class bytecode
-     *
-     * @param loader
-     * @return 转换后的字节码 / Transformed bytecode
-     * @param clazzBytes
-     * @throws Exception 转换过程中的异常 / Exception during transformation
+     * @param loader 类加载器 / class loader
+     * @param clazzBytes 类字节码 / class bytecode
+     * @return 转换后的字节码 / transformed bytecode
+     * @throws Exception 转换过程中的异常 / exception during transformation
      */
     protected byte[] transformClass(ClassLoader loader, byte[] clazzBytes) throws Exception {
         ClassPool cp = new ClassPool();
@@ -76,10 +73,10 @@ public class GlobalCallbackEnhancer extends CallbackClassFileTransformer {
      * 增强单个方法，添加回调相关的代码
      * Enhance a single method by adding callback-related code
      *
-     * @param method 要增强的方法 / Method to enhance
-     * Compilation exception
-     * Class not found exception。
-     * Class loading exception。
+     * @param method 要增强的方法 / method to enhance
+     * @throws CannotCompileException 编译异常 / compilation exception
+     * @throws NotFoundException 类未找到异常 / class not found exception
+     * @throws ClassNotFoundException 类加载异常 / class loading exception
      */
     protected void enhanceMethod(CtMethod method) throws CannotCompileException, NotFoundException, ClassNotFoundException {
         ClassPool cp = method.getDeclaringClass().getClassPool();
@@ -104,14 +101,11 @@ public class GlobalCallbackEnhancer extends CallbackClassFileTransformer {
      * 生成方法执行前的回调代码
      * Generate callback code for before method execution
      *
-     * Target method
-     * Parameter length
-     *
-     * @param listenerFieldName 监听器字段名 / Listener field name
-     * @param paramLength
-     * @return 生成的代码 / Generated code
-     * @param listenerFieldName
-     * @throws NotFoundException 类未找到异常 / Class not found exception
+     * @param method 目标方法 / target method
+     * @param paramLength 参数个数 / parameter length
+     * @param listenerFieldName 监听器字段名 / listener field name
+     * @return 生成的代码 / generated code
+     * @throws NotFoundException 类未找到异常 / class not found exception
      */
     protected String writeBeforeMethod(CtMethod method, int paramLength, String listenerFieldName) throws NotFoundException {
         StringBuilder sb = new StringBuilder();
@@ -161,14 +155,11 @@ public class GlobalCallbackEnhancer extends CallbackClassFileTransformer {
      * 生成方法执行后的回调代码
      * Generate callback code for after method execution
      *
-     * Target method
-     * Parameter length
-     *
-     * @param listenerFieldName 监听器字段名 / Listener field name
-     * @param paramLength
-     * @return 生成的代码 / Generated code
-     * @param listenerFieldName
-     * @throws NotFoundException 类未找到异常 / Class not found exception
+     * @param method 目标方法 / target method
+     * @param paramLength 参数个数 / parameter length
+     * @param listenerFieldName 监听器字段名 / listener field name
+     * @return 生成的代码 / generated code
+     * @throws NotFoundException 类未找到异常 / class not found exception
      */
     protected String writeAfterMethod(CtMethod method, int paramLength, String listenerFieldName) throws NotFoundException {
         StringBuilder sb = new StringBuilder();

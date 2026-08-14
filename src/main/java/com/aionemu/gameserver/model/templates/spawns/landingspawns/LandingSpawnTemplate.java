@@ -6,8 +6,8 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
- * 登陆刷新点模板（静态数据/XML）。
- * XML template.
+ * 登陆区域刷新点运行时模板：绑定登陆状态类型。
+ * Runtime spawn template for landing zones: binds a landing state type.
  */
 
 public class LandingSpawnTemplate extends SpawnTemplate {
@@ -28,7 +28,7 @@ public class LandingSpawnTemplate extends SpawnTemplate {
 		return id;
 	}
 
-	/** 返回 e state type / Returns the e state type */
+	/** 返回登陆状态类型 / Returns the landing state type */
 	public LandingStateType getEStateType() {
 		return landingType;
 	}
@@ -38,18 +38,21 @@ public class LandingSpawnTemplate extends SpawnTemplate {
 		this.id = id;
 	}
 
-	/** 设置 e state type / Sets the e state type */
+	/** 设置登陆状态类型 / Sets the landing state type */
 	public void setEStateType(LandingStateType landingLevel) {
 		this.landingType = landingLevel;
 	}
 
-	/** 是否登陆打开 / Whether landing open */
+	/** 登陆是否开放 / Whether landing is open */
 	public final boolean isLandingOpen() {
 		return !landingType.equals(LandingStateType.NONE);
 	}
 
 	/**
-	 * @return Whether landing closed
+	 * 登陆是否关闭（无状态）。
+	 * Whether landing is closed (no state).
+	 *
+	 * @return 关闭则为 true / Whether landing closed
 	 */
 	public final boolean isLandingClosed() {
 		return landingType.equals(LandingStateType.NONE);

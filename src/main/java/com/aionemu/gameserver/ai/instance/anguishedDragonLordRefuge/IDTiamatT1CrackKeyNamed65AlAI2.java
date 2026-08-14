@@ -120,7 +120,9 @@ public class IDTiamatT1CrackKeyNamed65AlAI2 extends AggressiveNpcAI2
 				public void run() {
 					if (!isAlreadyDead()) {
 						spawn(282735, x, y, z, (byte) 0); //Cavity Of Earth.
+						// 大地之腔。 / Cavity Of Earth.
 						spawn(282737, x, y, z, (byte) 0); //Collapsing Earth.
+						// 崩塌的大地。 / Collapsing Earth.
 					}
 				}
 			}, 3000);
@@ -157,6 +159,8 @@ public class IDTiamatT1CrackKeyNamed65AlAI2 extends AggressiveNpcAI2
 		if (p != null) {
 			deleteNpcs(p.getWorldMapInstance().getNpcs(282735)); //Cavity Of Earth.
 			deleteNpcs(p.getWorldMapInstance().getNpcs(282737)); //Collapsing Earth.
+			// 大地之腔。 / Cavity Of Earth.
+			// 崩塌的大地。 / Collapsing Earth.
 		}
 		cancelPhaseTask();
 		sendMsg(1401141);

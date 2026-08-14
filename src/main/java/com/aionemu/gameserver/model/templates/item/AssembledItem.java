@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * 组装物品模板（静态数据/XML）。
- * XML template.
+ * 组装产物物品模板。
+ * Assembled item template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

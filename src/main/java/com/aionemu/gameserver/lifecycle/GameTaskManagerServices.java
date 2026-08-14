@@ -66,7 +66,7 @@ public final class GameTaskManagerServices implements DisposableBean {
      * 解析 ExpireTimerTask：优先 Spring，否则 getInstance。
      * Resolve ExpireTimerTask: prefer Spring, otherwise {@code getInstance}.
      *
-     * ExpireTimerTask instance
+     * @return ExpireTimerTask 实例 / ExpireTimerTask instance
      */
     public static ExpireTimerTask expireTimerTask() {
         ObjectProvider<ExpireTimerTask> provider = expireTimerTaskProvider;
@@ -80,7 +80,7 @@ public final class GameTaskManagerServices implements DisposableBean {
      * 解析 TeamEffectUpdater：优先 Spring，否则 getInstance。
      * Resolve TeamEffectUpdater: prefer Spring, otherwise {@code getInstance}.
      *
-     * TeamEffectUpdater instance
+     * @return TeamEffectUpdater 实例 / TeamEffectUpdater instance
      */
     public static TeamEffectUpdater teamEffectUpdater() {
         ObjectProvider<TeamEffectUpdater> provider = teamEffectUpdaterProvider;
@@ -94,7 +94,7 @@ public final class GameTaskManagerServices implements DisposableBean {
      * 解析 TeamMoveUpdater：优先 Spring，否则 getInstance。
      * Resolve TeamMoveUpdater: prefer Spring, otherwise {@code getInstance}.
      *
-     * TeamMoveUpdater instance
+     * @return TeamMoveUpdater 实例 / TeamMoveUpdater instance
      */
     public static TeamMoveUpdater teamMoveUpdater() {
         ObjectProvider<TeamMoveUpdater> provider = teamMoveUpdaterProvider;
@@ -108,7 +108,7 @@ public final class GameTaskManagerServices implements DisposableBean {
      * 解析 TemporaryTradeTimeTask：优先 Spring，否则 getInstance。
      * Resolve TemporaryTradeTimeTask: prefer Spring, otherwise {@code getInstance}.
      *
-     * TemporaryTradeTimeTask instance
+     * @return TemporaryTradeTimeTask 实例 / TemporaryTradeTimeTask instance
      */
     public static TemporaryTradeTimeTask temporaryTradeTimeTask() {
         ObjectProvider<TemporaryTradeTimeTask> provider = temporaryTradeTimeTaskProvider;

@@ -59,7 +59,7 @@ public class NpcSkillData {
 	 * 返回已加载的 NPC 技能模板数量。
 	 * Returns the number of loaded NPC skill templates.
 	 *
-	 * template count
+	 * @return 已加载的NPC 技能模板数量 / Returns the number of loaded NPC skill templates.
 	 */
 	public int size() {
 		return npcSkillData.size();
@@ -69,9 +69,7 @@ public class NpcSkillData {
 	 * 按 NPC ID 获取技能模板列表。
 	 * Returns the skill template list for the given npc id.
 	 *
-	 * npc id
-	 *
-	 * @param id
+	 * @param id NPC ID / npc id
 	 * @return 技能模板或 null / skill templates or null
 	 */
 	public NpcSkillTemplates getNpcSkillList(int id) {

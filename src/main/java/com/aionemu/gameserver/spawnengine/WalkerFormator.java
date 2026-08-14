@@ -30,10 +30,9 @@ public class WalkerFormator {
 	 * On instance first spawn, verifies and creates groups; call organizeAndSpawn after.
 	 * On respawn, places the NPC at the first step and restores saved data.
 	 *
-	 * npc
-	 * 世界 ID / world id
-	 * instance id
-	 *
+	 * @param npc NPC / the NPC
+	 * @param worldId 世界 ID / world id
+	 * @param instanceId 实例 ID / instance id
 	 * @return 若本次调用已将 NPC 刷入世界则为 true / true if the npc was brought into world by this call
 	 */
 	public static boolean processClusteredNpc(Npc npc, int worldId, int instanceId) {
@@ -65,8 +64,8 @@ public class WalkerFormator {
 	 * 组织并刷出所有已处理的巡逻编队；仅应在实例 NPC 全部生成时调用。
 	 * Organizes and spawns all processed walker groups; call only when spawning all instance NPCs.
 	 *
-	 * 世界 ID / world id
-	 * instance id
+	 * @param worldId 世界 ID / world id
+	 * @param instanceId 实例 ID / instance id
 	 */
 	public static void organizeAndSpawn(int worldId, int instanceId) {
 		InstanceWalkerFormations formations = WalkerFormationsCache.getInstanceFormations(worldId, instanceId);
@@ -77,8 +76,8 @@ public class WalkerFormator {
 	 * 实例销毁时清理巡逻编队缓存。
 	 * Clears walker formation cache when an instance is destroyed.
 	 *
-	 * 世界 ID / world id
-	 * instance id
+	 * @param worldId 世界 ID / world id
+	 * @param instanceId 实例 ID / instance id
 	 */
 	public static void onInstanceDestroy(int worldId, int instanceId) {
 		WalkerFormationsCache.onInstanceDestroy(worldId, instanceId);

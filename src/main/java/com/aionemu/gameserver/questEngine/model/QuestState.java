@@ -42,13 +42,13 @@ public class QuestState {
 	 * 构造任务状态。
 	 * Constructs a quest state.
 	 *
-	 * Quest id
-	 * Initial status
+	 * @param questId 任务 ID / Quest id
+	 * @param status 初始状态 / Initial status
 	 * @param questVars 打包的任务变量 / Packed quest vars
-	 * Completion count
+	 * @param completeCount 完成计数 / Completion count
 	 * @param nextRepeatTime 下次可重复时间 / Next repeat time
-	 * Reward index
-	 * Completion time
+	 * @param reward 奖励索引 / Reward index
+	 * @param completeTime 完成时间 / Completion time
 	 */
 	public QuestState(int questId, QuestStatus status, int questVars, int completeCount, Timestamp nextRepeatTime,
 			Integer reward, Timestamp completeTime) {
@@ -66,7 +66,7 @@ public class QuestState {
 	 * 返回任务变量集合。
 	 * Returns the quest variable set.
 	 *
-	 * Quest vars
+	 * @return 任务变量 / Quest vars
 	 */
 	public QuestVars getQuestVars() {
 		return questVars;
@@ -89,7 +89,7 @@ public class QuestState {
 	 * Returns the quest sub-variable at the given index.
 	 *
 	 * @param id 子变量索引 / Sub-variable index
-	 * Sub-variable value
+	 * @return 子变量值 / Sub-variable value
 	 */
 	public int getQuestVarById(int id) {
 		return questVars.getVarById(id);
@@ -110,7 +110,7 @@ public class QuestState {
 	 * 返回当前任务状态。
 	 * Returns the current quest status.
 	 *
-	 * Quest status
+	 * @return 任务状态 / Quest status
 	 */
 	public QuestStatus getStatus() {
 		return status;
@@ -120,7 +120,7 @@ public class QuestState {
 	 * 设置任务状态；首次进入 COMPLETE 时自动更新完成时间，并标记持久化。
 	 * Sets quest status; auto-updates completion time on first transition to COMPLETE and marks for persistence.
 	 *
-	 * New status
+	 * @param status 新状态 / New status
 	 */
 	public void setStatus(QuestStatus status) {
 		if (status == QuestStatus.COMPLETE && this.status != QuestStatus.COMPLETE)
@@ -161,7 +161,7 @@ public class QuestState {
 	 * 返回任务 ID。
 	 * Returns the quest id.
 	 *
-	 * Quest id
+	 * @return 任务 ID / Quest id
 	 */
 	public int getQuestId() {
 		return questId;
@@ -171,7 +171,7 @@ public class QuestState {
 	 * 设置完成次数，并标记需要持久化更新。
 	 * Sets the completion count and marks the state for persistence update.
 	 *
-	 * Completion count
+	 * @param completeCount 完成计数 / Completion count
 	 */
 	public void setCompleteCount(int completeCount) {
 		this.completeCount = completeCount;
@@ -182,7 +182,7 @@ public class QuestState {
 	 * 返回完成次数。
 	 * Returns the completion count.
 	 *
-	 * Completion count
+	 * @return 完成计数 / Completion count
 	 */
 	public int getCompleteCount() {
 		return completeCount;
@@ -212,7 +212,7 @@ public class QuestState {
 	 * 设置已选奖励索引，并标记需要持久化更新。
 	 * Sets the selected reward index and marks the state for persistence update.
 	 *
-	 * Reward index
+	 * @param reward 奖励索引 / Reward index
 	 */
 	public void setReward(Integer reward) {
 		this.reward = reward;

@@ -44,7 +44,6 @@ public enum SpellStatus {
 	 * 获取协议 ID。
 	 * Gets protocol id.
 	 *
-	 * spell status id
 	 */
 	public int getId() {
 		return id;

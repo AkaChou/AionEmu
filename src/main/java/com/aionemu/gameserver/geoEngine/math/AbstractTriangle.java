@@ -13,7 +13,7 @@ public abstract class AbstractTriangle implements Collidable {
 	 * 返回第一个顶点。
 	 * Returns the first vertex.
 	 *
-	 * vertex 1
+	 * @return 顶点 1 / vertex 1
 	 */
 	public abstract Vector3f get1();
 
@@ -21,7 +21,7 @@ public abstract class AbstractTriangle implements Collidable {
 	 * 返回第二个顶点。
 	 * Returns the second vertex.
 	 *
-	 * vertex 2
+	 * @return 顶点 2 / vertex 2
 	 */
 	public abstract Vector3f get2();
 
@@ -29,7 +29,7 @@ public abstract class AbstractTriangle implements Collidable {
 	 * 返回第三个顶点。
 	 * Returns the third vertex.
 	 *
-	 * vertex 3
+	 * @return 顶点 3 / vertex 3
 	 */
 	public abstract Vector3f get3();
 
@@ -37,9 +37,9 @@ public abstract class AbstractTriangle implements Collidable {
 	 * 设置三个顶点。
 	 * Sets the three vertices.
 	 *
-	 * vertex 1
-	 * vertex 2
-	 * vertex 3
+	 * @param var1 顶点 1 / vertex 1
+	 * @param var2 顶点 2 / vertex 2
+	 * @param var3 顶点 3 / vertex 3
 	 */
 	public abstract void set(Vector3f var1, Vector3f var2, Vector3f var3);
 
@@ -49,7 +49,7 @@ public abstract class AbstractTriangle implements Collidable {
 	 *
 	 * @param other 另一可碰撞体 / other collidable
 	 * @param results 碰撞结果收集器 / collision results collector
-	 * hit count
+	 * @return 命中数 / hit count
 	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) {

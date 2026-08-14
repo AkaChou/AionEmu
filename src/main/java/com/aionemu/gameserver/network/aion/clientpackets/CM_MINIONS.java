@@ -55,62 +55,62 @@ public class CM_MINIONS extends AionClientPacket {
 	protected void readImpl() {
 		actionId = readH();
 		switch (actionId) {
-		case 0: // add
-			itemObjectId = readD(); // Item UniqueId (Minion Contract)
+		case 0: // 添加 / add
+			itemObjectId = readD(); // 物品唯一 ID（随从契约）/ Item UniqueId (Minion Contract)
 			break;
-		case 1: // delete
+		case 1: // 删除 / delete
 			objectId = readD();
 			break;
-		case 2: // rename
-			objectId = readD(); // Minion Unique ID
-			minionName = readS(); // Name
+		case 2: // 重命名 / rename
+			objectId = readD(); // 随从唯一 ID / Minion Unique ID
+			minionName = readS(); // 名称 / Name
 			break;
-		case 3: // locked
-			objectId = readD(); // Minion Unique ID
-			lock = readC(); // lock/unlock
+		case 3: // 锁定 / locked
+			objectId = readD(); // 随从唯一 ID / Minion Unique ID
+			lock = readC(); // 锁定/解锁 / lock/unlock
 			break;
-		case 4: // summon
-		case 5: // unsummon
-			minionObjectId = readD(); // Minion Unique ID
+		case 4: // 召唤 / summon
+		case 5: // 收回 / unsummon
+			minionObjectId = readD(); // 随从唯一 ID / Minion Unique ID
 			break;
-		case 6: // ascension
+		case 6: // 进阶 / ascension
 			MaterialObjIds.clear();
-			objectId = readD(); // Minion Unique ID
+			objectId = readD(); // 随从唯一 ID / Minion Unique ID
 			for (int i = 0; i < 10; i++) {
 				MaterialObjIds.add(readD());
 			}
 			break;
-		case 7: // evolution
+		case 7: // 进化 / evolution
 			objectId = readD();
 			break;
-		case 8:// combination
+		case 8:// 合成 / combination
 			MaterialObjIds.clear();
 			for (int i = 0; i < 4; i++) {
 				MaterialObjIds.add(readD());
 			}
 			break;
-		case 9: // Minion function: sub-switch followed by four fixed-width parameters
+		case 9: // 随从功能：子开关后跟四个定长参数 / Minion function: sub-switch followed by four fixed-width parameters
 			subSwitch = readD();
 			functId = readD();
 			minionObjectId = readD();
 			functionParam1 = readD();
 			functionParam2 = readD();
 			break;
-		case 10: // Nothing to read (Falke Log 5.6_Minion_Function)
+		case 10: // 无可读内容 / Nothing to read (Falke Log 5.6_Minion_Function)
 			break;
-		case 11: // charge
-			charge = readC(); // Charge 1 = true / 0 = false ?
-			autoCharge = readC(); // Auto recharge on/off
+		case 11: // 充能 / charge
+			charge = readC(); // 充能：1 = true / 0 = false？/ Charge 1 = true / 0 = false ?
+			autoCharge = readC(); // 自动充能开关 / Auto recharge on/off
 			break;
 		case 12:
-			readC(); // Auto Function on/off
+			readC(); // 自动功能开关 / Auto Function on/off
 			break;
 		case 13:
 			readD();
 			readC();
 			readH();
 			break;
-		case 14: // BUFF ON
+		case 14: // 增益开启 / BUFF ON
 			readC(); // 20?
 			readC();
 			readC();
@@ -168,7 +168,7 @@ public class CM_MINIONS extends AionClientPacket {
 			switch (subSwitch) {
 			case 0: {
 				switch (functId) {
-				case 0: { // Add Item
+				case 0: { // 添加物品 / Add Item
 					log.debug("CM_MINIONS handle add item. playerId={} minionObjectId={} itemId={} targetSlot={}",
 							player.getObjectId(), minionObjectId, functionParam1, functionParam2);
 					GameEventBootstrapServices.minionService().addMinionFunctionItem(player, minionObjectId, functionParam1,
@@ -202,7 +202,7 @@ public class CM_MINIONS extends AionClientPacket {
 			}
 			}
 			break;
-		case 10: // MinionFunction (Activate)
+		case 10: // 随从功能（激活）/ MinionFunction (Activate)
 			GameEventBootstrapServices.minionService().activateMinionFunction(player);
 			break;
 		case 11:

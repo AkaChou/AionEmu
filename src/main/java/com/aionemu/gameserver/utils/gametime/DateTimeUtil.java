@@ -72,7 +72,7 @@ public final class DateTimeUtil {
 	 * 返回配置时区下的当前日期时间。
 	 * Current date/time in the configured zone.
 	 *
-	 * Current ZonedDateTime
+	 * @return 当前日期时间 / Current ZonedDateTime
 	 */
 	public static ZonedDateTime now() {
 		return ZonedDateTime.now(getZoneWithFallback());
@@ -100,7 +100,7 @@ public final class DateTimeUtil {
 	 * Create ZonedDateTime from a string with the given formatter.
 	 *
 	 * @param dateTimeString 日期时间字符串 / Date-time string
-	 * Formatter
+	 * @param formatter 格式化器 / Formatter
 	 * @return ZonedDateTime
 	 */
 	public static ZonedDateTime fromString(String dateTimeString, DateTimeFormatter formatter) {
@@ -117,7 +117,7 @@ public final class DateTimeUtil {
 	 * 从 Calendar 创建 ZonedDateTime。
 	 * Create ZonedDateTime from a Calendar.
 	 *
-	 * Calendar
+	 * @param calendar Calendar
 	 * @return ZonedDateTime
 	 */
 	public static ZonedDateTime fromCalendar(Calendar calendar) {
@@ -184,7 +184,7 @@ public final class DateTimeUtil {
 	 * 将 ZonedDateTime 字段保留后改用配置时区。
 	 * Re-apply configured zone to a ZonedDateTime while retaining local fields.
 	 *
-	 * Source zoned date-time
+	 * @param zonedDateTime 源日期时间 / Source zoned date-time
 	 * @return ZonedDateTime
 	 */
 	public static ZonedDateTime applyZoneRetainFields(ZonedDateTime zonedDateTime) {
@@ -226,8 +226,8 @@ public final class DateTimeUtil {
 	 * 按指定格式格式化 ZonedDateTime。
 	 * Format a ZonedDateTime with the given formatter.
 	 *
-	 * Date-time
-	 * Formatter
+	 * @param dateTime 日期时间 / Date-time
+	 * @param formatter 格式化器 / Formatter
 	 * @return 格式化字符串 / Formatted string
 	 */
 	public static String format(ZonedDateTime dateTime, DateTimeFormatter formatter) {
@@ -241,8 +241,8 @@ public final class DateTimeUtil {
 	 * 转为 GregorianCalendar。
 	 * Convert to GregorianCalendar.
 	 *
-	 * Date-time
-	 * GregorianCalendar or null
+	 * @param dateTime 日期时间 / Date-time
+	 * @return GregorianCalendar 或 null / GregorianCalendar or null
 	 */
 	public static GregorianCalendar toGregorianCalendar(ZonedDateTime dateTime) {
 		if (dateTime == null) {
@@ -255,8 +255,8 @@ public final class DateTimeUtil {
 	 * 转为 java.util.Calendar（时区来自 dateTime）。
 	 * Convert to java.util.Calendar (zone taken from dateTime).
 	 *
-	 * Date-time
-	 * Calendar or null
+	 * @param dateTime 日期时间 / Date-time
+	 * @return Calendar 或 null / Calendar or null
 	 */
 	public static Calendar toCalendar(ZonedDateTime dateTime) {
 		if (dateTime == null) {
@@ -269,8 +269,8 @@ public final class DateTimeUtil {
 	 * 返回 epoch 毫秒。
 	 * Epoch millis for the given ZonedDateTime.
 	 *
-	 * Date-time
-	 * Millis, or 0 if null
+	 * @param dateTime 日期时间 / Date-time
+	 * @return 毫秒，null 时为 0 / Millis, or 0 if null
 	 */
 	public static long toMillis(ZonedDateTime dateTime) {
 		if (dateTime == null) {
@@ -283,8 +283,8 @@ public final class DateTimeUtil {
 	 * 返回 ISO 本地日期时间字符串。
 	 * ISO local date-time string representation.
 	 *
-	 * Date-time
-	 * ISO string
+	 * @param dateTime 日期时间 / Date-time
+	 * @return ISO 字符串 / ISO string
 	 */
 	public static String toIsoString(ZonedDateTime dateTime) {
 		if (dateTime == null) {

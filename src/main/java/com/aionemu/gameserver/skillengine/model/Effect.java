@@ -155,7 +155,6 @@ public class Effect implements StatOwner {
 	 * 获取关联技能实例。
 	 * Gets related skill instance.
 	 *
-	 * skill
 	 */
 	public final Skill getSkill() {
 		return skill;
@@ -165,7 +164,6 @@ public class Effect implements StatOwner {
 	 * 设置异常状态掩码。
 	 * Sets abnormal state mask.
 	 *
-	 * mask
 	 */
 	public void setAbnormal(int mask) {
 		abnormals |= mask;
@@ -175,7 +173,6 @@ public class Effect implements StatOwner {
 	 * 获取异常状态掩码。
 	 * Gets abnormal state mask.
 	 *
-	 * mask
 	 */
 	public int getAbnormals() {
 		return abnormals;
@@ -221,8 +218,8 @@ public class Effect implements StatOwner {
 	 * 设置世界坐标。
 	 * Sets world position.
 	 *
-	 * 世界 ID / world id
-	 * instance id
+	 * @param worldId 世界 ID / world id
+	 * @param instanceId 实例 ID / instance id
 	 * @param x X
 	 * @param y Y
 	 * @param z Z
@@ -249,7 +246,6 @@ public class Effect implements StatOwner {
 	 * 获取技能 ID。
 	 * Gets skill id.
 	 *
-	 * skill id
 	 */
 	public int getSkillId() {
 		return skillTemplate.getSkillId();
@@ -259,7 +255,6 @@ public class Effect implements StatOwner {
 	 * 获取技能名称。
 	 * Gets skill name.
 	 *
-	 * name
 	 */
 	public String getSkillName() {
 		return skillTemplate.getName();
@@ -269,7 +264,6 @@ public class Effect implements StatOwner {
 	 * 获取技能模板。
 	 * Gets skill template.
 	 *
-	 * template
 	 */
 	public final SkillTemplate getSkillTemplate() {
 		return skillTemplate;
@@ -283,7 +277,6 @@ public class Effect implements StatOwner {
 	 * 获取技能子类型。
 	 * Gets skill sub type.
 	 *
-	 * sub type
 	 */
 	public SkillSubType getSkillSubType() {
 		return skillTemplate.getSubType();
@@ -293,7 +286,6 @@ public class Effect implements StatOwner {
 	 * 获取技能组例外。
 	 * Gets skill-set exception.
 	 *
-	 * exception
 	 */
 	public int getSkillSetException() {
 		return skillTemplate.getSkillSetException();
@@ -303,7 +295,6 @@ public class Effect implements StatOwner {
 	 * 获取技能组最大共存。
 	 * Gets skill-set max occurrence.
 	 *
-	 * max occur
 	 */
 	public int getSkillSetMaxOccur() {
 		return skillTemplate.getSkillSetMaxOccur();
@@ -313,7 +304,6 @@ public class Effect implements StatOwner {
 	 * 获取堆叠键。
 	 * Gets stack key.
 	 *
-	 * stack
 	 */
 	public String getStack() {
 		return skillTemplate.getStack();
@@ -323,7 +313,6 @@ public class Effect implements StatOwner {
 	 * 获取技能组。
 	 * Gets skill group.
 	 *
-	 * group
 	 */
 	public String getGroup() {
 		return skillTemplate.getGroup();
@@ -333,7 +322,6 @@ public class Effect implements StatOwner {
 	 * 获取技能等级。
 	 * Gets skill level.
 	 *
-	 * level
 	 */
 	public int getSkillLevel() {
 		return skillLevel;
@@ -343,7 +331,6 @@ public class Effect implements StatOwner {
 	 * 获取技能堆叠等级。
 	 * Gets skill stack level.
 	 *
-	 * stack level
 	 */
 	public int getSkillStackLvl() {
 		return skillTemplate.getLvl();
@@ -353,7 +340,6 @@ public class Effect implements StatOwner {
 	 * 获取技能类型。
 	 * Gets skill type.
 	 *
-	 * type
 	 */
 	public SkillType getSkillType() {
 		return skillTemplate.getType();
@@ -363,7 +349,6 @@ public class Effect implements StatOwner {
 	 * 获取持续时间。
 	 * Gets duration.
 	 *
-	 * duration
 	 */
 	public int getDuration() {
 		return duration;
@@ -373,7 +358,6 @@ public class Effect implements StatOwner {
 	 * 设置持续时间。
 	 * Sets duration.
 	 *
-	 * new duration
 	 */
 	public void setDuration(int newDuration) {
 		this.duration = newDuration;
@@ -383,7 +367,6 @@ public class Effect implements StatOwner {
 	 * 获取受影响者。
 	 * Gets the effected creature.
 	 *
-	 * effected
 	 */
 	public Creature getEffected() {
 		return effected;
@@ -393,7 +376,6 @@ public class Effect implements StatOwner {
 	 * 获取施法者。
 	 * Gets the effector.
 	 *
-	 * effector
 	 */
 	public Creature getEffector() {
 		return effector;
@@ -403,7 +385,6 @@ public class Effect implements StatOwner {
 	 * 是否被动。
 	 * Whether passive.
 	 *
-	 * whether
 	 */
 	public boolean isPassive() {
 		return skillTemplate.isPassive();
@@ -413,7 +394,6 @@ public class Effect implements StatOwner {
 	 * 设置主任务。
 	 * Sets main task.
 	 *
-	 * task
 	 */
 	public void setTask(Future<?> task) {
 		this.task = task;
@@ -424,7 +404,7 @@ public class Effect implements StatOwner {
 	 * Gets periodic task.
 	 *
 	 * @param i 索引（从 1 起） / 1-based index
-	 * task
+	 * @return 任务 / task
 	 */
 	public Future<?> getPeriodicTask(int i) {
 		return periodicTasks != null ? periodicTasks[i - 1] : null;
@@ -434,7 +414,7 @@ public class Effect implements StatOwner {
 	 * 设置周期任务。
 	 * Sets periodic task.
 	 *
-	 * task
+	 * @param periodicTask 任务 / task
 	 * @param i 索引 / index
 	 */
 	public void setPeriodicTask(Future<?> periodicTask, int i) {
@@ -448,7 +428,6 @@ public class Effect implements StatOwner {
 	 * 获取保留值 1。
 	 * Gets reserved value 1.
 	 *
-	 * value
 	 */
 	public int getReserved1() {
 		return currentEffectTemplate == null ? reserved1 : reserved1ByEffect.getOrDefault(currentEffectTemplate, reserved1);
@@ -458,7 +437,6 @@ public class Effect implements StatOwner {
 	 * 设置保留值 1。
 	 * Sets reserved value 1.
 	 *
-	 * value
 	 */
 	public void setReserved1(int reserved1) {
 		this.reserved1 = reserved1;
@@ -471,7 +449,6 @@ public class Effect implements StatOwner {
 	 * 获取保留值 2。
 	 * Gets reserved value 2.
 	 *
-	 * value
 	 */
 	public int getReserved2() {
 		return reserved2;
@@ -481,7 +458,6 @@ public class Effect implements StatOwner {
 	 * 设置保留值 2。
 	 * Sets reserved value 2.
 	 *
-	 * value
 	 */
 	public void setReserved2(int reserved2) {
 		this.reserved2 = reserved2;
@@ -491,7 +467,6 @@ public class Effect implements StatOwner {
 	 * 获取保留值 3。
 	 * Gets reserved value 3.
 	 *
-	 * value
 	 */
 	public int getReserved3() {
 		return reserved3;
@@ -501,7 +476,6 @@ public class Effect implements StatOwner {
 	 * 设置保留值 3。
 	 * Sets reserved value 3.
 	 *
-	 * value
 	 */
 	public void setReserved3(int reserved3) {
 		this.reserved3 = reserved3;
@@ -511,7 +485,6 @@ public class Effect implements StatOwner {
 	 * 获取保留值 4。
 	 * Gets reserved value 4.
 	 *
-	 * value
 	 */
 	public int getReserved4() {
 		return reserved4;
@@ -521,7 +494,6 @@ public class Effect implements StatOwner {
 	 * 设置保留值 4。
 	 * Sets reserved value 4.
 	 *
-	 * value
 	 */
 	public void setReserved4(int reserved4) {
 		this.reserved4 = reserved4;
@@ -531,7 +503,6 @@ public class Effect implements StatOwner {
 	 * 获取保留值 5。
 	 * Gets reserved value 5.
 	 *
-	 * value
 	 */
 	public int getReserved5() {
 		return reserved5;
@@ -541,7 +512,6 @@ public class Effect implements StatOwner {
 	 * 设置保留值 5。
 	 * Sets reserved value 5.
 	 *
-	 * value
 	 */
 	public void setReserved5(int reserved5) {
 		this.reserved5 = reserved5;
@@ -551,7 +521,6 @@ public class Effect implements StatOwner {
 	 * 获取攻击状态。
 	 * Gets attack status.
 	 *
-	 * status
 	 */
 	public AttackStatus getAttackStatus() {
 		return attackStatus;
@@ -561,7 +530,6 @@ public class Effect implements StatOwner {
 	 * 设置攻击状态。
 	 * Sets attack status.
 	 *
-	 * status
 	 */
 	public void setAttackStatus(AttackStatus attackStatus) {
 		this.attackStatus = attackStatus;
@@ -582,7 +550,6 @@ public class Effect implements StatOwner {
 	 * 获取效果模板列表。
 	 * Gets effect template list.
 	 *
-	 * templates
 	 */
 	public List<EffectTemplate> getEffectTemplates() {
 		return skillTemplate.getEffects().getEffects();
@@ -592,7 +559,6 @@ public class Effect implements StatOwner {
 	 * 是否瞬时 MP 治疗。
 	 * Whether MP heal instant.
 	 *
-	 * whether
 	 */
 	public boolean isMphealInstant() {
 		Effects effects = skillTemplate.getEffects();
@@ -603,7 +569,6 @@ public class Effect implements StatOwner {
 	 * 是否切换型。
 	 * Whether toggle.
 	 *
-	 * whether
 	 */
 	public boolean isToggle() {
 		return skillTemplate.getActivationAttribute() == ActivationAttribute.TOGGLE;
@@ -613,7 +578,6 @@ public class Effect implements StatOwner {
 	 * 是否咏唱/战歌。
 	 * Whether chant.
 	 *
-	 * whether
 	 */
 	public boolean isChant() {
 		return skillTemplate.getTargetSlot() == SkillTargetSlot.CHANT;
@@ -623,17 +587,15 @@ public class Effect implements StatOwner {
 	 * 是否增益。
 	 * Whether buff.
 	 *
-	 * whether
 	 */
 	public boolean isBuff() {
 		return skillTemplate.getTargetSlot() == SkillTargetSlot.BUFF;
 	}
 
 	/**
-	 * 是否游侠类增益。
+	 * 是否弓星类增益。
 	 * Whether ranger buff.
 	 *
-	 * whether
 	 */
 	public boolean isRangerBuff() {
 		int skillId = skillTemplate.getSkillId();
@@ -655,7 +617,6 @@ public class Effect implements StatOwner {
 	 * 获取目标槽位 ID。
 	 * Gets target slot id.
 	 *
-	 * slot
 	 */
 	public int getTargetSlot() {
 		return skillTemplate.getTargetSlot().ordinal();
@@ -665,7 +626,6 @@ public class Effect implements StatOwner {
 	 * 获取目标槽位枚举。
 	 * Gets target slot enum.
 	 *
-	 * slot
 	 */
 	public SkillTargetSlot getTargetSlotEnum() {
 		return skillTemplate.getTargetSlot();
@@ -675,7 +635,6 @@ public class Effect implements StatOwner {
 	 * 获取目标槽位等级。
 	 * Gets target slot level.
 	 *
-	 * level
 	 */
 	public int getTargetSlotLevel() {
 		return skillTemplate.getTargetSlotLevel();
@@ -685,7 +644,6 @@ public class Effect implements StatOwner {
 	 * 获取驱散分类。
 	 * Gets dispel category.
 	 *
-	 * category
 	 */
 	public DispelCategoryType getDispelCategory() {
 		return skillTemplate.getDispelCategory();
@@ -695,7 +653,6 @@ public class Effect implements StatOwner {
 	 * 获取所需驱散等级。
 	 * Gets required dispel level.
 	 *
-	 * level
 	 */
 	public int getReqDispelLevel() {
 		return skillTemplate.getReqDispelLevel();
@@ -705,7 +662,6 @@ public class Effect implements StatOwner {
 	 * Gets attack status observer.
 	 *
 	 * @param i 索引 / index
-	 * observer
 	 */
 	public AttackCalcObserver getAttackStatusObserver(int i) {
 		return attackStatusObserver != null ? attackStatusObserver[i - 1] : null;
@@ -714,7 +670,6 @@ public class Effect implements StatOwner {
 	 * 设置攻击状态观察者。
 	 * Sets attack status observer.
 	 *
-	 * observer
 	 * @param i 索引 / index
 	 */
 	public void setAttackStatusObserver(AttackCalcObserver attackStatusObserver, int i) {
@@ -728,7 +683,6 @@ public class Effect implements StatOwner {
 	 * Gets attack shield observer.
 	 *
 	 * @param i 索引 / index
-	 * observer
 	 */
 	public AttackCalcObserver getAttackShieldObserver(int i) {
 		return attackShieldObserver != null ? attackShieldObserver[i - 1] : null;
@@ -737,7 +691,6 @@ public class Effect implements StatOwner {
 	 * 设置护盾观察者。
 	 * Sets attack shield observer.
 	 *
-	 * observer
 	 * @param i 索引 / index
 	 */
 	public void setAttackShieldObserver(AttackCalcObserver attackShieldObserver, int i) {
@@ -752,7 +705,6 @@ public class Effect implements StatOwner {
 	 * Gets reserved int array value.
 	 *
 	 * @param i 索引 / index
-	 * value
 	 */
 	public int getReservedInt(int i) {
 		return reservedInts != null ? reservedInts[i - 1] : 0;
@@ -763,7 +715,6 @@ public class Effect implements StatOwner {
 	 * Sets reserved int array value.
 	 *
 	 * @param i 索引 / index
-	 * value
 	 */
 	public void setReservedInt(int i, int value) {
 		if (this.reservedInts == null) {
@@ -775,7 +726,6 @@ public class Effect implements StatOwner {
 	 * 是否触发子效果。
 	 * Whether to launch sub-effect.
 	 *
-	 * whether
 	 */
 	public boolean isLaunchSubEffect() {
 		return launchSubEffect;
@@ -784,7 +734,6 @@ public class Effect implements StatOwner {
 	 * 设置是否触发子效果。
 	 * Sets launch sub-effect flag.
 	 *
-	 * whether
 	 */
 	public void setLaunchSubEffect(boolean launchSubEffect) {
 		this.launchSubEffect = launchSubEffect;
@@ -793,7 +742,6 @@ public class Effect implements StatOwner {
 	 * 获取护盾防御值。
 	 * Gets shield defense value.
 	 *
-	 * defense
 	 */
 	public int getShieldDefense() {
 		return shieldDefense;
@@ -802,7 +750,6 @@ public class Effect implements StatOwner {
 	 * 设置护盾防御值。
 	 * Sets shield defense value.
 	 *
-	 * defense
 	 */
 	public void setShieldDefense(int shieldDefense) {
 		this.shieldDefense = shieldDefense;
@@ -811,7 +758,6 @@ public class Effect implements StatOwner {
 	 * 获取反射伤害。
 	 * Gets reflected damage.
 	 *
-	 * damage
 	 */
 	public int getReflectedDamage() {
 		return this.reflectedDamage;
@@ -821,7 +767,6 @@ public class Effect implements StatOwner {
 	 * 设置反射伤害。
 	 * Sets reflected damage.
 	 *
-	 * damage
 	 */
 	public void setReflectedDamage(int value) {
 		this.reflectedDamage = value;
@@ -831,7 +776,6 @@ public class Effect implements StatOwner {
 	 * 获取反射技能 ID。
 	 * Gets reflected skill id.
 	 *
-	 * skill id
 	 */
 	public int getReflectedSkillId() {
 		return this.reflectedSkillId;
@@ -841,7 +785,6 @@ public class Effect implements StatOwner {
 	 * 设置反射技能 ID。
 	 * Sets reflected skill id.
 	 *
-	 * skill id
 	 */
 	public void setReflectedSkillId(int value) {
 		this.reflectedSkillId = value;
@@ -851,7 +794,6 @@ public class Effect implements StatOwner {
 	 * 获取保护技能 ID。
 	 * Gets protected skill id.
 	 *
-	 * skill id
 	 */
 	public int getProtectedSkillId() {
 		return this.protectedSkillId;
@@ -861,7 +803,6 @@ public class Effect implements StatOwner {
 	 * 设置保护技能 ID。
 	 * Sets protected skill id.
 	 *
-	 * skill id
 	 */
 	public void setProtectedSkillId(int skillId) {
 		this.protectedSkillId = skillId;
@@ -871,7 +812,6 @@ public class Effect implements StatOwner {
 	 * 获取被保护伤害。
 	 * Gets protected damage.
 	 *
-	 * damage
 	 */
 	public int getProtectedDamage() {
 		return this.protectedDamage;
@@ -881,7 +821,6 @@ public class Effect implements StatOwner {
 	 * 设置被保护伤害。
 	 * Sets protected damage.
 	 *
-	 * damage
 	 */
 	public void setProtectedDamage(int protectedDamage) {
 		this.protectedDamage = protectedDamage;
@@ -910,7 +849,6 @@ public class Effect implements StatOwner {
 	 * 获取法术状态。
 	 * Gets spell status.
 	 *
-	 * status
 	 */
 	public SpellStatus getSpellStatus() {
 		return spellStatus;
@@ -919,7 +857,6 @@ public class Effect implements StatOwner {
 	 * 设置法术状态。
 	 * Sets spell status.
 	 *
-	 * status
 	 */
 	public void setSpellStatus(SpellStatus spellStatus) {
 		this.spellStatus = spellStatus;
@@ -928,7 +865,6 @@ public class Effect implements StatOwner {
 	 * 获取冲刺状态。
 	 * Gets dash status.
 	 *
-	 * status
 	 */
 	public DashStatus getDashStatus() {
 		return dashStatus;
@@ -937,7 +873,6 @@ public class Effect implements StatOwner {
 	 * 设置冲刺状态。
 	 * Sets dash status.
 	 *
-	 * status
 	 */
 	public void setDashStatus(DashStatus dashStatus) {
 		this.dashStatus = dashStatus;
@@ -946,7 +881,6 @@ public class Effect implements StatOwner {
 	 * 获取刻印数量。
 	 * Gets carved signet count.
 	 *
-	 * count
 	 */
 	public int getCarvedSignet() {
 		return this.carvedSignet;
@@ -956,7 +890,6 @@ public class Effect implements StatOwner {
 	 * 设置刻印数量。
 	 * Sets carved signet count.
 	 *
-	 * count
 	 */
 	public void setCarvedSignet(int value) {
 		this.carvedSignet = value;
@@ -965,7 +898,6 @@ public class Effect implements StatOwner {
 	 * 获取子效果。
 	 * Gets sub-effect.
 	 *
-	 * sub-effect
 	 */
 	public Effect getSubEffect() {
 		return subEffect;
@@ -974,7 +906,6 @@ public class Effect implements StatOwner {
 	 * 设置子效果。
 	 * Sets sub-effect.
 	 *
-	 * sub-effect
 	 */
 	public void setSubEffect(Effect subEffect) {
 		this.subEffect = subEffect;
@@ -983,8 +914,6 @@ public class Effect implements StatOwner {
 	 * 是否包含指定效果 ID。
 	 * Whether contains effect id.
 	 *
-	 * effect id
-	 * whether
 	 */
 	public boolean containsEffectId(int effectId) {
 		for (EffectTemplate template : successEffects) {
@@ -999,7 +928,6 @@ public class Effect implements StatOwner {
 	 * 获取变身类型。
 	 * Gets transform type.
 	 *
-	 * type
 	 */
 	public TransformType getTransformType() {
 		for (EffectTemplate et : skillTemplate.getEffects().getEffects()) {
@@ -1014,7 +942,6 @@ public class Effect implements StatOwner {
 	 * 设置强制持续标记。
 	 * Sets forced duration flag.
 	 *
-	 * whether
 	 */
 	public void setForcedDuration(boolean forcedDuration) {
 		this.forcedDuration = forcedDuration;
@@ -1024,7 +951,6 @@ public class Effect implements StatOwner {
 	 * 设置强制效果标记。
 	 * Sets forced effect flag.
 	 *
-	 * whether
 	 */
 	public void setIsForcedEffect(boolean isForcedEffect) {
 		this.isForcedEffect = isForcedEffect;
@@ -1034,7 +960,6 @@ public class Effect implements StatOwner {
 	 * 是否强制效果。
 	 * Whether forced effect.
 	 *
-	 * whether
 	 */
 	public boolean getIsForcedEffect() {
 		return this.isForcedEffect || DataManager.MATERIAL_DATA.isMaterialSkill(this.getSkillId());
@@ -1141,7 +1066,7 @@ public class Effect implements StatOwner {
 	public void applyEffect() {
 
 		/**
-	 * broadcast final hate to all visible objects
+	 * 向所有可见对象广播最终仇恨值 / broadcast final hate to all visible objects
 	 */
 		if (effectHate != 0 && skillTemplate.getHostileType() != HostileType.NONE) {
 			if (skillTemplate.getHostileType() == HostileType.DIRECT && getEffected() instanceof Npc && !isDelayedDamage() && !isPetOrder()
@@ -1173,7 +1098,6 @@ public class Effect implements StatOwner {
 	 * 开始效果生命周期。
 	 * Starts effect lifecycle.
 	 *
-	 * whether restored
 	 */
 	public synchronized void startEffect(boolean restored) {
 		if (isStopped || successEffects.isEmpty()) {
@@ -1344,7 +1268,6 @@ public class Effect implements StatOwner {
 	 * 获取剩余时间。
 	 * Gets remaining time.
 	 *
-	 * remaining millis
 	 */
 	public int getRemainingTime() {
 		int remainingTime = (int) (endTime - System.currentTimeMillis());
@@ -1357,7 +1280,6 @@ public class Effect implements StatOwner {
 	 * 获取结束时间戳。
 	 * Gets end timestamp.
 	 *
-	 * timestamp
 	 */
 	public long getEndTime() {
 		return endTime;
@@ -1366,7 +1288,6 @@ public class Effect implements StatOwner {
 	 * 获取 PvP 伤害系数。
 	 * Gets PvP damage factor.
 	 *
-	 * factor
 	 */
 	public int getPvpDamage() {
 		return skillTemplate.getPvpDamage();
@@ -1376,7 +1297,6 @@ public class Effect implements StatOwner {
 	 * 获取关联物品模板。
 	 * Gets related item template.
 	 *
-	 * template
 	 */
 	public ItemTemplate getItemTemplate() {
 		return itemTemplate;
@@ -1395,7 +1315,6 @@ public class Effect implements StatOwner {
 	 * 获取效果仇恨。
 	 * Gets effect hate.
 	 *
-	 * hate
 	 */
 	public int getEffectHate() {
 		return effectHate;
@@ -1404,7 +1323,6 @@ public class Effect implements StatOwner {
 	 * 设置效果仇恨。
 	 * Sets effect hate.
 	 *
-	 * hate
 	 */
 	public void setEffectHate(int effectHate) {
 		this.effectHate = effectHate;
@@ -1413,7 +1331,6 @@ public class Effect implements StatOwner {
 	 * 获取嘲讽仇恨。
 	 * Gets taunt hate.
 	 *
-	 * hate
 	 */
 	public int getTauntHate() {
 		return tauntHate;
@@ -1422,7 +1339,6 @@ public class Effect implements StatOwner {
 	 * 设置嘲讽仇恨。
 	 * Sets taunt hate.
 	 *
-	 * hate
 	 */
 	public void setTauntHate(int tauntHate) {
 		this.tauntHate = tauntHate;
@@ -1432,7 +1348,6 @@ public class Effect implements StatOwner {
 	 * Gets action observer.
 	 *
 	 * @param i 索引 / index
-	 * observer
 	 */
 	public ActionObserver getActionObserver(int i) {
 		return actionObserver != null ? actionObserver[i - 1] : null;
@@ -1441,7 +1356,6 @@ public class Effect implements StatOwner {
 	 * 设置动作观察者。
 	 * Sets action observer.
 	 *
-	 * observer
 	 * @param i 索引 / index
 	 */
 	public void setActionObserver(ActionObserver observer, int i) {
@@ -1455,7 +1369,6 @@ public class Effect implements StatOwner {
 	 * 添加成功效果模板。
 	 * Adds successful effect template.
 	 *
-	 * effect template
 	 */
 	public void addSucessEffect(EffectTemplate effect) {
 		if (!successEffects.contains(effect)) {
@@ -1467,8 +1380,6 @@ public class Effect implements StatOwner {
 	 * 是否在成功效果列表中。
 	 * Whether in success effects.
 	 *
-	 * position
-	 * whether
 	 */
 	public boolean isInSuccessEffects(int position) {
 		for (EffectTemplate effect : successEffects) {
@@ -1482,7 +1393,6 @@ public class Effect implements StatOwner {
 	 * 获取成功效果集合。
 	 * Gets success effect collection.
 	 *
-	 * collection
 	 */
 	public Collection<EffectTemplate> getSuccessEffect() {
 		return successEffects;
@@ -1537,7 +1447,6 @@ public class Effect implements StatOwner {
 	 * 获取效果总时长。
 	 * Gets total effects duration.
 	 *
-	 * duration
 	 */
 	public int getEffectsDuration() {
 		int duration = 0;
@@ -1578,7 +1487,6 @@ public class Effect implements StatOwner {
 	 * 是否神性化身。
 	 * Whether deity avatar.
 	 *
-	 * whether
 	 */
 	public boolean isDeityAvatar() {
 		return skillTemplate.isDeityAvatar();
@@ -1625,7 +1533,6 @@ public class Effect implements StatOwner {
 	 * 获取实例 ID。
 	 * Gets instance id.
 	 *
-	 * instance id
 	 */
 	public int getInstanceId() {
 		return instanceId;
@@ -1634,7 +1541,6 @@ public class Effect implements StatOwner {
 	 * 获取技能位移类型。
 	 * Gets skill move type.
 	 *
-	 * type
 	 */
 	public SkillMoveType getSkillMoveType() {
 		return skillMoveType;
@@ -1643,7 +1549,6 @@ public class Effect implements StatOwner {
 	 * 设置技能位移类型。
 	 * Sets skill move type.
 	 *
-	 * type
 	 */
 	public void setSkillMoveType(SkillMoveType skillMoveType) {
 		this.skillMoveType = skillMoveType;
@@ -1694,7 +1599,6 @@ public class Effect implements StatOwner {
 	 * 设置子效果中止标记。
 	 * Sets sub-effect aborted flag.
 	 *
-	 * whether
 	 */
 	public void setSubEffectAborted(boolean value) {
 		this.subEffectAbortedBySubConditions = value;
@@ -1704,7 +1608,6 @@ public class Effect implements StatOwner {
 	 * 子效果是否因条件中止。
 	 * Whether sub-effect aborted by conditions.
 	 *
-	 * whether
 	 */
 	public boolean isSubEffectAbortedBySubConditions() {
 		return this.subEffectAbortedBySubConditions;
@@ -1714,7 +1617,6 @@ public class Effect implements StatOwner {
 	 * 设置经验加成标记。
 	 * Sets XP boost flag.
 	 *
-	 * whether
 	 */
 	public void setXpBoost(boolean value) {
 		this.isXpBoost = value;
@@ -1724,7 +1626,6 @@ public class Effect implements StatOwner {
 	 * 是否经验加成。
 	 * Whether XP boost.
 	 *
-	 * whether
 	 */
 	public boolean isXpBoost() {
 		return this.isXpBoost;
@@ -1734,7 +1635,6 @@ public class Effect implements StatOwner {
 	 * 设置 AP 加成标记。
 	 * Sets AP boost flag.
 	 *
-	 * whether
 	 */
 	public void setApBoost(boolean value) {
 		this.isApBoost = value;
@@ -1744,7 +1644,6 @@ public class Effect implements StatOwner {
 	 * 是否 AP 加成。
 	 * Whether AP boost.
 	 *
-	 * whether
 	 */
 	public boolean isApBoost() {
 		return this.isApBoost;
@@ -1754,7 +1653,6 @@ public class Effect implements StatOwner {
 	 * 设置掉落加成标记。
 	 * Sets drop boost flag.
 	 *
-	 * whether
 	 */
 	public void setDrBoost(boolean value) {
 		this.isDrBoost = value;
@@ -1764,7 +1662,6 @@ public class Effect implements StatOwner {
 	 * 是否掉落加成。
 	 * Whether drop boost.
 	 *
-	 * whether
 	 */
 	public boolean isDrBoost() {
 		return this.isDrBoost;
@@ -1774,7 +1671,6 @@ public class Effect implements StatOwner {
 	 * 设置 BDR 加成标记。
 	 * Sets BDR boost flag.
 	 *
-	 * whether
 	 */
 	public void setBdrBoost(boolean value) {
 		this.isBdrBoost = value;
@@ -1784,7 +1680,6 @@ public class Effect implements StatOwner {
 	 * 是否 BDR 加成。
 	 * Whether BDR boost.
 	 *
-	 * whether
 	 */
 	public boolean isBdrBoost() {
 		return this.isBdrBoost;
@@ -1794,7 +1689,6 @@ public class Effect implements StatOwner {
 	 * 设置鉴定加成标记。
 	 * Sets authorize boost flag.
 	 *
-	 * whether
 	 */
 	public void setAuthorizeBoost(boolean value) {
 		this.isAuthorizeBoost = value;
@@ -1804,7 +1698,6 @@ public class Effect implements StatOwner {
 	 * 是否鉴定加成。
 	 * Whether authorize boost.
 	 *
-	 * whether
 	 */
 	public boolean isAuthorizeBoost() {
 		return this.isAuthorizeBoost;
@@ -1814,7 +1707,6 @@ public class Effect implements StatOwner {
 	 * 设置附魔加成标记。
 	 * Sets enchant boost flag.
 	 *
-	 * whether
 	 */
 	public void setEnchantBoost(boolean value) {
 		this.isEnchantBoost = value;
@@ -1824,7 +1716,6 @@ public class Effect implements StatOwner {
 	 * 是否附魔加成。
 	 * Whether enchant boost.
 	 *
-	 * whether
 	 */
 	public boolean isEnchantBoost() {
 		return this.isEnchantBoost;
@@ -1834,7 +1725,6 @@ public class Effect implements StatOwner {
 	 * 设置附魔词条加成标记。
 	 * Sets enchant option boost flag.
 	 *
-	 * whether
 	 */
 	public void setEnchantOptionBoost(boolean value) {
 		this.isEnchantOptionBoost = value;
@@ -1844,7 +1734,6 @@ public class Effect implements StatOwner {
 	 * 是否附魔词条加成。
 	 * Whether enchant option boost.
 	 *
-	 * whether
 	 */
 	public boolean isEnchantOptionBoost() {
 		return this.isEnchantOptionBoost;
@@ -1854,7 +1743,6 @@ public class Effect implements StatOwner {
 	 * 设置伊顿掉落加成标记。
 	 * Sets Idun drop boost flag.
 	 *
-	 * whether
 	 */
 	public void setIdunDropBoost(boolean value) {
 		this.isIdunDropBoost = value;
@@ -1864,7 +1752,6 @@ public class Effect implements StatOwner {
 	 * 是否伊顿掉落加成。
 	 * Whether Idun drop boost.
 	 *
-	 * whether
 	 */
 	public boolean isIdunDropBoost() {
 		return this.isIdunDropBoost;
@@ -1874,7 +1761,6 @@ public class Effect implements StatOwner {
 	 * 设置死亡惩罚减免标记。
 	 * Sets no-death-penalty-reduce flag.
 	 *
-	 * whether
 	 */
 	public void setNoDeathPenaltyReduce(boolean value) {
 		this.isNoDeathPenaltyReduce = value;
@@ -1884,7 +1770,6 @@ public class Effect implements StatOwner {
 	 * 是否死亡惩罚减免。
 	 * Whether no death penalty reduce.
 	 *
-	 * whether
 	 */
 	public boolean isNoDeathPenaltyReduce() {
 		return this.isNoDeathPenaltyReduce;
@@ -1894,7 +1779,6 @@ public class Effect implements StatOwner {
 	 * 设置无死亡惩罚标记。
 	 * Sets no-death-penalty flag.
 	 *
-	 * whether
 	 */
 	public void setNoDeathPenalty(boolean value) {
 		this.isNoDeathPenalty = value;
@@ -1904,7 +1788,6 @@ public class Effect implements StatOwner {
 	 * 是否无死亡惩罚。
 	 * Whether no death penalty.
 	 *
-	 * whether
 	 */
 	public boolean isNoDeathPenalty() {
 		return this.isNoDeathPenalty;
@@ -1914,7 +1797,6 @@ public class Effect implements StatOwner {
 	 * 设置无复活惩罚标记。
 	 * Sets no-resurrect-penalty flag.
 	 *
-	 * whether
 	 */
 	public void setNoResurrectPenalty(boolean value) {
 		this.isNoResurrectPenalty = value;
@@ -1924,7 +1806,6 @@ public class Effect implements StatOwner {
 	 * 是否无复活惩罚。
 	 * Whether no resurrect penalty.
 	 *
-	 * whether
 	 */
 	public boolean isNoResurrectPenalty() {
 		return this.isNoResurrectPenalty;
@@ -1934,7 +1815,6 @@ public class Effect implements StatOwner {
 	 * 设置 HiPass 标记。
 	 * Sets HiPass flag.
 	 *
-	 * whether
 	 */
 	public void setHiPass(boolean value) {
 		this.isHiPass = value;
@@ -1944,7 +1824,6 @@ public class Effect implements StatOwner {
 	 * 是否 HiPass。
 	 * Whether HiPass.
 	 *
-	 * whether
 	 */
 	public boolean isHiPass() {
 		return this.isHiPass;
@@ -1954,7 +1833,6 @@ public class Effect implements StatOwner {
 	 * 设置回城冷却减免标记。
 	 * Sets return cooldown reduce flag.
 	 *
-	 * whether
 	 */
 	public void setReturnCoolReduce(boolean value) {
 		this.isReturnCoolReduce = value;
@@ -1964,7 +1842,6 @@ public class Effect implements StatOwner {
 	 * 是否回城冷却减免。
 	 * Whether return cooldown reduce.
 	 *
-	 * whether
 	 */
 	public boolean isReturnCoolReduce() {
 		return this.isReturnCoolReduce;
@@ -1974,7 +1851,6 @@ public class Effect implements StatOwner {
 	 * 设置奥德拉恢复提升标记。
 	 * Sets Odella recover increase flag.
 	 *
-	 * whether
 	 */
 	public void setOdellaRecoverIncrease(boolean value) {
 		this.isOdellaRecoverIncrease = value;
@@ -1984,7 +1860,6 @@ public class Effect implements StatOwner {
 	 * 是否奥德拉恢复提升。
 	 * Whether Odella recover increase.
 	 *
-	 * whether
 	 */
 	public boolean isOdellaRecoverIncrease() {
 		return this.isOdellaRecoverIncrease;
@@ -1994,7 +1869,6 @@ public class Effect implements StatOwner {
 	 * 设置冲刺飞行值消耗减免标记。
 	 * Sets sprint FP reduce flag.
 	 *
-	 * whether
 	 */
 	public void setSprintFpReduce(boolean value) {
 		this.isSprintFpReduce = value;
@@ -2004,7 +1878,6 @@ public class Effect implements StatOwner {
 	 * 是否冲刺飞行值消耗减免。
 	 * Whether sprint FP reduce.
 	 *
-	 * whether
 	 */
 	public boolean isSprintFpReduce() {
 		return this.isSprintFpReduce;
@@ -2014,7 +1887,6 @@ public class Effect implements StatOwner {
 	 * 设置死亡惩罚降低标记。
 	 * Sets death penalty reduce flag.
 	 *
-	 * whether
 	 */
 	public void setDeathPenaltyReduce(boolean value) {
 		this.isDeathPenaltyReduce = value;
@@ -2024,7 +1896,6 @@ public class Effect implements StatOwner {
 	 * 是否死亡惩罚降低。
 	 * Whether death penalty reduce.
 	 *
-	 * whether
 	 */
 	public boolean isDeathPenaltyReduce() {
 		return this.isDeathPenaltyReduce;
@@ -2109,7 +1980,6 @@ public class Effect implements StatOwner {
 	 * 设置受伤取消标记。
 	 * Sets cancel-on-damage flag.
 	 *
-	 * whether
 	 */
 	public void setCancelOnDmg(boolean value) {
 		this.isCancelOnDmg = value;
@@ -2119,7 +1989,6 @@ public class Effect implements StatOwner {
 	 * 是否受伤取消。
 	 * Whether cancel on damage.
 	 *
-	 * whether
 	 */
 	public boolean isCancelOnDmg() {
 		return this.isCancelOnDmg;
@@ -2140,7 +2009,6 @@ public class Effect implements StatOwner {
 	 * 是否恐惧效果。
 	 * Whether fear effect.
 	 *
-	 * whether
 	 */
 	public boolean isFearEffect() {
 		for (EffectTemplate template : successEffects) {
@@ -2155,7 +2023,6 @@ public class Effect implements StatOwner {
 	 * 是否延迟伤害。
 	 * Whether delayed damage.
 	 *
-	 * whether
 	 */
 	public boolean isDelayedDamage() {
 		return this.isDelayedDamage;
@@ -2165,7 +2032,6 @@ public class Effect implements StatOwner {
 	 * 设置延迟伤害标记。
 	 * Sets delayed damage flag.
 	 *
-	 * whether
 	 */
 	public void setDelayedDamage(boolean value) {
 		this.isDelayedDamage = value;
@@ -2175,7 +2041,6 @@ public class Effect implements StatOwner {
 	 * 是否宠物指令。
 	 * Whether pet order.
 	 *
-	 * whether
 	 */
 	public boolean isPetOrder() {
 		return this.isPetOrder;
@@ -2185,7 +2050,6 @@ public class Effect implements StatOwner {
 	 * 设置宠物指令标记。
 	 * Sets pet order flag.
 	 *
-	 * whether
 	 */
 	public void setPetOrder(boolean value) {
 		this.isPetOrder = value;
@@ -2195,7 +2059,6 @@ public class Effect implements StatOwner {
 	 * 是否召唤中。
 	 * Whether summoning.
 	 *
-	 * whether
 	 */
 	public boolean isSummoning() {
 		return this.isSummoning;
@@ -2205,7 +2068,6 @@ public class Effect implements StatOwner {
 	 * 设置召唤中标记（历史拼写）。
 	 * Sets summoning flag (legacy spelling).
 	 *
-	 * whether
 	 */
 	public void setSumonning(boolean value) {
 		this.isSummoning = value;
@@ -2218,7 +2080,6 @@ public class Effect implements StatOwner {
 	 * 获取强度。
 	 * Gets power.
 	 *
-	 * power
 	 */
 	public int getPower() {
 		return power;
@@ -2227,7 +2088,6 @@ public class Effect implements StatOwner {
 	 * 设置强度。
 	 * Sets power.
 	 *
-	 * power
 	 */
 	public void setPower(int power) {
 		this.power = power;
@@ -2237,8 +2097,6 @@ public class Effect implements StatOwner {
 	 * 削减强度。
 	 * Removes power amount.
 	 *
-	 * amount
-	 * remaining power
 	 */
 	public int removePower(int power) {
 		this.power -= power;
@@ -2249,7 +2107,6 @@ public class Effect implements StatOwner {
 	 * 设置命中修正加成。
 	 * Sets accuracy mod boost.
 	 *
-	 * boost
 	 */
 	public void setAccModBoost(int accModBoost) {
 		this.accModBoost = accModBoost;
@@ -2259,7 +2116,6 @@ public class Effect implements StatOwner {
 	 * 获取命中修正加成。
 	 * Gets accuracy mod boost.
 	 *
-	 * boost
 	 */
 	public int getAccModBoost() {
 		return this.accModBoost;
@@ -2269,7 +2125,6 @@ public class Effect implements StatOwner {
 	 * 是否隐身效果。
 	 * Whether hide effect.
 	 *
-	 * whether
 	 */
 	public boolean isHideEffect() {
 		return isHideEffect;
@@ -2279,7 +2134,6 @@ public class Effect implements StatOwner {
 	 * 是否麻痹效果。
 	 * Whether paralyze effect.
 	 *
-	 * whether
 	 */
 	public boolean isParalyzeEffect() {
 		return isParalyzeEffect;
@@ -2289,7 +2143,6 @@ public class Effect implements StatOwner {
 	 * 是否庇护效果。
 	 * Whether sanctuary effect.
 	 *
-	 * whether
 	 */
 	public boolean isSanctuaryEffect() {
 		return isSanctuaryEffect;
@@ -2298,7 +2151,6 @@ public class Effect implements StatOwner {
 	 * 是否伤害效果。
 	 * Whether damage effect.
 	 *
-	 * whether
 	 */
 	public boolean isDamageEffect() {
 		return isDamageEffect;
@@ -2307,7 +2159,6 @@ public class Effect implements StatOwner {
 	 * 设置伤害效果标记。
 	 * Sets damage effect flag.
 	 *
-	 * whether
 	 */
 	public void setDamageEffect(boolean isDamageEffect) {
 		this.isDamageEffect = isDamageEffect;
@@ -2316,7 +2167,6 @@ public class Effect implements StatOwner {
 	 * 获取印记爆发数量。
 	 * Gets signet burst count.
 	 *
-	 * count
 	 */
 	public int getSignetBurstedCount() {
 		return signetBurstedCount;
@@ -2325,7 +2175,6 @@ public class Effect implements StatOwner {
 	 * 设置印记爆发数量。
 	 * Sets signet burst count.
 	 *
-	 * count
 	 */
 	public void setSignetBurstedCount(int signetBurstedCount) {
 		this.signetBurstedCount = signetBurstedCount;
@@ -2335,7 +2184,6 @@ public class Effect implements StatOwner {
 	 * 获取效果结算结果。
 	 * Gets effect result.
 	 *
-	 * result
 	 */
 	public final EffectResult getEffectResult() {
 		return effectResult;
@@ -2345,7 +2193,6 @@ public class Effect implements StatOwner {
 	 * 设置效果结算结果。
 	 * Sets effect result.
 	 *
-	 * result
 	 */
 	public final void setEffectResult(EffectResult effectResult) {
 		this.effectResult = effectResult;
@@ -2355,7 +2202,6 @@ public class Effect implements StatOwner {
 	 * 获取 MP 护盾值。
 	 * Gets MP shield value.
 	 *
-	 * value
 	 */
 	public int getMpShield() {
 		return this.mpShield;
@@ -2365,7 +2211,6 @@ public class Effect implements StatOwner {
 	 * 设置 MP 护盾值。
 	 * Sets MP shield value.
 	 *
-	 * value
 	 */
 	public void setMpShield(int mpShield) {
 		this.mpShield = mpShield;
@@ -2378,7 +2223,6 @@ public class Effect implements StatOwner {
 	 * 是否物理控制状态。
 	 * Whether physical state.
 	 *
-	 * whether
 	 */
 	public boolean isPhysicalState() {
 		return isPhysicalState;
@@ -2388,7 +2232,6 @@ public class Effect implements StatOwner {
 	 * 设置物理控制状态标记。
 	 * Sets physical state flag.
 	 *
-	 * whether
 	 */
 	public void setIsPhysicalState(boolean isPhysicalState) {
 		this.isPhysicalState = isPhysicalState;
@@ -2398,7 +2241,6 @@ public class Effect implements StatOwner {
 	 * 是否魔法控制状态。
 	 * Whether magical state.
 	 *
-	 * whether
 	 */
 	public boolean isMagicalState() {
 		return isMagicalState;
@@ -2408,7 +2250,6 @@ public class Effect implements StatOwner {
 	 * 设置魔法控制状态标记。
 	 * Sets magical state flag.
 	 *
-	 * whether
 	 */
 	public void setIsMagicalState(boolean isMagicalState) {
 		this.isMagicalState = isMagicalState;

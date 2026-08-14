@@ -80,9 +80,9 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
      * 删除游戏内商城物品。
      * Deletes an in-game shop item.
      *
-     * item id
-     * category
-     * sub category
+     * @param itemId 物品 ID / item id
+     * @param category 类别 / category
+     * @param subCategory 子类别 / sub category
      * @param list 列表编号 / list number
      * @return 是否删除成功 / whether deletion succeeded
      */
@@ -107,18 +107,18 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
      * 保存游戏内商城物品。
      * Saves an in-game shop item.
      *
-     * object id
-     * item id
-     * item count
-     * item price
-     * category
-     * sub category
+     * @param objectId 对象 ID / object id
+     * @param itemId 物品 ID / item id
+     * @param itemCount 物品数量 / item count
+     * @param itemPrice 物品价格 / item price
+     * @param category 类别 / category
+     * @param subCategory 子类别 / sub category
      * @param list 列表编号 / list number
-     * sales ranking
-     * item type
+     * @param salesRanking 销售额排名 / sales ranking
+     * @param itemType 物品类型 / item type
      * @param gift 是否礼品 / gift flag
-     * title description
-     * description
+     * @param titleDescription 称号描述 / title description
+     * @param description 描述 / description
      */
     @Override
     public void saveIngameShopItem(int objectId, int itemId, long itemCount, long itemPrice, byte category, byte subCategory, int list, int salesRanking, byte itemType, byte gift, String titleDescription, String description) {
@@ -149,9 +149,9 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
      * 增加销量排名。
      * Increases sales ranking.
      *
-     * object id
-     * current sales
-     * whether succeeded
+     * @param object 对象 ID / object id
+     * @param current 当前销售额 / current sales
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean increaseSales(int object, int current) {
@@ -172,10 +172,10 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

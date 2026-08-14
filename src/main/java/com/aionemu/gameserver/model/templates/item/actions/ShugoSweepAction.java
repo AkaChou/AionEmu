@@ -20,7 +20,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ShugoSweepAction")
 public class ShugoSweepAction extends AbstractItemAction {
-	@XmlAttribute(name = "type") // 1 reset ; 2 gold dice
+	@XmlAttribute(name = "type") // 1 重置棋盘；2 黄金骰子 / 1 reset board; 2 gold dice
 	protected int type;
 
 	@XmlAttribute(name = "count")

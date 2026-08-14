@@ -125,7 +125,7 @@ public class Config {
      * 配置目录路径。
      * Config directory path.
      *
-     * Config directory
+     * @return 配置目录 / Config directory
      */
     private static String configDir() {
         return Objects.requireNonNull(System.getProperty("aion.config.dir"), "aion.config.dir is not configured");
@@ -135,7 +135,7 @@ public class Config {
      * 设置 boot 层属性覆盖。
      * Set boot-layer property overrides.
      *
-     * Override properties
+     * @param properties 覆盖属性 / Override properties
      */
     public static void setBootOverrides(Properties properties) {
         Properties copy = new Properties();

@@ -20,7 +20,7 @@ final class CoordinateDestinationChecker extends DestinationChecker {
 	 * 构造坐标目的地检查器。
 	 * Constructs a coordinate destination checker.
 	 *
-	 * Follower creature
+	 * @param follower 跟随生物 / follower creature
 	 * @param x 目标 X / Target X
 	 * @param y 目标 Y / Target Y
 	 * @param z 目标 Z / Target Z

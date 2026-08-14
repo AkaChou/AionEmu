@@ -27,10 +27,8 @@ public class GenericMapAdapter<K, V> extends XmlAdapter<GenericMapAdapter.KeyVal
      * 将 Map 序列化为 XML 节点容器。
      * Marshal a Map into an XML key-value container.
      *
-     * Source map
-     * Key-value container
-     *
-     * @param v
+     * @param v 源 Map / Source map
+     * @return 键值容器 / Key-value container
      * @throws Exception 序列化失败 / On marshal failure
      */
     @Override
@@ -51,9 +49,7 @@ public class GenericMapAdapter<K, V> extends XmlAdapter<GenericMapAdapter.KeyVal
      * Unmarshal an XML key-value container into a Map.
      *
      * @param v 键值容器 / Key-value container
-     * Reconstructed map
-     *
-     * @param v
+     * @return 重建的 Map / Reconstructed map
      * @throws Exception 反序列化失败 / On unmarshal failure
      */
     @Override
@@ -90,7 +86,7 @@ public class GenericMapAdapter<K, V> extends XmlAdapter<GenericMapAdapter.KeyVal
          * 追加一个 Map 条目。
          * Append a map entry.
          *
-         * Entry
+         * @param entry Map 条目 / Map entry
          */
         public void addElement(Map.Entry<K, V> entry) {
             if (values == null) {
@@ -135,7 +131,7 @@ public class GenericMapAdapter<K, V> extends XmlAdapter<GenericMapAdapter.KeyVal
          * 从 Map.Entry 构造。
          * Construct from a Map.Entry.
          *
-         * Entry
+         * @param entry Map 条目 / Map entry
          */
         public KeyValuePair(Map.Entry<K, V> entry) {
             this(entry.getKey(), entry.getValue());
@@ -145,8 +141,8 @@ public class GenericMapAdapter<K, V> extends XmlAdapter<GenericMapAdapter.KeyVal
          * 根据值类型写入对应字段。
          * Populate the matching field based on value type.
          *
-         * Key
-         * Value
+         * @param key 键 / Key
+         * @param value 值 / Value
          */
         @SuppressWarnings("rawtypes")
         public KeyValuePair(K key, V value) {
@@ -180,7 +176,7 @@ public class GenericMapAdapter<K, V> extends XmlAdapter<GenericMapAdapter.KeyVal
          * 获取键。
          * Get the key.
          *
-         * Key
+         * @return 键 / Key
          */
         public K getKey() {
             return key;
@@ -190,7 +186,7 @@ public class GenericMapAdapter<K, V> extends XmlAdapter<GenericMapAdapter.KeyVal
          * 获取普通值。
          * Get the plain value.
          *
-         * Value
+         * @return 普通值 / Plain value
          */
         public V getValue() {
             return value;
@@ -200,7 +196,7 @@ public class GenericMapAdapter<K, V> extends XmlAdapter<GenericMapAdapter.KeyVal
          * 获取集合值。
          * Get the collection value.
          *
-         * Collection
+         * @return 集合值 / Collection value
          */
         @SuppressWarnings("rawtypes")
         public Collection getCollectionValue() {
@@ -211,7 +207,7 @@ public class GenericMapAdapter<K, V> extends XmlAdapter<GenericMapAdapter.KeyVal
          * 获取嵌套 Map 值。
          * Get the nested map value.
          *
-         * Nested map
+         * @return 嵌套 Map 值 / Nested map value
          */
         @SuppressWarnings("rawtypes")
         public Map getMapValue() {

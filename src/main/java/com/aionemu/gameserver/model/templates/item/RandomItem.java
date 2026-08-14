@@ -10,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.utils.Rnd;
 
 /**
- * Random 物品模板（静态数据/XML）。
- * XML template.
+ * 随机物品模板：随机数量或等级范围。
+ * Random item template: random count or grade range.
  *
  * @author vlog
  */
@@ -40,12 +40,12 @@ public class RandomItem {
 		return type;
 	}
 
-	/** 返回 rnd min / Returns the rnd min */
+	/** 返回随机下限 / Returns the rnd min */
 	public int getRndMin() {
 		return rndMin;
 	}
 
-	/** 返回 rnd max / Returns the rnd max */
+	/** 返回随机上限 / Returns the rnd max */
 	public int getRndMax() {
 		return rndMax;
 	}

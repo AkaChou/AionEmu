@@ -28,12 +28,12 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 	
 	@Override
 	protected void handleUseItemFinish(Player player) {
-		if (!player.getInventory().decreaseByItemId(185000266, 1)) { //Earthen Malachite.
+		if (!player.getInventory().decreaseByItemId(185000266, 1)) { // 大地孔雀石 / Earthen Malachite.
 			// 你没有可放在祭坛上的大地孔雀石。 / You don’t have a Malachite of Earth to place on the altar.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403447));
 			return;
 		} switch (getNpcId()) {
-			case 834006: //Altar Of Earth.
+			case 834006: // 大地祭坛 / Altar Of Earth.
 				// 大地孔雀石发出光芒并开始漂浮。 / The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -45,7 +45,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 				    }
 			    }, 5000);
 			break;
-			case 834019: //Altar Of Earth.
+			case 834019: // 大地祭坛 / Altar Of Earth.
 				// 大地孔雀石发出光芒并开始漂浮。 / The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -57,7 +57,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 				    }
 			    }, 5000);
 			break;
-			case 834020: //Altar Of Earth.
+			case 834020: // 大地祭坛 / Altar Of Earth.
 				// 大地孔雀石发出光芒并开始漂浮。 / The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -69,7 +69,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 				    }
 			    }, 5000);
 			break;
-			case 834021: //Altar Of Earth.
+			case 834021: // 大地祭坛 / Altar Of Earth.
 				// 大地孔雀石发出光芒并开始漂浮。 / The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -81,7 +81,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 				    }
 			    }, 5000);
 			break;
-			case 834022: //Altar Of Earth.
+			case 834022: // 大地祭坛 / Altar Of Earth.
 				// 大地孔雀石发出光芒并开始漂浮。 / The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

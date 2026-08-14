@@ -58,7 +58,7 @@ public class Change {
 	 * 获取目标属性。
 	 * Returns the target stat.
 	 *
-	 * stat enum
+	 * @return 目标属性 / stat enum
 	 */
 	public final StatEnum getStat() {
 		return stat;
@@ -68,7 +68,7 @@ public class Change {
 	 * 获取变更函数。
 	 * Returns the change function.
 	 *
-	 * change function
+	 * @return 变更函数 / change function
 	 */
 	public final Func getFunc() {
 		return func;
@@ -78,7 +78,7 @@ public class Change {
 	 * 获取基础变更值。
 	 * Returns the base change value.
 	 *
-	 * base value
+	 * @return 基础变更值 / base value
 	 */
 	public final int getValue() {
 		return value;
@@ -88,7 +88,7 @@ public class Change {
 	 * 获取等级增量。
 	 * Returns the level delta.
 	 *
-	 * delta
+	 * @return 等级增量 / delta
 	 */
 	public final int getDelta() {
 		return delta;
@@ -98,7 +98,7 @@ public class Change {
 	 * 获取应用条件。
 	 * Returns the apply conditions.
 	 *
-	 * conditions
+	 * @return 应用条件 / conditions
 	 */
 	public final Conditions getConditions() {
 		return conditions;

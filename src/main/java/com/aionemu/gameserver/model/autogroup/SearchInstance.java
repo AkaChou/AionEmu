@@ -54,71 +54,71 @@ public class SearchInstance {
 	}
 
 	/**
-	 * @return 是否为 Kamar 类型。 / Whether kamar
-	  */
+	 * @return 是否为卡玛尔战场 / Whether kamar battlefield
+	 */
 	public boolean isKamar() {
 		return instanceMaskId == 107;
 	}
 
 	/**
-	 * @return Whether ophidan
+	 * @return 是否为吞噬奥菲丹桥 / Whether ophidan
 	 */
 	public boolean isOphidan() {
 		return instanceMaskId == 108;
 	}
 
 	/**
-	 * @return Whether bastion
+	 * @return 是否为铁壁战线 / Whether bastion
 	 */
 	public boolean isBastion() {
 		return instanceMaskId == 109;
 	}
 
 	/**
-	 * @return Whether idgel dome
+	 * @return 是否为 Idgel Dome / Whether idgel dome
 	 */
 	public boolean isIdgelDome() {
 		return instanceMaskId == 111;
 	}
 
 	/**
-	 * @return Whether asyunatar
+	 * @return 是否为阿休纳塔尔无畏舰 / Whether asyunatar
 	 */
 	public boolean isAsyunatar() {
 		return instanceMaskId == 121;
 	}
 
 	/**
-	 * @return Whether suspicious ophidan
+	 * @return 是否为可疑奥菲丹桥 / Whether suspicious ophidan
 	 */
 	public boolean isSuspiciousOphidan() {
 		return instanceMaskId == 122;
 	}
 
 	/**
-	 * @return Whether idgel dome landmark
+	 * @return 是否为 Idgel Dome 地标 / Whether idgel dome landmark
 	 */
 	public boolean isIdgelDomeLandmark() {
 		return instanceMaskId == 123;
 	}
 
 	/**
-	 * @return 是否为黄金神庙训练所。 / Whether hall of tenacity
-	  */
+	 * @return 是否为黄金神庙训练所 / Whether hall of tenacity
+	 */
 	public boolean isHallOfTenacity() {
 		return instanceMaskId == 125;
 	}
 
 	/**
-	 * @return Whether grand arena training camp
+	 * @return 是否为大竞技场训练营 / Whether grand arena training camp
 	 */
 	public boolean isGrandArenaTrainingCamp() {
 		return instanceMaskId == 127;
 	}
 
 	/**
-	 * @return 是否为 IDRun 类型。 / Whether id run
-	  */
+	 * @return 是否为 IDRun 类型 / Whether id run
+	 */
 	public boolean isIDRun() {
 		return instanceMaskId == 131;
 	}

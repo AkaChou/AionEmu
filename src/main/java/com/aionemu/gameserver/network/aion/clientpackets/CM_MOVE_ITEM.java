@@ -35,9 +35,9 @@ public class CM_MOVE_ITEM extends AionClientPacket {
 	@Override
 	protected void readImpl() {
 		targetObjectId = readD();// 空 / empty
-		source = readSC(); // FROM (0 - player inventory, 1 - regular warehouse, 2 - account warehouse, 3 -
+		source = readSC(); // 来源（0-玩家背包，1-常规仓库，2-账号仓库，3-军团）/ FROM (0 - player inventory, 1 - regular warehouse, 2 - account warehouse, 3 -
 							// 军团 / legion
-		destination = readSC(); // TO
+		destination = readSC(); // 目标 / TO
 		slot = readSH();
 	}
 

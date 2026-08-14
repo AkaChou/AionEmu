@@ -59,7 +59,7 @@ public class InstanceRiftLocation {
 		return id;
 	}
 
-	/** 返回是否已刷新 / Returns the spawned */
+	/** 返回已生成的对象列表 / Returns the spawned objects */
 	public List<VisibleObject> getSpawned() {
 		return spawned;
 	}

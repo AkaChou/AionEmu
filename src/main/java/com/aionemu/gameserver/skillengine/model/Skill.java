@@ -107,8 +107,8 @@ public class Skill {
 	 * Duration that depends on BOOST_CASTING_TIME
 	 */
 	private int duration;
-	private int hitTime;// from CM_CASTSPELL
-	private int serverTime;// time when effect is applied
+	private int hitTime;// 来自 CM_CASTSPELL / from CM_CASTSPELL
+	private int serverTime;// 效果生效的服务器时间 / time when effect is applied
 	private String chainCategory = null;
 	private volatile boolean isMultiCast = false;
 	private List<Creature> preselectedTargets;
@@ -139,7 +139,7 @@ public class Skill {
 	 * 获取充能技能模板。
 	 * Gets charge skill template.
 	 *
-	 * charge template
+	 * @return 充能技能模板 / charge skill template
 	 */
 	public ChargeSkillTemplate getChargeTemplate() {
 		return chargeTemplate;
@@ -174,7 +174,7 @@ public class Skill {
 	 * 校验当前是否可使用该技能。
 	 * Validates whether the skill can be used now.
 	 *
-	 * whether usable
+	 * @return 是否可用 / whether usable
 	 */
 	public boolean canUseSkill() {
 		if (skillTemplate.getType() == SkillType.MAGICAL && !skillTemplate.hasEvadeEffect()
@@ -254,7 +254,7 @@ public class Skill {
 	 * 使用技能（含动画）。
 	 * Uses the skill (with animation).
 	 *
-	 * whether succeeded
+	 * @return 是否成功 / whether succeeded
 	 */
 	public boolean useSkill() {
 		return useSkill(true, true);
@@ -276,7 +276,7 @@ public class Skill {
 	 * 使用技能（无动画）。
 	 * Uses the skill without animation.
 	 *
-	 * whether succeeded
+	 * @return 是否成功 / whether succeeded
 	 */
 	public boolean useNoAnimationSkill() {
 		return useSkill(false, true);
@@ -286,7 +286,7 @@ public class Skill {
 	 * 使用技能（跳过属性校验）。
 	 * Uses the skill without property checks.
 	 *
-	 * whether succeeded
+	 * @return 是否成功 / whether succeeded
 	 */
 	public boolean useWithoutPropSkill() {
 		return useSkill(false, false);
@@ -303,7 +303,7 @@ public class Skill {
 		}
 
 		if (SecurityConfig.MOTION_TIME) {
-			// must be after calculateskillduration
+			// 必须在计算技能持续时间之后执行 / must be after calculateskillduration
 			if (checkAnimation && !checkAnimationTime()) {
 				log.debug("check animation time failed");
 				return false;
@@ -381,9 +381,9 @@ public class Skill {
 	 * 计算烙印附魔冷却。
 	 * Computes stigma enchant cooldown.
 	 *
-	 * skill
-	 * base cooldown
-	 * cooldown
+	 * @param skill 技能实例 / skill
+	 * @param cooldown 基础冷却 / base cooldown
+	 * @return 最终冷却 / final cooldown
 	 */
 	public int StigmaEnchantCoolDown(Skill skill, int cooldown) {
 		if (skill == null) {
@@ -1110,7 +1110,7 @@ public class Skill {
 
 		/**
 		 * 部分技能例外：药草/法力治疗、陷阱。
-	 * exceptions for certain skills - herb and mana treatment - traps
+		 * Exceptions for certain skills - herb and mana treatment - traps
 		 */
 		// 不检查草药、法力治疗与专注增强 / dont check herb , mana treatment and concentration enhancement
 		switch (this.getSkillId()) { // 4.8
@@ -1315,7 +1315,8 @@ public class Skill {
 	}
 
 	/**
-	 * Apply effects and perform actions specified in skill template
+	 * 应用模板中指定的效果并执行动作。
+	 * Apply effects and perform actions specified in skill template.
 	 */
 	private void endCast() {
 		if (castCancelled || !effector.isCasting()) {
@@ -1496,10 +1497,10 @@ public class Skill {
 			this.chainSuccess = true;
 		}
 
-		/**
-	 * 设置 variableschaincondition。
-	 * set variables for chaincondition check
-	 */
+			/**
+		 * 设置连锁条件检查所需变量。
+		 * Set variables for chain condition check.
+		 */
 		if (effector instanceof Player && this.chainSuccess && this.chainCategory != null) {
 			((Player) effector).getChainSkills().addChainSkill(this.chainCategory, this.isMulticast());
 		}
@@ -1541,10 +1542,10 @@ public class Skill {
 	}
 
 	/**
-	 * 对目标列表应用效果。
-	 * Applies effects to the target list.
+	 * 向受影响对象广播效果并执行惩罚技能。
+	 * Broadcasts effects to affected objects and runs the penalty skill.
 	 *
-	 * effects
+	 * @param effects 效果列表 / effect list
 	 */
 	public void applyEffect(List<Effect> effects) {
 		Creature eventTarget = null;
@@ -1591,8 +1592,12 @@ public class Skill {
 	}
 
 	/**
-	 * @param spellStatus
-	 * @param dashStatus
+	 * 广播施法结束结果包（按目标类型分发）。
+	 * Broadcasts the cast-end result packet (dispatched by target type).
+	 *
+	 * @param spellStatus 法术状态码 / spell status code
+	 * @param dashStatus 位移状态码 / dash status code
+	 * @param effects 已计算的效果列表 / calculated effects
 	 */
 	private void sendCastspellEnd(int spellStatus, int dashStatus, List<Effect> effects) {
 		getSkillSkinData();
@@ -1638,7 +1643,10 @@ public class Skill {
 	}
 
 	/**
-	 * @param delay 调度技能动作 / 效果（引导类技能）。 / Schedule actions/effects of skill (channeled skills)
+	 * 调度技能动作/效果（引导类技能）。
+	 * Schedule actions/effects of skill (channeled skills).
+	 *
+	 * @param delay 延迟毫秒 / delay millis
 	 */
 	private void schedule(int delay) {
 		castingTask = GameThreadPoolServices.threadPoolManager().schedule(this::endCast, delay);
@@ -1647,7 +1655,8 @@ public class Skill {
 	}
 
 	/**
-	 * Check all conditions before starting cast
+	 * 施法前校验全部开始条件。
+	 * Check all conditions before starting cast.
 	 */
 	private boolean preCastCheck() {
 		Conditions skillConditions = skillTemplate.getStartconditions();
@@ -1655,7 +1664,8 @@ public class Skill {
 	}
 
 	/**
-	 * Check all conditions before using skill
+	 * 使用前校验全部使用条件。
+	 * Check all conditions before using skill.
 	 */
 	private boolean preUsageCheck() {
 		Conditions skillConditions = skillTemplate.getUseconditions();
@@ -1665,7 +1675,6 @@ public class Skill {
 	 * 设置技能消耗加成。
 	 * Sets skill cost boost.
 	 *
-	 * boost value
 	 */
 	public void setBoostSkillCost(int value) {
 		boostSkillCost = value;
@@ -1674,7 +1683,6 @@ public class Skill {
 	 * 获取技能消耗加成。
 	 * Gets skill cost boost.
 	 *
-	 * boost value
 	 */
 	public int getBoostSkillCost() {
 		return boostSkillCost;
@@ -1683,7 +1691,6 @@ public class Skill {
 	 * 获取受影响目标列表。
 	 * Gets list of effected creatures.
 	 *
-	 * effected list
 	 */
 	public List<Creature> getEffectedList() {
 		return effectedList;
@@ -1692,7 +1699,6 @@ public class Skill {
 	 * 获取施法者。
 	 * Gets the effector.
 	 *
-	 * effector
 	 */
 	public Creature getEffector() {
 		return effector;
@@ -1701,7 +1707,6 @@ public class Skill {
 	 * 获取技能等级。
 	 * Gets skill level.
 	 *
-	 * level
 	 */
 	public int getSkillLevel() {
 		return skillLevel;
@@ -1710,7 +1715,6 @@ public class Skill {
 	 * 获取技能 ID。
 	 * Gets skill id.
 	 *
-	 * skill id
 	 */
 	public int getSkillId() {
 		return skillTemplate.getSkillId();
@@ -1719,7 +1723,6 @@ public class Skill {
 	 * 获取技能堆叠等级。
 	 * Gets skill stack level.
 	 *
-	 * stack level
 	 */
 	public int getSkillStackLvl() {
 		return skillStackLvl;
@@ -1728,7 +1731,6 @@ public class Skill {
 	 * 获取移动条件监听器。
 	 * Gets start-moving condition listener.
 	 *
-	 * listener
 	 */
 	public StartMovingListener getConditionChangeListener() {
 		return conditionChangeListener;
@@ -1737,7 +1739,6 @@ public class Skill {
 	 * 获取技能模板。
 	 * Gets skill template.
 	 *
-	 * template
 	 */
 	public SkillTemplate getSkillTemplate() {
 		return skillTemplate;
@@ -1746,7 +1747,6 @@ public class Skill {
 	 * 获取主目标。
 	 * Gets first target.
 	 *
-	 * first target
 	 */
 	public Creature getFirstTarget() {
 		return firstTarget;
@@ -1755,7 +1755,6 @@ public class Skill {
 	 * 设置主目标。
 	 * Sets first target.
 	 *
-	 * first target
 	 */
 	public void setFirstTarget(Creature firstTarget) {
 		this.firstTarget = firstTarget;
@@ -1764,7 +1763,6 @@ public class Skill {
 	 * 是否被动技能。
 	 * Whether passive skill.
 	 *
-	 * whether passive
 	 */
 	public boolean isPassive() {
 		return skillTemplate.getActivationAttribute() == ActivationAttribute.PASSIVE;
@@ -1773,7 +1771,6 @@ public class Skill {
 	 * 是否检查主目标距离。
 	 * Whether first-target range is checked.
 	 *
-	 * whether checked
 	 */
 	public boolean isFirstTargetRangeCheck() {
 		return firstTargetRangeCheck;
@@ -1791,7 +1788,6 @@ public class Skill {
 	 * 是否非指向 AOE。
 	 * Whether non-target AOE.
 	 *
-	 * whether
 	 */
 	public boolean checkNonTargetAOE() {
 		return (firstTargetAttribute == FirstTargetAttribute.ME && targetRangeAttribute == TargetRangeAttribute.AREA);
@@ -1800,7 +1796,6 @@ public class Skill {
 	 * 是否目标 AOE。
 	 * Whether target AOE.
 	 *
-	 * whether
 	 */
 	public boolean isTargetAOE() {
 		return (firstTargetAttribute == FirstTargetAttribute.TARGET && targetRangeAttribute == TargetRangeAttribute.AREA);
@@ -1809,7 +1804,6 @@ public class Skill {
 	 * 是否自身增益。
 	 * Whether self buff.
 	 *
-	 * whether
 	 */
 	public boolean isSelfBuff() {
 		return (firstTargetAttribute == FirstTargetAttribute.ME && targetRangeAttribute == TargetRangeAttribute.ONLYONE && skillTemplate.getSubType() == SkillSubType.BUFF && !skillTemplate.isDeityAvatar());
@@ -1818,7 +1812,6 @@ public class Skill {
 	 * 主目标是否自身。
 	 * Whether first target is self.
 	 *
-	 * whether
 	 */
 	public boolean isFirstTargetSelf() {
 		return (firstTargetAttribute == FirstTargetAttribute.ME);
@@ -1827,7 +1820,6 @@ public class Skill {
 	 * 是否地点技能。
 	 * Whether point skill.
 	 *
-	 * whether
 	 */
 	public boolean isPointSkill() {
 		return (this.firstTargetAttribute == FirstTargetAttribute.POINT);
@@ -1836,7 +1828,6 @@ public class Skill {
 	 * 设置是否检查主目标距离。
 	 * Sets first-target range check flag.
 	 *
-	 * whether check
 	 */
 	public void setFirstTargetRangeCheck(boolean firstTargetRangeCheck) {
 		this.firstTargetRangeCheck = firstTargetRangeCheck;
@@ -1845,7 +1836,6 @@ public class Skill {
 	 * 设置关联物品模板。
 	 * Sets related item template.
 	 *
-	 * item template
 	 */
 	public void setItemTemplate(ItemTemplate itemTemplate) {
 		this.itemTemplate = itemTemplate;
@@ -1855,7 +1845,6 @@ public class Skill {
 	 * 获取关联物品模板。
 	 * Gets related item template.
 	 *
-	 * item template
 	 */
 	public ItemTemplate getItemTemplate() {
 		return this.itemTemplate;
@@ -1875,7 +1864,6 @@ public class Skill {
 	 * 获取物品对象 ID。
 	 * Gets item object id.
 	 *
-	 * object id
 	 */
 	public int getItemObjectId() {
 		return this.itemObjectId;
@@ -1884,7 +1872,6 @@ public class Skill {
 	 * 设置目标范围属性。
 	 * Sets target range attribute.
 	 *
-	 * range attribute
 	 */
 	public void setTargetRangeAttribute(TargetRangeAttribute targetRangeAttribute) {
 		this.targetRangeAttribute = targetRangeAttribute;
@@ -1893,7 +1880,6 @@ public class Skill {
 	 * 设置目标类型与坐标。
 	 * Sets target type and coordinates.
 	 *
-	 * target type
 	 * @param x X
 	 * @param y Y
 	 * @param z Z
@@ -1973,7 +1959,6 @@ public class Skill {
 	 * 获取命中时间。
 	 * Gets hit time.
 	 *
-	 * hit time
 	 */
 	public int getHitTime() {
 		return hitTime;
@@ -1982,7 +1967,6 @@ public class Skill {
 	 * 设置命中时间。
 	 * Sets hit time.
 	 *
-	 * time
 	 */
 	public void setHitTime(int time) {
 		this.hitTime = time;
@@ -2073,7 +2057,6 @@ public class Skill {
 	 * 是否地面技能。
 	 * Whether ground skill.
 	 *
-	 * whether
 	 */
 	public boolean isGroundSkill() {
 		return skillTemplate.isGroundSkill();
@@ -2083,8 +2066,6 @@ public class Skill {
 	 * 判断是否应影响该可见对象。
 	 * Whether the visible object should be affected.
 	 *
-	 * visible object
-	 * whether affect
 	 */
 	public boolean shouldAffectTarget(VisibleObject object) {
 		// 生物离地至少 2 米时无法施加地面技能。 / If creature is at least 2 meters above the terrain, ground skill cannot be applied
@@ -2103,7 +2084,6 @@ public class Skill {
 	 * 设置连锁类别。
 	 * Sets chain category.
 	 *
-	 * category
 	 */
 	public void setChainCategory(String chainCategory) {
 		this.chainCategory = chainCategory;
@@ -2113,7 +2093,6 @@ public class Skill {
 	 * 获取连锁类别。
 	 * Gets chain category.
 	 *
-	 * category
 	 */
 	public String getChainCategory() {
 		return this.chainCategory;
@@ -2123,7 +2102,6 @@ public class Skill {
 	 * 获取技能方法类型。
 	 * Gets skill method type.
 	 *
-	 * method
 	 */
 	public SkillMethod getSkillMethod() {
 		return this.skillMethod;
@@ -2133,7 +2111,6 @@ public class Skill {
 	 * 是否点对点技能。
 	 * Whether point-to-point skill.
 	 *
-	 * whether
 	 */
 	public boolean isPointPointSkill() {
 		if (this.getSkillTemplate().getProperties().getFirstTarget() == FirstTargetAttribute.POINT && this.getSkillTemplate().getProperties().getTargetType() == TargetRangeAttribute.POINT) {
@@ -2146,7 +2123,6 @@ public class Skill {
 	 * 是否多重施放。
 	 * Whether multicast.
 	 *
-	 * whether
 	 */
 	public boolean isMulticast() {
 		return this.isMultiCast;
@@ -2156,7 +2132,6 @@ public class Skill {
 	 * 设置多重施放标记。
 	 * Sets multicast flag.
 	 *
-	 * whether multicast
 	 */
 	public void setIsMultiCast(boolean isMultiCast) {
 		this.isMultiCast = isMultiCast;

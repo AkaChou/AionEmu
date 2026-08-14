@@ -14,6 +14,12 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "FactionCategory")
 public enum FactionCategory {
 
-	/** 导师 / Mentor. */
-	MENTOR, DAILY, COMBINESKILL, SHUGO;
+	/** 导师 / Mentor */
+	MENTOR,
+	/** 每日 / Daily */
+	DAILY,
+	/** 组合技能 / Combine skill */
+	COMBINESKILL,
+	/** 术古 / Shugo */
+	SHUGO;
 }

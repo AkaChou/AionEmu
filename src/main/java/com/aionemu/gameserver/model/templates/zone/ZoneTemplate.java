@@ -71,10 +71,10 @@ public class ZoneTemplate {
 	@XmlAttribute(name = "zone_type")
 	protected ZoneClassName zoneType = ZoneClassName.SUB;
 
-	 /**
-	  * 获取 points 属性值。
-	  * Gets the value of the points property
-	  */
+	/**
+	 * 获取 points 属性值。
+	 * Gets the value of the points property.
+	 */
 	public Points getPoints() {
 		return points;
 	}
@@ -102,16 +102,17 @@ public class ZoneTemplate {
 	}
 
 	/**
-	 * 获取 value 的名称 property。 / Gets the value of the name property
+	 * 获取区域名称属性值。
+	 * Gets the value of the name property.
 	 */
 	public ZoneName getName() {
 		return zoneName;
 	}
 
-	 /**
-	  * 获取 mapid 属性值。
-	  * Gets the value of the mapid property
-	  */
+	/**
+	 * 获取 mapid 属性值。
+	 * Gets the value of the mapid property.
+	 */
 	public int getMapid() {
 		return mapid;
 	}

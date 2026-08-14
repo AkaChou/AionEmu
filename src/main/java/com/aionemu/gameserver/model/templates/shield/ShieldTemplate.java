@@ -48,7 +48,7 @@ public class ShieldTemplate {
 		return radius;
 	}
 
-	/** 返回居中 / Returns the center*/
+	/** 返回中心点 / Returns the center */
 	public ShieldPoint getCenter() {
 		return center;
 	}
@@ -61,6 +61,14 @@ public class ShieldTemplate {
 	public ShieldTemplate() {
 	};
 
+	/**
+	 * 用给定名称、地图和中心点构造护盾模板，默认半径 6。
+	 * Constructs a shield template with the given name, map and center; default radius is 6.
+	 *
+	 * @param name 护盾名称 / shield name
+	 * @param mapId 地图 ID / map id
+	 * @param center 中心点 / center point
+	 */
 	public ShieldTemplate(String name, int mapId, Point3D center) {
 		this.name = name;
 		this.map = mapId;

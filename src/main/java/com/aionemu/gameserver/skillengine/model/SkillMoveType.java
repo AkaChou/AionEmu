@@ -37,7 +37,6 @@ public enum SkillMoveType {
 	 * 获取协议 ID。
 	 * Gets protocol id.
 	 *
-	 * move type id
 	 */
 	public int getId() {
 		return id;

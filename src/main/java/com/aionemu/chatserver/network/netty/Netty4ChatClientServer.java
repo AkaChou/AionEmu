@@ -144,7 +144,7 @@ final class Netty4ChatClientServer {
          * Delegate complete frames for parsing; non-{@link ByteBuf} messages are forwarded downstream.
          *
          * @param context 通道上下文 / Channel handler context
-         * Inbound message
+         * @param message 入站消息 / Inbound message
          */
         @Override
         public void channelRead(ChannelHandlerContext context, Object message) {

@@ -8,8 +8,8 @@ import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * 全局 Rule 模板（静态数据/XML）。
- * XML template.
+ * 全局掉落规则模板（静态数据/XML）。
+ * Global drop rule template (static data/XML).
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GlobalRule")
@@ -65,7 +65,7 @@ public class GlobalRule {
 	@XmlAttribute(name = "count_per_npc_level")
 	protected boolean countPerNpcLevel;
 
-	/** 返回 global rule items / Returns the global rule items */
+	/** 返回规则物品。 / Returns the rule items. */
 	public GlobalDropItems getGlobalRuleItems() {
 		return gdItems;
 	}
@@ -75,87 +75,87 @@ public class GlobalRule {
 		this.gdItems = value;
 	}
 
-	/** 返回 global rule worlds / Returns the global rule worlds */
+	/** 返回规则世界。 / Returns the rule worlds. */
 	public GlobalDropWorlds getGlobalRuleWorlds() {
 		return gdWorlds;
 	}
 
-	/** 设置 worlds / Sets the worlds */
+	/** 设置世界。 / Sets the worlds. */
 	public void setWorlds(GlobalDropWorlds value) {
 		this.gdWorlds = value;
 	}
 
-	/** 返回 global rule races / Returns the global rule races */
+	/** 返回规则种族。 / Returns the rule races. */
 	public GlobalDropRaces getGlobalRuleRaces() {
 		return gdRaces;
 	}
 
-	/** 设置 npc races / Sets the npc races */
+	/** 设置 NPC 种族。 / Sets the NPC races. */
 	public void setNpcRaces(GlobalDropRaces value) {
 		this.gdRaces = value;
 	}
 
-	/** 返回 global rule ratings / Returns the global rule ratings */
+	/** 返回规则等级。 / Returns the rule ratings. */
 	public GlobalDropRatings getGlobalRuleRatings() {
 		return gdRatings;
 	}
 
-	/** 设置 npc ratings / Sets the npc ratings */
+	/** 设置 NPC 等级。 / Sets the NPC ratings. */
 	public void setNpcRatings(GlobalDropRatings value) {
 		this.gdRatings = value;
 	}
 
-	/** 返回 global rule maps / Returns the global rule maps */
+	/** 返回规则地图。 / Returns the rule maps. */
 	public GlobalDropMaps getGlobalRuleMaps() {
 		return gdMaps;
 	}
 
-	/** 设置 maps / Sets the maps */
+	/** 设置地图。 / Sets the maps. */
 	public void setMaps(GlobalDropMaps value) {
 		this.gdMaps = value;
 	}
 
-	/** 返回 global rule tribes / Returns the global rule tribes */
+	/** 返回规则部落。 / Returns the rule tribes. */
 	public GlobalDropTribes getGlobalRuleTribes() {
 		return gdTribes;
 	}
 
-	/** 设置 npc tribes / Sets the npc tribes */
+	/** 设置 NPC 部落。 / Sets the NPC tribes. */
 	public void setNpcTribes(GlobalDropTribes value) {
 		this.gdTribes = value;
 	}
 
-	/** 返回 global rule npcs / Returns the global rule npcs */
+	/** 返回规则 NPC。 / Returns the rule npcs. */
 	public GlobalDropNpcs getGlobalRuleNpcs() {
 		return gdNpcs;
 	}
 
-	/** 设置 npcs / Sets the npcs */
+	/** 设置 NPC。 / Sets the npcs. */
 	public void setNpcs(GlobalDropNpcs value) {
 		this.gdNpcs = value;
 	}
 
-	/** 返回 global rule zones / Returns the global rule zones */
+	/** 返回规则区域。 / Returns the rule zones. */
 	public GlobalDropZones getGlobalRuleZones() {
 		return gdZones;
 	}
 
-	/** 设置 zones / Sets the zones */
+	/** 设置区域。 / Sets the zones. */
 	public void setZones(GlobalDropZones value) {
 		this.gdZones = value;
 	}
 
-	/** 返回 rule name / Returns the rule name */
+	/** 返回规则名称。 / Returns the rule name. */
 	public String getRuleName() {
 		return ruleName;
 	}
 
-	/** 设置 rule name / Sets the rule name */
+	/** 设置规则名称。 / Sets the rule name. */
 	public void setRuleName(String value) {
 		this.ruleName = value;
 	}
 
-	/** 返回最小数量 / Returns the min count*/
+	/** 返回最小数量。 / Returns the min count. */
 	public long getMinCount() {
 		if (minCount == null) {
 			return 1L;
@@ -164,12 +164,12 @@ public class GlobalRule {
 		}
 	}
 
-	/** 设置最小数量 / Sets the min count*/
+	/** 设置最小数量。 / Sets the min count. */
 	public void setMinCount(Long value) {
 		this.minCount = value;
 	}
 
-	/** 返回最大数量 / Returns the max count*/
+	/** 返回最大数量。 / Returns the max count. */
 	public long getMaxCount() {
 		if (maxCount == null) {
 			return 1L;
@@ -178,57 +178,57 @@ public class GlobalRule {
 		}
 	}
 
-	/** 设置最大数量 / Sets the max count*/
+	/** 设置最大数量。 / Sets the max count. */
 	public void setMaxCount(Long value) {
 		this.maxCount = value;
 	}
 
-	/** 返回概率 / Returns the chance*/
+	/** 返回概率。 / Returns the chance. */
 	public float getChance() {
 		return chance;
 	}
 
-	/** 设置概率 / Sets the chance*/
+	/** 设置概率。 / Sets the chance. */
 	public void setChance(float value) {
 		this.chance = value;
 	}
 
-	/** 返回 min diff / Returns the min diff */
+	/** 返回最小等级差。 / Returns the min diff. */
 	public int getMinDiff() {
 		return minDiff;
 	}
 
-	/** 设置 min diff / Sets the min diff */
+	/** 设置最小等级差。 / Sets the min diff. */
 	public void setMinDiff(int value) {
 		this.minDiff = value;
 	}
 
-	/** 返回 max diff / Returns the max diff */
+	/** 返回最大等级差。 / Returns the max diff. */
 	public int getMaxDiff() {
 		return maxDiff;
 	}
 
-	/** 设置 max diff / Sets the max diff */
+	/** 设置最大等级差。 / Sets the max diff. */
 	public void setMaxDiff(int value) {
 		this.maxDiff = value;
 	}
 
-	/** 返回 restriction race / Returns the restriction race */
+	/** 返回种族限制。 / Returns the restriction race. */
 	public RestrictionRace getRestrictionRace() {
 		return restrictionRace;
 	}
 
-	/** 设置 restriction race / Sets the restriction race */
+	/** 设置种族限制。 / Sets the restriction race. */
 	public void setRestrictionRace(RestrictionRace value) {
 		this.restrictionRace = value;
 	}
 
-	/** 返回 no reduction / Returns the no reduction */
+	/** 返回不削减掉落标志。 / Returns the no reduction flag. */
 	public boolean getNoReduction() {
 		return noReduction;
 	}
 
-	/** 设置 no reduction / Sets the no reduction */
+	/** 设置不削减掉落标志。 / Sets the no reduction flag. */
 	public void setNoReduction(boolean value) {
 		this.noReduction = value;
 	}
@@ -260,6 +260,9 @@ public class GlobalRule {
 	@XmlType(name = "race_restriction")
 	@XmlEnum
 	public enum RestrictionRace {
-		ASMODIANS, ELYOS
+		/** 魔族 / Asmodians. */
+		ASMODIANS,
+		/** 天族 / Elyos. */
+		ELYOS
 	}
 }

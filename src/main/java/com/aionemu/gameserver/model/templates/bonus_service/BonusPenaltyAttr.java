@@ -10,7 +10,7 @@ import com.aionemu.gameserver.skillengine.change.Func;
 
 /**
  * 加成 PenaltyAttr 模板（静态数据/XML）。
- * XML template.
+ * Bonus penalty attribute template (static data/XML).
  *
  * @author Ranastic (Encom)
  */

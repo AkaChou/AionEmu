@@ -38,7 +38,7 @@ public abstract class CircusInstance<CL extends NightmareCircusLocation> {
 	 * 绑定梦魇马戏团地点。
 	 * Binds the Nightmare Circus location.
 	 *
-	 * location
+	 * @param nightmareCircusLocation 马戏团地点 / Circus location
 	 */
 	public CircusInstance(CL nightmareCircusLocation) {
 		this.nightmareCircusLocation = nightmareCircusLocation;
@@ -105,7 +105,7 @@ public abstract class CircusInstance<CL extends NightmareCircusLocation> {
 	 * 获取绑定地点。
 	 * Returns the bound location.
 	 *
-	 * location
+	 * @return 绑定地点 / Bound location
 	 */
 	public CL getNightmareCircusLocation() {
 		return nightmareCircusLocation;
@@ -115,7 +115,7 @@ public abstract class CircusInstance<CL extends NightmareCircusLocation> {
 	 * 获取地点 ID。
 	 * Returns the location id.
 	 *
-	 * location id
+	 * @return 地点 ID / Location id
 	 */
 	public int getNightmareCircusLocationId() {
 		return nightmareCircusLocation.getId();

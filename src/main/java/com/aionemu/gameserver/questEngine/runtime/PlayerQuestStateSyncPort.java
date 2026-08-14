@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
 
-/** Production quest-state protocol sync. It runs only after the state transaction committed and was published. */
+/** 生产任务状态协议同步。仅在状态事务提交并发布后运行。 / Production quest-state protocol sync. It runs only after the state transaction committed and was published. */
 public final class PlayerQuestStateSyncPort implements QuestStateSyncPort {
 	private final QuestPlayerPort players;
 	private final IntFunction<QuestMetadata> metadata;

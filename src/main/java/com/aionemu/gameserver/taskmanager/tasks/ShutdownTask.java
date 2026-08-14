@@ -43,7 +43,7 @@ public class ShutdownTask extends TaskFromDBHandler {
 	 * 返回任务名 {@code shutdown}。
 	 * Return the task name {@code shutdown}.
 	 *
-	 * Task name
+	 * @return 任务名 / Task name
 	 */
 	@Override
 	public String getTaskName() {

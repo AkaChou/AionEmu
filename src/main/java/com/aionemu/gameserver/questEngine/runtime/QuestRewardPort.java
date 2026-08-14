@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-/** Typed transactional boundary for durable non-currency quest rewards. */
+/** 耐久非货币任务奖励的类型化事务边界。 / Typed transactional boundary for durable non-currency quest rewards. */
 public interface QuestRewardPort {
 	void preflight(Connection connection, QuestSnapshot snapshot,
 			List<QuestAction.GrantReward> rewards) throws SQLException;

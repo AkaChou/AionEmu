@@ -38,13 +38,13 @@ public class SvsLocation {
 		return isActive;
 	}
 
-	/** 设置 active svs / Sets the active svs */
+	/** 设置当前势力战 / Sets the active svs */
 	public void setActiveSvs(Panesterra<SvsLocation> svs) {
 		isActive = svs != null;
 		this.activeSvs = svs;
 	}
 
-	/** 返回当前 svs / Returns the active svs */
+	/** 返回当前势力战 / Returns the active svs */
 	public Panesterra<SvsLocation> getActiveSvs() {
 		return activeSvs;
 	}
@@ -59,7 +59,7 @@ public class SvsLocation {
 		return id;
 	}
 
-	/** 返回是否已刷新 / Returns the spawned */
+	/** 返回已刷新的对象列表 / Returns the spawned objects */
 	public List<VisibleObject> getSpawned() {
 		return spawned;
 	}

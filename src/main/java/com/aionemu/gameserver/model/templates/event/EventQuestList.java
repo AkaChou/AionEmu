@@ -15,7 +15,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 活动任务列表模板（静态数据/XML）。
- * XML template.
+ * Event Quest List Template (static data/XML).
  *
  * @author Rolandas
  */
@@ -59,7 +59,7 @@ public class EventQuestList {
 	}
 
 	/**
-	 * @return the startQuests (automatically started on logon)
+	 * @return 可开始任务列表（登录时自动开始）/ the startQuests (automatically started on logon)
 	 */
 	public List<Integer> getStartableQuests() {
 		if (startQuests == null) {
@@ -69,7 +69,7 @@ public class EventQuestList {
 	}
 
 	/**
-	 * @return the maintainQuests (started indirectly from other quests)
+	 * @return 可保持任务列表（由其他任务间接开始）/ the maintainQuests (started indirectly from other quests)
 	 */
 	public List<Integer> getMaintainQuests() {
 		if (maintainQuests == null) {

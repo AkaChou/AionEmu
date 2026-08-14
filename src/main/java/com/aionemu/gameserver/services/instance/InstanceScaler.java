@@ -34,7 +34,7 @@ public final class InstanceScaler implements StatOwner {
 	 * 玩家数量变化时重算。
 	 * Recalculates when player count changes.
 	 *
-	 * instance
+	 * @param instance 副本实例 / instance
 	 */
 	public static void onPlayersChanged(WorldMapInstance instance) {
 		int maxPlayers = InstanceService.getMaxPlayers(instance.getMapId());
@@ -78,7 +78,7 @@ public final class InstanceScaler implements StatOwner {
 	 * 刷怪前应用缩放。
 	 * Applies scaling before spawn.
 	 *
-	 * npc
+	 * @param npc 目标 NPC / npc
 	 */
 	public static void onBeforeSpawn(Npc npc) {
 		WorldMapInstance instance = npc.getPosition().getWorldMapInstance();
@@ -161,7 +161,7 @@ public final class InstanceScaler implements StatOwner {
 		 * 应用效果。
 		 * Applies the effect.
 		 *
-		 * stat
+		 * @param stat 属性 / stat
 		 */
 		public void apply(Stat2 stat) {
 			stat.setBaseRate(stat.getBaseRate() * rate);
@@ -170,9 +170,10 @@ public final class InstanceScaler implements StatOwner {
 
 		@Override
 		/**
-		 * getPriority 方法。
-		 * getPriority method.
-		 * result
+		 * 返回优先级。
+		 * Returns the priority.
+		 *
+		 * @return 优先级 / result
 		 */
 		public int getPriority() {
 			return 120;

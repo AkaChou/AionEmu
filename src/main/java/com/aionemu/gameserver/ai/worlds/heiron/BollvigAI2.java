@@ -57,6 +57,12 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
 	
+	/**
+	 * 按血量百分比（75%/50%/25%）触发技能链与召唤物生成。
+	 * Triggers skill chains and summon spawns by HP percentage (75%/50%/25%).
+	 *
+	 * @param hpPercentage 当前血量百分比 / current HP percentage
+	 */
 	private synchronized void checkPercentage(int hpPercentage) {
 		for (Integer percent : percents) {
 			if (hpPercentage <= percent) {

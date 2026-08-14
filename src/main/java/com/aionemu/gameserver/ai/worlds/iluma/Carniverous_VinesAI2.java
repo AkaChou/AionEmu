@@ -42,7 +42,7 @@ public class Carniverous_VinesAI2 extends NpcAI2
 	
 	@Override
 	protected void handleDied() {
-		spawn(806236, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Tunes Of Splendor Scout.
+		spawn(806236, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // Tunes Of Splendor 侦察兵 / Tunes Of Splendor Scout.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);

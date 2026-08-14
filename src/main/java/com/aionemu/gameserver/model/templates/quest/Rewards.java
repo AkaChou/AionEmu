@@ -56,7 +56,7 @@ public class Rewards {
 	@XmlAttribute(name = "extend_stigma")
 	protected Integer extendStigma;
 
-	/** 返回 selectable reward item / Returns the selectable reward item */
+	/** 返回可选奖励物品列表 / Returns the selectable reward items */
 	public List<QuestItems> getSelectableRewardItem() {
 		if (selectableRewardItem == null) {
 			selectableRewardItem = new ArrayList<QuestItems>();
@@ -82,7 +82,7 @@ public class Rewards {
 		return exp;
 	}
 
-	/** 返回经验加速 / Returns the exp boost*/
+	/** 返回经验加成 / Returns the exp boost. */
 	public Integer getExpBoost() {
 		return expBoost;
 	}
@@ -97,7 +97,7 @@ public class Rewards {
 		return ap;
 	}
 
-	/** 返回荣耀点 / Returns the gp */
+	/** 返回荣耀点数 / Returns the gp */
 	public Integer getGp() {
 		return gp;
 	}
@@ -107,7 +107,7 @@ public class Rewards {
 		return cp;
 	}
 
-	/** 返回 abyss op / Returns the abyss op */
+	/** 返回 Abyss Op / Returns the abyss op */
 	public Integer getAbyssOp() {
 		return abyssOp;
 	}
@@ -117,12 +117,12 @@ public class Rewards {
 		return title;
 	}
 
-	/** 返回 extend inventory / Returns the extend inventory */
+	/** 返回扩展背包数量 / Returns the extend inventory */
 	public Integer getExtendInventory() {
 		return extendInventory;
 	}
 
-	/** 返回 extend stigma / Returns the extend stigma */
+	/** 返回扩展烙印之石槽数量 / Returns the extend stigma */
 	public Integer getExtendStigma() {
 		return extendStigma;
 	}

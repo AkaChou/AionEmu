@@ -119,8 +119,8 @@ public class MotionList {
     }
 
     /**
-	 * 检查玩家是否拥有指定 ID 的动画。 / Checks if the player has a motion with the given ID.
-	 */
+     * 检查玩家是否拥有指定 ID 的动画。 / Checks if the player has a motion with the given ID.
+     */
     public boolean hasMotion(Integer motionId) {
        if (motions == null) {
            // log.warn(I18n.get("log.23d63069dea6"));
@@ -133,13 +133,13 @@ public class MotionList {
     }
 
     /**
-	 * 从数据库加载动作。 / Load motions from database
-	  */
+     * 从数据库加载动作。 / Load motions from database.
+     */
     public void loadMotionsFromDatabase() {
         List<Motion> loadedMotions = DAOManager.getDAO(MotionDAO.class).loadMotions(owner.getObjectId());
         if (loadedMotions != null) {
             for (Motion motion : loadedMotions) {
-                add(motion, false); // Не сохраняем повторно, просто загружаем
+                add(motion, false); // 不重复保存，仅加载 / Not saving again, just loading
             }
         }
     }

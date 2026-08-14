@@ -6,7 +6,7 @@ import com.aionemu.gameserver.model.ai.Summons;
 
 /**
  * AI 模板（静态数据/XML）。
- * XML template.
+ * AI Template (static data/XML).
  *
  * @author xTz
  */
@@ -30,12 +30,12 @@ public class AITemplate {
 		return npcId;
 	}
 
-	/** 返回 summons / Returns the summons */
+	/** 返回召唤物 / Returns the summons */
 	public Summons getSummons() {
 		return summons;
 	}
 
-	/** 返回 bombs / Returns the bombs */
+	/** 返回炸弹 / Returns the bombs */
 	public Bombs getBombs() {
 		return bombs;
 	}

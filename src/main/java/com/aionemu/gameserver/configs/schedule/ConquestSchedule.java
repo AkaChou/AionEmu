@@ -68,8 +68,8 @@ public class ConquestSchedule {
 	@XmlRootElement(name = "conquest")
 	public static class Conquest {
 		/**
-	 * 征服 ID / Conquest ID
-	 */
+		 * 征服 ID / Conquest ID
+		 */
 		@XmlAttribute(required = true)
 		private int id;
 

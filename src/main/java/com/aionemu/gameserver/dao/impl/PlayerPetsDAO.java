@@ -25,11 +25,11 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
      * 保存宠物喂养状态。
      * Saves the pet feed status.
      *
-     * 玩家 / player
-     * pet id
-     * hungry level
-     * feed progress
-     * reuse time
+     * @param player 玩家 / player
+     * @param petId 宠物 ID / pet id
+     * @param hungryLevel hungry level
+     * @param feedProgress feed progress
+     * @param reuseTime 复用时间 / reuse time
      */
     @Override
     public void saveFeedStatus(Player player, int petId, int hungryLevel, int feedProgress, long reuseTime) {
@@ -52,9 +52,9 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
      * 保存宠物增益包（食品/饮料/卷轴）。
      * Saves the pet doping bag (food/drink/scrolls).
      *
-     * 玩家 / player
-     * pet id
-     * doping bag
+     * @param player 玩家 / player
+     * @param petId 宠物 ID / pet id
+     * @param bag doping bag
      */
     @Override
     public void saveDopingBag(Player player, int petId, PetDopingBag bag) {
@@ -82,8 +82,8 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
      * 设置宠物复用时间。
      * Sets the pet reuse time.
      *
-     * 玩家 / player
-     * pet id
+     * @param player 玩家 / player
+     * @param petId 宠物 ID / pet id
      * @param time 复用时间 / reuse time
      */
     @Override
@@ -129,8 +129,8 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
      * 删除玩家宠物记录。
      * Removes a player pet record.
      *
-     * 玩家 / player
-     * pet id
+     * @param player 玩家 / player
+     * @param petId 宠物 ID / pet id
      */
     @Override
     public void removePlayerPet(Player player, int petId) {
@@ -247,7 +247,7 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
      * Saves pet mood related data.
      *
      * @param petCommonData 宠物通用数据 / pet common data
-     * whether successful
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean savePetMoodData(PetCommonData petCommonData) {
@@ -274,10 +274,10 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

@@ -66,7 +66,7 @@ public class Inspector_PidaraAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 60, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 60, getOwner()).useNoAnimationSkill(); // 布里特拉的眷顾 / Beritra's Favor
 		}
 	}
 	
@@ -81,10 +81,10 @@ public class Inspector_PidaraAI2 extends AggressiveNpcAI2
 	}	
 	
 	private void skill() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 18158, 100, getOwner()).useNoAnimationSkill(); //Wrathful Venom Burst.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 18158, 100, getOwner()).useNoAnimationSkill(); // 愤怒毒爆 / Wrathful Venom Burst
 		   GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
-                GameEngineServices.skillEngine().getSkill(getOwner(), 18160, 100, getOwner()).useNoAnimationSkill(); //Virulence.
+                GameEngineServices.skillEngine().getSkill(getOwner(), 18160, 100, getOwner()).useNoAnimationSkill(); // 毒性 / Virulence
 			}
 		}, 4000);
 	}

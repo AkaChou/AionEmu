@@ -12,7 +12,7 @@ public class GameDAOClassProvider implements DAOClassProvider {
 	 * 返回 DAO 上下文名称。
 	 * Returns the DAO context name.
 	 *
-	 * context name
+	 * @return 上下文名 / context name
 	 */
 	@Override
 	public String contextName() {

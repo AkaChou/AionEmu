@@ -25,7 +25,7 @@ public abstract class BrokerDAO implements IDFactoryAwareDAO {
 	 * Stores a broker item.
 	 *
 	 * @param brokerItem 交易行物品 / broker item
-	 * whether successful
+	 * @return 是否成功 / whether successful
 	 */
 	public abstract boolean store(BrokerItem brokerItem);
 
@@ -46,7 +46,7 @@ public abstract class BrokerDAO implements IDFactoryAwareDAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
 	 *
-	 * class name
+	 * @return 类名 / class name
 	 */
 	@Override
 	public final String getClassName() {

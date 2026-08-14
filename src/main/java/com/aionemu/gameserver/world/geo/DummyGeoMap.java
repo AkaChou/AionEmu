@@ -19,7 +19,7 @@ public class DummyGeoMap extends GeoMap {
 	 * Constructs a dummy map with the given name and world size.
 	 *
 	 * @param name 地图名称 / map name
-	 * world size
+	 * @param worldSize 世界尺寸 / world size
 	 */
 	public DummyGeoMap(String name, int worldSize) {
 		super(name, worldSize);
@@ -32,8 +32,8 @@ public class DummyGeoMap extends GeoMap {
 	 * @param x X 坐标 / x coordinate
 	 * @param y Y 坐标 / y coordinate
 	 * @param z 参考高度 / reference height
-	 * instance id
-	 * the original height
+	 * @param instanceId 实例 ID / instance id
+	 * @return 原样高度 / the original height
 	 */
 	@Override
 	public final float getZ(float x, float y, float z, int instanceId) {
@@ -47,12 +47,12 @@ public class DummyGeoMap extends GeoMap {
 	 * @param x 起点 X / start x
 	 * @param y 起点 Y / start y
 	 * @param z 起点 Z / start z
-	 * target x
-	 * target y
-	 * target z
+	 * @param targetX 目标 X / target x
+	 * @param targetY 目标 Y / target y
+	 * @param targetZ 目标 Z / target z
 	 * @param limit 检测距离上限 / ray-length limit
-	 * instance id
-	 * always true
+	 * @param instanceId 实例 ID / instance id
+	 * @return 始终为 true / always true
 	 */
 	@Override
 	public final boolean canSee(float x, float y, float z, float targetX, float targetY, float targetZ, float limit,
@@ -67,13 +67,13 @@ public class DummyGeoMap extends GeoMap {
 	 * @param x 起点 X / start x
 	 * @param y 起点 Y / start y
 	 * @param z 起点 Z / start z
-	 * target x
-	 * target y
-	 * target z
+	 * @param targetX 目标 X / target x
+	 * @param targetY 目标 Y / target y
+	 * @param targetZ 目标 Z / target z
 	 * @param limit 检测距离上限 / ray-length limit
-	 * instance id
-	 * ignore properties
-	 * always true
+	 * @param instanceId 实例 ID / instance id
+	 * @param ignoreProperties 忽略属性 / ignore properties
+	 * @return 始终为 true / always true
 	 */
 	@Override
 	public boolean canSee(float x, float y, float z, float targetX, float targetY, float targetZ, float limit,
@@ -88,12 +88,12 @@ public class DummyGeoMap extends GeoMap {
 	 * @param x 起点 X / start x
 	 * @param y 起点 Y / start y
 	 * @param z 起点 Z / start z
-	 * target x
-	 * target y
-	 * target z
+	 * @param targetX 目标 X / target x
+	 * @param targetY 目标 Y / target y
+	 * @param targetZ 目标 Z / target z
 	 * @param changeDirction 是否允许改向 / whether direction may change
 	 * @param fly 是否飞行 / whether flying
-	 * instance id
+	 * @param instanceId 实例 ID / instance id
 	 * @param intentions 碰撞意图掩码 / collision intention mask
 	 * @return 目标点坐标 / the target coordinates
 	 */
@@ -110,14 +110,14 @@ public class DummyGeoMap extends GeoMap {
 	 * @param x 起点 X / start x
 	 * @param y 起点 Y / start y
 	 * @param z 起点 Z / start z
-	 * target x
-	 * target y
-	 * target z
+	 * @param targetX 目标 X / target x
+	 * @param targetY 目标 Y / target y
+	 * @param targetZ 目标 Z / target z
 	 * @param changeDirction 是否允许改向 / whether direction may change
 	 * @param fly 是否飞行 / whether flying
-	 * instance id
+	 * @param instanceId 实例 ID / instance id
 	 * @param intentions 碰撞意图掩码 / collision intention mask
-	 * ignore properties
+	 * @param ignoreProperties 忽略属性 / ignore properties
 	 * @return 目标点坐标 / the target coordinates
 	 */
 	@Override
@@ -133,14 +133,14 @@ public class DummyGeoMap extends GeoMap {
 	 * @param x 起点 X / start x
 	 * @param y 起点 Y / start y
 	 * @param z 起点 Z / start z
-	 * target x
-	 * target y
-	 * target z
+	 * @param targetX 目标 X / target x
+	 * @param targetY 目标 Y / target y
+	 * @param targetZ 目标 Z / target z
 	 * @param changeDirection 是否允许改向 / whether direction may change
 	 * @param fly 是否飞行 / whether flying
-	 * instance id
+	 * @param instanceId 实例 ID / instance id
 	 * @param intentions 碰撞意图掩码 / collision intention mask
-	 * ignore properties
+	 * @param ignoreProperties 忽略属性 / ignore properties
 	 *
 	 * @return 空碰撞结果 / empty collision results
 	 */
@@ -154,8 +154,8 @@ public class DummyGeoMap extends GeoMap {
 	 * 空操作：哑地图不维护门状态。
 	 * No-op: dummy maps do not track door state.
 	 *
-	 * instance id
-	 * door id
+	 * @param instanceId 实例 ID / instance id
+	 * @param doorId 门 ID / door id
 	 * @param open 是否打开 / whether open
 	 */
 	@Override
@@ -167,8 +167,8 @@ public class DummyGeoMap extends GeoMap {
 	 * 空操作：哑地图不生成可放置物。
 	 * No-op: dummy maps do not spawn placeable objects.
 	 *
-	 * instance id
-	 * static object id
+	 * @param instanceId 实例 ID / instance id
+	 * @param staticId 静态物 ID / static object id
 	 */
 	@Override
 	public void spawnPlaceableObject(int instanceId, int staticId) {
@@ -179,8 +179,8 @@ public class DummyGeoMap extends GeoMap {
 	 * 空操作：哑地图不销毁可放置物。
 	 * No-op: dummy maps do not despawn placeable objects.
 	 *
-	 * instance id
-	 * static object id
+	 * @param instanceId 实例 ID / instance id
+	 * @param staticId 静态物 ID / static object id
 	 */
 	@Override
 	public void despawnPlaceableObject(int instanceId, int staticId) {
@@ -191,7 +191,7 @@ public class DummyGeoMap extends GeoMap {
 	 * 空操作：哑地图不更新城镇等级。
 	 * No-op: dummy maps do not update town levels.
 	 *
-	 * town id
+	 * @param townId 城镇 ID / town id
 	 * @param level 目标等级 / target level
 	 */
 	@Override
@@ -203,8 +203,8 @@ public class DummyGeoMap extends GeoMap {
 	 * 空操作：哑地图不维护房屋门状态。
 	 * No-op: dummy maps do not track house-door state.
 	 *
-	 * instance id
-	 * house address
+	 * @param instanceId 实例 ID / instance id
+	 * @param houseAddress 房屋地址 / house address
 	 * @param open 是否打开 / whether open
 	 */
 	@Override
@@ -216,7 +216,7 @@ public class DummyGeoMap extends GeoMap {
 	 * 哑地图无地形材质。
 	 * Dummy maps have no terrain materials.
 	 *
-	 * always false
+	 * @return 始终为 false / always false
 	 */
 	@Override
 	public boolean hasTerrainMaterials() {
@@ -227,8 +227,8 @@ public class DummyGeoMap extends GeoMap {
 	 * 空操作：不挂接子节点。
 	 * No-op: children are not attached.
 	 *
-	 * child spatial
-	 * always 0
+	 * @param child 子节点 / child spatial
+	 * @return 始终为 0 / always 0
 	 */
 	@Override
 	public int attachChild(Spatial child) {

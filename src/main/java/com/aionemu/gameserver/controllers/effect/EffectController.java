@@ -70,7 +70,7 @@ public class EffectController {
 	 * 返回效果所属生物。
 	 * Returns the creature that owns these effects.
 	 *
-	 * owner
+	 * @return 所有者生物 / owner creature
 	 */
 	public Creature getOwner() {
 		return owner;
@@ -97,7 +97,7 @@ public class EffectController {
 	}
 
 	/**
-	 * 添加效果：处理被动叠层、冲突、开关/吟唱/游侠上限后启动并广播。
+	 * 添加效果：处理被动叠层、冲突、开关/吟唱/弓星上限后启动并广播。
 	 * Adds an effect: resolves passive stacks, conflicts, toggle/chant/ranger caps, then starts and broadcasts.
 	 *
 	 * @param nextEffect 待添加的效果 / effect to add
@@ -126,9 +126,7 @@ public class EffectController {
 				}
 
 				if (useEffectId) {
-					/**
-	 * idea here is that effects with same effectId shouldnt stack effect with higher basiclvl takes priority
-	 */
+					// 相同 effectId 的效果不应叠加，basicLvl 更高的优先 / effects with the same effectId should not stack, higher basicLvl takes priority
 					for (Effect effect : effectsSnapshot(mapToUpdate)) {
 						if (effect.getTargetSlot() == nextEffect.getTargetSlot()) {
 							for (EffectTemplate et : effect.getEffectTemplates()) {
@@ -181,7 +179,7 @@ public class EffectController {
 					chantIter.next().endEffect();
 				}
 			}
-			// 最多 2 个游侠效果 / Max 2 Ranger Effect
+			// 最多 2 个弓星效果 / Max 2 Ranger Effect
 			if (nextEffect.isRangerBuff()) {
 				Collection<Effect> rangerBuff = this.getRangerEffects();
 				if (rangerBuff.size() >= 2) {
@@ -219,9 +217,7 @@ public class EffectController {
 	 * 判断技能是否为奥德科技类开关效果（4.8）。
 	 * Returns whether the skill is an Aethertech-style toggle effect (4.8).
 	 *
-	 * skill id
-	 *
-	 * @param skillId
+	 * @param skillId 技能 ID / skill id
 	 * @return true 若为奥德科技效果 / true if Aethertech effect
 	 */
 	public boolean isAethertechEffect(int skillId) { // 4.8
@@ -285,7 +281,7 @@ public class EffectController {
 	 * Finds an existing effect in the map that conflicts with the new effect by conflictId.
 	 *
 	 * @param mapToUpdate 待检索的效果映射 / effect map to search
-	 * new effect
+	 * @param newEffect 新效果 / new effect
 	 * @return 冲突效果，无则 null / conflicting effect, or null
 	 */
 	private final Effect findConflictedEffect(Map<String, Effect> mapToUpdate, Effect newEffect) {
@@ -303,10 +299,10 @@ public class EffectController {
 
 	/**
 	 * 按效果类型返回对应存储映射（被动 / 开关 / 异常）。
-	 * toggle / abnormal).
+	 * Returns the storage map for the effect type (passive / toggle / abnormal).
 	 *
-	 * effect
-	 * matching map
+	 * @param effect 效果 / effect
+	 * @return 对应映射 / matching map
 	 */
 	private Map<String, Effect> getMapForEffect(Effect effect) {
 
@@ -323,9 +319,7 @@ public class EffectController {
 	 * 按 stack 键获取异常效果。
 	 * Returns the abnormal effect for the given stack key.
 	 *
-	 * effect stack key
-	 *
-	 * @param stack
+	 * @param stack 效果 stack 键 / effect stack key
 	 * @return 异常效果或 null / abnormal effect or null
 	 */
 	public Effect getAnormalEffect(String stack) {
@@ -336,9 +330,8 @@ public class EffectController {
 	 * 是否存在指定技能 ID 的异常效果。
 	 * Whether an abnormal effect with the given skill id is present.
 	 *
-	 * skill id
-	 *
-	 * @param skillId 存在则为 true / true if present
+	 * @param skillId 技能 ID / skill id
+	 * @return 存在则为 true / true if present
 	 */
 	public boolean hasAbnormalEffect(int skillId) {
 		Iterator<Effect> localIterator = effectsSnapshot(abnormalEffectMap).iterator();
@@ -355,9 +348,8 @@ public class EffectController {
 	 * 在全部效果映射中是否包含指定效果模板 ID。
 	 * Whether any effect map contains the given effect-template id.
 	 *
-	 * effect template id
-	 *
-	 * @param effectId 若 contained 则为 true / true if contained
+	 * @param effectId 效果模板 ID / effect template id
+	 * @return 包含则为 true / true if contained
 	 */
 	public boolean hasEffectById(int effectId) {
 		Collection<Effect> allEffects = new ArrayList<>();
@@ -393,7 +385,7 @@ public class EffectController {
 	 * 向指定玩家发送当前效果图标（用于新进入视野）。
 	 * Sends current effect icons to the given player (when newly seen).
 	 *
-	 * target player
+	 * @param player 目标玩家 / target player
 	 */
 	public synchronized void sendEffectIconsTo(Player player) {
 		List<Effect> effects = getAbnormalEffects();
@@ -419,7 +411,7 @@ public class EffectController {
 	 * 按技能 ID 结束并移除全部映射中的效果。
 	 * Ends and removes effects with the given skill id from all maps.
 	 *
-	 * skill id
+	 * @param skillid 技能 ID / skill id
 	 */
 	public void removeEffect(int skillid) {
 		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
@@ -441,6 +433,12 @@ public class EffectController {
 		}
 	}
 
+	/**
+	 * 结束带指定技能 ID 且标记为「阻止目标行动」的效果。
+	 * Ends effects with the given skill id that are flagged target-stop.
+	 *
+	 * @param skillId 技能 ID / skill id
+	 */
 	public void removeTargetStoppableEffect(int skillId) {
 		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (effect.getSkillId() == skillId && effect.getSkillTemplate().isTargetStop()) {
@@ -449,6 +447,13 @@ public class EffectController {
 		}
 	}
 
+	/**
+	 * 登记持续效果组；超过最大目标数时移除最旧的一组。
+	 * Registers maintain-effect groups; evicts the oldest group when over the max target count.
+	 *
+	 * @param effects 效果组 / effect group
+	 * @param maxTargetCount 最大目标数 / max target count
+	 */
 	public synchronized void registerMaintainEffects(List<Effect> effects, int maxTargetCount) {
 		if (effects.isEmpty() || maxTargetCount <= 0) {
 			return;
@@ -506,9 +511,7 @@ public class EffectController {
 	 * 计算可被 DispelBuffCounterAtk 驱散的效果数量。
 	 * Counts effects removable by DispelBuffCounterAtk at the given dispel level.
 	 *
-	 * dispel level
-	 *
-	 * @param dispelLevel
+	 * @param dispelLevel 驱散等级 / dispel level
 	 * @return 可驱散数量 / removable count
 	 */
 	public int calculateNumberOfEffects(int dispelLevel) {
@@ -549,10 +552,10 @@ public class EffectController {
 	 * 按驱散类别、目标槽与驱散等级移除效果。
 	 * Removes effects by dispel category, target slot and dispel level.
 	 *
-	 * dispel category
-	 * target slot
+	 * @param dispelCat 驱散类别 / dispel category
+	 * @param targetSlot 目标槽 / target slot
 	 * @param count 最多移除数量 / max removals
-	 * dispel level
+	 * @param dispelLevel 驱散等级 / dispel level
 	 * @param power 驱散强度 / dispel power
 	 */
 	public void removeEffectByDispelCat(DispelCategoryType dispelCat, SkillTargetSlot targetSlot, int count,
@@ -649,7 +652,7 @@ public class EffectController {
 	 * Runs DispelBuffCounterAtk: dispels buffs by count and level.
 	 *
 	 * @param count 最多驱散数 / max dispels
-	 * dispel level
+	 * @param dispelLevel 驱散等级 / dispel level
 	 * @param power 驱散强度 / dispel power
 	 */
 	public void dispelBuffCounterAtkEffect(int count, int dispelLevel, int power) {
@@ -699,9 +702,8 @@ public class EffectController {
 	 * 判断超长时长效果是否仍允许被驱散（白名单技能）。
 	 * Whether a long-duration effect is still removable (whitelist skills).
 	 *
-	 * effect
-	 *
-	 * @param effect 若 removable 则为 true / true if removable
+	 * @param effect 效果 / effect
+	 * @return 可驱散则为 true / true if removable
 	 */
 	private boolean isDispellableLongDurationEffect(Effect effect) {
 		int skillId = effect.getSkillId();
@@ -726,7 +728,7 @@ public class EffectController {
 	 * 按效果类型结束匹配的异常效果。
 	 * Ends abnormal effects matching the given effect type.
 	 *
-	 * effect type
+	 * @param effectType 效果类型 / effect type
 	 */
 	public void removeEffectByEffectType(EffectType effectType) {
 		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
@@ -766,10 +768,8 @@ public class EffectController {
 	 * 削减效果驱散强度；耗尽则返回 true。
 	 * Reduces the effect's remaining dispel power; returns true when exhausted.
 	 *
-	 * effect
-	 *
+	 * @param effect 效果 / effect
 	 * @param power 驱散强度 / power to apply
-	 * @param power
 	 * @return true 若效果应结束 / true if the effect should end
 	 */
 	private boolean removePower(Effect effect, int power) {
@@ -786,7 +786,7 @@ public class EffectController {
 	 * 按技能 ID 移除被动效果。
 	 * Removes passive effects by skill id.
 	 *
-	 * skill id
+	 * @param skillid 技能 ID / skill id
 	 */
 	public void removePassiveEffect(int skillid) {
 		for (Effect effect : effectsSnapshot(passiveEffectMap)) {
@@ -800,7 +800,7 @@ public class EffectController {
 	 * 按技能 ID 移除不显示的开关类效果。
 	 * Removes no-show (toggle) effects by skill id.
 	 *
-	 * skill id
+	 * @param skillid 技能 ID / skill id
 	 */
 	public void removeNoshowEffect(int skillid) {
 		for (Effect effect : effectsSnapshot(noshowEffects)) {
@@ -814,7 +814,7 @@ public class EffectController {
 	 * 按目标槽移除异常效果。
 	 * Removes abnormal effects matching the target slot.
 	 *
-	 * target slot
+	 * @param targetSlot 目标槽 / target slot
 	 */
 	public void removeAbnormalEffectsByTargetSlot(SkillTargetSlot targetSlot) {
 		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
@@ -873,9 +873,8 @@ public class EffectController {
 	 * 异常映射中是否存在指定技能 ID。
 	 * Whether the abnormal map contains the given skill id.
 	 *
-	 * skill id
-	 *
-	 * @param skillId 存在则为 true / true if present
+	 * @param skillId 技能 ID / skill id
+	 * @return 存在则为 true / true if present
 	 */
 	public boolean isAbnormalPresentBySkillId(int skillId) {
 		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
@@ -890,9 +889,8 @@ public class EffectController {
 	 * 不显示效果映射中是否存在指定技能 ID。
 	 * Whether the no-show map contains the given skill id.
 	 *
-	 * skill id
-	 *
-	 * @param skillId 存在则为 true / true if present
+	 * @param skillId 技能 ID / skill id
+	 * @return 存在则为 true / true if present
 	 */
 	public boolean isNoshowPresentBySkillId(int skillId) {
 		for (Effect effect : effectsSnapshot(noshowEffects)) {
@@ -907,9 +905,8 @@ public class EffectController {
 	 * 被动映射中是否存在指定技能 ID。
 	 * Whether the passive map contains the given skill id.
 	 *
-	 * skill id
-	 *
-	 * @param skillId 存在则为 true / true if present
+	 * @param skillId 技能 ID / skill id
+	 * @return 存在则为 true / true if present
 	 */
 	public boolean isPassivePresentBySkillId(int skillId) {
 		for (Effect effect : effectsSnapshot(passiveEffectMap)) {
@@ -991,7 +988,7 @@ public class EffectController {
 	 * 返回当前吟唱类效果。
 	 * Returns current chant effects.
 	 *
-	 * chant effects
+	 * @return 吟唱效果集合 / chant effects
 	 */
 	public Collection<Effect> getChantEffects() {
 		return Collections2.filter(effectsSnapshot(abnormalEffectMap), new Predicate<Effect>() {
@@ -1003,10 +1000,10 @@ public class EffectController {
 	}
 
 	/**
-	 * 返回当前游侠增益效果。
+	 * 返回当前弓星增益效果。
 	 * Returns current ranger buff effects.
 	 *
-	 * ranger effects
+	 * @return 弓星增益集合 / ranger effects
 	 */
 	public Collection<Effect> getRangerEffects() {
 		return Collections2.filter(effectsSnapshot(abnormalEffectMap), new Predicate<Effect>() {
@@ -1021,7 +1018,7 @@ public class EffectController {
 	 * 返回当前增益效果。
 	 * Returns current buff effects.
 	 *
-	 * buff effects
+	 * @return 增益效果集合 / buff effects
 	 */
 	public Collection<Effect> getBuffEffects() {
 		return Collections2.filter(effectsSnapshot(abnormalEffectMap), new Predicate<Effect>() {
@@ -1053,6 +1050,12 @@ public class EffectController {
 		abnormals &= ~(mask & ~getMappedAbnormals());
 	}
 
+	/**
+	 * 汇总异常效果映射中的所有异常状态位。
+	 * ORs together the abnormal-state bits of all abnormal effects.
+	 *
+	 * @return 已映射的异常状态掩码 / mapped abnormal bits
+	 */
 	private int getMappedAbnormals() {
 		int mappedAbnormals = 0;
 		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
@@ -1088,7 +1091,7 @@ public class EffectController {
 	 * 返回当前异常状态位掩码。
 	 * Returns the current abnormal-state bit mask.
 	 *
-	 * abnormal mask
+	 * @return 异常状态掩码 / abnormal mask
 	 */
 	public int getAbnormals() {
 		return abnormals;
@@ -1108,7 +1111,7 @@ public class EffectController {
 	 * 根据当前效果推断变身类型。
 	 * Infers transform type from current effects.
 	 *
-	 * transform type
+	 * @return 变身类型 / transform type
 	 */
 	public TransformType getTransformType() {
 		for (Effect eff : getAbnormalEffects()) {
@@ -1135,7 +1138,7 @@ public class EffectController {
 	 * 按 delayId 限制同类效果数量，必要时结束最早者。
 	 * Enforces per-delayId effect caps and ends the earliest when over limit.
 	 *
-	 * new effect
+	 * @param effect 新效果 / new effect
 	 */
 	public void checkEffectCooldownId(Effect effect) {
 		Collection<Effect> effects = this.getAbnormalEffectsToShow();
@@ -1180,9 +1183,7 @@ public class EffectController {
 	 * 处理 EXTRA 驱散类别的叠层替换。
 	 * Handles EXTRA dispel-category stack replacement.
 	 *
-	 * new effect
-	 *
-	 * @param effect
+	 * @param effect 新效果 / new effect
 	 * @return true 若已替换已有效果 / true if an existing effect was replaced
 	 */
 	private boolean checkExtraEffect(Effect effect) {
@@ -1201,8 +1202,8 @@ public class EffectController {
 	 * 线程安全地复制效果值列表。
 	 * Thread-safely copies effect values into a list.
 	 *
-	 * effect map
-	 * snapshot list
+	 * @param effects 效果映射 / effect map
+	 * @return 快照列表 / snapshot list
 	 */
 	private static List<Effect> effectsSnapshot(Map<String, Effect> effects) {
 		synchronized (effects) {
@@ -1214,8 +1215,8 @@ public class EffectController {
 	 * 线程安全地复制效果条目列表。
 	 * Thread-safely copies effect entries into a list.
 	 *
-	 * effect map
-	 * entry snapshot
+	 * @param effects 效果映射 / effect map
+	 * @return 条目快照列表 / entry snapshot
 	 */
 	private static List<Map.Entry<String, Effect>> effectEntriesSnapshot(Map<String, Effect> effects) {
 		synchronized (effects) {
@@ -1227,9 +1228,7 @@ public class EffectController {
 	 * 搜索 effectId 冲突；低 basicLvl 被拒绝，高 basicLvl 顶替。
 	 * Searches effectId conflicts; lower basicLvl is rejected, higher replaces.
 	 *
-	 * new effect
-	 *
-	 * @param nextEffect
+	 * @param nextEffect 新效果 / new effect
 	 * @return true 若新效果因冲突被拒绝 / true if new effect is rejected
 	 */
 	private boolean searchConflict(Effect nextEffect) {
@@ -1268,9 +1267,8 @@ public class EffectController {
 	 * 高优先级 Stigma 效果顶替同槽低优先级效果。
 	 * Higher-priority stigma effects replace lower ones in the same slot.
 	 *
-	 * new effect
-	 *
-	 * @param nextEffect 若 a lower effect was replaced 则为 true / true if a lower effect was replaced
+	 * @param nextEffect 新效果 / new effect
+	 * @return 若低优先级效果被顶替则为 true / true if a lower effect was replaced
 	 */
 	private boolean priorityStigmaEffect(Effect nextEffect) {
 		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {

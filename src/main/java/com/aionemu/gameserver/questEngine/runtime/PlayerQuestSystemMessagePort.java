@@ -13,7 +13,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import java.util.Objects;
 import java.util.function.IntFunction;
 
-/** Production system-message boundary for the currently modeled quest messages. */
+/** 当前建模任务消息的生产系统消息边界。 / Production system-message boundary for the currently modeled quest messages. */
 public final class PlayerQuestSystemMessagePort implements QuestSystemMessagePort {
 	private final QuestPlayerPort players;
 	private final MessageOperations operations;

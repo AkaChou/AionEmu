@@ -76,7 +76,7 @@ public class GameServerInfo {
     @Setter
     private volatile int maxPlayers;
     /**
- * 本服在线账号 Map&lt;账号 ID, Account&gt;。
+     * 本服在线账号 Map&lt;账号 ID, Account&gt;。
      * Online accounts Map&lt;accountId, Account&gt;.
      */
     private final Map<Integer, Account> accountsOnGameServer = new ConcurrentHashMap<>();
@@ -146,7 +146,7 @@ public class GameServerInfo {
      * 当前在线人数。
      * Current online player count.
      *
-     * Online count
+     * @return 在线人数 / Online count
      */
     public int getCurrentPlayers() {
         return accountsOnGameServer.size();
@@ -169,9 +169,7 @@ public class GameServerInfo {
      * 不同子网可能需要不同地址；离线时返回 127.0.0.1。
      * Different subnets may need different addresses; returns 127.0.0.1 when offline.
      *
-     * Player IP
-     *
-     * @param playerIp
+     * @param playerIp 玩家 IP / Player IP
      * @return 对该玩家有效的地址字节 / Address bytes valid for the player
      */
     public byte[] getIPAddressForPlayer(String playerIp) {

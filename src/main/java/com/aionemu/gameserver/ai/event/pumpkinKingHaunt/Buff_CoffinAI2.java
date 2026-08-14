@@ -30,7 +30,7 @@ public class Buff_CoffinAI2 extends GeneralNpcAI2
     public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
-			    case 835989: //Buff Coffin.
+			    case 835989: // 某个高贵者的棺木 / Buff Coffin.
 					GameEngineServices.skillEngine().applyEffectDirectly(11385, player, player, 3600000 * 1);
 				break;
 			}

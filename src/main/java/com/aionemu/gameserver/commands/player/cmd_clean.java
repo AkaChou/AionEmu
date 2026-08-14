@@ -108,7 +108,7 @@ public class cmd_clean extends PlayerCommand {
 	 * Echoes the failure message when arguments are invalid.
 	 *
 	 * @param player 执行命令的玩家 / invoking player
-	 * failure message
+	 * @param message 失败提示消息 / failure message
 	 */
     @Override
     public void onFail(Player player, String message) {

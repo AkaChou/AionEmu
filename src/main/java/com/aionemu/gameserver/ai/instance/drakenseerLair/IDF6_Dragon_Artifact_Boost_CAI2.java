@@ -60,6 +60,7 @@ public class IDF6_Dragon_Artifact_Boost_CAI2 extends NpcAI2
 	}
 	
    /**
+	 * 发起龙族突袭 C 阶段。
 	 * Dragon Raid C
 	 */
 	private void startIDF6DragonRaidC1() {

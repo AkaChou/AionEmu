@@ -128,9 +128,9 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
 		    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				public void run() {
 					if (!isAlreadyDead()) {
-                        spawn(284380, 244.12497f, 276.17401f, 242.625f, (byte) 0); //Modor's Bodyguard.
-                        spawn(284381, 263.12497f, 276.17401f, 242.625f, (byte) 0); //Vengeful Reaper.
-						spawn(284382, 253.12497f, 277.17401f, 242.625f, (byte) 0); //Hoarfrost Acheron Drake.
+                        spawn(284380, 244.12497f, 276.17401f, 242.625f, (byte) 0); // 葛兰达的保镖 / Modor's Bodyguard
+                        spawn(284381, 263.12497f, 276.17401f, 242.625f, (byte) 0); // 复仇收割者 / Vengeful Reaper
+						spawn(284382, 253.12497f, 277.17401f, 242.625f, (byte) 0); // 白霜阿刻戎龙 / Hoarfrost Acheron Drake
 						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 284.34036f, 262.9162f, 248.851f, (byte) 63);
 				        PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 					}
@@ -208,7 +208,7 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
 		sendMsg(1500744);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
-				despawnNpcs(231304); //Cursed Queen Modor.
+				despawnNpcs(231304); // 被诅咒的葛兰达女王 / Cursed Queen Modor
 				spawn(284383, 255.12497f, 293.17401f, 257.625f, (byte) 22);
 				spawn(284383, 284.12497f, 262.17401f, 249.625f, (byte) 0);
 				spawn(284383, 271.12497f, 230.17401f, 251.625f, (byte) 0);

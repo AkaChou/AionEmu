@@ -107,7 +107,7 @@ public abstract class StatsTemplate {
 		this.evasion = evasion;
 	}
 
-	/** 返回黑名单 / Returns the block */
+	/** 返回格挡 / Returns the block */
 	public int getBlock() {
 		return block;
 	}

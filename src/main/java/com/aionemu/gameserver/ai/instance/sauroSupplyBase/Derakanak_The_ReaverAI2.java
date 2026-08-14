@@ -36,7 +36,7 @@ public class Derakanak_The_ReaverAI2 extends AggressiveNpcAI2
 	}
 	
 	private void beritraFavor() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
 	}
 	
 	@Override
@@ -65,7 +65,7 @@ public class Derakanak_The_ReaverAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 17888, 60, getOwner()).useNoAnimationSkill(); //Fear Casting.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 17888, 60, getOwner()).useNoAnimationSkill(); // 恐惧施法 / Fear Casting.
 			scheduleDelayStage1(delay);
 		}
 	}
@@ -74,7 +74,7 @@ public class Derakanak_The_ReaverAI2 extends AggressiveNpcAI2
 		int delay = 15000;
 		if (isAlreadyDead() || !isStart) {
 			return;
-		} else { //16918: Flame Spurt & 16881: Magic Missile.
+		} else { // 16918: 火焰喷射 与 16881: 魔法飞弹 / 16918: Flame Spurt & 16881: Magic Missile.
 			GameEngineServices.skillEngine().getSkill(getOwner(), Rnd.get(2) == 0 ? 16918 : 16881, 60, getTarget()).useNoAnimationSkill();
 			scheduleDelayStage2(delay);
 		}

@@ -77,11 +77,11 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      * 存储活动窗口进度。
      * Stores event window progress.
      *
-     * 账号 ID / account id
-     * event id
+     * @param accountId 账号 ID / account id
+     * @param eventId 事件 ID / event id
      * @param last_stamp 上次时间戳 / last stamp
-     * elapsed time
-     * whether successful
+     * @param elapsed 已用时间 / elapsed time
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean store(int accountId, int eventId, Timestamp last_stamp, int elapsed) {
@@ -104,8 +104,8 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      * 插入一条活动窗口记录。
      * Inserts an event window record.
      *
-     * 账号 ID / account id
-     * event id
+     * @param accountId 账号 ID / account id
+     * @param eventId 事件 ID / event id
      * @param last_stamp 上次时间戳 / last stamp
      */
     @Override
@@ -126,8 +126,8 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      * 删除指定账号的活动窗口记录。
      * Deletes an event window record for the account.
      *
-     * 账号 ID / account id
-     * event id
+     * @param accountId 账号 ID / account id
+     * @param eventId 事件 ID / event id
      */
     @Override
     public void delete(final int accountId, final int eventId) {
@@ -146,8 +146,8 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      * 获取账号下全部活动窗口 ID。
      * Returns all event window ids for the account.
      *
-     * 账号 ID / account id
-     * list of event ids
+     * @param accountId 账号 ID / account id
+     * @return 事件 ID 列表 / list of event ids
      */
     @Override
     public List<Integer> getEventsWindow(final int accountId) {
@@ -173,8 +173,8 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      * 获取指定活动的上次时间戳。
      * Returns the last stamp for the given event.
      *
-     * 账号 ID / account id
-     * event id
+     * @param accountId 账号 ID / account id
+     * @param eventId 事件 ID / event id
      * @return 上次时间戳；无记录时返回当前时间 / last stamp, or now if none
      */
     @Override
@@ -200,8 +200,8 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      * 获取指定活动已过时间。
      * Returns the elapsed time for the given event.
      *
-     * 账号 ID / account id
-     * event id
+     * @param accountId 账号 ID / account id
+     * @param eventId 事件 ID / event id
      * @return 已过时间；无记录时为 0 / elapsed time, or 0 if none
      */
     @Override
@@ -227,9 +227,9 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      * 更新指定活动的已过时间。
      * Updates the elapsed time for the given event.
      *
-     * 账号 ID / account id
-     * event id
-     * elapsed time
+     * @param accountId 账号 ID / account id
+     * @param eventId 事件 ID / event id
+     * @param elapsed 已用时间 / elapsed time
      */
     @Override
     public void updateElapsed(int accountId, int eventId, int elapsed) {
@@ -249,8 +249,8 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      * 获取指定活动已领取奖励次数。
      * Returns the reward received count for the given event.
      *
-     * 账号 ID / account id
-     * event id
+     * @param accountId 账号 ID / account id
+     * @param eventId 事件 ID / event id
      *
      * @return 已领次数；无记录时为 0 / reward count, or 0 if none
      */
@@ -277,8 +277,8 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      * 设置已领取奖励次数并重置进度。
      * Sets the reward received count and resets progress.
      *
-     * 账号 ID / account id
-     * event id
+     * @param accountId 账号 ID / account id
+     * @param eventId 事件 ID / event id
      * @param rewardReceivedCount 已领奖励次数 / reward received count
      */
     @Override
@@ -299,10 +299,10 @@ public class PlayerEventsWindowDAO extends com.aionemu.gameserver.dao.PlayerEven
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

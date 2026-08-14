@@ -24,7 +24,7 @@ public class KeyGen {
 
     /** Blowfish 密钥生成器 / Blowfish key generator */
     private static KeyGenerator blowfishKeyGen;
-    /** RSA key pairs with encrypted modulus N / RSA key pairs with encrypted modulus N */
+    /** 模数 N 加密后的 RSA 密钥对 / RSA key pairs with encrypted modulus N */
     private static EncryptedRSAKeyPair[] encryptedRSAKeyPairs;
 
     /**

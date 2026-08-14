@@ -12,8 +12,8 @@ import com.aionemu.gameserver.model.landing_special.LandingSpecialStateType;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
 
 /**
- * 登陆 Special 刷新点模板（静态数据/XML）。
- * XML template.
+ * 登陆特别刷新点模板（静态数据/XML）。
+ * Landing Special Spawn Template (static data/XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -30,7 +30,7 @@ public class LandingSpecialSpawn {
 	@XmlElement(name = "landing_special_type")
 	private List<LandingSpecialSpawn.LandingSpStateTemplate> LandingSpStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回登陆特别状态模板列表 / Returns the landing special state templates */
 	public List<LandingSpStateTemplate> getSiegeModTemplates() {
 		return LandingSpStateTemplate;
 	}
@@ -50,7 +50,7 @@ public class LandingSpecialSpawn {
 			return spawns;
 		}
 
-		/** 返回登陆特殊类型 / Returns the landing special type*/
+		/** 返回登陆特别类型 / Returns the landing special type */
 		public LandingSpecialStateType getLandingSpecialType() {
 			return landingSpecialType;
 		}

@@ -35,11 +35,11 @@ public class ShoutGroup {
 		return this.shoutNpcs;
 	}
 
-	 /**
-	  * 获取 clientAi 属性值。
-	  * Gets the value of the clientAi property
-	  * @return possible object is {@link String }
-	  */
+	/**
+	 * 获取 clientAi 属性值。
+	 * Gets the value of the clientAi property
+	 * @return 可能的对象类型 / possible object is {@link String }
+	 */
 	public String getClientAi() {
 		return clientAi;
 	}

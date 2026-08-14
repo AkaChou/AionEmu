@@ -39,7 +39,7 @@ public class SiegeShield implements ZoneHandler {
 		return geometry;
 	}
 
-	/** 在 EnterZone / On Enter Zone */
+	/** 进入区域时 / On Enter Zone */
 	@Override
 	public void onEnterZone(Creature creature, ZoneInstance zone) {
 		if (!(creature instanceof Player)) {
@@ -56,7 +56,7 @@ public class SiegeShield implements ZoneHandler {
 		}
 	}
 
-	/** 在 LeaveZone / On Leave Zone */
+	/** 离开区域时 / On Leave Zone */
 	@Override
 	public void onLeaveZone(Creature creature, ZoneInstance zone) {
 		ActionObserver actor = observed.get(creature.getObjectId());
@@ -66,7 +66,7 @@ public class SiegeShield implements ZoneHandler {
 		}
 	}
 
-	/** 设置 enabled / Sets the enabled */
+	/** 设置启用状态 / Sets the enabled */
 	public void setEnabled(boolean enable) {
 		isEnabled = enable;
 	}

@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Finished 任务 Cond 模板（静态数据/XML）。
- * XML template.
+ * 已完成任务条件模板（静态数据/XML）。
+ * Finished quest condition template (static data / XML).
  *
  * @author antness
  */

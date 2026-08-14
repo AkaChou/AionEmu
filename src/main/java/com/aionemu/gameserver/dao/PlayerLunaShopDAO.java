@@ -15,7 +15,7 @@ public abstract class PlayerLunaShopDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public String getClassName() {
@@ -26,7 +26,7 @@ public abstract class PlayerLunaShopDAO implements DAO {
 	 * 加载玩家月神商店数据。
 	 * Loads player Luna Shop data.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void load(Player player);
 
@@ -34,11 +34,11 @@ public abstract class PlayerLunaShopDAO implements DAO {
 	 * 新增月神商店免费次数记录。
 	 * Adds a Luna Shop free-use record.
 	 *
-	 * player id
-	 * free underpath
-	 * free factory
-	 * free chest
-	 * 若 successful 则为 true / true if successful
+	 * @param playerId 玩家 ID / player id
+	 * @param freeUnderpath 免费地下通道 / free underpath
+	 * @param freeFactory 免费工厂 / free factory
+	 * @param freeChest 免费宝箱 / free chest
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean add(final int playerId, boolean freeUnderpath, boolean freeFactory, boolean freeChest);
 
@@ -46,7 +46,7 @@ public abstract class PlayerLunaShopDAO implements DAO {
 	 * 删除月神商店数据。
 	 * Deletes Luna Shop data.
 	 *
-	 * 若 successful 则为 true / true if successful
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean delete();
 
@@ -54,8 +54,8 @@ public abstract class PlayerLunaShopDAO implements DAO {
 	 * 持久化玩家月神商店数据。
 	 * Stores player Luna Shop data.
 	 *
-	 * 玩家 / player
-	 * 若 successful 则为 true / true if successful
+	 * @param player 玩家 / player
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean store(Player player);
 
@@ -63,11 +63,11 @@ public abstract class PlayerLunaShopDAO implements DAO {
 	 * 按对象 ID 设置月神商店免费状态。
 	 * Sets Luna Shop free flags by object ID.
 	 *
-	 * object id
-	 * free underpath
-	 * free factory
-	 * free chest
-	 * 若 successful 则为 true / true if successful
+	 * @param obj 对象 ID / object id
+	 * @param freeUnderpath 免费地下通道 / free underpath
+	 * @param freeFactory 免费工厂 / free factory
+	 * @param freeChest 免费宝箱 / free chest
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean setLunaShopByObjId(final int obj, boolean freeUnderpath, boolean freeFactory,
 			boolean freeChest);

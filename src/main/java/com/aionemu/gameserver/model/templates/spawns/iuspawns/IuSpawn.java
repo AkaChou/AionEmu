@@ -32,7 +32,7 @@ public class IuSpawn {
 	@XmlElement(name = "iu_type")
 	private List<IuSpawn.IuStateTemplate> IuStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回 IU 状态模板列表 / Returns the IU state templates */
 	public List<IuStateTemplate> getSiegeModTemplates() {
 		return IuStateTemplate;
 	}
@@ -52,7 +52,7 @@ public class IuSpawn {
 			return spawns;
 		}
 
-		/** 返回 iu type / Returns the iu type */
+		/** 返回 IU 状态类型 / Returns the iu type */
 		public IuStateType getIuType() {
 			return iuType;
 		}

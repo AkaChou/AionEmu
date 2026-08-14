@@ -169,7 +169,7 @@ public enum QuestDialog {
 	 * 返回客户端对话框 ID。
 	 * Returns the client dialog id.
 	 *
-	 * Dialog id
+	 * @return 对话框 ID / Dialog id
 	 */
 	public int id() {
 		return id;

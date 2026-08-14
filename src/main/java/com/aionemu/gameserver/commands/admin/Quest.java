@@ -41,7 +41,6 @@ public class Quest extends AdminCommand {
      * 分发 start/set/delete/show 子命令；目标必须为玩家。
      * Dispatch start/set/delete/show; the target must be a player.
      *
-     * 执行 GM / Admin player
      * @param params 子命令与任务参数 / Subcommand and quest args
      */
     @Override
@@ -108,6 +107,7 @@ public class Quest extends AdminCommand {
         else {
             var metadata = GameEngineServices.questEngine().questCatalog().findMetadata(id).orElse(null);
             if (metadata != null) {
+                // 备选起始条件组是 OR 分支，只有全局必填的前置条件才能单独上报，避免产生误诊断。
                 // Alternative start-condition groups are OR branches. Only globally mandatory
                 // prerequisites can be reported individually without producing false diagnostics.
                 for (int prerequisite : metadata.prerequisites()) {
@@ -301,8 +301,6 @@ public class Quest extends AdminCommand {
      * 参数错误时显示语法。
      * Show syntax when parameters are invalid.
      *
-     * 玩家 / Player
-     * Failure message
      */
     @Override
     public void onFail(Player player, String message) {

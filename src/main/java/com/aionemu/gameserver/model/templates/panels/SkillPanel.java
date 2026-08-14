@@ -21,7 +21,7 @@ public class SkillPanel {
 	@XmlAttribute(name = "panel_skills")
 	protected List<Integer> skills;
 
-	/** 返回 panel id / Returns the panel id */
+	/** 返回面板 ID / Returns the panel id */
 	public int getPanelId() {
 		return id;
 	}
@@ -31,7 +31,7 @@ public class SkillPanel {
 		return null;
 	}
 
-	/** 是否使用技能 / Whether use skill */
+	/** 是否可使用技能 / Whether the skill can be used */
 	public boolean canUseSkill(int skillId, int level) {
 		for (Integer skill : skills) {
 			if (skill >> 8 == skillId && (skill & 0xFF) == level) {

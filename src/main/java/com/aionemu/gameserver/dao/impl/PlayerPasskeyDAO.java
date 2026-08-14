@@ -30,8 +30,8 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
      * 为账号插入二级密码。
      * Inserts a passkey for an account.
      *
-     * 账号 ID / account id
-     * passkey
+     * @param accountId 账号 ID / account id
+     * @param passkey 通行密钥 / passkey
      */
     @Override
     public void insertPlayerPasskey(int accountId, String passkey) {
@@ -50,9 +50,9 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
      * 在校验旧密码后更新二级密码。
      * Updates the passkey after verifying the old one.
      *
-     * 账号 ID / account id
-     * old passkey
-     * new passkey
+     * @param accountId 账号 ID / account id
+     * @param oldPasskey 旧通行密钥 / old passkey
+     * @param newPasskey 新通行密钥 / new passkey
      *
      * @return 是否更新成功 / whether update succeeded
      */
@@ -75,8 +75,8 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
      * 强制更新二级密码（不校验旧密码）。
      * Force-updates the passkey without verifying the old one.
      *
-     * 账号 ID / account id
-     * new passkey
+     * @param accountId 账号 ID / account id
+     * @param newPasskey 新通行密钥 / new passkey
      *
      * @return 是否更新成功 / whether update succeeded
      */
@@ -98,9 +98,9 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
      * 校验账号二级密码是否匹配。
      * Checks whether the account passkey matches.
      *
-     * 账号 ID / account id
-     * passkey
-     * whether it matches
+     * @param accountId 账号 ID / account id
+     * @param passkey 通行密钥 / passkey
+     * @return 是否匹配 / whether it matches
      */
     @Override
     public boolean checkPlayerPasskey(int accountId, String passkey) {
@@ -150,10 +150,10 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

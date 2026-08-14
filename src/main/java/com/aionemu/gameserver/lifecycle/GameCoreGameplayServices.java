@@ -114,7 +114,7 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * 获取掉落服务。
      * Obtain the drop service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static DropService dropService() {
         ObjectProvider<DropService> provider = dropServiceProvider;
@@ -128,7 +128,7 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * 获取邮件服务。
      * Obtain the mail service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static MailService mailService() {
         ObjectProvider<MailService> provider = mailServiceProvider;
@@ -142,7 +142,7 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * 获取 PvP 服务。
      * Obtain the PvP service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static PvpService pvpService() {
         ObjectProvider<PvpService> provider = pvpServiceProvider;
@@ -156,7 +156,7 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * 获取欧比斯排名缓存。
      * Obtain the abyss ranking cache.
      *
-     * Cache instance
+     * @return 缓存实例 / Cache instance
      */
     public static AbyssRankingCache abyssRankingCache() {
         ObjectProvider<AbyssRankingCache> provider = abyssRankingCacheProvider;
@@ -170,7 +170,7 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * 获取军团服务。
      * Obtain the legion service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static LegionService legionService() {
         ObjectProvider<LegionService> provider = legionServiceProvider;
@@ -184,7 +184,7 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * 获取自动组队服务。
      * Obtain the auto-group service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static AutoGroupService autoGroupService() {
         ObjectProvider<AutoGroupService> provider = autoGroupServiceProvider;
@@ -198,7 +198,7 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * 获取龙族袭击服务。
      * Obtain the Balaur assault service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static BalaurAssaultService balaurAssaultService() {
         ObjectProvider<BalaurAssaultService> provider = balaurAssaultServiceProvider;
@@ -212,7 +212,7 @@ public final class GameCoreGameplayServices implements DisposableBean {
      * 获取战场联盟服务。
      * Obtain the battlefield union service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static BattlefieldUnionService battlefieldUnionService() {
         ObjectProvider<BattlefieldUnionService> provider = battlefieldUnionServiceProvider;

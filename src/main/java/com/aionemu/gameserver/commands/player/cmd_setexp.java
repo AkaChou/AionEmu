@@ -23,7 +23,7 @@ public class cmd_setexp extends PlayerCommand {
      * Parses the multiplier argument and stores it on player common data.
      *
      * @param player 执行命令的玩家 / invoking player
-     * multiplier value
+     * @param params 倍率值 / multiplier value
      */
     @Override
     public void execute(Player player, String... params) {
@@ -49,7 +49,7 @@ public class cmd_setexp extends PlayerCommand {
      * Shows usage when arguments are invalid.
      *
      * @param player 执行命令的玩家 / invoking player
-     * failure message
+     * @param message 失败提示消息 / failure message
      */
     @Override
     public void onFail(Player player, String message) {

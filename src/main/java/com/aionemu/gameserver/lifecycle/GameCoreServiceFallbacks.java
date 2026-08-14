@@ -42,7 +42,7 @@ final class GameCoreServiceFallbacks {
      * HTML 缓存回退实例。
      * HTML cache fallback instance.
      *
-     * HTML cache
+     * @return HTML 缓存 / HTML cache
      */
     static HTMLCache htmlCache() {
         return HtmlCacheFallback.INSTANCE;

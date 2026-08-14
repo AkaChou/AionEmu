@@ -35,8 +35,8 @@ public class SM_FRIEND_RESPONSE extends AionServerPacket {
 	private final int code;
 
 	/**
-	 * @param playerName  目标玩家名 / target player name
-	 * result code
+	 * @param playerName 目标玩家名 / target player name
+	 * @param messageType 结果码 / result code
 	 */
 	public SM_FRIEND_RESPONSE(String playerName, int messageType) {
 		player = playerName;

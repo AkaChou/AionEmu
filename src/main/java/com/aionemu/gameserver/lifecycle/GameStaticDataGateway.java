@@ -28,7 +28,7 @@ public class GameStaticDataGateway {
      * 注入 DataManager 提供者。
      * Inject the DataManager provider.
      *
-     * DataManager provider
+     * @param dataManagerProvider DataManager 提供者 / DataManager provider
      */
     @Autowired(required = false)
     void setDataManagerProvider(ObjectProvider<DataManager> dataManagerProvider) {
@@ -58,7 +58,7 @@ public class GameStaticDataGateway {
      * 解析 DataManager：优先 Spring，否则走运行时桥。
      * Resolve DataManager: prefer Spring, otherwise the runtime bridge.
      *
-     * DataManager instance
+     * @return DataManager 实例 / DataManager instance
      */
     private DataManager dataManager() {
         if (dataManagerProvider == null) {
@@ -71,7 +71,7 @@ public class GameStaticDataGateway {
      * 解析核心服务运行时桥：优先 Spring，否则新建。
      * Resolve the core-services runtime bridge: prefer Spring, otherwise create new.
      *
-     * Runtime bridge
+     * @return 运行时桥 / Runtime bridge
      */
     private GameCoreServicesRuntimeBridge runtimeBridge() {
         if (runtimeBridgeProvider == null) {

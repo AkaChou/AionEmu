@@ -23,6 +23,15 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 /*
+第 6 阶段的唯一对手是 Vanktrist Spacetwine（万克特里斯特·时空酒）。
+作为至高试炼场最终 BOSS 的小型弱化部下，Spacetwine 会使用部分相同技能，但威力不到 9000。
+其常用技能包括造成伤害并眩晕的「Young Space Twist」与「Void Flame」。
+血量约 75% 时开始使用降低移动速度的「Gravitational Shift」。
+不久后会召唤几个 Vortex 协助战斗。
+这些是非精英且相对容易击败，建议优先集火。
+血量降到 50% 后，「Young Adrift」会加入攻击循环，造成中等伤害且使用频繁。
+由于击败 Spacetwine 对推进奖励轮任务至关重要，务必全力以赴，
+合理使用药水、DP 与长冷却技能以确保胜利！
 The only foe you will face in Stage 6 is Vanktrist Spacetwine.
 A smaller, less powerful underling of the Master Boss of the Empyrean Crucible, Spacetwine employs some of the same abilities, albeit at power levels less than 9000.
 The common abilities in Spacetwine's arsenal are Young Space Twist, which deals damage and stuns and Void Flame.
@@ -74,7 +83,7 @@ public class Vanktrist_SpacetwineAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19567, 46, getOwner()).useNoAnimationSkill(); //Gravitational Shift.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19567, 46, getOwner()).useNoAnimationSkill(); // 重力偏移 / Gravitational Shift.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -106,7 +115,7 @@ public class Vanktrist_SpacetwineAI2 extends AggressiveNpcAI2
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
-						spawn(217804, x, y, z, (byte) 0); //Weakened Dimensional Vortex.
+						spawn(217804, x, y, z, (byte) 0); // 弱化次元漩涡 / Weakened Dimensional Vortex.
 					}
 				}
 			}, 3000);
@@ -147,7 +156,7 @@ public class Vanktrist_SpacetwineAI2 extends AggressiveNpcAI2
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
 		if (p != null) {
-			deleteNpcs(p.getWorldMapInstance().getNpcs(217804)); //Vortex.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(217804)); // 次元漩涡 / Vortex.
 		}
 		cancelPhaseTask();
 		super.handleDied();

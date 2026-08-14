@@ -524,7 +524,7 @@ public class GameLocationBootstrapGateway {
      * 解析攻城服务。
      * Resolve the siege service.
      *
-     * Siege service
+     * @return 攻城服务 / Siege service
      */
     private SiegeService siegeService() {
         if (siegeServiceProvider == null) {
@@ -537,7 +537,7 @@ public class GameLocationBootstrapGateway {
      * 解析基地服务。
      * Resolve the base service.
      *
-     * Base service
+     * @return 基地服务 / Base service
      */
     private BaseService baseService() {
         if (baseServiceProvider == null) {
@@ -550,7 +550,7 @@ public class GameLocationBootstrapGateway {
      * 解析前哨服务。
      * Resolve the outpost service.
      *
-     * Outpost service
+     * @return 前哨服务 / Outpost service
      */
     private OutpostService outpostService() {
         if (outpostServiceProvider == null) {
@@ -563,7 +563,7 @@ public class GameLocationBootstrapGateway {
      * 解析漩涡服务。
      * Resolve the vortex service.
      *
-     * Vortex service
+     * @return 漩涡服务 / Vortex service
      */
     private VortexService vortexService() {
         if (vortexServiceProvider == null) {
@@ -615,7 +615,7 @@ public class GameLocationBootstrapGateway {
      * 解析 SvS 服务。
      * Resolve the SvS service.
      *
-     * SvS service
+     * @return SvS 服务 / SvS service
      */
     private SvsService svsService() {
         if (svsServiceProvider == null) {
@@ -628,7 +628,7 @@ public class GameLocationBootstrapGateway {
      * 解析 RvR 服务。
      * Resolve the RvR service.
      *
-     * RvR service
+     * @return RvR 服务 / RvR service
      */
     private RvrService rvrService() {
         if (rvrServiceProvider == null) {
@@ -641,7 +641,7 @@ public class GameLocationBootstrapGateway {
      * 解析 IU 演唱会服务。
      * Resolve the IU concert service.
      *
-     * IU service
+     * @return IU 服务 / IU service
      */
     private IuService iuService() {
         if (iuServiceProvider == null) {
@@ -719,7 +719,7 @@ public class GameLocationBootstrapGateway {
      * 解析裂隙服务。
      * Resolve the Rift service.
      *
-     * Rift service
+     * @return 裂隙服务 / Rift service
      */
     private RiftService riftService() {
         if (riftServiceProvider == null) {
@@ -732,7 +732,7 @@ public class GameLocationBootstrapGateway {
      * 解析征服服务。
      * Resolve the Conquest service.
      *
-     * Conquest service
+     * @return 征服服务 / Conquest service
      */
     private ConquestService conquestService() {
         if (conquestServiceProvider == null) {

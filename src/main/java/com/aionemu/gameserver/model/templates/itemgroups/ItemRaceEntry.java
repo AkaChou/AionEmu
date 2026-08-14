@@ -12,8 +12,8 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.rewards.IdLevelReward;
 
 /**
- * 物品种族条目模板（静态数据/XML）。
- * XML template.
+ * 物品种族条目：物品 ID 与允许种族，并按模板校验种族。
+ * Item race entry: item id and allowed race, validated against the template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

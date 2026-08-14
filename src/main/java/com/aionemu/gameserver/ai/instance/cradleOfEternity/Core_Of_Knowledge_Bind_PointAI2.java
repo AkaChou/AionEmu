@@ -46,7 +46,7 @@ public class Core_Of_Knowledge_Bind_PointAI2 extends NpcAI2
 	private void CoreOfKnowledgeBindPoint() {
 		AI2Actions.deleteOwner(Core_Of_Knowledge_Bind_PointAI2.this);
 		spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
-		spawn(730844, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Core Of Knowledge Bind Point.
+		spawn(730844, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 知识之核传送点 / Core Of Knowledge Bind Point.
     }
 	
 	private void announceCoreOfKnowledge() {

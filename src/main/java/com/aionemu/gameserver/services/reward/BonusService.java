@@ -52,7 +52,7 @@ public class BonusService {
 	 * 获取服务单例（优先 Spring ObjectProvider，否则回退本地实例）。
 	 * Get the service singleton (prefer Spring ObjectProvider, otherwise local instance).
 	 *
-	 * Service instance
+	 * @return 服务实例 / Service instance
 	 */
 	public static BonusService getInstance() {
 		ObjectProvider<BonusService> provider = instanceProvider;
@@ -67,7 +67,7 @@ public class BonusService {
 	 * Obtain (or override) the service instance with the given item-group data.
 	 *
 	 * @param itemGroups 物品组数据 / Item groups data
-	 * Service instance
+	 * @return 服务实例 / Service instance
 	 */
 	public static BonusService getInstance(ItemGroupsData itemGroups) {
 		BonusService service = getInstance();
@@ -162,8 +162,8 @@ public class BonusService {
 	 * 将原始概率归一化为百分比。
 	 * Normalize a raw chance value into a percentage of the total.
 	 *
-	 * Raw chance
-	 * Total weight
+	 * @param chance 原始概率 / Raw chance
+	 * @param total 总权重 / Total weight
 	 * @return 归一化概率 / Normalized chance
 	 */
 	float getNormalizedChance(float chance, float total) {
@@ -175,7 +175,7 @@ public class BonusService {
 	 * Randomly pick a group for the given bonus type.
 	 *
 	 * @param type 加成类型 / Bonus type
-	 * Chosen group
+	 * @return 选中的组 / Chosen group
 	 */
 	public BonusItemGroup getRandomGroup(BonusType type) {
 		return getRandomGroup(getGroupsByType(type));
@@ -185,8 +185,8 @@ public class BonusService {
 	 * 根据任务模板计算玩家应得的任务加成物品。
 	 * Resolve the quest-bonus item a player should receive for the given quest template.
 	 *
-	 * 玩家 / Player
-	 * Quest template
+	 * @param player 玩家 / Player
+	 * @param questTemplate 任务模板 / Quest template
 	 * @return 任务物品，无加成时返回 null / Quest item, or null if no bonus
 	 */
 	public QuestItems getQuestBonus(Player player, QuestTemplate questTemplate) {
@@ -226,9 +226,9 @@ public class BonusService {
 	 * 解析制作类任务加成奖励。
 	 * Resolve craft-task quest bonus rewards.
 	 *
-	 * 玩家 / Player
-	 * Quest template
-	 * Quest item
+	 * @param player 玩家 / Player
+	 * @param questTemplate 任务模板 / Quest template
+	 * @return 任务物品 / Quest item
 	 */
 	QuestItems getCraftBonus(Player player, QuestTemplate questTemplate) {
 		BonusItemGroup[] groups = itemGroups.getCraftGroups();
@@ -250,7 +250,7 @@ public class BonusService {
 			}
 		}
 
-		if (group == null) { // probably all chances set to 0
+		if (group == null) { // 可能所有概率都设为 0 / probably all chances set to 0
 			return null;
 		}
 		List<ItemRaceEntry> finalList = new ArrayList<ItemRaceEntry>();
@@ -280,9 +280,9 @@ public class BonusService {
 	 * 解析勋章类任务加成奖励。
 	 * Resolve medal quest bonus rewards.
 	 *
-	 * 玩家 / Player
-	 * Quest template
-	 * Quest item
+	 * @param player 玩家 / Player
+	 * @param template 任务模板 / Quest template
+	 * @return 任务物品 / Quest item
 	 */
 	QuestItems getMedalBonus(Player player, QuestTemplate template) {
 		BonusItemGroup[] groups = itemGroups.getMedalGroups();
@@ -318,9 +318,9 @@ public class BonusService {
 	 * 解析魔石类任务加成奖励。
 	 * Resolve manastone quest bonus rewards.
 	 *
-	 * 玩家 / Player
-	 * @param bonus  任务加成配置 / Quest bonus config
-	 * Quest item
+	 * @param player 玩家 / Player
+	 * @param bonus 任务加成配置 / Quest bonus config
+	 * @return 任务物品 / Quest item
 	 */
 	QuestItems getManastoneBonus(Player player, QuestBonuses bonus) {
 		ManastoneGroup group = (ManastoneGroup) getRandomGroup(BonusType.MANASTONE);

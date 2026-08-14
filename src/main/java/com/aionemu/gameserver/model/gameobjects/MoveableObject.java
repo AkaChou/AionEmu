@@ -15,7 +15,7 @@ public class MoveableObject extends HouseObject<HousingMoveableItem> {
 		super(owner, objId, templateId);
 	}
 
-	/** 使用时 / on Use. */
+	/** 使用时 / On use. */
 	public void onUse(Player player) {
 	}
 

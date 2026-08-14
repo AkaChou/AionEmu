@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.model.templates;
 
 /**
- * 制作 Learn 模板（静态数据/XML）。
- * XML template.
+ * 制作学习模板（静态数据/XML）。
+ * Craft learn template (static data / XML).
  */
 
 public class CraftLearnTemplate {

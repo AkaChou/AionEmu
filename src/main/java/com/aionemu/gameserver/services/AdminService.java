@@ -108,11 +108,11 @@ public class AdminService {
 	 * 检查玩家是否可对指定物品执行操作（基于 Item 对象）。
 	 * Checks whether the player may operate on the given item (Item overload).
 	 *
-	 * operator
+	 * @param player 操作者 / operator
 	 * @param target 目标玩家，可为 null / target player, may be null
-	 * item
+	 * @param item 目标物品 / item
 	 * @param type 操作类型描述 / operation type description
-	 * 若 allowed 则为 true / true if allowed
+	 * @return 允许则为 true / true if allowed
 	 */
 	public boolean canOperate(Player player, Player target, Item item, String type) {
 		return canOperate(player, target, item.getItemId(), type);
@@ -122,11 +122,11 @@ public class AdminService {
 	 * 检查玩家是否可对指定物品 ID 执行操作。
 	 * Checks whether the player may operate on the given item ID.
 	 *
-	 * operator
+	 * @param player 操作者 / operator
 	 * @param target 目标玩家，可为 null / target player, may be null
-	 * item id
+	 * @param itemId 目标物品 ID / item id
 	 * @param type 操作类型描述 / operation type description
-	 * 若 allowed 则为 true / true if allowed
+	 * @return 允许则为 true / true if allowed
 	 */
 	public boolean canOperate(Player player, Player target, int itemId, String type) {
 		if (!AdminConfig.ENABLE_TRADEITEM_RESTRICTION) {

@@ -25,7 +25,7 @@ public class LimitedItem {
 	@Getter
 	private String salesTime;
 
-	private Map<Integer, Integer> buyCounts = new HashMap<>();
+	private Map<Integer, Integer> buyCounts = new HashMap<>(); // 玩家对象 ID → 购买数量 / player object id → buy count
 
 	public LimitedItem() {
 	}
@@ -39,28 +39,37 @@ public class LimitedItem {
 	}
 
 	/**
-	 * @param playerObjectId playerObjectId.
-	 * @param count count.
+	 * 记录玩家购买数量（仅在该玩家尚无记录时写入）。
+	 * Records a player's buy count (only if no entry exists yet).
+	 *
+	 * @param playerObjectId 玩家对象 ID / the player object id
+	 * @param count 购买数量 / the buy count
 	 */
 	public void setBuyCount(int playerObjectId, int count) {
 		buyCounts.putIfAbsent(playerObjectId, count);
 	}
 
 	/**
-	 * return playerListByObject
+	 * 返回按玩家对象 ID 统计的购买数量映射。
+	 * Returns the buy-count map keyed by player object id.
+	 *
+	 * @return 购买数量映射 / the buy count map
 	 */
 	public Map<Integer, Integer> getBuyCount() {
 		return buyCounts;
 	}
 
 	/**
-	 * @param itemId itemId.
+	 * 设置物品 ID。
+	 * Sets the item id.
+	 *
+	 * @param itemId 物品 ID / the item id
 	 */
 	public void setItem(int itemId) {
 		this.itemId = itemId;
 	}
 
-	/** 设置默认 / Sets the to default*/
+	/** 重置为默认销售限额并清空购买记录。 / Resets to the default sell limit and clears buy counts. */
 	public void setToDefault() {
 		sellLimit = defaultSellLimit;
 		buyCounts.clear();

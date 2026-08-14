@@ -3,7 +3,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.questEngine.definition.QuestSystemMessage;
 import com.aionemu.gameserver.questEngine.definition.QuestSystemMessagePacket;
 
-/** Typed boundary for modeled system messages emitted after a quest commit. */
+/** 任务提交后发出的建模系统消息的类型化边界。 / Typed boundary for modeled system messages emitted after a quest commit. */
 public interface QuestSystemMessagePort {
 	boolean send(QuestSnapshot snapshot, QuestMutationPlan plan, QuestSystemMessage message);
 

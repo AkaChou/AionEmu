@@ -5,7 +5,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestMembershipPermission;
 import java.util.Objects;
 import java.util.Set;
 
-/** Immutable membership-permission facts captured at the quest event boundary. */
+/** 在任务事件边界捕获的不可变会员权限事实。 / Immutable membership-permission facts captured at the quest event boundary. */
 public record QuestMembershipFacts(Set<QuestMembershipPermission> granted) {
 	public QuestMembershipFacts {
 		Objects.requireNonNull(granted, "granted");

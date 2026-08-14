@@ -18,6 +18,7 @@ import java.util.concurrent.Future;
 @AIName("Balaur_Explosives_Stockpile")
 public class Balaur_Explosives_StockpileAI2 extends AggressiveNpcAI2
 {
+	// 攻击增益定时任务：周期性对副官阿努哈尔特施放技能。 / Attack boost task: periodically uses a skill on Lieutenant Anuhart.
 	private Future<?> attackBoostTask;
 	
 	@Override
@@ -34,7 +35,7 @@ public class Balaur_Explosives_StockpileAI2 extends AggressiveNpcAI2
 		attackBoostTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				AI2Actions.targetCreature(Balaur_Explosives_StockpileAI2.this, getPosition().getWorldMapInstance().getNpc(243682)); //Lieutenant Anuhart.
+				AI2Actions.targetCreature(Balaur_Explosives_StockpileAI2.this, getPosition().getWorldMapInstance().getNpc(243682)); //副官阿努哈尔特。 / Lieutenant Anuhart.
 				AI2Actions.useSkill(Balaur_Explosives_StockpileAI2.this, 0);
 			}
 		}, 3000, 8000);

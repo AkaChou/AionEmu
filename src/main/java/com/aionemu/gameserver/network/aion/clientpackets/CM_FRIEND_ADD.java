@@ -71,7 +71,7 @@ public class CM_FRIEND_ADD extends AionClientPacket {
 			sendPacket(new SM_FRIEND_RESPONSE(targetPlayer.getName(), SM_FRIEND_RESPONSE.TARGET_BLOCKED));
 		} else if (targetPlayer.getBlockList().contains(activePlayer.getObjectId())) {
 			sendPacket(SM_SYSTEM_MESSAGE.STR_YOU_EXCLUDED(targetName));
-		} else // Send request
+		} else // 发送请求 / Send request
 		{
 			RequestResponseHandler responseHandler = new RequestResponseHandler(activePlayer) {
 

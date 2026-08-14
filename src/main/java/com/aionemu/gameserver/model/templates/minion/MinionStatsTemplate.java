@@ -9,7 +9,7 @@ import com.aionemu.gameserver.model.templates.stats.StatsTemplate;
 
 /**
  * 守护灵属性模板（静态数据/XML）。
- * XML template.
+ * Minion stats template (static data/XML).
  *
  * @author Falke_34
  */

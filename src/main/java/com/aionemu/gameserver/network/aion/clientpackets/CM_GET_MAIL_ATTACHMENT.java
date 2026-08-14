@@ -33,7 +33,7 @@ public class CM_GET_MAIL_ATTACHMENT extends AionClientPacket {
 	@Override
 	protected void readImpl() {
 		mailObjId = readD();
-		attachmentType = readC(); // 0 - item , 1 - kinah, 2- AP ??
+		attachmentType = readC(); // 0-物品，1-基纳，2-欧比斯点数？/ 0 - item, 1 - kinah, 2- AP ??
 	}
 
 	@Override

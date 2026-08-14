@@ -15,7 +15,7 @@ public class Whiptail_MetamorphAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(243223, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Whiptail Fledgling.
+		spawn(243223, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // Whiptail 幼兽 / Whiptail Fledgling.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

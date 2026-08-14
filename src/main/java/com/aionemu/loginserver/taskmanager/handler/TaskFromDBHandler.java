@@ -15,7 +15,7 @@ public abstract class TaskFromDBHandler {
      * 获取任务 ID。
      * Returns the task id.
      *
-     * task id
+     * @return 任务 ID / task id
      */
     public int getTaskId() {
         return taskId;
@@ -25,7 +25,7 @@ public abstract class TaskFromDBHandler {
      * 设置任务 ID。
      * Sets the task id.
      *
-     * task id
+     * @param taskId 任务 ID / task id
      */
     public void setTaskId(int taskId) {
         this.taskId = taskId;
@@ -35,7 +35,7 @@ public abstract class TaskFromDBHandler {
      * 获取任务执行参数。
      * Returns the task execution parameters.
      *
-     * parameters
+     * @return 参数数组 / parameters
      */
     public String[] getParams() {
         return params;
@@ -45,7 +45,7 @@ public abstract class TaskFromDBHandler {
      * 设置任务执行参数。
      * Sets the task execution parameter(s).
      *
-     * String[]
+     * @param params 参数数组 / parameters
      */
     public void setParams(String params[]) {
         this.params = params;
@@ -55,7 +55,7 @@ public abstract class TaskFromDBHandler {
      * 检查任务参数是否有效。
      * Checks whether the task parameters are valid.
      *
-     * 若 valid, false otherwise 则为 true / true if valid, false otherwise
+     * @return 参数有效则为 true / true if valid
      */
     public abstract boolean isValid();
 

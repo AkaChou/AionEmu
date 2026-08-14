@@ -47,11 +47,11 @@ public class SM_LS_CONTROL_RESPONSE extends GsServerPacket {
      * Constructs a login-server control result response packet.
      *
      * @param type 控制类型 / control type
-     * whether succeeded
-     * player name
-     * 账号 ID / account id
+     * @param result 是否成功 / whether succeeded
+     * @param playerName 玩家名 / player name
+     * @param accountId 账号 ID / account id
      * @param param 附加参数 / extra parameter
-     * admin name
+     * @param adminName 管理员名 / admin name
      */
     public SM_LS_CONTROL_RESPONSE(int type, boolean result, String playerName, int accountId, int param, String adminName) {
         this.type = type;

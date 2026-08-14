@@ -43,7 +43,7 @@ class DelayedEvent extends Event implements Comparable<DelayedEvent> {
 	 * Compares by remaining delay; near delays also factor priority.
 	 *
 	 * @param o 另一延迟事件 / other delayed event
-	 * comparison result
+	 * @return 比较结果 / comparison result
 	 */
 	@Override
 	public int compareTo(DelayedEvent o) {
@@ -60,7 +60,7 @@ class DelayedEvent extends Event implements Comparable<DelayedEvent> {
 	 * Remaining delay until forecast fire time.
 	 *
 	 * @param unit 时间单位 / time unit
-	 * remaining delay
+	 * @return 剩余延迟 / remaining delay
 	 */
 	public long getDelay(TimeUnit unit) {
 		return unit.convert(forecast.compareTo(new Date()), TimeUnit.MILLISECONDS);

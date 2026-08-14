@@ -39,8 +39,8 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
      * 加载玩家好友列表。
      * Loads the player's friend list.
      *
-     * 玩家 / player
-     * friend list
+     * @param player 玩家 / player
+     * @return 好友列表 / friend list
      */
     @Override
     public FriendList load(final Player player) {
@@ -72,9 +72,9 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
      * 双向添加好友关系。
      * Adds a mutual friendship between two players.
      *
-     * 玩家 / player
-     * friend
-     * whether successful
+     * @param player 玩家 / player
+     * @param friend 好友 / friend
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean addFriends(final Player player, final Player friend) {
@@ -103,9 +103,9 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
      * 双向删除好友关系。
      * Deletes a mutual friendship between two players.
      *
-     * player object id
-     * friend object id
-     * whether successful
+     * @param playerOid 玩家对象 ID / player object id
+     * @param friendOid 好友对象 ID / friend object id
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean delFriends(final int playerOid, final int friendOid) {
@@ -134,9 +134,9 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
      * 设置好友备注。
      * Sets a note for a friend.
      *
-     * player id
-     * friend id
-     * note
+     * @param playerId 玩家 ID / player id
+     * @param friendId 好友 ID / friend id
+     * @param note 备注 / note
      */
     @Override
     public void setFriendNote(final int playerId, final int friendId, final String note) {
@@ -156,10 +156,10 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * @param s 数据库名 / database name
-     * @param i 主版本 / major version
-     * @param i1 次版本 / minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String s, int i, int i1) {

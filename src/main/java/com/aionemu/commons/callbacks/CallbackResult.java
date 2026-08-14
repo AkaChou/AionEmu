@@ -102,9 +102,7 @@ public class CallbackResult<T> {
      * 创建完全阻止（回调和目标方法）的结果
      * Create a callback result that blocks both callbacks and target method
      *
-     * Result value
-     *
-     * @param result
+     * @param result 结果值 / Result value
      * @return 完全阻止的结果实例 / Callback result instance for full blocking
      */
     public static <T> CallbackResult<T> newFullBlocker(T result) {

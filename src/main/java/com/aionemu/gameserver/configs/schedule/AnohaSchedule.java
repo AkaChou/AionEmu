@@ -68,8 +68,8 @@ public class AnohaSchedule {
 	@XmlRootElement(name = "anoha")
 	public static class Anoha {
 		/**
-	 * 阿诺哈 ID / Anoha ID
-	 */
+		 * 阿诺哈 ID / Anoha ID
+		 */
 		@XmlAttribute(required = true)
 		private int id;
 

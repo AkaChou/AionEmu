@@ -26,7 +26,6 @@ public class AdminChat extends AdminCommand {
 	 * 执行 GM 频道发言：校验权限与禁言后广播。
 	 * Executes staff chat: checks GM level/gag status, then broadcasts.
 	 *
-	 * admin
 	 * @param params 参数：消息内容 / message text
 	 */
 	@Override
@@ -56,8 +55,6 @@ public class AdminChat extends AdminCommand {
 	 * 参数错误时输出 {@code //s} 用法。
 	 * Prints {@code //s} usage on invalid arguments.
 	 *
-	 * admin
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player admin, String message) {

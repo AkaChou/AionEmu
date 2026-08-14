@@ -18,7 +18,7 @@ public class CM_CHAT_INI extends AbstractClientPacket {
      * 构造聊天初始化客户端包。
      * Constructs a chat init client packet.
      *
-     * packet reader
+     * @param packetReader 包读取器 / packet reader
      * @param clientChannelHandler 客户端通道处理器 / client channel handler
      * @param chatService 聊天服务（当前未使用） / chat service (currently unused)
      */

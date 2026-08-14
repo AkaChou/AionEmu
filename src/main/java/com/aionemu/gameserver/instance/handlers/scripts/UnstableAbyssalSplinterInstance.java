@@ -43,11 +43,11 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 	private int hugeAetherFragment;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
-	/** unstable luminous waterworm / unstable luminous waterworm */
+		/** unstable luminous waterworm / unstable luminous waterworm */
 		private int unstableLuminousWaterworm;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-	/** abyssalsplinter 任务 / abyssal splinter task */
+		/** abyssalsplinter 任务 / abyssal splinter task */
 		private final List<Future<?>> abyssalSplinterTask = new ArrayList<Future<?>>();
 	
 	/**
@@ -77,7 +77,7 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -95,7 +95,7 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -251,48 +251,48 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 	 * 处理 sp。
 	 * Handle sp.
 	 *
-	 * NPC
+	 * @param npcId NPC / NPC
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * time
+	 * @param time 时间 / time
 	 */
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
-	/**
-	 * 处理 sp。
-	 * Handle sp.
-	 *
-	 * NPC
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * time
-	 * message
-	 * 阵营 / race
-	 */
+    /**
+     * 处理 sp。
+     * Handle sp.
+     * 
+     * @param npcId NPC / NPC
+     * @param x X 坐标 / X
+     * @param y Y 坐标 / Y
+     * @param z Z 坐标 / Z
+     * @param h 朝向 / h
+     * @param time 时间 / time
+     * @param msg 消息 / message
+     * @param race 阵营 / race
+     */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
-	/**
-	 * 处理 sp。
-	 * Handle sp.
-	 *
-	 * NPC
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * entity id
-	 * time
-	 * message
-	 * 阵营 / race
-	 */
+    /**
+     * 处理 sp。
+     * Handle sp.
+     * 
+     * @param npcId NPC / NPC
+     * @param x X 坐标 / X
+     * @param y Y 坐标 / Y
+     * @param z Z 坐标 / Z
+     * @param h 朝向 / h
+     * @param entityId 实体 ID / entity id
+     * @param time 时间 / time
+     * @param msg 消息 / message
+     * @param race 阵营 / race
+     */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         abyssalSplinterTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -315,13 +315,13 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 	 * 处理 sp。
 	 * Handle sp.
 	 *
-	 * NPC
+	 * @param npcId NPC / NPC
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * time
-	 * walkerId
+	 * @param time 时间 / time
+	 * @param walkerId 寻路器 ID / walkerId
 	 */
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
@@ -359,9 +359,9 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

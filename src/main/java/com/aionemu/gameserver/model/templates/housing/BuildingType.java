@@ -12,8 +12,10 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "BuildingType")
 @XmlEnum
 public enum BuildingType {
-	/** Personal Field / Personal Field */
-	PERSONAL_FIELD(2), PERSONAL_INS(1);
+	/** 个人田地 / Personal Field */
+	PERSONAL_FIELD(2),
+	/** 个人住宅 / Personal Ins */
+	PERSONAL_INS(1);
 
 	private int id;
 

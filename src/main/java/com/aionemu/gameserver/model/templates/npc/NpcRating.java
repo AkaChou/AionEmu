@@ -13,10 +13,16 @@ import com.aionemu.gameserver.model.gameobjects.state.CreatureSeeState;
 @XmlType(name = "rating")
 @XmlEnum
 public enum NpcRating {
-	/** 垃圾 / Junk. */
-	JUNK(CreatureSeeState.NORMAL), NORMAL(CreatureSeeState.NORMAL), ELITE(CreatureSeeState.SEARCH1),
-	/** 英雄 / Hero. */
-	HERO(CreatureSeeState.SEARCH2), LEGENDARY(CreatureSeeState.SEARCH2);
+	/** 垃圾 / Junk */
+	JUNK(CreatureSeeState.NORMAL),
+	/** 普通 / Normal */
+	NORMAL(CreatureSeeState.NORMAL),
+	/** 精英 / Elite */
+	ELITE(CreatureSeeState.SEARCH1),
+	/** 英雄 / Hero */
+	HERO(CreatureSeeState.SEARCH2),
+	/** 传颂 / Legendary */
+	LEGENDARY(CreatureSeeState.SEARCH2);
 
 	private final CreatureSeeState congenitalSeeState;
 

@@ -13,11 +13,10 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 
 /**
  * 动态裂隙刷新点模板（静态数据/XML）。
- * XML template.
+ * Dynamic rift spawn template (static data/XML).
  *
  * @author Rinzler (Encom)
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DynamicRiftSpawn")
 public class DynamicRiftSpawn {
@@ -32,7 +31,7 @@ public class DynamicRiftSpawn {
 	@XmlElement(name = "dynamic_rift_type")
 	private List<DynamicRiftSpawn.DynamicRiftStateTemplate> DynamicRiftStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回要塞模式模板 / Returns the siege mod templates */
 	public List<DynamicRiftStateTemplate> getSiegeModTemplates() {
 		return DynamicRiftStateTemplate;
 	}

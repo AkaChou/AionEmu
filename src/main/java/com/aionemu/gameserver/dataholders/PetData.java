@@ -44,7 +44,7 @@ public class PetData {
 	 * 返回已加载的宠物模板数量。
 	 * Returns the number of loaded pet templates.
 	 *
-	 * template count
+	 * @return 已加载的宠物模板数量 / Returns the number of loaded pet templates.
 	 */
 	public int size() {
 		return petData.size();

@@ -26,7 +26,7 @@ public class Fiery_TyphonAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameEngineServices.skillEngine().getSkill(getOwner(), 23035, 60, getOwner()).useNoAnimationSkill(); //Typhons Pollutant.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 23035, 60, getOwner()).useNoAnimationSkill(); // 提芬的污染物 / Typhons Pollutant.
 		startLifeTask();
 	}
 	

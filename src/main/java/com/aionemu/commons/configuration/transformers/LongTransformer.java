@@ -23,13 +23,13 @@ public class LongTransformer implements PropertyTransformer<Long> {
     public static final LongTransformer SHARED_INSTANCE = new LongTransformer();
 
     /**
- * 将字符串值转换为 Long 对象
+     * 将字符串值转换为 Long 对象
      * Transforms string value into Long object
      *
-     * @param value 要转换的字符串值 String value to transform
-     * @param field 字段对象 Field that will be transformed
- * @return 转换后的 Long 对象 Transformed Long object
-     * @throws TransformationException 如果转换失败 if transformation fails
+     * @param value 要转换的字符串值 / String value to transform
+     * @param field 字段对象 / Field that will be transformed
+     * @return 转换后的 Long 对象 / Transformed Long object
+     * @throws TransformationException 如果转换失败 / if transformation fails
      */
     public Long transform(String value, Field field) throws TransformationException {
         try {

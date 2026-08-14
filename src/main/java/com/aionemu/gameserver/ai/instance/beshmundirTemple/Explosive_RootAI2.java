@@ -30,7 +30,7 @@ public class Explosive_RootAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 18900, 60, getOwner()).useNoAnimationSkill(); //Root.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 18900, 60, getOwner()).useNoAnimationSkill(); // 束缚技能 / Root.
 				startLifeTask();
 			}
 		}, 1000);

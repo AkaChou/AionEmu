@@ -113,7 +113,7 @@ public class GameMaintenanceServicesRuntimeBridge {
      * 猪猪爆米花活动是否启用。
      * Whether the pig-poppy event is enabled.
      *
-     * @return {@code true} if enabled。
+     * @return 已启用为 {@code true} / {@code true} if enabled
      */
     public boolean isPigPoppyEventEnabled() {
         return EventsConfig.ENABLE_PIG_POPPY_EVENT;
@@ -131,7 +131,7 @@ public class GameMaintenanceServicesRuntimeBridge {
      * 欧比斯宝藏活动是否启用。
      * Whether the abyss treasure event is enabled.
      *
-     * @return {@code true} if enabled。
+     * @return 已启用为 {@code true} / {@code true} if enabled
      */
     public boolean isAbyssEventEnabled() {
         return EventsConfig.ENABLE_ABYSS_EVENT;
@@ -149,7 +149,7 @@ public class GameMaintenanceServicesRuntimeBridge {
      * 术古皇陵是否启用。
      * Whether the Imperial Tomb is enabled.
      *
-     * @return {@code true} if enabled。
+     * @return 已启用为 {@code true} / {@code true} if enabled
      */
     public boolean isImperialTombEnabled() {
         return EventsConfig.IMPERIAL_TOMB_ENABLE;

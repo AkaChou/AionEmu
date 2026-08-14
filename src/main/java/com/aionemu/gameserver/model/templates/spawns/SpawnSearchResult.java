@@ -14,7 +14,7 @@ public final class SpawnSearchResult {
 		this.spot = spot;
 	}
 
-	/** 返回 spot / Returns the spot */
+	/** 返回刷新点 / Returns the spot */
 	public SpawnSpotTemplate getSpot() {
 		return spot;
 	}

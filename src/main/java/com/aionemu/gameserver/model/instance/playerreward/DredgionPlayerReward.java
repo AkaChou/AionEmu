@@ -12,7 +12,7 @@ public class DredgionPlayerReward extends InstancePlayerReward {
 		super(object);
 	}
 
-	/** Capture Zone / Capture Zone */
+	/** 占领区域 / Capture Zone */
 	public void captureZone() {
 		zoneCaptured++;
 	}

@@ -94,7 +94,7 @@ public class AuraEffect extends EffectTemplate {
 	 * 对指定玩家施加光环关联技能。
 	 * Applies the aura-linked skill to the given player.
 	 *
-	 * target player
+	 * @param effected 目标玩家 / target player
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	private void applyAuraTo(Player effected, Effect effect) {

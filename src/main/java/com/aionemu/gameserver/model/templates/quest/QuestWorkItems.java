@@ -21,7 +21,10 @@ public class QuestWorkItems {
 	protected List<QuestItems> questWorkItem;
 
 	/**
-	 * 获取 questWorkItem 属性值。 / Gets the value of the questWorkItem property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the questWorkItem property. <p> For example, to add a new item, do as follows: <pre> getQuestWorkItem().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link QuestItems }
+	 * 返回任务工作物品列表（惰性初始化，修改会直接反映到 JAXB 对象）。
+	 * Returns the quest work item list (lazily initialized; modifications are reflected in the JAXB object).
+	 *
+	 * @return 工作物品列表 / list of {@link QuestItems}
 	 */
 	public List<QuestItems> getQuestWorkItem() {
 		if (questWorkItem == null) {

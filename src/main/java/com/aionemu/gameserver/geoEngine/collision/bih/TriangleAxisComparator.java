@@ -18,7 +18,7 @@ public class TriangleAxisComparator implements Comparator<BIHTriangle> {
 	 * 以比较轴构造。
 	 * Constructs with the comparison axis.
 	 *
-	 * axis index
+	 * @param axis 轴索引 / axis index
 	 */
 	public TriangleAxisComparator(int axis) {
 		this.axis = axis;

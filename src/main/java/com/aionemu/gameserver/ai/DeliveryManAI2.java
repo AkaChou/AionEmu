@@ -52,7 +52,7 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	@Override
 	protected void handleDialogStart(Player player) {
@@ -66,7 +66,7 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 	 * 处理生物移动事件。
 	 * Handle creature-moved.
 	 *
-	 * creature
+	 * @param creature 生物 / creature
 	 */
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
@@ -79,7 +79,7 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 	 * 处理自定义事件。
 	 * Handle custom event.
 	 *
-	 * event id
+	 * @param eventId 事件 ID / event id
 	 * @param args 附加参数 / extra args
 	 */
 	@Override

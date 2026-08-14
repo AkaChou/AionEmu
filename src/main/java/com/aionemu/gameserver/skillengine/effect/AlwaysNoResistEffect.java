@@ -7,6 +7,10 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.controllers.observer.AttackCalcObserver;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * 必不抵抗效果：使目标攻击必定不被抵抗，可按次数消耗。
+ * Always-no-resist effect: ensures the target's attacks are never resisted, optionally for a limited number of uses.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AlwaysNoResistEffect")
 public class AlwaysNoResistEffect extends EffectTemplate {
@@ -16,6 +20,10 @@ public class AlwaysNoResistEffect extends EffectTemplate {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 注册攻击计算观察者，强制攻击不被抵抗并统计剩余次数。
+	 * Registers an attack calc observer that prevents resists and tracks remaining uses.
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 		AttackCalcObserver observer = new AttackCalcObserver() {

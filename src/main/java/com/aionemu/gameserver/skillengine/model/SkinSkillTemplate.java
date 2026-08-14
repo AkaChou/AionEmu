@@ -31,7 +31,6 @@ public class SkinSkillTemplate {
 	 * 获取技能 ID。
 	 * Gets skill id.
 	 *
-	 * id
 	 */
 	public int getId() {
 		return id;
@@ -41,7 +40,6 @@ public class SkinSkillTemplate {
 	 * 获取名称。
 	 * Gets name.
 	 *
-	 * name
 	 */
 	public String getName() {
 		return name;
@@ -51,7 +49,6 @@ public class SkinSkillTemplate {
 	 * 获取描述。
 	 * Gets description.
 	 *
-	 * description
 	 */
 	public String getDesc() {
 		return desc;
@@ -61,7 +58,6 @@ public class SkinSkillTemplate {
 	 * 获取技能分组。
 	 * Gets skill group.
 	 *
-	 * group
 	 */
 	public String getGroup() {
 		return skill_group;

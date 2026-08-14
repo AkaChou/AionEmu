@@ -2,7 +2,10 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import java.util.Objects;
 
-/** A checked slice of the existing 32-bit quest_vars value. */
+/**
+ * 既有 32 位 quest_vars 值中经过校验的一段字段切片。
+ * A checked slice of the existing 32-bit quest_vars value.
+ */
 public record BitField(String name, int offset, int width, int minValue, int maxValue,
 		PersistenceMode persistence, ProgressScope scope) {
 	public BitField {

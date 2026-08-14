@@ -8,7 +8,7 @@ public enum POWER {
 	WARRIOR(110), GLADIATOR(110), TEMPLAR(110), SCOUT(100), ASSASSIN(110), RANGER(90), MAGE(90), SORCERER(90),
 	SPIRIT_MASTER(90), PRIEST(95), CLERIC(105), CHANTER(110),
 
-	// 资讯类 4.3 / News Class 4.3
+	// 新职业 4.3 / New Class 4.3
 	TECHNIST(100), // GOOD
 	GUNSLINGER(100), // GOOD
 	MUSE(95), // GOOD
@@ -29,7 +29,7 @@ public enum POWER {
 	 * 获取该职业的基础属性值。
 	 * Returns the baseline attribute value for this class.
 	 *
-	 * Attribute value
+	 * @return 基础属性值 / baseline attribute value
 	 */
 	public int getValue() {
 		return value;

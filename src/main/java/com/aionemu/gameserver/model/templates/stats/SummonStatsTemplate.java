@@ -23,21 +23,30 @@ public class SummonStatsTemplate extends StatsTemplate {
 	private int mcrit;
 
 	/**
-	 * @return the pdefense
+	 * 返回物理防御。
+	 * Returns the physical defense.
+	 *
+	 * @return 物理防御 / the physical defense
 	 */
 	public int getPdefense() {
 		return pdefense;
 	}
 
 	/**
-	 * @return the mresist
+	 * 返回魔法抵抗。
+	 * Returns the magic resistance.
+	 *
+	 * @return 魔法抵抗 / the magic resistance
 	 */
 	public int getMresist() {
 		return mresist;
 	}
 
 	/**
-	 * @return the mcrit
+	 * 返回魔法暴击。
+	 * Returns the magic critical.
+	 *
+	 * @return 魔法暴击 / the magic critical
 	 */
 	public int getMcrit() {
 		return mcrit;

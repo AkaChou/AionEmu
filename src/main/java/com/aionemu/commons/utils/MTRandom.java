@@ -52,7 +52,7 @@ public class MTRandom extends Random {
      * 使用 long 种子创建实例。
      * Create an instance with a long seed.
      *
-     * Seed
+     * @param seed 种子值 / Seed value
      */
     public MTRandom(long seed) {
         super(seed);
@@ -87,7 +87,7 @@ public class MTRandom extends Random {
      * 以单 int 种子初始化状态。
      * Initialize state with a single int seed.
      *
-     * Seed
+     * @param seed 种子值 / Seed value
      */
     private void setSeed(int seed) {
         if (mt == null) {
@@ -103,7 +103,7 @@ public class MTRandom extends Random {
      * 设置 long 种子（兼容模式退化为 int 种子）。
      * Set a long seed (compat mode falls back to int seed).
      *
-     * Seed
+     * @param seed 种子值 / Seed value
      */
     @Override
     public synchronized void setSeed(long seed) {
@@ -174,8 +174,8 @@ public class MTRandom extends Random {
      * 生成下一批随机位。
      * Generate the next random bits.
      *
-     * Bit count
-     * Random bits
+     * @param bits 请求的随机位数 / Requested bit count
+     * @return 生成的随机位 / Generated random bits
      */
     @Override
     protected final synchronized int next(int bits) {
@@ -210,7 +210,7 @@ public class MTRandom extends Random {
      * Pack a byte array into an int array.
      *
      * @param buf 字节数组 / Byte array
-     * Int array
+     * @return 打包后的 int 数组 / Packed int array
      */
     public static int[] pack(byte[] buf) {
         int blen = buf.length;

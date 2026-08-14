@@ -35,39 +35,39 @@ public class BuildingCapabilities {
 	@XmlAttribute(required = true)
 	protected int exterior;
 
-	/** Whether 有 addon / Whether have addon */
+	/** 是否支持扩建 / Whether have addon */
 	public boolean canHaveAddon() {
 		return addon;
 	}
 
-	/** 返回 emblem id / Returns the emblem id */
+	/** 返回徽章 ID / Returns the emblem id */
 	public int getEmblemId() {
 		return emblemId;
 	}
 
 	/**
-	 * @return Whether change floor
+	 * @return 是否可以更换地板 / whether change floor
 	 */
 	public boolean canChangeFloor() {
 		return floor;
 	}
 
 	/**
-	 * @return Whether change room
+	 * @return 是否可以更换房间 / whether change room
 	 */
 	public boolean canChangeRoom() {
 		return room;
 	}
 
 	/**
-	 * @return Whether change interior
+	 * @return 是否可以更换室内装潢 / whether change interior
 	 */
 	public int canChangeInterior() {
 		return interior;
 	}
 
 	/**
-	 * @return Whether change exterior
+	 * @return 是否可以更换室外装潢 / whether change exterior
 	 */
 	public int canChangeExterior() {
 		return exterior;

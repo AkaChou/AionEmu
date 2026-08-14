@@ -48,7 +48,7 @@ public enum ObserverType {
 	private int observerMask;
 
 	/**
-	 * bit mask
+	 * @param observerMask 位掩码 / bit mask
 	 */
 	private ObserverType(int observerMask) {
 		this.observerMask = observerMask;
@@ -59,7 +59,7 @@ public enum ObserverType {
 	 * Whether this type covers the given observer type.
 	 *
 	 * @param observerType 待匹配类型 / type to match
-	 * whether it matches
+	 * @return 是否覆盖 / whether it matches
 	 */
 	public boolean matchesObserver(ObserverType observerType) {
 		return (observerType.observerMask & observerMask) == observerType.observerMask;

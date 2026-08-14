@@ -18,16 +18,29 @@ import com.aionemu.gameserver.services.moltenusservice.MoltenusFight;
  */
 
 public class MoltenusLocation {
+	/** 位置 ID / Location id */
 	protected int id;
+	/** 是否激活 / Whether active */
 	protected boolean isActive;
+	/** 位置模板 / Location template */
 	protected MoltenusTemplate template;
+	/** 当前进行的熔岩魔战斗 / Active moltenus fight */
 	protected MoltenusFight<MoltenusLocation> activeMoltenus;
+	/** 位置内的玩家映射 / Players in this location */
 	protected Map<Integer, Player> players = new HashMap<>();
+	/** 已刷出的实体列表 / Spawned entities */
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
+	/** 默认构造。 / Default constructor. */
 	public MoltenusLocation() {
 	}
 
+	/**
+	 * 以模板构造位置。
+	 * Constructs a location from a template.
+	 *
+	 * @param template 位置模板 / location template
+	 */
 	public MoltenusLocation(MoltenusTemplate template) {
 		this.template = template;
 		this.id = template.getId();

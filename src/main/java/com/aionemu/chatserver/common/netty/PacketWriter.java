@@ -18,7 +18,7 @@ public interface PacketWriter {
      * 写入 1 字节。
      * Writes one byte.
      *
-     * Byte value
+     * @param value 字节值 / Byte value
      */
     void writeC(int value);
 
@@ -34,7 +34,7 @@ public interface PacketWriter {
      * 写入 4 字节整型（小端）。
      * Writes one int in little-endian order.
      *
-     * Integer value
+     * @param value 整数值 / Integer value
      */
     void writeD(int value);
 
@@ -66,7 +66,7 @@ public interface PacketWriter {
      * 写入 2 字节字符（小端）。
      * Writes one character as a short in little-endian order.
      *
-     * Character
+     * @param value 字符值 / Character value
      */
     void writeChar(char value);
 
@@ -82,7 +82,7 @@ public interface PacketWriter {
      * 在指定索引处写入 short（小端）。
      * Sets a short at the given index in little-endian order.
      *
-     * Index
+     * @param index 索引 / Index
      * @param value 短整数值 / Short value
      */
     void setH(int index, int value);
@@ -92,7 +92,7 @@ public interface PacketWriter {
      * Copies bytes from the given index into the destination array.
      *
      * @param index 起始索引 / Start index
-     * Destination array
+     * @param destination 目标数组 / Destination array
      */
     void getBytes(int index, byte[] destination);
 }

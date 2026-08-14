@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 全局掉落 Ratings 模板（静态数据/XML）。
- * XML template.
+ * Global drop ratings template (static data/XML).
  *
  * @author Wnkrz
  */
@@ -20,7 +20,7 @@ public class GlobalDropRatings {
 	@XmlElement(name = "gd_rating")
 	protected List<GlobalDropRating> gdRatings;
 
-	/** 返回 global drop ratings / Returns the global drop ratings */
+	/** 返回全局掉落评级。 / Returns the global drop ratings. */
 	public List<GlobalDropRating> getGlobalDropRatings() {
 		if (gdRatings == null) {
 			gdRatings = new ArrayList<GlobalDropRating>();

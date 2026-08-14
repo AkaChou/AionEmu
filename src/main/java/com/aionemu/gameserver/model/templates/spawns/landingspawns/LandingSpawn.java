@@ -12,8 +12,8 @@ import com.aionemu.gameserver.model.landing.LandingStateType;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
 
 /**
- * 登陆刷新点模板（静态数据/XML）。
- * XML template.
+ * 登陆区域刷新点模板：按登陆状态组织刷怪。
+ * Landing zone spawn template: organizes spawns by landing state.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -30,7 +30,7 @@ public class LandingSpawn {
 	@XmlElement(name = "landing_level")
 	private List<LandingSpawn.LandingStateTemplate> LandingStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回登陆状态模板 / Returns the landing state templates */
 	public List<LandingStateTemplate> getSiegeModTemplates() {
 		return LandingStateTemplate;
 	}

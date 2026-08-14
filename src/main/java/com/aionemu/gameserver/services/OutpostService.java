@@ -65,7 +65,7 @@ public class OutpostService {
 	}
 
 	/**
-	 * 注册每周三 9:00 的前哨与神器重置任务（因吉森 / 格克马洛斯）。
+	 * 注册每周三 9:00 的前哨与神器重置任务（英吉斯温 / 格尔克马洛斯）。
 	 * Schedules the weekly Wed 09:00 outpost/artifact reset for Inggison and Gelkmaros.
 	 */
 	public void initOupostReset() {
@@ -74,7 +74,7 @@ public class OutpostService {
 		String weekly = "0 0 9 ? * WED *";
 		GameCronServices.cronService().schedule(new Runnable() {
 			public void run() {
-				// 因格森。 / Inggison.
+				// 英吉斯温。 / Inggison.
 				capture(101, Race.NPC);
 				capture(102, Race.NPC);
 				capture(103, Race.NPC);
@@ -89,7 +89,7 @@ public class OutpostService {
 				captureArtifact(105, Race.NPC);
 				captureArtifact(106, Race.NPC);
 				captureArtifact(107, Race.NPC);
-				// 吉尔克马罗斯。 / Gelkmaros.
+				// 格尔克马洛斯。 / Gelkmaros.
 				capture(201, Race.NPC);
 				capture(202, Race.NPC);
 				capture(203, Race.NPC);

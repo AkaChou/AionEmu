@@ -7,7 +7,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestSkillFacts;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
-/** Captures the caster/target identity at the successful skill callback. */
+/** 在技能成功回调处捕获施法者/目标身份。 / Captures the caster/target identity at the successful skill callback. */
 public final class PlayerQuestSkillEventPort implements QuestSkillEventPort {
 	@Override
 	public QuestEvent.UseSkill useSkill(QuestEnv env, int skillId) {

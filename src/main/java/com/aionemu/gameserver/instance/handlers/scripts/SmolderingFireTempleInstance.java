@@ -43,15 +43,15 @@ import java.util.concurrent.Future;
 @InstanceID(302000000)
 public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 {
-	/** 军阶 / rank */
+		/** 军阶 / rank */
 		private int rank;
 	/** 开始时间 / start time */
 	private long startTime;
-	/** vengeful obscura / vengeful obscura */
+		/** vengeful obscura / vengeful obscura */
 		private int vengefulObscura;
-	/** 准备计时器 / timer prepare */
+		/** 准备计时器 / timer prepare */
 		private Future<?> timerPrepare;
-	/** 副本计时器 / timer instance */
+		/** 副本计时器 / timer instance */
 		private Future<?> timerInstance;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
@@ -60,19 +60,19 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	/** 副本奖励对象 / instance reward object */
 	private SmolderingReward instanceReward;
 	// 准备时间。 / Preparation Time.
-	/** 准备计时秒数 / prepare timer seconds */
+		/** 准备计时秒数 / prepare timer seconds */
 		private int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
 	// 副本持续计时。 / Duration Instance Time.
-	/** 副本计时秒数 / instance timer seconds */
+		/** 副本计时秒数 / instance timer seconds */
 		private int instanceTimerSeconds = 600000; //...10Min
-	/** smoldering 任务 / smoldering task */
+		/** smoldering 任务 / smoldering task */
 		private final List<Future<?>> smolderingTask = new ArrayList<Future<?>>();
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
 	 *
-	 * visible object
-	 * result
+	 * @param object 可见对象 / visible object
+	 * @return 结果 / result
 	 */
 	
 	protected SmolderingPlayerReward getPlayerReward(Integer object) {
@@ -98,7 +98,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
 	 *
-	 * result
+	 * @return 结果 / result
 	 */
 	@Override
 	public InstanceReward<?> getInstanceReward() {
@@ -108,7 +108,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -165,7 +165,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -268,8 +268,8 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
@@ -419,8 +419,8 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	 * 玩家打开门时处理。
 	 * Handle a player opening a door.
 	 *
-	 * 玩家 / player
-	 * doorId
+	 * @param player 玩家 / player
+	 * @param doorId 门 ID / doorId
 	 */
 	@Override
 	public void onOpenDoor(Player player, int doorId) {
@@ -592,7 +592,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	 * 移除指定 NPC。
 	 * Despawn the given NPC.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	protected void despawnNpc(Npc npc) {
@@ -619,9 +619,9 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

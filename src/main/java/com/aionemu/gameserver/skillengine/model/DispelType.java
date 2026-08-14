@@ -26,7 +26,6 @@ public enum DispelType {
 	 * 返回枚举名（JAXB 值）。
 	 * Returns enum name (JAXB value).
 	 *
-	 * name
 	 */
 	public String value() {
 		return name();
@@ -37,7 +36,6 @@ public enum DispelType {
 	 * Parses dispel type from string.
 	 *
 	 * @param v 名称 / name
-	 * dispel type
 	 */
 	public static DispelType fromValue(String v) {
 		return valueOf(v);

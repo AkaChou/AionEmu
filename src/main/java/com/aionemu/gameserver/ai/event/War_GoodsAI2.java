@@ -18,7 +18,7 @@ public class War_GoodsAI2 extends AggressiveNpcAI2
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
 		if (p != null) {
-			spawn(832261, p.getX(), p.getY(), p.getZ(), (byte) 0); //Idian Dephs Treasure Chest.
+			spawn(832261, p.getX(), p.getY(), p.getZ(), (byte) 0); // 伊迪安深渊宝箱 / Idian Dephs Treasure Chest.
 		}
 		super.handleDied();
 		AI2Actions.deleteOwner(this);

@@ -20,7 +20,7 @@ public class FunctionalNpc extends SummonedObject<Creature> {
 		return getCreator().isEnemy(creature);
 	}
 
-	/** 返回 npc object type / Returns the npc object type */
+	/** 返回 NPC 对象类型 / Returns the npc object type */
 	@Override
 	public NpcObjectType getNpcObjectType() {
 		return NpcObjectType.NORMAL;

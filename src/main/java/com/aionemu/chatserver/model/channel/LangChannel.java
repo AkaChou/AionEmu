@@ -13,7 +13,7 @@ public class LangChannel extends RaceChannel {
      * 创建语言频道。
      * Creates a language channel.
      *
-     * 阵营 / race
+     * @param race 阵营 / race
      * @param identifier 字符串标识 / string identifier
      */
     public LangChannel(Race race, String identifier) {

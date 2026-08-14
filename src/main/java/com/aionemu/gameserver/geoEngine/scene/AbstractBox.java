@@ -20,7 +20,7 @@ public abstract class AbstractBox extends Mesh {
 
 	/** 盒子中心。 / Box center. */
 	public final Vector3f center = new Vector3f(0f, 0f, 0f);
-	/** Y/Z 轴半长。 / Half-extents along X/Y/Z/Y/Z 轴半长。 / Half-extents along X/Y/Z */
+	/** X/Y/Z 轴半长。 / Half-extents along X/Y/Z. */
 	public float xExtent, yExtent, zExtent;
 
 	/**
@@ -72,7 +72,7 @@ public abstract class AbstractBox extends Mesh {
 	 * 获取盒子中心点。
 	 * Gets the center point of this box.
 	 *
-	 * center point
+	 * @return 盒子中心点 / center point
 	 */
 	public final Vector3f getCenter() {
 		return center;
@@ -82,7 +82,7 @@ public abstract class AbstractBox extends Mesh {
 	 * 获取 X 轴半长。
 	 * Gets the x-axis size (extent) of this box.
 	 *
-	 * x extent
+	 * @return X 轴半长 / x extent
 	 */
 	public final float getXExtent() {
 		return xExtent;
@@ -92,7 +92,7 @@ public abstract class AbstractBox extends Mesh {
 	 * 获取 Y 轴半长。
 	 * Gets the y-axis size (extent) of this box.
 	 *
-	 * y extent
+	 * @return Y 轴半长 / y extent
 	 */
 	public final float getYExtent() {
 		return yExtent;
@@ -102,7 +102,7 @@ public abstract class AbstractBox extends Mesh {
 	 * 获取 Z 轴半长。
 	 * Gets the z-axis size (extent) of this box.
 	 *
-	 * z extent
+	 * @return Z 轴半长 / z extent
 	 */
 	public final float getZExtent() {
 		return zExtent;
@@ -128,7 +128,7 @@ public abstract class AbstractBox extends Mesh {
 	 * 实际边长为半长的两倍，因盒子从中心向两侧延伸。
 	 * Note that actual side lengths are twice the given extents because the box extends both ways from the center.
 	 *
-	 * center of the box
+	 * @param center 盒子中心 / center of the box
 	 * @param x X 方向半长 / x extent in each direction
 	 * @param y Y 方向半长 / y extent in each direction
 	 * @param z Z 方向半长 / z extent in each direction

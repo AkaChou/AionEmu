@@ -35,7 +35,7 @@ public class AntiHackService {
 	 * @param z 目标 Z / Target Z
 	 * @param speed 上报速度 / Reported speed
 	 * @param type 移动掩码类型 / Movement mask type
-	 * @return {@code true} if move is allowed。
+	 * @return 允许移动则为 {@code true} / {@code true} if move is allowed
 	 */
 	public static boolean canMove(Player player, float x, float y, float z, float speed, byte type) {
 
@@ -162,12 +162,12 @@ public class AntiHackService {
 	 * 按配置对作弊行为执行处罚（回退、踢线等）。
 	 * Applies configured punishment for hack behavior (rollback, kick, etc.).
 	 *
-	 * 玩家 / Player
+	 * @param player 玩家 / Player
 	 * @param x 坐标 X / X
 	 * @param y 坐标 Y / Y
 	 * @param type 移动类型 / Move type
-	 * Rollback packet
-	 * Audit message
+	 * @param pkt 回退同步包 / Rollback packet
+	 * @param message 审计消息 / Audit message
 	 *
 	 * @return 是否仍允许移动 / Whether move is still allowed
 	 */
@@ -202,11 +202,11 @@ public class AntiHackService {
 	 * 强制将玩家位置回退并同步客户端。
 	 * Forces player position rollback and syncs the client.
 	 *
-	 * 玩家 / Player
+	 * @param player 玩家 / Player
 	 * @param x 坐标 X / X
 	 * @param y 坐标 Y / Y
 	 * @param type 移动类型 / Move type
-	 * Sync packet
+	 * @param pkt 同步包 / Sync packet
 	 */
 	protected static void moveBack(Player player, float x, float y, byte type, AionServerPacket pkt) {
 		PacketSendUtility.broadcastPacketAndReceive(player, pkt);

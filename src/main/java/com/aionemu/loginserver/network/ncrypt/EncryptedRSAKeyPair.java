@@ -12,7 +12,7 @@ import java.security.interfaces.RSAPublicKey;
  */
 public class EncryptedRSAKeyPair {
 
-    /** Original RSA key pair / Original RSA key pair */
+    /** 原始 RSA 密钥对 / Original RSA key pair */
     private KeyPair RSAKeyPair;
     /** 混淆后的模数 / Scrambled modulus bytes */
     private byte[] encryptedModulus;

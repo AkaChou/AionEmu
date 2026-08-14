@@ -27,7 +27,6 @@ public class AddCube extends AdminCommand {
 	 * 执行魔立方扩展：定位在线玩家并调用扩展服务。
 	 * Executes cube expand: finds the online player and calls the expand service.
 	 *
-	 * admin
 	 * @param params 参数：玩家名 / player name
 	 */
 	@Override
@@ -64,8 +63,6 @@ public class AddCube extends AdminCommand {
 	 * 参数错误时输出 {@code //addcube} 用法。
 	 * Prints {@code //addcube} usage on invalid arguments.
 	 *
-	 * admin
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player admin, String message) {

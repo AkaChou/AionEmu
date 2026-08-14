@@ -27,8 +27,8 @@ public class IgnoreProperties {
 	 * 私有构造。
 	 * Private constructor.
 	 *
-	 * 阵营 / race
-	 * static object id
+	 * @param race 阵营 / race
+	 * @param staticId 静态物体 id / static object id
 	 */
 	private IgnoreProperties(Race race, int staticId) {
 		this.race = race;
@@ -39,8 +39,8 @@ public class IgnoreProperties {
 	 * 按种族与静态 id 创建；{@code staticId == 0} 时复用预置常量。
 	 * Creates by race and static id; reuses prefabricated constants when {@code staticId == 0}.
 	 *
-	 * 阵营 / race
-	 * static object id
+	 * @param race 阵营 / race
+	 * @param staticId 静态物体 id / static object id
 	 *
 	 * @return 忽略属性实例 / ignore properties instance
 	 */
@@ -74,9 +74,7 @@ public class IgnoreProperties {
 	 * 仅按静态 id 创建。
 	 * Creates by static id only.
 	 *
-	 * static object id
-	 *
-	 * @param staticId
+	 * @param staticId 静态物体 id / static object id
 	 * @return 忽略属性实例 / ignore properties instance
 	 */
 	public static IgnoreProperties of(int staticId) {
@@ -97,7 +95,7 @@ public class IgnoreProperties {
 	 * 返回忽略的静态物体 id。
 	 * Returns the static object id to ignore.
 	 *
-	 * static object id
+	 * @return 静态物体 id / static object id
 	 */
 	public int getStaticId() {
 		return staticId;

@@ -81,7 +81,7 @@ public class NpcShoutData {
 	 * 返回已加载的喊话条目数量。
 	 * Returns the number of loaded shout entries.
 	 *
-	 * shout count
+	 * @return 已加载的呐喊条目数量 / Returns the number of loaded shout entries.
 	 */
 	public int size() {
 		return this.count;
@@ -91,8 +91,8 @@ public class NpcShoutData {
 	 * 获取全局喊话与世界限定喊话的合并副本；用完后请清理。
 	 * Returns a combined copy of global and world-specific shouts; clean up after use.
 	 *
-	 * 世界 ID / world id
-	 * npc id
+	 * @param worldId 世界 ID / world id
+	 * @param npcId NPC ID / npc id
 	 * @return 喊话列表，不存在则为 null / shout list or null
 	 */
 	public List<NpcShout> getNpcShouts(int worldId, int npcId) {
@@ -118,9 +118,8 @@ public class NpcShoutData {
 	 * 轻量检查是否存在喊话，不复制列表。
 	 * Lightweight check for any shouts without copying lists.
 	 *
-	 * 世界 ID / world id
-	 * npc id
-	 *
+	 * @param worldId 世界 ID / world id
+	 * @param npcId NPC ID / npc id
 	 * @return 存在喊话则为 true / true if any shout exists
 	 */
 	public boolean hasAnyShout(int worldId, int npcId) {
@@ -139,8 +138,8 @@ public class NpcShoutData {
 	 * 轻量检查是否存在指定事件类型的喊话。
 	 * Lightweight check for shouts of the given event type.
 	 *
-	 * 世界 ID / world id
-	 * npc id
+	 * @param worldId 世界 ID / world id
+	 * @param npcId NPC ID / npc id
 	 * @param type 喊话事件类型 / shout event type
 	 * @return 存在匹配喊话则为 true / true if any matching shout exists
 	 */
@@ -161,8 +160,8 @@ public class NpcShoutData {
 	 * 按事件类型 / 模式 / 技能序号筛选 NPC 喊话。
 	 * Filters NPC shouts by event type, pattern and skill number.
 	 *
-	 * 世界 ID / world id
-	 * npc id
+	 * @param worldId 世界 ID / world id
+	 * @param npcId NPC ID / npc id
 	 * @param type 喊话事件类型 / shout event type
 	 * @param pattern 模式；null 表示不过滤 / pattern, null for any
 	 * @param skillNo 技能序号；0 表示不过滤 / skill number, 0 for any

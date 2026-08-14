@@ -80,11 +80,15 @@ public class PetBuff implements StatOwner {
 		PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 	}
 
-	/** 返回 buff remaning time / Returns the buff remaning time */
+	/** 返回剩余 buff 时间 / Returns the buff remaining time */
 	public int getBuffRemaningTime() {
 		return (int) ((System.currentTimeMillis() - startTime) / 1000);
 	}
 
+	/**
+	 * 宠物 Buff 定时任务：定时消耗食物并延续增益效果。
+	 * Pet buff task: periodically consumes food and renews the buff effect.
+	 */
 	private class PetBuffTask implements Runnable {
 		private Player player;
 
@@ -109,7 +113,7 @@ public class PetBuff implements StatOwner {
 		}
 	}
 
-	/** 是否宠物增益 / Whether pet buff*/
+	/** 是否有宠物增益 / Whether pet buff */
 	public boolean hasPetBuff() {
 		return task != null && !task.isDone();
 	}

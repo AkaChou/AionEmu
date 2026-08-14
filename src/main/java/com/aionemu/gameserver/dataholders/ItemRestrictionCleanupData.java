@@ -25,7 +25,7 @@ public class ItemRestrictionCleanupData {
 	 * 返回清理规则数量。
 	 * Returns the number of cleanup rules.
 	 *
-	 * rule count
+	 * @return 清理规则数量 / Returns the number of cleanup rules.
 	 */
 	public int size() {
 		return bplist.size();

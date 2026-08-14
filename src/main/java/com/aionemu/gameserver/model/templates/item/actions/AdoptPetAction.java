@@ -44,7 +44,7 @@ public class AdoptPetAction extends AbstractItemAction {
 	}
 
 	/**
-	 * @return Whether side kick
+	 * @return 是否为伙伴宠物 / whether this pet is a sidekick
 	 */
 	public Boolean isSideKick() {
 		return isSideKick;

@@ -17,9 +17,9 @@ public class Title implements IExpirable {
 	private int dispearTime;
 
 	/**
-	 * @param template
-	 * @param id
-	 * @param dispearTime
+	 * @param template 称号模板 / title template
+	 * @param id 称号 ID / title id
+	 * @param dispearTime 消失时间戳 / disappear timestamp
 	 */
 	public Title(TitleTemplate template, int id, int dispearTime) {
 		this.template = template;
@@ -28,21 +28,21 @@ public class Title implements IExpirable {
 	}
 
 	/**
-	 * @return Returns the template.
+	 * @return 称号模板 / the template
 	 */
 	public TitleTemplate getTemplate() {
 		return template;
 	}
 
 	/**
-	 * @return Returns the id.
+	 * @return 称号 ID / the id
 	 */
 	public int getId() {
 		return id;
 	}
 
 	/**
-	 * @return Returns the dispearTime.
+	 * @return 剩余时间 / remaining time
 	 */
 	public int getRemainingTime() {
 		if (dispearTime == 0) {

@@ -13,7 +13,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 
 /**
- * 玩家 Entered 活动，用于团队2相关逻辑。
+ * 玩家入队事件（团队2）。
  * Player Entered Event for team 2 logic.
  *
  * @author ATracer
@@ -29,14 +29,17 @@ public class PlayerEnteredEvent implements Predicate<Player>, TeamEvent {
 	}
 
 	/**
-	 * Entered player should not be in group yet
+	 * 入队玩家必须尚未在队伍中。
+	 * Entered player should not be in group yet.
+	 *
+	 * @return 是否满足条件 / whether the condition holds
 	 */
 	@Override
 	public boolean checkCondition() {
 		return !group.hasMember(enteredPlayer.getObjectId());
 	}
 
-	/** 处理活动。 / Handle event. */
+	/** 处理事件。 / Handle event. */
 	@Override
 	public void handleEvent() {
 		PlayerGroupService.addPlayerToGroup(group, enteredPlayer);

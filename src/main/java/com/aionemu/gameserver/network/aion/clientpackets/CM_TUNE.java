@@ -51,7 +51,7 @@ public class CM_TUNE extends AionClientPacket {
 			return;
 		Storage inventory = player.getInventory();
 		Item fitem = inventory.getItemByObjId(itemObjectId);
-		// 修复：支持已装备物品的鉴定
+		// 修复：支持已装备物品的鉴定 / Fix: support identifying equipped items
 		if (fitem == null && tuningScrollId != 0) {
 			fitem = player.getEquipment().getEquippedItemByObjId(itemObjectId);
 			if (fitem == null)
@@ -77,6 +77,8 @@ public class CM_TUNE extends AionClientPacket {
 		}
 		// 修复：使用固定的动画 ID（166200022 神话装备鉴定卷轴）让客户端正确播放鉴定动画
 		// 直接使用物品本身的 ID 可能没有对应的动画定义
+		// Fix: use a fixed animation ID (166200022 Mythic identify scroll) so the client plays the identify animation
+		// correctly; the item's own ID may have no matching animation definition
 		final int itemId = 166200022;
 		final ItemTemplate template = item.getItemTemplate();
 		final int nameId = template.getNameId();
@@ -89,6 +91,7 @@ public class CM_TUNE extends AionClientPacket {
 				player.removeItemCoolDown(template.getUseLimits().getDelayId());
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_CANCELED(new DescriptionId(nameId)));
 				// 修复：取消时使用 endState = 3（取消）而不是 2（失败）
+				// Fix: use endState = 3 (cancel) on abort instead of 2 (fail)
 				PacketSendUtility.broadcastPacket(player,
 						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjectId, itemId, 0, 3, 0), true);
 				player.getObserveController().removeObserver(this);

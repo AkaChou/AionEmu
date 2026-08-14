@@ -82,7 +82,7 @@ public class NpcDropData {
 	 * 返回全部 NPC 掉落列表。
 	 * Returns the full NPC drop list.
 	 *
-	 * npc drop list
+	 * @return NPC 掉落列表 / npc drop list
 	 */
 	public List<NpcDrop> getNpcDrop() {
 		return npcDrop == null ? Collections.emptyList() : npcDrop;
@@ -92,7 +92,7 @@ public class NpcDropData {
 	 * 设置 NPC 掉落列表并重建索引。
 	 * Sets the NPC drop list and rebuilds the index.
 	 *
-	 * npc drop list
+	 * @param npcDrop NPC 掉落列表 / npc drop list
 	 */
 	public void setNpcDrop(List<NpcDrop> npcDrop) {
 		this.npcDrop = npcDrop;
@@ -129,9 +129,7 @@ public class NpcDropData {
 	 * 按 NPC ID 获取掉落配置。
 	 * Returns the drop configuration for the given npc id.
 	 *
-	 * npc id
-	 *
-	 * @param npcId
+	 * @param npcId NPC ID / npc id
 	 * @return 掉落配置或 null / drop config or null
 	 */
 	public synchronized NpcDrop getDrop(int npcId) {

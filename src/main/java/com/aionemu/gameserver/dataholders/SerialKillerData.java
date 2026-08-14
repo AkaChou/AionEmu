@@ -44,7 +44,7 @@ public class SerialKillerData {
 	 * 返回已加载的等级限制数量。
 	 * Returns the number of loaded rank restrictions.
 	 *
-	 * restriction count
+	 * @return 已加载的排名限制数量 / Returns the number of loaded rank restrictions.
 	 */
 	public int size() {
 		return templates.size();

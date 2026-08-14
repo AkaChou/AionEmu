@@ -16,7 +16,7 @@ public class FollowManager {
 	 * 跟随目标过远时尝试向目标移动。
 	 * Attempts to move toward the target when the follow target is too far.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void targetTooFar(NpcAI2 npcAI) {
 		Npc npc = npcAI.getOwner();

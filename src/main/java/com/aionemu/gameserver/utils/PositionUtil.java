@@ -14,8 +14,8 @@ public class PositionUtil {
 	 * 判断 object1 是否位于 object2 的背后。
 	 * Checks whether object1 is behind object2.
 	 *
-	 * Observer
-	 * Target
+	 * @param object1 观察者 / Observer
+	 * @param object2 目标 / Target
 	 *
 	 * @return 是否在背后 / Whether behind the target
 	 */
@@ -36,8 +36,8 @@ public class PositionUtil {
 	 * 判断 object1 是否位于 object2 的正前方。
 	 * Checks whether object1 is in front of object2.
 	 *
-	 * Observer
-	 * Target
+	 * @param object1 观察者 / Observer
+	 * @param object2 目标 / Target
 	 *
 	 * @return 是否在正前方 / Whether in front of the target
 	 */
@@ -58,7 +58,7 @@ public class PositionUtil {
 	 * 通过朝向射线判断 object2 是否在 object1 的背后半平面内。
 	 * Uses a heading ray to check whether object2 lies in the half-plane behind object1.
 	 *
-	 * Reference object
+	 * @param object1 参考对象 / Reference object
 	 *
 	 * @param object2 待判定对象 / Object to test
 	 * @param object2
@@ -84,9 +84,9 @@ public class PositionUtil {
 	 * 计算 object1 朝向到 object2 的相对角度差。
 	 * Calculates the relative angle from object1's facing to object2.
 	 *
-	 * Reference object
-	 * Target object
-	 * Angle difference in degrees
+	 * @param object1 参考对象 / Reference object
+	 * @param object2 目标对象 / Target object
+	 * @return 角度差（度） / Angle difference in degrees
 	 */
 	public static float getAngleToTarget(VisibleObject object1, VisibleObject object2) {
 		float angleObject1 = MathUtil.convertHeadingToDegree(object1.getHeading()) - 180;
@@ -105,8 +105,8 @@ public class PositionUtil {
 	 * 计算两对象在相对方向上的包围半径修正量。
 	 * Calculates the directional bound correction between two objects.
 	 *
-	 * Object 1
-	 * Object 2
+	 * @param object1 对象 1 / Object 1
+	 * @param object2 对象 2 / Object 2
 	 * @param inverseTarget 是否反转目标方向 / Whether to invert the target direction
 	 * @return 方向包围修正量 / Directional bound correction
 	 */
@@ -133,8 +133,8 @@ public class PositionUtil {
 	 * 计算两对象方向包围修正量（不反转目标）。
 	 * Calculates the directional bound correction without inverting the target.
 	 *
-	 * Object 1
-	 * Object 2
+	 * @param object1 对象 1 / Object 1
+	 * @param object2 对象 2 / Object 2
 	 * @return 方向包围修正量 / Directional bound correction
 	 */
 	public static float getDirectionalBound(VisibleObject object1, VisibleObject object2) {
@@ -145,9 +145,9 @@ public class PositionUtil {
 	 * 计算从 fromObject 指向 object 的远离朝向。
 	 * Calculates the heading to move away from fromObject toward object.
 	 *
-	 * Source object
-	 * Target object
-	 * Heading byte
+	 * @param fromObject 源对象 / Source object
+	 * @param object 目标对象 / Target object
+	 * @return Heading byte / Heading byte
 	 */
 	public static byte getMoveAwayHeading(VisibleObject fromObject, VisibleObject object) {
 		float angle = MathUtil.calculateAngleFrom(fromObject, object);

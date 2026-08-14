@@ -7,7 +7,7 @@ package com.aionemu.commons.network;
  * @param hostName 监听主机（"*" 表示所有地址） / Bind host ("*" for all addresses)
  * @param port 监听端口 / Bind port
  * @param connectionName 连接名称（日志用） / Connection name for logging
- * Connection factory
+ * @param factory 连接工厂 / Connection factory
  */
 public record NettyServerCfg(String hostName, int port, String connectionName, NettyConnectionFactory factory) {
 }

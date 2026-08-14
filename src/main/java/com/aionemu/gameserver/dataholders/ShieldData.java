@@ -28,7 +28,7 @@ public class ShieldData {
 	 * 返回护盾模板数量；列表为空时初始化为空列表并返回 0。
 	 * Returns the number of shield templates; initializes an empty list and returns 0 when null.
 	 *
-	 * template count
+	 * @return shield templates; initializes an empty list and returns 0 when null数量 / Returns the number of shield templates; initializes an empty list and returns 0 when null.
 	 */
 	public int size() {
 		if (shieldTemplates == null) {

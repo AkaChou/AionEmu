@@ -61,7 +61,7 @@ public class AnimationAddAction extends AbstractItemAction {
 	public void act(final Player player, final Item parentItem, Item targetItem) {
 		player.getController().cancelUseItem();
 
-		// Проверяем, нужно ли проигрывать анимацию (если у игрока нет ни одной из эмоций)
+		// 检查是否需要播放动画（若玩家尚未拥有任一动作）。 / Check whether the animation should play (if the player has none of the motions).
 		boolean shouldPlayAnimation = false;
 		if (idle != null && !player.getMotions().hasMotion(idle)) {
 			shouldPlayAnimation = true;
@@ -79,7 +79,7 @@ public class AnimationAddAction extends AbstractItemAction {
 			shouldPlayAnimation = true;
 		}
 
-		// Проигрываем анимацию, если нужно
+		// 如果需要则播放动画。 / Play the animation if needed.
 		if (shouldPlayAnimation) {
 			PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 1000, 0, 0));
 		}
@@ -88,10 +88,10 @@ public class AnimationAddAction extends AbstractItemAction {
 			/** 运行 / run. */
 			@Override
 			public void run() {
-				// Флаг, чтобы определить, была ли добавлена хотя бы одна новая анимация
+				// 标记是否新增了至少一种动画。 / Flag whether at least one new motion was added.
 				boolean anyMotionAdded = false;
 
-				// 检查是否需添加 idle 动画且尚未学习。 / Проверяем, нужно ли добавить анимацию idle и не изучена ли она уже
+				// 检查是否需添加 idle 动画且尚未学习。 / Check whether the idle motion should be added and is not learned yet.
 				if (idle != null) {
 					// log.warn(I18n.get("log.79bf49d72aa1", idle));
 					if (!player.getMotions().hasMotion(idle)) {
@@ -102,7 +102,7 @@ public class AnimationAddAction extends AbstractItemAction {
 						// log.warn(I18n.get("log.3b733eb97e8b", idle));
 					}
 				}
-				// 检查是否需添加 run 动画且尚未学习。 / Проверяем, нужно ли добавить анимацию run и не изучена ли она уже
+				// 检查是否需添加 run 动画且尚未学习。 / Check whether the run motion should be added and is not learned yet.
 				if (run != null) {
 					// log.warn(I18n.get("log.168b6ac187b9", run));
 					if (!player.getMotions().hasMotion(run)) {
@@ -113,7 +113,7 @@ public class AnimationAddAction extends AbstractItemAction {
 						// log.warn(I18n.get("log.d00cde9a83fd", run));
 					}
 				}
-				// 检查是否需添加 jump 动画且尚未学习。 / Проверяем, нужно ли добавить анимацию jump и не изучена ли она уже
+				// 检查是否需添加 jump 动画且尚未学习。 / Check whether the jump motion should be added and is not learned yet.
 				if (jump != null) {
 					// log.warn(I18n.get("log.4dced1c0e67e", jump));
 					if (!player.getMotions().hasMotion(jump)) {
@@ -124,7 +124,7 @@ public class AnimationAddAction extends AbstractItemAction {
 						// log.warn(I18n.get("log.e24a81c09788", jump));
 					}
 				}
-				// 检查是否需添加 rest 动画且尚未学习。 / Проверяем, нужно ли добавить анимацию rest и не изучена ли она уже
+				// 检查是否需添加 rest 动画且尚未学习。 / Check whether the rest motion should be added and is not learned yet.
 				if (rest != null) {
 					// log.warn(I18n.get("log.d56e3b9a8d34", rest));
 					if (!player.getMotions().hasMotion(rest)) {
@@ -135,7 +135,7 @@ public class AnimationAddAction extends AbstractItemAction {
 						// log.warn(I18n.get("log.a1bca3318f8c", rest));
 					}
 				}
-				// 检查是否需添加 shop 动画且尚未学习。 / Проверяем, нужно ли добавить анимацию shop и не изучена ли она уже
+				// 检查是否需添加 shop 动画且尚未学习。 / Check whether the shop motion should be added and is not learned yet.
 				if (shop != null) {
 					// log.warn(I18n.get("log.5debe69c6ae9", shop));
 					if (!player.getMotions().hasMotion(shop)) {
@@ -147,7 +147,7 @@ public class AnimationAddAction extends AbstractItemAction {
 					}
 				}
 
-				// 仅在新增至少一种动画时发送 SM_ITEM_USAGE_ANIMATION、SM_MOTION 与学习消息，并减少数量。 / Отправляем пакет SM_ITEM_USAGE_ANIMATION, SM_MOTION и сообщение об изучении только в том случае, если была добавлена хотя бы одна новая анимация и уменьшаем кол-во предметов.
+				// 仅在新增至少一种动画时才发送动画包与学习消息，并减少物品数量。 / Send the animation packet and learn message, and decrease the item count, only when at least one new motion was added.
 				if (anyMotionAdded) {
 					PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemId(), 0, 1, 0));
 					PacketSendUtility.broadcastPacket(player, new SM_MOTION(player.getObjectId(), player.getMotions().getActiveMotions()), false);

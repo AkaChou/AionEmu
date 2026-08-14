@@ -10,6 +10,10 @@ import jakarta.xml.bind.annotation.XmlElement;
  */
 public class NpcEquipmentList {
 
+	/**
+	 * 装备物品 ID 数组。
+	 * Equipped item id array.
+	 */
 	@XmlElement(name = "item")
 	public int[] itemIds;
 

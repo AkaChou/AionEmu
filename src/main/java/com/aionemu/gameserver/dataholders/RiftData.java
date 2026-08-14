@@ -43,7 +43,7 @@ public class RiftData {
 	 * 返回已加载的裂隙据点数量。
 	 * Returns the number of loaded rift locations.
 	 *
-	 * location count
+	 * @return 已加载的裂缝地点数量 / Returns the number of loaded rift locations.
 	 */
 	public int size() {
 		return rift.size();

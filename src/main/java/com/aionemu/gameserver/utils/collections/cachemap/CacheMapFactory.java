@@ -16,10 +16,8 @@ public class CacheMapFactory {
 	 *
 	 * @param <K> 键类型 / Type of keys
 	 * @param <V> 值类型 / Type of values
-	 * The name for this cache map
-	 *
+	 * @param cacheName 缓存映射名称 / The name for this cache map
 	 * @param valueName 值的助记名 / Mnemonic name for values stored in the cache
-	 * @param valueName
 	 * @return 缓存映射实例 / Cache map instance
 	 */
 	public static <K, V> CacheMap<K, V> createCacheMap(String cacheName, String valueName) {
@@ -36,10 +34,8 @@ public class CacheMapFactory {
 	 *
 	 * @param <K> 键类型 / Type of keys
 	 * @param <V> 值类型 / Type of values
-	 * The name for this cache map
-	 *
+	 * @param cacheName 缓存映射名称 / The name for this cache map
 	 * @param valueName 值的助记名 / Mnemonic name for values stored in the cache
-	 * @param valueName
 	 * @return 软引用缓存映射 / Soft-reference cache map
 	 */
 	public static <K, V> CacheMap<K, V> createSoftCacheMap(String cacheName, String valueName) {
@@ -52,10 +48,8 @@ public class CacheMapFactory {
 	 *
 	 * @param <K> 键类型 / Type of keys
 	 * @param <V> 值类型 / Type of values
-	 * The name for this cache map
-	 *
+	 * @param cacheName 缓存映射名称 / The name for this cache map
 	 * @param valueName 值的助记名 / Mnemonic name for values stored in the cache
-	 * @param valueName
 	 * @return 弱引用缓存映射 / Weak-reference cache map
 	 */
 	public static <K, V> CacheMap<K, V> createWeakCacheMap(String cacheName, String valueName) {

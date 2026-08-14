@@ -48,7 +48,6 @@ public class FixNpc extends AdminCommand
 	 * 对当前目标或按 start/stop 批量修正刷出并保存。
 	 * Fixes the current target spawn or batch-fixes via start/stop.
 	 *
-	 * admin
 	 * @param params start [counter] | stop，或无参时处理当前目标 / start [counter] | stop, or current target when empty
 	 */
 	@Override
@@ -201,8 +200,6 @@ public class FixNpc extends AdminCommand
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
 	 *
-	 * admin
-	 * error message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

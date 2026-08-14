@@ -148,7 +148,7 @@ public class KnownList {
 	 * 将对象加入可见集合，并通知控制器 {@code see}。
 	 * Adds the object to the visual set and notifies the controller via {@code see}.
 	 *
-	 * visual object
+	 * @param object 待添加的可见对象 / visual object to add
 	 */
 	public void addVisualObject(VisibleObject object) {
 		if (object instanceof Creature) {
@@ -179,8 +179,8 @@ public class KnownList {
 	 */
 	private void del(VisibleObject object, boolean isOutOfRange) {
 		/**
-	 * 对象已知 / object was known
-	 */
+		 * 对象已知 / object was known
+		 */
 		if (knownObjects.remove(object.getObjectId()) != null) {
 			if (knownPlayers != null) {
 				knownPlayers.remove(object.getObjectId());
@@ -193,7 +193,7 @@ public class KnownList {
 	 * 从可见集合删除对象，并通知控制器 {@code notSee}。
 	 * Removes the object from the visual set and notifies the controller via {@code notSee}.
 	 *
-	 * visual object
+	 * @param object 待删除的可见对象 / visual object to remove
 	 * @param isOutOfRange 是否因超出范围 / whether removal is due to range
 	 */
 	public void delVisualObject(VisibleObject object, boolean isOutOfRange) {
@@ -243,8 +243,8 @@ public class KnownList {
 					continue;
 				}
 				/**
-	 * New object is not known
-	 */
+				 * 新对象尚未被知晓 / New object is not known
+				 */
 				if (add(newObject)) {
 					newObject.getKnownList().add(owner);
 				}
@@ -256,9 +256,7 @@ public class KnownList {
 	 * 判断所有者是否应感知该对象（是否保留在已知列表中）。
 	 * Whether the known-list owner is aware of the found object (should keep it in the list).
 	 *
-	 * candidate object
-	 *
-	 * @param newObject
+	 * @param newObject 待检查的对象 / candidate object
 	 * @return 应感知则返回 {@code true} / {@code true} if aware
 	 */
 	protected boolean isAwareOf(VisibleObject newObject) {
@@ -269,9 +267,7 @@ public class KnownList {
 	 * 检查对象是否在所有者的可见距离内（含 Z 轴上限）。
 	 * Checks whether the object is within the owner's visibility distance (including max Z).
 	 *
-	 * candidate object
-	 *
-	 * @param newObject
+	 * @param newObject 待检查的对象 / candidate object
 	 * @return 在范围内返回 {@code true} / {@code true} if in range
 	 */
 	protected boolean checkObjectInRange(VisibleObject newObject) {
@@ -286,9 +282,8 @@ public class KnownList {
 	 * 反向范围检查；若新对象使用不同的感知半径，可覆盖此方法。
 	 * Reverse range check; override when the new object uses a different awareness radius.
 	 *
-	 * candidate object
-	 *
-	 * @param newObject {@code false} by default。
+	 * @param newObject 待检查的对象 / candidate object
+	 * @return 默认返回 {@code false} / {@code false} by default
 	 */
 	protected boolean checkReversedObjectInRange(VisibleObject newObject) {
 		return false;
@@ -298,7 +293,7 @@ public class KnownList {
 	 * 对所有已知 NPC 执行访问回调（无数量上限）。
 	 * Visits all known NPCs without an iteration limit.
 	 *
-	 * visitor callback
+	 * @param visitor 访问回调 / visitor callback
 	 */
 	public void doOnAllNpcs(Visitor<Npc> visitor) {
 		doOnAllNpcs(visitor, Integer.MAX_VALUE);
@@ -308,10 +303,8 @@ public class KnownList {
 	 * 对所有已知 NPC 执行访问回调，可限制最大遍历数。
 	 * Visits known NPCs, optionally capped by an iteration limit.
 	 *
-	 * visitor callback
-	 *
+	 * @param visitor 访问回调 / visitor callback
 	 * @param iterationLimit 最大遍历数 / maximum iterations
-	 * @param iterationLimit
 	 * @return 实际遍历数量 / number of NPCs visited
 	 */
 	public int doOnAllNpcs(Visitor<Npc> visitor, int iterationLimit) {
@@ -335,7 +328,7 @@ public class KnownList {
 	 * 对所有已知 NPC 执行携带所有者的访问回调（无数量上限）。
 	 * Visits all known NPCs with owner context, without an iteration limit.
 	 *
-	 * visitor callback
+	 * @param visitor 访问回调 / visitor callback
 	 */
 	public void doOnAllNpcsWithOwner(VisitorWithOwner<Npc, VisibleObject> visitor) {
 		doOnAllNpcsWithOwner(visitor, Integer.MAX_VALUE);
@@ -345,10 +338,8 @@ public class KnownList {
 	 * 对所有已知 NPC 执行携带所有者的访问回调，可限制最大遍历数。
 	 * Visits known NPCs with owner context, optionally capped by an iteration limit.
 	 *
-	 * visitor callback
-	 *
+	 * @param visitor 访问回调 / visitor callback
 	 * @param iterationLimit 最大遍历数 / maximum iterations
-	 * @param iterationLimit
 	 * @return 实际遍历数量 / number of NPCs visited
 	 */
 	public int doOnAllNpcsWithOwner(VisitorWithOwner<Npc, VisibleObject> visitor, int iterationLimit) {
@@ -372,7 +363,7 @@ public class KnownList {
 	 * 对所有已知玩家执行访问回调。
 	 * Visits all known players.
 	 *
-	 * visitor callback
+	 * @param visitor 访问回调 / visitor callback
 	 */
 	public void doOnAllPlayers(Visitor<Player> visitor) {
 		if (knownPlayers == null) {
@@ -393,7 +384,7 @@ public class KnownList {
 	 * 对所有已知对象执行访问回调。
 	 * Visits all known objects.
 	 *
-	 * visitor callback
+	 * @param visitor 访问回调 / visitor callback
 	 */
 	public void doOnAllObjects(Visitor<VisibleObject> visitor) {
 		try {
@@ -443,7 +434,7 @@ public class KnownList {
 	 * 已知对象值的线程安全快照。
 	 * Thread-safe snapshot of known-object values.
 	 *
-	 * snapshot list
+	 * @return 快照列表 / snapshot list
 	 */
 	private List<VisibleObject> knownObjectsSnapshot() {
 		synchronized (knownObjects) {
@@ -455,7 +446,7 @@ public class KnownList {
 	 * 已知玩家值的线程安全快照。
 	 * Thread-safe snapshot of known-player values.
 	 *
-	 * snapshot list
+	 * @return 快照列表 / snapshot list
 	 */
 	private List<Player> knownPlayersSnapshot() {
 		if (knownPlayers == null) {
@@ -563,9 +554,7 @@ public class KnownList {
 	 * 按对象 ID 获取已知对象。
 	 * Returns a known object by object id.
 	 *
-	 * target object id
-	 *
-	 * @param targetObjectId
+	 * @param targetObjectId 目标对象 ID / target object id
 	 * @return 已知对象，不存在则为 {@code null} / known object, or {@code null}
 	 */
 	public VisibleObject getObject(int targetObjectId) {

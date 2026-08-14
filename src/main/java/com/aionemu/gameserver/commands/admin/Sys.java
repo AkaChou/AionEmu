@@ -16,10 +16,10 @@ import java.util.List;
  * Admin command for server system info and shutdown/restart control.
  * <p>
  * //sys info - 系统信息 / System informations<br>
- * Memory informations<br>
+ * //sys memory - 内存信息 / Memory informations<br>
  * //sys gc - 垃圾回收 / Garbage collector<br>
- * Call shutdown<br>
- * Call restart<br>
+ * //sys shutdown - 关机 / Call shutdown<br>
+ * //sys restart - 重启 / Call restart<br>
  * //sys threadpool - 线程池信息 / Thread pools info
  * </p>
  *
@@ -129,8 +129,6 @@ public class Sys extends AdminCommand {
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
 	 *
-	 * 玩家 / Player
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

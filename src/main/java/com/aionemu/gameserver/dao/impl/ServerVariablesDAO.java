@@ -32,7 +32,7 @@ public class ServerVariablesDAO extends com.aionemu.gameserver.dao.ServerVariabl
 	 *
 	 * variable key
 	 *
-	 * @param var
+	 * @param var 变量键 / variable key
 	 * @return 变量值，不存在则 0 / value, or 0 if missing
 	 */
 	@Override
@@ -56,8 +56,8 @@ public class ServerVariablesDAO extends com.aionemu.gameserver.dao.ServerVariabl
 	 * 存储服务器变量。
 	 * Stores a server variable.
 	 *
-	 * variable key
-	 * integer value
+	 * @param var 变量键 / variable key
+	 * @param time 整数值 / integer value
 	 *
 	 * @return 是否写入成功 / whether the write succeeded
 	 */
@@ -79,10 +79,10 @@ public class ServerVariablesDAO extends com.aionemu.gameserver.dao.ServerVariabl
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
 	 *
-	 * database name
-	 * major version
-	 * minor version
-	 * whether supported
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
 	 */
 	@Override
 	public boolean supports(String databaseName, int majorVersion, int minorVersion) {

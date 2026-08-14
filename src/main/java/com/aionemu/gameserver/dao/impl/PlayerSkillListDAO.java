@@ -75,8 +75,8 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
      * 加载玩家技能列表。
      * Loads the player's skill list.
      *
-     * player id
-     * skill list
+     * @param playerId 玩家 ID / player id
+     * @return 技能列表 / skill list
      */
     @Override
     public PlayerSkillList loadSkillList(int playerId) {
@@ -110,8 +110,8 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
      * 持久化玩家当前技能与已删除技能。
      * Persists the player's active and deleted skills.
      *
-     * 玩家 / player
-     * always true
+     * @param player 玩家 / player
+     * @return 恒为 true / always true
      */
     @Override
     public boolean storeSkills(Player player) {
@@ -166,8 +166,8 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
      * 批量插入 NEW 状态技能。
      * Batch-inserts skills in NEW state.
      *
-     * connection
-     * 玩家 / player
+     * @param con 连接 / connection
+     * @param player 玩家 / player
      * @param skills 技能条目列表 / list of skill entries
      * SQL exception
      */
@@ -195,8 +195,8 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
      * 批量更新 UPDATE_REQUIRED 状态技能等级。
      * Batch-updates skill levels in UPDATE_REQUIRED state.
      *
-     * connection
-     * 玩家 / player
+     * @param con 连接 / connection
+     * @param player 玩家 / player
      * @param skills 技能条目列表 / list of skill entries
      * SQL exception
      */
@@ -224,8 +224,8 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
      * 批量更新 UPDATE_REQUIRED 状态技能皮肤信息。
      * Batch-updates skill skin info in UPDATE_REQUIRED state.
      *
-     * connection
-     * 玩家 / player
+     * @param con 连接 / connection
+     * @param player 玩家 / player
      * @param skills 技能条目列表 / list of skill entries
      * SQL exception
      */
@@ -256,8 +256,8 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
      * 批量删除 DELETED 状态技能。
      * Batch-deletes skills in DELETED state.
      *
-     * connection
-     * 玩家 / player
+     * @param con 连接 / connection
+     * @param player 玩家 / player
      * @param skills 技能条目列表 / list of skill entries
      * SQL exception
      */
@@ -284,8 +284,8 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
      * 获取技能皮肤激活日期。
      * Returns the skill skin active date.
      *
-     * player object id
-     * skill id
+     * @param playerObjId 玩家对象 ID / player object id
+     * @param skillId 技能 ID / skill id
      * @return 激活时间戳；无记录返回 null / active timestamp, or null if none
      */
     @Override
@@ -314,8 +314,8 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
      * 获取技能皮肤过期时间。
      * Returns the skill skin expire time.
      *
-     * player object id
-     * skill id
+     * @param playerObjId 玩家对象 ID / player object id
+     * @param skillId 技能 ID / skill id
      * @return 过期时间；无记录返回 0 / expire time, or 0 if none
      */
     @Override
@@ -344,10 +344,10 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

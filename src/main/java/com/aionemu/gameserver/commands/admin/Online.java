@@ -26,8 +26,6 @@ public class Online extends AdminCommand {
 	 * 从 {@link PlayerDAO} 读取在线人数并回复管理员。
 	 * Read the online count from {@link PlayerDAO} and reply to the admin.
 	 *
-	 * 执行 GM / Admin player
-	 * Unused
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -46,8 +44,6 @@ public class Online extends AdminCommand {
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
 	 *
-	 * 玩家 / Player
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

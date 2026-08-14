@@ -2,10 +2,17 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import java.util.Objects;
 
-/** Closed set of authoritative spawn locations. */
+/**
+ * 封闭的权威生成位置集合。
+ * Closed set of authoritative spawn locations.
+ */
 public sealed interface QuestSpawnLocation permits QuestSpawnLocation.Fixed,
 		QuestSpawnLocation.PlayerPosition {
 
+	/**
+	 * 固定世界坐标中的具体生成位置。
+	 * A fixed spawn position with explicit world coordinates.
+	 */
 	record Fixed(int worldId, QuestInstanceTarget instanceTarget, float x, float y, float z, byte heading)
 			implements QuestSpawnLocation {
 		public Fixed {
@@ -19,7 +26,10 @@ public sealed interface QuestSpawnLocation permits QuestSpawnLocation.Fixed,
 		}
 	}
 
-	/** Spawn at the event-time player position frozen in {@code QuestSnapshot}. */
+	/**
+	 * 事件发生时冻结在 {@code QuestSnapshot} 中的玩家位置。
+	 * Spawn at the event-time player position frozen in {@code QuestSnapshot}.
+	 */
 	record PlayerPosition(byte heading) implements QuestSpawnLocation {
 	}
 }

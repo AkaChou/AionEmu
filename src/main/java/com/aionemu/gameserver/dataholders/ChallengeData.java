@@ -61,9 +61,7 @@ public class ChallengeData {
 	 * 按任务 ID 获取挑战任务模板。
 	 * Returns the challenge task template for the given task id.
 	 *
-	 * task id
-	 *
-	 * @param taskId
+	 * @param taskId 任务 ID / task id
 	 * @return 模板，不存在则为 null / template or null
 	 */
 	public ChallengeTaskTemplate getTaskByTaskId(int taskId) {
@@ -96,7 +94,7 @@ public class ChallengeData {
 	 * 返回已加载的挑战任务数量。
 	 * Returns the number of loaded challenge tasks.
 	 *
-	 * task count
+	 * @return 已加载的挑战任务数量 / Returns the number of loaded challenge tasks.
 	 */
 	public int size() {
 		return this.tasksById.size();

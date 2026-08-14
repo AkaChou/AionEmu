@@ -52,12 +52,12 @@ public class RecipeTemplate {
 	@XmlElement(name = "component_panel")
 	private List<Component> component_panel;
 
-	/** 返回 component / Returns the component */
+	/** 返回组件面板 / Returns the component panel */
 	public List<Component> getComponent() {
 		return component_panel;
 	}
 
-	/** 返回 combo product / Returns the combo product */
+	/** 返回组合产品 / Returns the combo product */
 	public Integer getComboProduct(int num) {
 		if (comboproduct == null || comboproduct.get(num - 1) == null) {
 			return null;
@@ -65,7 +65,7 @@ public class RecipeTemplate {
 		return comboproduct.get(num - 1).getItemid();
 	}
 
-	/** 返回 combo product size / Returns the combo product size */
+	/** 返回组合产品数量 / Returns the combo product size */
 	public Integer getComboProductSize() {
 		if (comboproduct == null) {
 			return 0;
@@ -73,17 +73,17 @@ public class RecipeTemplate {
 		return comboproduct.size();
 	}
 
-	/** 返回 quantity / Returns the quantity */
+	/** 返回数量 / Returns the quantity */
 	public Integer getQuantity() {
 		return quantity;
 	}
 
-	/** 返回 productid / Returns the productid */
+	/** 返回产品 ID / Returns the product id */
 	public Integer getProductid() {
 		return productid;
 	}
 
-	/** 返回 auto learn / Returns the auto learn */
+	/** 返回自动学习 / Returns the auto learn */
 	public int getAutoLearn() {
 		return autolearn;
 	}
@@ -93,7 +93,7 @@ public class RecipeTemplate {
 		return dp;
 	}
 
-	/** 返回 skillpoint / Returns the skillpoint */
+	/** 返回技能点数 / Returns the skill point */
 	public Integer getSkillpoint() {
 		return skillpoint;
 	}
@@ -103,12 +103,12 @@ public class RecipeTemplate {
 		return race;
 	}
 
-	/** 返回 skillid / Returns the skillid */
+	/** 返回技能 ID / Returns the skill id */
 	public Integer getSkillid() {
 		return skillid;
 	}
 
-	/** 返回物品 ID / Returns the itemid */
+	/** 返回物品 ID / Returns the item id */
 	public Integer getItemid() {
 		return itemid;
 	}
@@ -118,7 +118,7 @@ public class RecipeTemplate {
 		return name;
 	}
 
-	/** 返回 nameid / Returns the nameid */
+	/** 返回名称 ID / Returns the name id */
 	public int getNameid() {
 		return nameid;
 	}
@@ -128,7 +128,7 @@ public class RecipeTemplate {
 		return id;
 	}
 
-	/** 返回 max production count / Returns the max production count */
+	/** 返回最大制作数量 / Returns the max production count */
 	public Integer getMaxProductionCount() {
 		return maxProductionCount;
 	}
@@ -138,19 +138,19 @@ public class RecipeTemplate {
 		return craftDelayTime;
 	}
 
-	/** 返回 craft delay id / Returns the craft delay id */
+	/** 返回制作延迟 ID / Returns the craft delay id */
 	public Integer getCraftDelayId() {
 		return craftDelayId;
 	}
 
 	/**
-	 * @return Whether arch daeva
+	 * @return 是否为高阶守护者配方 / whether arch daeva recipe
 	 */
 	public boolean isArchDaeva() {
 		return archdaeva;
 	}
 
-	/** 设置 arch daeva / Sets the arch daeva */
+	/** 设置高阶守护者标志 / Sets the arch daeva flag */
 	public void setArchDaeva(boolean value) {
 		archdaeva = value;
 	}

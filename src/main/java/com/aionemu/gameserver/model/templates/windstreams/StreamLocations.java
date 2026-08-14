@@ -9,8 +9,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * StreamLocations 模板（静态数据/XML）。
- * XML template.
+ * 风道地点集模板（静态数据/XML）。
+ * Stream locations template (static data/XML).
  *
  * @author LokiReborn
  */

@@ -42,7 +42,7 @@ public class BindPointData {
 	 * 返回已加载的绑定点数量。
 	 * Returns the number of loaded bind points.
 	 *
-	 * template count
+	 * @return 已加载的绑定点数量 / Returns the number of loaded bind points.
 	 */
 	public int size() {
 		return bindplistData.size();
@@ -52,9 +52,7 @@ public class BindPointData {
 	 * 按 NPC ID 获取绑定点模板。
 	 * Returns the bind-point template for the given NPC id.
 	 *
-	 * npc id
-	 *
-	 * @param npcId
+	 * @param npcId NPC ID / npc id
 	 * @return 模板，不存在则为 null / template or null
 	 */
 	public BindPointTemplate getBindPointTemplate(int npcId) {

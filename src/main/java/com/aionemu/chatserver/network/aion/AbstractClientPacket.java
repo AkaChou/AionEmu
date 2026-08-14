@@ -22,9 +22,9 @@ public abstract class AbstractClientPacket extends BaseClientPacket {
      * 构造客户端数据包。
      * Constructs a client packet.
      *
-     * packet reader
+     * @param packetReader 包读取器 / packet reader
      * @param clientChannelHandler 客户端通道处理器 / client channel handler
-     * operation code
+     * @param opCode 操作码 / operation code
      */
     public AbstractClientPacket(PacketReader packetReader, ClientChannelHandler clientChannelHandler, int opCode) {
         super(packetReader, opCode);

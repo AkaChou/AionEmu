@@ -24,7 +24,7 @@ public abstract class AITemplate extends AbstractAI {
 	 * 默认允许思考。
 	 * Allows thinking by default.
 	 *
-	 * always true
+	 * @return 默认 true / always true
 	 */
 	@Override
 	public boolean canThink() {
@@ -198,7 +198,7 @@ public abstract class AITemplate extends AbstractAI {
 	 * 默认不允许喊话。
 	 * Disallows shouting by default.
 	 *
-	 * always false
+	 * @return 默认 false / always false
 	 */
 	@Override
 	public boolean isMayShout() {
@@ -209,7 +209,7 @@ public abstract class AITemplate extends AbstractAI {
 	 * 默认不处理模式喊话。
 	 * Does not handle pattern shouts by default.
 	 *
-	 * always false
+	 * @return 默认 false / always false
 	 */
 	@Override
 	public boolean onPatternShout(ShoutEventType event, String pattern, int skillNumber) {

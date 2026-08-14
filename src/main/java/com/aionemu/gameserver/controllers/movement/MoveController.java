@@ -18,7 +18,7 @@ public interface MoveController {
 	 * 返回目标 X 坐标。
 	 * Return the target X coordinate.
 	 *
-	 * Target X
+	 * @return 目标 X 坐标 / Target X
 	 */
 	float getTargetX2();
 
@@ -26,7 +26,7 @@ public interface MoveController {
 	 * 返回目标 Y 坐标。
 	 * Return the target Y coordinate.
 	 *
-	 * Target Y
+	 * @return 目标 Y 坐标 / Target Y
 	 */
 	float getTargetY2();
 
@@ -34,7 +34,7 @@ public interface MoveController {
 	 * 返回目标 Z 坐标。
 	 * Return the target Z coordinate.
 	 *
-	 * Target Z
+	 * @return 目标 Z 坐标 / Target Z
 	 */
 	float getTargetZ2();
 
@@ -65,7 +65,7 @@ public interface MoveController {
 	 * 返回当前移动掩码。
 	 * Return the current movement mask.
 	 *
-	 * Movement mask
+	 * @return 移动掩码 / Movement mask
 	 */
 	byte getMovementMask();
 

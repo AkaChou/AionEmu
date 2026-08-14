@@ -83,7 +83,7 @@ public class GameRewardServicesGateway {
      * 解析奖励服务：优先 Spring，否则经运行时桥回退。
      * Resolve reward service: prefer Spring, otherwise fall back via runtime bridge.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private RewardService rewardService() {
         if (rewardServiceProvider == null) {
@@ -96,7 +96,7 @@ public class GameRewardServicesGateway {
      * 解析老兵奖励服务：优先 Spring，否则经运行时桥回退。
      * Resolve veteran-rewards service: prefer Spring, otherwise fall back via runtime bridge.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private VeteranRewardsService veteranRewardsService() {
         if (veteranRewardsServiceProvider == null) {

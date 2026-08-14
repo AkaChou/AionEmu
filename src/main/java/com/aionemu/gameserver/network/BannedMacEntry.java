@@ -16,7 +16,7 @@ public class BannedMacEntry {
 	 * 以地址与截止时间（毫秒）构造条目。
 	 * Creates an entry from address and end time in milliseconds.
 	 *
-	 * banned MAC
+	 * @param address 封禁的 MAC 地址 / banned MAC address
 	 * @param newTime 截止时间戳（毫秒） / end timestamp in ms
 	 */
 	public BannedMacEntry(String address, long newTime) {
@@ -28,9 +28,9 @@ public class BannedMacEntry {
 	 * 以地址、截止时间与备注构造条目。
 	 * Creates an entry from address, end timestamp and details.
 	 *
-	 * banned MAC
+	 * @param address 封禁的 MAC 地址 / banned MAC address
 	 * @param time 截止时间 / end time
-	 * details
+	 * @param details 封禁备注 / ban details
 	 */
 	public BannedMacEntry(String address, Timestamp time, String details) {
 		this.mac = address;
@@ -42,7 +42,7 @@ public class BannedMacEntry {
 	 * 设置封禁备注。
 	 * Sets ban details.
 	 *
-	 * details
+	 * @param details 封禁备注 / ban details
 	 */
 	public final void setDetails(String details) {
 		this.details = details;
@@ -62,7 +62,7 @@ public class BannedMacEntry {
 	 * 获取封禁 MAC。
 	 * Returns the banned MAC.
 	 *
-	 * MAC address
+	 * @return 封禁的 MAC 地址 / banned MAC address
 	 */
 	public final String getMac() {
 		return mac;
@@ -72,7 +72,7 @@ public class BannedMacEntry {
 	 * 获取封禁截止时间。
 	 * Returns ban end time.
 	 *
-	 * end time
+	 * @return 封禁截止时间 / ban end time
 	 */
 	public final Timestamp getTime() {
 		return timeEnd;
@@ -103,7 +103,7 @@ public class BannedMacEntry {
 	 * 获取封禁备注。
 	 * Returns ban details.
 	 *
-	 * details
+	 * @return 封禁备注 / ban details
 	 */
 	public final String getDetails() {
 		return details;

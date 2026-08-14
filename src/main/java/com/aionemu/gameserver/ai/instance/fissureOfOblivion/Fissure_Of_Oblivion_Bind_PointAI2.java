@@ -26,6 +26,10 @@ public class Fissure_Of_Oblivion_Bind_PointAI2 extends NpcAI2
         checkDistance(this, creature);
     }
 	
+	/**
+	 * 玩家进入 10 米范围内时激活绑定点：删除自身并生成目标传送点。
+	 * Activates the bind point when a player comes within 10m: deletes itself and spawns the destination teleport points.
+	 */
 	private void checkDistance(NpcAI2 ai, Creature creature) {
         if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
         	if (MathUtil.isIn3dRange(getOwner(), creature, 10)) {

@@ -15,7 +15,7 @@ public abstract class TaskFromDBHandler implements Runnable {
 	protected String params[];
 
 	/**
-	 * @param id 设置任务 ID。 / Task's id
+	 * @param id 设置任务 ID / Task's id
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -36,7 +36,7 @@ public abstract class TaskFromDBHandler implements Runnable {
 	/**
 	 * 检查任务参数是否有效。 / Check if the task's parameters are valid
 	 *
-	 * @return true if valid, false otherwise
+	 * @return 有效返回 true，否则 false / true if valid, false otherwise
 	 */
 	public abstract boolean isValid();
 

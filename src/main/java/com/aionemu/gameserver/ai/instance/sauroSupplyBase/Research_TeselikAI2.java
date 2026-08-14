@@ -40,7 +40,7 @@ public class Research_TeselikAI2 extends AggressiveNpcAI2
 	}
 	
 	private void beritraFavor() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
 	}
 	
 	@Override
@@ -66,7 +66,7 @@ public class Research_TeselikAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 20657, 1, getOwner()).useNoAnimationSkill(); //Summoning Ritual.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20657, 1, getOwner()).useNoAnimationSkill(); // 召唤仪式 / Summoning Ritual.
 			ShebanMysticalTyrhund();
 			scheduleDelayStage1(delay);
 		}
@@ -77,8 +77,8 @@ public class Research_TeselikAI2 extends AggressiveNpcAI2
 		    enrageTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			    public void run() {
 					if (!isAlreadyDead()) {
-					    spawn(284455, 482.25043f, 337.24167f, 181.71579f, (byte) 30); //Sheban Mystical Tyrhund.
-					    spawn(284455, 476.00104f, 337.45627f, 181.71579f, (byte) 30); //Sheban Mystical Tyrhund.
+					    spawn(284455, 482.25043f, 337.24167f, 181.71579f, (byte) 30); // 生成 Sheban Mystical Tyrhund / spawn Sheban Mystical Tyrhund.
+					    spawn(284455, 476.00104f, 337.45627f, 181.71579f, (byte) 30); // 生成 Sheban Mystical Tyrhund / spawn Sheban Mystical Tyrhund.
 					}
 				}
 			}, 3000);
@@ -110,15 +110,15 @@ public class Research_TeselikAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleBackHome() {
 		super.handleBackHome();
-        despawnNpcs(284455); //Sheban Mystical Tyrhund.
+        despawnNpcs(284455); // 移除 Sheban Mystical Tyrhund / despawn Sheban Mystical Tyrhund.
 		isStart = false;
 		stage = 0;
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();
-        despawnNpcs(284455); //Sheban Mystical Tyrhund.
+        despawnNpcs(284455); // 移除 Sheban Mystical Tyrhund / despawn Sheban Mystical Tyrhund.
 		isStart = false;
 		stage = 0;
 	}

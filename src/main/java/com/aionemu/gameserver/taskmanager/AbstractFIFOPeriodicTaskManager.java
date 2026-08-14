@@ -90,7 +90,7 @@ public abstract class AbstractFIFOPeriodicTaskManager<T> extends AbstractPeriodi
 	 * 处理单个任务。
 	 * Process a single task.
 	 *
-	 * Task
+	 * @param task 任务 / the task
 	 */
 	protected abstract void callTask(T task);
 
@@ -98,7 +98,7 @@ public abstract class AbstractFIFOPeriodicTaskManager<T> extends AbstractPeriodi
 	 * 供耗时统计使用的被调方法名。
 	 * Method name used for runtime statistics.
 	 *
-	 * Method name
+	 * @return 被调方法名 / the method name
 	 */
 	protected abstract String getCalledMethodName();
 

@@ -66,7 +66,7 @@ public final class LoginShutdownServices implements DisposableBean {
      * 回退关机实例。
      * Fallback shutdown instance.
      *
-     * fallback instance
+     * @return 回退实例 / fallback instance
      */
     private static Shutdown fallbackShutdown() {
         return Fallbacks.SHUTDOWN;
@@ -77,7 +77,7 @@ public final class LoginShutdownServices implements DisposableBean {
      * Remember the resolved shutdown instance.
      *
      * @param shutdown 关机协调器 / shutdown coordinator
-     * same instance
+     * @return 同一实例 / same instance
      */
     private static Shutdown remember(Shutdown shutdown) {
         resolvedShutdown = shutdown;

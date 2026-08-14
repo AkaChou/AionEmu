@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * 绑定点模板（静态数据/XML 模板）。
- * XML template.
+ * Bind point template (static data / XML template).
  *
  * @author avol
  */

@@ -2,7 +2,10 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import java.util.Arrays;
 
-/** Generated from Aion 5.8 client HyperLinks.xml and active quest XML references. */
+/**
+ * 由 Aion 5.8 客户端 HyperLinks.xml 与活动任务 XML 引用生成。
+ * Generated from Aion 5.8 client HyperLinks.xml and active quest XML references.
+ */
 public enum QuestDialogAction {
 	USE_OBJECT(-1),
 	SELECTED_QUEST_REWARD1(8),

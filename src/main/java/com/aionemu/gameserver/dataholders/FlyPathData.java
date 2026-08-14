@@ -40,7 +40,7 @@ public class FlyPathData {
 	 * 返回飞行路径条目数量。
 	 * Returns the number of fly path entries.
 	 *
-	 * path count
+	 * @return 飞行路径条目数量 / Returns the number of fly path entries.
 	 */
 	public int size() {
 		return loctlistData.size();

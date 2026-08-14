@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Key 物品模板（静态数据/XML）。
- * XML template.
+ * 钥匙物品模板（静态数据/XML）。
+ * Key item template (static data / XML).
  *
  * @author Wakizashi
  */
@@ -23,21 +23,21 @@ public class KeyItem {
 	protected int quantity;
 
 	/**
-	 * @return the id
+	 * @return 钥匙 ID / the id
 	 */
 	public int getId() {
 		return id;
 	}
 
 	/**
-	 * @return the itemid
+	 * @return 物品 ID / the itemid
 	 */
 	public int getItemId() {
 		return itemid;
 	}
 
 	/**
-	 * @return the quantity
+	 * @return 数量 / the quantity
 	 */
 	public int getQuantity() {
 		return quantity;

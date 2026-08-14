@@ -16,7 +16,7 @@ public interface Collidable {
 	 * @param other 另一可碰撞对象 / the other collidable
 	 * @param results 碰撞结果收集器 / collector for collision hits
 	 * @return 检测到的碰撞次数 / how many collisions were found
-	 * unsupported collidable pair。
+	 * @throws UnsupportedCollisionException 不支持的可碰撞对象组合 / unsupported collidable pair
 	 */
 	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException;
 }

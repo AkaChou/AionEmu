@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-/** Builds a plan without mutating player state or performing external effects. */
+/** 不改变玩家状态或执行外部效果地构建计划。 / Builds a plan without mutating player state or performing external effects. */
 public final class QuestMutationPlanner {
 	private QuestMutationPlanner() {
 	}
@@ -132,7 +132,7 @@ public final class QuestMutationPlanner {
 				case QuestAction.GrantReward ignored -> {
 				}
 				case QuestAction.GrantSelectedReward ignored -> {
-					// Lowered to GrantReward before this validation loop.
+					// 在此校验循环之前已降级为 GrantReward。 / Lowered to GrantReward before this validation loop.
 				}
 				case QuestAction.DecreaseCurrency debit -> {
 					QuestRewardKind balanceKind = canonicalCurrencyKind(debit.kind());
@@ -162,11 +162,14 @@ public final class QuestMutationPlanner {
 				case QuestAction.BlockDefaultItemUse ignored -> {
 				}
 				case QuestAction.AbandonQuest ignored -> {
+					// NONE 投影由 QuestStatePort 持久化；终止清理由 QuestExecutionCoordinator 在提交后注册。
 					// The NONE projection is persisted by QuestStatePort; terminal cleanup
 					// is registered by QuestExecutionCoordinator after commit.
 				}
 			}
 		}
+		// 目标投影对动作未触及的字段（跨节点进度）是权威的，但绝不能覆盖
+		// 转换自身的显式 set/increment（自环计数）。
 		// Target projection is authoritative for fields the actions did not touch
 		// (cross-node progress), but must never overwrite an explicit set/increment
 		// by the transition itself (self-loop counting).
@@ -185,6 +188,10 @@ public final class QuestMutationPlanner {
 	}
 
 	/**
+	 * NPC 阵营状态是玩家侧生命周期资源而非任务变量。把它放在 SQL 变更之外，
+	 * 但安排旧 QuestService 调用的相同 start、complete 与显式放弃钩子。
+	 * 每日/每周门控已删除：零售阵营轮换是每日的且每日标志不可靠，
+	 * 因此 StartNpcFactionQuest 在每次 NONE 到 START 获取时触发；min-level 999 已守卫轮换窗口。
 	 * NPC-faction state is a player-side lifecycle resource rather than a quest
 	 * variable. Keep it outside the SQL mutation, but schedule the same start,
 	 * complete, and explicit-abandon hooks that the legacy QuestService invokes.
@@ -244,6 +251,7 @@ public final class QuestMutationPlanner {
 	}
 
 	/**
+	 * 放弃必须在同一事务中随 NONE 投影移除旧版任务工作物品。普通收集物品保持不变。
 	 * Abandonment must remove legacy quest work items in the same transaction as
 	 * the NONE projection. Ordinary collected items remain untouched.
 	 */
@@ -300,7 +308,7 @@ public final class QuestMutationPlanner {
 			.allMatch(entry -> entry.getValue().equals(actual.get(entry.getKey())));
 	}
 
-	/** Metadata prerequisites and start conditions gate only transitions that acquire an unaccepted quest. */
+	/** 元数据前置条件与开始条件只门控获取未接取任务的转换。 / Metadata prerequisites and start conditions gate only transitions that acquire an unaccepted quest. */
 	private static boolean metadataPrerequisitesSatisfied(CompiledQuestDefinition definition,
 		QuestSnapshot snapshot, QuestTransition transition) {
 		if (transition.sourceNode() == null) {
@@ -339,6 +347,9 @@ public final class QuestMutationPlanner {
 	}
 
 	/**
+	 * 可重复任务在两次运行之间持久化为 COMPLETE，而其下一个开始转换从 NONE/未接取节点声明。
+	 * 只有显式开始合格（start-eligible）的转换才能跨越该生命周期边界；
+	 * 完成后的普通未接取对话路由不得触发。
 	 * A repeatable quest is persisted as COMPLETE between runs, while its next
 	 * start transition is declared from the NONE/unaccepted node. Only an
 	 * explicitly start-eligible transition may cross that lifecycle boundary;
@@ -355,6 +366,8 @@ public final class QuestMutationPlanner {
 	}
 
 	/**
+	 * 仅当快照确实捕获了背包事实时移除才可行。未知事实（玩家登出）绝不猜测零余额：
+	 * 移除被视为不可行，而不是凭空编造匹配计划。
 	 * A removal is feasible only when the snapshot actually captured inventory
 	 * facts. Unknown facts (player being logged out) never guess a zero balance:
 	 * the removal is treated as infeasible instead of inventing a matching plan.
@@ -376,6 +389,7 @@ public final class QuestMutationPlanner {
 	}
 
 	/**
+	 * 仅当余额已捕获且本转换的累计金额可容纳时扣减才可行。未知余额失败关闭。
 	 * A debit is feasible only when the balance was captured and the cumulative
 	 * amount for this transition fits. Unknown balances fail closed.
 	 */
@@ -387,7 +401,7 @@ public final class QuestMutationPlanner {
 		}
 	}
 
-	/** Exact currency writes require captured balances and currently support DP as a reset/set resource. */
+	/** 精确货币写入需要已捕获余额，目前支持将 DP 作为重置/设置资源。 / Exact currency writes require captured balances and currently support DP as a reset/set resource. */
 	private static boolean setCurrencyFeasible(QuestSnapshot snapshot, QuestAction.SetCurrency set) {
 		if (set.kind() != QuestRewardKind.DP || set.amount() > Integer.MAX_VALUE) {
 			return false;

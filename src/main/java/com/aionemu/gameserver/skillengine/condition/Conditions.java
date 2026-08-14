@@ -53,7 +53,7 @@ public class Conditions {
 	 * 获取条件列表（实时引用，修改会反映到 JAXB 对象中）。
 	 * Gets the conditions list (live reference; modifications are present inside the JAXB object).
 	 *
-	 * conditions list
+	 * @return 条件列表 / conditions list
 	 */
 	public List<Condition> getConditions() {
 		if (conditions == null) {
@@ -85,7 +85,7 @@ public class Conditions {
 	 * Validates all conditions on the stat calculation path.
 	 *
 	 * @param stat 属性对象 / stat object
-	 * stat function
+	 * @param statFunction 属性函数 / stat function
 	 *
 	 * @return 全部通过则为 true / true if all pass
 	 */
@@ -104,9 +104,7 @@ public class Conditions {
 	 * 在效果应用路径上逐条校验全部条件。
 	 * Validates all conditions on the effect application path.
 	 *
-	 * effect environment
-	 *
-	 * @param effect
+	 * @param effect 效果环境 / effect environment
 	 * @return 全部通过则为 true / true if all pass
 	 */
 	public boolean validate(Effect effect) {

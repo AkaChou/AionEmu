@@ -38,7 +38,7 @@ public class OilCaskAI2 extends AggressiveNpcAI2
 			public void run() {
 				AI2Actions.deleteOwner(OilCaskAI2.this);
 			}
-		}, 20000); //20 Secondes.
+		}, 20000); // 20 秒后 / 20 Secondes.
 	}
 	
 	@Override

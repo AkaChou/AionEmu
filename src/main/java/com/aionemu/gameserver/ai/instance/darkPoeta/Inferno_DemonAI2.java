@@ -43,7 +43,7 @@ public class Inferno_DemonAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
 			switch (getNpcId()) {
-				case 237373: //Inferno Demon.
+				case 237373: // 炼狱恶魔。 / Inferno Demon.
 					// 你有 15 分钟找到辉煌元素，否则它将逃走。 / You have 15 minutes to find the Brilliant Elemental before it flees.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_Teo_T_TimeAttack_01, 0);
 					// 破碎元素正在积蓄力量。聚集在一起以分摊伤害。 / The Fractured Elemental is building up power. Gather together to disperse the damage.
@@ -89,7 +89,7 @@ public class Inferno_DemonAI2 extends AggressiveNpcAI2
 				} else {
 					// 元素力量即将以毁灭性爆炸释放。 / A massive blast of elemental power will soon explode with destructive force.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_Teo_T_Boss_Skill_03, 0);
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19567, 46, getOwner()).useNoAnimationSkill(); //Gravitational Shift.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19567, 46, getOwner()).useNoAnimationSkill(); // 引力位移。 / Gravitational Shift.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -123,11 +123,11 @@ public class Inferno_DemonAI2 extends AggressiveNpcAI2
 					if (!isAlreadyDead()) {
 						switch (Rnd.get(1, 2)) {
 						    case 1:
-							    spawn(237374, x, y, z, (byte) 0); //Mutated Dimensional Intruder.
+							    spawn(237374, x, y, z, (byte) 0); // 变异的次元入侵者。 / Mutated Dimensional Intruder.
 								spawn(856597, x, y, z, (byte) 0);
 							break;
 							case 2:
-							    spawn(237381, x, y, z, (byte) 0); //Wary Dimensional Intruder.
+							    spawn(237381, x, y, z, (byte) 0); // 警惕的次元入侵者。 / Wary Dimensional Intruder.
 								spawn(856597, x, y, z, (byte) 0);
 							break;
 						}
@@ -161,8 +161,8 @@ public class Inferno_DemonAI2 extends AggressiveNpcAI2
 	private void deleteHelpers() {
 		WorldMapInstance instance = getPosition().getWorldMapInstance();
 		if (instance != null) {
-			deleteNpcs(instance.getNpcs(237374)); //Mutated Dimensional Intruder.
-			deleteNpcs(instance.getNpcs(237381)); //Wary Dimensional Intruder.
+			deleteNpcs(instance.getNpcs(237374)); // 变异的次元入侵者。 / Mutated Dimensional Intruder.
+			deleteNpcs(instance.getNpcs(237381)); // 警惕的次元入侵者。 / Wary Dimensional Intruder.
 			deleteNpcs(instance.getNpcs(856597));
 		}
 	}
@@ -172,8 +172,8 @@ public class Inferno_DemonAI2 extends AggressiveNpcAI2
 		cancelPhaseTask();
 		final WorldPosition p = getPosition();
 		if (p != null) {
-			deleteNpcs(p.getWorldMapInstance().getNpcs(237374)); //Mutated Dimensional Intruder.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(237381)); //Wary Dimensional Intruder.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(237374)); // 变异的次元入侵者。 / Mutated Dimensional Intruder.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(237381)); // 警惕的次元入侵者。 / Wary Dimensional Intruder.
 			deleteNpcs(p.getWorldMapInstance().getNpcs(856597));
 		}
 		// 辉煌元素已消失。 / The Brilliant Elemental has disappeared.

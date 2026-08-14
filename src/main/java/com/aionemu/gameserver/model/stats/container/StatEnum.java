@@ -8,8 +8,8 @@ import com.aionemu.gameserver.model.items.ItemSlot;
 import lombok.Getter;
 
 /**
- * 属性 Enum 枚举。
- * Stat Enum enumeration.
+ * 属性枚举：定义全部属性字段及其物品魔石掩码。
+ * Stat enumeration: defines all stats and their item stone masks.
  */
 
 @XmlType(name = "StatEnum")
@@ -41,7 +41,7 @@ public enum StatEnum {
 	BOOST_CASTING_TIME(108), BOOST_CASTING_TIME_HEAL, BOOST_CASTING_TIME_TRAP, BOOST_CASTING_TIME_ATTACK,
 	BOOST_CASTING_TIME_SKILL, BOOST_CASTING_TIME_SUMMONHOMING, BOOST_CASTING_TIME_SUMMON, BOOST_HATE(109),
 
-	FLY_TIME(23), FLY_SPEED(37), SOAR_SPEED, // No Idea :(
+	FLY_TIME(23), FLY_SPEED(37), SOAR_SPEED, // 用途不明 / No Idea :(
 	DAMAGE_REDUCE, DAMAGE_REDUCE_MAX, BLEED_RESISTANCE(44), BLIND_RESISTANCE(48), BLOCK_PENETRATION, BIND_RESISTANCE(63),
 	CHARM_RESISTANCE(49), CONFUSE_RESISTANCE(54), CURSE_RESISTANCE(53), DISEASE_RESISTANCE(50), DEFORM_RESISTANCE(64),
 	FEAR_RESISTANCE(52), OPENAREIAL_RESISTANCE(59), PARALYZE_RESISTANCE(45), PERIFICATION_RESISTANCE(56),
@@ -119,7 +119,7 @@ public enum StatEnum {
 		this.sign = sign;
 	}
 
-	/** Find 按物品 stonemask / Find by item stone mask */
+	/** 按物品魔石掩码查找属性 / Find by item stone mask */
 	public static StatEnum findByItemStoneMask(int mask) {
 		for (StatEnum sEnum : values()) {
 			if (sEnum.getItemStoneMask() == mask) {
@@ -129,7 +129,7 @@ public enum StatEnum {
 		throw new IllegalArgumentException("Cannot find StatEnum for stone mask: " + mask);
 	}
 
-	/** 返回 hand stat / Returns the hand stat */
+	/** 返回对应主/副手属性 / Returns the hand stat */
 	public StatEnum getHandStat(long itemSlot) {
 		switch (this) {
 		case MAGICAL_ATTACK:
@@ -149,8 +149,11 @@ public enum StatEnum {
 	}
 
 	/**
-	 * @return 是否为主手或副手属性。 / Whether main or sub hand stat
-	  */
+	 * 是否为可拆分主/副手的属性。
+	 * Whether this stat can split into main/sub hand variants.
+	 *
+	 * @return 是否为主手或副手属性 / Whether main or sub hand stat
+	 */
 	public boolean isMainOrSubHandStat() {
 		switch (this) {
 		case MAGICAL_ATTACK:

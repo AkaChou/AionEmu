@@ -29,7 +29,7 @@ public abstract class AbstractPeriodicTaskManager extends AbstractLockManager im
 	 * Scheduling period in milliseconds.
 	 */
 	private int period;
-	private Future<?> task;
+	private Future<?> task; // 调度句柄 / scheduled task handle
 
 	/**
 	 * 以给定周期构造管理器，并注册到游戏服启动钩子。
@@ -55,6 +55,12 @@ public abstract class AbstractPeriodicTaskManager extends AbstractLockManager im
 				Rnd.get(period - 5, period + 5));
 	}
 
+	/**
+	 * 以新周期重新调度固定周期执行。
+	 * Reschedules the fixed-rate execution with a new period.
+	 *
+	 * @param period 新的周期毫秒数 / the new period in milliseconds
+	 */
 	public final synchronized void reschedule(int period) {
 		if (task != null) {
 			task.cancel(false);

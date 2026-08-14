@@ -32,11 +32,12 @@ public class SkillAttackManager {
 	 * 执行技能攻击：校验射程后进入施法子状态，可延迟或立即释放。
 	 * Performs a skill attack: validates range, enters CAST sub-state, then casts after optional delay.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param delay 攻击延迟（毫秒） / attack delay in milliseconds
 	 */
 	public static void performAttack(NpcAI2 npcAI, int delay) {
 		// 如果攻击范围为0，使用攻击范围进行检查（而不是仇恨范围）
+		// If the attack range is 0, use the attack range for checks (instead of aggro range)
 		if (npcAI.getOwner().getObjectTemplate().getAttackRange() == 0) {
 			if (npcAI.getOwner().getTarget() != null && !MathUtil.isInRange(npcAI.getOwner(),
 					npcAI.getOwner().getTarget(), npcAI.getOwner().getGameStats().getAttackRange().getCurrent() / 1000f)) {
@@ -46,6 +47,7 @@ public class SkillAttackManager {
 			}
 		}
 		// 设置施法子状态
+		// Set casting sub-state
 		if (npcAI.setSubStateIfNot(AISubState.CAST)) {
 			Creature target = (Creature) npcAI.getOwner().getTarget();
 			int skillId = npcAI.getSkillId();
@@ -53,6 +55,7 @@ public class SkillAttackManager {
 			long fightStartingTime = npcAI.getOwner().getGameStats().getFightStartingTime();
 			if (delay > 0) {
 				// 延迟执行技能攻击
+				// Execute the skill attack after a delay
 				GameThreadPoolServices.threadPoolManager().schedule(
 						() -> skillAction(npcAI, target, skillId, skillLevel, fightStartingTime), delay);
 			} else {
@@ -65,7 +68,7 @@ public class SkillAttackManager {
 	 * 执行技能攻击动作：BUFF 去重、使用技能或在目标无效时放弃。
 	 * Executes the skill action: skips duplicate BUFF, uses skill, or gives up if the target is invalid.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	private static void skillAction(NpcAI2 npcAI, Creature target, int skillId, int skillLevel, long fightStartingTime) {
 		if (!canExecuteScheduledSkill(npcAI.getState(), npcAI.getSubState(), npcAI.getOwner().getTarget(), target,
@@ -80,6 +83,7 @@ public class SkillAttackManager {
 			return;
 		}
 		// 如果攻击范围为0，使用攻击范围进行检查（而不是仇恨范围）
+		// If the attack range is 0, use the attack range for checks (instead of aggro range)
 		if (npcAI.getOwner().getObjectTemplate().getAttackRange() == 0) {
 			if (!MathUtil.isInRange(npcAI.getOwner(), target,
 					npcAI.getOwner().getGameStats().getAttackRange().getCurrent() / 1000f)) {
@@ -110,10 +114,12 @@ public class SkillAttackManager {
 			boolean success = npcAI.getOwner().getController().useSkill(skillId, skillLevel);
 			if (!success) {
 				// 技能使用失败，结束技能
+				// Skill use failed, end the skill
 				afterUseSkill(npcAI);
 			}
 		} else {
 			// 目标无效，放弃目标
+			// Invalid target, give up on the target
 			npcAI.setSubStateIfNot(AISubState.NONE);
 			npcAI.onGeneralEvent(AIEventType.TARGET_GIVEUP);
 		}
@@ -132,7 +138,7 @@ public class SkillAttackManager {
 	 * 技能使用后的处理：清除施法子状态并触发攻击完成事件。
 	 * Post-skill handling: clears CAST sub-state and fires ATTACK_COMPLETE.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void afterUseSkill(NpcAI2 npcAI) {
 		npcAI.setSubStateIfNot(AISubState.NONE);
@@ -143,13 +149,14 @@ public class SkillAttackManager {
 	 * 选择下一个就绪技能；施法中、沉默/束缚/恐惧或 CD 未好时返回 {@code null}。
 	 * Chooses the next ready skill; returns {@code null} while casting, silenced/bound/feared, or on cooldown.
 	 *
-	 * NPC AI instance
+	 * @return NPC AI 实例 / NPC AI instance
 	 *
 	 * @param npcAI
 	 * @return 下一个技能条目，无可用时为 {@code null} / next skill entry, or {@code null} if none
 	 */
 	public static NpcSkillEntry chooseNextSkill(NpcAI2 npcAI) {
 		// 如果正在施法，不选择技能
+		// If casting, do not choose a skill
 		if (npcAI.isInSubState(AISubState.CAST)) {
 			return null;
 		}
@@ -166,6 +173,7 @@ public class SkillAttackManager {
 						System.currentTimeMillis() - owner.getGameStats().getFightStartingTime())) {
 					SkillTemplate template = npcSkill.getSkillTemplate();
 					// 检查技能使用条件
+					// Check skill-use conditions
 					if ((template.getType() == SkillType.MAGICAL
 							&& owner.getEffectController().isAbnormalSet(AbnormalState.SILENCE))
 							|| (template.getType() == SkillType.PHYSICAL

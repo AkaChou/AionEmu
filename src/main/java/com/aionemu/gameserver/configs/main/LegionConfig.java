@@ -55,8 +55,8 @@ public class LegionConfig {
 	@Property(key = "gameserver.legion.emblem.required.kinah", defaultValue = "10000")
 	public static int LEGION_EMBLEM_REQUIRED_KINAH;
 	/**
-	 * 是否启用公会任务升级要求。
-	 * Whether guild task requirements are enabled for upgrades.
+	 * 是否启用军团任务升级要求。
+	 * Whether legion task requirements are enabled for upgrades.
 	 */
 	@Property(key = "gameserver.legion.task.requirement.enable", defaultValue = "true")
 	public static boolean ENABLE_GUILD_TASK_REQ;

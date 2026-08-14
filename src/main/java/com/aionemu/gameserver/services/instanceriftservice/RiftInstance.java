@@ -38,7 +38,7 @@ public abstract class RiftInstance<RL extends InstanceRiftLocation> {
 	 * 绑定裂隙地点。
 	 * Binds the rift location.
 	 *
-	 * location
+	 * @param instanceRiftLocation 裂隙地点 / rift location
 	 */
 	public RiftInstance(RL instanceRiftLocation) {
 		this.instanceRiftLocation = instanceRiftLocation;
@@ -105,7 +105,7 @@ public abstract class RiftInstance<RL extends InstanceRiftLocation> {
 	 * 获取绑定地点。
 	 * Returns the bound location.
 	 *
-	 * location
+	 * @return 绑定地点 / bound location
 	 */
 	public RL getInstanceRiftLocation() {
 		return instanceRiftLocation;
@@ -115,7 +115,7 @@ public abstract class RiftInstance<RL extends InstanceRiftLocation> {
 	 * 获取地点 ID。
 	 * Returns the location id.
 	 *
-	 * location id
+	 * @return 地点 ID / location id
 	 */
 	public int getInstanceRiftLocationId() {
 		return instanceRiftLocation.getId();

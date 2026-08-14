@@ -37,16 +37,16 @@ public class AgrintAI2 extends AggressiveNpcAI2
     protected void handleSpawned() {
         super.handleSpawned();
 		switch (getNpcId()) {
-			case 218850: //Spring Agrint.
+			case 218850: //春之奥格林特。 / Spring Agrint.
 			    announceSpringAgrint();
 			break;
-			case 218851: //Summer Agrint.
+			case 218851: //夏之奥格林特。 / Summer Agrint.
 			    announceSummerAgrint();
 			break;
-			case 218852: //Fall Agrint.
+			case 218852: //秋之奥格林特。 / Fall Agrint.
 			    announceFallAgrint();
 			break;
-			case 218853: //Winter Agrint.
+			case 218853: //冬之奥格林特。 / Winter Agrint.
 				announceWinterAgrint();
 			break;
 		}
@@ -56,36 +56,36 @@ public class AgrintAI2 extends AggressiveNpcAI2
 	protected void handleDied() {
 		switch (getNpcId()) {
 			// 阿格林特 奥利尔。 / AGRINT ORIEL.
-			case 218850: //Spring Agrint.
+			case 218850: //春之奥格林特。 / Spring Agrint.
 				spawnUmbronite(218866); //Vernal Umbronite.
 				spawnUmbronite(218867); //Sprout Umbronite.
 			break;
-			case 218851: //Summer Agrint.
+			case 218851: //夏之奥格林特。 / Summer Agrint.
 				spawnUmbronite(218868); //Sweltering Umbronite.
 				spawnUmbronite(218869); //Rain Umbronite.
 			break;
-			case 218852: //Fall Agrint.
+			case 218852: //秋之奥格林特。 / Fall Agrint.
 				spawnUmbronite(218870); //Maple Umbronite.
 				spawnUmbronite(218871); //Dusk Umbronite.
 			break;
-			case 218853: //Winter Agrint.
+			case 218853: //冬之奥格林特。 / Winter Agrint.
 				spawnUmbronite(218872); //Ice Umbronite.
 				spawnUmbronite(218873); //Snowflower Umbronite.
 			break;
 			// 阿格林特 佩尔农。 / AGRINT PERNON.
-			case 218862: //Spring Agrint.
+			case 218862: //春之奥格林特。 / Spring Agrint.
 				spawnUmbronite(218882); //Vernal Umbronite.
 				spawnUmbronite(218883); //Sprout Umbronite.
 			break;
-			case 218863: //Summer Agrint.
+			case 218863: //夏之奥格林特。 / Summer Agrint.
 				spawnUmbronite(218884); //Sweltering Umbronite.
 				spawnUmbronite(218885); //Rain Umbronite.
 			break;
-			case 218864: //Fall Agrint.
+			case 218864: //秋之奥格林特。 / Fall Agrint.
 				spawnUmbronite(218886); //Maple Umbronite.
 				spawnUmbronite(218887); //Dusk Umbronite.
 			break;
-			case 218865: //Winter Agrint.
+			case 218865: //冬之奥格林特。 / Winter Agrint.
 				spawnUmbronite(218888); //Ice Umbronite.
 				spawnUmbronite(218889); //Snowflower Umbronite.
 			break;

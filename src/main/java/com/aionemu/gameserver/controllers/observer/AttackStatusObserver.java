@@ -17,7 +17,7 @@ public class AttackStatusObserver extends AttackCalcObserver {
 
 	/**
 	 * @param value 关联数值 / associated value
-	 * attack status
+	 * @param status 攻击状态 / attack status
 	 */
 	public AttackStatusObserver(int value, AttackStatus status) {
 		this.value = value;

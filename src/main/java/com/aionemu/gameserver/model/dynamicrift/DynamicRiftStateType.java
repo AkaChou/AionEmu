@@ -9,5 +9,7 @@ package com.aionemu.gameserver.model.dynamicrift;
 
 public enum DynamicRiftStateType {
 	/** 打开 / Open. */
-	OPEN, CLOSED;
+	OPEN,
+	/** 关闭 / Closed */
+	CLOSED;
 }

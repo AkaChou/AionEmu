@@ -31,7 +31,7 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
      * Construct with buffer and opcode.
      *
      * @param buf 数据缓冲 / Data buffer
-     * Opcode
+     * @param opcode 操作码 / Opcode
      */
     public BaseClientPacket(ByteBuffer buf, int opcode) {
         this(opcode);
@@ -42,7 +42,7 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
      * 使用操作码构造。
      * Construct with opcode.
      *
-     * Opcode
+     * @param opcode 操作码 / Opcode
      */
     public BaseClientPacket(int opcode) {
         super(BasePacket.PacketType.CLIENT, opcode);
@@ -228,7 +228,7 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
      * 读取 UTF-16LE 字符串（以 \\0 结尾）。
      * Read UTF-16LE string terminated by \\0.
      *
-     * String value
+     * @return 字符串值 / String value
      */
     protected final String readS() {
         StringBuffer sb = new StringBuffer();
@@ -249,8 +249,8 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
      * 读取指定长度字节数组。
      * Read byte array of given length.
      *
-     * Byte length
-     * Byte array
+     * @param length 字节长度 / Byte length
+     * @return 字节数组 / Byte array
      */
     protected final byte[] readB(int length) {
         byte[] result = new byte[length];
@@ -269,7 +269,7 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
      * Read byte array sized by hexadecimal template length.
      *
      * @param string 十六进制模板 / Hexadecimal template
-     * Byte array
+     * @return 字节数组 / Byte array
      */
     protected final byte[] readB(String string) {
         String finalString = string.replaceAll("\\s+", "");

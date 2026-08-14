@@ -94,7 +94,7 @@ public final class ThreadPoolManager {
 	 * Clamp delay into [0, MAX_DELAY].
 	 *
 	 * @param delay 原始延迟（毫秒） / Raw delay in milliseconds
-	 * Validated delay
+	 * @return 校验后的延迟 / Validated delay
 	 */
 	private long validate(long delay) {
 		return Math.max(0, Math.min(MAX_DELAY, delay));
@@ -104,7 +104,7 @@ public final class ThreadPoolManager {
 	 * 计算长时任务池大小（至少 2，默认 CPU 核数）。
 	 * Compute long-running pool size (at least 2, default = CPU count).
 	 *
-	 * Pool size
+	 * @return 池大小 / Pool size
 	 */
 	private int longRunningPoolSize() {
 		return Math.max(2, Runtime.getRuntime().availableProcessors());
@@ -126,7 +126,7 @@ public final class ThreadPoolManager {
 	 *
 	 * @param r 任务 / Task
 	 * @param delay 延迟毫秒 / Delay in milliseconds
-	 * Scheduled future
+	 * @return 调度的 future / Scheduled future
 	 */
 	public final ScheduledFuture<?> schedule(Runnable r, long delay) {
 		r = new ThreadPoolRunnableWrapper(r);
@@ -141,7 +141,7 @@ public final class ThreadPoolManager {
 	 * @param r 任务 / Task
 	 * @param delay 首次延迟毫秒 / Initial delay in milliseconds
 	 * 周期（毫秒） / Period in milliseconds
-	 * Scheduled future
+	 * @param period 调度的 future / Scheduled future
 	 */
 	public final ScheduledFuture<?> scheduleAtFixedRate(Runnable r, long delay, long period) {
 		r = new ThreadPoolRunnableWrapper(r);
@@ -154,7 +154,7 @@ public final class ThreadPoolManager {
 	 * 获取工作窃取（ForkJoin）池。
 	 * Get the work-stealing (ForkJoin) pool.
 	 *
-	 * ForkJoin pool
+	 * @return ForkJoin 池 / ForkJoin pool
 	 */
 	public ForkJoinPool getForkingPool() {
 		return workStealingPool;
@@ -187,7 +187,7 @@ public final class ThreadPoolManager {
 	 * Submit a task to the instant pool and return a Future.
 	 *
 	 * @param r 任务 / Task
-	 * Future handle
+	 * @return Future 句柄 / Future handle
 	 */
 	public final Future<?> submit(Runnable r) {
 		r = new ThreadPoolRunnableWrapper(r);
@@ -199,7 +199,7 @@ public final class ThreadPoolManager {
 	 * Submit a task to the long-running pool and return a Future.
 	 *
 	 * @param r 任务 / Task
-	 * Future handle
+	 * @return Future 句柄 / Future handle
 	 */
 	public final Future<?> submitLongRunning(Runnable r) {
 		r = new RunnableWrapper(r);
@@ -264,7 +264,7 @@ public final class ThreadPoolManager {
 	 * Sum of queue size and active count for a pool.
 	 *
 	 * @param tp 线程池 / Thread pool
-	 * Task count
+	 * @return 任务数 / Task count
 	 */
 	private int getTaskCount(ThreadPoolExecutor tp) {
 		return tp.getQueue().size() + tp.getActiveCount();
@@ -326,11 +326,8 @@ public final class ThreadPoolManager {
 	 * 在超时内轮询等待各池终止。
 	 * Poll-wait for all pools to terminate within a timeout.
 	 *
-	 * Timeout in milliseconds
-	 *
-	 * @param timeoutInMillisec
+	 * @param timeoutInMillisec 毫秒超时 / Timeout in milliseconds
 	 * @return 全部终止返回 true / True if all terminated
-	 * @return
 	 * @throws InterruptedException 等待被中断 / Wait interrupted
 	 */
 	private boolean awaitTermination(long timeoutInMillisec) throws InterruptedException {
@@ -366,7 +363,7 @@ public final class ThreadPoolManager {
 	 * 获取实例（优先 Spring 提供者，否则单例）。
 	 * Get instance (prefer Spring provider, else singleton).
 	 *
-	 * ThreadPoolManager instance
+	 * @return ThreadPoolManager 实例 / ThreadPoolManager instance
 	 */
 	public static ThreadPoolManager getInstance() {
 		ObjectProvider<ThreadPoolManager> provider = instanceProvider;
@@ -380,7 +377,7 @@ public final class ThreadPoolManager {
 	 * 注入 Spring 实例提供者。
 	 * Inject a Spring instance provider.
 	 *
-	 * Spring ObjectProvider
+	 * @param instanceProvider Spring ObjectProvider / Spring ObjectProvider
 	 */
 	public static void setInstanceProvider(ObjectProvider<ThreadPoolManager> instanceProvider) {
 		ThreadPoolManager.instanceProvider = instanceProvider;

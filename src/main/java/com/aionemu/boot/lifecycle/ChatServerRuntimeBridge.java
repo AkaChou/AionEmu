@@ -24,7 +24,7 @@ public class ChatServerRuntimeBridge {
      * 注入可选的聊天服运行时提供者。
      * Injects an optional chat-server runtime provider.
      *
-     * runtime ObjectProvider
+     * @param chatServerRuntimeProvider 聊天服运行时提供者 / runtime ObjectProvider
      */
     @Autowired(required = false)
     void setChatServerRuntimeProvider(ObjectProvider<ChatServerRuntime> chatServerRuntimeProvider) {
@@ -35,7 +35,7 @@ public class ChatServerRuntimeBridge {
      * 注入可选的进程运行时桥提供者。
      * Injects an optional process runtime-bridge provider.
      *
-     * process-bridge ObjectProvider
+     * @param processBridgeProvider 进程运行时桥提供者 / process-bridge ObjectProvider
      */
     @Autowired(required = false)
     void setProcessBridgeProvider(ObjectProvider<ChatProcessRuntimeBridge> processBridgeProvider) {

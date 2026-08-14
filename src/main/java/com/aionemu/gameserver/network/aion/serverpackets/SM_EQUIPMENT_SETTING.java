@@ -14,6 +14,12 @@ public class SM_EQUIPMENT_SETTING extends AionServerPacket {
 
 	private final Collection<EquipmentSetting> equipmentSettings;
 
+	/**
+	 * 按装备预设集合构造列表包。
+	 * Creates an equipment preset list packet from the given settings.
+	 *
+	 * @param equipmentSettings 装备预设集合 / collection of equipment settings
+	 */
 	public SM_EQUIPMENT_SETTING(Collection<EquipmentSetting> equipmentSettings) {
 		this.equipmentSettings = equipmentSettings;
 	}

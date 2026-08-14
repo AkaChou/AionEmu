@@ -6,7 +6,10 @@ package com.aionemu.gameserver.model.autogroup;
  */
 
 public enum EntryRequestType {
-	/** New 小队 Entry / New Group Entry */
+	/**
+	 * 入场类型：新小队 / 快速小队 / 队伍 / 特殊用途。
+	 * Entry types: new group / fast group / group / special purpose.
+	 */
 	NEW_GROUP_ENTRY((byte) 0), FAST_GROUP_ENTRY((byte) 1), GROUP_ENTRY((byte) 2), SPECIAL_PURPOSE((byte) 3);
 
 	private byte id;
@@ -20,12 +23,12 @@ public enum EntryRequestType {
 		return id;
 	}
 
-	/** Whethernew 小队 entry / Whether new group entry */
+	/** 是否新小队入场 / Whether new group entry */
 	public boolean isNewGroupEntry() {
 		return id == 0;
 	}
 
-	/** Whetherfast 小队 entry / Whether fast group entry */
+	/** 是否快速小队入场 / Whether fast group entry */
 	public boolean isFastGroupEntry() {
 		return id == 1;
 	}
@@ -36,7 +39,7 @@ public enum EntryRequestType {
 	}
 
 	/**
-	 * @return Whether special purpose
+	 * @return 是否特殊用途 / Whether special purpose
 	 */
 	public boolean isSpecialPurpose() {
 		return id == 3;

@@ -14,8 +14,8 @@ public abstract class AbyssSpecialLandingDAO implements DAO {
 	 * 加载所有特殊着陆点。
 	 * Loads all special landing locations.
 	 *
-	 * target map
-	 * whether successful
+	 * @param locations 目标映射 / target map
+	 * @return 是否成功 / whether successful
 	 */
 	public abstract boolean loadLandingSpecialLocations(Map<Integer, LandingSpecialLocation> locations);
 
@@ -32,7 +32,7 @@ public abstract class AbyssSpecialLandingDAO implements DAO {
 	 * Updates a special landing location.
 	 *
 	 * @param location 特殊着陆点 / special landing location
-	 * whether successful
+	 * @return 是否成功 / whether successful
 	 */
 	public abstract boolean updateLandingSpecialLocation(LandingSpecialLocation location);
 
@@ -50,7 +50,7 @@ public abstract class AbyssSpecialLandingDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
 	 *
-	 * class name
+	 * @return 类名 / class name
 	 */
 	@Override
 	public String getClassName() {

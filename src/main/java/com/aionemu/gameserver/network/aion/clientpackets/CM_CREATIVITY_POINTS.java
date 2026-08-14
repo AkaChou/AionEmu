@@ -53,7 +53,7 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 		activePlayer = getConnection().getActivePlayer();
 		type = readC();
 		switch (type) {
-		case 0: // Apply
+		case 0: // 应用 / Apply
 			plusSize = readH();
 			for (int i = 0; i < plusSize; i++) {
 				id = readD();

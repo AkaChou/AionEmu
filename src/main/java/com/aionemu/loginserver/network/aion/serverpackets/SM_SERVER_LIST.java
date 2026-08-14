@@ -33,23 +33,23 @@ public class SM_SERVER_LIST extends AionServerPacket {
 
         charactersCountOnServer = AccountController.getGSCharacterCountsFor(accountId);
 
-        writeC(servers.size());// servers
-        writeC(con.getAccount().getLastServer());// last server
+        writeC(servers.size());// 服务器数量 / servers
+        writeC(con.getAccount().getLastServer());// 上次登录服务器 / last server
         for (GameServerInfo gsi : servers) {
             if (gsi.getId() > maxId) {
                 maxId = gsi.getId();
             }
 
-            writeC(gsi.getId());// server id
-            writeB(gsi.getIPAddressForPlayer(con.getIP())); // server IP
-            writeD(gsi.getPort());// port
-            writeC(0x00); // age limit
-            writeC(0x01);// pvp=1
-            writeH(gsi.getCurrentPlayers());// currentPlayers
-            writeH(gsi.getMaxPlayers());// maxPlayers
-            writeC(gsi.isOnline() ? 1 : 0);// ServerStatus, up=1
-            writeD(1);// bits);
-            writeC(1);// server.brackets ? 0x01 : 0x00);
+            writeC(gsi.getId());// 服务器 ID / server id
+            writeB(gsi.getIPAddressForPlayer(con.getIP())); // 服务器 IP / server IP
+            writeD(gsi.getPort());// 端口 / port
+            writeC(0x00); // 年龄限制 / age limit
+            writeC(0x01);// PvP 标志 / pvp=1
+            writeH(gsi.getCurrentPlayers());// 当前玩家数 / current players
+            writeH(gsi.getMaxPlayers());// 最大玩家数 / max players
+            writeC(gsi.isOnline() ? 1 : 0);// 服务器状态，在线=1 / server status, up=1
+            writeD(1);// 位标志 / bits
+            writeC(1);// 括号标志 / server.brackets ? 0x01 : 0x00
         }
 
         writeH(maxId + 1);

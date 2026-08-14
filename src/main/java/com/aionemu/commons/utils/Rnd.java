@@ -20,7 +20,7 @@ public class Rnd {
      * 获取 {@code [0, 1)} 随机浮点数。
      * Random float in {@code [0, 1)}.
      *
-     * Random float
+     * @return 随机浮点数 / Random float
      */
     public float get() {
         return rnd.nextFloat();
@@ -31,7 +31,7 @@ public class Rnd {
      * Random int in {@code [0, n)}.
      *
      * @param n 上限（不含） / Upper bound (exclusive)
-     * Random int
+     * @return 随机整数 / Random int
      */
     public int get(int n) {
         return (int) Math.floor(rnd.nextDouble() * (double) n);
@@ -41,9 +41,9 @@ public class Rnd {
      * 获取 {@code [min, max]} 随机整数。
      * Random int in {@code [min, max]}.
      *
-     * Lower bound (inclusive)
-     * Upper bound (inclusive)
-     * Random int
+     * @param min 下限（含） / Lower bound (inclusive)
+     * @param max 上限（含） / Upper bound (inclusive)
+     * @return 随机整数 / Random int
      */
     public int get(int min, int max) {
         return min + (int) Math.floor(rnd.nextDouble() * (double) (max - min + 1));
@@ -53,8 +53,8 @@ public class Rnd {
      * 按百分比概率判定是否成功（1–100）。
      * Chance success by percentage (1–100).
      *
-     * Success chance
-     * Whether successful
+     * @param chance 成功概率（百分比） / Success chance (percent)
+     * @return 是否成功 / Whether successful
      */
     public boolean chance(int chance) {
         return chance >= 1 && (chance > 99 || nextInt(99) + 1 <= chance);
@@ -64,8 +64,8 @@ public class Rnd {
      * 按百分比概率判定是否成功（支持小数，0–100）。
      * Chance success by percentage with decimals (0–100).
      *
-     * Success chance
-     * Whether successful
+     * @param chance 成功概率（百分比） / Success chance (percent)
+     * @return 是否成功 / Whether successful
      */
     public boolean chance(double chance) {
         return nextDouble() <= chance / 100.0D;
@@ -76,8 +76,8 @@ public class Rnd {
      * Pick a random element from an array.
      *
      * @param <E>  元素类型 / Element type
-     * Source array
-     * Random element
+     * @param list 源数组 / Source array
+     * @return 随机元素 / Random element
      */
     public <E> E get(E[] list) {
         return list[get(list.length)];
@@ -88,7 +88,7 @@ public class Rnd {
      * Pick a random element from an int array.
      *
      * @param list 整数数组 / Int array
-     * Random int
+     * @return 随机整数 / Random int
      */
     public int get(int[] list) {
         return list[get(list.length)];
@@ -99,8 +99,8 @@ public class Rnd {
      * Pick a random element from a list.
      *
      * @param <E>  元素类型 / Element type
-     * Source list
-     * Random element
+     * @param list 源列表 / Source list
+     * @return 随机元素 / Random element
      */
     public <E> E get(List<E> list) {
         return list.get(get(list.size()));
@@ -111,7 +111,7 @@ public class Rnd {
      * Random int in {@code [0, n)}.
      *
      * @param n 上限（不含） / Upper bound (exclusive)
-     * Random int
+     * @return 随机整数 / Random int
      */
     public int nextInt(int n) {
         return (int) Math.floor(rnd.nextDouble() * (double) n);
@@ -121,7 +121,7 @@ public class Rnd {
      * 获取随机整数。
      * Random int value.
      *
-     * Random int
+     * @return 随机整数 / Random int
      */
     public int nextInt() {
         return rnd.nextInt();
@@ -151,7 +151,7 @@ public class Rnd {
      * 获取随机布尔值。
      * Random boolean value.
      *
-     * Random boolean
+     * @return 随机布尔值 / Random boolean
      */
     public boolean nextBoolean() {
         return rnd.nextBoolean();

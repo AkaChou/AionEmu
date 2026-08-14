@@ -24,7 +24,7 @@ public class NettyServer {
      * 获取单例（已废弃，迁移至 Boot 后请使用注入）。
      * Return the singleton (deprecated; prefer injection after Boot migration).
      *
-     * Singleton instance
+     * @return 单例实例 / Singleton instance
      * @deprecated boot-migration
      */
     @Deprecated(since = "boot-migration")
@@ -40,7 +40,7 @@ public class NettyServer {
      * Return the singleton with a custom client packet handler (deprecated).
      *
      * @param clientPacketHandler 客户端包处理器 / Client packet handler
-     * Singleton instance
+     * @return 单例实例 / Singleton instance
      * @deprecated boot-migration
      */
     @Deprecated(since = "boot-migration")

@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * 物品 Cleanup 模板（静态数据/XML）。
- * XML template.
+ * 物品清理模板（静态数据/XML）。
+ * Item Cleanup Template (static data/XML).
  *
  * @author KID
  */
@@ -38,12 +38,12 @@ public class ItemCleanupTemplate {
 		return sell;
 	}
 
-	/** Result WH / Result WH */
+	/** 结果：仓库。 / Result WH. */
 	public byte resultWH() {
 		return wh;
 	}
 
-	/** Result Account WH / Result Account WH */
+	/** 结果：账号仓库。 / Result Account WH. */
 	public byte resultAccountWH() {
 		return awh;
 	}

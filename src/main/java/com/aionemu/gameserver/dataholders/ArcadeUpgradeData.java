@@ -43,7 +43,7 @@ public class ArcadeUpgradeData {
 	 * 返回已加载的页签数量。
 	 * Returns the number of loaded tabs.
 	 *
-	 * tab count
+	 * @return 已加载的选项卡数量 / Returns the number of loaded tabs.
 	 */
 	public int size() {
 		return arcadeItemList.size();

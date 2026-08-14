@@ -10,8 +10,8 @@ import com.aionemu.gameserver.model.templates.rewards.BonusType;
 import com.aionemu.gameserver.model.templates.rewards.IdReward;
 
 /**
- * 物品奖励组模板（静态数据/XML）。
- * XML template.
+ * 物品奖励组抽象基类：加成类型、概率与奖励条目。
+ * Abstract item group: bonus type, chance and reward entries.
  *
  * @author Rolandas
  */

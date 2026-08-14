@@ -85,8 +85,9 @@ public class Equipment {
 			return null;
 		}
 		/*
-		 * TO DO 
-         //Your nationality prevents you from using this item. PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_ITEM_INVALID_NATION); return null;
+		 * TO DO
+         // 你的国籍不允许使用此物品。 / Your nationality prevents you from using this item.
+         // PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_ITEM_INVALID_NATION); return null;
 		 */
 		ItemTemplate itemTemplate = item.getItemTemplate();
 		if (itemTemplate.isWeapon() && !itemTemplate.isTwoHandWeapon() && !WeaponDualEffect.hasDualWieldEffect(owner)) {
@@ -215,7 +216,7 @@ public class Equipment {
 	}
 
 	/**
-	 * @param itemSlotToEquip - must be slot combination for dual weapons
+	 * @param itemSlotToEquip 装备槽位，双持武器必须是槽位组合 / must be slot combination for dual weapons
 	 * @param item
 	 */
 	private Item equip(long itemSlotToEquip, Item item) {
@@ -314,7 +315,8 @@ public class Equipment {
 	}
 
 	/**
-	 * 收到 CM_EQUIP_ITEM（action=1）时调用。 / Called when CM_EQUIP_ITEM packet arrives with action 1.
+	 * 收到 CM_EQUIP_ITEM（action=1）时调用。
+	 * Called when CM_EQUIP_ITEM packet arrives with action 1.
 	 */
 	public Item unEquipItem(int itemUniqueId, long slot) {
 		return unEquipItem(itemUniqueId, slot, false);
@@ -376,12 +378,13 @@ public class Equipment {
 	}
 
 	/**
-	 * @param slot - Must be composite for dual weapons
+	 * @param slot 槽位，双持武器必须是复合槽位 / Must be composite for dual weapons
 	 */
 	private void unEquip(long slot) {
 		ItemSlot[] allSlots = ItemSlot.getSlotsFor(slot);
 		Item item = equipment.remove(allSlots[0].getSlotIdMask());
-		if (item == null) { // NPE check, there is no item in the given slot.
+		if (item == null) {
+			// 空值检查：指定槽位中没有物品。 / NPE check, there is no item in the given slot.
 			return;
 		}
         if (item.getItemTemplate().isEstima()) {
@@ -465,8 +468,10 @@ public class Equipment {
 					}
 				}
 			}
-		} else { // adding one-handed weapon
-			if (itemInRightHand != null) { // main hand is already occupied
+		} else {
+			// 添加单手武器。 / adding one-handed weapon
+			if (itemInRightHand != null) {
+				// 主手已被占用。 / main hand is already occupied
 				boolean addingLeftHand = (item.getEquipmentSlot() & ItemSlot.LEFT_HAND.getSlotIdMask()) != 0;
 				// 若装备双手武器，须卸下双槽，无需技能。 / if occupied by 2H weapon, we have to unequip both slots, skills are not required
 				if (mainIsTwoHand) {
@@ -477,7 +482,8 @@ public class Equipment {
 					} else {
 						unEquip(rightSlot | leftSlot);
 					}
-				} // main hand is already occupied and adding unknown hand, needs skills to be checked
+				}
+				// 主手已被占用且添加的是未知手，需要检查技能。 / main hand is already occupied and adding unknown hand, needs skills to be checked
 				else if (WeaponDualEffect.hasDualWieldEffect(owner)) {
 					// 若添加到空的左手则可以 / if adding to empty left hand that is ok
 					if (itemInLeftHand == null && addingLeftHand) {
@@ -492,7 +498,7 @@ public class Equipment {
 						unEquip(switchSlot);
 					}
 				} else {
-					// requiredInventorySlots are 0
+					// 所需背包格数为 0。 / requiredInventorySlots are 0
 					if (addingLeftHand && itemInLeftHand != null) {
 						// 不好：若背包满，应切换槽位 / this is not good, if inventory is full, should switch slots
 						if (validateOnly) {
@@ -597,7 +603,7 @@ public class Equipment {
 
 	/**
 	 * @param value
-	 * @return List<Item>
+	 * @return 已装备物品列表 / List<Item>
 	 */
 	public List<Item> getEquippedItemsByItemId(int value) {
 		List<Item> equippedItemsById = new ArrayList<Item>();
@@ -682,7 +688,7 @@ public class Equipment {
 	}
 
 	/**
-	 * @return List<Item>
+	 * @return 已装备物品列表 / List<Item>
 	 */
 	public List<Item> getEquippedItems() {
 		HashSet<Item> equippedItems = new HashSet<Item>();
@@ -692,7 +698,7 @@ public class Equipment {
 	}
 
 	/**
-	 * @return List<Integer>
+	 * @return 已装备物品 ID 列表 / List<Integer>
 	 * @usage return all equipped items at the same time
 	 */
 	public List<Integer> getEquippedItemIds() {
@@ -704,7 +710,7 @@ public class Equipment {
 	}
 
 	/**
-	 * @return List<Item>
+	 * @return 已装备物品列表 / List<Item>
 	 */
 	public List<Item> getEquippedItemsWithoutStigma() {
 		List<Item> equippedItems = new ArrayList<Item>();
@@ -775,7 +781,7 @@ public class Equipment {
 	}
 
 	/**
-	 * @return List<Item>
+	 * @return 已装备物品列表 / List<Item>
 	 */
 	public List<Item> getEquippedItemsAllStigma() {
 		List<Item> equippedItems = new ArrayList<Item>();
@@ -799,7 +805,7 @@ public class Equipment {
 	}
 
 	/**
-	 * @return List<Item>
+	 * @return 已装备物品列表 / List<Item>
 	 */
 	public List<Item> getEquippedItemsRegularStigma() {
 		List<Item> equippedItems = new ArrayList<Item>();
@@ -823,7 +829,7 @@ public class Equipment {
 	}
 
 	/**
-	 * @return Number of parts equipped belonging to requested itemset
+	 * @return 已装备的属于指定套装件的部件数 / Number of parts equipped belonging to requested itemset
 	 */
 	public int itemSetPartsEquipped(int itemSetTemplateId) {
 		int number = 0;
@@ -906,7 +912,8 @@ public class Equipment {
 	}
 
 	/**
-	 * 仅在玩家加载且装备对象完全构建后调用。应用所有已装备物品的属性修正。 / Should be called only when equipment object totally constructed on player loading. Applies every equipped item stats modificators
+	 * 仅在玩家加载且装备对象完全构建后调用，应用所有已装备物品的属性修正。
+	 * Should be called only when equipment object totally constructed on player loading. Applies every equipped item stats modificators
 	 */
 	public void onLoadApplyEquipmentStats() {
 		Item twoHanded = null;
@@ -929,7 +936,7 @@ public class Equipment {
 	}
 
 	/**
-	 * @return true or false
+	 * @return 是否装备盾牌 / true or false
 	 */
 	public boolean isShieldEquipped() {
 		Item subHandItem = equipment.get(ItemSlot.SUB_HAND.getSlotIdMask());
@@ -949,7 +956,7 @@ public class Equipment {
 	}
 
 	/**
-	 * @return true if player is equipping the requested ArmorType
+	 * @return 玩家是否装备了请求的护甲类型 / true if player is equipping the requested ArmorType
 	 */
 	public boolean isArmorTypeEquipped(ArmorType type) {
 		for (Item item : equipment.values()) {
@@ -964,7 +971,7 @@ public class Equipment {
 	}
 
 	/**
-	 * @return <tt>WeaponType< / tt> of current weapon in main hand or null
+	 * @return 主手当前武器的武器类型，未装备时为 null / <tt>WeaponType</tt> of current weapon in main hand or null
 	 */
 	public WeaponType getMainHandWeaponType() {
 		Item mainHandItem = equipment.get(ItemSlot.MAIN_HAND.getSlotIdMask());
@@ -975,7 +982,7 @@ public class Equipment {
 	}
 
 	/**
-	 * @return <tt>WeaponType< / tt> of current weapon in off hand or null
+	 * @return 副手当前武器的武器类型，未装备时为 null / <tt>WeaponType</tt> of current weapon in off hand or null
 	 */
 	public WeaponType getOffHandWeaponType() {
 		Item offHandItem = equipment.get(ItemSlot.SUB_HAND.getSlotIdMask());
@@ -990,7 +997,7 @@ public class Equipment {
 	}
 
 	/**
-	 * @return Whether power shard equipped
+	 * @return 是否装备了力量之石 / Whether power shard equipped
 	 */
 	public boolean isPowerShardEquipped() {
 		Item leftPowershard = equipment.get(ItemSlot.POWER_SHARD_LEFT.getSlotIdMask());
@@ -1030,7 +1037,8 @@ public class Equipment {
 	public void usePowerShard(Item powerShardItem, int count) {
 		decreaseEquippedItemCount(powerShardItem.getObjectId(), count);
 
-		if (powerShardItem.getItemCount() <= 0) {// Search for next same power shards stack
+		if (powerShardItem.getItemCount() <= 0) {
+			// 搜索下一组相同的力量之石。 / Search for next same power shards stack
 			List<Item> powerShardStacks = owner.getInventory().getItemsByItemId(powerShardItem.getItemTemplate().getTemplateId());
 			if (powerShardStacks.size() != 0) {
 				equipItem(powerShardStacks.get(0).getObjectId(), powerShardItem.getEquipmentSlot());
@@ -1077,6 +1085,7 @@ public class Equipment {
 	}
 
 	/**
+	 * 切换副手与主手武器。
 	 * Switch OFF and MAIN hands
 	 */
 	public void switchHands() {
@@ -1173,9 +1182,10 @@ public class Equipment {
 	}
 
 	/**
-	 * 检查任意槽位组合中是否装备了两把单手武器。 / Check whether two one-handed weapons are equipped in any slot combination.
+	 * 检查任意槽位组合中是否装备了两把单手武器。
+	 * Check whether two one-handed weapons are equipped in any slot combination.
 	 *
-	 * @param slot masks
+	 * @param slot 槽位掩码 / masks
 	 * @return
 	 */
 	public boolean hasDualWeaponEquipped(ItemSlot slot) {

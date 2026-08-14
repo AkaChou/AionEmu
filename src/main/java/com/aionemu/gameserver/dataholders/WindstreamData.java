@@ -71,9 +71,7 @@ public class WindstreamData {
 	 * 按地图 ID 获取风道模板。
 	 * Returns the windstream template for the given map id.
 	 *
-	 * map id
-	 *
-	 * @param mapId
+	 * @param mapId 地图 ID / map id
 	 * @return 风道模板，不存在则为 null / windstream template or null
 	 */
 	public WindstreamTemplate getStreamTemplate(int mapId) {
@@ -89,7 +87,7 @@ public class WindstreamData {
 	 * 返回已加载的风道模板数量。
 	 * Returns the number of loaded windstream templates.
 	 *
-	 * template count
+	 * @return 已加载的气流模板数量 / Returns the number of loaded windstream templates.
 	 */
 	public int size() {
 		return windstreams.size();

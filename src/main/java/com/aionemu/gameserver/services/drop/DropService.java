@@ -581,7 +581,7 @@ public class DropService {
 	}
 
 	/**
-	 * @param player messages when item gained via ROLLED
+	 * @param player 掷骰中奖时消息通知的玩家 / messages when item gained via ROLLED
 	 */
 	private void winningRollActions(Player player, int itemId, int npcId) {
 		PacketSendUtility.sendPacket(player,
@@ -599,7 +599,7 @@ public class DropService {
 	}
 
 	/**
-	 * @param player messages/removes and shares kinah when item gained via BID
+	 * @param player 竞价中奖时消息/移除并分享基纳的玩家 / messages/removes and shares kinah when item gained via BID
 	 */
 	private void winningBidActions(Player player, int npcId, long highestValue) {
 		DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcId);

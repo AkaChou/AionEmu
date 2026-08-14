@@ -206,7 +206,7 @@ public class Effects {
 	 * 获取效果模板列表（懒初始化）。
 	 * Returns the effect template list (lazy-initialized).
 	 *
-	 * effects list
+	 * @return 效果模板列表 / effect template list
 	 */
 	public List<EffectTemplate> getEffects() {
 		if (effects == null) {
@@ -229,7 +229,7 @@ public class Effects {
 	 * 添加效果类型到缓存列表。
 	 * Adds an effect type to the cached list.
 	 *
-	 * effect type
+	 * @param effectType 效果类型 / effect type
 	 */
 	public void addEffectType(EffectType effectType) {
 		if (effectTypes == null) {
@@ -242,9 +242,8 @@ public class Effects {
 	 * 判断是否包含指定效果类型。
 	 * Checks whether the given effect type is present.
 	 *
-	 * effect type
-	 *
-	 * @param effectType 存在则为 true / true if present
+	 * @param effectType 要检查的效果类型 / effect type to check
+	 * @return 存在则为 true / true if present
 	 */
 	public boolean isEffectTypePresent(EffectType effectType) {
 		if (effectTypes == null) {
@@ -278,7 +277,7 @@ public class Effects {
 	 * After unmarshalling, caches each effect's {@link EffectType}.
 	 *
 	 * @param u JAXB 反序列化器 / unmarshaller
-	 * parent object
+	 * @param parent 父对象 / parent object
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (EffectTemplate et : getEffects()) {

@@ -94,7 +94,8 @@ public class AbyssRank {
 	}
 
 	/**
-	 * 添加 AP 到玩家(当前玩家 AP + addedAP )。 / Add AP to a player (current player AP + added AP)
+	 * 添加欧比斯点数到玩家（当前玩家 AP + 新增 AP）。
+	 * Add AP to a player (current player AP + added AP)
 	 *
 	 * @param additionalAp
 	 */
@@ -122,7 +123,8 @@ public class AbyssRank {
 	}
 
 	/**
-	 * 添加 GP 到玩家(当前玩家 GP + addedGP )。 / Add GP to a player (current player GP + added GP)
+	 * 添加荣耀点数到玩家（当前玩家 GP + 新增 GP）。
+	 * Add GP to a player (current player GP + added GP)
 	 *
 	 * @param additionalGp
 	 */
@@ -143,56 +145,56 @@ public class AbyssRank {
 	}
 
 	/**
-	 * @return The daily <Abyss Point> count
+	 * @return 每日欧比斯点数 / The daily <Abyss Point> count
 	 */
 	public int getDailyAP() {
 		return dailyAP;
 	}
 
 	/**
-	 * @return The weekly <Abyss Point> count
+	 * @return 每周欧比斯点数 / The weekly <Abyss Point> count
 	 */
 	public int getWeeklyAP() {
 		return weeklyAP;
 	}
 
 	/**
-	 * @return The all time <Abyss Point> count
+	 * @return 历史欧比斯点数 / The all time <Abyss Point> count
 	 */
 	public int getAp() {
 		return currentAp;
 	}
 
 	/**
-	 * @return The daily <Glory Point> count
+	 * @return 每日荣耀点数 / The daily <Glory Point> count
 	 */
 	public int getDailyGP() {
 		return dailyGP;
 	}
 
 	/**
-	 * @return The weekly <Glory Point> count
+	 * @return 每周荣耀点数 / The weekly <Glory Point> count
 	 */
 	public int getWeeklyGP() {
 		return weeklyGP;
 	}
 
 	/**
-	 * @return The all time <Glory Point> count
+	 * @return 历史荣耀点数 / The all time <Glory Point> count
 	 */
 	public int getGp() {
 		return currentGp;
 	}
 
 	/**
-	 * @return the rank
+	 * @return 当前排名 / the rank
 	 */
 	public AbyssRankEnum getRank() {
 		return rank;
 	}
 
 	/**
-	 * @return The top ranking of the current rank
+	 * @return 当前排名的配额排名 / The top ranking of the current rank
 	 */
 	public int getTopRanking() {
 		return topRanking;
@@ -206,28 +208,29 @@ public class AbyssRank {
 	}
 
 	/**
-	 * @return The daily count kill
+	 * @return 每日击杀数 / The daily count kill
 	 */
 	public int getDailyKill() {
 		return dailyKill;
 	}
 
 	/**
-	 * @return The weekly count kill
+	 * @return 每周击杀数 / The weekly count kill
 	 */
 	public int getWeeklyKill() {
 		return weeklyKill;
 	}
 
 	/**
-	 * @return all Kill
+	 * @return 总击杀数 / all Kill
 	 */
 	public int getAllKill() {
 		return allKill;
 	}
 
 	/**
-	 * 添加一个 kill 到玩家。 / Add one kill to a player
+	 * 为玩家增加一次击杀。
+	 * Add one kill to a player
 	 */
 	public void updateKillCounts() {
 		this.dailyKill += 1;
@@ -236,28 +239,28 @@ public class AbyssRank {
 	}
 
 	/**
-	 * @return max Rank
+	 * @return 最高排名 / max Rank
 	 */
 	public int getMaxRank() {
 		return maxRank;
 	}
 
 	/**
-	 * @return The last week count kill
+	 * @return 上周击杀数 / The last week count kill
 	 */
 	public int getLastKill() {
 		return lastKill;
 	}
 
 	/**
-	 * @return The last week <Abyss Point> count
+	 * @return 上周欧比斯点数 / The last week <Abyss Point> count
 	 */
 	public int getLastAP() {
 		return lastAP;
 	}
 
 	/**
-	 * @return The last week <Glory Point> count
+	 * @return 上周荣耀点数 / The last week <Glory Point> count
 	 */
 	public int getLastGP() {
 		return lastGP;
@@ -276,7 +279,8 @@ public class AbyssRank {
 	}
 
 	/**
-	 * 添加一个 kill 到玩家。 / Add one kill to a player
+	 * 为玩家增加一次击杀。
+	 * Add one kill to a player
 	 */
 	public void setAllKill() {
 		this.dailyKill += 1;
@@ -300,7 +304,7 @@ public class AbyssRank {
 		}
 	}
 
-	/** Captures all fields changed by quest AP/GP rewards. */
+	/** 记录任务欧比斯/荣耀奖励修改前的全部字段 / Captures all fields changed by quest AP/GP rewards. */
 	public TransactionSnapshot transactionSnapshot() {
 		return new TransactionSnapshot();
 	}
@@ -340,14 +344,15 @@ public class AbyssRank {
 	}
 
 	/**
-	 * @return The last update of the AbyssRank
+	 * @return 欧比斯排名的最后更新时间 / The last update of the AbyssRank
 	 */
 	public long getLastUpdate() {
 		return lastUpdate;
 	}
 
 	/**
-	 * 更新每日/每周/上次击杀与 AP 计数。 / Make an update for the daily/weekly/last kill & ap counts
+	 * 更新每日/每周/上次击杀与欧比斯点数计数。
+	 * Make an update for the daily/weekly/last kill & ap counts
 	 */
 	public void doUpdate() {
 		boolean needUpdate = false;

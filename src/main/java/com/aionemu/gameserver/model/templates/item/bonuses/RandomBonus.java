@@ -12,8 +12,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 
 /**
- * Random 加成模板（静态数据/XML）。
- * XML template.
+ * 随机加成模板（静态数据/XML）。
+ * Random bonus template (static data / XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -36,10 +36,12 @@ public class RandomBonus {
 		return this.modifiers;
 	}
 
-	 /**
-	  * 获取 id 属性值。
-	  * Gets the value of the id property
-	  */
+	/**
+	 * 获取加成 ID。
+	 * Gets the bonus id.
+	 *
+	 * @return 加成 ID / Bonus id
+	 */
 	public int getId() {
 		return id;
 	}

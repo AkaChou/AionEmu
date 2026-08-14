@@ -20,8 +20,8 @@ public class Advance_Corridor_For_Distinguished_ServiceAI2 extends GeneralNpcAI2
 	@Override
 	protected void handleDialogStart(Player player) {
         switch (getNpcId()) {
-			case 730967: //Advance Corridor For Distinguished Service.
-			case 730968: { //Advance Corridor For Distinguished Service.
+			case 730967: // 战功晋升走廊。 / Advance Corridor For Distinguished Service.
+			case 730968: { // 战功晋升走廊。 / Advance Corridor For Distinguished Service.
 				super.handleDialogStart(player);
 				break;
 			} default: {
@@ -37,8 +37,8 @@ public class Advance_Corridor_For_Distinguished_ServiceAI2 extends GeneralNpcAI2
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 105) {
 			switch (getNpcId()) {
-			    case 730967: //Advance Corridor For Distinguished Service.
-				case 730968: //Advance Corridor For Distinguished Service.
+			    case 730967: // 战功晋升走廊。 / Advance Corridor For Distinguished Service.
+				case 730968: // 战功晋升走廊。 / Advance Corridor For Distinguished Service.
 				    AutoGroupType agt = AutoGroupType.getAutoGroup(player.getLevel(), getNpcId());
 					if (agt != null) {
 					    PacketSendUtility.sendPacket(player, new SM_FIND_GROUP(0x1A, agt.getInstanceMapId()));

@@ -138,29 +138,29 @@ public final class GameRuntimeServices implements DisposableBean {
      * 构造并绑定各运行时服务的 instance provider。
      * Construct and bind instance providers for all runtime services.
      *
-     * Periodic save
-     * Admin
-     * Player transfer
-     * Territory
-     * Game time
-     * Announcement
-     * Debug
-     * Weather
-     * Broker
-     * Influence
-     * Exchange
-     * Petition
-     * Fly ring
-     * Curing zone
-     * Spring zone
-     * Boost event
-     * DB task manager
-     * Limited-item trade
-     * Webshop
-     * Survey
-     * Find group
-     * In-game shop
-     * GM
+     * @param periodicSaveServiceProvider 周期存档服务提供者 / Periodic-save service provider
+     * @param adminServiceProvider 管理服务提供者 / Admin service provider
+     * @param playerTransferServiceProvider 角色转移服务提供者 / Player-transfer service provider
+     * @param territoryServiceProvider 领地服务提供者 / Territory service provider
+     * @param gameTimeServiceProvider 游戏时间服务提供者 / Game-time service provider
+     * @param announcementServiceProvider 公告服务提供者 / Announcement service provider
+     * @param debugServiceProvider 调试服务提供者 / Debug service provider
+     * @param weatherServiceProvider 天气服务提供者 / Weather service provider
+     * @param brokerServiceProvider 寄售服务提供者 / Broker service provider
+     * @param influenceProvider 影响力提供者 / Influence provider
+     * @param exchangeServiceProvider 交易服务提供者 / Exchange service provider
+     * @param petitionServiceProvider 请愿服务提供者 / Petition service provider
+     * @param flyRingServiceProvider 飞行环服务提供者 / Fly-ring service provider
+     * @param curingZoneServiceProvider 治愈区服务提供者 / Curing-zone service provider
+     * @param springZoneServiceProvider 泉水区服务提供者 / Spring-zone service provider
+     * @param boostEventServiceProvider 增益活动服务提供者 / Boost-event service provider
+     * @param taskManagerFromDBProvider DB 任务管理器提供者 / DB task-manager provider
+     * @param limitedItemTradeServiceProvider 限购交易服务提供者 / Limited-item trade service provider
+     * @param webshopServiceProvider 网店服务提供者 / Webshop service provider
+     * @param surveyServiceProvider 问卷服务提供者 / Survey service provider
+     * @param findGroupServiceProvider 寻找队伍服务提供者 / Find-group service provider
+     * @param inGameShopEnProvider 商城服务提供者 / In-game shop provider
+     * @param gmServiceProvider GM 服务提供者 / GM service provider
      */
     public GameRuntimeServices(ObjectProvider<PeriodicSaveService> periodicSaveServiceProvider,
             ObjectProvider<AdminService> adminServiceProvider,
@@ -230,7 +230,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * 解析管理服务实例。
      * Resolve the admin service instance.
      *
-     * Admin service
+     * @return 管理服务 / Admin service
      */
     public static AdminService adminService() {
         return getIfAvailable(adminServiceProvider, AdminService::getInstance);
@@ -250,7 +250,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * 解析公告服务实例。
      * Resolve the announcement service instance.
      *
-     * Announcement service
+     * @return 公告服务 / Announcement service
      */
     public static AnnouncementService announcementService() {
         return getIfAvailable(announcementServiceProvider, AnnouncementService::getInstance);
@@ -270,7 +270,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * 解析领地服务实例。
      * Resolve the territory service instance.
      *
-     * Territory service
+     * @return 领地服务 / Territory service
      */
     public static TerritoryService territoryService() {
         return getIfAvailable(territoryServiceProvider, TerritoryService::getInstance);
@@ -280,7 +280,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * 解析天气服务实例。
      * Resolve the weather service instance.
      *
-     * Weather service
+     * @return 天气服务 / Weather service
      */
     public static WeatherService weatherService() {
         return getIfAvailable(weatherServiceProvider, WeatherService::getInstance);
@@ -290,7 +290,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * 解析寄售服务实例。
      * Resolve the broker service instance.
      *
-     * Broker service
+     * @return 寄售服务 / Broker service
      */
     public static BrokerService brokerService() {
         return getIfAvailable(brokerServiceProvider, BrokerService::getInstance);
@@ -300,7 +300,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * 解析影响力实例。
      * Resolve the influence instance.
      *
-     * Influence
+     * @return 影响力 / Influence
      */
     public static Influence influence() {
         return getIfAvailable(influenceProvider, Influence::getInstance);
@@ -310,7 +310,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * 解析交易服务实例。
      * Resolve the exchange service instance.
      *
-     * Exchange service
+     * @return 交易服务 / Exchange service
      */
     public static ExchangeService exchangeService() {
         return getIfAvailable(exchangeServiceProvider, ExchangeService::getInstance);
@@ -320,7 +320,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * 解析请愿服务实例。
      * Resolve the petition service instance.
      *
-     * Petition service
+     * @return 请愿服务 / Petition service
      */
     public static PetitionService petitionService() {
         return getIfAvailable(petitionServiceProvider, PetitionService::getInstance);
@@ -350,7 +350,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * 解析问卷服务实例。
      * Resolve the survey service instance.
      *
-     * Survey service
+     * @return 问卷服务 / Survey service
      */
     public static SurveyService surveyService() {
         return getIfAvailable(surveyServiceProvider, SurveyService::getInstance);
@@ -370,7 +370,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * 解析商城服务实例。
      * Resolve the in-game shop instance.
      *
-     * In-game shop
+     * @return 商城服务 / In-game shop
      */
     public static InGameShopEn inGameShopEn() {
         return getIfAvailable(inGameShopEnProvider, InGameShopEn::getInstance);
@@ -380,7 +380,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * 解析 GM 服务实例。
      * Resolve the GM service instance.
      *
-     * GM service
+     * @return GM 服务 / GM service
      */
     public static GMService gmService() {
         return getIfAvailable(gmServiceProvider, GMService::getInstance);
@@ -390,10 +390,10 @@ public final class GameRuntimeServices implements DisposableBean {
      * 优先从提供者取 bean，否则执行回退供应器。
      * Prefer the provider bean, otherwise run the fallback supplier.
      *
-     * Spring provider
+     * @param provider Spring 提供者 / Spring provider
      * @param fallback 回退供应器 / Fallback supplier
      * @param <T> 服务类型 / Service type
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private static <T> T getIfAvailable(ObjectProvider<T> provider, Supplier<T> fallback) {
         if (provider == null) {

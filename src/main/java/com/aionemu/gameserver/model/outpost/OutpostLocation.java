@@ -7,7 +7,6 @@ import com.aionemu.gameserver.model.templates.outpost.OutpostTemplate;
  * 前哨位置模型。
  * Outpost Location model.
  */
-
 public class OutpostLocation {
 	protected OutpostTemplate template;
 	protected Race race = Race.NPC;

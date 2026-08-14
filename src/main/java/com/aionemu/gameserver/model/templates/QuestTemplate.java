@@ -29,7 +29,7 @@ import com.aionemu.gameserver.model.templates.quest.XMLStartCondition;
 
 /**
  * 任务模板（静态数据/XML）。
- * XML template.
+ * Quest template (static data / XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -136,7 +136,7 @@ public class QuestTemplate {
 	 /**
 	  * 获取 collectItems 属性值。
 	  * Gets the value of the collectItems property
-	  * @return possible object is {@link CollectItems }
+	  * @return 可能的对象是 {@link CollectItems } / Possible object is {@link CollectItems }
 	  */
 	public CollectItems getCollectItems() {
 		return collectItems;
@@ -212,7 +212,7 @@ public class QuestTemplate {
 	 /**
 	  * 获取 genderPermitted 属性值。
 	  * Gets the value of the genderPermitted property
-	  * @return possible object is {@link Gender }
+	  * @return 可能的对象是 {@link Gender } / Possible object is {@link Gender }
 	  */
 	public Gender getGenderPermitted() {
 		return genderPermitted;
@@ -221,7 +221,7 @@ public class QuestTemplate {
 	 /**
 	  * 获取 questWorkItems 属性值。
 	  * Gets the value of the questWorkItems property
-	  * @return possible object is {@link QuestWorkItems }
+	  * @return 可能的对象是 {@link QuestWorkItems } / Possible object is {@link QuestWorkItems }
 	  */
 	public QuestWorkItems getQuestWorkItems() {
 		return questWorkItems;
@@ -346,9 +346,10 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * 获取 value 的名称 property。 / Gets the value of the name property
+	 * 获取任务名称。
+	 * Gets the quest name.
 	 *
-	 * @return possible object is {@link String }
+	 * @return 任务名称 / Quest name
 	 */
 	public String getName() {
 		return name;
@@ -357,7 +358,7 @@ public class QuestTemplate {
 	 /**
 	  * 获取 nameId 属性值。
 	  * Gets the value of the nameId property
-	  * @return possible object is {@link Integer }
+	  * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
 	  */
 	public Integer getNameId() {
 		return nameId;
@@ -366,7 +367,7 @@ public class QuestTemplate {
 	 /**
 	  * 获取 minlevelPermitted 属性值。
 	  * Gets the value of the minlevelPermitted property
-	  * @return possible object is {@link Integer }
+	  * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
 	  */
 	public Integer getMinlevelPermitted() {
 		return minlevelPermitted;
@@ -385,7 +386,7 @@ public class QuestTemplate {
 	 /**
 	  * 获取 maxRepeatCount 属性值。
 	  * Gets the value of the maxRepeatCount property
-	  * @return possible object is {@link Integer }
+	  * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
 	  */
 	public Integer getMaxRepeatCount() {
 		if (maxRepeatCount == null || !(maxRepeatCount > 1)) {
@@ -405,7 +406,7 @@ public class QuestTemplate {
 	 /**
 	  * 获取 maxCountLimitedQuest 属性值。
 	  * Gets the value of the maxCountLimitedQuest property
-	  * @return possible object is {@link Integer }
+	  * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
 	  */
 	public Integer getMaxCountLimitedQuest() {
 		if (maxCountLimitedQuest == null || !(maxCountLimitedQuest > 1)) {
@@ -417,7 +418,7 @@ public class QuestTemplate {
 	 /**
 	  * 获取 countRecoverLimitedQuest 属性值。
 	  * Gets the value of the countRecoverLimitedQuest property
-	  * @return possible object is {@link Integer }
+	  * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
 	  */
 	public Integer getCountRecoverLimitedQuest() {
 		if (countRecoverLimitedQuest == null || !(countRecoverLimitedQuest > 1)) {
@@ -429,7 +430,7 @@ public class QuestTemplate {
 	 /**
 	  * 获取 cannotShare 属性值。
 	  * Gets the value of the cannotShare property
-	  * @return possible object is {@link Boolean }
+	  * @return 可能的对象是 {@link Boolean } / Possible object is {@link Boolean }
 	  */
 	public boolean isCannotShare() {
 		if (cannotShare == null) {
@@ -442,7 +443,7 @@ public class QuestTemplate {
 	 /**
 	  * 获取 cannotGiveup 属性值。
 	  * Gets the value of the cannotGiveup property
-	  * @return possible object is {@link Boolean }
+	  * @return 可能的对象是 {@link Boolean } / Possible object is {@link Boolean }
 	  */
 	public boolean isCannotGiveup() {
 		if (cannotGiveup == null) {
@@ -453,7 +454,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * @return Whether bounty reward
+	 * @return 是否为悬赏奖励 / Whether bounty reward
 	 */
 	public boolean isBountyReward() {
 		if (bountyReward == null) {
@@ -482,7 +483,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * @return Whether repeatable
+	 * @return 是否可重复 / Whether repeatable
 	 */
 	public boolean isRepeatable() {
 		return getMaxRepeatCount() > 1;
@@ -508,7 +509,7 @@ public class QuestTemplate {
 	 /**
 	  * 获取 combineskill 属性值。
 	  * Gets the value of the combineskill property
-	  * @return possible object is {@link Integer }
+	  * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
 	  */
 	public Integer getCombineSkill() {
 		return combineskill;
@@ -517,7 +518,7 @@ public class QuestTemplate {
 	 /**
 	  * 获取 combineSkillpoint 属性值。
 	  * Gets the value of the combineSkillpoint property
-	  * @return possible object is {@link Integer }
+	  * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
 	  */
 	public Integer getCombineSkillPoint() {
 		return combineSkillpoint;
@@ -526,7 +527,7 @@ public class QuestTemplate {
 	 /**
 	  * 获取 timer 属性值。
 	  * Gets the value of the timer property
-	  * @return possible object is {@link Integer }
+	  * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
 	  */
 
 	public boolean isTimer() {
@@ -546,14 +547,14 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * @return the mentor
+	 * @return 是否为导师任务 / Whether mentor
 	 */
 	public boolean isMentor() {
 		return mentorType != QuestMentorType.NONE;
 	}
 
 	/**
-	 * @return the mentor
+	 * @return 导师类型 / The mentor type
 	 */
 	public QuestMentorType getMentorType() {
 		return mentorType;
@@ -580,7 +581,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * @return Whether time based
+	 * @return 是否基于时间 / Whether time based
 	 */
 	public boolean isTimeBased() {
 		return repeatCycle != null;
@@ -592,14 +593,14 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * @return 是否为每日类型。 / Whether daily
-	  */
+	 * @return 是否为每日类型 / Whether daily
+	 */
 	public boolean isDaily() {
 		return isTimeBased() && repeatCycle.size() == 1 && repeatCycle.get(0) == QuestRepeatCycle.ALL;
 	}
 
 	/**
-	 * @return Whether weekly
+	 * @return 是否为每周类型 / Whether weekly
 	 */
 	public boolean isWeekly() {
 		return isTimeBased() && !isDaily();

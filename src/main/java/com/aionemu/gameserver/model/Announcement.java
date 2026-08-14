@@ -23,9 +23,9 @@ public class Announcement {
 	 * 无公告 ID 的构造。
 	 * Constructor without announcement id.
 	 *
-	 * announcement text
-	 * faction
-	 * chat type
+	 * @param announce 公告文本 / announcement text
+	 * @param faction 阵营（ELYOS/ASMODIANS/ALL） / faction (ELYOS/ASMODIANS/ALL)
+	 * @param chatType 聊天类型 / chat type
 	 * @param delay 延迟秒数 / delay in seconds
 	 */
 	public Announcement(String announce, String faction, String chatType, int delay) {
@@ -45,9 +45,9 @@ public class Announcement {
 	 * Constructor with announcement id.
 	 *
 	 * @param id 公告 ID / announcement id
-	 * announcement text
-	 * faction
-	 * chat type
+	 * @param announce 公告文本 / announcement text
+	 * @param faction 阵营（ELYOS/ASMODIANS/ALL） / faction (ELYOS/ASMODIANS/ALL)
+	 * @param chatType 聊天类型 / chat type
 	 * @param delay 延迟秒数 / delay in seconds
 	 */
 	public Announcement(int id, String announce, String faction, String chatType, int delay) {
@@ -67,7 +67,7 @@ public class Announcement {
 	 * 返回公告 ID；不存在时返回 -1。
 	 * Returns the announcement id, or -1 if missing.
 	 *
-	 * announcement id
+	 * @return 公告 ID / announcement id
 	 */
 	public int getId() {
 		if (id != 0) {
@@ -81,7 +81,7 @@ public class Announcement {
 	 * 返回公告阵营枚举：{@link Race#ELYOS} / {@link Race#ASMODIANS}；ALL 时为 null。
 	 * {@link Race#ASMODIANS}; null for ALL.
 	 *
-	 * faction race
+	 * @return 阵营枚举 / faction race
 	 */
 	public Race getFactionEnum() {
 		if (faction.equalsIgnoreCase("ELYOS")) {
@@ -106,7 +106,7 @@ public class Announcement {
 	 * 返回聊天类型枚举。
 	 * Returns the chat type enum.
 	 *
-	 * chat type
+	 * @return 聊天类型枚举 / chat type
 	 */
 	public ChatType getChatType() {
 		if (chatType.equalsIgnoreCase("System")) {

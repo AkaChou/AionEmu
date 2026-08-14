@@ -47,9 +47,8 @@ public abstract class AbstractIterativePeriodicTaskManager<T> extends AbstractPe
 	 * 判断任务是否处于活跃或即将启动（且不在停止列表中）。
 	 * Whether the task is active or pending start (and not on the stop list).
 	 *
-	 * Task
-	 *
-	 * @param task 若 tracked as active 则为 true / True if tracked as active
+	 * @param task 任务 / the task
+	 * @return 若 tracked as active 则为 true / true if tracked as active
 	 */
 	public boolean hasTask(T task) {
 		readLock();
@@ -67,7 +66,7 @@ public abstract class AbstractIterativePeriodicTaskManager<T> extends AbstractPe
 	 * 请求启动任务：加入 start 列表并取消 stop。
 	 * Request starting a task: add to start list and clear stop.
 	 *
-	 * Task
+	 * @param task 要启动的任务 / the task to start
 	 */
 	public void startTask(T task) {
 		writeLock();
@@ -84,7 +83,7 @@ public abstract class AbstractIterativePeriodicTaskManager<T> extends AbstractPe
 	 * 请求停止任务：加入 stop 列表并取消 start。
 	 * Request stopping a task: add to stop list and clear start.
 	 *
-	 * Task
+	 * @param task 要停止的任务 / the task to stop
 	 */
 	public void stopTask(T task) {
 		writeLock();
@@ -131,7 +130,7 @@ public abstract class AbstractIterativePeriodicTaskManager<T> extends AbstractPe
 	 * 处理单个活跃任务。
 	 * Process a single active task.
 	 *
-	 * Task
+	 * @param task 任务 / the task
 	 */
 	protected abstract void callTask(T task);
 
@@ -139,7 +138,7 @@ public abstract class AbstractIterativePeriodicTaskManager<T> extends AbstractPe
 	 * 供耗时统计使用的被调方法名。
 	 * Method name used for runtime statistics.
 	 *
-	 * Method name
+	 * @return 被调方法名 / the method name
 	 */
 	protected abstract String getCalledMethodName();
 }

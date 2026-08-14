@@ -33,7 +33,7 @@ public class CM_QUESTION_RESPONSE extends AionClientPacket {
 	@Override
 	protected void readImpl() {
 		questionid = readD();
-		response = readC(); // y/n
+		response = readC(); // 是/否 / y/n
 		readC(); // unk 0x00 - 0x01 ?
 		readH();
 		senderid = readD();

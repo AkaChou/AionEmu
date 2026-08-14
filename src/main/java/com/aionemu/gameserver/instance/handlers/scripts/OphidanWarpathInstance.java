@@ -63,19 +63,19 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 {
 	/** 副本时间戳 / instance timestamp */
 	private long instanceTime;
-	/** 能量发生器 / power generator */
+		/** 能量发生器 / power generator */
 		private int powerGenerator;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-    /** engulfed ophidan bridge reward / engulfed ophidan bridge reward */
+        /** engulfed ophidan bridge reward / engulfed ophidan bridge reward */
         protected EngulfedOphidanBridgeReward engulfedOphidanBridgeReward;
-    /** 败方倍率 / losing-group multiplier */
+        /** 败方倍率 / losing-group multiplier */
         private float loosingGroupMultiplier = 1;
     /** 副本是否已销毁 / whether the instance is destroyed */
     private boolean isInstanceDestroyed = false;
-    /** 副本是否已开始 / whether the instance started */
+        /** 副本是否已开始 / whether the instance started */
         protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    /** warpath 任务 / warpath task */
+        /** warpath 任务 / warpath task */
         private final List<Future<?>> warpathTask = new ArrayList<Future<?>>();
 	
     protected EngulfedOphidanBridgePlayerReward getPlayerReward(Player player) {
@@ -91,7 +91,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -421,7 +421,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
         }, 1200000));
     }
 	
-   /**
+	/**
 	 * 天族 / Elyos
 	 */
 	private void spawnMechanicalElyos() {
@@ -500,7 +500,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 		spawn(833951, 582.88556f, 481.7509f, 620.74567f, (byte) 84);
 	}
 	
-   /**
+	/**
 	 * 魔族 / Asmodians
 	 */
 	private void spawnMechanicalAsmodians() {
@@ -607,7 +607,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
              * 处理 visit。
              * Handle visit.
              *
-             * opponent
+             * @param opponent 对手 / opponent
              */
             @Override
             public void visit(Player opponent) {
@@ -768,8 +768,8 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
      * 处理玩家复活事件。
      * Handle a player revive event.
      *
-     * 玩家 / player
-     * result
+     * @param player 玩家 / player
+     * @return 结果 / result
      */
     @Override
     public boolean onReviveEvent(Player player) {
@@ -784,9 +784,9 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
      * 处理死亡事件。
      * Handle a death event.
      *
-     * 玩家 / player
+     * @param player 玩家 / player
      * @param lastAttacker 最后攻击者 / last attacker
-     * result
+     * @return 结果 / result
      */
     @Override
     public boolean onDie(Player player, Creature lastAttacker) {
@@ -895,8 +895,8 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
 	 *
-	 * 玩家 / player
-	 * zone
+	 * @param player 玩家 / player
+	 * @param zone 区域 / zone
 	 */
 	@Override
     public void onEnterZone(Player player, ZoneInstance zone) {
@@ -911,7 +911,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
      * 处理死亡事件。
      * Handle a death event.
      *
-     * npc
+     * @param npc NPC / npc
      */
     @Override
 	public void onDie(Npc npc) {
@@ -936,8 +936,8 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
      * 玩家对 NPC 使用物品完成时处理。
      * Handle item-use finish on an NPC.
      *
-     * 玩家 / player
-     * npc
+     * @param player 玩家 / player
+     * @param npc NPC / npc
      */
     @Override
     public void handleUseItemFinish(Player player, Npc npc) {
@@ -1153,7 +1153,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
      * 返回本副本奖励对象。
      * Return this instance's reward object.
      *
-     * result
+     * @return 结果 / result
      */
     @Override
     public InstanceReward<?> getInstanceReward() {

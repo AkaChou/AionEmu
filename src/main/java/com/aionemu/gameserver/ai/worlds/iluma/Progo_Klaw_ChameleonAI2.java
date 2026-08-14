@@ -15,7 +15,7 @@ public class Progo_Klaw_ChameleonAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(243003, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Progo Klaw Fledgling.
+		spawn(243003, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // Progo Klaw 幼兽 / Progo Klaw Fledgling.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

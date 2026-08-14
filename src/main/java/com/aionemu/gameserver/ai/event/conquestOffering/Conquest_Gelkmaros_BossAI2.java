@@ -74,7 +74,7 @@ public class Conquest_Gelkmaros_BossAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				despawnNpc(833022); //Secret Portal.
+				despawnNpc(833022); //可疑传送门。 / Questionable Portal.
 			}
 		}, 300000); //5 分钟。 / 5 Minutes.
     }

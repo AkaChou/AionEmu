@@ -26,15 +26,15 @@ import java.util.concurrent.Future;
 @InstanceID(300090000)
 public class RightWingChamberInstance extends GeneralInstanceHandler
 {
-	/** chest rwctask / chest rwctask */
+		/** chest rwctask / chest rwctask */
 		private Future<?> chestRWCTask;
-	/** rightwing 任务 / right wing task */
+		/** rightwing 任务 / right wing task */
 		private Future<?> rightWingTask;
-	/** 是否启动计时器 / is start timer */
+		/** 是否启动计时器 / is start timer */
 		private boolean isStartTimer = false;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
-	/** ancien treasure box / ancien treasure box */
+		/** ancien treasure box / ancien treasure box */
 		private List<Npc> AncienTreasureBox = new ArrayList<Npc>();
 	
 	private void startRightWingChamberTimer() {
@@ -409,9 +409,9 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

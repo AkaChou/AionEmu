@@ -68,8 +68,8 @@ public class BeritraSchedule {
 	@XmlRootElement(name = "beritra")
 	public static class Beritra {
 		/**
-	 * 贝里特拉 ID / Beritra ID。 Beritra ID
-	 */
+		 * 贝里特拉 ID / Beritra ID
+		 */
 		@XmlAttribute(required = true)
 		private int id;
 

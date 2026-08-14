@@ -35,7 +35,7 @@ public final class CallbackBuildTimeWeaver {
 	 * CLI entry point that weaves callbacks for the given classes directory
 	 *
 	 * @param args 参数，仅接受一个 classes 目录路径 / Arguments, expects a single classes directory path
-	 * When weaving fails。
+	 * @throws Exception 织入失败时抛出 / When weaving fails
 	 */
 	public static void main(String[] args) throws Exception {
 		if (args.length != 1) {
@@ -48,11 +48,8 @@ public final class CallbackBuildTimeWeaver {
 	 * 遍历目录下全部 class 文件并执行织入
 	 * Walk all class files under the directory and weave them
 	 *
-	 * Classes output directory
-	 *
-	 * @param classesDirectory
+	 * @param classesDirectory classes 输出目录 / classes output directory
 	 * @return 实际被修改的 class 数量 / Number of class files actually modified
-	 * @return
 	 * @throws Exception 织入或 IO 失败时 / When weaving or IO fails
 	 */
 	public static int weaveClasses(Path classesDirectory) throws Exception {
@@ -82,7 +79,7 @@ public final class CallbackBuildTimeWeaver {
 	 * @param loader 用于解析依赖的类加载器 / Class loader used to resolve dependencies
 	 * @param classBytes 原始 class 字节码 / Original class bytecode
 	 * @return 织入后的字节码；若无需修改则返回原数组 / Woven bytecode, or the original array when no change is needed
-	 * When weaving fails。
+	 * @throws Exception 织入失败时抛出 / When weaving fails
 	 */
 	public static byte[] weaveClassBytes(ClassLoader loader, byte[] classBytes) throws Exception {
 		if (isAlreadyWoven(loader, classBytes)) {
@@ -103,11 +100,8 @@ public final class CallbackBuildTimeWeaver {
 	 * 收集目录下全部 class 文件路径
 	 * Collect all class file paths under the directory
 	 *
-	 * Classes directory
-	 *
-	 * @param classesDirectory
+	 * @param classesDirectory classes 目录 / classes directory
 	 * @return 排序后的 class 文件路径 / Sorted class file paths
-	 * @return
 	 * @throws IOException 遍历目录失败时 / When directory walking fails
 	 */
 	private static Iterable<Path> classFiles(Path classesDirectory) throws IOException {
@@ -123,13 +117,9 @@ public final class CallbackBuildTimeWeaver {
 	 * 检查 class 是否已经织入过回调增强
 	 * Check whether the class has already been woven with callback enhancements
 	 *
-	 * Class loader
-	 * Class bytecode
-	 *
-	 * @param loader
+	 * @param loader 类加载器 / Class loader
+	 * @param classBytes class 字节码 / Class bytecode
 	 * @return 已织入返回 true / True if already woven
-	 * @param classBytes
-	 *
 	 * @throws IOException 解析字节码失败时 / When bytecode inspection fails
 	 */
 	private static boolean isAlreadyWoven(ClassLoader loader, byte[] classBytes) throws IOException {

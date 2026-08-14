@@ -62,8 +62,8 @@ public class CM_LEGION_TABS extends AionClientPacket {
 			/**
 	 * 历史页签 / History Tab
 	 */
-			case 0: // legion history
-			case 2: // legion WH history
+			case 0: // 军团历史 / legion history
+			case 2: // 军团仓库历史 / legion WH history
 				Collection<LegionHistory> history = activePlayer.getLegion().getLegionHistoryByTabId(tab);
 				/**
 	 * 若历史条数不足 page*8 则返回 / If history size is less than page*8 return

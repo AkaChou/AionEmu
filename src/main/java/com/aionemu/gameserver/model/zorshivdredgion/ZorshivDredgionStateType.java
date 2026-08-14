@@ -9,5 +9,7 @@ package com.aionemu.gameserver.model.zorshivdredgion;
 
 public enum ZorshivDredgionStateType {
 	/** 登陆。 / Landing. */
-	LANDING, PEACE;
+	LANDING,
+	/** 和平。 / Peace. */
+	PEACE;
 }

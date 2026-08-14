@@ -39,7 +39,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -166,15 +166,15 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
      * 处理死亡事件。
      * Handle a death event.
      *
-     * npc
+     * @param npc NPC / npc
      */
     @Override
     public void onDie(Npc npc) {
         Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
-		   /**
-	 * 区域 1：警卫室与符文大厅。 / Area 1: Guardroom And Rune Hall
-	 */
+			/**
+			 * 区域 1：警卫室与符文大厅。 / Area 1: Guardroom And Rune Hall
+			 */
 			case 230849: //Guard Captain Rohuka.
 				doors.get(383).setOpen(true);
 				// 通往被玷污的达努阿尔神殿的门已打开。 / The door to the Defiled Danuar Temple has opened.
@@ -200,9 +200,9 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 				}
 			break;
 			
-		   /**
-	 * 区域 2：符文回廊与后勤基地。 / Area 2: Rune Cloister And Logistic Base
-	 */
+			/**
+			 * 区域 2：符文回廊与后勤基地。 / Area 2: Rune Cloister And Logistic Base
+			 */
 			case 230818: //Sheban Legion Elite Gunner.
 				doors.get(372).setOpen(true);
 				// 通往首席研究员办公室的门已打开。 / The door to the Head Researcher's Office has opened.
@@ -214,9 +214,9 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 				sendMsgByRace(1401917, Race.PC_ALL, 0);
 			break;
 			
-		   /**
-	 * 区域 3：符文桥与后勤基地军械库。 / Area 3: Rune Bridge And Logistic Base Arsenal
-	 */
+			/**
+			 * 区域 3：符文桥与后勤基地军械库。 / Area 3: Rune Bridge And Logistic Base Arsenal
+			 */
 			case 233255: //Gatekeeper Stranir.
 				doors.get(378).setOpen(true);
 				// 通往索罗军械库的门已打开。 / The door to the Sauro Armory has opened.
@@ -308,9 +308,9 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

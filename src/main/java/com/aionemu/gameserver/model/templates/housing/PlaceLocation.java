@@ -14,14 +14,18 @@ import jakarta.xml.bind.annotation.XmlType;
 public enum PlaceLocation {
 
 	/** 地板 / Floor. */
-	FLOOR, STACK, WALL;
+	FLOOR,
+	/** 叠放 / Stack. */
+	STACK,
+	/** 墙面 / Wall. */
+	WALL;
 
 	/** 值。 / Value. */
 	public String value() {
 		return name();
 	}
 
-	/** 值 / From Value*/
+	/** 值 / From Value. */
 	public static PlaceLocation fromValue(String value) {
 		return valueOf(value);
 	}

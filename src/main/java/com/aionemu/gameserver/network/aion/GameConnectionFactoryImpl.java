@@ -45,9 +45,9 @@ public class GameConnectionFactoryImpl implements NettyConnectionFactory {
 	 * 为传入传输创建 AionConnection；洪泛拒绝时关闭传输并返回 null。
 	 * Creates an AionConnection for the inbound transport; closes and returns null on flood reject.
 	 *
-	 * connection transport
-	 * new connection or null
-	 * if creation fails
+	 * @param transport 连接传输 / connection transport
+	 * @return 新连接或 null / new connection or null
+	 * @throws IOException 创建失败 / if creation fails
 	 */
 	@Override
 	public AConnection create(ConnectionTransport transport) throws IOException {

@@ -44,7 +44,7 @@ public class DynamicRiftData {
 	 * 返回动态裂隙地点数量。
 	 * Returns the number of dynamic rift locations.
 	 *
-	 * location count
+	 * @return 动态裂缝地点数量 / Returns the number of dynamic rift locations.
 	 */
 	public int size() {
 		return dynamicRift.size();

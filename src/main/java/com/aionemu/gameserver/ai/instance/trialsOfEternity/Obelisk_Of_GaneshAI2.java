@@ -29,6 +29,10 @@ public class Obelisk_Of_GaneshAI2 extends NpcAI2
 		GameEngineServices.skillEngine().getSkill(getOwner(), 17746, 60, getOwner()).useNoAnimationSkill();
 	}
 	
+	/**
+	 * 方尖碑被摧毁后，于 120 秒后在原位置重生，随后移除自身。
+	 * When the obelisk is destroyed, it respawns at its original position after 120 seconds, then removes itself.
+	 */
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {

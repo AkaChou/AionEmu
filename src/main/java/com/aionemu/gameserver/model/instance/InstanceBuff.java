@@ -54,7 +54,7 @@ public class InstanceBuff implements StatOwner {
 		player.getGameStats().addEffect(this, functions);
 	}
 
-	/** 结束效果 / End Effect */
+	/** 结束效果。 / End effect. */
 	public void endEffect(Player player) {
 		functions.clear();
 		if (hasInstanceBuff()) {
@@ -63,7 +63,7 @@ public class InstanceBuff implements StatOwner {
 		player.getGameStats().endEffect(this);
 	}
 
-	/** Apply pledge / Apply pledge */
+	/** 应用誓约效果。 / Apply pledge. */
 	public void applyPledge(Player player, int buffId) {
 		if (instanceBonusAttr == null) {
 			return;
@@ -80,14 +80,14 @@ public class InstanceBuff implements StatOwner {
 		player.getGameStats().addEffect(this, functions);
 	}
 
-	/** 结束誓约 / end Pledge. */
+	/** 结束誓约。 / End pledge. */
 	public void endPledge(Player player) {
 		functions.clear();
 		player.setBonusId(0);
 		player.getGameStats().endEffect(this);
 	}
 
-	/** Apply pledge duration / Apply pledge duration */
+	/** 应用带时长的誓约效果。 / Apply pledge with duration. */
 	public void applyPledgeDuration(Player player, int buffId, int time) {
 		if (hasInstanceBuff() || instanceBonusAttr == null) {
 			return;
@@ -108,7 +108,7 @@ public class InstanceBuff implements StatOwner {
 		player.getGameStats().addEffect(this, functions);
 	}
 
-	/** 结束誓约时长 / end Pledge Duration. */
+	/** 结束带时长的誓约效果。 / End pledge duration. */
 	public void endPledgeDuration(Player player) {
 		functions.clear();
 		if (hasInstanceBuff()) {
@@ -118,7 +118,7 @@ public class InstanceBuff implements StatOwner {
 		player.getGameStats().endEffect(this);
 	}
 
-	/** 返回 remaning time / Returns the remaning time */
+	/** 返回剩余时间。 / Returns the remaining time. */
 	public int getRemaningTime() {
 		return (int) ((System.currentTimeMillis() - startTime) / 1000);
 	}
@@ -131,7 +131,7 @@ public class InstanceBuff implements StatOwner {
 			this.player = player;
 		}
 
-		/** 运行 / run. */
+		/** 运行。 / Run. */
 		@Override
 		public void run() {
 			endEffect(player);
@@ -141,7 +141,7 @@ public class InstanceBuff implements StatOwner {
 		}
 	}
 
-	/** 是否实例增益 / Whether instance buff*/
+	/** 是否拥有实例增益。 / Whether an instance buff is active. */
 	public boolean hasInstanceBuff() {
 		return task != null && !task.isDone();
 	}

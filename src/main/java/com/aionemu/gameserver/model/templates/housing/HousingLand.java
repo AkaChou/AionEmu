@@ -74,7 +74,7 @@ public class HousingLand {
 				return building;
 			}
 		}
-		return buildings.get(0); // fail
+		return buildings.get(0); // 兜底返回第一个建筑 / fallback to the first building
 	}
 
 	/** 返回 sale options / Returns the sale options */

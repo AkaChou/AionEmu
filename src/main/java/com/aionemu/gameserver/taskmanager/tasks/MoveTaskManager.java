@@ -99,7 +99,7 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	 * 将生物加入移动跟踪集合。
 	 * Add a creature to the moving set.
 	 *
-	 * Creature
+	 * @param creature 生物 / Creature
 	 */
 	public void addCreature(Creature creature) {
 		int objectId = creature.getObjectId();
@@ -141,7 +141,7 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	 * 将生物移出移动跟踪集合。
 	 * Remove a creature from the moving set.
 	 *
-	 * Creature
+	 * @param creature 生物 / Creature
 	 */
 	public void removeCreature(Creature creature) {
 		movingCreatures.remove(creature.getObjectId());
@@ -199,7 +199,7 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
 	 *
-	 * Provider
+	 * @param provider 实例提供者 / Provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<MoveTaskManager> provider) {
 		instanceProvider = provider;

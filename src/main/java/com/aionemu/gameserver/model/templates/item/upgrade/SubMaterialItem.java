@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Sub 材料物品模板（静态数据/XML）。
- * XML template.
+ * 子材料物品模板（静态数据/XML）。
+ * Sub material item template (static data/XML).
  *
  * @author Ranastic (Encom)
  */

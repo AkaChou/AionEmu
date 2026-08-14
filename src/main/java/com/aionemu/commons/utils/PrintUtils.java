@@ -22,7 +22,7 @@ public class PrintUtils {
      * 打印分区标题与分隔线。
      * Print a section title with a rule line.
      *
-     * Section name
+     * @param sectionName 分区名称 / Section name
      */
     public void printSection(String sectionName) {
         String title = normalizeTitle(sectionName);
@@ -37,7 +37,7 @@ public class PrintUtils {
      * 打印子分区标题。
      * Print a sub-section title.
      *
-     * Sub-section title
+     * @param title 子分区标题 / Sub-section title
      */
     public void printSubSection(String title) {
         String normalized = normalizeTitle(title);
@@ -89,7 +89,7 @@ public class PrintUtils {
      * Convert a hex string to bytes (whitespace ignored).
      *
      * @param string 十六进制字符串 / Hex string
-     * Byte array
+     * @return 字节数组 / Byte array
      */
     public byte[] hex2bytes(String string) {
         String finalString = string.replaceAll("\\s+", "");
@@ -128,7 +128,7 @@ public class PrintUtils {
      * Reverse a hex string by byte pairs.
      *
      * @param input 十六进制字符串 / Hex string
-     * Reversed hex string
+     * @return 反转后的十六进制字符串 / Reversed hex string
      */
     public String reverseHex(String input) {
         String[] chunked = new String[input.length() / 2];
@@ -187,9 +187,9 @@ public class PrintUtils {
      * 追加可读 ASCII 文本段。
      * Append a readable ASCII text segment.
      *
-     * Buffer
-     * Output builder
-     * Byte count
+     * @param data 缓冲区 / Buffer
+     * @param result 输出构建器 / Output builder
+     * @param cnt 字节数 / Byte count
      */
     private void toText(ByteBuffer data, StringBuilder result, int cnt) {
         int charPos = data.position() - cnt;

@@ -30,8 +30,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * 生物游戏属性，用于属性相关逻辑。
- * Creature Game Stats for stats logic.
+ * 生物游戏属性的基类：管理基础值与修正函数计算。
+ * Base creature game stats: manages base values and modifier functions.
  */
 
 @Slf4j(access = AccessLevel.PROTECTED)

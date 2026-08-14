@@ -54,7 +54,7 @@ public class LunaTemplate {
 	@XmlAttribute
 	protected int id;
 
-	/** 返回 luna component / Returns the luna component */
+	/** 返回月华组件 1 / Returns the luna component 1 */
 	public List<LunaComponent> getLunaComponent() {
 		if (luna_component_panel_1 == null) {
 			luna_component_panel_1 = new ArrayList<LunaComponent>();
@@ -62,7 +62,7 @@ public class LunaTemplate {
 		return this.luna_component_panel_1;
 	}
 
-	/** 返回 luna component 2 / Returns the luna component 2 */
+	/** 返回月华组件 2 / Returns the luna component 2 */
 	public List<LunaComponent> getLunaComponent2() {
 		if (luna_component_panel_2 == null) {
 			luna_component_panel_2 = new ArrayList<LunaComponent>();
@@ -70,7 +70,7 @@ public class LunaTemplate {
 		return this.luna_component_panel_2;
 	}
 
-	/** 返回 luna component 3 / Returns the luna component 3 */
+	/** 返回月华组件 3 / Returns the luna component 3 */
 	public List<LunaComponent> getLunaComponent3() {
 		if (luna_component_panel_3 == null) {
 			luna_component_panel_3 = new ArrayList<LunaComponent>();
@@ -78,7 +78,7 @@ public class LunaTemplate {
 		return this.luna_component_panel_3;
 	}
 
-	/** 返回 luna component 4 / Returns the luna component 4 */
+	/** 返回月华组件 4 / Returns the luna component 4 */
 	public List<LunaComponent> getLunaComponent4() {
 		if (luna_component_panel_4 == null) {
 			luna_component_panel_4 = new ArrayList<LunaComponent>();
@@ -86,7 +86,7 @@ public class LunaTemplate {
 		return this.luna_component_panel_4;
 	}
 
-	/** 返回 luna component 5 / Returns the luna component 5 */
+	/** 返回月华组件 5 / Returns the luna component 5 */
 	public List<LunaComponent> getLunaComponent5() {
 		if (luna_component_panel_5 == null) {
 			luna_component_panel_5 = new ArrayList<LunaComponent>();
@@ -94,7 +94,7 @@ public class LunaTemplate {
 		return this.luna_component_panel_5;
 	}
 
-	/** 返回 quantity / Returns the quantity */
+	/** 返回数量 / Returns the quantity */
 	public Integer getQuantity() {
 		return quantity;
 	}
@@ -109,7 +109,7 @@ public class LunaTemplate {
 		return success_rate;
 	}
 
-	/** 返回 productid / Returns the productid */
+	/** 返回产品 ID / Returns the product id */
 	public Integer getProductid() {
 		return productid;
 	}
@@ -119,7 +119,7 @@ public class LunaTemplate {
 		return race;
 	}
 
-	/** 返回物品 ID / Returns the itemid */
+	/** 返回物品 ID / Returns the item id */
 	public Integer getItemid() {
 		return itemid;
 	}
@@ -129,7 +129,7 @@ public class LunaTemplate {
 		return name;
 	}
 
-	/** 返回 nameid / Returns the nameid */
+	/** 返回名称 ID / Returns the name id */
 	public int getNameid() {
 		return nameid;
 	}
@@ -139,7 +139,7 @@ public class LunaTemplate {
 		return id;
 	}
 
-	/** 返回 max production count / Returns the max production count */
+	/** 返回最大制作数量 / Returns the max production count */
 	public Integer getMaxProductionCount() {
 		return maxProductionCount;
 	}

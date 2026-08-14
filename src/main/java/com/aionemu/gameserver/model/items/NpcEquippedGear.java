@@ -31,7 +31,7 @@ public class NpcEquippedGear implements Iterable<Entry<ItemSlot, ItemTemplate>> 
 	}
 
 	/**
-	 * @return short
+	 * @return 装备槽位掩码 / items slot mask
 	 */
 	public short getItemsMask() {
 		if (items == null) {
@@ -50,7 +50,8 @@ public class NpcEquippedGear implements Iterable<Entry<ItemSlot, ItemTemplate>> 
 	}
 
 	/**
-	 * Here NPC equipment mask is initialized. All NPC slot masks should be lower than 65536
+	 * 初始化 NPC 装备槽位掩码；所有 NPC 槽位掩码应小于 65536。
+	 * Here the NPC equipment mask is initialized; all NPC slot masks should be lower than 65536.
 	 */
 	public void init() {
 		synchronized (this) {
@@ -77,8 +78,11 @@ public class NpcEquippedGear implements Iterable<Entry<ItemSlot, ItemTemplate>> 
 	}
 
 	/**
-	 * @param itemSlot
-	 * @return
+	 * 获取指定槽位的物品模板。
+	 * Returns the item template for the given slot.
+	 *
+	 * @param itemSlot 槽位 / item slot
+	 * @return 物品模板，未装备返回 null / item template, or null if not equipped
 	 */
 	public ItemTemplate getItem(ItemSlot itemSlot) {
 		return items != null ? items.get(itemSlot) : null;

@@ -12,7 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/** Lowers strict XML authoring blocks to the canonical transition IR. */
+/**
+ * 将严格 XML 编写块降级为规范转换 IR。
+ * Lowers strict XML authoring blocks to the canonical transition IR.
+ */
 final class QuestXmlBlockExpander {
 	private QuestXmlBlockExpander() {
 	}
@@ -133,6 +136,8 @@ final class QuestXmlBlockExpander {
 		int npcId = positiveInteger(context, block, "npc-start", "npc-id");
 		// NONE 状态首次开启对话时下发的页。默认 1011;部分 quest (如 luna 80875/80876) 旧版
 		// start_dialog_id 为 4762, 客户端只有该页的 html, 必须显式指定才能命中客户端资源。
+		// The page sent when the dialog opens for the first time from NONE state. Default is 1011; some quests
+		// (e.g. luna 80875/80876) used 4762 as legacy start_dialog_id, and the client only has HTML for that page.
 		if (block.hasAttribute("start-page") && block.hasAttribute("start-dialog-id")) {
 			fail("DIALOG_LEGACY_ATTRIBUTE_CONFLICT", context, "dialog", "start-page",
 				"declare start-page or start-dialog-id, not both");
@@ -969,10 +974,14 @@ final class QuestXmlBlockExpander {
 	private static List<QuestReward> rewardGroup(Context context, int completeRewardIndex) {
 		List<QuestRewardGroup> groups = context.metadata().rewardGroups();
 		if (groups.isEmpty()) {
+			// 无奖励任务仍会把完成奖励索引持久化为 QuestState 的一部分；
+			// 任何固定或可选奖励引用会在下方针对这个空组校验。
 			// Rewardless quests still persist the completion reward index as part of QuestState.
 			// Any fixed or selectable reward reference is validated against this empty group below.
 			return List.of();
 		}
+		// 少数有证据支撑的自定义所有者会声明一个物理奖励组的同时持久化非零完成奖励。
+		// 保留该状态契约；只有多组时才把索引当作选择器。
 		// A few evidence-backed custom owners persist a non-zero completion reward while declaring one
 		// physical reward group. Preserve that state contract; only multiple groups use the index as a selector.
 		if (groups.size() == 1) {

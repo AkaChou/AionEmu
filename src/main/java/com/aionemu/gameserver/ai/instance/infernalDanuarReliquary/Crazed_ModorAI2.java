@@ -437,7 +437,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void eternalGrudge() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21169, 1, getOwner()).useNoAnimationSkill(); //Eternal Grudge.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 21169, 1, getOwner()).useNoAnimationSkill(); // 永恒怨恨 / Eternal Grudge.
 	}
 	
 	private void despawnNpcs(int npcId) {

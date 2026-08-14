@@ -105,7 +105,7 @@ public class Empyrean_Record_KeeperAI2 extends NpcAI2
 			case 799568:
 			    // 你已完成第 1 阶段，尼尔克。 / You have completed Stage 1, nyerk.
 				sendMsg(1111460, getObjectId(), false, 2000);
-				// 希望你拿到了资格票，尼尔克。 / I hope you got yourself a Worthiness Ticket, nyerk.
+				// 希望你拿到了败者复活券，尼尔克。 / I hope you got yourself a Worthiness Ticket, nyerk.
 				sendMsg(1111451, getObjectId(), false, 6000);
 			break;
 			case 799569:

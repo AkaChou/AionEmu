@@ -29,7 +29,7 @@ public class CsPacketHandlerFactory {
 	 * 向处理器注册包原型及合法状态。
 	 * Registers a packet prototype with valid states.
 	 *
-	 * packet prototype
+	 * @param prototype 包原型 / packet prototype
 	 * @param states 合法连接状态 / valid connection states
 	 */
 	private void addPacket(CsClientPacket prototype, State... states) {
@@ -40,7 +40,7 @@ public class CsPacketHandlerFactory {
 	 * 获取已注册的包处理器。
 	 * Returns the registered packet handler.
 	 *
-	 * packet handler
+	 * @return 包处理器 / packet handler
 	 */
 	public CsPacketHandler getPacketHandler() {
 		return handler;

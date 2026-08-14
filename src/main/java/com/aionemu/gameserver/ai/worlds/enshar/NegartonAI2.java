@@ -33,12 +33,22 @@ public class NegartonAI2 extends NpcAI2
         }
     }
 	
+	/**
+	 * 处理对话选择：消耗钥匙并打开通往黑暗军团传送门的路。
+	 * Handles dialog selection: consumes the key and opens the Dark Legion portal path.
+	 *
+	 * @param player 对话玩家 / dialog player
+	 * @param dialogId 对话框选项 ID / dialog option ID
+	 * @param questId 任务 ID / quest ID
+	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
+	 * @return 始终为 true / always true
+	 */
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		// 塞特领地村庄渗透裂隙走廊钥匙。 / Cet Territory Village Infiltration Rift Corridor Key.
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000234, 1)) {
 		    switch (getNpcId()) {
-				case 804840: //Negarton.
+				case 804840: // 开启黑暗军团传送门的 NPC / Negarton.
 				    announceDarkLegionPortal();
 					spawn(702721, 1474.6984f, 1796.5096f, 330.69998f, (byte) 103);
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

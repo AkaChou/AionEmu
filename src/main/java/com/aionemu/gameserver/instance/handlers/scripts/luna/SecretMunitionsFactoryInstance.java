@@ -74,7 +74,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 		private int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
 	// 副本持续计时。 / Duration Instance Time.
 	/** 副本计时秒数 / instance timer seconds */
-		private int instanceTimerSeconds = 3600000; //...1Hr
+		private int instanceTimerSeconds = 3600000; //...1 小时 / ...1Hr
 	/** 副本奖励对象 / instance reward object */
 	private SecretMunitionsFactoryReward instanceReward;
 	/** factory task1 / factory task1 */
@@ -85,8 +85,8 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
 	 *
-	 * visible object
-	 * result
+	 * @param object 可见对象 / visible object
+	 * @return 奖励记录 / result
 	 */
 	
 	protected SecretMunitionsFactoryPlayerReward getPlayerReward(Integer object) {
@@ -112,7 +112,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
 	 *
-	 * result
+	 * @return 奖励记录 / result
 	 */
 	@Override
 	public InstanceReward<?> getInstanceReward() {
@@ -122,55 +122,55 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
-			case 245185: //Mechaturerk’s Core.
+			case 245185: // 机械图尔克的核心 / Mechaturerk’s Core.
 			    switch (Rnd.get(1, 7)) {
 				    case 1:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150000, 2)); //Uncut Crystal.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150000, 2)); // 未切割的水晶 / Uncut Crystal.
 				    break;
 					case 2:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150001, 2)); //Chipped Crystal.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150001, 2)); // 有缺口的水晶 / Chipped Crystal.
 				    break;
 					case 3:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150002, 2)); //Cloudy Crystal.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150002, 2)); // 浑浊的水晶 / Cloudy Crystal.
 				    break;
 					case 4:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150003, 2)); //Clear Crystal.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150003, 2)); // 透明的水晶 / Clear Crystal.
 				    break;
 					case 5:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150004, 2)); //Flawless Crystal.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150004, 2)); // 无瑕的水晶 / Flawless Crystal.
 				    break;
 					case 6:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150005, 2)); //Luna’s Light.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150005, 2)); // 露娜之光 / Luna’s Light.
 				    break;
 					case 7:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150006, 2)); //Luna’s Blessing.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150006, 2)); // 露娜的祝福 / Luna’s Blessing.
 				    break;
 			    }
 			break;
-			case 834443: //Mechaturerk’s Treasure Box.
-			case 834444: //Mechaturerk’s Special Treasure Box.
+			case 834443: // 机械图尔克的宝物箱 / Mechaturerk’s Treasure Box.
+			case 834444: // 机械图尔克的特殊宝物箱 / Mechaturerk’s Special Treasure Box.
 			break;
 		}
 	}
 	
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
-		storage.decreaseByItemId(164000418, storage.getItemCountByItemId(164000418)); //Stink Bomb.
-		storage.decreaseByItemId(164002362, storage.getItemCountByItemId(164002362)); //Mechaturerk Oil Cask.
+		storage.decreaseByItemId(164000418, storage.getItemCountByItemId(164000418)); // 臭气弹 / Stink Bomb.
+		storage.decreaseByItemId(164002362, storage.getItemCountByItemId(164002362)); // 机械图尔克油桶 / Mechaturerk Oil Cask.
 	}
 	
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -178,21 +178,21 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 		int npcId = npc.getNpcId();
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
-			case 243993: //Mechaturerk’s Cannon.
+			case 243993: // 机械图尔克大炮 / Mechaturerk’s Cannon.
 				despawnNpc(npc);
-				spawn(833835, 231.14809f, 258.98563f, 191.01645f, (byte) 59); //Mechaturerk's Cannon.
+				spawn(833835, 231.14809f, 258.98563f, 191.01645f, (byte) 59); // 机械图尔克大炮 / Mechaturerk's Cannon.
 			break;
-			case 245759: //Siege Factory Watcher.
+			case 245759: // 攻城工厂监视者 / Siege Factory Watcher.
 				startFactoryTask1();
 			break;
-			case 243663: //Mechaturerk Machine Monster.
+			case 243663: // 机械图尔克机械怪物 / Mechaturerk Machine Monster.
 				despawnNpc(npc);
-				killNpc(getNpcs(833896)); //Factory Gate.
+				killNpc(getNpcs(833896)); // 工厂大门 / Factory Gate.
 				// 破坏魔像的储物箱已出现在军需工厂内。 / The Destruction Golem has appeared!
 				sendMsgByRace(1403649, Race.PC_ALL, 0);
 				// 机械怪物的储物箱已出现在军需工厂内。 / The Machine Monster’s Footlocker has appeared inside the Munitions Factory.
 				sendMsgByRace(1403645, Race.PC_ALL, 5000);
-		        spawn(703380, 138.84042f, 256.166f, 191.8727f, (byte) 0); //Machine Monster’s Footlocker.
+		        spawn(703380, 138.84042f, 256.166f, 191.8727f, (byte) 0); // 机械怪物的储物箱 / Machine Monster’s Footlocker.
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					/**
 					 * 处理 run。
@@ -200,11 +200,11 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-					    spawn(243664, 163.01869f, 259.16562f, 192.11992f, (byte) 1); //Mechaturerk.
+					    spawn(243664, 163.01869f, 259.16562f, 192.11992f, (byte) 1); // 机械图尔克 / Mechaturerk.
 					}
 				}, 5000);
 			break;
-			case 243664: //Mechaturerk.
+			case 243664: // 机械图尔克 / Mechaturerk.
 				points = 878600;
 				// 你击杀了机械图尔克！ / You killed Mechaturerk!
 				sendMsgByRace(1403653, Race.PC_ALL, 0);
@@ -216,10 +216,10 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403648, Race.PC_ALL, 15000);
 				switch (Rnd.get(1, 2)) {
 		            case 1:
-				        spawn(834443, 149.65579f, 260.02966f, 191.8727f, (byte) 0); //Mechaturerk’s Treasure Box.
+				        spawn(834443, 149.65579f, 260.02966f, 191.8727f, (byte) 0); // 机械图尔克的宝物箱 / Mechaturerk’s Treasure Box.
 					break;
 					case 2:
-					    spawn(834444, 149.65579f, 260.02966f, 191.8727f, (byte) 0); //Mechaturerk’s Special Treasure Box.
+					    spawn(834444, 149.65579f, 260.02966f, 191.8727f, (byte) 0); // 机械图尔克的特殊宝物箱 / Mechaturerk’s Special Treasure Box.
 					break;
 				}
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -245,40 +245,40 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 					}
 				}, 5000);
 			break;
-			case 243968: //Remirunerk.
+			case 243968: // 雷米鲁内克 / Remirunerk.
 			    points = 500;
 			    // 雷米伦伦克的储物箱已出现在军需工厂内。 / Remirunrunerk’s Footlocker has appeared inside the Munitions Factory.
 				sendMsgByRace(1403643, Race.PC_ALL, 3000);
-		        spawn(703378, 138.79507f, 263.1448f, 191.8727f, (byte) 0); //Remirunrunerk’s Footlocker.
+		        spawn(703378, 138.79507f, 263.1448f, 191.8727f, (byte) 0); // 雷米鲁内克的储物箱 / Remirunrunerk’s Footlocker.
 			break;
-			case 243969: //Bomirunrunerk.
+			case 243969: // 波米鲁内克 / Bomirunrunerk.
 			    points = 500;
 			    // 博米伦伦克的储物箱已出现在军需工厂内。 / Bomirunrunerk’s Footlocker has appeared inside the Munitions Factory.
 				sendMsgByRace(1403644, Race.PC_ALL, 3000);
-		        spawn(703379, 138.76562f, 259.84332f, 191.8727f, (byte) 0); //Bomirunrunerk’s Footlocker.
+		        spawn(703379, 138.76562f, 259.84332f, 191.8727f, (byte) 0); // 波米鲁内克的储物箱 / Bomirunrunerk’s Footlocker.
 			break;
-			case 244028: //Mechaturerk Gunner.
+			case 244028: // 机械图尔克炮手 / Mechaturerk Gunner.
 			    // 炮手的储物箱已出现在军需工厂内。 / The Gunner’s Footlocker has appeared inside the Munitions Factory.
 				sendMsgByRace(1403642, Race.PC_ALL, 3000);
-		        spawn(703377, 138.77333f, 266.49652f, 191.8727f, (byte) 0); //Gunner’s Footlocker.
+		        spawn(703377, 138.77333f, 266.49652f, 191.8727f, (byte) 0); // 炮手的储物箱 / Gunner’s Footlocker.
 			break;
-			case 244035: //Damaged Mecha Infantryman.
+			case 244035: // 受损的机甲步兵 / Damaged Mecha Infantryman.
 			    mechaInfantrymanKilled++;
 				if (mechaInfantrymanKilled == 2) {
 					// 装甲士兵的储物箱已出现在军需工厂内。 / The Armored Soldier’s Footlocker has appeared inside the Munitions Factory.
 					sendMsgByRace(1403640, Race.PC_ALL, 3000);
-					spawn(703375, 138.73476f, 272.44095f, 191.8727f, (byte) 0); //Armored Soldier’s Footlocker.
+					spawn(703375, 138.73476f, 272.44095f, 191.8727f, (byte) 0); // 装甲士兵的储物箱 / Armored Soldier’s Footlocker.
 				}
 			break;
-			case 244135: //Melee Support Destruction Golem.
+			case 244135: // 近战支援破坏魔像 / Melee Support Destruction Golem.
 				// 恢复植物已出现。 / The recovery plant has emerged.
 				sendMsgByRace(1403824, Race.PC_ALL, 1000);
-				spawn(836090, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading()); //Health Pod.
+				spawn(836090, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading()); // 治疗舱 / Health Pod.
 			break;
-			case 244136: //Ranged Support Destruction Golem.
+			case 244136: // 远程支援破坏魔像 / Ranged Support Destruction Golem.
 				// 恢复植物已出现。 / The recovery plant has emerged.
 				sendMsgByRace(1403824, Race.PC_ALL, 1000);
-				spawn(836090, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading()); //Health Pod.
+				spawn(836090, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading()); // 治疗舱 / Health Pod.
 			break;
 		} if (instanceReward.getInstanceScoreType().isStartProgress()) {
 			instanceReward.addNpcKill();
@@ -292,28 +292,28 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 * Handle item-use finish on an NPC.
 	 *
 	 * 玩家 / player
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
-			case 833833: //Bomb Chest.
+			case 833833: // 炸弹箱 / Bomb Chest.
 			    if (player.getInventory().isFull()) {
 					sendMsgByRace(1390149, Race.PC_ALL, 0);
 				}
-			    ItemService.addItem(player, 164000418, 1); //Stink Bomb.
+			    ItemService.addItem(player, 164000418, 1); // 臭气弹 / Stink Bomb.
 			break;
-			case 836090: //Health Pod.
+			case 836090: // 治疗舱 / Health Pod.
 			    despawnNpc(npc);
 				player.getLifeStats().increaseHp(SM_ATTACK_STATUS.TYPE.HP, 50000);
 				player.getLifeStats().increaseHp(SM_ATTACK_STATUS.TYPE.MP, 50000);
 			break;
-			case 243660: //Oil Cask.
+			case 243660: // 油桶 / Oil Cask.
 			    despawnNpc(npc);
 				if (player.getInventory().isFull()) {
 					sendMsgByRace(1390149, Race.PC_ALL, 0);
 				}
-				ItemService.addItem(player, 164002362, 5); //Mechaturerk Oil Cask.
+				ItemService.addItem(player, 164002362, 5); // 机械图尔克油桶 / Mechaturerk Oil Cask.
 			break;
 		}
 	}
@@ -487,7 +487,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	}
 	
 	private int checkRank(int totalPoints) {
-		if (totalPoints >= 878600) { //Rank S.
+		if (totalPoints >= 878600) { // S 级 / Rank S.
 			rank = 1;
 		} else {
 			rank = 6;
@@ -496,7 +496,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	}
 	
    /**
-	 * Raid Instance
+	 * 副本实例。 / Raid Instance
 	 */
 	protected void startFactoryTask1() {
 		factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -509,7 +509,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 				startFactoryRaid1();
 				//sendMsg("[START]: Wave <1/3>");
             }
-        }, 120000)); //...2Min
+        }, 120000)); //...2 分钟 / ...2Min
 		factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -522,9 +522,9 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 				//sendMsg("[START]: Wave <2/3>");
 				// 维修士兵的储物箱已出现在军需工厂内。 / The Maintenance Soldier’s Footlocker has appeared inside the Munitions Factory.
 				sendMsgByRace(1403641, Race.PC_ALL, 3000);
-				spawn(703376, 138.75412f, 269.4629f, 191.8727f, (byte) 0); //Maintenance Soldier’s Footlocker.
+				spawn(703376, 138.75412f, 269.4629f, 191.8727f, (byte) 0); // 维护士兵的储物箱 / Maintenance Soldier’s Footlocker.
             }
-        }, 240000)); //...4Min
+        }, 240000)); //...4 分钟 / ...4Min
 		factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -536,7 +536,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 				factoryTaskA2.cancel(true);
 				//sendMsg("[START]: Wave <3/3>");
             }
-        }, 360000)); //...6Min
+        }, 360000)); //...6 分钟 / ...6Min
 		factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -558,7 +558,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 				    }
 			    });
             }
-        }, 480000)); //...8Min
+        }, 480000)); //...8 分钟 / ...8Min
 	}
 	
    /**
@@ -585,7 +585,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 				    }
 			    });
             }
-        }, 3600000)); //1 Hour.
+        }, 3600000)); // 1 小时 / 1 Hour.
     }
 	
 	/**
@@ -593,14 +593,14 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 * Handle a player opening a door.
 	 *
 	 * 玩家 / player
-	 * doorId
+	 * @param doorId 门 id / doorId
 	 */
 	@Override
 	public void onOpenDoor(Player player, int doorId) {
 		if (doorId == 27) {
 			startFactoryTask2();
 			doors.get(27).setOpen(true);
-			killNpc(getNpcs(833868)); //Rock Pile.
+			killNpc(getNpcs(833868)); // 岩石堆 / Rock Pile.
 			// 玩家有 1 分钟准备！！！【红色计时】 / The player has 1 min to prepare !!! [Timer Red]
 			if ((timerPrepare != null) && (!timerPrepare.isDone() || !timerPrepare.isCancelled())) {
 				// 开始副本计时！！！【白色计时】 / Start the instance time !!! [Timer White]
@@ -668,11 +668,11 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	}
 	
 	private void spawnLunaDetachment() {
-		sp(833829, 382.25574f, 283.81686f, 198.50284f, (byte) 7, 5, "NPCPathAlly_NPC_Path2");//Herez.
-		sp(833827, 386.10965f, 282.91656f, 198.24266f, (byte) 11, 5, "NPCPathAlly_NPC_Path3");//Mak.
-		sp(833897, 388.17896f, 279.8141f, 197.98882f, (byte) 14, 5, "NPCPathAlly_NPC_Path4");//Joel.
-		sp(833826, 385.30814f, 286.88065f, 198.56099f, (byte) 6, 5, "NPCPathAlly_NPC_Path5");//Roxy.
-		sp(833828, 386.33496f, 290.52594f, 198.5f, (byte) 115, 5, "NPCPathAlly_NPC_Path6");//Manad.
+		sp(833829, 382.25574f, 283.81686f, 198.50284f, (byte) 7, 5, "NPCPathAlly_NPC_Path2");// 赫雷兹 / Herez.
+		sp(833827, 386.10965f, 282.91656f, 198.24266f, (byte) 11, 5, "NPCPathAlly_NPC_Path3");// 马克 / Mak.
+		sp(833897, 388.17896f, 279.8141f, 197.98882f, (byte) 14, 5, "NPCPathAlly_NPC_Path4");// 乔尔 / Joel.
+		sp(833826, 385.30814f, 286.88065f, 198.56099f, (byte) 6, 5, "NPCPathAlly_NPC_Path5");// 罗克西 / Roxy.
+		sp(833828, 386.33496f, 290.52594f, 198.5f, (byte) 115, 5, "NPCPathAlly_NPC_Path6");// 马纳德 / Manad.
 	}
 	/**
 	 * 处理 stopInstance1。
@@ -715,22 +715,22 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			playerReward.setRewarded();
 			int factoryRank = instanceReward.getRank();
 			switch (factoryRank) {
-				case 1: //Rank S
+				case 1: // S 级 / Rank S
 					playerReward.setMechaturerkSecretBox(1);
 					// 机械图尔克的特殊宝箱。 / Mechaturerk's Secret Box.
 					ItemService.addItem(player, 188055475, 1);
 				break;
-				case 2: //Rank A
+				case 2: // A 级 / Rank A
 				    playerReward.setMechaturerkNormalTreasureChest(1);
 					// 机械图尔克的特殊宝箱。 / Mechaturerk’s Normal Treasure Chest.
 					ItemService.addItem(player, 188055647, 1);
 				break;
-				case 3: //Rank B
+				case 3: // B 级 / Rank B
 				    playerReward.setMechaturerkSpecialTreasureBox(1);
 					// 机械图尔克的特殊宝箱。 / Mechaturerk’s Special Treasure Box.
 					ItemService.addItem(player, 188055648, 1);
 				break;
-				case 4: //Rank C
+				case 4: // C 级 / Rank C
 				    playerReward.setMechaturerkSpecialTreasureBox(1);
 					// 机械图尔克的特殊宝箱。 / Mechaturerk’s Special Treasure Box.
 					ItemService.addItem(player, 188055648, 1);
@@ -789,13 +789,13 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 * 处理 sp。
 	 * Handle sp.
 	 *
-	 * NPC
+	 * @param npcId NPC id / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * time
-	 * walkerId
+	 * @param time 时间 / time
+	 * @param walkerId 路径 id / walkerId
 	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
@@ -818,7 +818,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 * 移除指定 NPC。
 	 * Despawn the given NPC.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	protected void despawnNpc(Npc npc) {
@@ -836,7 +836,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 * 处理 killNpc。
 	 * Handle killNpc.
 	 *
-	 * npcs
+	 * @param npcs NPC 列表 / npcs
 	 */
 	
 	protected void killNpc(List<Npc> npcs) {
@@ -848,8 +848,8 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 * 返回 npcs。
 	 * Return the npcs.
 	 *
-	 * NPC
-	 * result
+	 * @param npcId NPC id / NPC id
+	 * @return NPC 列表 / result
 	 */
 	
 	protected List<Npc> getNpcs(int npcId) {
@@ -907,9 +907,9 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param message 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

@@ -109,9 +109,9 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -176,7 +176,7 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc 死亡的 NPC / dead NPC
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -260,9 +260,7 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 				sendMsgByRace(1401048, Race.PC_ALL, 2000);
 			break;
 			case 218577: //Marabata Watchman.
-				/**
-	 * 阿图拉姆空中要塞指挥中心：击杀大量“指挥区龙人”后出现指挥官 / ■ At home in the Aturam Sky Fortress Command Center The Commander appears when many "Command Area Drakan" are killed
-	 */
+				// 阿图拉姆空中要塞指挥中心：击杀大量“指挥区龙人”后出现指挥官。 / At home in the Aturam Sky Fortress Command Center, the Commander appears when many "Command Area Drakan" are killed.
 				despawnNpc(npc);
 				spawn(217382, 258.3894f, 796.7554f, 901.6453f, (byte) 80); //Commander Barus.
 			break;
@@ -328,9 +326,9 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param flyingRing 飞行环标识 / flying-ring id
-	 * result
+	 * @return 是否已处理 / whether handled
 	 */
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {
@@ -477,8 +475,8 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc 目标 NPC / target NPC
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
@@ -542,52 +540,52 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
         }
     }
 	/**
-	 * 处理 sp。
-	 * Handle sp.
+	 * 延迟刷出 NPC。
+	 * Delayed NPC spawn.
 	 *
-	 * NPC
+	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * time
+	 * @param time 延迟毫秒 / delay millis
 	 */
-	
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
 	/**
-	 * 处理 sp。
-	 * Handle sp.
+	 * 延迟刷出 NPC 并广播消息。
+	 * Delayed NPC spawn with a broadcast message.
 	 *
-	 * NPC
+	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * time
-	 * message
-	 * 阵营 / race
+	 * @param time 延迟毫秒 / delay millis
+	 * @param msg 消息 ID / message id
+	 * @param race 目标阵营 / target race
 	 */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
 	/**
-	 * 处理 sp。
-	 * Handle sp.
+	 * 延迟刷出带实体 ID 的 NPC 并广播消息。
+	 * Delayed NPC spawn with entity id and a broadcast message.
 	 *
-	 * NPC
+	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * entity id
-	 * time
-	 * message
-	 * 阵营 / race
+	 * @param entityId 实体 ID / entity id
+	 * @param time 延迟毫秒 / delay millis
+	 * @param msg 消息 ID / message id
+	 * @param race 目标阵营 / target race
 	 */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         aturamSkyFortressTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -606,18 +604,18 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
         }, time));
     }
 	/**
-	 * 处理 sp。
-	 * Handle sp.
+	 * 延迟刷出带巡路线 NPC。
+	 * Delayed NPC spawn with a walker route.
 	 *
-	 * NPC
+	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * time
-	 * walkerId
+	 * @param time 延迟毫秒 / delay millis
+	 * @param walkerId 巡路线 ID / walker id
 	 */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         aturamSkyFortressTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -650,14 +648,14 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 		});
 	}
 	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
+	 * 按阵营广播系统消息。
+	 * Broadcasts a system message by race.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 ID / message id
+	 * @param race 目标阵营 / target race
+	 * @param time 延迟毫秒 / delay millis
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**

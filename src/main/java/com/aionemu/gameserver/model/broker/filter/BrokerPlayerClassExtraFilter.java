@@ -14,7 +14,8 @@ public class BrokerPlayerClassExtraFilter extends BrokerPlayerClassFilter {
 	private int mask;
 
 	/**
-	 * @param mask
+	 * @param mask 类别掩码（模板 ID / 100000） / category mask (template id / 100000)
+	 * @param playerClass 限制的玩家职业 / restricted player class
 	 */
 	public BrokerPlayerClassExtraFilter(int mask, PlayerClass playerClass) {
 		super(playerClass);

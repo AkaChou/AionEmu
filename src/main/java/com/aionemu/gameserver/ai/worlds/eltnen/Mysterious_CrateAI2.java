@@ -18,25 +18,25 @@ public class Mysterious_CrateAI2 extends NpcAI2
 	protected void handleDied() {
 		switch (Rnd.get(1, 7)) {
 			case 1:
-				spawn(211793, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //MuMu Mon.
+				spawn(211793, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 姆姆·蒙 / MuMu Mon.
 			break;
 			case 2:
-				spawn(211794, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //MuMu Zoo.
+				spawn(211794, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 姆姆·苏 / MuMu Zoo.
 			break;
 			case 3:
-				spawn(211795, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Cursed Camu.
+				spawn(211795, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 被诅咒的卡穆 / Cursed Camu.
 			break;
 			case 4:
-				spawn(211796, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Cursed Miku.
+				spawn(211796, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 被诅咒的米库 / Cursed Miku.
 			break;
 			case 5:
-			  	spawn(211797, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Cursed Muku.
+			  	spawn(211797, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 被诅咒的穆库 / Cursed Muku.
 			break;
 			case 6:
-				spawn(211798, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Arrogant Amurru.
+				spawn(211798, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 傲慢的阿穆鲁 / Arrogant Amurru.
 			break;
 			case 7:
-				spawn(211800, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Chaos Dracus.
+				spawn(211800, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 混沌的德拉库斯 / Chaos Dracus.
 			break;
 		}
 		super.handleDied();

@@ -3,7 +3,10 @@ package com.aionemu.gameserver.questEngine.definition;
 import java.util.List;
 import java.util.Objects;
 
-/** XML 与 Java DSL compiler 共用的不可变任务定义。 Immutable quest definition shared by XML and Java DSL compilers. */
+/**
+ * XML 与 Java DSL compiler 共用的不可变任务定义。
+ * Immutable quest definition shared by XML and Java DSL compilers.
+ */
 public record QuestDefinition(int id, int version,
 		QuestMetadata metadata, ProgressLayout progressLayout,
 		List<QuestNode> nodes, List<QuestTransition> transitions) {

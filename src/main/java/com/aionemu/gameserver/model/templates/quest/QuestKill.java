@@ -30,14 +30,20 @@ public class QuestKill {
 	private Set<Integer> npcIdSet;
 
 	/**
-	 * @return the seq
+	 * 返回序列号。
+	 * Returns the sequence number.
+	 *
+	 * @return 序列号 / the seq
 	 */
 	public int getSequenceNumber() {
 		return seq;
 	}
 
 	/**
-	 * @return the npcIds
+	 * 返回目标 NPC ID 集合（一次性转换后缓存）。
+	 * Returns the target NPC id set (converted once and cached).
+	 *
+	 * @return NPC ID 集合 / the npcIds
 	 */
 	public Set<Integer> getNpcIds() {
 		if (npcIdSet == null) {

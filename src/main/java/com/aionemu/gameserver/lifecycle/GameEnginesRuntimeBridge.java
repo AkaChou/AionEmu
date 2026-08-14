@@ -118,7 +118,7 @@ public class GameEnginesRuntimeBridge {
      * 解析任务引擎。
      * Resolve the quest engine.
      *
-     * Quest engine
+     * @return 任务引擎 / Quest engine
      */
     public QuestEngine questEngine() {
         if (questEngineProvider == null) {
@@ -131,7 +131,7 @@ public class GameEnginesRuntimeBridge {
      * 解析技能引擎。
      * Resolve the skill engine.
      *
-     * Skill engine
+     * @return 技能引擎 / Skill engine
      */
     public SkillEngine skillEngine() {
         if (skillEngineProvider == null) {
@@ -144,7 +144,7 @@ public class GameEnginesRuntimeBridge {
      * 解析副本引擎。
      * Resolve the instance engine.
      *
-     * Instance engine
+     * @return 副本引擎 / Instance engine
      */
     public InstanceEngine instanceEngine() {
         if (instanceEngineProvider == null) {
@@ -157,7 +157,7 @@ public class GameEnginesRuntimeBridge {
      * 解析 AI2 引擎。
      * Resolve the AI2 engine.
      *
-     * AI2 engine
+     * @return AI2 引擎 / AI2 engine
      */
     public AI2Engine ai2Engine() {
         if (ai2EngineProvider == null) {

@@ -4,7 +4,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/** Immutable world-instance facts captured from the player's current position. */
+/** 从玩家当前位置捕获的不可变世界实例事实。 / Immutable world-instance facts captured from the player's current position. */
 public record QuestWorldFacts(Set<Integer> npcTemplateIds, Set<String> zoneNames) {
 	public QuestWorldFacts(Set<Integer> npcTemplateIds) {
 		this(npcTemplateIds, Set.of());

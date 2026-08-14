@@ -39,14 +39,14 @@ public class Ai2Command extends AdminCommand {
 	 * 执行 AI2 调试：支持全局日志开关与目标 NPC 的 info/log/set/event 等操作。
 	 * Executes AI2 debug: global log toggles and target-NPC info/log/set/event ops.
 	 *
-	 * admin
 	 * @param params 参数：子命令与附加参数 / subcommand and extra args
 	 */
 	@Override
 	public void execute(Player player, String... params) {
 		/**
-	 * Non target commands
-	 */
+		 * 非目标类命令（全局日志开关）。
+		 * Non target commands
+		 */
 		String param0 = params[0];
 
 		if (param0.equals("createlog")) {
@@ -75,8 +75,9 @@ public class Ai2Command extends AdminCommand {
 		}
 
 		/**
-	 * Target commands
-	 */
+		 * 目标类命令（需选中 NPC）。
+		 * Target commands
+		 */
 		VisibleObject target = player.getTarget();
 
 		if (target == null || !(target instanceof Npc)) {
@@ -140,8 +141,6 @@ public class Ai2Command extends AdminCommand {
 	 * 参数错误时输出 {@code //ai2} 用法。
 	 * Prints {@code //ai2} usage on invalid arguments.
 	 *
-	 * admin
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

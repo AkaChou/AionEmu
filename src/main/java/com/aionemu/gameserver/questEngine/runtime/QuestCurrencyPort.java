@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-/** Typed transactional boundary for kinah/AP/GP and other durable currency rewards. */
+/** 基纳/AP/GP 及其他耐久货币奖励的类型化事务边界。 / Typed transactional boundary for kinah/AP/GP and other durable currency rewards. */
 public interface QuestCurrencyPort {
 	void preflight(Connection connection, QuestSnapshot snapshot,
 			List<QuestAction.GrantReward> rewards) throws SQLException;

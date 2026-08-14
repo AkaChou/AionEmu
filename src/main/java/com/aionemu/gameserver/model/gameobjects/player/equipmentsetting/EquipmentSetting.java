@@ -74,7 +74,7 @@ public class EquipmentSetting {
 		this.bracelet = bracelet;
 	}
 
-	/** 默认名称 / Default Name*/
+	/** 默认名称。 / Default name. */
 	public static String defaultName(int slot) {
 		return "Equipment Set " + (slot + 1);
 	}
@@ -99,112 +99,112 @@ public class EquipmentSetting {
 		return name;
 	}
 
-	/** 返回 display / Returns the display */
+	/** 获取显示设置。 / Returns the display. */
 	public int getDisplay() {
 		return display;
 	}
 
-	/** 获取主手 / getm Hand. */
+	/** 获取主手。 / Gets the main hand. */
 	public int getmHand() {
 		return mHand;
 	}
 
-	/** 获取副手 / gets Hand. */
+	/** 获取副手。 / Gets the sub hand. */
 	public int getsHand() {
 		return sHand;
 	}
 
-	/** 返回 helmet / Returns the helmet */
+	/** 返回头盔。 / Returns the helmet. */
 	public int getHelmet() {
 		return helmet;
 	}
 
-	/** 返回 torso / Returns the torso */
+	/** 返回胸甲。 / Returns the torso. */
 	public int getTorso() {
 		return torso;
 	}
 
-	/** 返回 glove / Returns the glove */
+	/** 返回手套。 / Returns the glove. */
 	public int getGlove() {
 		return glove;
 	}
 
-	/** 返回 boots / Returns the boots */
+	/** 返回靴子。 / Returns the boots. */
 	public int getBoots() {
 		return boots;
 	}
 
-	/** 返回 earrings left / Returns the earrings left */
+	/** 返回左耳环。 / Returns the earrings left. */
 	public int getEarringsLeft() {
 		return earringsLeft;
 	}
 
-	/** 返回 earrings right / Returns the earrings right */
+	/** 返回右耳环。 / Returns the earrings right. */
 	public int getEarringsRight() {
 		return earringsRight;
 	}
 
-	/** 返回 ring left / Returns the ring left */
+	/** 返回左戒指。 / Returns the ring left. */
 	public int getRingLeft() {
 		return ringLeft;
 	}
 
-	/** 返回 ring right / Returns the ring right */
+	/** 返回右戒指。 / Returns the ring right. */
 	public int getRingRight() {
 		return ringRight;
 	}
 
-	/** 返回 necklace / Returns the necklace */
+	/** 返回项链。 / Returns the necklace. */
 	public int getNecklace() {
 		return necklace;
 	}
 
-	/** 返回 shoulder / Returns the shoulder */
+	/** 返回肩甲。 / Returns the shoulder. */
 	public int getShoulder() {
 		return shoulder;
 	}
 
-	/** 返回 pants / Returns the pants */
+	/** 返回下衣。 / Returns the pants. */
 	public int getPants() {
 		return pants;
 	}
 
-	/** 返回 powershard left / Returns the powershard left */
+	/** 返回左侧魔力之石。 / Returns the powershard left. */
 	public int getPowershardLeft() {
 		return powershardLeft;
 	}
 
-	/** 返回 powershard right / Returns the powershard right */
+	/** 返回右侧魔力之石。 / Returns the powershard right. */
 	public int getPowershardRight() {
 		return powershardRight;
 	}
 
-	/** 返回 wings / Returns the wings */
+	/** 返回翅膀。 / Returns the wings. */
 	public int getWings() {
 		return wings;
 	}
 
-	/** 返回 waist / Returns the waist */
+	/** 返回腰带。 / Returns the waist. */
 	public int getWaist() {
 		return waist;
 	}
 
-	/** 获取主手卸下 / getm Off Hand. */
+	/** 获取主武器副手槽。 / Gets the main off-hand weapon slot. */
 	public int getmOffHand() {
 		return mOffHand;
 	}
 
-	/** 获取副手卸下 / gets Off Hand. */
+	/** 获取副武器副手槽。 / Gets the sub off-hand weapon slot. */
 	public int getsOffHand() {
 		return sOffHand;
 	}
 
-	/** 返回 plume / Returns the plume */
+	/** 返回羽饰。 / Returns the plume. */
 	public int getPlume() {
 		return plume;
 	}
 
-	/** 返回 bracelet / Returns the bracelet */
+	/** 返回手镯。 / Returns the bracelet. */
 	public int getBracelet() {
 		return bracelet;
 	}

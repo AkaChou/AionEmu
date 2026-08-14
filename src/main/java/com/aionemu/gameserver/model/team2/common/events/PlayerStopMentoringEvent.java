@@ -45,7 +45,7 @@ public abstract class PlayerStopMentoringEvent<T extends TemporaryPlayerTeam<? e
 	}
 
 	/**
-	 * @param member
+	 * @param member 队伍成员 / team member
 	 */
 	protected abstract void sendGroupPacketOnMentorEnd(Player member);
 }

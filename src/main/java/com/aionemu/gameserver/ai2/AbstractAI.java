@@ -63,7 +63,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 获取当前 AI 场景。
 	 * Returns the current AI scenario.
 	 *
-	 * scenario
+	 * @return 场景 / scenario
 	 */
 	public AI2Scenario getScenario() {
 		return scenario;
@@ -73,7 +73,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 设置 AI 场景。
 	 * Sets the AI scenario.
 	 *
-	 * scenario
+	 * @param scenario 场景 / scenario
 	 */
 	public void setScenario(AI2Scenario scenario) {
 		this.scenario = scenario;
@@ -91,7 +91,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 获取事件日志（调试用）。
 	 * Returns the event log (for debugging).
 	 *
-	 * event log
+	 * @return 事件日志 / event log
 	 */
 	public AIEventLog getEventLog() {
 		return eventLog;
@@ -101,7 +101,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 获取当前主状态。
 	 * Returns the current main state.
 	 *
-	 * main state
+	 * @return 主状态 / main state
 	 */
 	@Override
 	public AIState getState() {
@@ -113,7 +113,7 @@ public abstract class AbstractAI implements AI2 {
 	 * Returns whether the AI is in the given main state.
 	 *
 	 * @param state 目标状态 / target state
-	 * whether matching
+	 * @return 是否匹配 / whether matching
 	 */
 	public final boolean isInState(AIState state) {
 		return currentState == state;
@@ -123,7 +123,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 获取当前子状态。
 	 * Returns the current sub-state.
 	 *
-	 * sub-state
+	 * @return 子状态 / sub-state
 	 */
 	@Override
 	public AISubState getSubState() {
@@ -135,7 +135,7 @@ public abstract class AbstractAI implements AI2 {
 	 * Returns whether the AI is in the given sub-state.
 	 *
 	 * @param subState 目标子状态 / target sub-state
-	 * whether matching
+	 * @return 是否匹配 / whether matching
 	 */
 	public final boolean isInSubState(AISubState subState) {
 		return currentSubState == subState;
@@ -145,7 +145,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 获取 AI 名称（来自 {@link AIName}，否则 "noname"）。
 	 * Returns the AI name from {@link AIName}, or "noname".
 	 *
-	 * AI name
+	 * @return AI 名称 / AI name
 	 */
 	@Override
 	public String getName() {
@@ -160,7 +160,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 获取当前技能 ID。
 	 * Returns the current skill id.
 	 *
-	 * skill id
+	 * @return 技能 ID / skill id
 	 */
 	public int getSkillId() {
 		return skillId;
@@ -170,7 +170,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 获取当前技能等级。
 	 * Returns the current skill level.
 	 *
-	 * skill level
+	 * @return 技能等级 / skill level
 	 */
 	public int getSkillLevel() {
 		return skillLevel;
@@ -180,9 +180,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 判断当前状态是否允许处理该事件。
 	 * Returns whether the current state allows handling the given event.
 	 *
-	 * event type
-	 *
-	 * @param eventType
+	 * @param eventType 事件类型 / event type
 	 * @return 是否可处理 / whether handleable
 	 */
 	protected boolean canHandleEvent(AIEventType eventType) {
@@ -222,9 +220,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 若状态不同则切换主状态。
 	 * Changes the main state if it differs from the current one.
 	 *
-	 * new state
-	 *
-	 * @param newState
+	 * @param newState 新状态 / new state
 	 * @return 是否发生切换 / whether the state changed
 	 */
 	public synchronized boolean setStateIfNot(AIState newState) {
@@ -255,9 +251,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 若子状态不同则切换子状态。
 	 * Changes the sub-state if it differs from the current one.
 	 *
-	 * new sub-state
-	 *
-	 * @param newSubState
+	 * @param newSubState 新子状态 / new sub-state
 	 * @return 是否发生切换 / whether the sub-state changed
 	 */
 	public synchronized boolean setSubStateIfNot(AISubState newSubState) {
@@ -295,7 +289,7 @@ public abstract class AbstractAI implements AI2 {
 	 * Receives a creature event and dispatches it when allowed.
 	 *
 	 * @param event 事件类型 / event type
-	 * related creature
+	 * @param creature 相关生物 / related creature
 	 */
 	@Override
 	public void onCreatureEvent(AIEventType event, Creature creature) {
@@ -331,8 +325,8 @@ public abstract class AbstractAI implements AI2 {
 	 * 接收自定义事件并分发处理。
 	 * Receives a custom event and dispatches it.
 	 *
-	 * event id
-	 * arguments
+	 * @param eventId 事件 ID / event id
+	 * @param args 参数 / arguments
 	 */
 	@Override
 	public void onCustomEvent(int eventId, Object... args) {
@@ -346,7 +340,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 获取 AI 所有者生物（NpcAI2 以下可隐藏更具体类型）。
 	 * Returns the AI owner creature (more specific types are hidden below NpcAI2).
 	 *
-	 * owner
+	 * @return 所有者 / owner
 	 */
 	public Creature getOwner() {
 		return owner;
@@ -356,7 +350,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 获取所有者对象 ID。
 	 * Returns the owner's object id.
 	 *
-	 * object id
+	 * @return 对象 ID / object id
 	 */
 	public int getObjectId() {
 		return owner.getObjectId();
@@ -366,7 +360,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 获取世界坐标。
 	 * Returns the world position.
 	 *
-	 * world position
+	 * @return 世界坐标 / world position
 	 */
 	public WorldPosition getPosition() {
 		return owner.getPosition();
@@ -376,7 +370,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 获取当前目标。
 	 * Returns the current target.
 	 *
-	 * target object
+	 * @return 目标对象 / target object
 	 */
 	public VisibleObject getTarget() {
 		return owner.getTarget();
@@ -396,7 +390,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 绑定所有者生物。
 	 * Binds the owner creature.
 	 *
-	 * owner
+	 * @param owner 所有者 / owner
 	 */
 	void setOwner(Creature owner) {
 		this.owner = owner;
@@ -424,7 +418,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 是否开启调试日志。
 	 * Returns whether debug logging is enabled.
 	 *
-	 * whether logging
+	 * @return 是否记录日志 / whether logging
 	 */
 	@Override
 	public final boolean isLogging() {
@@ -435,7 +429,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 设置调试日志开关。
 	 * Sets the debug logging flag.
 	 *
-	 * whether enable
+	 * @param logging 是否启用 / whether enable
 	 */
 	public void setLogging(boolean logging) {
 		this.logging = logging;
@@ -543,9 +537,9 @@ public abstract class AbstractAI implements AI2 {
 	 * Handles a pattern shout.
 	 *
 	 * @param event 喊话事件 / shout event
-	 * pattern
-	 * skill number
-	 * whether handled
+	 * @param pattern 模式字符串 / pattern
+	 * @param skillNumber 技能编号 / skill number
+	 * @return 是否已处理 / whether handled
 	 */
 	public abstract boolean onPatternShout(ShoutEventType event, String pattern, int skillNumber);
 
@@ -645,7 +639,7 @@ public abstract class AbstractAI implements AI2 {
 	 * Dispatches a creature event to the concrete handler.
 	 *
 	 * @param event 事件类型 / event type
-	 * related creature
+	 * @param creature 相关生物 / related creature
 	 */
 	void handleCreatureEvent(AIEventType event, Creature creature) {
 		switch (event) {
@@ -711,8 +705,8 @@ public abstract class AbstractAI implements AI2 {
 	 * 投票式查询：先问实例，再处理通用问题。
 	 * Polls a question: instance first, then common questions.
 	 *
-	 * AI question
-	 * whether positive
+	 * @param question 问题 / question
+	 * @return 是否肯定 / whether positive
 	 */
 	@Override
 	public boolean poll(AIQuestion question) {
@@ -737,8 +731,8 @@ public abstract class AbstractAI implements AI2 {
 	 * 向具体 AI 实例投票；无特有答案时返回 null。
 	 * Polls the concrete AI instance; returns null when no specific answer.
 	 *
-	 * AI question
-	 * answer or null
+	 * @param question 问题 / question
+	 * @return 答案或 null / answer or null
 	 */
 	protected AIAnswer pollInstance(AIQuestion question) {
 		return null;
@@ -748,8 +742,8 @@ public abstract class AbstractAI implements AI2 {
 	 * 询问问题，默认否定。
 	 * Asks a question; defaults to negative.
 	 *
-	 * AI question
-	 * AI answer
+	 * @param question 问题 / question
+	 * @return 答案对象 / answer object
 	 */
 	@Override
 	public AIAnswer ask(AIQuestion question) {
@@ -760,7 +754,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 按当前状态判断是否已到达目的地。
 	 * Returns whether the destination is reached based on current state.
 	 *
-	 * whether reached
+	 * @return 是否已到达 / whether reached
 	 */
 	protected boolean isDestinationReached() {
 		AIState state = currentState;
@@ -786,7 +780,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 昼夜切换时是否允许刷新（仅 DESPAWNED/CREATED）。
 	 * Returns whether spawn on daytime change is allowed (only DESPAWNED/CREATED).
 	 *
-	 * whether allowed
+	 * @return 是否允许 / whether allowed
 	 */
 	protected boolean isCanSpawnOnDaytimeChange() {
 		return currentState == AIState.DESPAWNED || currentState == AIState.CREATED;
@@ -804,7 +798,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 选择攻击意图。
 	 * Chooses the next attack intention.
 	 *
-	 * attack intention
+	 * @return 攻击意图 / attack intention
 	 */
 	public abstract AttackIntention chooseAttackIntention();
 
@@ -812,7 +806,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 处理对话框选择，默认不处理。
 	 * Handles dialog select; not handled by default.
 	 *
-	 * always false
+	 * @return 默认 false / always false
 	 */
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
@@ -823,7 +817,7 @@ public abstract class AbstractAI implements AI2 {
 	 * 获取剩余时间，默认 0。
 	 * Returns remaining time; 0 by default.
 	 *
-	 * remaining time
+	 * @return 剩余时间 / remaining time
 	 */
 	@Override
 	public long getRemainigTime() {
@@ -834,12 +828,12 @@ public abstract class AbstractAI implements AI2 {
 	 * 在与所有者相同世界/实例中刷新对象。
 	 * Spawns an object in the same world/instance as the AI owner.
 	 *
-	 * NPC id
+	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / x
 	 * @param y Y 坐标 / y
 	 * @param z Z 坐标 / z
-	 * 朝向 / heading
-	 * spawned object
+	 * @param heading 朝向 / heading
+	 * @return 刷新的对象 / spawned object
 	 */
 	protected VisibleObject spawn(int npcId, float x, float y, float z, byte heading) {
 		return spawn(owner.getWorldId(), npcId, x, y, z, heading, 0, getPosition().getInstanceId());
@@ -849,13 +843,13 @@ public abstract class AbstractAI implements AI2 {
 	 * 在与所有者相同世界/实例中刷新带 entityId 的对象。
 	 * Spawns an object with entityId in the same world/instance as the AI owner.
 	 *
-	 * NPC id
+	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / x
 	 * @param y Y 坐标 / y
 	 * @param z Z 坐标 / z
-	 * 朝向 / heading
-	 * entity id
-	 * spawned object
+	 * @param heading 朝向 / heading
+	 * @param entityId 实体 ID / entity id
+	 * @return 刷新的对象 / spawned object
 	 */
 	protected VisibleObject spawn(int npcId, float x, float y, float z, byte heading, int entityId) {
 		return spawn(owner.getWorldId(), npcId, x, y, z, heading, entityId, getPosition().getInstanceId());
@@ -865,15 +859,15 @@ public abstract class AbstractAI implements AI2 {
 	 * 按完整参数刷新对象。
 	 * Spawns an object with full parameters.
 	 *
-	 * 世界 ID / world id
-	 * NPC id
+	 * @param worldId 世界 ID / world id
+	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / x
 	 * @param y Y 坐标 / y
 	 * @param z Z 坐标 / z
-	 * 朝向 / heading
-	 * entity id
-	 * instance id
-	 * spawned object
+	 * @param heading 朝向 / heading
+	 * @param entityId 实体 ID / entity id
+	 * @param instanceId 副本实例 ID / instance id
+	 * @return 刷新的对象 / spawned object
 	 */
 	protected VisibleObject spawn(int worldId, int npcId, float x, float y, float z, byte heading, int entityId,
 			int instanceId) {

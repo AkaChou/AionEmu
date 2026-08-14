@@ -67,7 +67,7 @@ public class WalkerData {
 	 * 返回已加载的巡逻路线数量。
 	 * Returns the number of loaded walker routes.
 	 *
-	 * route count
+	 * @return 已加载的巡逻路线数量 / Returns the number of loaded walker routes.
 	 */
 	public int size() {
 		return walkerlistData.size();
@@ -77,9 +77,7 @@ public class WalkerData {
 	 * 按路线 ID 获取巡逻模板。
 	 * Returns the walker template for the given route id.
 	 *
-	 * route id
-	 *
-	 * @param routeId
+	 * @param routeId 路线 ID / route id
 	 * @return 巡逻模板，不存在或参数为 null 则为 null / walker template, or null if missing/null id
 	 */
 	public WalkerTemplate getWalkerTemplate(String routeId) {
@@ -97,7 +95,7 @@ public class WalkerData {
 	 * 追加一条待导出的巡逻模板到内部列表。
 	 * Appends a walker template to the internal list for later export.
 	 *
-	 * new template
+	 * @param newTemplate 待追加的巡逻模板 / walker template to append
 	 */
 	public void AddTemplate(WalkerTemplate newTemplate) {
 		if (walkerlist == null)
@@ -146,7 +144,7 @@ public class WalkerData {
 	 * 返回全部已加载的巡逻模板集合。
 	 * Returns the collection of all loaded walker templates.
 	 *
-	 * template collection
+	 * @return 全部已加载巡逻模板的集合 / Returns the collection of all loaded walker templates.
 	 */
 	public Collection<WalkerTemplate> getTemplates() {
 		return walkerlistData.values();

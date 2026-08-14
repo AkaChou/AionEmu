@@ -18,7 +18,7 @@ public interface IActor {
 	 * 启用或禁用该行为者。
 	 * Enable or disable this actor.
 	 *
-	 * whether to enable
+	 * @param enable 是否启用 / whether to enable
 	 */
 	void setEnabled(boolean enable);
 

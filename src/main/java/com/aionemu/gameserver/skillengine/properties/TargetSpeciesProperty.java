@@ -20,7 +20,7 @@ public class TargetSpeciesProperty {
 	 *
 	 * @param skill 技能上下文 / skill context
 	 * @param properties 目标筛选属性 / target filter properties
-	 * always true
+	 * @return 恒为 true / always true
 	 */
 	public static boolean set(final Skill skill, Properties properties) {
 		TargetSpeciesAttribute value = properties.getTargetSpecies();

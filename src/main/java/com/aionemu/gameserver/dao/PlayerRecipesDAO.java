@@ -18,7 +18,7 @@ public abstract class PlayerRecipesDAO implements DAO {
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
 	 *
-	 * fully qualified class name
+	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
 	public String getClassName() {
@@ -29,8 +29,8 @@ public abstract class PlayerRecipesDAO implements DAO {
 	 * 加载玩家已学会的配方列表。
 	 * Loads the recipe list for the player.
 	 *
-	 * player object id
-	 * recipe list
+	 * @param playerId 玩家对象 ID / player object id
+	 * @return 配方列表 / recipe list
 	 */
 	public abstract RecipeList load(final int playerId);
 
@@ -38,8 +38,8 @@ public abstract class PlayerRecipesDAO implements DAO {
 	 * 为玩家添加一条配方。
 	 * Adds a recipe for the player.
 	 *
-	 * player object id
-	 * recipe id
+	 * @param playerId 玩家对象 ID / player object id
+	 * @param recipeId 配方 ID / recipe id
 	 * @return 是否添加成功 / true if added
 	 */
 	public abstract boolean addRecipe(final int playerId, final int recipeId);
@@ -48,8 +48,8 @@ public abstract class PlayerRecipesDAO implements DAO {
 	 * 删除玩家的一条配方。
 	 * Deletes a recipe from the player.
 	 *
-	 * player object id
-	 * recipe id
+	 * @param playerId 玩家对象 ID / player object id
+	 * @param recipeId 配方 ID / recipe id
 	 * @return 是否删除成功 / true if deleted
 	 */
 	public abstract boolean delRecipe(final int playerId, final int recipeId);

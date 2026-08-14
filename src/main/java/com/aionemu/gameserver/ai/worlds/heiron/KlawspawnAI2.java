@@ -21,6 +21,12 @@ public class KlawspawnAI2 extends GeneralNpcAI2 {
 		return false;
 	}
 
+	/**
+	 * 受击处理：当对应 NPC 不存在且 10% 概率触发时，生成 NPC 并静默死亡。
+	 * Attack handler: spawns the NPC with a 10% chance when absent, then dies silently.
+	 *
+	 * @param creature 攻击者 / attacker
+	 */
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);

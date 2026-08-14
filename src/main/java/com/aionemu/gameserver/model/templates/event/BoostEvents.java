@@ -13,7 +13,7 @@ import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 
 /**
  * BoostEvents 模板（静态数据/XML）。
- * XML template.
+ * Boost Events Template (static data/XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -55,17 +55,17 @@ public class BoostEvents {
 		return buffId;
 	}
 
-	/** 返回增益值 / Returns the buff value*/
+	/** 返回增益值 / Returns the buff value */
 	public int getBuffValue() {
 		return buffValue;
 	}
 
-	/** 返回开始日期 / Returns the start date*/
+	/** 返回开始日期 / Returns the start date */
 	public ZonedDateTime getStartDate() {
 		return DateTimeUtil.fromCalendar(startDate.toGregorianCalendar());
 	}
 
-	/** 返回结束日期 / Returns the end date*/
+	/** 返回结束日期 / Returns the end date */
 	public ZonedDateTime getEndDate() {
 		return DateTimeUtil.fromCalendar(endDate.toGregorianCalendar());
 	}
@@ -77,7 +77,7 @@ public class BoostEvents {
 	}
 
 	/**
-	 * @return Whether expired
+	 * @return 是否已过期 / whether expired
 	 */
 	public boolean isExpired() {
 		return !isActive();

@@ -9,8 +9,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Teleporter 模板（静态数据/XML）。
- * XML template.
+ * 传送师模板（静态数据/XML）。
+ * Teleporter template (static data/XML).
  *
  * @author orz
  */
@@ -28,28 +28,41 @@ public class TeleporterTemplate {
 	private TeleLocIdData teleLocIdData;
 
 	/**
-	 * @return the npcId
+	 * 返回关联的 NPC ID 列表。
+	 * Returns the bound npc ids.
+	 *
+	 * @return NPC ID 列表 / npc ids
 	 */
 	public List<Integer> getNpcIds() {
 		return npcIds;
 	}
 
 	/**
-	 * @return the name of npc
+	 * 判断给定 NPC ID 是否绑定此传送师。
+	 * Whether the given npc id is bound to this teleporter.
+	 *
+	 * @param npcId NPC ID / npc id
+	 * @return 包含则为 true / true if contained
 	 */
 	public boolean containNpc(int npcId) {
 		return npcIds.contains(npcId);
 	}
 
 	/**
-	 * @return the teleportId
+	 * 返回传送 ID。
+	 * Returns the teleport id.
+	 *
+	 * @return 传送 ID / teleport id
 	 */
 	public int getTeleportId() {
 		return teleportId;
 	}
 
 	/**
-	 * @return the teleLocIdData
+	 * 返回地点 ID 数据。
+	 * Returns the tele-location-id data.
+	 *
+	 * @return 传送地点数据 / tele-location data
 	 */
 	public TeleLocIdData getTeleLocIdData() {
 		return teleLocIdData;

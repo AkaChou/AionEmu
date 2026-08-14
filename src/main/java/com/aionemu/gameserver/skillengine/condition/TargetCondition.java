@@ -30,7 +30,7 @@ public class TargetCondition extends Condition {
 	 * 获取配置的目标属性。
 	 * Gets the configured target attribute.
 	 *
-	 * target attribute
+	 * @return 目标属性 / target attribute
 	 */
 	public TargetAttribute getValue() {
 		return value;
@@ -41,7 +41,7 @@ public class TargetCondition extends Condition {
 	 * Validates whether the skill environment satisfies this condition.
 	 *
 	 * @param skill 技能环境 / skill environment
-	 * whether valid
+	 * @return 是否有效 / whether valid
 	 */
 	@Override
 	public boolean validate(Skill skill) {

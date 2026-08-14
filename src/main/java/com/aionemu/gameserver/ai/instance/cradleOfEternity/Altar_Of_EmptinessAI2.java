@@ -30,7 +30,7 @@ public class Altar_Of_EmptinessAI2 extends NpcAI2
 	
 	@Override
     protected void handleDialogStart(Player player) {
-        if (player.getInventory().getFirstItemByItemId(182215992) != null) { //Completed Records Of Life.
+        if (player.getInventory().getFirstItemByItemId(182215992) != null) { // 完整的生命记录 / Completed Records Of Life.
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
         } else {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 27));
@@ -41,9 +41,9 @@ public class Altar_Of_EmptinessAI2 extends NpcAI2
 	
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
-        if (dialogId == 10000 && player.getInventory().decreaseByItemId(182215992, 1)) { //Completed Records Of Life.
+        if (dialogId == 10000 && player.getInventory().decreaseByItemId(182215992, 1)) { // 完整的生命记录 / Completed Records Of Life.
             switch (getNpcId()) {
-                case 833999: //Altar Of Emptiness.
+                case 833999: // 虚无祭坛 / Altar Of Emptiness.
                     handleUseItemStart(player);
 					// 空虚祭坛正在移动。 / The Altar of Emptiness is moving.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403506));
@@ -54,6 +54,12 @@ public class Altar_Of_EmptinessAI2 extends NpcAI2
         return true;
     }
 	
+	/**
+	 * 开始使用祭坛：有施放延迟时挂载使用观察者并调度结束回调，否则直接完成。
+	 * Start using the altar: attach a use observer and schedule the finish callback when a delay exists, otherwise finish immediately.
+	 *
+	 * @param player 使用祭坛的玩家 / Player using the altar
+	 */
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {

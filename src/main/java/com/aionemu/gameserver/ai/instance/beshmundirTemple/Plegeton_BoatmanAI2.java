@@ -30,7 +30,7 @@ public class Plegeton_BoatmanAI2 extends NpcAI2
         if (dialogId == 10000) {
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
             switch (getNpcId()) {
-                case 799517: //Plegeton Boatman [Island I]
+                case 799517: //Plegeton 船夫 [岛 I] / Plegeton Boatman [Island I]
                     player.setState(CreatureState.FLIGHT_TELEPORT);
 					player.unsetState(CreatureState.ACTIVE);
 					player.setFlightTeleportId(85001);
@@ -40,19 +40,19 @@ public class Plegeton_BoatmanAI2 extends NpcAI2
                         sendTimer();
                     }
                 break;
-                case 799518: //Plegeton Boatman [Island II]
+                case 799518: //Plegeton 船夫 [岛 II] / Plegeton Boatman [Island II]
                     player.setState(CreatureState.FLIGHT_TELEPORT);
 					player.unsetState(CreatureState.ACTIVE);
 					player.setFlightTeleportId(86001);
 					PacketSendUtility.sendPacket(player, new SM_EMOTION(player, EmotionType.START_FLYTELEPORT, 86001, 0));
                 break;
-                case 799519: //Plegeton Boatman [Island III]
+                case 799519: //Plegeton 船夫 [岛 III] / Plegeton Boatman [Island III]
                     player.setState(CreatureState.FLIGHT_TELEPORT);
 					player.unsetState(CreatureState.ACTIVE);
 					player.setFlightTeleportId(87001);
 					PacketSendUtility.sendPacket(player, new SM_EMOTION(player, EmotionType.START_FLYTELEPORT, 87001, 0));
                 break;
-                case 799520: //Plegeton Boatman [Island IV]
+                case 799520: //Plegeton 船夫 [岛 IV] / Plegeton Boatman [Island IV]
                     player.setState(CreatureState.FLIGHT_TELEPORT);
 					player.unsetState(CreatureState.ACTIVE);
 					player.setFlightTeleportId(88001);

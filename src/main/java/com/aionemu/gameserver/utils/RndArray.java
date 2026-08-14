@@ -26,7 +26,7 @@ public class RndArray {
 	 * Returns a random int in the range [0, n).
 	 *
 	 * @param n 上界（不含） / Exclusive upper bound
-	 * Random int
+	 * @return 随机整数 / Random int
 	 */
 	public static int get(int n) {
 		return (int) Math.floor(rnd.nextDouble() * n);
@@ -36,9 +36,9 @@ public class RndArray {
 	 * 返回 [min, max] 范围内的随机整数。
 	 * Returns a random int in the range [min, max].
 	 *
-	 * Inclusive lower bound
-	 * Inclusive upper bound
-	 * Random int
+	 * @param min 包含的下界 / Inclusive lower bound
+	 * @param max 包含的上界 / Inclusive upper bound
+	 * @return 随机整数 / Random int
 	 */
 	public static int get(int min, int max) {
 		return min + (int) Math.floor(rnd.nextDouble() * (max - min + 1));
@@ -48,8 +48,8 @@ public class RndArray {
 	 * 按百分比概率判定是否命中（整数百分比）。
 	 * Checks whether an integer percentage chance succeeds.
 	 *
-	 * Hit chance (1–100)
-	 * Whether the chance hit
+	 * @param chance Hit chance (1–100) / Hit chance (1–100)
+	 * @return 概率是否命中 / Whether the chance hit
 	 */
 	public static boolean chance(int chance) {
 		return (chance >= 1) && ((chance > 99) || (nextInt(99) + 1 <= chance));
@@ -59,8 +59,8 @@ public class RndArray {
 	 * 按百分比概率判定是否命中（双精度百分比）。
 	 * Checks whether a double percentage chance succeeds.
 	 *
-	 * Hit chance (0–100)
-	 * Whether the chance hit
+	 * @param chance Hit chance (0–100) / Hit chance (0–100)
+	 * @return 概率是否命中 / Whether the chance hit
 	 */
 	public static boolean chance(double chance) {
 		return nextDouble() <= chance / 100.0D;
@@ -70,9 +70,9 @@ public class RndArray {
 	 * 从数组中随机选取一个元素。
 	 * Selects a random element from an array.
 	 *
-	 * Array
+	 * @param list 数组 / Array
 	 * @param <E> 元素类型 / Element type
-	 * Random element
+	 * @return 随机元素 / Random element
 	 */
 	public static <E> E get(E[] list) {
 		return list[get(list.length)];
@@ -82,8 +82,8 @@ public class RndArray {
 	 * 从 int 数组中随机选取一个值。
 	 * Selects a random value from an int array.
 	 *
-	 * Int array
-	 * Random value
+	 * @param list 整型数组 / Int array
+	 * @return 随机值 / Random value
 	 */
 	public static int get(int[] list) {
 		return list[get(list.length)];
@@ -93,9 +93,9 @@ public class RndArray {
 	 * 从列表中随机选取一个元素。
 	 * Selects a random element from a list.
 	 *
-	 * List
+	 * @param list 列表 / List
 	 * @param <E> 元素类型 / Element type
-	 * Random element
+	 * @return 随机元素 / Random element
 	 */
 	public static <E> E get(List<E> list) {
 		return list.get(get(list.size()));
@@ -106,7 +106,7 @@ public class RndArray {
 	 * Returns a random int in the range [0, n).
 	 *
 	 * @param n 上界（不含） / Exclusive upper bound
-	 * Random int
+	 * @return 随机整数 / Random int
 	 */
 	public static int nextInt(int n) {
 		return (int) Math.floor(rnd.nextDouble() * n);
@@ -116,7 +116,7 @@ public class RndArray {
 	 * 返回下一个随机 int（全范围）。
 	 * Returns the next random int (full range).
 	 *
-	 * Random int
+	 * @return 随机整数 / Random int
 	 */
 	public static int nextInt() {
 		return rnd.nextInt();

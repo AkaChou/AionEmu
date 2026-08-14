@@ -61,9 +61,9 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
      * 存储 F2P 账号时间。
      * Stores F2P account time.
      *
-     * player object id
+     * @param objectId 玩家对象 ID / player object id
      * @param time 剩余时间 / remaining time
-     * whether succeeded
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean storeF2p(int objectId, int time) {
@@ -86,9 +86,9 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
      * 更新 F2P 账号时间。
      * Updates F2P account time.
      *
-     * player object id
+     * @param objectId 玩家对象 ID / player object id
      * @param time 剩余时间 / remaining time
-     * whether succeeded
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean updateF2p(int objectId, int time) {
@@ -116,8 +116,8 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
      * 删除 F2P 账号记录。
      * Deletes F2P account record.
      *
-     * player object id
-     * whether succeeded
+     * @param objectId 玩家对象 ID / player object id
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean deleteF2p(int objectId) {
@@ -139,8 +139,8 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
      * 保存玩家 F2P 数据。
      * Saves player F2P data.
      *
-     * 玩家 / player
-     * whether succeeded
+     * @param player 玩家 / player
+     * @return 是否成功 / whether succeeded
      */
     public boolean saveF2p(Player player) {
         F2p f2p = player.getF2p();
@@ -161,8 +161,8 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
      * 获取 F2P 剩余时间。
      * Gets F2P remaining time.
      *
-     * player object id
-     * remaining time
+     * @param objectId 玩家对象 ID / player object id
+     * @return 剩余时间 / remaining time
      */
     public int getF2pTime(int objectId) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -187,10 +187,10 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

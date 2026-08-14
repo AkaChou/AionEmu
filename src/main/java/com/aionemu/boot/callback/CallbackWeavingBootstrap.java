@@ -46,11 +46,8 @@ public class CallbackWeavingBootstrap {
      * 解析锚点类对应的 exploded classes 目录；非默认文件系统或 jar 场景返回 null。
      * Resolves the exploded classes directory for the anchor class; returns null for jars or non-default filesystems.
      *
-     * anchor class
-     *
-     * @param anchorClass
+     * @param anchorClass 锚点类 / anchor class
      * @return classes 目录路径，不可用时为 null / classes directory path, or null when unavailable
-     * @return
      * @throws Exception 解析代码源位置失败时抛出 / thrown when the code-source location cannot be resolved
      */
     private Path classesDirectory(Class<?> anchorClass) throws Exception {

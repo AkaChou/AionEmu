@@ -195,7 +195,7 @@ public class MinionCommonData extends VisibleObjectTemplate implements IExpirabl
 	}
 
 	/**
-	 * @return Whether looting
+	 * @return 是否正在拾取 / Whether looting
 	 */
 	public boolean isLooting() {
 		return this.isLooting;

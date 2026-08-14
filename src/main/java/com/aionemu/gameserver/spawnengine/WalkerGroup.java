@@ -169,7 +169,7 @@ public class WalkerGroup {
 	 * Sums row counts.
 	 *
 	 * @param rows 各行人数 / members per row
-	 * sum
+	 * @return 总人数 / the sum
 	 */
 	private int sumRows(int[] rows) {
 		int sum = 0;
@@ -183,7 +183,7 @@ public class WalkerGroup {
 	 * 成员碰撞体侧边长度之和。
 	 * Sum of member bound-radius side lengths.
 	 *
-	 * sum of sides
+	 * @return 侧边长度之和 / sum of sides
 	 */
 	private float sumMemberBoundSides() {
 		float sum = 0;
@@ -197,10 +197,10 @@ public class WalkerGroup {
 	 * 行间额外间距（预留，当前恒为 0）。
 	 * Extra inter-row spacing (stub; currently always 0).
 	 *
-	 * rows
-	 * start row index
-	 * end row index
-	 * extra distance
+	 * @param rows 行数数组 / the row counts
+	 * @param startIndex 起始行下标 / start row index
+	 * @param endIndex 结束行下标 / end row index
+	 * @return 额外间距 / extra distance
 	 */
 	@SuppressWarnings("unused")
 	private float getSidesExtra(int[] rows, int startIndex, int endIndex) {
@@ -213,8 +213,7 @@ public class WalkerGroup {
 	 *
 	 * @param origin 初始刷怪点 / initial spawn location
 	 * @param destination 下一移动点 / next move point
-	 * @param shift 相对 origin 的垂直偏移：矢状负为左、正为右；冠状负为后、正为前
-	 * offset perpendicular to destination; sagittal negative=left, coronal negative=back。
+	 * @param shift 相对 origin 的垂直偏移：矢状负为左、正为右；冠状负为后、正为前 / offset perpendicular to destination; sagittal negative=left, coronal negative=back
 	 * @return 计算后的点 / computed point
 	 */
 	public static Point2D getLinePoint(Point2D origin, Point2D destination, WalkerGroupShift shift) {
@@ -278,8 +277,8 @@ public class WalkerGroup {
 	 * 返回归一化方向符号向量。
 	 * Returns a normalized direction sign vector.
 	 *
-	 * origin
-	 * destination
+	 * @param origin 起始点 / origin point
+	 * @param destination 目标点 / destination point
 	 * @return 方向偏移符号 / direction shift signs
 	 */
 	private static WalkerGroupShift getShiftSigns(Point2D origin, Point2D destination) {
@@ -292,8 +291,8 @@ public class WalkerGroup {
 	 * 更新成员路径步骤，并在必要时推进编队整体步骤。
 	 * Updates a member's route step and advances the group step when appropriate.
 	 *
-	 * member npc
-	 * new step
+	 * @param member 成员 NPC / the member NPC
+	 * @param step 新步骤 / the new step
 	 */
 	public void setStep(Npc member, int step) {
 		int currentStep = 0;
@@ -315,7 +314,7 @@ public class WalkerGroup {
 	 * 成员到达目标后的编队同步：等待全员到齐再统一推进。
 	 * Sync after a member reaches a target: wait for all, then advance together.
 	 *
-	 * arriving npc AI
+	 * @param npcAI 到达目标的成员 AI / the arriving member AI
 	 */
 	public void targetReached(NpcAI2 npcAI) {
 		synchronized (members) {
@@ -357,7 +356,7 @@ public class WalkerGroup {
 	 * 将重生 NPC 绑定回编队对应槽位并重置步骤。
 	 * Rebinds a respawned NPC into its formation slot and resets its step.
 	 *
-	 * respawned npc
+	 * @param npc 重生的 NPC / the respawned NPC
 	 */
 	public void respawn(Npc npc) {
 		for (int index = 0; index < members.size(); index++) {
@@ -377,9 +376,7 @@ public class WalkerGroup {
 	 * 按 NPC 查找对应的集群数据。
 	 * Finds clustered data for the given NPC.
 	 *
-	 * member npc
-	 *
-	 * @param npc
+	 * @param npc 成员 NPC / the member NPC
 	 * @return 集群数据，未找到则为 null / clustered data or null
 	 */
 	public ClusteredNpc getClusterData(Npc npc) {
@@ -397,8 +394,8 @@ public class WalkerGroup {
 	 *
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
-	 * spawn template
-	 * height Z
+	 * @param template 刷怪模板 / spawn template
+	 * @return 高度 Z / height Z
 	 */
 	private float getHeight(float x, float y, SpawnTemplate template) {
 		/*
@@ -412,7 +409,7 @@ public class WalkerGroup {
 	 * 编队人数（池大小）。
 	 * Formation size (pool).
 	 *
-	 * member count
+	 * @return 成员数量 / member count
 	 */
 	public int getPool() {
 		return members.size();
@@ -429,9 +426,7 @@ public class WalkerGroup {
 	 * 判断 NPC 是否处于单行（线性）方阵站位。
 	 * Whether the NPC is in a single-row (linear) square formation.
 	 *
-	 * member npc
-	 *
-	 * @param npc
+	 * @param npc 成员 NPC / the member NPC
 	 * @return 线性站位则为 true / true if linearly positioned
 	 */
 	public boolean isLinearlyPositioned(Npc npc) {

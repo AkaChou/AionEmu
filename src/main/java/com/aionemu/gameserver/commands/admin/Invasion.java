@@ -67,7 +67,7 @@ public class Invasion extends AdminCommand
 					@Override
 					public void visit(Player player) {
 						if (player.getCommonData().getRace() == Race.ELYOS) {
-						    // 通往布鲁斯特霍宁的次元漩涡已出现。 / A Dimensional Vortex leading to Brusthonin has appeared.
+						    // 通往布鲁斯特豪宁的次元漩涡已出现。 / A Dimensional Vortex leading to Brusthonin has appeared.
 						    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_DARK_SIDE_INVADE_DIRECT_PORTAL_OPEN);
 						}
 					}
@@ -76,7 +76,7 @@ public class Invasion extends AdminCommand
 					@Override
 					public void visit(Player player) {
 						if (player.getCommonData().getRace() == Race.ASMODIANS) {
-						    // 通往西奥波莫斯的次元漩涡已出现。 / A Dimensional Vortex leading to Theobomos has appeared.
+						    // 通往泰奥勃莫斯的次元漩涡已出现。 / A Dimensional Vortex leading to Theobomos has appeared.
 						    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LIGHT_SIDE_INVADE_DIRECT_PORTAL_OPEN);
 						}
 					}
@@ -98,7 +98,6 @@ public class Invasion extends AdminCommand
 	 * Validate whether the vortex location id exists.
 	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
-	 * Vortex location id
 	 *
 	 * @return 若 valid 则为 true / True if valid
 	 */

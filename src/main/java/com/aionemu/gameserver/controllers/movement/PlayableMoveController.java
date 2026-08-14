@@ -51,7 +51,7 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 	 * 使用指定所有者构造控制器。
 	 * Construct the controller for the given owner.
 	 *
-	 * Owner
+	 * @param owner 所有者 / Owner
 	 */
 	public PlayableMoveController(T owner) {
 		super(owner);
@@ -188,7 +188,7 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 	 * 返回当前移动朝向档位；未移动时返回 -1。
 	 * Return the current movement heading sector; -1 when not moving.
 	 *
-	 * Heading sector
+	 * @return 朝向档位 / Heading sector
 	 */
 	public int getMovementHeading() {
 		if (!isInMove()) {

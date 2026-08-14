@@ -43,9 +43,7 @@ public class TitleData {
 	 * 按称号 ID 获取称号模板。
 	 * Returns the title template for the given title id.
 	 *
-	 * title id
-	 *
-	 * @param titleId
+	 * @param titleId 称号 ID / title id
 	 * @return 称号模板，不存在则为 null / title template or null
 	 */
 	public TitleTemplate getTitleTemplate(int titleId) {
@@ -56,7 +54,7 @@ public class TitleData {
 	 * 返回已加载的称号数量。
 	 * Returns the number of loaded titles.
 	 *
-	 * template count
+	 * @return 已加载的称号数量 / Returns the number of loaded titles.
 	 */
 	public int size() {
 		return titles.size();

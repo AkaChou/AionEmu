@@ -56,7 +56,7 @@ public class Geometry extends Spatial {
 	 * 返回网格顶点数。
 	 * Returns the mesh vertex count.
 	 *
-	 * vertex count
+	 * @return 顶点数 / vertex count
 	 */
 	@Override
 	public int getVertexCount() {
@@ -67,7 +67,7 @@ public class Geometry extends Spatial {
 	 * 返回网格三角形数。
 	 * Returns the mesh triangle count.
 	 *
-	 * triangle count
+	 * @return 三角形数 / triangle count
 	 */
 	@Override
 	public int getTriangleCount() {
@@ -78,7 +78,7 @@ public class Geometry extends Spatial {
 	 * 设置网格。
 	 * Sets the mesh.
 	 *
-	 * mesh
+	 * @param mesh 网格 / mesh
 	 */
 	public void setMesh(Mesh mesh) {
 
@@ -89,7 +89,7 @@ public class Geometry extends Spatial {
 	 * 获取网格。
 	 * Gets the mesh.
 	 *
-	 * mesh
+	 * @return 网格 / mesh
 	 */
 	public Mesh getMesh() {
 		return mesh;
@@ -119,7 +119,7 @@ public class Geometry extends Spatial {
 	 * 返回缓存的世界变换矩阵。
 	 * Returns the cached world transform matrix.
 	 *
-	 * world matrix
+	 * @return 世界矩阵 / world matrix
 	 */
 	public Matrix4f getWorldMatrix() {
 		return cachedWorldMat;
@@ -151,8 +151,7 @@ public class Geometry extends Spatial {
 				return 0;
 			}
 		}
-		// 注意：网格中的 BIHTree 已检查与……的碰撞 / NOTE: BIHTree in mesh already checks collision with the
-		// 网格边界 / mesh's bound
+		// 注意：网格中的 BIHTree 已检查与网格边界的碰撞 / NOTE: BIHTree in mesh already checks collision with the mesh's bound
 		int prevSize = results.size();
 		int added = mesh.collideWith(other, cachedWorldMat, worldBound, results);
 		int newSize = results.size();
@@ -166,8 +165,8 @@ public class Geometry extends Spatial {
 	 * 用旋转、平移与均匀缩放设置世界变换。
 	 * Sets the world transform from rotation, translation and uniform scale.
 	 *
-	 * rotation matrix
-	 * translation
+	 * @param rotation 旋转矩阵 / rotation matrix
+	 * @param loc 平移 / translation
 	 * @param scale 均匀缩放 / uniform scale
 	 */
 	@Override
@@ -182,8 +181,8 @@ public class Geometry extends Spatial {
 	 * 用旋转、平移与非均匀缩放设置世界变换。
 	 * Sets the world transform from rotation, translation and non-uniform scale.
 	 *
-	 * rotation matrix
-	 * translation
+	 * @param rotation 旋转矩阵 / rotation matrix
+	 * @param loc 平移 / translation
 	 * @param scale 各轴缩放 / per-axis scale
 	 */
 	@Override
@@ -198,7 +197,7 @@ public class Geometry extends Spatial {
 	 * 返回网格碰撞标志。
 	 * Returns the mesh collision flags.
 	 *
-	 * collision flags
+	 * @return 碰撞标志 / collision flags
 	 */
 	@Override
 	public short getCollisionFlags() {

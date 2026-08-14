@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-/** Production craft port: durable recipe/skill effects commit atomically with quest state. */
+/** 生产制作端口：耐久配方/技能效果与任务状态原子性一起提交。 / Production craft port: durable recipe/skill effects commit atomically with quest state. */
 @Slf4j
 public final class PlayerQuestCraftPort implements QuestCraftPort {
 	private final QuestPlayerPort players;
@@ -169,7 +169,7 @@ public final class PlayerQuestCraftPort implements QuestCraftPort {
 			try {
 				publisher.publish(player, learned, forgotten, targetSkills);
 			} catch (RuntimeException failure) {
-				// The database is already authoritative. Relog or an idempotent retry reconciles live state.
+				// 数据库已是权威来源。重新登录或幂等重试可调和实时状态。 / The database is already authoritative. Relog or an idempotent retry reconciles live state.
 				log.error(I18n.get("log.quest_engine.craft_publish_failed", snapshot.playerId()), failure);
 			}
 		}, () -> { });

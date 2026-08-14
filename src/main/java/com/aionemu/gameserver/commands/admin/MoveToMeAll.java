@@ -28,8 +28,6 @@ public class MoveToMeAll extends AdminCommand {
 	 * 按 {@code all|elyos|asmos} 将对应玩家传送到管理员位置。
 	 * Teleport matching players to the admin for {@code all|elyos|asmos}.
 	 *
-	 * 执行 GM / Admin player
-	 * Scope selector
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -86,8 +84,6 @@ public class MoveToMeAll extends AdminCommand {
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
 	 *
-	 * 玩家 / Player
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

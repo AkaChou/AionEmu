@@ -29,7 +29,6 @@ public class AddEmotion extends AdminCommand {
 	 * 执行添加表情：解析表情 ID/过期时间，或展示 HTML 列表。
 	 * Executes add-emotion: parses emotion id/expiry, or shows the HTML list.
 	 *
-	 * admin
 	 * @param params 参数：表情 ID、过期分钟或 html / emotion id, expire minutes, or html
 	 */
 	@Override

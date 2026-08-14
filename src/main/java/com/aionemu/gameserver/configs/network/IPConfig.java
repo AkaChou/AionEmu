@@ -52,7 +52,7 @@ public class IPConfig {
 	 * 返回 IP 段映射列表。
 	 * Returns the list of IP ranges.
 	 *
-	 * list of IP ranges
+	 * @return IP 段映射列表 / List of IP ranges
 	 */
 	public static List<IPRange> getRanges() {
 		return List.of();
@@ -62,7 +62,7 @@ public class IPConfig {
 	 * 返回默认对外地址。
 	 * Returns the default public address.
 	 *
-	 * @return 默认地址字节 / default address
+	 * @return 默认地址字节 / Default address bytes
 	 */
 	public static byte[] getDefaultAddress() {
 		return defaultAddress;

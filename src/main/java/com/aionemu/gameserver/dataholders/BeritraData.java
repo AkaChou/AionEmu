@@ -44,7 +44,7 @@ public class BeritraData {
 	 * 返回已加载的地点数量。
 	 * Returns the number of loaded locations.
 	 *
-	 * location count
+	 * @return 已加载的地点数量 / Returns the number of loaded locations.
 	 */
 	public int size() {
 		return beritra.size();

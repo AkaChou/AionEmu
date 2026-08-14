@@ -22,7 +22,7 @@ public abstract class PlayerQuestListDAO implements DAO {
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
 	 *
-	 * fully qualified class name
+	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
 	public String getClassName() {
@@ -33,7 +33,7 @@ public abstract class PlayerQuestListDAO implements DAO {
 	 * 加载玩家的任务状态列表。
 	 * Loads the quest state list for the player.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @return 任务状态列表 / quest state list
 	 */
 	public abstract QuestStateList load(final Player player);
@@ -42,7 +42,7 @@ public abstract class PlayerQuestListDAO implements DAO {
 	 * 保存玩家的任务状态列表。
 	 * Stores the quest state list for the player.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void store(final Player player);
 

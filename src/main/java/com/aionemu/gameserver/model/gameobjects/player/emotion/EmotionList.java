@@ -26,7 +26,10 @@ public class EmotionList {
 	private Player owner;
 
 	/**
-	 * @param owner
+	 * 构造表情列表。
+	 * Constructs an emotion list.
+	 *
+	 * @param owner 所属玩家 / owning player
 	 */
 	public EmotionList(Player owner) {
 		this.owner = owner;
@@ -65,8 +68,12 @@ public class EmotionList {
 	}
 
 	/**
-	 * @param emotionId 是否可使用。 / Whether use
-	  */
+	 * 判断表情是否可使用。
+	 * Returns whether the emotion can be used.
+	 *
+	 * @param emotionId 表情 ID / emotion id
+	 * @return 是否可使用 / whether use
+	 */
 	public boolean canUse(int emotionId) {
 		return emotionId < 64 || emotionId > 155 || (emotions != null && emotions.containsKey(emotionId))
 				|| owner.havePermission(MembershipConfig.EMOTIONS_ALL);

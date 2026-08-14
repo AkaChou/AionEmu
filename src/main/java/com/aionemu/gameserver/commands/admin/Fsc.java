@@ -31,7 +31,6 @@ public class Fsc extends AdminCommand {
 	 * 按包 ID 与格式串组装并发送自定义包。
 	 * Builds and sends a custom packet from id, format string and values.
 	 *
-	 * admin
 	 * @param params 包 ID、格式串、数据值 / packet id, format string, data values
 	 */
 	@Override
@@ -61,8 +60,6 @@ public class Fsc extends AdminCommand {
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
 	 *
-	 * admin
-	 * error message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

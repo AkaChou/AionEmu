@@ -181,7 +181,6 @@ public class SkillTemplate {
 	 * 获取技能属性（射程、目标等）。
 	 * Gets skill properties (range, target, etc.).
 	 *
-	 * properties
 	 */
 	public Properties getProperties() {
 		return properties;
@@ -190,7 +189,6 @@ public class SkillTemplate {
 	 * 获取开始施法条件。
 	 * Gets start-cast conditions.
 	 *
-	 * conditions
 	 */
 	public Conditions getStartconditions() {
 		return startconditions;
@@ -199,7 +197,6 @@ public class SkillTemplate {
 	 * 获取使用条件。
 	 * Gets use conditions.
 	 *
-	 * conditions
 	 */
 	public Conditions getUseconditions() {
 		return useconditions;
@@ -208,7 +205,6 @@ public class SkillTemplate {
 	 * 获取装备使用条件。
 	 * Gets equipment use conditions.
 	 *
-	 * conditions
 	 */
 	public Conditions getUseEquipmentconditions() {
 		return useequipmentconditions;
@@ -217,7 +213,6 @@ public class SkillTemplate {
 	 * 获取效果集合。
 	 * Gets effect collection.
 	 *
-	 * effects
 	 */
 	public Effects getEffects() {
 		return effects;
@@ -226,7 +221,6 @@ public class SkillTemplate {
 	 * 获取动作集合（消耗等）。
 	 * Gets action collection (costs, etc.).
 	 *
-	 * actions
 	 */
 	public Actions getActions() {
 		return actions;
@@ -235,7 +229,6 @@ public class SkillTemplate {
 	 * 获取周期动作。
 	 * Gets periodic actions.
 	 *
-	 * periodic actions
 	 */
 	public PeriodicActions getPeriodicActions() {
 		return periodicActions;
@@ -244,7 +237,6 @@ public class SkillTemplate {
 	 * 获取动作时间配置。
 	 * Gets motion timing config.
 	 *
-	 * motion
 	 */
 	public Motion getMotion() {
 		return motion;
@@ -257,7 +249,6 @@ public class SkillTemplate {
 	 * 获取技能 ID。
 	 * Gets skill id.
 	 *
-	 * skill id
 	 */
 	public int getSkillId() {
 		return skillId;
@@ -266,7 +257,6 @@ public class SkillTemplate {
 	 * 获取技能名称。
 	 * Gets skill name.
 	 *
-	 * name
 	 */
 	public String getName() {
 		return name;
@@ -275,7 +265,6 @@ public class SkillTemplate {
 	 * 获取名称字符串 ID。
 	 * Gets name string id.
 	 *
-	 * name id
 	 */
 	public int getNameId() {
 		return nameId;
@@ -284,7 +273,6 @@ public class SkillTemplate {
 	 * 获取效果堆叠键。
 	 * Gets effect stack key.
 	 *
-	 * stack
 	 */
 	public String getStack() {
 		return stack;
@@ -293,7 +281,6 @@ public class SkillTemplate {
 	 * 获取技能分组。
 	 * Gets skill group.
 	 *
-	 * group
 	 */
 	public String getSkillGroup() {
 		return skill_group;
@@ -302,7 +289,6 @@ public class SkillTemplate {
 	 * 获取技能组显示名。
 	 * Gets skill group display name.
 	 *
-	 * group name
 	 */
 	public String getGroup() {
 		return skill_group_name;
@@ -311,7 +297,6 @@ public class SkillTemplate {
 	 * 获取技能等级。
 	 * Gets skill level.
 	 *
-	 * level
 	 */
 	public int getLvl() {
 		return lvl;
@@ -320,7 +305,6 @@ public class SkillTemplate {
 	 * 获取技能类型（物理/魔法）。
 	 * Gets skill type (physical/magical).
 	 *
-	 * type
 	 */
 	public SkillType getType() {
 		return type;
@@ -333,7 +317,6 @@ public class SkillTemplate {
 	 * 获取技能子类型。
 	 * Gets skill sub type.
 	 *
-	 * sub type
 	 */
 	public SkillSubType getSubType() {
 		return subType;
@@ -342,7 +325,6 @@ public class SkillTemplate {
 	 * 获取目标槽位。
 	 * Gets target slot.
 	 *
-	 * slot
 	 */
 	public SkillTargetSlot getTargetSlot() {
 		return targetSlot;
@@ -351,7 +333,6 @@ public class SkillTemplate {
 	 * 获取目标槽位等级。
 	 * Gets target slot level.
 	 *
-	 * slot level
 	 */
 	public int getTargetSlotLevel() {
 		return targetSlotLevel;
@@ -360,7 +341,6 @@ public class SkillTemplate {
 	 * 获取驱散分类。
 	 * Gets dispel category.
 	 *
-	 * dispel category
 	 */
 	public DispelCategoryType getDispelCategory() {
 		return dispelCategory;
@@ -369,12 +349,17 @@ public class SkillTemplate {
 	 * 获取所需驱散等级。
 	 * Gets required dispel level.
 	 *
-	 * dispel level
 	 */
 	public int getReqDispelLevel() {
 		return reqDispelLevel;
 	}
 
+	/**
+	 * 获取所需驱散计数（维持型默认 30，其余默认 10）。
+	 * Gets required dispel count (30 for maintain skills, 10 otherwise).
+	 *
+	 * @return 所需驱散计数 / required dispel count
+	 */
 	public int getReqDispelCount() {
 		return reqDispelCount != null ? reqDispelCount : isMaintain() ? 30 : 10;
 	}
@@ -382,7 +367,6 @@ public class SkillTemplate {
 	 * 获取效果持续时间。
 	 * Gets effect duration.
 	 *
-	 * duration
 	 */
 	public int getDuration() {
 		return duration;
@@ -408,7 +392,6 @@ public class SkillTemplate {
 	 * 获取切换型计时。
 	 * Gets toggle timer.
 	 *
-	 * toggle timer
 	 */
 	public int getToggleTimer() {
 		return toggleTimer;
@@ -418,7 +401,6 @@ public class SkillTemplate {
 	 * 获取烙印类型。
 	 * Gets stigma type.
 	 *
-	 * stigma type
 	 */
 	public StigmaType getStigmaType() {
 		return stigmaType;
@@ -427,7 +409,6 @@ public class SkillTemplate {
 	 * 获取激活属性。
 	 * Gets activation attribute.
 	 *
-	 * activation
 	 */
 	public ActivationAttribute getActivationAttribute() {
 		return activationAttribute;
@@ -437,7 +418,6 @@ public class SkillTemplate {
 	 * 是否被动技能。
 	 * Whether this is a passive skill.
 	 *
-	 * whether passive
 	 */
 	public boolean isPassive() {
 		return activationAttribute == ActivationAttribute.PASSIVE;
@@ -447,7 +427,6 @@ public class SkillTemplate {
 	 * 是否切换型技能。
 	 * Whether this is a toggle skill.
 	 *
-	 * whether toggle
 	 */
 	public boolean isToggle() {
 		return activationAttribute == ActivationAttribute.TOGGLE;
@@ -457,7 +436,6 @@ public class SkillTemplate {
 	 * 是否激怒/反击触发。
 	 * Whether this is a provoked skill.
 	 *
-	 * whether provoked
 	 */
 	public boolean isProvoked() {
 		return activationAttribute == ActivationAttribute.PROVOKED;
@@ -467,7 +445,6 @@ public class SkillTemplate {
 	 * 是否维持型技能。
 	 * Whether this is a maintain skill.
 	 *
-	 * whether maintain
 	 */
 	public boolean isMaintain() {
 		return activationAttribute == ActivationAttribute.MAINTAIN;
@@ -477,7 +454,6 @@ public class SkillTemplate {
 	 * 是否主动技能。
 	 * Whether this is an active skill.
 	 *
-	 * whether active
 	 */
 	public boolean isActive() {
 		return activationAttribute == ActivationAttribute.ACTIVE;
@@ -486,9 +462,7 @@ public class SkillTemplate {
 	 * 按位置获取效果模板（1-based）。
 	 * Gets effect template by 1-based position.
 	 *
-	 * 1-based position
-	 *
-	 * @param position
+	 * @param position 1-based 位置 / 1-based position
 	 * @return 效果模板，无则 null / effect template or null
 	 */
 	public EffectTemplate getEffectTemplate(int position) {
@@ -500,7 +474,6 @@ public class SkillTemplate {
 	 * 获取冷却时间。
 	 * Gets cooldown.
 	 *
-	 * cooldown
 	 */
 	public int getCooldown() {
 		return cooldown;
@@ -526,7 +499,6 @@ public class SkillTemplate {
 	 * 获取惩罚技能 ID。
 	 * Gets penalty skill id.
 	 *
-	 * penalty skill id
 	 */
 	public int getPenaltySkillId() {
 		return penaltySkillId;
@@ -539,7 +511,6 @@ public class SkillTemplate {
 	 * 获取 PvP 伤害系数。
 	 * Gets PvP damage factor.
 	 *
-	 * pvp damage
 	 */
 	public int getPvpDamage() {
 		return pvpDamage;
@@ -548,7 +519,6 @@ public class SkillTemplate {
 	 * 获取 PvP 持续时间。
 	 * Gets PvP duration.
 	 *
-	 * pvp duration
 	 */
 	public int getPvpDuration() {
 		return pvpDuration;
@@ -557,7 +527,6 @@ public class SkillTemplate {
 	 * 获取连锁技能概率。
 	 * Gets chain skill probability.
 	 *
-	 * chain probability
 	 */
 	public int getChainSkillProb() {
 		return chainSkillProb;
@@ -566,7 +535,6 @@ public class SkillTemplate {
 	 * 获取施法被打断概率。
 	 * Gets cast cancel rate.
 	 *
-	 * cancel rate
 	 */
 	public int getCancelRate() {
 		return cancelRate;
@@ -575,7 +543,6 @@ public class SkillTemplate {
 	 * 是否姿态技能。
 	 * Whether this is a stance skill.
 	 *
-	 * whether stance
 	 */
 	public boolean isStance() {
 		return getStanceType() != 0;
@@ -592,7 +559,6 @@ public class SkillTemplate {
 	 * 获取技能组例外标识。
 	 * Gets skill-set exception id.
 	 *
-	 * exception id
 	 */
 	public int getSkillSetException() {
 		return skillSetException;
@@ -601,7 +567,6 @@ public class SkillTemplate {
 	 * 获取技能组最大共存数。
 	 * Gets skill-set max occurrence.
 	 *
-	 * max occur
 	 */
 	public int getSkillSetMaxOccur() {
 		return skillSetMaxOccur;
@@ -611,7 +576,6 @@ public class SkillTemplate {
 	 * 是否含复活效果。
 	 * Whether has resurrect effect.
 	 *
-	 * has resurrect
 	 */
 	public boolean hasResurrectEffect() {
 		return getEffects() != null && getEffects().isResurrect();
@@ -621,7 +585,6 @@ public class SkillTemplate {
 	 * 是否含物品飞行值治疗。
 	 * Whether has item FP heal effect.
 	 *
-	 * has FP heal
 	 */
 	public boolean hasItemHealFpEffect() {
 		return getEffects() != null && getEffects().isEffectTypePresent(EffectType.PROCFPHEALINSTANT);
@@ -631,7 +594,6 @@ public class SkillTemplate {
 	 * 是否含闪避效果。
 	 * Whether has evade effect.
 	 *
-	 * has evade
 	 */
 	public boolean hasEvadeEffect() {
 		return getEffects() != null && getEffects().isEffectTypePresent(EffectType.EVADE);
@@ -641,7 +603,6 @@ public class SkillTemplate {
 	 * 是否含瞬时召回。
 	 * Whether has recall instant effect.
 	 *
-	 * has recall
 	 */
 	public boolean hasRecallInstant() {
 		return getEffects() != null && getEffects().isEffectTypePresent(EffectType.RECALLINSTANT);
@@ -709,7 +670,6 @@ public class SkillTemplate {
 	 * 是否含治疗效果。
 	 * Whether has heal effect.
 	 *
-	 * has heal
 	 */
 	public boolean hasHealEffect() {
 		return getEffects() != null && (getEffects().isEffectTypePresent(EffectType.HEAL)
@@ -730,7 +690,6 @@ public class SkillTemplate {
 	 * 获取冷却延迟 ID（无则用 skillId）。
 	 * Gets delay/cooldown id (falls back to skillId).
 	 *
-	 * delay id
 	 */
 	public int getDelayId() {
 		return (delayId > 0) ? delayId : skillId;
@@ -740,7 +699,6 @@ public class SkillTemplate {
 	 * 是否神性化身技能。
 	 * Whether deity avatar skill.
 	 *
-	 * deity avatar
 	 */
 	public boolean isDeityAvatar() {
 		return isDeityAvatar;
@@ -750,7 +708,6 @@ public class SkillTemplate {
 	 * 是否地面技能。
 	 * Whether ground skill.
 	 *
-	 * ground skill
 	 */
 	public boolean isGroundSkill() {
 		return isGroundSkill;
@@ -760,7 +717,6 @@ public class SkillTemplate {
 	 * 获取反击所需攻击状态。
 	 * Gets counter-skill attack status.
 	 *
-	 * attack status
 	 */
 	public AttackStatus getCounterSkill() {
 		return counterSkill;
@@ -770,7 +726,6 @@ public class SkillTemplate {
 	 * 获取弹药速度。
 	 * Gets ammo speed.
 	 *
-	 * ammo speed
 	 */
 	public int getAmmoSpeed() {
 		return ammoSpeed;
@@ -784,7 +739,6 @@ public class SkillTemplate {
 	 * 获取冲突 ID。
 	 * Gets conflict id.
 	 *
-	 * conflict id
 	 */
 	public int getConflictId() {
 		return conflictId;
@@ -794,7 +748,6 @@ public class SkillTemplate {
 	 * 获取名称描述键。
 	 * Gets name description key.
 	 *
-	 * name desc
 	 */
 	public String getNamedesc() {
 		return namedesc;
@@ -822,7 +775,6 @@ public class SkillTemplate {
 	 * 获取充能集合名。
 	 * Gets charge set name.
 	 *
-	 * charge set
 	 */
 	public String getChargeSetName() {
 		return charge_set_name;
@@ -832,8 +784,6 @@ public class SkillTemplate {
 	 * 按技能等级计算效果总时长。
 	 * Computes effects duration for skill level.
 	 *
-	 * skill level
-	 * duration
 	 */
 	public int getEffectsDuration(int skillLevel) {
 		int duration = 0;
@@ -870,12 +820,15 @@ public class SkillTemplate {
 	 * 获取效果 ID→基础等级映射。
 	 * Gets effect-id to basic-level map.
 	 *
-	 * map
 	 */
 	public HashMap<Integer, Integer> getEffectIds() {
 		return this.effectIds;
 	}
 
+	/**
+	 * JAXB 反序列化钩子：构建效果 ID 到基础等级的映射。
+	 * JAXB unmarshal hook: builds the effect-id to basic-level map.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		if (this.getEffects() != null && this.getEffects().getEffects() != null) {
 			for (EffectTemplate et : this.getEffects().getEffects()) {
@@ -892,7 +845,7 @@ public class SkillTemplate {
 	 * 从开始条件中提取 HP 条件。
 	 * Extracts HP condition from start conditions.
 	 *
-	 * HP condition or null
+	 * @return HP 条件，无则 null / HP condition or null
 	 */
 	public HpCondition getHpCondition() {
 		if (startconditions != null) {

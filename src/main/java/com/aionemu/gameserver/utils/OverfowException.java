@@ -14,7 +14,7 @@ public class OverfowException extends Error {
 	 * 使用指定消息创建溢出错误。
 	 * Creates an overflow error with the given message.
 	 *
-	 * Error message
+	 * @param message 错误消息 / Error message
 	 */
 	public OverfowException(String message) {
 		super(message);

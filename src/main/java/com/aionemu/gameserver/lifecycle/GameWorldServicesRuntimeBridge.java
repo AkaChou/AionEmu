@@ -39,7 +39,7 @@ public class GameWorldServicesRuntimeBridge {
      * 注入 GeoService 提供者。
      * Inject the GeoService provider.
      *
-     * GeoService provider
+     * @param geoServiceProvider GeoService 提供者 / GeoService provider
      */
     @Autowired(required = false)
     void setGeoServiceProvider(ObjectProvider<GeoService> geoServiceProvider) {
@@ -50,7 +50,7 @@ public class GameWorldServicesRuntimeBridge {
      * 注入 PathService 提供者。
      * Inject the PathService provider.
      *
-     * PathService provider
+     * @param pathServiceProvider PathService 提供者 / PathService provider
      */
     @Autowired(required = false)
     void setPathServiceProvider(ObjectProvider<PathService> pathServiceProvider) {
@@ -61,7 +61,7 @@ public class GameWorldServicesRuntimeBridge {
      * 注入 DropRegistrationService 提供者。
      * Inject the DropRegistrationService provider.
      *
-     * DropRegistrationService provider
+     * @param dropRegistrationServiceProvider DropRegistrationService 提供者 / DropRegistrationService provider
      */
     @Autowired(required = false)
     void setDropRegistrationServiceProvider(ObjectProvider<DropRegistrationService> dropRegistrationServiceProvider) {
@@ -72,7 +72,7 @@ public class GameWorldServicesRuntimeBridge {
      * 解析 GeoService：优先 Spring，否则回退。
      * Resolve GeoService: prefer Spring, otherwise fallback.
      *
-     * GeoService instance
+     * @return GeoService 实例 / GeoService instance
      */
     public GeoService geoService() {
         if (geoServiceProvider == null) {
@@ -85,7 +85,7 @@ public class GameWorldServicesRuntimeBridge {
      * 解析 PathService：优先 Spring，否则回退。
      * Resolve PathService: prefer Spring, otherwise fallback.
      *
-     * PathService instance
+     * @return PathService 实例 / PathService instance
      */
     public PathService pathService() {
         if (pathServiceProvider == null) {
@@ -98,7 +98,7 @@ public class GameWorldServicesRuntimeBridge {
      * 解析 DropRegistrationService：优先 Spring，否则回退。
      * Resolve DropRegistrationService: prefer Spring, otherwise fallback.
      *
-     * DropRegistrationService instance
+     * @return DropRegistrationService 实例 / DropRegistrationService instance
      */
     public DropRegistrationService dropRegistrationService() {
         if (dropRegistrationServiceProvider == null) {
@@ -111,7 +111,7 @@ public class GameWorldServicesRuntimeBridge {
      * 创建新的 GameServer 实例。
      * Create a new GameServer instance.
      *
-     * New GameServer
+     * @return 新的 GameServer / New GameServer
      */
     public GameServer createGameServer() {
         return new GameServer();

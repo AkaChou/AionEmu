@@ -15,7 +15,7 @@ public interface ICache<K extends Comparable, V> {
 	 * 按键获取缓存值。
 	 * Get a cached value by key.
 	 *
-	 * Key
+	 * @param obj 键 / Key
 	 * @return 缓存值，不存在则为 null / Cached value, or null if absent
 	 */
 	V get(K obj);
@@ -24,8 +24,8 @@ public interface ICache<K extends Comparable, V> {
 	 * 写入或更新缓存项。
 	 * Put or renew a cache entry.
 	 *
-	 * Key
-	 * Value
+	 * @param key 键 / Key
+	 * @param obj 值 / Value
 	 */
 	void put(K key, V obj);
 
@@ -33,7 +33,7 @@ public interface ICache<K extends Comparable, V> {
 	 * 按键移除缓存项。
 	 * Remove a cache entry by key.
 	 *
-	 * Key
+	 * @param key 键 / Key
 	 */
 	void remove(K key);
 
@@ -49,7 +49,7 @@ public interface ICache<K extends Comparable, V> {
 	 * 当前缓存大小。
 	 * Current cache size.
 	 *
-	 * Entry count
+	 * @return 条目数 / Entry count
 	 */
 	int size();
 }

@@ -19,8 +19,8 @@ public abstract class MotionDAO implements DAO {
 	 * 按玩家 ID 加载动作列表。
 	 * Loads the motion list by player ID.
 	 *
-	 * player id
-	 * list of motions
+	 * @param playerId 玩家 ID / player id
+	 * @return 动作列表 / list of motions
 	 */
 	public abstract List<Motion> loadMotions(Integer playerId);
 
@@ -28,7 +28,7 @@ public abstract class MotionDAO implements DAO {
 	 * 加载并填充玩家的动作列表。
 	 * Loads and fills the player's motion list.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void loadMotionList(Player player);
 
@@ -36,9 +36,9 @@ public abstract class MotionDAO implements DAO {
 	 * 存储一条新动作。
 	 * Stores a new motion entry.
 	 *
-	 * player object id
-	 * motion
-	 * 若 successful 则为 true / true if successful
+	 * @param objectId 玩家对象 ID / player object id
+	 * @param motion 动作 / motion
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean storeMotion(int objectId, Motion motion);
 
@@ -46,9 +46,9 @@ public abstract class MotionDAO implements DAO {
 	 * 更新已有动作记录。
 	 * Updates an existing motion record.
 	 *
-	 * player object id
-	 * motion
-	 * 若 successful 则为 true / true if successful
+	 * @param objectId 玩家对象 ID / player object id
+	 * @param motion 动作 / motion
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean updateMotion(int objectId, Motion motion);
 
@@ -56,9 +56,9 @@ public abstract class MotionDAO implements DAO {
 	 * 删除指定动作。
 	 * Deletes the given motion.
 	 *
-	 * player object id
-	 * motion id
-	 * 若 successful 则为 true / true if successful
+	 * @param objectId 玩家对象 ID / player object id
+	 * @param motionId 动作 ID / motion id
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean deleteMotion(int objectId, int motionId);
 
@@ -66,7 +66,7 @@ public abstract class MotionDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public String getClassName() {

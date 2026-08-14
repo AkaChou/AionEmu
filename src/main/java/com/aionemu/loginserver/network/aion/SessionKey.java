@@ -36,7 +36,7 @@ public class SessionKey {
      * 为账号生成新的随机会话密钥。
      * Create a new random session key for the account.
      *
-     * 账号 / Account
+     * @param acc 账号 / Account
      */
     public SessionKey(Account acc) {
         this.accountId = acc.getId();
@@ -49,10 +49,10 @@ public class SessionKey {
      * 用给定值构造会话密钥。
      * Construct session key with the given values.
      *
-     * 账号 ID / Account id
-     * Login-ok key
-     * Play-ok1 key
-     * Play-ok2 key
+     * @param accountId 账号 ID / Account id
+     * @param loginOk 登录确认密钥 / Login-ok key
+     * @param playOk1 游戏确认密钥 1 / Play-ok1 key
+     * @param playOk2 游戏确认密钥 2 / Play-ok2 key
      */
     public SessionKey(int accountId, int loginOk, int playOk1, int playOk2) {
         this.accountId = accountId;
@@ -65,8 +65,8 @@ public class SessionKey {
      * 校验 accountId 与 loginOk 是否匹配。
      * Check whether accountId and loginOk match this key.
      *
-     * 账号 ID / Account id
-     * Login-ok key
+     * @param accountId 账号 ID / Account id
+     * @param loginOk 登录确认密钥 / Login-ok key
      *
      * @return 若 both match 则为 true / True if both match
      */

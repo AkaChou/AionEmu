@@ -34,8 +34,8 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
      * 加载玩家称号列表，并跳过已过期称号。
      * Loads the player's title list, skipping expired titles.
      *
-     * player id
-     * title list
+     * @param playerId 玩家 ID / player id
+     * @return 称号列表 / title list
      */
     @Override
     public TitleList loadTitleList(int playerId) {
@@ -75,8 +75,8 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
      * Stores a title on the caller-owned transaction connection.
      *
      * 调用方事务连接 / caller-owned transaction connection
-     * 玩家 object id / player object id
-     * 称号 ID / title id
+     * @param con 玩家 object id / player object id
+     * @param playerId 称号 ID / title id
      * 剩余毫秒数，0 表示永久 / remaining ms, 0 for permanent
      */
     @Override
@@ -93,9 +93,9 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
      * 保存单个玩家称号。
      * Stores a single player title.
      *
-     * 玩家 / player
+     * @param player 玩家 / player
      * @param entry 称号条目 / title entry
-     * whether successful
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean storeTitles(Player player, Title entry) {
@@ -119,9 +119,9 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
      * 删除玩家的指定称号。
      * Removes a specific title from the player.
      *
-     * player id
-     * title id
-     * whether successful
+     * @param playerId 玩家 ID / player id
+     * @param titleId 称号 ID / title id
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean removeTitle(int playerId, int titleId) {
@@ -144,8 +144,8 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
      * 删除玩家的全部称号。
      * Removes all titles of the player.
      *
-     * player id
-     * whether successful
+     * @param playerId 玩家 ID / player id
+     * @return 是否成功 / whether successful
      */
     public boolean removeAllTitles(int playerId) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -165,9 +165,9 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
      * 批量保存玩家称号列表。
      * Batch-stores the player's title list.
      *
-     * 玩家 / player
-     * title list
-     * whether successful
+     * @param player 玩家 / player
+     * @param titles 称号列表 / title list
+     * @return 是否成功 / whether successful
      */
     public boolean storeTitles(Player player, TitleList titles) {
         if (titles == null || titles.size() == 0) {
@@ -230,10 +230,10 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

@@ -5,7 +5,7 @@ import com.aionemu.gameserver.services.QuestService;
 
 import java.util.List;
 
-/** Production lifecycle cleanup for resources owned by typed quest actions. */
+/** 类型化任务动作拥有的资源的生产生命周期清理。 / Production lifecycle cleanup for resources owned by typed quest actions. */
 public final class QuestRuntimeResources {
 	private QuestRuntimeResources() {
 	}

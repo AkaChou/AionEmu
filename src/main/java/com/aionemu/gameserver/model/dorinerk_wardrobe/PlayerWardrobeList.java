@@ -31,14 +31,14 @@ public final class PlayerWardrobeList implements WardrobeList<Player> {
 		}
 	}
 
-	/** 返回 all wardrobe / Returns the all wardrobe */
+	/** 返回全部衣橱。 / Returns the all wardrobe. */
 	public PlayerWardrobeEntry[] getAllWardrobe() {
 		List<PlayerWardrobeEntry> allWardrobe = new ArrayList<PlayerWardrobeEntry>();
 		allWardrobe.addAll(entry.values());
 		return allWardrobe.toArray(new PlayerWardrobeEntry[allWardrobe.size()]);
 	}
 
-	/** 返回 basic wardrobe / Returns the basic wardrobe */
+	/** 返回基础衣橱。 / Returns the basic wardrobe. */
 	public PlayerWardrobeEntry[] getBasicWardrobe() {
 		return entry.values().toArray(new PlayerWardrobeEntry[entry.size()]);
 	}
@@ -67,7 +67,7 @@ public final class PlayerWardrobeList implements WardrobeList<Player> {
 		return entry != null;
 	}
 
-	/** 大小 / size. */
+	/** 大小。 / Size. */
 	@Override
 	public int size() {
 		return entry.size();

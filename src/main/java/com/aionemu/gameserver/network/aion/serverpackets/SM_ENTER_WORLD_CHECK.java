@@ -13,10 +13,20 @@ public class SM_ENTER_WORLD_CHECK extends AionServerPacket {
 
 	private byte msg = 0x00;
 
+	/**
+	 * 按校验结果码构造检查响应包。
+	 * Creates a world-entry check response with the given result code.
+	 *
+	 * @param msg 校验结果码 / check result code
+	 */
 	public SM_ENTER_WORLD_CHECK(byte msg) {
 		this.msg = msg;
 	}
 
+	/**
+	 * 构造默认（成功）检查响应包。
+	 * Creates a default (success) check response.
+	 */
 	public SM_ENTER_WORLD_CHECK() {
 	}
 

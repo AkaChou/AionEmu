@@ -13,40 +13,49 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 public class CylinderArea extends AbstractArea {
 
 	/**
-	 * 圆柱中心 / Center of cylinder
+	 * 圆心 X 坐标。
+	 * Center X of cylinder.
 	 */
 	private final float centerX;
 
 	/**
-	 * 圆柱中心 / Center of cylinder
+	 * 圆心 Y 坐标。
+	 * Center Y of cylinder.
 	 */
 	private final float centerY;
 
 	/**
-	 * Cylinder radius
+	 * 圆柱半径。
+	 * Cylinder radius.
 	 */
 	private final float radius;
 
 	/**
-	 * 创建新 cylinder 给定 radius。 / Creates new cylinder with given radius
+	 * 创建给定半径的圆柱区域。
+	 * Creates new cylinder with given radius.
 	 *
-	 * @param zoneName center of the circle
-	 * @param worldId radius of the circle
-	 * @param center   min z
-	 * @param radius   max z
+	 * @param zoneName 区域名称 / zone name
+	 * @param worldId 世界 ID / world id
+	 * @param center 圆心 / center of the circle
+	 * @param radius 半径 / radius of the circle
+	 * @param minZ 最小 Z 坐标 / minimal z
+	 * @param maxZ 最大 Z 坐标 / maximal z
 	 */
 	public CylinderArea(ZoneName zoneName, int worldId, Point2D center, float radius, float minZ, float maxZ) {
 		this(zoneName, worldId, center.getX(), center.getY(), radius, minZ, maxZ);
 	}
 
 	/**
-	 * 创建新 cylider 给定 radius。 / Creates new cylider with given radius
+	 * 创建给定半径的圆柱区域。
+	 * Creates new cylinder with given radius.
 	 *
-	 * @param zoneName      center coord
-	 * @param worldId      center coord
-	 * @param x radius of the circle
-	 * @param y   min z
-	 * @param radius   max z
+	 * @param zoneName 区域名称 / zone name
+	 * @param worldId 世界 ID / world id
+	 * @param x 圆心 X 坐标 / center x coord
+	 * @param y 圆心 Y 坐标 / center y coord
+	 * @param radius 半径 / radius of the circle
+	 * @param minZ 最小 Z 坐标 / minimal z
+	 * @param maxZ 最大 Z 坐标 / maximal z
 	 */
 	public CylinderArea(ZoneName zoneName, int worldId, float x, float y, float radius, float minZ, float maxZ) {
 		super(zoneName, worldId, minZ, maxZ);

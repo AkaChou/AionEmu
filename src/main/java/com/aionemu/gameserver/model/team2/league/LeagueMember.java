@@ -4,8 +4,8 @@ import com.aionemu.gameserver.model.team2.TeamMember;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 
 /**
- * 战团 Member，用于团队2相关逻辑。
- * League Member for team 2 logic.
+ * 战团成员，用于团队 2 相关逻辑。
+ * League member for team 2 logic.
  *
  * @author ATracer
  */

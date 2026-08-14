@@ -28,7 +28,7 @@ public class NanabelAI2 extends AggressiveNpcAI2
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 75) {
 			announceDF6G1BossSpawn01();
-			spawn(240769, 1391.9735f, 1615.5792f, 1010.55457f, (byte) 25); //Nanabel <Commander>
+			spawn(240769, 1391.9735f, 1615.5792f, 1010.55457f, (byte) 25); // 指挥官娜娜贝尔 / Nanabel <Commander>
 			AI2Actions.deleteOwner(this);
 		}
 	}

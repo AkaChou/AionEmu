@@ -6,8 +6,8 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
- * 登陆 Special 刷新点模板（静态数据/XML）。
- * XML template.
+ * 登陆特别刷新点模板（静态数据/XML）。
+ * Landing Special Spawn Template (static data/XML).
  */
 
 public class LandingSpecialSpawnTemplate extends SpawnTemplate {
@@ -28,7 +28,7 @@ public class LandingSpecialSpawnTemplate extends SpawnTemplate {
 		return id;
 	}
 
-	/** 返回 f state type / Returns the f state type */
+	/** 返回势力状态类型 / Returns the f state type */
 	public LandingSpecialStateType getFStateType() {
 		return landingSpecialType;
 	}
@@ -38,20 +38,20 @@ public class LandingSpecialSpawnTemplate extends SpawnTemplate {
 		this.id = id;
 	}
 
-	/** 设置 f state type / Sets the f state type */
+	/** 设置势力状态类型 / Sets the f state type */
 	public void setFStateType(LandingSpecialStateType landingSpecialType) {
 		this.landingSpecialType = landingSpecialType;
 	}
 
 	/**
-	 * @return Whether special landing active
+	 * @return 特殊登陆是否激活 / whether special landing is active
 	 */
 	public final boolean isSpecialLandingActive() {
 		return landingSpecialType.equals(LandingSpecialStateType.ACTIVE);
 	}
 
 	/**
-	 * @return Whether special landing no active
+	 * @return 特殊登陆是否未激活 / whether special landing is inactive
 	 */
 	public final boolean isSpecialLandingNoActive() {
 		return landingSpecialType.equals(LandingSpecialStateType.NO_ACTIVE);

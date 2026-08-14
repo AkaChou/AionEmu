@@ -67,7 +67,7 @@ public class AGPlayer {
 	}
 
 	/**
-	 * @return Whether pressed enter
+	 * @return 是否已按下回车 / Whether pressed enter
 	 */
 	public boolean isPressedEnter() {
 		return isPressEnter;

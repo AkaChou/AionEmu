@@ -328,7 +328,6 @@ public class LegionCommand extends AdminCommand {
 	 * Show command syntax and optional failure reason on invalid arguments.
 	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

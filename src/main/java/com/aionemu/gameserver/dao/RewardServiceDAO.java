@@ -15,7 +15,7 @@ public abstract class RewardServiceDAO implements DAO {
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
 	 *
-	 * fully qualified class name
+	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -26,7 +26,7 @@ public abstract class RewardServiceDAO implements DAO {
 	 * 查询玩家可领取的奖励条目。
 	 * Returns available reward entries for the player.
 	 *
-	 * player object id
+	 * @param playerId 玩家对象 ID / player object id
 	 * @return 可领取奖励列表 / available reward entry list
 	 */
 	public abstract List<RewardEntryItem> getAvailable(int playerId);
@@ -43,7 +43,7 @@ public abstract class RewardServiceDAO implements DAO {
 	 * 将奖励下载状态置为 down。
 	 * Sets the update/download flag to down for the entry.
 	 *
-	 * unique entry id
+	 * @param unique 唯一条目 ID / unique entry id
 	 */
 	public abstract void setUpdateDown(int unique);
 
@@ -51,7 +51,7 @@ public abstract class RewardServiceDAO implements DAO {
 	 * 更新奖励条目状态。
 	 * Updates the reward entry status.
 	 *
-	 * unique entry id
+	 * @param unique 唯一条目 ID / unique entry id
 	 * @return 是否更新成功 / true if updated
 	 */
 	public abstract boolean setUpdate(int unique);

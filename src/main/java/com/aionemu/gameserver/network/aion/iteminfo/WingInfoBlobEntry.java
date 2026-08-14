@@ -34,7 +34,7 @@ public class WingInfoBlobEntry extends ItemBlobEntry {
 		Item item = ownerItem;
 
 		writeQ(buf, ItemSlot.getSlotFor(item.getItemTemplate().getItemSlot()).getSlotIdMask());
-		writeQ(buf, 0); // no secondary slot
+		writeQ(buf, 0); // 无副槽位 / no secondary slot
 	}
 
 	/**

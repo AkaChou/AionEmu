@@ -76,8 +76,8 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
      * 移除玩家的指定随从。
      * Removes the specified minion for the player.
      *
-     * 玩家 / player
-     * minion object id
+     * @param player 玩家 / player
+     * @param minionObjectId 仆从对象 ID / minion object id
      */
     @Override
     public boolean removePlayerMinion(Player player, int minionObjectId) {
@@ -98,8 +98,8 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
      * 加载玩家的全部随从数据。
      * Loads all minions belonging to the player.
      *
-     * 玩家 / player
-     * minion list
+     * @param player 玩家 / player
+     * @return 仆从列表 / minion list
      */
     @Override
     public List<MinionCommonData> getPlayerMinions(Player player) {
@@ -294,9 +294,9 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
      * 锁定或解锁指定随从。
      * Locks or unlocks the specified minion.
      *
-     * 玩家 / player
-     * minion object id
-     * lock flag
+     * @param player 玩家 / player
+     * @param minionObjId 仆从对象 ID / minion object id
+     * @param isLocked 锁定标记 / lock flag
      */
     @Override
     public boolean lockMinions(Player player, int minionObjId, int isLocked) {
@@ -397,7 +397,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
      * 清理所属玩家已不存在的孤儿随从记录。
      * Cleans orphaned minion rows whose owner player no longer exists.
      *
-     * deleted row count
+     * @return 删除行数 / deleted row count
      */
     public int cleanOrphanedMinions() {
         try (Connection con = DatabaseFactory.getConnection();
@@ -418,10 +418,10 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

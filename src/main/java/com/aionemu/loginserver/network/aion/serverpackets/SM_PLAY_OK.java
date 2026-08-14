@@ -33,7 +33,7 @@ public class SM_PLAY_OK extends AionServerPacket {
      * Constructs a new SM_PLAY_OK packet.
      *
      * @param key 会话密钥 / session key
-     * game server id
+     * @param serverId 游戏服 ID / game server id
      */
     public SM_PLAY_OK(SessionKey key, byte serverId) {
         super(0x07);

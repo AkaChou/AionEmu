@@ -28,8 +28,6 @@ public class AnnounceFaction extends AdminCommand {
 	 * 执行阵营公告：按 ely/asmo 过滤在线玩家并居中广播。
 	 * Executes faction announce: filters online players by ely/asmo and center-broadcasts.
 	 *
-	 * admin
-	 * ely|asmo, message。
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -71,8 +69,6 @@ public class AnnounceFaction extends AdminCommand {
 	 * 参数错误时输出 {@code //announcefaction} 用法。
 	 * Prints {@code //announcefaction} usage on invalid arguments.
 	 *
-	 * admin
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

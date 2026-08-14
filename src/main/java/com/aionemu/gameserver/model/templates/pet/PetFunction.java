@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * 宠物函数模板（静态数据/XML）。
- * XML template.
+ * Pet function template (static data / XML).
  *
  * @author IlBuono
  */
@@ -37,7 +37,7 @@ public class PetFunction {
 		return slots;
 	}
 
-	/** 创建空对象 / Create Empty. */
+	/** 创建空对象。 / Creates an empty object. */
 	public static PetFunction CreateEmpty() {
 		PetFunction result = new PetFunction();
 		result.type = PetFunctionType.NONE;

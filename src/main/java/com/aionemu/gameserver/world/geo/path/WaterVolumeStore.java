@@ -15,6 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 水体体积存储：从 water-volumes.bin 加载并查询各世界的水体。
+ * Water volume store: loads water-volumes.bin and queries water volumes per world.
+ */
 @Slf4j
 final class WaterVolumeStore {
 
@@ -160,6 +164,7 @@ final class WaterVolumeStore {
 			if (Float.isFinite(flatZ)) {
 				return flatZ;
 			}
+			// ponytail: 对导出轮廓插值；若沼泽水面不准确再采样 WaterGeometry CGF。
 			// ponytail: interpolate the exported contour; sample WaterGeometry CGFs only if swamp surfaces prove inaccurate.
 			for (int i = 0; i < triangles.length; i += 3) {
 				float value = triangleZ(px, py, triangles[i], triangles[i + 1], triangles[i + 2]);

@@ -8,7 +8,10 @@ package com.aionemu.gameserver.model.templates.zone;
  */
 public enum ZoneType {
 
-	/** 飞行。 / Fly. */
+	/**
+	 * 区域类型：飞行 / 伤害区域 / 水域 / 攻城区域 / PvP 区域。
+	 * Zone types: fly / damage / water / siege / pvp.
+	 */
 	FLY(0), DAMAGE(1), WATER(2), SIEGE(3), PVP(4);
 
 	private byte value;

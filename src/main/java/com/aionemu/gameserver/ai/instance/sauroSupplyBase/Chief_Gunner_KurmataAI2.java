@@ -35,8 +35,8 @@ public class Chief_Gunner_KurmataAI2 extends AggressiveNpcAI2
 	}
 	
 	private void beritraFavor() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21194, 1, getOwner()).useNoAnimationSkill(); //Iron Guardian.
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 21194, 1, getOwner()).useNoAnimationSkill(); // 钢铁守护 / Iron Guardian.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
 	}
 	
 	@Override
@@ -65,7 +65,7 @@ public class Chief_Gunner_KurmataAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 20701, 60, getOwner()).useNoAnimationSkill(); //Blessing of Blood.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20701, 60, getOwner()).useNoAnimationSkill(); // 鲜血祝福 / Blessing of Blood.
 		}
 	}
 	
@@ -74,7 +74,7 @@ public class Chief_Gunner_KurmataAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 20858, 60, getOwner()).useNoAnimationSkill(); //Thunder Crash Fallout.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20858, 60, getOwner()).useNoAnimationSkill(); // 雷霆冲击 / Thunder Crash Fallout.
 			scheduleDelayStage2(delay);
 		}
 	}

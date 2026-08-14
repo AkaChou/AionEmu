@@ -18,7 +18,7 @@ public class Maga_Potion_Temple_VaultAI2 extends NpcAI2
 {
 	@Override
     protected void handleDialogStart(Player player) {
-        if (player.getInventory().getFirstItemByItemId(185000109) != null) { //Relic Key.
+        if (player.getInventory().getFirstItemByItemId(185000109) != null) { // 遗物钥匙 / Relic Key.
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
         } else {
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 27));
@@ -28,9 +28,9 @@ public class Maga_Potion_Temple_VaultAI2 extends NpcAI2
 	@Override
 	public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		int instanceId = getPosition().getInstanceId();
-		if (dialogId == 10000) { //Relic Key.
+		if (dialogId == 10000) { // 遗物钥匙 / Relic Key.
 		    switch (getNpcId()) {
-			    case 730308: //Maga's Potion.
+			    case 730308: // 玛加药剂 / Maga's Potion.
 					TeleportService2.teleportTo(player, 300230000, instanceId, 687.56116f, 681.68225f, 200.28648f, (byte) 30);
 				break;
 			}

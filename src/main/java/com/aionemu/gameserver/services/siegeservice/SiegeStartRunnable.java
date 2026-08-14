@@ -26,9 +26,10 @@ public class SiegeStartRunnable implements Runnable {
 	}
 
 	/**
-	 * getLocationId 方法。
-	 * getLocationId method.
-	 * result
+	 * 返回目标据点 ID。
+	 * Returns the target location id.
+	 *
+	 * @return 据点 ID / location id
 	 */
 	public int getLocationId() {
 		return locationId;

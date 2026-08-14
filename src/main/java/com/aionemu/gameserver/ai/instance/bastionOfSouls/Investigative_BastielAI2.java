@@ -87,9 +87,9 @@ public class Investigative_BastielAI2 extends GeneralNpcAI2
 							if (!isAlreadyDead()) {
 								WorldPosition worldPosition = player.getPosition();
 								if (worldPosition.isInstanceMap()) {
-									if (worldPosition.getMapId() == 302340000) { //Bastion Of Souls 5.5
+									if (worldPosition.getMapId() == 302340000) { // 灵魂堡垒 5.5。 / Bastion Of Souls 5.5.
 										WorldMapInstance worldMapInstance = worldPosition.getWorldMapInstance();
-										killNpc(worldMapInstance.getNpcs(731795)); //Prison Door.
+										killNpc(worldMapInstance.getNpcs(731795)); // 监狱门。 / Prison Door.
 									}
 								}
 							}

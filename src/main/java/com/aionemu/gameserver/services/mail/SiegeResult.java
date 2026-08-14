@@ -5,7 +5,18 @@ package com.aionemu.gameserver.services.mail;
  * Siege result enum identifying siege mail settlement outcomes.
  */
 public enum SiegeResult {
-	DEFENCE(0), OCCUPY(1), PROTECT(2), DEFENDER(3), EMPTY(4), FAIL(5);
+	/** 防守成功 / Defence. */
+	DEFENCE(0),
+	/** 占领成功 / Occupy. */
+	OCCUPY(1),
+	/** 保护成功 / Protect. */
+	PROTECT(2),
+	/** 防守者 / Defender. */
+	DEFENDER(3),
+	/** 空 / Empty. */
+	EMPTY(4),
+	/** 失败 / Fail. */
+	FAIL(5);
 
 	private int value;
 

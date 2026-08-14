@@ -8,6 +8,8 @@ import com.aionemu.gameserver.world.World;
 import java.util.Objects;
 
 /**
+ * 真实 {@link QuestNpcPort}：提交后按其权威 interactionObjectId 删除任务的交互 NPC，
+ * 并可选择安排其重生。
  * Real {@link QuestNpcPort}: after commit, deletes the interaction NPC of the
  * commit by its authoritative interactionObjectId and optionally schedules its
  * respawn. Unlike {@code DespawnNpc} (which only dereferences task-spawned
@@ -31,7 +33,7 @@ public final class PlayerQuestNpcPort implements QuestNpcPort {
 		Objects.requireNonNull(snapshot, "snapshot");
 		Objects.requireNonNull(plan, "plan");
 		if (snapshot.interactionObjectId() <= 0) {
-			// 无权威交互对象 (例如非 NPC 触发):best-effort 跳过。
+			// 无权威交互对象（例如非 NPC 触发）：best-effort 跳过。 / No authoritative interaction object (e.g. non-NPC trigger): best-effort skip.
 			return false;
 		}
 		VisibleObject visible = world.world().findVisibleObject(snapshot.interactionObjectId());

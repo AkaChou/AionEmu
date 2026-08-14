@@ -27,13 +27,13 @@ public class InetSocketAddressTransformer implements PropertyTransformer<InetSoc
     public static final InetSocketAddressTransformer SHARED_INSTANCE = new InetSocketAddressTransformer();
 
     /**
- * 将字符串值转换为 InetSocketAddress 对象
+     * 将字符串值转换为 InetSocketAddress 对象
      * Transforms string value into InetSocketAddress object
      *
-     * @param value 要转换的字符串值（格式："address:port"）String value to transform (format: "address:port")
-     * @param field 字段对象 Field that will be transformed
- * @return 转换后的 InetSocketAddress 对象 Transformed InetSocketAddress object
-     * @throws TransformationException 如果输入格式无效或地址解析失败 if input format is invalid or address resolution fails
+     * @param value 要转换的字符串值（格式："address:port"）/ String value to transform (format: "address:port")
+     * @param field 字段对象 / Field that will be transformed
+     * @return 转换后的 InetSocketAddress 对象 / Transformed InetSocketAddress object
+     * @throws TransformationException 如果输入格式无效或地址解析失败 / if input format is invalid or address resolution fails
      */
     public InetSocketAddress transform(String value, Field field) throws TransformationException {
         String[] parts = value.split(":");

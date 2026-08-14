@@ -76,9 +76,9 @@ public class GeoMap extends Node {
 	 * 从名称解析地图 ID。
 	 * Parses map id from the name string.
 	 *
-	 * map name
 	 *
-	 * @param name
+	 *
+	 * @param name 地图名 / map name
 	 * @return 地图 ID，解析失败为 0 / map id, or 0 on failure
 	 */
 	private int parseMapId(String name) {
@@ -93,7 +93,7 @@ public class GeoMap extends Node {
 	 * 返回地图 ID。
 	 * Returns the map id.
 	 *
-	 * map id
+	 * @return 地图 ID / map id
 	 */
 	public int getMapId() {
 		return mapId;
@@ -106,11 +106,11 @@ public class GeoMap extends Node {
 	 * @param x 起点 X / origin X
 	 * @param y 起点 Y / origin Y
 	 * @param z 起点 Z / origin Z
-	 * target X
-	 * target Y
-	 * target Z
+	 * @param targetX 目标 X / target X
+	 * @param targetY 目标 Y / target Y
+	 * @param targetZ 目标 Z / target Z
 	 * @param limit 射线长度上限 / ray limit
-	 * instance id
+	 * @param instanceId 副本实例 ID / instance id
 	 *
 	 * @return 若 path is clear 则为 true / true if path is clear
 	 */
@@ -139,11 +139,11 @@ public class GeoMap extends Node {
 	 * @param x 起点 X / origin X
 	 * @param y 起点 Y / origin Y
 	 * @param z 起点 Z / origin Z
-	 * target X
-	 * target Y
-	 * target Z
+	 * @param targetX 目标 X / target X
+	 * @param targetY 目标 Y / target Y
+	 * @param targetZ 目标 Z / target Z
 	 * @param limit 射线长度上限 / ray limit
-	 * instance id
+	 * @param instanceId 副本实例 ID / instance id
 	 *
 	 * @return 若 path is clear 则为 true / true if path is clear
 	 */
@@ -184,7 +184,7 @@ public class GeoMap extends Node {
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z 参考 Z / reference Z
-	 * instance id
+	 * @param instanceId 副本实例 ID / instance id
 	 * Z height
 	 */
 	public float getZW(float x, float y, float z, int instanceId) {
@@ -195,8 +195,8 @@ public class GeoMap extends Node {
 	 * 设置门开闭状态（关态/开态节点互斥激活）。
 	 * Sets door open/closed state (closed/open nodes activated mutually exclusive).
 	 *
-	 * instance id
-	 * door id
+	 * @param instanceId 副本实例 ID / instance id
+	 * @param doorId 门 ID / door id
 	 * @param open 是否打开 / whether open
 	 */
 	public void setDoorState(int instanceId, int doorId, boolean open) {
@@ -223,7 +223,7 @@ public class GeoMap extends Node {
 	 * 返回当前地图可忽略的门 ID 集合（缺 mesh 白名单）。
 	 * Door ids that may be missing mesh data on this map.
 	 *
-	 * ignorable door ids
+	 * @return 可忽略的门 ID / ignorable door ids
 	 */
 	private Set<Integer> getIgnorableDoorIds() {
 		if (mapId == 300290000) {
@@ -248,8 +248,8 @@ public class GeoMap extends Node {
 	 * 激活可放置物体。
 	 * Spawns (activates) a placeable object.
 	 *
-	 * instance id
-	 * static object id
+	 * @param instanceId 副本实例 ID / instance id
+	 * @param staticId 静态对象 ID / static object id
 	 */
 	public void spawnPlaceableObject(int instanceId, int staticId) {
 		DespawnableNode node = despawnables.get(staticId);
@@ -262,8 +262,8 @@ public class GeoMap extends Node {
 	 * 取消可放置物体。
 	 * Despawns (deactivates) a placeable object.
 	 *
-	 * instance id
-	 * static object id
+	 * @param instanceId 副本实例 ID / instance id
+	 * @param staticId 静态对象 ID / static object id
 	 */
 	public void despawnPlaceableObject(int instanceId, int staticId) {
 		DespawnableNode node = despawnables.get(staticId);
@@ -276,7 +276,7 @@ public class GeoMap extends Node {
 	 * 按城镇等级更新城镇物体激活状态。
 	 * Updates town-object activation based on town level.
 	 *
-	 * town id
+	 * @param townId 村庄 ID / town id
 	 * @param level 城镇等级 / town level
 	 */
 	public void updateTownToLevel(int townId, int level) {
@@ -294,8 +294,8 @@ public class GeoMap extends Node {
 	 * 设置房屋门开闭（打开时节点关闭）。
 	 * Sets house door open state (node active when closed).
 	 *
-	 * instance id
-	 * house address
+	 * @param instanceId 副本实例 ID / instance id
+	 * @param houseAddress 房屋地址 / house address
 	 * @param open 是否打开 / whether open
 	 */
 	public void setHouseDoorState(int instanceId, int houseAddress, boolean open) {
@@ -326,7 +326,7 @@ public class GeoMap extends Node {
 	 * Gets or creates the chunk for the child's center.
 	 *
 	 * @param child 子空间体 / child spatial
-	 * chunk node
+	 * @return 区块节点 / chunk node
 	 */
 	private Node getOrCreateChunk(Spatial child) {
 		int chunkId = RegionUtil.get2DRegionId(NODE_CHUNK_SIZE, child.getWorldBound().getCenter().x, child.getWorldBound().getCenter().y);
@@ -344,7 +344,7 @@ public class GeoMap extends Node {
 	 * 统计所有分块中的实体数。
 	 * Counts entities across all chunks.
 	 *
-	 * entity count
+	 * @return 实体数量 / entity count
 	 */
 	public int getEntityCount() {
 		int count = 0;
@@ -385,7 +385,7 @@ public class GeoMap extends Node {
 	 * 设置正方形高度图数据。
 	 * Sets square heightmap data.
 	 *
-	 * height samples
+	 * @param terrainData 高度采样 / height samples
 	 */
 	public void setTerrainData(short[] terrainData) {
 		int size = terrainData.length == 1 ? 1 : (int) Math.sqrt(terrainData.length);
@@ -396,9 +396,9 @@ public class GeoMap extends Node {
 	 * 设置矩形高度图数据。
 	 * Sets rectangular heightmap data.
 	 *
-	 * height samples
-	 * width
-	 * height
+	 * @param terrainData 高度采样 / height samples
+	 * @param width 宽度 / width
+	 * @param height 高度 / height
 	 */
 	public void setTerrainData(short[] terrainData, int width, int height) {
 		if (terrain == null) {
@@ -411,9 +411,9 @@ public class GeoMap extends Node {
 	 * 设置地形材质图。
 	 * Sets terrain material map data.
 	 *
-	 * material bytes
-	 * width
-	 * height
+	 * @param terrainMaterialData 材质字节 / material bytes
+	 * @param width 宽度 / width
+	 * @param height 高度 / height
 	 */
 	public void setTerrainMaterialData(byte[] terrainMaterialData, int width, int height) {
 		if (terrain == null) {
@@ -453,7 +453,7 @@ public class GeoMap extends Node {
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
-	 * instance id
+	 * @param instanceId 副本实例 ID / instance id
 	 *
 	 * @return 材质 ID，无效为 0 / material id, or 0
 	 */
@@ -497,7 +497,7 @@ public class GeoMap extends Node {
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z 参考 Z / reference Z
-	 * instance id
+	 * @param instanceId 副本实例 ID / instance id
 	 * @return 高度，失败返回原 z / Z, or original z on miss
 	 */
 	public float getZ(float x, float y, float z, int instanceId) {
@@ -513,7 +513,7 @@ public class GeoMap extends Node {
 	 * @param y Y 坐标 / Y
 	 * upper Z
 	 * lower Z
-	 * instance id
+	 * @param zMax 副本实例 ID / instance id
 	 * Z or NaN
 	 */
 	public float getZ(float x, float y, float zMax, float zMin, int instanceId) {
@@ -528,7 +528,7 @@ public class GeoMap extends Node {
 	 * @param y Y 坐标 / Y
 	 * upper Z
 	 * lower Z
-	 * instance id
+	 * @param zMax 副本实例 ID / instance id
 	 * @param ignoreSlopingSurface 是否忽略斜面 / ignore sloping surfaces
 	 * Z or NaN
 	 */
@@ -555,12 +555,12 @@ public class GeoMap extends Node {
 	 * @param x 起点 X / origin X
 	 * @param y 起点 Y / origin Y
 	 * @param z 起点 Z / origin Z
-	 * target X
-	 * target Y
-	 * target Z
+	 * @param targetX 目标 X / target X
+	 * @param targetY 目标 Y / target Y
+	 * @param targetZ 目标 Z / target Z
 	 * @param changeDirection 是否贴地校正方向 / snap direction to ground
 	 * @param fly 是否飞行 / flying
-	 * instance id
+	 * @param instanceId 副本实例 ID / instance id
 	 * @param intentions 碰撞意图位 / collision intention flags
 	 * @return 最近碰撞或目标点 / contact or target
 	 */
@@ -576,14 +576,14 @@ public class GeoMap extends Node {
 	 * @param x 起点 X / origin X
 	 * @param y 起点 Y / origin Y
 	 * @param z 起点 Z / origin Z
-	 * target X
-	 * target Y
-	 * target Z
+	 * @param targetX 目标 X / target X
+	 * @param targetY 目标 Y / target Y
+	 * @param targetZ 目标 Z / target Z
 	 * @param changeDirection 是否贴地校正方向 / snap direction to ground
 	 * @param fly 是否飞行 / flying
-	 * instance id
+	 * @param instanceId 副本实例 ID / instance id
 	 * @param intentions 碰撞意图位 / collision intention flags
-	 * ignore properties
+	 * @param ignoreProperties 忽略的属性 / ignore properties
 	 * @return 最近碰撞或目标点 / contact or target
 	 */
 	public Vector3f getClosestCollision(float x, float y, float z, float targetX, float targetY, float targetZ,
@@ -611,9 +611,9 @@ public class GeoMap extends Node {
 	 * 对碰撞点施加边界回退与贴地修正。
 	 * Applies bound offset and ground snap to a contact point.
 	 *
-	 * contact point
+	 * @param pos 接触点 / contact point
 	 * @param direction 来源方向点 / origin used as direction base
-	 * instance id
+	 * @param instanceId 副本实例 ID / instance id
 	 */
 	private void applyCollisionCheckOffsets(Vector3f pos, Vector3f direction, int instanceId) {
 		applyCollisionCheckOffsets(pos, direction, instanceId, false);
@@ -623,9 +623,9 @@ public class GeoMap extends Node {
 	 * 对碰撞点施加边界回退与贴地修正。
 	 * Applies bound offset and ground snap to a contact point.
 	 *
-	 * contact point
+	 * @param pos 接触点 / contact point
 	 * @param direction 来源方向点 / origin used as direction base
-	 * instance id
+	 * @param instanceId 副本实例 ID / instance id
 	 * @param allowNaN 是否允许 NaN 地面高度 / allow NaN ground Z
 	 */
 	private void applyCollisionCheckOffsets(Vector3f pos, Vector3f direction, int instanceId, boolean allowNaN) {
@@ -650,8 +650,8 @@ public class GeoMap extends Node {
 	 * @param origin 起点（Z 会被修改） / origin (Z may be mutated)
 	 * target X
 	 * target Y
-	 * instance id
-	 * reachable point
+	 * @param targetX 副本实例 ID / instance id
+	 * @param targetY 可达点 / reachable point
 	 */
 	public Vector3f findMovementCollision(Vector3f origin, float targetX, float targetY, int instanceId) {
 		origin.setZ(origin.getZ() + COLLISION_CHECK_Z_OFFSET);
@@ -689,14 +689,14 @@ public class GeoMap extends Node {
 	 * @param x 起点 X / origin X
 	 * @param y 起点 Y / origin Y
 	 * @param z 起点 Z / origin Z
-	 * target X
-	 * target Y
-	 * target Z
+	 * @param targetX 目标 X / target X
+	 * @param targetY 目标 Y / target Y
+	 * @param targetZ 目标 Z / target Z
 	 * @param changeDirection 是否贴地校正 / snap to ground
 	 * @param fly 是否飞行 / flying
-	 * instance id
+	 * @param instanceId 副本实例 ID / instance id
 	 * @param intentions 碰撞意图位 / intention flags
-	 * collision results
+	 * @return 碰撞结果 / collision results
 	 */
 	public CollisionResults getCollisions(float x, float y, float z, float targetX, float targetY, float targetZ,
 			boolean changeDirection, boolean fly, int instanceId, byte intentions) {
@@ -710,15 +710,15 @@ public class GeoMap extends Node {
 	 * @param x 起点 X / origin X
 	 * @param y 起点 Y / origin Y
 	 * @param z 起点 Z / origin Z
-	 * target X
-	 * target Y
-	 * target Z
+	 * @param targetX 目标 X / target X
+	 * @param targetY 目标 Y / target Y
+	 * @param targetZ 目标 Z / target Z
 	 * @param changeDirection 是否贴地校正 / snap to ground
 	 * @param fly 是否飞行 / flying
-	 * instance id
+	 * @param instanceId 副本实例 ID / instance id
 	 * @param intentions 碰撞意图位 / intention flags
-	 * ignore properties
-	 * collision results
+	 * @param ignoreProperties 忽略的属性 / ignore properties
+	 * @return 碰撞结果 / collision results
 	 */
 	public CollisionResults getCollisions(float x, float y, float z, float targetX, float targetY, float targetZ,
 			boolean changeDirection, boolean fly, int instanceId, byte intentions, IgnoreProperties ignoreProperties) {
@@ -733,14 +733,14 @@ public class GeoMap extends Node {
 	 * 从原点向量向目标发射射线，收集地形与场景碰撞。
 	 * Casts a ray from origin toward the target, collecting terrain and scene hits.
 	 *
-	 * origin
-	 * target X
-	 * target Y
-	 * target Z
-	 * instance id
+	 * @param origin 原点 / origin
+	 * @param targetX 目标 X / target X
+	 * @param targetY 目标 Y / target Y
+	 * @param targetZ 目标 Z / target Z
+	 * @param instanceId 副本实例 ID / instance id
 	 * @param intentions 碰撞意图位 / intention flags
-	 * ignore properties
-	 * collision results
+	 * @param ignoreProperties 忽略的属性 / ignore properties
+	 * @return 碰撞结果 / collision results
 	 */
 	public CollisionResults getCollisions(Vector3f origin, float targetX, float targetY, float targetZ, int instanceId, byte intentions,
 			IgnoreProperties ignoreProperties) {
@@ -765,11 +765,11 @@ public class GeoMap extends Node {
 	 * @param x 起点 X / origin X
 	 * @param y 起点 Y / origin Y
 	 * @param z 起点 Z / origin Z
-	 * target X
-	 * target Y
-	 * target Z
+	 * @param targetX 目标 X / target X
+	 * @param targetY 目标 Y / target Y
+	 * @param targetZ 目标 Z / target Z
 	 * @param limit 射线长度上限 / ray limit
-	 * instance id
+	 * @param instanceId 副本实例 ID / instance id
 	 *
 	 * @return 若 visible 则为 true / true if visible
 	 */
@@ -785,12 +785,12 @@ public class GeoMap extends Node {
 	 * @param x 起点 X / origin X
 	 * @param y 起点 Y / origin Y
 	 * @param z 起点 Z / origin Z
-	 * target X
-	 * target Y
-	 * target Z
+	 * @param targetX 目标 X / target X
+	 * @param targetY 目标 Y / target Y
+	 * @param targetZ 目标 Z / target Z
 	 * @param limit 射线长度上限 / ray limit
-	 * instance id
-	 * ignore properties
+	 * @param instanceId 副本实例 ID / instance id
+	 * @param ignoreProperties 忽略的属性 / ignore properties
 	 *
 	 * @return 若 visible 则为 true / true if visible
 	 */
@@ -818,7 +818,7 @@ public class GeoMap extends Node {
 	 * 流式遍历地图下全部 Geometry。
 	 * Streams all geometries under this map.
 	 *
-	 * geometry stream
+	 * @return 几何流 / geometry stream
 	 */
 	public Stream<Geometry> getGeometries() {
 		return getGeometries(getChildren());
@@ -829,7 +829,7 @@ public class GeoMap extends Node {
 	 * Recursively flattens geometries from a spatial list.
 	 *
 	 * @param spatials 空间体列表 / spatial list
-	 * geometry stream
+	 * @return 几何流 / geometry stream
 	 */
 	private static Stream<Geometry> getGeometries(List<Spatial> spatials) {
 		return spatials.stream().flatMap(child -> {

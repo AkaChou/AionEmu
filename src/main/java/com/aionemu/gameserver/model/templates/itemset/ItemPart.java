@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * 物品 Part 模板（静态数据/XML）。
- * XML template.
+ * 套装部件模板（静态数据/XML）。
+ * Item set part template (static data/XML).
  *
  * @author ATracer
  */

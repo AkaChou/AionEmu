@@ -36,7 +36,7 @@ public class SensoryAreaAI2 extends AggressiveNpcAI2
 			if (MathUtil.getDistance(getOwner(), player) <= 10) {
 				if (startedEvent.compareAndSet(false, true)) {
 					switch (player.getWorldId()) {
-		                case 300280000: //Rentus Base
+		                case 300280000: // Rentus Base 基地 / Rentus Base
 						    // 萨斯塔从头顶飞过。 / Xasta flies past overhead.
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Rasta_Spawn_01, 9000);
 							// 用防空炮攻击头顶飞行的萨斯塔。 / Use the anti-aircraft gun to attack Xasta flying overhead.
@@ -52,7 +52,7 @@ public class SensoryAreaAI2 extends AggressiveNpcAI2
 							AI2Actions.deleteOwner(SensoryAreaAI2.this);
 				        break;
 					} switch (player.getWorldId()) {
-		                case 300620000: //[Occupied] Rentus Base 4.8
+		                case 300620000: // 被占领的 Rentus Base 4.8 / [Occupied] Rentus Base 4.8
 						    // 萨斯塔从头顶飞过。 / Xasta flies past overhead.
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Rasta_Spawn_01, 9000);
 							// 用防空炮攻击头顶飞行的萨斯塔。 / Use the anti-aircraft gun to attack Xasta flying overhead.

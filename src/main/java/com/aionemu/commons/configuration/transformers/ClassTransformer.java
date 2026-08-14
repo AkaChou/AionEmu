@@ -21,13 +21,13 @@ public class ClassTransformer implements PropertyTransformer<Class<?>> {
     public static final ClassTransformer SHARED_INSTANCE = new ClassTransformer();
 
     /**
- * 将字符串值转换为 Class 对象
+     * 将字符串值转换为 Class 对象
      * Transforms string value into Class object
      *
-     * @param value 要转换的字符串值（类的完整名称）String value to transform (fully qualified class name)
-     * @param field 字段对象 Field that will be transformed
- * @return 转换后的 Class 对象 Transformed Class object
-     * @throws TransformationException 如果找不到指定的类 if specified class cannot be found
+     * @param value 要转换的字符串值（类的完整名称）/ String value to transform (fully qualified class name)
+     * @param field 字段对象 / Field that will be transformed
+     * @return 转换后的 Class 对象 / Transformed Class object
+     * @throws TransformationException 如果找不到指定的类 / if specified class cannot be found
      */
     public Class<?> transform(String value, Field field) throws TransformationException {
         try {

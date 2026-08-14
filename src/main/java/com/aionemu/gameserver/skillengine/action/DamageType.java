@@ -19,7 +19,7 @@ public enum DamageType {
 	 * 返回枚举名字符串。
 	 * Returns the enum name as a string.
 	 *
-	 * enum name
+	 * @return 枚举名字符串 / enum name
 	 */
 	public String value() {
 		return name();
@@ -30,7 +30,7 @@ public enum DamageType {
 	 * Parses a damage type from a string value.
 	 *
 	 * @param v 名称字符串 / name string
-	 * matching enum constant
+	 * @return 匹配的枚举常量 / matching enum constant
 	 */
 	public static DamageType fromValue(String v) {
 		return valueOf(v);

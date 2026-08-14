@@ -42,7 +42,7 @@ public class CuringObjectsData {
 	 * 返回已加载的治疗物体数量。
 	 * Returns the number of loaded curing objects.
 	 *
-	 * template count
+	 * @return 已加载的治疗物件数量 / Returns the number of loaded curing objects.
 	 */
 	public int size() {
 		return curingObjects.size();
@@ -52,7 +52,7 @@ public class CuringObjectsData {
 	 * 返回全部治疗物体模板列表。
 	 * Returns all curing object templates.
 	 *
-	 * template list
+	 * @return 全部治疗物件模板 / Returns all curing object templates.
 	 */
 	public List<CuringTemplate> getCuringObject() {
 		return curingObjects;

@@ -58,13 +58,13 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	 /**
 	  * 获取 materials 属性值。
 	  * Gets the value of the materials property
-	  * @return possible object is {@link Materials }
+	  * @return 可能的返回对象 / possible object is {@link Materials }
 	  */
 	public Materials getMaterials() {
 		return materials;
 	}
 
-	/** 返回 extra 材料 / Returns the extra 材料 */
+	/** 返回额外材料 / Returns the extra materials */
 	public ExMaterials getExtraMaterials() {
 		return exmaterials;
 	}
@@ -81,7 +81,7 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	 /**
 	  * 获取 aerialAdj 属性值。
 	  * Gets the value of the aerialAdj property
-	  * @return possible object is {@link Integer }
+	  * @return 可能的返回对象 / possible object is {@link Integer }
 	  */
 	public int getAerialAdj() {
 		return aerialAdj;
@@ -90,7 +90,7 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	 /**
 	  * 获取 failureAdj 属性值。
 	  * Gets the value of the failureAdj property
-	  * @return possible object is {@link Integer }
+	  * @return 可能的返回对象 / possible object is {@link Integer }
 	  */
 	public int getFailureAdj() {
 		return failureAdj;
@@ -99,7 +99,7 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	 /**
 	  * 获取 successAdj 属性值。
 	  * Gets the value of the successAdj property
-	  * @return possible object is {@link Integer }
+	  * @return 可能的返回对象 / possible object is {@link Integer }
 	  */
 	public int getSuccessAdj() {
 		return successAdj;
@@ -108,7 +108,7 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	 /**
 	  * 获取 harvestSkill 属性值。
 	  * Gets the value of the harvestSkill property
-	  * @return possible object is {@link Integer }
+	  * @return 可能的返回对象 / possible object is {@link Integer }
 	  */
 	public int getHarvestSkill() {
 		return harvestSkill;
@@ -117,7 +117,7 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	 /**
 	  * 获取 skillLevel 属性值。
 	  * Gets the value of the skillLevel property
-	  * @return possible object is {@link Integer }
+	  * @return 可能的返回对象 / possible object is {@link Integer }
 	  */
 	public int getSkillLevel() {
 		return skillLevel;
@@ -126,7 +126,7 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	 /**
 	  * 获取 harvestCount 属性值。
 	  * Gets the value of the harvestCount property
-	  * @return possible object is {@link Integer }
+	  * @return 可能的返回对象 / possible object is {@link Integer }
 	  */
 	public int getHarvestCount() {
 		return harvestCount;
@@ -135,16 +135,16 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	 /**
 	  * 获取 sourceType 属性值。
 	  * Gets the value of the sourceType property
-	  * @return possible object is {@link String }
+	  * @return 可能的返回对象 / possible object is {@link String }
 	  */
 	public String getSourceType() {
 		return sourceType;
 	}
 
 	/**
-	 * 获取 value 的名称 property。 / Gets the value of the name property
+	 * 获取名称属性值。 / Gets the value of the name property
 	 *
-	 * @return possible object is {@link String }
+	 * @return 可能的返回对象 / possible object is {@link String }
 	 */
 	@Override
 	public String getName() {
@@ -152,14 +152,17 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	}
 
 	/**
-	 * @return the nameId
+	 * 获取名称 ID。
+	 * Gets the name id.
+	 *
+	 * @return 名称 ID / the nameId
 	 */
 	@Override
 	public int getNameId() {
 		return nameId;
 	}
 
-	/** 返回 captcha rate / Returns the captcha rate */
+	/** 返回验证码比率 / Returns the captcha rate */
 	public int getCaptchaRate() {
 		return captcha;
 	}
@@ -169,22 +172,22 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 		return lvlLimit;
 	}
 
-	/** 返回 required item id / Returns the required item id */
+	/** 返回所需物品 ID / Returns the required item id */
 	public int getRequiredItemId() {
 		return reqItem;
 	}
 
-	/** 返回 required item name id / Returns the required item name id */
+	/** 返回所需物品名称 ID / Returns the required item name id */
 	public int getRequiredItemNameId() {
 		return reqItemNameId * 2 + 1;
 	}
 
-	/** 返回检查类型 / Returns the check type*/
+	/** 返回检查类型 / Returns the check type */
 	public int getCheckType() {
 		return checkType;
 	}
 
-	/** 返回 erase value / Returns the erase value */
+	/** 返回消除值 / Returns the erase value */
 	public int getEraseValue() {
 		return eraseValue;
 	}

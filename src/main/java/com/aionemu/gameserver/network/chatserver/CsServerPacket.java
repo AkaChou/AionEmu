@@ -13,7 +13,7 @@ public abstract class CsServerPacket extends BaseServerPacket {
 	 * 使用指定操作码构造服务端包。
 	 * Constructs a server packet with the given opcode.
 	 *
-	 * packet opcode
+	 * @param opcode 包操作码 / packet opcode
 	 */
 	protected CsServerPacket(int opcode) {
 		super(opcode);
@@ -24,7 +24,7 @@ public abstract class CsServerPacket extends BaseServerPacket {
 	 * Writes this packet into the given connection buffer (including length and opcode header).
 	 *
 	 * @param con 目标连接 / target connection
-	 * write buffer
+	 * @param buffer 写出缓冲 / write buffer
 	 */
 	public final synchronized void write(ChatServerConnection con, ByteBuffer buffer) {
 		setBuf(buffer);

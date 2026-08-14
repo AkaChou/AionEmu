@@ -38,9 +38,9 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
      * 按所有者与类型加载挑战任务。
      * Loads challenge tasks by owner and type.
      *
-     * owner id
+     * @param ownerId 房主 ID / owner id
      * @param type 挑战类型 / challenge type
-     * task map
+     * @return 任务映射 / task map
      */
     @Override
     public Map<Integer, ChallengeTask> load(int ownerId, ChallengeType type) {
@@ -154,10 +154,10 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

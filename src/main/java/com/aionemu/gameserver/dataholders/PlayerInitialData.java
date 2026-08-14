@@ -67,7 +67,7 @@ public class PlayerInitialData {
 	 * 返回已加载的职业创建数据数量。
 	 * Returns the number of loaded class creation entries.
 	 *
-	 * entry count
+	 * @return 已加载的职业创建条目数量 / Returns the number of loaded class creation entries.
 	 */
 	public int size() {
 		return data.size();
@@ -77,9 +77,9 @@ public class PlayerInitialData {
 	 * 按阵营获取出生坐标。
 	 * Returns the spawn location for the given race.
 	 *
-	 * 阵营 / race
+	 * @param race 阵营 / race
 	 * @return 出生坐标数据 / spawn location data
-	 * if race is unsupported。
+	 * @throws IllegalArgumentException 不支持的阵营 / if race is unsupported
 	 */
 	public LocationData getSpawnLocation(Race race) {
 		switch (race) {
@@ -143,7 +143,7 @@ public class PlayerInitialData {
 			 * 返回该物品对应的物品模板。
 			 * Returns the item template for this entry.
 			 *
-			 * item template
+			 * @return 该条目的物品模板 / Returns the item template for this entry.
 			 */
 			public ItemTemplate getTemplate() {
 				return DataManager.ITEM_DATA.getItemTemplate(templateId);
@@ -153,7 +153,7 @@ public class PlayerInitialData {
 			 * 返回物品数量。
 			 * Returns the item count.
 			 *
-			 * count
+			 * @return 物品数量 / Returns the item count.
 			 */
 			public int getCount() {
 				return count;
@@ -200,7 +200,7 @@ public class PlayerInitialData {
 		 * 返回地图 ID。
 		 * Returns the map id.
 		 *
-		 * map id
+		 * @return 地图 ID / Returns the map id.
 		 */
 		public int getMapId() {
 			return mapId;
@@ -240,7 +240,7 @@ public class PlayerInitialData {
 		 * 返回朝向。
 		 * Returns the heading.
 		 *
-		 * 朝向 / heading
+		 * @return 朝向 / heading
 		 */
 		public byte getHeading() {
 			return heading;

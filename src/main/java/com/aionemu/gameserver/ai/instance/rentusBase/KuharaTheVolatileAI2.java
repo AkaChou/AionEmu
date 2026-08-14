@@ -126,7 +126,7 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					// 雷安军需官发现油桶。\n 引爆可伤害库哈拉。 / The Reian Quartermaster found an oil barrel.\nKuhara will be hurt if you make it explode.
+					// 鸢族军需官发现油桶。\n 引爆可伤害库哈拉。 / The Reian Quartermaster found an oil barrel.\nKuhara will be hurt if you make it explode.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Kuhara_Barrel_Spawn, 0);
 				}
 			}
@@ -179,7 +179,7 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 									handleMoveValidate();
 									GameEngineServices.skillEngine().getSkill(getOwner(), 19375, 60, getOwner()).useNoAnimationSkill();
 								}
-								deleteNpcs(getPosition().getWorldMapInstance().getNpcs(282396)); //Kuhara Bomb.
+								deleteNpcs(getPosition().getWorldMapInstance().getNpcs(282396)); // 库哈拉炸弹 / Kuhara Bomb.
 							}
 						}
 					}, 11000);
@@ -278,10 +278,10 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 		cancelBombEventTask();
 		final WorldPosition p = getPosition();
 		if (p != null) {
-			deleteNpcs(p.getWorldMapInstance().getNpcs(282394)); //Oil Cask.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(282395)); //Spilled Oil.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(282396)); //Kuhara Bomb.
-			spawn(219215, p.getX(), p.getY(), p.getZ(), p.getHeading()); //Kuhara Treasure Box.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(282394)); // 油桶 / Oil Cask.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(282395)); // 洒落的油 / Spilled Oil.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(282396)); // 库哈拉炸弹 / Kuhara Bomb.
+			spawn(219215, p.getX(), p.getY(), p.getZ(), p.getHeading()); // 库哈拉宝物箱 / Kuhara Treasure Box.
 			p.getWorldMapInstance().getDoors().get(43).setOpen(false);
 			p.getWorldMapInstance().getDoors().get(150).setOpen(true);
 		}

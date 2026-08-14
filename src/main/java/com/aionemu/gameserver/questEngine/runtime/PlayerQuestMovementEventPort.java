@@ -5,7 +5,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMovementFacts;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
-/** Captures movement facts only after the client/server movement handshake succeeds. */
+/** 仅在客户端/服务器移动握手成功后捕获移动事实。 / Captures movement facts only after the client/server movement handshake succeeds. */
 public final class PlayerQuestMovementEventPort implements QuestMovementEventPort {
 	@Override
 	public QuestEvent.PassFlyingRing passFlyingRing(QuestEnv env, String ring) {

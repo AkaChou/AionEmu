@@ -18,8 +18,7 @@ public class WorldMapInstanceFactory {
 	 * Create a non-personal map instance (ownerId=0).
 	 *
 	 * @param parent 父级世界地图 / parent world map
-	 * instance id
-	 *
+	 * @param instanceId 实例 ID / instance id
 	 * @return 新建的地图实例 / newly created map instance
 	 */
 	public static WorldMapInstance createWorldMapInstance(WorldMap parent, int instanceId) {
@@ -31,7 +30,7 @@ public class WorldMapInstanceFactory {
 	 * Create a map instance; abyss/Panesterra maps use 3D regions, others 2D.
 	 *
 	 * @param parent 父级世界地图 / parent world map
-	 * instance id
+	 * @param instanceId 实例 ID / instance id
 	 * @param ownerId 个人实例所有者 ID，0 表示非个人 / personal-instance owner id, 0 if not personal
 	 * @return 新建的地图实例 / newly created map instance
 	 */

@@ -29,6 +29,10 @@ public class Activated_Kisk_BAI2 extends NpcAI2
 		checkDistance(this, creature);
 	}
 	
+	/**
+	 * 当玩家进入 15 米范围内时激活该传送点并广播系统消息。
+	 * Activates this save point and broadcasts a system message when a player comes within 15 meters.
+	 */
 	private void checkDistance(NpcAI2 ai, Creature creature) {
 		if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
         	if (MathUtil.isIn3dRange(getOwner(), creature, 15)) {
@@ -37,12 +41,16 @@ public class Activated_Kisk_BAI2 extends NpcAI2
         	}
         }
     }
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 	}
-	
+
+	/**
+	 * 删除未激活的传送石，在原地刷新激活版传送石。
+	 * Deletes the inactive teleport stone and spawns the activated version at the same spot.
+	 */
 	private void IDEternity03BSavePoint() {
 		AI2Actions.deleteOwner(Activated_Kisk_BAI2.this);
 		spawn(281446, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());

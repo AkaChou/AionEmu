@@ -46,10 +46,10 @@ public class CM_START_LOOT extends AionClientPacket {
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
 
-		if (action == 0) // open
+		if (action == 0) // 打开 / open
 		{
 			GameCoreGameplayServices.dropService().requestDropList(player, targetObjectId);
-		} else if (action == 1) // close
+		} else if (action == 1) // 关闭 / close
 		{
 			GameCoreGameplayServices.dropService().closeDropList(player, targetObjectId);
 		}

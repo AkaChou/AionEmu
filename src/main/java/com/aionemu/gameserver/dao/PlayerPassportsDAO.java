@@ -17,9 +17,9 @@ public abstract class PlayerPassportsDAO implements DAO {
 	 * 插入一条护照记录。
 	 * Inserts a passport record.
 	 *
-	 * 账号 ID / account id
-	 * passport id
-	 * stamps
+	 * @param accountId 账号 ID / account id
+	 * @param passportId 通行证 ID / passport id
+	 * @param stamps 印章数 / stamps
 	 * @param last_stamp 最后时间戳 / last stamp
 	 */
 	public abstract void insertPassport(int accountId, int passportId, int stamps, Timestamp last_stamp);
@@ -28,9 +28,9 @@ public abstract class PlayerPassportsDAO implements DAO {
 	 * 更新护照进度。
 	 * Updates passport progress.
 	 *
-	 * 账号 ID / account id
-	 * passport id
-	 * stamps
+	 * @param accountId 账号 ID / account id
+	 * @param passportId 通行证 ID / passport id
+	 * @param stamps 印章数 / stamps
 	 * @param rewarded 是否已领奖 / rewarded flag
 	 * @param last_stamp 最后时间戳 / last stamp
 	 */
@@ -41,9 +41,9 @@ public abstract class PlayerPassportsDAO implements DAO {
 	 * 获取护照印章数。
 	 * Returns the stamp count for the passport.
 	 *
-	 * 账号 ID / account id
-	 * passport id
-	 * stamp count
+	 * @param accountId 账号 ID / account id
+	 * @param passportId 通行证 ID / passport id
+	 * @return 印章数量 / stamp count
 	 */
 	public abstract int getStamps(int accountId, int passportId);
 
@@ -51,8 +51,8 @@ public abstract class PlayerPassportsDAO implements DAO {
 	 * 获取护照最后时间戳。
 	 * Returns the last stamp timestamp for the passport.
 	 *
-	 * 账号 ID / account id
-	 * passport id
+	 * @param accountId 账号 ID / account id
+	 * @param passportId 通行证 ID / passport id
 	 * @return 最后时间戳 / last stamp
 	 */
 	public abstract Timestamp getLastStamp(int accountId, int passportId);
@@ -61,8 +61,8 @@ public abstract class PlayerPassportsDAO implements DAO {
 	 * 获取账号下全部护照 ID。
 	 * Returns all passport IDs for the account.
 	 *
-	 * 账号 ID / account id
-	 * list of passport ids
+	 * @param accountId 账号 ID / account id
+	 * @return 通行证 ID 列表 / list of passport ids
 	 */
 	public abstract List<Integer> getPassports(int accountId);
 
@@ -70,7 +70,7 @@ public abstract class PlayerPassportsDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public final String getClassName() {

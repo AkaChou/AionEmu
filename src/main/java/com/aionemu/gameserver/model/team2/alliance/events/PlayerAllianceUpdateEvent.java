@@ -10,8 +10,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 
 /**
- * 玩家联盟 Update 活动，用于团队2相关逻辑。
- * Player Alliance Update Event for team 2 logic.
+ * 玩家联盟信息更新事件。
+ * Player Alliance Update Event.
  *
  * @author ATracer
  */

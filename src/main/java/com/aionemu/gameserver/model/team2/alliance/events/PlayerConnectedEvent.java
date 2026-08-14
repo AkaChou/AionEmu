@@ -13,8 +13,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 
 /**
- * 玩家 Connected 活动，用于团队2相关逻辑。
- * Player Connected Event for team 2 logic.
+ * 玩家上线事件。
+ * Player Connected Event.
  *
  * @author ATracer
  */

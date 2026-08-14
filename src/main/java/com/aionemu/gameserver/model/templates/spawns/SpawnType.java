@@ -12,14 +12,18 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum SpawnType {
 	/** 管理器。 / Manager. */
-	MANAGER, TELEPORT, SIGN;
+	MANAGER,
+	/** 传送点 / Teleport */
+	TELEPORT,
+	/** 标示 / Sign */
+	SIGN;
 
 	/** 值。 / Value. */
 	public String value() {
 		return name();
 	}
 
-	/** 值 / From Value*/
+	/** 按值返回 / From Value*/
 	public static SpawnType fromValue(String v) {
 		return valueOf(v);
 	}

@@ -31,7 +31,7 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
      *
      * player id
      *
-     * @param playerId
+     * @param playerId 玩家 ID / player id
      * @return 技能皮肤列表 / skill skin list
      */
     @Override
@@ -62,9 +62,9 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
      * 保存玩家技能皮肤。
      * Stores a player skill skin.
      *
-     * 玩家 / player
+     * @param player 玩家 / player
      * @param entry 技能皮肤条目 / skill skin entry
-     * whether successful
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean storeSkillSkins(Player player, SkillSkin entry) {
@@ -87,9 +87,9 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
      * 激活指定技能皮肤。
      * Activates the specified skill skin.
      *
-     * player object id
-     * skin id
-     * whether successful
+     * @param playerObjId 玩家对象 ID / player object id
+     * @param skinId 外观 ID / skin id
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean setActive(final int playerObjId, final int skinId) {
@@ -111,9 +111,9 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
      * 取消激活指定技能皮肤。
      * Deactivates the specified skill skin.
      *
-     * player object id
-     * skin id
-     * whether successful
+     * @param playerObjId 玩家对象 ID / player object id
+     * @param skinId 外观 ID / skin id
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean setDeactive(final int playerObjId, final int skinId) {
@@ -135,9 +135,9 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
      * 移除指定技能皮肤。
      * Removes the specified skill skin.
      *
-     * player id
-     * skin id
-     * whether successful
+     * @param playerId 玩家 ID / player id
+     * @param skinId 外观 ID / skin id
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean removeSkillSkin(int playerId, int skinId) {
@@ -158,10 +158,10 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

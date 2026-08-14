@@ -32,6 +32,13 @@ public class RecoveringEnergyAI2 extends NpcAI2 {
         checkDistance(this, creature);
     }
 
+    /**
+     * 玩家进入 1 码范围且视线通畅时，对其施放恢复技能。
+     * Cast the recovery skill on a player within 1 yard when line of sight is clear.
+     *
+     * @param ai AI 实例 / AI instance
+     * @param creature 进入范围的生物 / creature that entered range
+     */
     protected void checkDistance(NpcAI2 ai, Creature creature) {
         Npc owner = ai.getOwner();
         if (creature == null || creature.getLifeStats() == null) {

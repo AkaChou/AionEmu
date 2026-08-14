@@ -37,7 +37,10 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
-/** 真端 InAreaObjCtrl 团队区域控制。 */
+/**
+ * 真端 InAreaObjCtrl 团队区域控制。
+ * Retail InAreaObjCtrl team area control.
+ */
 @Slf4j
 public final class RetailGroupControlEngine {
 

@@ -45,7 +45,7 @@ public abstract class XmlUtil {
 	 * 将 XML 字符串解析为 Document。
 	 * Parse an XML string into a Document.
 	 *
-	 * XML source
+	 * @param xmlSource XML 源 / XML source
 	 * @return Document
 	 */
 	public static Document getDocument(String xmlSource) {
@@ -65,8 +65,8 @@ public abstract class XmlUtil {
 	 * 将 Document 转为 XML 字符串。
 	 * Convert a Document to an XML string.
 	 *
-	 * DOM document
-	 * XML string
+	 * @param document DOM 文档 / DOM document
+	 * @return XML 字符串 / XML string
 	 */
 	public static String getString(Document document) {
 		try {
@@ -88,7 +88,7 @@ public abstract class XmlUtil {
 	 * Create a Schema from a schema file path.
 	 *
 	 * @param schemaFile 相对/绝对 schema 路径 / Relative/absolute schema path
-	 * Schema object
+	 * @return Schema 对象 / Schema object
 	 */
 	public static Schema getSchema(String schemaFile) {
 		return getSchema(schemaFile, false);
@@ -100,7 +100,7 @@ public abstract class XmlUtil {
 	 *
 	 * @param schemaFileOrSourceCode 文件路径或 schema 源码 / File path or schema source
 	 * @param isSourceCode 是否为源码 / Whether the argument is source code
-	 * Schema object
+	 * @return Schema 对象 / Schema object
 	 */
 	public static Schema getSchema(String schemaFileOrSourceCode, boolean isSourceCode) {
 		try {
@@ -119,7 +119,7 @@ public abstract class XmlUtil {
 	 * Validate a Document against the given Schema.
 	 *
 	 * @param schema Schema
-	 * DOM document
+	 * @param document DOM 文档 / DOM document
 	 */
 	public static void validate(Schema schema, Document document) {
 		Validator validator = schema.newValidator();
@@ -134,9 +134,9 @@ public abstract class XmlUtil {
 	 * 枚举目录下的 .xml 文件。
 	 * List .xml files under a directory.
 	 *
-	 * Root path
-	 * Whether recursive
-	 * Collection of .xml files
+	 * @param root 根路径 / Root path
+	 * @param recursive 是否递归 / Whether recursive
+	 * @return .xml 文件集合 / Collection of .xml files
 	 * @see #listFiles(File, boolean)
 	 */
 	public static Collection<File> listFiles(String root, boolean recursive) {

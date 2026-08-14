@@ -9,7 +9,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * 升级材料模板（静态数据/XML）。
- * XML template.
+ * Upgrade materials template (static data/XML).
  *
  * @author Ranastic (Encom)
  */
@@ -20,7 +20,7 @@ public class UpgradeMaterials {
 	@XmlElement(required = true)
 	protected List<SubMaterialItem> sub_material_item;
 
-	/** 返回 sub material item / Returns the sub material item */
+	/** 返回子材料列表 / Returns the sub material items */
 	public List<SubMaterialItem> getSubMaterialItem() {
 		return sub_material_item;
 	}

@@ -27,15 +27,15 @@ public abstract class PlayerAllianceDisbandCallback implements Callback {
 		return CallbackResult.newContinue();
 	}
 
-	/** 获取基础职业。 / Returns the base class. */
+	/** 返回基础回调类。 / Returns the base callback class. */
 	@Override
 	public Class<? extends Callback> getBaseClass() {
 		return PlayerAllianceDisbandCallback.class;
 	}
 
-	/** 在 alliance disband 前 / On Before Alliance Disband */
+	/** 联盟解散前 / Before an alliance is disbanded */
 	public abstract void onBeforeAllianceDisband(PlayerAlliance alliance);
 
-	/** 在 alliance disband 后 / On After Alliance Disband */
+	/** 联盟解散后 / After an alliance is disbanded */
 	public abstract void onAfterAllianceDisband(PlayerAlliance alliance);
 }

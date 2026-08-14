@@ -9,7 +9,7 @@ import com.aionemu.gameserver.model.templates.RideBound;
 
 /**
  * Ride 信息模板（静态数据/XML）。
- * XML template.
+ * Ride info template (static data/XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -79,7 +79,7 @@ public class RideInfo {
 	}
 
 	/**
-	 * @return Whether sprint
+	 * @return 是否可冲刺 / Whether sprint
 	 */
 	public boolean canSprint() {
 		return sprintSpeed != 0.0f;

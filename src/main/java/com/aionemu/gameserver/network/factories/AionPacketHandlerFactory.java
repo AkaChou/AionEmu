@@ -19,7 +19,7 @@ public class AionPacketHandlerFactory {
 	 * 获取工厂单例（优先 Spring Provider）。
 	 * Returns the factory singleton (prefers Spring provider).
 	 *
-	 * factory instance
+	 * @return 工厂实例 / factory instance
 	 */
 	public static AionPacketHandlerFactory getInstance() {
 		ObjectProvider<AionPacketHandlerFactory> provider = instanceProvider;
@@ -33,7 +33,7 @@ public class AionPacketHandlerFactory {
 	 * 注入 Spring ObjectProvider，供 DI 覆盖静态单例。
 	 * Injects Spring ObjectProvider to override the static singleton.
 	 *
-	 * Spring provider
+	 * @param provider Spring Provider / Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<AionPacketHandlerFactory> provider) {
 		instanceProvider = provider;
@@ -261,7 +261,7 @@ public class AionPacketHandlerFactory {
 	 * 获取已注册的包处理器。
 	 * Returns the registered packet handler.
 	 *
-	 * packet handler
+	 * @return 包处理器 / packet handler
 	 */
 	public AionPacketHandler getPacketHandler() {
 		return handler;
@@ -271,7 +271,7 @@ public class AionPacketHandlerFactory {
 	 * 向处理器注册一个客户端包原型。
 	 * Registers one client packet prototype with the handler.
 	 *
-	 * packet prototype
+	 * @param prototype 包原型 / packet prototype
 	 */
 	private void addPacket(AionClientPacket prototype) {
 		handler.addPacketPrototype(prototype);

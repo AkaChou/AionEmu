@@ -7,6 +7,10 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.controllers.observer.AttackCalcObserver;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * 必中效果：使目标攻击必定命中，可按次数消耗。
+ * Always-hit effect: ensures the target's attacks always hit, optionally for a limited number of uses.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AlwaysHitEffect")
 public class AlwaysHitEffect extends EffectTemplate {
@@ -16,6 +20,10 @@ public class AlwaysHitEffect extends EffectTemplate {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 注册攻击计算观察者，强制攻击命中并统计剩余次数。
+	 * Registers an attack calc observer that forces hits and tracks remaining uses.
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 		AttackCalcObserver observer = new AttackCalcObserver() {

@@ -13,7 +13,7 @@ import jakarta.xml.bind.annotation.XmlType;
 public enum ItemCategory {
 	/** 魔石 / Manastone. */
 	MANASTONE, SPECIAL_MANASTONE, PRIMARY_MANASTONE, GODSTONE, ENCHANTMENT, ENCHANTMENT_STIGMA,
-	/** Enchantment Amplification / Enchantment Amplification */
+	/** 强化增幅 / Enchantment Amplification */
 	ENCHANTMENT_AMPLIFICATION, FLUX, BALIC_EMOTION, BALIC_MATERIAL, RAWHIDE, SOULSTONE, RECIPE, GATHERABLE,
 	/** 可采集物加成。 / Gatherable Bonus. */
 	GATHERABLE_BONUS, SWORD, DAGGER, MACE, ORB, SPELLBOOK, GREATSWORD, POLEARM, STAFF, BOW, SHIELD, JACKET, PANTS,

@@ -11,7 +11,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 
 /**
- * 战团 Left 活动，用于团队2相关逻辑。
+ * 战团离开事件，用于团队2相关逻辑。
  * League Left Event for team 2 logic.
  */
 
@@ -55,6 +55,10 @@ public class LeagueLeftEvent extends AlwaysTrueTeamEvent implements Predicate<Le
 		}
 	}
 
+	/**
+	 * 检查战团是否应解散：无人在线直接解散，仅剩一人且该队型需解散时解散，否则移交队长。
+	 * Checks whether the league should disband: no online members, or one member left with a disbanding team type; otherwise the leader role is transferred.
+	 */
 	void checkDisband() {
 		if (league.onlineMembers() == 0) {
 			LeagueService.disband(league);

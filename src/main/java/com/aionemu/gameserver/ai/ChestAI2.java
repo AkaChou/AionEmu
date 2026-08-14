@@ -33,7 +33,7 @@ public class ChestAI2 extends ActionItemNpcAI2
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	@Override
 	protected void handleDialogStart(final Player player) {

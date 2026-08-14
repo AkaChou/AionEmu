@@ -12,8 +12,8 @@ import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster.BroadcastMode;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 召唤物游戏属性，用于属性相关逻辑。
- * Summon Game Stats for stats logic.
+ * 召唤物的游戏属性：继承主人属性加成并计算技能消耗等。
+ * Summon game stats: inherits master's bonuses and computes skill costs.
  *
  * @author ATracer
  */

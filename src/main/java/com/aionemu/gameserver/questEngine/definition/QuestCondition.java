@@ -10,7 +10,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-/** Closed set of pure conditions evaluated against a quest snapshot. */
+/**
+ * 针对任务快照求值的纯条件封闭集合。
+ * Closed set of pure conditions evaluated against a quest snapshot.
+ */
 public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCondition.HasItem,
 		QuestCondition.QuestVariableIs, QuestCondition.VariableAtLeast, QuestCondition.VariableBelow,
 		QuestCondition.VariableSumIs, QuestCondition.VariableSumBelow,
@@ -24,7 +27,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		QuestCondition.AcquiredQuest, QuestCondition.EquipmentSetEquipped, QuestCondition.EquippedItem,
 		QuestCondition.MembershipPermission, QuestCondition.DpAtMax, QuestCondition.CompleteCountIs,
 		QuestCondition.EventActive {
-	/** Matches a typed membership capability captured from the live account. */
+	/**
+	 * 匹配从活跃账户捕获的类型化成员权限。
+	 * Matches a typed membership capability captured from the live account.
+	 */
 	record MembershipPermission(QuestMembershipPermission permission, boolean expected) implements QuestCondition {
 		public MembershipPermission {
 			if (permission == null) {
@@ -37,7 +43,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches the number of copies of a concrete item in the equipment projection. */
+	/**
+	 * 匹配装备投影中某具体物品的副本数量。
+	 * Matches the number of copies of a concrete item in the equipment projection.
+	 */
 	record EquippedItem(int itemId, int count, boolean expected) implements QuestCondition {
 		public EquippedItem {
 			if (itemId <= 0 || count <= 0) {
@@ -54,10 +63,17 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
+	/**
+	 * 匹配任务是否满足全部启动条件。
+	 * Matches when the quest's start eligibility holds.
+	 */
 	record StartEligible() implements QuestCondition {
 	}
 
-	/** Matches when every listed prerequisite quest is already completed. */
+	/**
+	 * 当列出的每个前置任务都已完成时匹配。
+	 * Matches when every listed prerequisite quest is already completed.
+	 */
 	record QuestsFinished(Set<Integer> questIds) implements QuestCondition {
 		public QuestsFinished {
 			if (questIds == null || questIds.isEmpty()) {
@@ -70,7 +86,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches when none of the listed prerequisite quests is completed yet. */
+	/**
+	 * 当列出的前置任务均未完成时匹配。
+	 * Matches when none of the listed prerequisite quests is completed yet.
+	 */
 	record UnfinishedQuest(Set<Integer> questIds) implements QuestCondition {
 		public UnfinishedQuest {
 			if (questIds == null || questIds.isEmpty()) {
@@ -83,7 +102,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches when none of the listed quests is completed or currently acquired (START/REWARD). */
+	/**
+	 * 当列出的任务均未完成且当前未接取（START/REWARD）时匹配。
+	 * Matches when none of the listed quests is completed or currently acquired (START/REWARD).
+	 */
 	record NoAcquiredQuest(Set<Integer> questIds) implements QuestCondition {
 		public NoAcquiredQuest {
 			if (questIds == null || questIds.isEmpty()) {
@@ -97,6 +119,7 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 	}
 
 	/**
+	 * 当列出的任务均已接取（完成或在进行中）时匹配，镜像旧版 {@code acquired} 起始条件。
 	 * Matches when every listed quest is already acquired (completed or in progress),
 	 * mirroring the legacy {@code acquired} start condition.
 	 */
@@ -112,7 +135,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches the player's starting class (advanced classes normalize to their base). */
+	/**
+	 * 匹配玩家的起始职业（进阶职业归一化为其基础职业）。
+	 * Matches the player's starting class (advanced classes normalize to their base).
+	 */
 	record PlayerClassIs(PlayerClass startingClass) implements QuestCondition {
 		public PlayerClassIs {
 			if (startingClass == null) {
@@ -121,7 +147,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches the concrete advanced class captured from the player. */
+	/**
+	 * 匹配从玩家捕获的具体进阶职业。
+	 * Matches the concrete advanced class captured from the player.
+	 */
 	record AdvancedClassIs(PlayerClass playerClass) implements QuestCondition {
 		public AdvancedClassIs {
 			if (playerClass == null || playerClass == PlayerClass.ALL || playerClass.isStartingClass()) {
@@ -130,7 +159,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** 匹配快照中的玩家性别；未知事实安全失败。Matches captured gender; unknown facts fail closed. */
+	/**
+	 * 匹配快照中的玩家性别；未知事实安全失败。
+	 * Matches captured gender; unknown facts fail closed.
+	 */
 	record GenderIs(Gender gender) implements QuestCondition {
 		public GenderIs {
 			if (gender == null || gender == Gender.DUMMY) {
@@ -139,7 +171,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches the player's authoritative race projection. */
+	/**
+	 * 匹配玩家的权威种族投影。
+	 * Matches the player's authoritative race projection.
+	 */
 	record PlayerRaceIs(Race race) implements QuestCondition {
 		public PlayerRaceIs {
 			if (race == null || race == Race.PC_ALL) {
@@ -148,14 +183,20 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches whether the player is in a regular group (not merely an alliance). */
+	/**
+	 * 匹配玩家是否在常规小队中（而非仅仅是同盟）。
+	 * Matches whether the player is in a regular group (not merely an alliance).
+	 */
 	record PlayerInGroup(boolean expected) implements QuestCondition {
 		public PlayerInGroup() {
 			this(true);
 		}
 	}
 
-	/** Matches the world the player is currently in; expected=false is the explicit "not in world" case. */
+	/**
+	 * 匹配玩家当前所在世界；expected=false 为显式「不在该世界」情形。
+	 * Matches the world the player is currently in; expected=false is the explicit "not in world" case.
+	 */
 	record WorldIs(int worldId, boolean expected) implements QuestCondition {
 		public WorldIs {
 			if (worldId <= 0) {
@@ -164,7 +205,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches one authoritative zone occupied by the player. */
+	/**
+	 * 匹配玩家占据的一个权威区域。
+	 * Matches one authoritative zone occupied by the player.
+	 */
 	record ZoneIs(String zone, boolean expected) implements QuestCondition {
 		public ZoneIs {
 			if (zone == null || zone.isBlank()) {
@@ -178,7 +222,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches an authoritative AttackNpc callback while the target is below a strict HP percentage. */
+	/**
+	 * 目标严格低于某一 HP 百分比时匹配权威 AttackNpc 回调。
+	 * Matches an authoritative AttackNpc callback while the target is below a strict HP percentage.
+	 */
 	record NpcHpBelowPercent(int npcId, int percent) implements QuestCondition {
 		public NpcHpBelowPercent {
 			if (npcId <= 0) {
@@ -190,7 +237,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches a captured balance before a currency debit branch. */
+	/**
+	 * 货币扣减分支前匹配捕获的余额。
+	 * Matches a captured balance before a currency debit branch.
+	 */
 	record CurrencyAtLeast(QuestRewardKind kind, long amount) implements QuestCondition {
 		public CurrencyAtLeast {
 			if (kind == null || !kind.isCurrency()) {
@@ -202,7 +252,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches a captured currency balance strictly below the required amount. */
+	/**
+	 * 匹配严格低于所需金额的捕获货币余额。
+	 * Matches a captured currency balance strictly below the required amount.
+	 */
 	record CurrencyBelow(QuestRewardKind kind, long amount) implements QuestCondition {
 		public CurrencyBelow {
 			if (kind == null || !kind.isCurrency()) {
@@ -214,7 +267,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches whether any listed equipment set has exactly the requested equipped-part count. */
+	/**
+	 * 匹配任一列出的装备套装是否恰好具有请求的已装备部件数量。
+	 * Matches whether any listed equipment set has exactly the requested equipped-part count.
+	 */
 	record EquipmentSetEquipped(Set<Integer> setIds, int count, boolean expected) implements QuestCondition {
 		public EquipmentSetEquipped {
 			if (setIds == null || setIds.isEmpty() || setIds.stream().anyMatch(id -> id == null || id <= 0)) {
@@ -231,11 +287,15 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches when the captured current DP equals the captured maximum DP. */
+	/**
+	 * 当捕获的当前 DP 等于捕获的最大 DP 时匹配。
+	 * Matches when the captured current DP equals the captured maximum DP.
+	 */
 	record DpAtMax() implements QuestCondition {
 	}
 
 	/**
+	 * 匹配任务至今完成的次数（例如第九次完成解锁额外的事件奖励）。
 	 * Matches the number of times the quest has been completed so far
 	 * (for example the ninth completion unlocking an extra event reward).
 	 */
@@ -252,6 +312,8 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 	}
 
 	/**
+	 * 匹配当前游戏事件是否仍包含此任务，镜像 {@code EventService.checkQuestIsActive}。
+	 * 未知事实安全失败。
 	 * Matches whether the current game event still contains this quest,
 	 * mirroring {@code EventService.checkQuestIsActive}. Unknown facts fail closed.
 	 */
@@ -275,7 +337,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches presence of an NPC template in the player's current world instance. */
+	/**
+	 * 匹配玩家当前世界实例中是否存在某 NPC 模板。
+	 * Matches presence of an NPC template in the player's current world instance.
+	 */
 	record WorldNpcIs(int npcId, boolean expected) implements QuestCondition {
 		public WorldNpcIs {
 			if (npcId <= 0) {
@@ -284,6 +349,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
+	/**
+	 * 匹配任务状态投影等于给定状态。
+	 * Matches when the quest status projection equals the given status.
+	 */
 	record StatusIs(QuestStatus status) implements QuestCondition {
 		public StatusIs {
 			if (status == null) {
@@ -292,6 +361,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
+	/**
+	 * 匹配玩家背包中某物品的副本数量。
+	 * Matches the number of copies of an item in the player's inventory.
+	 */
 	record HasItem(int itemId, int count, boolean expected) implements QuestCondition {
 		public HasItem {
 			if (itemId <= 0 || count <= 0) {
@@ -304,6 +377,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
+	/**
+	 * 匹配任务变量字段等于给定值。
+	 * Matches when a quest variable field equals the given value.
+	 */
 	record QuestVariableIs(String field, int value) implements QuestCondition {
 		public QuestVariableIs {
 			if (field == null || field.isBlank()) {
@@ -312,7 +389,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** 字段值达到阈值（大于等于）。Matches when the field is at least the given value. */
+	/**
+	 * 字段值达到阈值（大于等于）。
+	 * Matches when the field is at least the given value.
+	 */
 	record VariableAtLeast(String field, int value) implements QuestCondition {
 		public VariableAtLeast {
 			if (field == null || field.isBlank()) {
@@ -321,7 +401,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** 字段值低于上限（小于）。Matches when the field is below the given cap. */
+	/**
+	 * 字段值低于上限（小于）。
+	 * Matches when the field is below the given cap.
+	 */
 	record VariableBelow(String field, int value) implements QuestCondition {
 		public VariableBelow {
 			if (field == null || field.isBlank()) {
@@ -330,21 +413,30 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches when the sum of the listed progress fields equals the target value. */
+	/**
+	 * 列出的进度字段之和等于目标值时匹配。
+	 * Matches when the sum of the listed progress fields equals the target value.
+	 */
 	record VariableSumIs(List<String> fields, int value) implements QuestCondition {
 		public VariableSumIs {
 			fields = validatedFields(fields);
 		}
 	}
 
-	/** Matches when the sum of the listed progress fields is below the target value. */
+	/**
+	 * 列出的进度字段之和低于目标值时匹配。
+	 * Matches when the sum of the listed progress fields is below the target value.
+	 */
 	record VariableSumBelow(List<String> fields, int value) implements QuestCondition {
 		public VariableSumBelow {
 			fields = validatedFields(fields);
 		}
 	}
 
-	/** Matches an authoritative recipe fact, including the explicit "not known" case. */
+	/**
+	 * 匹配权威配方事实，包括显式「未学会」情形。
+	 * Matches an authoritative recipe fact, including the explicit "not known" case.
+	 */
 	record RecipeKnown(int recipeId, boolean expected) implements QuestCondition {
 		public RecipeKnown {
 			if (recipeId <= 0) {
@@ -353,7 +445,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches expert/master eligibility captured before the event. */
+	/**
+	 * 匹配事件前捕获的专家/大师资格。
+	 * Matches expert/master eligibility captured before the event.
+	 */
 	record CanGrantCraftSkill(int skillId, int targetLevel) implements QuestCondition {
 		public CanGrantCraftSkill {
 			if (skillId <= 0 || targetLevel <= 0) {
@@ -362,7 +457,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches recipientLevel - victimLevel against an inclusive legacy PvP window. */
+	/**
+	 * 按闭区间旧版 PvP 窗口匹配 recipientLevel - victimLevel。
+	 * Matches recipientLevel - victimLevel against an inclusive legacy PvP window.
+	 */
 	record PvpVictimLevelDelta(int minimumRecipientDelta, int maximumRecipientDelta) implements QuestCondition {
 		public PvpVictimLevelDelta {
 			if (minimumRecipientDelta > maximumRecipientDelta) {
@@ -371,7 +469,10 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		}
 	}
 
-	/** Matches one authoritative Zone occupied by the credited PvP recipient. */
+	/**
+	 * 匹配获得积分的 PvP 接收者占据的一个权威区域。
+	 * Matches one authoritative Zone occupied by the credited PvP recipient.
+	 */
 	record PvpRecipientInZone(String zone) implements QuestCondition {
 		public PvpRecipientInZone {
 			if (zone == null || zone.isBlank()) {

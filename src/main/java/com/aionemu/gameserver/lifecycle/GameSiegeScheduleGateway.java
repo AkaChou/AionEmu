@@ -80,7 +80,7 @@ public class GameSiegeScheduleGateway {
      * 解析攻城服务。
      * Resolve the siege service.
      *
-     * Siege service
+     * @return 攻城服务 / Siege service
      */
     private SiegeService siegeService() {
         if (siegeServiceProvider == null) {
@@ -93,7 +93,7 @@ public class GameSiegeScheduleGateway {
      * 解析基地服务。
      * Resolve the base service.
      *
-     * Base service
+     * @return 基地服务 / Base service
      */
     private BaseService baseService() {
         if (baseServiceProvider == null) {

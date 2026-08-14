@@ -49,7 +49,7 @@ public class Nanabel_ComanderAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		GameLocationBootstrapServices.rvrService().stopRvr(4);
-		spawn(833766, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Dimensional Vortex.
+		spawn(833766, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 次元漩涡 / Dimensional Vortex.
 		super.handleDied();
 	}
 	

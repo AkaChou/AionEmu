@@ -129,7 +129,7 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
-						spawn(282378, x, y, z, (byte) 0); //Baby Consierd.
+						spawn(282378, x, y, z, (byte) 0); // 小 Consierd / Baby Consierd
 					}
 				}
 			}, 3000);

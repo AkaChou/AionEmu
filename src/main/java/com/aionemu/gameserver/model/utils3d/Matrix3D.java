@@ -1,13 +1,14 @@
 package com.aionemu.gameserver.model.utils3d;
 
 /**
- * Matrix3D，用于工具3d 相关逻辑。
- * Matrix 3 D for utils 3 d logic.
+ * 3x3 矩阵，用于 3D 工具逻辑。
+ * Matrix 3D for utils 3D logic.
  *
  * @author M@xx
  */
 public class Matrix3D {
 
+	/** 单位矩阵 / identity matrix */
 	public static final double[][] IDENTITY = new double[][] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
 
 	private double[][] data;
@@ -30,7 +31,7 @@ public class Matrix3D {
 		}
 	}
 
-	/** 替换列 / replace Column. */
+	/** 替换指定列并返回新矩阵。 / Replaces a column and returns a new matrix. */
 	public Matrix3D replaceColumn(int i, double[] newColumn) {
 		if (i > 3 || i < 0) {
 			throw new RuntimeException("Invalid column index " + i);
@@ -45,7 +46,7 @@ public class Matrix3D {
 		return B;
 	}
 
-	/** 相乘 / multiply. */
+	/** 矩阵相乘 / multiply. */
 	public Matrix3D multiply(Matrix3D B) {
 		Matrix3D C = new Matrix3D();
 		for (int i = 0; i < 3; i++) {
@@ -58,7 +59,7 @@ public class Matrix3D {
 		return C;
 	}
 
-	/** 相乘 / multiply. */
+	/** 与标量相乘 / multiply by a scalar. */
 	public Matrix3D multiply(double b) {
 		Matrix3D C = new Matrix3D();
 		for (int i = 0; i < 3; i++) {
@@ -69,7 +70,7 @@ public class Matrix3D {
 		return C;
 	}
 
-	/** 行列式 / determinant. */
+	/** 计算行列式。 / Computes the determinant. */
 	public double determinant() {
 		double aei = data[0][0] * data[1][1] * data[2][2];
 		double bfg = data[0][1] * data[1][2] * data[2][0];
@@ -80,7 +81,7 @@ public class Matrix3D {
 		return (aei + bfg + cdh - afh - bdi - ceg);
 	}
 
-	/** 逆矩阵 / inverse. */
+	/** 计算逆矩阵。 / Computes the inverse matrix. */
 	public Matrix3D inverse() {
 		if (Math.abs(determinant()) <= Double.MIN_VALUE) {
 			throw new RuntimeException("Matrix not inversible");
@@ -88,7 +89,7 @@ public class Matrix3D {
 		return adjugate().multiply(1 / determinant());
 	}
 
-	/** 伴随矩阵 / adjugate. */
+	/** 计算伴随矩阵。 / Computes the adjugate matrix. */
 	public Matrix3D adjugate() {
 		Matrix3D adj = new Matrix3D();
 		adj.data[0][0] = data[1][1] * data[2][2] - data[1][2] * data[2][1];
@@ -103,7 +104,7 @@ public class Matrix3D {
 		return adj;
 	}
 
-	/** 相乘 / multiply. */
+	/** 矩阵与向量相乘 / multiply by a vector. */
 	public double[] multiply(double[] v) {
 		if (v.length != 3) {
 			throw new RuntimeException("Vector dimensions invalid");

@@ -88,6 +88,7 @@ public class IDTiamatT1CrystalKeyNamed65AlAI2 extends AggressiveNpcAI2
 					cancelPhaseTask();
 				} else {
 					GameEngineServices.skillEngine().getSkill(getOwner(), 20159, 60, getOwner()).useNoAnimationSkill(); //Petrification Crystal.
+					// 石化水晶。 / Petrification Crystal.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -120,6 +121,7 @@ public class IDTiamatT1CrystalKeyNamed65AlAI2 extends AggressiveNpcAI2
 				public void run() {
 					if (!isAlreadyDead()) {
 						spawn(282731, x, y, z, (byte) 0); //Petrification Crystal.
+						// 石化水晶。 / Petrification Crystal.
 					}
 				}
 			}, 3000);
@@ -155,6 +157,7 @@ public class IDTiamatT1CrystalKeyNamed65AlAI2 extends AggressiveNpcAI2
 		final WorldPosition p = getPosition();
 		if (p != null) {
 			deleteNpcs(p.getWorldMapInstance().getNpcs(282731)); //Petrification Crystal.
+			// 石化水晶。 / Petrification Crystal.
 		}
 		cancelPhaseTask();
 		sendMsg(1401141);

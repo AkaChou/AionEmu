@@ -31,7 +31,7 @@ public class LsPacketHandlerFactory {
 	 * 获取工厂单例（优先 Spring Provider）。
 	 * Returns the factory singleton (prefers Spring provider).
 	 *
-	 * factory instance
+	 * @return 工厂实例 / factory instance
 	 */
 	public static final LsPacketHandlerFactory getInstance() {
 		ObjectProvider<LsPacketHandlerFactory> provider = instanceProvider;
@@ -45,7 +45,7 @@ public class LsPacketHandlerFactory {
 	 * 注入 Spring ObjectProvider，供 DI 覆盖静态单例。
 	 * Injects Spring ObjectProvider to override the static singleton.
 	 *
-	 * Spring provider
+	 * @param provider Spring Provider / Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<LsPacketHandlerFactory> provider) {
 		instanceProvider = provider;
@@ -73,7 +73,7 @@ public class LsPacketHandlerFactory {
 	 * 向处理器注册包原型及合法状态。
 	 * Registers a packet prototype with valid states.
 	 *
-	 * packet prototype
+	 * @param prototype 包原型 / packet prototype
 	 * @param states 合法连接状态 / valid connection states
 	 */
 	private void addPacket(LsClientPacket prototype, State... states) {
@@ -84,7 +84,7 @@ public class LsPacketHandlerFactory {
 	 * 获取已注册的包处理器。
 	 * Returns the registered packet handler.
 	 *
-	 * packet handler
+	 * @return 包处理器 / packet handler
 	 */
 	public LsPacketHandler getPacketHandler() {
 		return handler;

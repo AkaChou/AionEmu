@@ -15,7 +15,7 @@ public class Spirit_Forest_Worg_MorpherAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(242843, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Spirit Forest Worg Pup.
+		spawn(242843, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 灵森 Worg 幼崽 / Spirit Forest Worg Pup.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

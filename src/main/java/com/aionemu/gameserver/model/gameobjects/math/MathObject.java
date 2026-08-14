@@ -61,17 +61,17 @@ public class MathObject extends VisibleObject {
 		this.npcId = npcId;
 	}
 
-	/** 返回 controller / Returns the controller */
+	/** 返回控制器。 / Returns the controller. */
 	public MathController getController() {
 		return (MathController) super.getController();
 	}
 
-	/** 返回最小范围 / Returns the min range*/
+	/** 返回最小范围。 / Returns the min range. */
 	public double getMinRange() {
 		return this.minRange;
 	}
 
-	/** 返回最大范围 / Returns the max range*/
+	/** 返回最大范围。 / Returns the max range. */
 	public double getMaxRange() {
 		return this.maxRange;
 	}
@@ -86,12 +86,12 @@ public class MathObject extends VisibleObject {
 		return this.npcId;
 	}
 
-	/** 返回大师 / Returns the master*/
+	/** 返回主人。 / Returns the master. */
 	public Npc getMaster() {
 		return this.master;
 	}
 
-	/** 设置 master / Sets the master */
+	/** 设置主人。 / Sets the master. */
 	public void setMaster(Npc master) {
 		this.master = master;
 	}
@@ -101,28 +101,28 @@ public class MathObject extends VisibleObject {
 		return this.type;
 	}
 
-	/** 返回 reaction / Returns the reaction */
+	/** 返回反应类型。 / Returns the reaction. */
 	public MathObjectReaction getReaction() {
 		return this.reaction;
 	}
 
-	/** 返回时长 / Returns the duration*/
+	/** 返回时长。 / Returns the duration. */
 	public int getDuration() {
 		return this.duration;
 	}
 
-	/** 设置 duration / Sets the duration */
+	/** 设置时长。 / Sets the duration. */
 	public void setDuration(int duration) {
 		this.duration = duration;
 	}
 
-	/** 返回 visibility distance / Returns the visibility distance */
+	/** 返回可见距离。 / Returns the visibility distance. */
 	@Override
 	public float getVisibilityDistance() {
 		return (float) (this.getMaxRange() + 5.0);
 	}
 
-	/** 返回 max z visible distance / Returns the max z visible distance */
+	/** 返回最大 Z 轴可见距离。 / Returns the max z visible distance. */
 	@Override
 	public float getMaxZVisibleDistance() {
 		return (float) (this.getMaxRange() + 5.0);

@@ -95,7 +95,7 @@ public class GameCoreServicesRuntimeBridge {
      * 解析 HTML 缓存：优先 Spring，否则回退。
      * Resolve HTMLCache: prefer Spring, otherwise fall back.
      *
-     * HTML cache
+     * @return HTML 缓存 / HTML cache
      */
     public HTMLCache htmlCache() {
         if (htmlCacheProvider == null) {

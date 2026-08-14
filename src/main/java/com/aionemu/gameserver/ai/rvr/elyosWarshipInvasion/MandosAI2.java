@@ -28,7 +28,7 @@ public class MandosAI2 extends AggressiveNpcAI2
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 75) {
 			announceDF6G1BossSpawn01();
-			spawn(240770, 1391.9735f, 1615.5792f, 1010.55457f, (byte) 25); //Mandos <Commander>
+			spawn(240770, 1391.9735f, 1615.5792f, 1010.55457f, (byte) 25); // 指挥官曼多斯 / Mandos <Commander>
 			AI2Actions.deleteOwner(this);
 		}
 	}

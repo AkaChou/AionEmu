@@ -17,7 +17,7 @@ public abstract class TaskFromDBDAO implements DAO {
 	 * 查询数据库中全部定时任务。
 	 * Returns all tasks from the database.
 	 *
-	 * task list
+	 * @return 任务列表 / task list
 	 */
 	public abstract ArrayList<TaskFromDB> getAllTasks();
 
@@ -33,7 +33,7 @@ public abstract class TaskFromDBDAO implements DAO {
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
 	 *
-	 * fully qualified class name
+	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
 	public final String getClassName() {

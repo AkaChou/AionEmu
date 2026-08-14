@@ -38,7 +38,7 @@ public abstract class Panesterra<PL extends SvsLocation> {
 	 * 绑定 SVS 地点。
 	 * Binds the SVS location.
 	 *
-	 * location
+	 * @param svsLocation SVS 地点 / SVS location
 	 */
 	public Panesterra(PL svsLocation) {
 		this.svsLocation = svsLocation;
@@ -105,7 +105,7 @@ public abstract class Panesterra<PL extends SvsLocation> {
 	 * 获取绑定地点。
 	 * Returns the bound location.
 	 *
-	 * location
+	 * @return 绑定地点 / bound location
 	 */
 	public PL getSvsLocation() {
 		return svsLocation;
@@ -115,7 +115,7 @@ public abstract class Panesterra<PL extends SvsLocation> {
 	 * 获取地点 ID。
 	 * Returns the location id.
 	 *
-	 * location id
+	 * @return 地点 ID / location id
 	 */
 	public int getSvsLocationId() {
 		return svsLocation.getId();

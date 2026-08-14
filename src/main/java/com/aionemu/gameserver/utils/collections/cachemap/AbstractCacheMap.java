@@ -46,8 +46,8 @@ abstract class AbstractCacheMap<K, V> implements CacheMap<K, V> {
 	 * 使用缓存名与值名构造。
 	 * Construct with cache name and value name.
 	 *
-	 * Cache name
-	 * Value name
+	 * @param cacheName 缓存名称 / Cache name
+	 * @param valueName 值名称 / Value name
 	 */
 	AbstractCacheMap(String cacheName, String valueName) {
 		this.cacheName = "#CACHE  [" + cacheName + "]#  ";
@@ -120,10 +120,10 @@ abstract class AbstractCacheMap<K, V> implements CacheMap<K, V> {
 	 * 创建包装键的引用实现。
 	 * Create a reference implementation that holds the key.
 	 *
-	 * Key
-	 * Value
+	 * @param key 键 / Key
+	 * @param value 值 / Value
 	 * @param queue 引用队列 / Reference queue
-	 * Reference object
+	 * @return 引用对象 / Reference object
 	 */
 	protected abstract Reference<V> newReference(K key, V value, ReferenceQueue<V> queue);
 }

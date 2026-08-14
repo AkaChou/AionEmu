@@ -3,7 +3,10 @@ package com.aionemu.gameserver.questEngine.definition;
 import java.util.List;
 import java.util.Objects;
 
-/** A pure event/condition to mutation transition. */
+/**
+ * 纯粹的事件/条件到变更的转换。
+ * A pure event/condition to mutation transition.
+ */
 public record QuestTransition(QuestEvent event, List<QuestCondition> conditions,
 		List<QuestAction> actions, String targetNode, List<AfterCommitAction> afterCommit,
 		Integer priority, String sourceNode) {

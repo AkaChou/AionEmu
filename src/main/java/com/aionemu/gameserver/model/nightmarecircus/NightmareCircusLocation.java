@@ -38,13 +38,13 @@ public class NightmareCircusLocation {
 		return isActive;
 	}
 
-	/** 设置 active nightmare circus / Sets the active nightmare circus */
+	/** 设置激活的梦魇马戏团实例。 / Sets the active nightmare circus. */
 	public void setActiveNightmareCircus(CircusInstance<NightmareCircusLocation> nightmareCircus) {
 		isActive = nightmareCircus != null;
 		this.activeNightmareCircus = nightmareCircus;
 	}
 
-	/** 返回 active nightmare circus / Returns the active nightmare circus */
+	/** 返回激活的梦魇马戏团实例。 / Returns the active nightmare circus. */
 	public CircusInstance<NightmareCircusLocation> getActiveNightmareCircus() {
 		return activeNightmareCircus;
 	}

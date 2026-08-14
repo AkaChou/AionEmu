@@ -11,7 +11,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 
 /**
- * 玩家 Connected 活动，用于团队2相关逻辑。
+ * 玩家重连事件（团队2）。
  * Player Connected Event for team 2 logic.
  *
  * @author ATracer
@@ -26,7 +26,7 @@ public class PlayerConnectedEvent extends AlwaysTrueTeamEvent implements Predica
 		this.player = player;
 	}
 
-	/** 处理活动。 / Handle event. */
+	/** 处理事件。 / Handle event. */
 	@Override
 	public void handleEvent() {
 		group.removeMember(player.getObjectId());

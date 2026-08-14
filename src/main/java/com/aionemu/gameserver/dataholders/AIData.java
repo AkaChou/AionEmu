@@ -43,7 +43,7 @@ public class AIData {
 	 * 返回已加载的 AI 模板数量。
 	 * Returns the number of loaded AI templates.
 	 *
-	 * template count
+	 * @return 已加载的AI 模板数量 / Returns the number of loaded AI templates.
 	 */
 	public int size() {
 		return aiTemplate.size();

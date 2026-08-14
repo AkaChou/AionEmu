@@ -9,8 +9,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Percentage，用于 ai 相关逻辑。
- * Percentage for ai logic.
+ * 血量百分比触发点：按血量阈值配置召唤物组与技能。
+ * HP-percentage trigger: configures summon groups and a skill by HP threshold.
  *
  * @author xTz
  */
@@ -43,7 +43,10 @@ public class Percentage {
 	}
 
 	/**
-	 * @return Whether individual
+	 * 是否为独立召唤（按玩家分别触发）。
+	 * Whether the summons trigger individually per player.
+	 *
+	 * @return 是否独立召唤 / Whether individual
 	 */
 	public boolean isIndividual() {
 		return isIndividual;

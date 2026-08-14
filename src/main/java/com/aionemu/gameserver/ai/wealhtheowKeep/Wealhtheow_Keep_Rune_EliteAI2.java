@@ -34,6 +34,7 @@ public class Wealhtheow_Keep_Rune_EliteAI2 extends AggressiveNpcAI2
 	
 	@Override
 	protected void handleDied() {
+		// 指定 NPC 死亡后 10 秒在固定位置生成 3 个宝箱。 / Spawns 3 treasure chests at fixed spots 10s after these NPCs die.
 		switch (getNpcId()) {
 			// 韦尔休堡垒。 / Wealhtheow's Keep.
 			case 251825:

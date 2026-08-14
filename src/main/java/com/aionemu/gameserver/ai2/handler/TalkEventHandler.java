@@ -24,10 +24,10 @@ public class TalkEventHandler {
 
 	/**
 	 * 处理完整对话：进入对话子状态，处理任务对话框，并按标题 / 城镇发送对话窗口。
-	 * town.
+	 * Handles full talk: enters talk sub-state, processes quest dialogs, and sends dialog window by title / town.
 	 *
-	 * NPC AI instance
-	 * talking creature
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 * @param creature 对话生物 / talking creature
 	 */
 	public static void onTalk(NpcAI2 npcAI, Creature creature) {
 		onSimpleTalk(npcAI, creature);
@@ -37,8 +37,8 @@ public class TalkEventHandler {
 				return;
 			}
 			switch (npcAI.getOwner().getObjectTemplate().getTitleId()) {
-			case 462877: // Village Trade Broker.
-			case 462878: // Village Guestbloom.
+			case 462877: // 村庄交易经纪人。 / Village Trade Broker.
+			case 462878: // 村庄 Guestbloom。 / Village Guestbloom.
 				// case 462881: // 村庄任务公告板。 / Village Quest Board.
 				// 奥利尔。 / Oriel.
 			case 730677:
@@ -92,8 +92,8 @@ public class TalkEventHandler {
 	 * 简化对话：对话框 NPC 进入 TALK 子状态并设定目标。
 	 * Simple talk: dialog NPCs enter TALK sub-state and set the target.
 	 *
-	 * NPC AI instance
-	 * talking creature
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 * @param creature 对话生物 / talking creature
 	 */
 	public static void onSimpleTalk(NpcAI2 npcAI, Creature creature) {
 		if (npcAI.getOwner().getObjectTemplate().isDialogNpc()) {
@@ -106,7 +106,7 @@ public class TalkEventHandler {
 	 * 结束对话：清空目标（非跟随状态）并触发思考。
 	 * Finishes talk: clears target (unless following) and triggers think.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param creature 结束对话的对象 / creature finishing talk
 	 */
 	public static void onFinishTalk(NpcAI2 npcAI, Creature creature) {
@@ -123,7 +123,7 @@ public class TalkEventHandler {
 	 * 简化结束对话：清除 TALK 子状态并清空目标。
 	 * Simple finish talk: clears TALK sub-state and target.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param creature 结束对话的对象 / creature finishing talk
 	 */
 	public static void onSimpleFinishTalk(NpcAI2 npcAI, Creature creature) {

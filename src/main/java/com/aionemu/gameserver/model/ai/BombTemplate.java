@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Bomb 模板，用于 ai 相关逻辑。
- * Bomb Template for ai logic.
+ * 炸弹模板：定义自爆技能的 ID 与冷却时间。
+ * Bomb template: defines the self-destruct skill id and cooldown.
  *
  * @author xTz
  */

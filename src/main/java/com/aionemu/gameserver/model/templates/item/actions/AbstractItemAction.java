@@ -18,19 +18,23 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 public abstract class AbstractItemAction {
 
 	/**
-	 * 检查是否物品可 used。 / Check if an item can be used
+	 * 检查物品是否可以使用。
+	 * Check whether the item can be used.
 	 *
-	 * @param player
-	 * @param parentItem
-	 * @param targetItem
-	 * @return
+	 * @param player 使用物品的玩家 / the player using the item
+	 * @param parentItem 父物品 / the parent item
+	 * @param targetItem 目标物品 / the target item
+	 * @return 允许使用则为 true / true if the item can be used
 	 */
 	public abstract boolean canAct(Player player, Item parentItem, Item targetItem);
 
 	/**
-	 * @param player
-	 * @param parentItem
-	 * @param targetItem
+	 * 执行物品动作。
+	 * Perform the item action.
+	 *
+	 * @param player 使用物品的玩家 / the player using the item
+	 * @param parentItem 父物品 / the parent item
+	 * @param targetItem 目标物品 / the target item
 	 */
 	public abstract void act(Player player, Item parentItem, Item targetItem);
 

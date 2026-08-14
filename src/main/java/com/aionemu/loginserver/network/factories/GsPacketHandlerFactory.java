@@ -121,7 +121,7 @@ public class GsPacketHandlerFactory {
      * Logs an unknown game-server packet.
      *
      * @param state 当前连接状态 / current connection state
-     * packet opcode
+     * @param id 包 opcode / packet opcode
      */
     private static void unknownPacket(State state, int id) {
         log.warn(I18n.get("log.2585d962bf33", String.format("%02X", id), state));

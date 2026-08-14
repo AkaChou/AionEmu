@@ -12,6 +12,14 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "item_type")
 @XmlEnum
 public enum ItemType {
-	/** 普通 / Normal. */
-	NORMAL, ABYSS, DRACONIC, DEVANION, LEGEND;
+	/** 普通 / Normal */
+	NORMAL,
+	/** 欧比斯 / Abyss */
+	ABYSS,
+	/** 龙族 / Draconic */
+	DRACONIC,
+	/** 圣灵守护者 / Devanion */
+	DEVANION,
+	/** 传颂 / Legend */
+	LEGEND;
 }

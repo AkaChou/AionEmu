@@ -22,7 +22,7 @@ public class ShieldCondition extends Condition {
 	 * Validates whether the skill environment satisfies this condition.
 	 *
 	 * @param env 技能环境 / skill environment
-	 * whether valid
+	 * @return 是否有效 / whether valid
 	 */
 	@Override
 	public boolean validate(Skill env) {

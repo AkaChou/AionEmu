@@ -35,10 +35,10 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {
@@ -49,8 +49,8 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
      * 加载玩家衣柜列表。
      * Loads the player's wardrobe list.
      *
-     * 玩家 / player
-     * wardrobe list
+     * @param player 玩家 / player
+     * @return 衣柜列表 / wardrobe list
      */
     @Override
     public PlayerWardrobeList load(Player player) {
@@ -79,11 +79,11 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
      * 保存衣柜条目（插入或更新）。
      * Stores a wardrobe entry (insert or update).
      *
-     * player object id
-     * item id
-     * slot
-     * reskin count
-     * whether successful
+     * @param objectId 玩家对象 ID / player object id
+     * @param itemId 物品 ID / item id
+     * @param slot 槽位 / slot
+     * @param reskin 外观重置次数 / reskin count
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean store(int objectId, int itemId, int slot, int reskin) {
@@ -106,9 +106,9 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
      * 删除指定衣柜条目。
      * Deletes a wardrobe entry.
      *
-     * player object id
-     * item id
-     * whether successful
+     * @param objectId 玩家对象 ID / player object id
+     * @param itemId 物品 ID / item id
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean delete(int objectId, int itemId) {
@@ -129,8 +129,8 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
      * 获取玩家衣柜物品数量。
      * Returns the number of wardrobe items for the player.
      *
-     * player object id
-     * item count
+     * @param playerObjId 玩家对象 ID / player object id
+     * @return 物品数量 / item count
      */
     @Override
     public int getItemSize(int playerObjId) {
@@ -156,7 +156,7 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
      * Returns the wardrobe item id for the given slot.
      *
      * @param obj 玩家对象 ID / player object id
-     * slot
+     * @param slot 槽位 / slot
      *
      * @return 物品 ID，未找到时返回 0 / item id, or 0 if not found
      */
@@ -185,7 +185,7 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
      * Returns the reskin count for the given slot.
      *
      * @param obj 玩家对象 ID / player object id
-     * slot
+     * @param slot 槽位 / slot
      *
      * @return 重染次数，未找到时返回 0 / reskin count, or 0 if not found
      */
@@ -214,9 +214,9 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
      * Sets the reskin count for the given slot.
      *
      * @param obj 玩家对象 ID / player object id
-     * slot
-     * reskin count
-     * whether successful
+     * @param slot 槽位 / slot
+     * @param reskin_count 外观重置次数 / reskin count
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean setReskinCountBySlot(int obj, int slot, int reskin_count) {

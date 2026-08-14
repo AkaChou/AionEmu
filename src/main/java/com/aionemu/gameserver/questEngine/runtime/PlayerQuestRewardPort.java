@@ -25,6 +25,8 @@ import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 
 /**
+ * 真实 {@link QuestRewardPort}：将耐久（非货币）任务奖励应用到在线玩家，
+ * 并通过调用方连接上的事务 DAO 持久化。
  * Real {@link QuestRewardPort}: applies durable (non-currency) quest rewards to
  * the live player and persists them through the transactional DAO on the
  * caller-owned connection. The item grant path is injected as a function so the
@@ -157,7 +159,8 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 					case EXP_BOOST -> player.getCommonData().addAuraOfGrowth(1060000L * QuestRewardAmounts.resolve(player, reward));
 					case AURA_OF_GROWTH -> player.getCommonData().addAuraOfGrowth(QuestRewardAmounts.resolve(player, reward));
 					case TITLE -> {
-						// 已在首个循环中经 grantTitle 处理，仅内存+连接持久化，不回写 common data
+						// 已在首个循环中经 grantTitle 处理，仅内存+连接持久化，不回写 common data。
+						// Handled by grantTitle in the first loop; in-memory + connection persistence only, no common-data write-back.
 					}
 					default -> throw new SQLException("unsupported durable reward " + reward.rewardKind());
 				}

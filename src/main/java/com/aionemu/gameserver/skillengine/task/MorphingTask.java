@@ -21,9 +21,9 @@ public class MorphingTask extends CraftingTask {
 	 * 构造单次变形任务。
 	 * Creates a single morphing task.
 	 *
-	 * requesting player
-	 * responder
-	 * recipe template
+	 * @param requestor 发起变形的玩家 / requesting player
+	 * @param responder 响应目标 / responder
+	 * @param recipeTemplates 配方模板 / recipe template
 	 */
 	public MorphingTask(Player requestor, StaticObject responder, RecipeTemplate recipeTemplates) {
 		this(requestor, responder, recipeTemplates, 1);
@@ -33,10 +33,10 @@ public class MorphingTask extends CraftingTask {
 	 * 构造可批量变形的任务。
 	 * Creates a morphing task with optional multi-craft count.
 	 *
-	 * requesting player
-	 * responder
-	 * recipe template
-	 * morph attempt count
+	 * @param requestor 发起变形的玩家 / requesting player
+	 * @param responder 响应目标 / responder
+	 * @param recipeTemplates 配方模板 / recipe template
+	 * @param craftCount 变形次数 / morph attempt count
 	 */
 	public MorphingTask(Player requestor, StaticObject responder, RecipeTemplate recipeTemplates, int craftCount) {
 		super(requestor, responder, recipeTemplates, 0, 0, craftCount);

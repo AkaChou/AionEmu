@@ -24,7 +24,7 @@ public class OnFlyCondition extends Condition {
 	 * Validates whether the skill environment satisfies this condition.
 	 *
 	 * @param env 技能环境 / skill environment
-	 * whether valid
+	 * @return 是否有效 / whether valid
 	 */
 	@Override
 	public boolean validate(Skill env) {
@@ -36,8 +36,8 @@ public class OnFlyCondition extends Condition {
 	 * Validates whether the stat calculation environment satisfies this condition.
 	 *
 	 * @param stat 属性对象 / stat object
-	 * stat function
-	 * whether valid
+	 * @param statFunction 属性函数 / stat function
+	 * @return 是否有效 / whether valid
 	 */
 	@Override
 	public boolean validate(Stat2 stat, IStatFunction statFunction) {
@@ -48,8 +48,8 @@ public class OnFlyCondition extends Condition {
 	 * 校验效果环境是否满足本条件。
 	 * Validates whether the effect environment satisfies this condition.
 	 *
-	 * effect environment
-	 * whether valid
+	 * @param effect 效果环境 / effect environment
+	 * @return 是否有效 / whether valid
 	 */
 	@Override
 	public boolean validate(Effect effect) {

@@ -27,13 +27,13 @@ public class PlayerEventWindowList implements EventWindowList<Player> {
 		}
 	}
 
-	/** 返回全部 / Returns the all*/
+	/** 返回全部 / Returns the all */
 	public PlayerEventWindowEntry[] getAll() {
 		ArrayList<PlayerEventWindowEntry> arrayList = new ArrayList<PlayerEventWindowEntry>(entry.values());
 		return arrayList.toArray(new PlayerEventWindowEntry[arrayList.size()]);
 	}
 
-	/** 返回基础 / Returns the basic*/
+	/** 返回基础 / Returns the basic */
 	public PlayerEventWindowEntry[] getBasic() {
 		return entry.values().toArray(new PlayerEventWindowEntry[entry.size()]);
 	}
@@ -70,7 +70,10 @@ public class PlayerEventWindowList implements EventWindowList<Player> {
 	}
 
 	/**
-	 * size player event window list
+	 * 玩家活动窗口列表大小。
+	 * Size of the player event window list.
+	 *
+	 * @return 条目数量 / Number of entries
 	 */
 	@Override
 	public int size() {

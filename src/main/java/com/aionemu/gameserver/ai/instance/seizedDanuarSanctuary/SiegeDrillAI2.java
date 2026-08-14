@@ -73,14 +73,14 @@ public class SiegeDrillAI2 extends NpcAI2
 		}
 		WorldPosition worldPosition = player.getPosition();
 		if (worldPosition.isInstanceMap()) {
-			if (worldPosition.getMapId() == 301140000) { //Seized Danuar Sanctuary 4.8
+			if (worldPosition.getMapId() == 301140000) { // 被占领的达努阿尔圣所 4.8 / Seized Danuar Sanctuary 4.8
 				WorldMapInstance worldMapInstance = worldPosition.getWorldMapInstance();
-				killNpc(worldMapInstance.getNpcs(233189)); //Chamber Of Ruin Entrance.
+				killNpc(worldMapInstance.getNpcs(233189)); // 毁灭之厅入口。 / Chamber Of Ruin Entrance.
 				//某处沉重的门已打开。 / A heavy door has opened somewhere.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_Under_02_NeedKey, 0);
-			} else if (worldPosition.getMapId() == 301380000) { //Danuar Sanctuary 4.8
+			} else if (worldPosition.getMapId() == 301380000) { // 达努阿尔圣所 4.8 / Danuar Sanctuary 4.8
 				WorldMapInstance worldMapInstance = worldPosition.getWorldMapInstance();
-				killNpc(worldMapInstance.getNpcs(233189)); //Chamber Of Ruin Entrance.
+				killNpc(worldMapInstance.getNpcs(233189)); // 毁灭之厅入口。 / Chamber Of Ruin Entrance.
 				//某处沉重的门已打开。 / A heavy door has opened somewhere.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_Under_02_NeedKey, 0);
 			}

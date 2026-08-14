@@ -52,7 +52,7 @@ public class ZorshivDredgionService {
 	private Map<Integer, ZorshivDredgionLocation> zorshivDredgion;
 	private final ConcurrentMap<Integer, ZorshivDredgion<?>> activeZorshivDredgion = new ConcurrentHashMap<Integer, ZorshivDredgion<?>>();
 
-	// 因格森入侵 / Inggison Invasion
+	// 英吉斯温入侵 / Inggison Invasion
 	private Map<Integer, VisibleObject> adventPortal = new HashMap<>();
 	private Map<Integer, VisibleObject> adventEffect = new HashMap<>();
 	private Map<Integer, VisibleObject> adventControl = new HashMap<>();

@@ -29,11 +29,11 @@ public class Bulwark_ShieldAI2 extends NpcAI2
 	}
 	
    /**
-	* 「Ahserion」周围墙壁变为可破坏，可开始摧毁与其之间的墙。
+	* 「Ahserion」周围墙壁变为可破坏，可开始摧毁与其之间的墙；30 分钟后真正的战斗开始。
 	 * Walls around "Ahserion" become vulnerable. You can start to destroy walls between you and "Ahserion". You can say that after 30min the real battle begins.
 	*/
 	private void startShieldVulnerable() {
-		final Npc GAb1SubNamedBarricadeDa65Ah = getPosition().getWorldMapInstance().getNpc(277231); //Bulwark Shield.
+		final Npc GAb1SubNamedBarricadeDa65Ah = getPosition().getWorldMapInstance().getNpc(277231); // 壁垒护盾 / Bulwark Shield
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
@@ -50,7 +50,7 @@ public class Bulwark_ShieldAI2 extends NpcAI2
 				// 特兰西迪姆附楼效果削弱了壁垒护盾。 / The effect of the Transidium Annex has weakened the Bulwark Shield.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_12, 0);
 			}
-		}, 1800000); //...30 Minutes.
+		}, 1800000); // 30 分钟后 / 30 minutes
 	}
 	
 	@Override

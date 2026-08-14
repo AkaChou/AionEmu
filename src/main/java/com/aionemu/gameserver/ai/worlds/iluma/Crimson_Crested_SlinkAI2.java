@@ -15,7 +15,7 @@ public class Crimson_Crested_SlinkAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(243263, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Small Crimson Crested Slink.
+		spawn(243263, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 小型 Crimson Crested Slink / Small Crimson Crested Slink.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

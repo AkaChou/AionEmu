@@ -22,7 +22,7 @@ public class AbnormalStateCondition extends Condition {
 	 * Validates whether the skill's first target has the specified abnormal state.
 	 *
 	 * @param env 技能环境 / skill environment
-	 * whether valid
+	 * @return 是否有效 / whether valid
 	 */
 	@Override
 	public boolean validate(Skill env) {
@@ -38,8 +38,8 @@ public class AbnormalStateCondition extends Condition {
 	 * 校验效果作用目标是否带有指定异常状态。
 	 * Validates whether the effect's target has the specified abnormal state.
 	 *
-	 * effect environment
-	 * whether valid
+	 * @param effect 效果环境 / effect environment
+	 * @return 是否有效 / whether valid
 	 */
 	@Override
 	public boolean validate(Effect effect) {

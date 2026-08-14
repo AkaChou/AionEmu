@@ -18,7 +18,7 @@ public abstract class HousesDAO implements IDFactoryAwareDAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
 	 *
-	 * class name
+	 * @return 类名 / class name
 	 */
 	@Override
 	public String getClassName() {
@@ -29,10 +29,10 @@ public abstract class HousesDAO implements IDFactoryAwareDAO {
 	 * 检查是否支持指定数据库版本。
 	 * Checks whether the given database version is supported.
 	 *
-	 * database name
-	 * major version
-	 * minor version
-	 * whether supported
+	 * @param databaseName 数据库名称 / database name
+	 * @param majorVersion 主版本号 / major version
+	 * @param minorVersion 次版本号 / minor version
+	 * @return 是否支持 / whether supported
 	 */
 	public abstract boolean supports(String databaseName, int majorVersion, int minorVersion);
 
@@ -40,7 +40,7 @@ public abstract class HousesDAO implements IDFactoryAwareDAO {
 	 * 检查房屋对象 ID 是否已被使用。
 	 * Checks whether a house object ID is already used.
 	 *
-	 * house object ID
+	 * @param houseObjectId 房屋对象 ID / house object ID
 	 * @return 是否已使用 / whether used
 	 */
 	public abstract boolean isIdUsed(int houseObjectId);
@@ -49,7 +49,7 @@ public abstract class HousesDAO implements IDFactoryAwareDAO {
 	 * 存储房屋。
 	 * Stores a house.
 	 *
-	 * house
+	 * @param house 房屋 / house
 	 */
 	public abstract void storeHouse(House house);
 
@@ -67,7 +67,7 @@ public abstract class HousesDAO implements IDFactoryAwareDAO {
 	 * 删除玩家的房屋。
 	 * Deletes a player's house.
 	 *
-	 * player ID
+	 * @param playerId 玩家 ID / player ID
 	 */
 	public abstract void deleteHouse(int playerId);
 }

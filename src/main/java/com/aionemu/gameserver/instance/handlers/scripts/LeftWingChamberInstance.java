@@ -27,37 +27,37 @@ import java.util.concurrent.Future;
 @InstanceID(300080000)
 public class LeftWingChamberInstance extends GeneralInstanceHandler
 {
-	/**
-	 * whether timer1 started
-	 */
+		/**
+		 * whether timer1 started
+		 */
 		private boolean isStartTimer1 = false;
-	/** 是否启动计时器2 / is start timer2 */
+		/** 是否启动计时器2 / is start timer2 */
 		private boolean isStartTimer2 = false;
-	/** 是否启动计时器3 / is start timer3 */
+		/** 是否启动计时器3 / is start timer3 */
 		private boolean isStartTimer3 = false;
-	/** 是否启动计时器4 / is start timer4 */
+		/** 是否启动计时器4 / is start timer4 */
 		private boolean isStartTimer4 = false;
-	/** 是否启动计时器5 / is start timer5 */
+		/** 是否启动计时器5 / is start timer5 */
 		private boolean isStartTimer5 = false;
-	/** 是否启动计时器6 / is start timer6 */
+		/** 是否启动计时器6 / is start timer6 */
 		private boolean isStartTimer6 = false;
-	/** 是否启动计时器7 / is start timer7 */
+		/** 是否启动计时器7 / is start timer7 */
 		private boolean isStartTimer7 = false;
-	/** 是否启动计时器8 / is start timer8 */
+		/** 是否启动计时器8 / is start timer8 */
 		private boolean isStartTimer8 = false;
-	/** 是否启动计时器9 / is start timer9 */
+		/** 是否启动计时器9 / is start timer9 */
 		private boolean isStartTimer9 = false;
-	/** 是否启动计时器10 / is start timer10 */
+		/** 是否启动计时器10 / is start timer10 */
 		private boolean isStartTimer10 = false;
-	/** 是否启动计时器11 / is start timer11 */
+		/** 是否启动计时器11 / is start timer11 */
 		private boolean isStartTimer11 = false;
-	/** 是否启动计时器12 / is start timer12 */
+		/** 是否启动计时器12 / is start timer12 */
 		private boolean isStartTimer12 = false;
-	/** chestleftwing 任务 / chest left wing task */
+		/** chestleftwing 任务 / chest left wing task */
 		private Future<?> chestLeftWingTask;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-	/** left wing treasure box / left wing treasure box */
+		/** left wing treasure box / left wing treasure box */
 		private List<Npc> leftWingTreasureBox = new ArrayList<Npc>();
 	
     /**
@@ -76,7 +76,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
      * 处理死亡事件。
      * Handle a death event.
      *
-     * npc
+     * @param npc NPC / npc
      */
     @Override
     public void onDie(Npc npc) {

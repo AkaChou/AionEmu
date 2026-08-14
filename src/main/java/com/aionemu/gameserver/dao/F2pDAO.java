@@ -15,7 +15,7 @@ public abstract class F2pDAO implements DAO {
 	 * 加载玩家的 F2P 信息。
 	 * Loads F2P info for a player.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void loadF2pInfo(Player player);
 
@@ -23,9 +23,9 @@ public abstract class F2pDAO implements DAO {
 	 * 存储玩家的 F2P 时间。
 	 * Stores F2P time for a player.
 	 *
-	 * player ID
-	 * F2P time
-	 * whether successful
+	 * @param playerId 玩家 ID / player ID
+	 * @param time F2P 时间 / F2P time
+	 * @return 是否成功 / whether successful
 	 */
 	public abstract boolean storeF2p(int playerId, int time);
 
@@ -33,9 +33,9 @@ public abstract class F2pDAO implements DAO {
 	 * 更新玩家的 F2P 时间。
 	 * Updates F2P time for a player.
 	 *
-	 * player ID
-	 * F2P time
-	 * whether successful
+	 * @param playerId 玩家 ID / player ID
+	 * @param time F2P 时间 / F2P time
+	 * @return 是否成功 / whether successful
 	 */
 	public abstract boolean updateF2p(int playerId, int time);
 
@@ -43,8 +43,8 @@ public abstract class F2pDAO implements DAO {
 	 * 删除玩家的 F2P 记录。
 	 * Deletes F2P record for a player.
 	 *
-	 * player ID
-	 * whether successful
+	 * @param playerId 玩家 ID / player ID
+	 * @return 是否成功 / whether successful
 	 */
 	public abstract boolean deleteF2p(int playerId);
 
@@ -52,7 +52,7 @@ public abstract class F2pDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
 	 *
-	 * class name
+	 * @return 类名 / class name
 	 */
 	public String getClassName() {
 		return F2pDAO.class.getName();

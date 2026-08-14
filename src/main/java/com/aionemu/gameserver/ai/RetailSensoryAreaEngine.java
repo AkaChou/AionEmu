@@ -10,7 +10,10 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** 真端感知区域移动事件分发。 */
+/**
+ * 真端感知区域移动事件分发。
+ * Retail sensory-area movement event dispatch.
+ */
 public final class RetailSensoryAreaEngine {
 
 	private static final Map<WorldMapInstance, Set<RetailPatternAI2>> BY_INSTANCE = new ConcurrentHashMap<>();

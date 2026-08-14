@@ -38,7 +38,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -105,9 +105,9 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 					}
                 }
             break;
-		   /**
-	 * 天族 / Elyos
-	 */
+			/**
+			 * 天族 / Elyos
+			 */
 			case 703131: //Histories Of Atreia.
 			    for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
@@ -177,9 +177,9 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 					}
                 }
 			break;
-		   /**
-	 * 魔族 / Asmodians
-	 */
+			/**
+			 * 魔族 / Asmodians
+			 */
 			case 703149: //Histories Of Atreia.
 			    for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
@@ -445,7 +445,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -532,9 +532,9 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

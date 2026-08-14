@@ -20,23 +20,23 @@ public class WrithingCocoonAI2 extends NpcAI2
 {
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
-		if (dialogId == 1012 && player.getInventory().decreaseByItemId(185000088, 1)) { //Shishir's Corrosive Fluid.
+		if (dialogId == 1012 && player.getInventory().decreaseByItemId(185000088, 1)) { // 希希尔腐蚀液 / Shishir's Corrosive Fluid.
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 			switch (getNpcId()) {
-				case 730232: //Writhing Cocoon.
+				case 730232: // 扭动之茧 / Writhing Cocoon.
 					Npc npc = getPosition().getWorldMapInstance().getNpc(730233);
 					if (npc != null) {
 						npc.getController().onDelete();
 					}
-					spawn(799500, getPosition().getX(), getPosition().getY(), getPosition().getZ(), getPosition().getHeading()); //Engeius.
+					spawn(799500, getPosition().getX(), getPosition().getY(), getPosition().getZ(), getPosition().getHeading()); // 恩盖乌斯 / Engeius.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(390510));
 				break;
-				case 730233: //Writhing Cocoon.
+				case 730233: // 扭动之茧 / Writhing Cocoon.
 					Npc npc1 = getPosition().getWorldMapInstance().getNpc(730232);
 					if (npc1 != null) {
 						npc1.getController().onDelete();
 					}
-					spawn(799501, getPosition().getX(), getPosition().getY(), getPosition().getZ(), getPosition().getHeading()); //Abyla.
+					spawn(799501, getPosition().getX(), getPosition().getY(), getPosition().getZ(), getPosition().getHeading()); // 阿比拉 / Abyla.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(390511));
 				break;
 			}

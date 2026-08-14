@@ -188,7 +188,7 @@ public class GameBattlefieldRuntimeBridge {
      * 自动组队是否启用。
      * Whether auto-group is enabled.
      *
-     * @return {@code true} if enabled。
+     * @return 已启用为 {@code true} / {@code true} if enabled
      */
     public boolean isAutoGroupEnabled() {
         return AutoGroupConfig.AUTO_GROUP_ENABLED;
@@ -198,7 +198,7 @@ public class GameBattlefieldRuntimeBridge {
      * 解析卡玛战场服务：优先 Spring，否则回退。
      * Resolve Kamar battlefield service: prefer Spring, otherwise fall back.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public KamarBattlefieldService kamarBattlefieldService() {
         if (kamarBattlefieldServiceProvider == null) {
@@ -211,7 +211,7 @@ public class GameBattlefieldRuntimeBridge {
      * 解析吞噬的奥菲丹桥服务。
      * Resolve Engulfed Ophidan Bridge service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public EngulfedOphidanBridgeService engulfedOphidanBridgeService() {
         if (engulfedOphidanBridgeServiceProvider == null) {
@@ -224,7 +224,7 @@ public class GameBattlefieldRuntimeBridge {
      * 解析可疑的奥菲丹桥服务。
      * Resolve Suspicious Ophidan Bridge service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public SuspiciousOphidanBridgeService suspiciousOphidanBridgeService() {
         if (suspiciousOphidanBridgeServiceProvider == null) {
@@ -237,7 +237,7 @@ public class GameBattlefieldRuntimeBridge {
      * 解析铁壁前线服务。
      * Resolve Iron Wall Warfront service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public IronWallWarfrontService ironWallWarfrontService() {
         if (ironWallWarfrontServiceProvider == null) {
@@ -250,7 +250,7 @@ public class GameBattlefieldRuntimeBridge {
      * 解析伊迪尔穹顶服务。
      * Resolve Idgel Dome service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public IdgelDomeService idgelDomeService() {
         if (idgelDomeServiceProvider == null) {
@@ -263,7 +263,7 @@ public class GameBattlefieldRuntimeBridge {
      * 解析伊迪尔穹顶地标服务。
      * Resolve Idgel Dome Landmark service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public IdgelDomeLandmarkService idgelDomeLandmarkService() {
         if (idgelDomeLandmarkServiceProvider == null) {
@@ -276,7 +276,7 @@ public class GameBattlefieldRuntimeBridge {
      * 解析坚韧殿堂服务。
      * Resolve Hall of Tenacity service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public HallOfTenacityService hallOfTenacityService() {
         if (hallOfTenacityServiceProvider == null) {
@@ -289,7 +289,7 @@ public class GameBattlefieldRuntimeBridge {
      * 解析大竞技场训练营服务。
      * Resolve Grand Arena Training Camp service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public GrandArenaTrainingCampService grandArenaTrainingCampService() {
         if (grandArenaTrainingCampServiceProvider == null) {
@@ -302,7 +302,7 @@ public class GameBattlefieldRuntimeBridge {
      * 解析 IDRun 服务。
      * Resolve IDRun service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public IDRunService idRunService() {
         if (idRunServiceProvider == null) {

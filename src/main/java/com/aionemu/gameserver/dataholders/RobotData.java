@@ -47,9 +47,7 @@ public class RobotData {
 	 * 按机器人/NPC ID 获取机器人信息。
 	 * Returns the robot info for the given robot/NPC id.
 	 *
-	 * robot or npc id
-	 *
-	 * @param npcId
+	 * @param npcId 机器人或 NPC ID / robot or npc id
 	 * @return 机器人信息，不存在则为 null / robot info or null
 	 */
 	public RobotInfo getRobotInfo(int npcId) {

@@ -40,8 +40,8 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 	 * 构造控制台进度报告器。
 	 * Construct a console progress reporter.
 	 *
-	 * Output stream
-	 * Whether enabled
+	 * @param out 输出流 / Output stream
+	 * @param enabled 是否启用 / Whether enabled
 	 */
 	ConsoleStartupProgressReporter(PrintStream out, boolean enabled) {
 		this.out = out;
@@ -63,7 +63,7 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 	 * 开始报告某分组的加载。
 	 * Start reporting load of a group.
 	 *
-	 * Group name
+	 * @param groupName 分组名 / Group name
 	 */
 	@Override
 	public void start(String groupName) {
@@ -101,8 +101,8 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 	 * 结束分组并打印耗时。
 	 * Finish a group and print elapsed time.
 	 *
-	 * Group name
-	 * Elapsed milliseconds
+	 * @param groupName 分组名 / Group name
+	 * @param elapsedMillis 耗时毫秒 / Elapsed milliseconds
 	 */
 	@Override
 	public void finish(String groupName, long elapsedMillis) {

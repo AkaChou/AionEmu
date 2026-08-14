@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Need 基纳模板（静态数据/XML）。
- * XML template.
+ * 需要基纳模板（静态数据/XML）。
+ * Need Kinah template (static data/XML).
  *
  * @author Ranastic (Encom)
  */

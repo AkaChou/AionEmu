@@ -30,30 +30,36 @@ public class AgentSpawnTemplate extends SpawnTemplate {
 		return id;
 	}
 
-	/** 返回状态类型 / Returns the a state type */
+	/** 返回代理状态类型 / Returns the agent state type */
 	public AgentStateType getAStateType() {
 		return agentType;
 	}
 
-	/** 设置 id / Sets the id */
+	/** 设置 ID / Sets the id */
 	public void setId(int id) {
 		this.id = id;
 	}
 
-	/** 设置 a state type / Sets the a state type */
+	/** 设置代理状态类型 / Sets the agent state type */
 	public void setAStateType(AgentStateType agentType) {
 		this.agentType = agentType;
 	}
 
 	/**
-	 * @return Whether agent fight
+	 * 是否处于代理战斗状态。
+	 * Whether agent fight.
+	 *
+	 * @return 战斗状态则为 true / true if fighting
 	 */
 	public final boolean isAgentFight() {
 		return agentType.equals(AgentStateType.FIGHT);
 	}
 
 	/**
-	 * @return Whether agent peace
+	 * 是否处于代理和平状态。
+	 * Whether agent peace.
+	 *
+	 * @return 和平状态则为 true / true if at peace
 	 */
 	public final boolean isAgentPeace() {
 		return agentType.equals(AgentStateType.PEACE);

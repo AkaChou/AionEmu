@@ -56,7 +56,7 @@ public class Box extends AbstractBox {
 	 * 半长 0.5 时即为单位立方体。
 	 * An extent of 0.5 yields the unit cube.
 	 *
-	 * center of the box
+	 * @param center 盒子中心 / center of the box
 	 * @param x X 轴半长（双向） / size along X in both directions
 	 * @param y Y 轴半长（双向） / size along Y in both directions
 	 * @param z Z 轴半长（双向） / size along Z in both directions

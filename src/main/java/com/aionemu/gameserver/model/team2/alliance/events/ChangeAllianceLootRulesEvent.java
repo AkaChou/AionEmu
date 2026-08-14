@@ -9,8 +9,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 
 /**
- * Change 联盟 LootRules 活动，用于团队2相关逻辑。
- * Change Alliance Loot Rules Event for team 2 logic.
+ * 联盟拾取规则变更事件。
+ * Change Alliance Loot Rules Event.
  *
  * @author ATracer
  */

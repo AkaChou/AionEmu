@@ -77,7 +77,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		this.state = PersistentState.NOACTION;
 	}
 
-	/** 返回 item creator / Returns the item creator */
+	/** 返回物品制作者 / Returns the item creator */
 	public String getItemCreator() {
 		if (itemCreator == null) {
 			return StringUtils.EMPTY;
@@ -96,13 +96,16 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	}
 
 	/**
-	 * @return Whether canceled
+	 * 是否已取消。
+	 * Whether the listing was canceled.
+	 *
+	 * @return 是否已取消 / whether canceled
 	 */
 	public boolean isCanceled() {
 		return isCanceled;
 	}
 
-	/** 设置 is canceled / Sets the is canceled */
+	/** 设置是否已取消 / Sets whether canceled */
 	public void setIsCanceled(boolean isCanceled) {
 		this.isCanceled = isCanceled;
 	}
@@ -130,18 +133,21 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	}
 
 	/**
-	 * @return Whether split sell
+	 * 是否拆分出售。
+	 * Whether the item is sold in split quantities.
+	 *
+	 * @return 是否拆分出售 / whether split sell
 	 */
 	public boolean isSplitSell() {
 		return this.isSplitSell;
 	}
 
-	/** 返回 seller / Returns the seller */
+	/** 返回卖家 / Returns the seller */
 	public String getSeller() {
 		return seller;
 	}
 
-	/** 返回 seller id / Returns the seller id */
+	/** 返回卖家 ID / Returns the seller id */
 	public int getSellerId() {
 		return sellerId;
 	}
@@ -152,7 +158,10 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	}
 
 	/**
-	 * @return 是否已售出。 / Whether sold
+	 * 是否已售出。
+	 * Whether the item is sold.
+	 *
+	 * @return 是否已售出 / whether sold
 	  */
 	public boolean isSold() {
 		return this.isSold;
@@ -178,6 +187,17 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		}
 	}
 
+	/**
+	 * 恢复交易状态（用于数据修复场景）。
+	 * Restores the transaction state (used for data repair).
+	 *
+	 * @param itemCount 物品数量 / item count
+	 * @param price 价格 / price
+	 * @param sold 是否已售出 / whether sold
+	 * @param settled 是否已结算 / whether settled
+	 * @param settleTime 结算时间 / settle time
+	 * @param persistentState 持久化状态 / persistent state
+	 */
 	public void restoreTransactionState(long itemCount, long price, boolean sold, boolean settled,
 			Timestamp settleTime, PersistentState persistentState) {
 		this.itemCount = itemCount;
@@ -194,13 +214,16 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	}
 
 	/**
-	 * @return Whether settled
+	 * 是否已结算。
+	 * Whether the sale is settled.
+	 *
+	 * @return 是否已结算 / whether settled
 	 */
 	public boolean isSettled() {
 		return isSettled;
 	}
 
-	/** 设置 settled / Sets the settled */
+	/** 标记为已结算 / Marks the sale as settled */
 	public void setSettled() {
 		this.isSettled = true;
 		this.settleTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
@@ -211,7 +234,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		return expireTime;
 	}
 
-	/** 返回 settle time / Returns the settle time */
+	/** 返回结算时间 / Returns the settle time */
 	public Timestamp getSettleTime() {
 		return settleTime;
 	}
@@ -225,7 +248,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		return item.getItemTemplate().getLevel();
 	}
 
-	/** 返回 piece price / Returns the piece price */
+	/** 返回单价 / Returns the piece price */
 	public long getPiecePrice() {
 		return getPrice() / getItemCount();
 	}
@@ -371,7 +394,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		return result;
 	}
 
-	/** 按 type 返回 comparatory / Returns the comparatory by type */
+	/** 按类型返回比较器 / Returns the comparator by sort type */
 	public static Comparator<BrokerItem> getComparatoryByType(int sortType) {
 		switch (sortType) {
 		case 0:

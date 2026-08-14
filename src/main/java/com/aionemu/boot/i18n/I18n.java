@@ -54,9 +54,7 @@ public class I18n {
      * 按消息键取值（无参数）。
      * Resolve message by code without arguments.
      *
-     * Message code
-     *
-     * @param code
+     * @param code 消息键 / message code
      * @return 本地化文本；缺失时返回键本身 / Localized text, or the code if missing
      */
     public String get(String code) {
@@ -67,10 +65,8 @@ public class I18n {
      * 按消息键与参数取值。数字参数会先转成原始字符串，避免本地化千分位。
      * Resolve message by code and args. Numbers are stringified first to avoid locale grouping.
      *
-     * Message code
-     *
+     * @param code 消息键 / message code
      * @param args 消息参数 / Message arguments
-     * @param args
      * @return 本地化文本；缺失时返回键本身 / Localized text, or the code if missing
      */
     public String get(String code, Object... args) {

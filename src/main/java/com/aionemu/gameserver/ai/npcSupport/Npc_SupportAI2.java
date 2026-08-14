@@ -22,19 +22,23 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @AIName("npc_support")
 public class Npc_SupportAI2 extends GeneralNpcAI2
 {
-    @Override
+    /**
+	 * 打开对话窗口：天族/魔族支援 NPC 使用默认对话，其余打开通用对话。
+	 * Opens the dialog window: default dialog for Elyos/Asmodian support NPCs, generic dialog otherwise.
+	 */
+	@Override
 	protected void handleDialogStart(Player player) {
         switch (getNpcId()) {
             // 天族。 / Elyos.
-			case 831024: //Ryoenniya.
-			case 831025: //Luella.
-			case 831030: //Netalion.
-			case 831031: //Nebrith.
+			case 831024: //天族支援 NPC：Ryoenniya / Ryoenniya.
+			case 831025: //天族支援 NPC：Luella / Luella.
+			case 831030: //天族支援 NPC：Netalion / Netalion.
+			case 831031: //天族支援 NPC：Nebrith / Nebrith.
             // 魔族。 / Asmodians.
-            case 831026: //Rikanellie.
-			case 831027: //Karzanke.
-			case 831028: //Erdat.
-			case 831029: { //Edandos.
+            case 831026: //魔族支援 NPC：Rikanellie / Rikanellie.
+			case 831027: //魔族支援 NPC：Karzanke / Karzanke.
+			case 831028: //魔族支援 NPC：Erdat / Erdat.
+			case 831029: { //魔族支援 NPC：Edandos / Edandos.
 				super.handleDialogStart(player);
 				break;
 			} default: {
@@ -44,6 +48,10 @@ public class Npc_SupportAI2 extends GeneralNpcAI2
 		}
 	}
 	
+	/**
+	 * 对话选择处理：处理任务对话，满状态后为玩家施加成长祝福技能。
+	 * Handles dialog selection: processes quest dialogs, restores full HP/MP and applies the Blessing Of Growth skill.
+	 */
 	@Override
     public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
@@ -54,24 +62,24 @@ public class Npc_SupportAI2 extends GeneralNpcAI2
 		} if (dialogId == 10000) {
 			int skillId = 0;
 			switch (getNpcId()) {
-			    case 831024: //Ryoenniya.
-			    case 831025: //Luella.
-			    case 831030: //Netalion.
-				case 831031: //Nebrith.
-				case 831026: //Rikanellie.
-			    case 831027: //Karzanke.
-			    case 831028: //Erdat.
-				case 831029: //Edandos.
+			    case 831024: //天族支援 NPC：Ryoenniya / Ryoenniya.
+			    case 831025: //天族支援 NPC：Luella / Luella.
+			    case 831030: //天族支援 NPC：Netalion / Netalion.
+				case 831031: //天族支援 NPC：Nebrith / Nebrith.
+				case 831026: //魔族支援 NPC：Rikanellie / Rikanellie.
+			    case 831027: //魔族支援 NPC：Karzanke / Karzanke.
+			    case 831028: //魔族支援 NPC：Erdat / Erdat.
+				case 831029: //魔族支援 NPC：Edandos / Edandos.
 				player.getLifeStats().setCurrentHpPercent(100);
 				player.getLifeStats().setCurrentMpPercent(100);
 				player.getLifeStats().updateCurrentStats();
 						switch (Rnd.get(1, 2)) {
 						case 1:
-							skillId = 20950; //Blessing Of Growth.
+							skillId = 20950; //成长祝福 / Blessing Of Growth.
 							effectController.removeEffect(20951);
 						break;
 						case 2:
-							skillId = 20950; //Blessing Of Growth.
+							skillId = 20950; //成长祝福 / Blessing Of Growth.
 							effectController.removeEffect(20951);
 						break;
 					}

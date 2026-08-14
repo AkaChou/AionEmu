@@ -83,7 +83,7 @@ public class GameServerNetworkRuntimeBridge {
      * 解析登录服连接。
      * Resolve the login-server connection.
      *
-     * Login server
+     * @return 登录服连接 / Login server
      */
     public LoginServer loginServer() {
         if (loginServerProvider == null) {
@@ -96,7 +96,7 @@ public class GameServerNetworkRuntimeBridge {
      * 解析聊天服连接。
      * Resolve the chat-server connection.
      *
-     * Chat server
+     * @return 聊天服连接 / Chat server
      */
     public ChatServer chatServer() {
         if (chatServerProvider == null) {

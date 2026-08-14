@@ -18,6 +18,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * Client packet for in-game shop browse, purchase, or gift actions.
  */
 public class CM_IN_GAME_SHOP_INFO extends AionClientPacket {
+	/** 动作 ID（浏览/购买/赠送等） / action id (browse, purchase, gift, etc.) */
 	private int actionId;
 	private int categoryId;
 	private int listInCategory;

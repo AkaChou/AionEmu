@@ -238,7 +238,7 @@ public class SpawnMap {
 		return rvrSpawns;
 	}
 
-	/** 返回 iu spawns / Returns the iu spawns */
+	/** 获取 IU 刷新 / Returns the iu spawns */
 	public List<IuSpawn> getIuSpawns() {
 		if (iuSpawns == null) {
 			iuSpawns = new ArrayList<IuSpawn>();
@@ -302,7 +302,7 @@ public class SpawnMap {
 		return landingSpawns;
 	}
 
-	/** 返回 landing special spawns / Returns the landing special spawns */
+	/** 获取特殊登陆刷新 / Returns the landing special spawns */
 	public List<LandingSpecialSpawn> getLandingSpecialSpawns() {
 		if (landingSpecialSpawns == null) {
 			landingSpecialSpawns = new ArrayList<LandingSpecialSpawn>();
@@ -310,7 +310,7 @@ public class SpawnMap {
 		return landingSpecialSpawns;
 	}
 
-	/** 返回 tower of eternity spawns / Returns the tower of eternity spawns */
+	/** 获取永恒之塔刷新 / Returns the tower of eternity spawns */
 	public List<TowerOfEternitySpawn> getTowerOfEternitySpawns() {
 		if (towerOfEternitySpawns == null) {
 			towerOfEternitySpawns = new ArrayList<TowerOfEternitySpawn>();
@@ -368,7 +368,7 @@ public class SpawnMap {
 		getRvrSpawns().add(spawns);
 	}
 
-	/** 添加 iu spawns / Adds iu spawns */
+	/** 添加 IU 刷新 / Adds iu spawns */
 	public void addIuSpawns(IuSpawn spawns) {
 		getIuSpawns().add(spawns);
 	}
@@ -408,12 +408,12 @@ public class SpawnMap {
 		getLandingSpawns().add(spawns);
 	}
 
-	/** 添加 landing special spawns / Adds landing special spawns */
+	/** 添加特殊登陆刷新 / Adds landing special spawns */
 	public void addLandingSpecialSpawns(LandingSpecialSpawn spawns) {
 		getLandingSpecialSpawns().add(spawns);
 	}
 
-	/** 添加 tower of eternity spawns / Adds tower of eternity spawns */
+	/** 添加永恒之塔刷新 / Adds tower of eternity spawns */
 	public void addTowerOfEternitySpawns(TowerOfEternitySpawn spawns) {
 		getTowerOfEternitySpawns().add(spawns);
 	}

@@ -91,7 +91,7 @@ public class NetConnector {
      * 测试用：替换传输工厂并清空当前实例。
      * Test helper: replace transport factory and clear current instance.
      *
-     * Transport factory
+     * @param factory 传输工厂 / transport factory
      */
     void useTransportFactory(Supplier<ServerTransport> factory) {
         synchronized (lifecycleLock) {

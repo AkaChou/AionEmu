@@ -6,7 +6,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 
 /**
- * Add 玩家 To 联盟 Callback，用于团队2相关逻辑。
+ * 玩家加入联盟回调，用于团队2相关逻辑。
  * Add Player To Alliance Callback for team 2 logic.
  *
  * @author ATracer
@@ -28,15 +28,15 @@ public abstract class AddPlayerToAllianceCallback implements Callback {
 		return CallbackResult.newContinue();
 	}
 
-	/** 获取基础职业。 / Returns the base class. */
+	/** 返回基础回调类。 / Returns the base callback class. */
 	@Override
 	public Class<? extends Callback> getBaseClass() {
 		return AddPlayerToAllianceCallback.class;
 	}
 
-	/** 玩家加入联盟前 / On Before Player Add To Alliance */
+	/** 玩家加入联盟前 / Before a player is added to the alliance */
 	public abstract void onBeforePlayerAddToAlliance(PlayerAlliance alliance, Player player);
 
-	/** 玩家加入联盟后 / On After Player Add To Alliance */
+	/** 玩家加入联盟后 / After a player is added to the alliance */
 	public abstract void onAfterPlayerAddToAlliance(PlayerAlliance alliance, Player player);
 }

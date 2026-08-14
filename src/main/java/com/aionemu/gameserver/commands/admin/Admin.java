@@ -27,7 +27,6 @@ public class Admin extends AdminCommand {
 	 * 执行帮助展示：打开 commands.xhtml 页面。
 	 * Executes help display: opens the commands.xhtml page.
 	 *
-	 * admin
 	 * @param params 参数（未使用） / unused params
 	 */
 	@Override

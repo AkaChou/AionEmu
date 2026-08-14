@@ -38,7 +38,7 @@ public final class AionNettyEndpoint {
      * @param name 逻辑名称 / Logical name
      * @param host 绑定主机，{@code "*"} 表示任意地址 / Bind host, {@code "*"} for any address
      * @param port 绑定端口 / Bind port
-     * Endpoint instance
+     * @return 端点描述实例 / Endpoint instance
      */
     public static AionNettyEndpoint of(String name, String host, int port) {
         return new AionNettyEndpoint(name, host, port);

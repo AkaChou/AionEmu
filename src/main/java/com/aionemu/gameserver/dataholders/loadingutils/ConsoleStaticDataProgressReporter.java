@@ -22,8 +22,8 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 	 * 使用指定输出流与启用开关创建报告器。
 	 * Creates a reporter with the given output stream and enable flag.
 	 *
-	 * output stream
-	 * whether enabled
+	 * @param out 输出流 / output stream
+	 * @param enabled 是否启用 / whether enabled
 	 */
 	ConsoleStaticDataProgressReporter(PrintStream out, boolean enabled) {
 		this.out = out;
@@ -45,7 +45,7 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 	 * 开始加载：打印分段分隔线与加载提示。
 	 * Starts loading: prints the section separator and loading banner.
 	 *
-	 * total section count
+	 * @param totalSections 分段总数 / total section count
 	 */
 	@Override
 	public void start(int totalSections) {
@@ -62,8 +62,8 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 	 * Section-start callback; the console row stays clear until there is actual progress to render.
 	 *
 	 * @param sectionIndex 当前分段序号 / current section index
-	 * total section count
-	 * section name
+	 * @param totalSections 分段总数 / total section count
+	 * @param sectionName 分段名称 / section name
 	 * @param totalEntries 分段条目总数 / total entries in the section
 	 */
 	@Override
@@ -76,8 +76,8 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 	 * Updates the progress line for the current section.
 	 *
 	 * @param sectionIndex 当前分段序号 / current section index
-	 * total section count
-	 * section name
+	 * @param totalSections 分段总数 / total section count
+	 * @param sectionName 分段名称 / section name
 	 * @param currentEntries 已处理条目数 / entries processed so far
 	 * @param totalEntries 分段条目总数 / total entries in the section
 	 */
@@ -94,8 +94,8 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 	 * Marks the current section finished and renders the completion line.
 	 *
 	 * @param sectionIndex 当前分段序号 / current section index
-	 * total section count
-	 * section name
+	 * @param totalSections 分段总数 / total section count
+	 * @param sectionName 分段名称 / section name
 	 * @param totalEntries 分段条目总数 / total entries in the section
 	 */
 	@Override
@@ -110,7 +110,7 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 	 * 全部加载完成：打印耗时摘要。
 	 * Finishes loading: prints the elapsed-time summary.
 	 *
-	 * total section count
+	 * @param totalSections 分段总数 / total section count
 	 * @param elapsedMillis 耗时毫秒数 / elapsed milliseconds
 	 */
 	@Override

@@ -15,7 +15,7 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 玩家队伍 Leaved 活动，用于团队2相关逻辑。
+ * 玩家离队事件（团队2）。
  * Player Group Leaved Event for team 2 logic.
  *
  * @author ATracer
@@ -35,7 +35,7 @@ public class PlayerGroupLeavedEvent extends PlayerLeavedEvent<PlayerGroupMember,
 		super(alliance, player, reason);
 	}
 
-	/** 处理活动。 / Handle event. */
+	/** 处理事件。 / Handle event. */
 	@Override
 	public void handleEvent() {
 		team.removeMember(leavedPlayer.getObjectId());

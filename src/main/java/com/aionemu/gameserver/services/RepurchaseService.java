@@ -61,8 +61,8 @@ public class RepurchaseService {
 	 * 移除玩家的单个可回购物品。
 	 * Removes a single repurchase item for the player.
 	 *
-	 * 玩家 / player
-	 * item
+	 * @param player 玩家 / player
+	 * @param item 要移除的物品 / item
 	 */
 	public void removeRepurchaseItem(Player player, Item item) {
 		repurchaseItems.get(player.getObjectId()).remove(item);

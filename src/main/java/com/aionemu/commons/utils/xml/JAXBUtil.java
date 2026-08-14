@@ -13,7 +13,7 @@ import org.w3c.dom.Document;
 
 /**
  * JAXB 序列化 / 反序列化与 Schema 生成工具。
- * deserialize and schema generation helpers.
+ * JAXB serialize / deserialize and schema generation helpers.
  */
 @UtilityClass
 public class JAXBUtil {
@@ -23,9 +23,7 @@ public class JAXBUtil {
      * Serialize an object to a formatted XML string.
      *
      * @param obj 待序列化对象 / Object to serialize
-     * XML string
-     *
-     * @param obj
+     * @return XML 字符串 / XML string
      * @throws RuntimeException 序列化失败 / On marshal failure
      */
     public String serialize(Object obj) {
@@ -47,7 +45,7 @@ public class JAXBUtil {
      * Serialize an object to a DOM Document.
      *
      * @param obj 待序列化对象 / Object to serialize
-     * Document
+     * @return DOM 文档 / Document
      */
     public Document serializeToDocument(Object obj) {
         String s = serialize(obj);
@@ -58,10 +56,10 @@ public class JAXBUtil {
      * 反序列化 XML 字符串（无 Schema）。
      * Deserialize an XML string without schema.
      *
-     * XML string
+     * @param s     XML 字符串 / XML string
      * @param clazz 目标类型 / Target type
      * @param <T>   类型参数 / Type parameter
-     * Object
+     * @return 反序列化对象 / Deserialized object
      */
     public <T> T deserialize(String s, Class<T> clazz) {
         return deserialize(s, clazz, (Schema) null);
@@ -71,11 +69,11 @@ public class JAXBUtil {
      * 使用 URL Schema 校验并反序列化。
      * Deserialize with schema validation from a URL.
      *
-     * XML string
+     * @param s         XML 字符串 / XML string
      * @param clazz     目标类型 / Target type
-     * Schema URL
+     * @param schemaURL 校验 Schema 的 URL / Schema URL
      * @param <T>       类型参数 / Type parameter
-     * Object
+     * @return 反序列化对象 / Deserialized object
      */
     public <T> T deserialize(String s, Class<T> clazz, URL schemaURL) {
         Schema schema = XmlUtils.getSchema(schemaURL);
@@ -86,11 +84,11 @@ public class JAXBUtil {
      * 使用字符串 Schema 校验并反序列化。
      * Deserialize with schema validation from a schema string.
      *
-     * XML string
+     * @param s            XML 字符串 / XML string
      * @param clazz        目标类型 / Target type
-     * Schema definition
+     * @param schemaString Schema 定义 / Schema definition
      * @param <T>          类型参数 / Type parameter
-     * Object
+     * @return 反序列化对象 / Deserialized object
      */
     public <T> T deserialize(String s, Class<T> clazz, String schemaString) {
         Schema schema = XmlUtils.getSchema(schemaString);
@@ -101,11 +99,11 @@ public class JAXBUtil {
      * 从 Document 反序列化（字符串 Schema）。
      * Deserialize from a Document using a schema string.
      *
-     * XML document
+     * @param xml          XML 文档 / XML document
      * @param clazz        目标类型 / Target type
-     * Schema definition
+     * @param schemaString Schema 定义 / Schema definition
      * @param <T>          类型参数 / Type parameter
-     * Object
+     * @return 反序列化对象 / Deserialized object
      */
     public <T> T deserialize(Document xml, Class<T> clazz, String schemaString) {
         String xmlAsString = XmlUtils.getString(xml);
@@ -116,12 +114,12 @@ public class JAXBUtil {
      * 核心反序列化方法。
      * Core deserialization method.
      *
-     * XML string
+     * @param s      XML 字符串 / XML string
      * @param clazz  目标类型 / Target type
-     * Validation schema, may be null
+     * @param schema 校验 Schema，可为 null / Validation schema, may be null
      * @param <T>    类型参数 / Type parameter
-     * Object
-     * On unmarshal failure。
+     * @return 反序列化对象 / Deserialized object
+     * @throws RuntimeException 反序列化失败 / On unmarshal failure
      */
     @SuppressWarnings("unchecked")
     public <T> T deserialize(String s, Class<T> clazz, Schema schema) {
@@ -139,9 +137,9 @@ public class JAXBUtil {
      * 为给定类生成 XML Schema 字符串。
      * Generate an XML Schema string for the given classes.
      *
-     * Target classes
-     * Schema string
-     * On generation failure
+     * @param classes 目标类 / Target classes
+     * @return Schema 字符串 / Schema string
+     * @throws RuntimeException 生成失败 / On generation failure
      */
     public String generateSchema(Class<?>... classes) {
         try {

@@ -251,7 +251,7 @@ public class GameFeatureServicesRuntimeBridge {
      * 解析 NPC 喊话服务。
      * Resolve the NPC-shouts service.
      *
-     * NPC-shouts service
+     * @return NPC 喊话服务 / NPC-shouts service
      */
     public NpcShoutsService npcShoutsService() {
         return getIfAvailable(npcShoutsServiceProvider, NpcShoutsService::getInstance);
@@ -261,7 +261,7 @@ public class GameFeatureServicesRuntimeBridge {
      * 解析护盾服务。
      * Resolve the shield service.
      *
-     * Shield service
+     * @return 护盾服务 / Shield service
      */
     public ShieldService shieldService() {
         return getIfAvailable(shieldServiceProvider, ShieldService::getInstance);
@@ -271,7 +271,7 @@ public class GameFeatureServicesRuntimeBridge {
      * 解析奖励服务。
      * Resolve the reward service.
      *
-     * Reward service
+     * @return 奖励服务 / Reward service
      */
     public RewardService rewardService() {
         return getIfAvailable(rewardServiceProvider, RewardService::getInstance);
@@ -301,7 +301,7 @@ public class GameFeatureServicesRuntimeBridge {
      * 解析前哨服务。
      * Resolve the outpost service.
      *
-     * Outpost service
+     * @return 前哨服务 / Outpost service
      */
     public OutpostService outpostService() {
         return getIfAvailable(outpostServiceProvider, OutpostService::getInstance);
@@ -341,7 +341,7 @@ public class GameFeatureServicesRuntimeBridge {
      * 解析 FFA 服务。
      * Resolve the FFA service.
      *
-     * FFA service
+     * @return FFA 服务 / FFA service
      */
     public FFAService ffaService() {
         return getIfAvailable(ffaServiceProvider, FFAService::getInstance);
@@ -351,7 +351,7 @@ public class GameFeatureServicesRuntimeBridge {
      * 解析天梯服务。
      * Resolve the ladder service.
      *
-     * Ladder service
+     * @return 天梯服务 / Ladder service
      */
     public LadderService ladderService() {
         return getIfAvailable(ladderServiceProvider, LadderService::getInstance);
@@ -361,7 +361,7 @@ public class GameFeatureServicesRuntimeBridge {
      * 解析战场服务。
      * Resolve the BG service.
      *
-     * BG service
+     * @return 战场服务 / BG service
      */
     public BGService bgService() {
         return getIfAvailable(bgServiceProvider, BGService::getInstance);
@@ -371,7 +371,7 @@ public class GameFeatureServicesRuntimeBridge {
      * 解析土匪服务。
      * Resolve the bandit service.
      *
-     * Bandit service
+     * @return 土匪服务 / Bandit service
      */
     public BanditService banditService() {
         return getIfAvailable(banditServiceProvider, BanditService::getInstance);
@@ -381,7 +381,7 @@ public class GameFeatureServicesRuntimeBridge {
      * 解析攻城服务。
      * Resolve the siege service.
      *
-     * Siege service
+     * @return 攻城服务 / Siege service
      */
     public SiegeService siegeService() {
         return getIfAvailable(siegeServiceProvider, SiegeService::getInstance);
@@ -391,7 +391,7 @@ public class GameFeatureServicesRuntimeBridge {
      * 解析基地服务。
      * Resolve the base service.
      *
-     * Base service
+     * @return 基地服务 / Base service
      */
     public BaseService baseService() {
         return getIfAvailable(baseServiceProvider, BaseService::getInstance);
@@ -401,10 +401,10 @@ public class GameFeatureServicesRuntimeBridge {
      * 优先从 Spring 提供者取实例，否则使用回退供应器。
      * Prefer the Spring provider instance, otherwise use the fallback supplier.
      *
-     * Spring provider
+     * @param provider Spring 提供者 / Spring provider
      * @param fallback 回退供应器 / Fallback supplier
      * @param <T> 服务类型 / Service type
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private static <T> T getIfAvailable(ObjectProvider<T> provider, Supplier<T> fallback) {
         if (provider == null) {

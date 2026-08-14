@@ -22,14 +22,24 @@ public class ItemStone implements StatOwner {
 	private PersistentState persistentState;
 
 	public static enum ItemStoneType {
-		MANASTONE, GODSTONE, FUSIONSTONE, IDIANSTONE;
+		/** 魔石 / Manastone */
+		MANASTONE,
+		/** 神石 / Godstone */
+		GODSTONE,
+		/** 融合石 / Fusionstone */
+		FUSIONSTONE,
+		/** 伊迪安石 / Idian stone */
+		IDIANSTONE;
 	}
 
 	/**
-	 * @param itemObjId
-	 * @param itemId
-	 * @param slot
-	 * @param persistentState
+	 * 构造物品镶嵌石。
+	 * Constructs an item stone.
+	 *
+	 * @param itemObjId 物品对象 ID / item object id
+	 * @param itemId 镶嵌石模板 ID / stone template id
+	 * @param slot 槽位 / slot
+	 * @param persistentState 持久化状态 / persistent state
 	 */
 	public ItemStone(int itemObjId, int itemId, int slot, PersistentState persistentState) {
 		this.itemObjId = itemObjId;
@@ -39,7 +49,10 @@ public class ItemStone implements StatOwner {
 	}
 
 	/**
-	 * @param slot the slot to set
+	 * 设置槽位。
+	 * Sets the slot.
+	 *
+	 * @param slot 槽位 / slot to set
 	 */
 	public void setSlot(int slot) {
 		this.slot = slot;
@@ -47,7 +60,10 @@ public class ItemStone implements StatOwner {
 	}
 
 	/**
-	 * @param persistentState
+	 * 设置持久化状态（NEW 状态下不可降级为 DELETED）。
+	 * Sets the persistent state (NEW cannot be downgraded to DELETED).
+	 *
+	 * @param persistentState 持久化状态 / persistent state
 	 */
 	public void setPersistentState(PersistentState persistentState) {
 		switch (persistentState) {

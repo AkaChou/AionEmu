@@ -26,7 +26,7 @@ public class Anoha_LavaAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21767, 46, getOwner()).useNoAnimationSkill(); //Infernal Flame Explosion.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21767, 46, getOwner()).useNoAnimationSkill(); // 炼狱火焰爆炸 / Infernal Flame Explosion.
 		startLifeTask();
 	}
 	

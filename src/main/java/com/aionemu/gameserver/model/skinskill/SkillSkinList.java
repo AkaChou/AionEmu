@@ -64,9 +64,9 @@ public class SkillSkinList {
 			throw new IllegalArgumentException("Invalid skin id " + skinId);
 		}
 		if (owner != null) {
-			SkillSkin skillSkin = new SkillSkin(sst, skinId, expireTime, 1); // expireTime = System.currentTimeMillis()
-																				//1000 + minutes * 60 (Calculated in
-																				// SkillAnimationAction)
+			SkillSkin skillSkin = new SkillSkin(sst, skinId, expireTime, 1); // expireTime = System.currentTimeMillis() / 1000
+																				// + minutes * 60（在 SkillAnimationAction 中计算）
+																				// + minutes * 60 (Calculated in SkillAnimationAction)
 			if (!skillskins.containsKey(skinId)) {
 				skillskins.put(skinId, skillSkin);
 				if (time != 0) {
@@ -79,8 +79,8 @@ public class SkillSkinList {
 			}
 			PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_MSG_GET_ITEM(sst.getName()));
 			PacketSendUtility.sendPacket(owner, new SM_SKILL_ANIMATION(skinId, time)); // time = templateTime * 60
-																						// （计算于 / (Calculated in
-																						// SkillAnimationAction)
+																						// （在 SkillAnimationAction 中计算） / (Calculated
+																						// in SkillAnimationAction)
 			return true;
 		}
 		return false;

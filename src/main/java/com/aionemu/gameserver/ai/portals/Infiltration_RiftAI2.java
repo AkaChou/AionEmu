@@ -34,7 +34,7 @@ public class Infiltration_RiftAI2 extends NpcAI2
 				public void acceptRequest(Creature requester, Player responder) {
 					if (!decisionTaken) {
 						switch (getNpcId()) {
-							case 702721: //Infiltration Rift.
+							case 702721: // 渗透裂缝。 / Infiltration Rift.
 							    if (responder.getCommonData().getRace() == Race.ELYOS) {
 								    switch (Rnd.get(1, 9)) {
 									    case 1:

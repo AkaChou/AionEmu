@@ -6,7 +6,6 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.AbstractAI;
-import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.handler.ReturningEventHandler;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
@@ -53,6 +52,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_OBJECT;
 import com.aionemu.gameserver.questEngine.model.RetailQuestState;
+import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.services.LimitedQuestService;
@@ -75,7 +75,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
-/** 执行真端 NPC AI Pattern 的通用 AI。 */
+/**
+ * 执行真端 NPC AI Pattern 的通用 AI。
+ * General AI that executes retail NPC AI patterns.
+ */
 @AIName("retail_pattern")
 public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
@@ -1371,9 +1374,12 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		byte heading = PositionUtil.getMoveAwayHeading(source, getOwner());
 		Point3D target = fleePoint(getOwner().getX(), getOwner().getY(), getOwner().getZ(),
 			Math.max(1, getOwner().getGameStats().getMovementSpeedFloat()), heading, Rnd.get(-45, 45));
+		// 逃跑终点 Z 取目标 XY 处地表高度，避免水平射线撞坡面侧壁后悬在坡下上方（视觉"上天"）
+		float groundZ = GameWorldServices.geoService().getZ(getOwner().getWorldId(), target.getX(), target.getY(),
+			getOwner().getZ(), 100, getOwner().getInstanceId());
 		byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
 		Vector3f destination = GameWorldServices.geoService().getClosestCollision(getOwner(), target.getX(), target.getY(),
-			target.getZ(), true, intentions);
+			groundZ, true, intentions);
 		getOwner().getMoveController().resetMove();
 		getOwner().getMoveController().moveToPoint(destination.getX(), destination.getY(), destination.getZ());
 	}
@@ -1814,7 +1820,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	static int switchHateAddition(int maximumHate, int targetHate, int percent, int points) {
 		long addition = maximumHate + maximumHate * (long) percent / 100 + points - targetHate;
-		return (int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, addition));
+		return Math.clamp(addition, Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
 
 	static boolean matchesRace(Race race, String retailRace) {
@@ -1997,7 +2003,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			return false;
 		}
 		if (retailState.equals("ABNSTATEI_SANCTUARY")) {
-			return creature.getEffectController().getAbnormalEffects().stream().anyMatch(effect -> effect.isSanctuaryEffect());
+			return creature.getEffectController().getAbnormalEffects().stream().anyMatch(Effect::isSanctuaryEffect);
 		}
 		if (retailState.equals("ABNSTATEI_INVULNERABLE_WING")) {
 			return creature instanceof Player player && player.isInvulnerableWing();
@@ -2089,7 +2095,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			if (walker == null || walker.getRouteSteps() == null || walker.getRouteSteps().isEmpty()) {
 				return null;
 			}
-			RouteStep first = walker.getRouteSteps().get(0);
+			RouteStep first = walker.getRouteSteps().getFirst();
 			return new Point3D(first.getX(), first.getY(), first.getZ());
 		}
 		float baseX = value(action, "spawn_location_type").equals("SPAWN_LOCATION_ABSOLUTE") ? 0 : ownerX;
@@ -2177,7 +2183,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				despawnAtAttackState.put(spawned, !value(action, "despawn_at_attack_state").equals("FALSE"));
 			}
 			if (trackedBySpawnId) {
-				this.spawned.computeIfAbsent(value(action, "spawn_id"), key -> new ArrayList<>()).add(spawned);
+				this.spawned.computeIfAbsent(value(action, "spawn_id"), _ -> new ArrayList<>()).add(spawned);
 			}
 			if (attackTarget != null && spawned instanceof Npc npc && value(action, "attack_target_after_spawn").equals("TRUE")) {
 				npc.getAggroList().addHate(attackTarget, integer(action, "hatepoints_to_add"));

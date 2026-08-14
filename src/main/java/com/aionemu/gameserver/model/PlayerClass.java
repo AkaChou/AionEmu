@@ -13,14 +13,44 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 @XmlEnum
 public enum PlayerClass {
-	/** 战士 / Warrior. */
-	WARRIOR(0, true), GLADIATOR(1), TEMPLAR(2), SCOUT(3, true), ASSASSIN(4), RANGER(5), MAGE(6, true), SORCERER(7),
+	/** 战士（起始职业） / Warrior (starting class). */
+	WARRIOR(0, true),
+	/** 剑星 / Gladiator */
+	GLADIATOR(1),
+	/** 守护星 / Templar */
+	TEMPLAR(2),
+	/** 斥候（起始职业） / Scout (starting class) */
+	SCOUT(3, true),
+	/** 杀星 / Assassin */
+	ASSASSIN(4),
+	/** 弓星 / Ranger */
+	RANGER(5),
+	/** 法师（起始职业） / Mage (starting class) */
+	MAGE(6, true),
+	/** 魔道星 / Sorcerer */
+	SORCERER(7),
 	/** 精灵星 / Spirit Master */
-	SPIRIT_MASTER(8), PRIEST(9, true), CLERIC(10), CHANTER(11),
+	SPIRIT_MASTER(8),
+	/** 祭司（起始职业） / Priest (starting class) */
+	PRIEST(9, true),
+	/** 治愈星 / Cleric */
+	CLERIC(10),
+	/** 护法星 / Chanter */
+	CHANTER(11),
 
 	// 资讯类 4.3/4.5 / News Class 4.3/4.5
-	/** 技师 / Technist. */
-	TECHNIST(12, true), AETHERTECH(13), GUNSLINGER(14), MUSE(15, true), SONGWEAVER(16), ALL(17);
+	/** 技师（起始职业） / Technist (starting class). */
+	TECHNIST(12, true),
+	/** 机甲星 / Aethertech */
+	AETHERTECH(13),
+	/** 枪炮星 / Gunslinger */
+	GUNSLINGER(14),
+	/** 缪斯（起始职业） / Muse (starting class) */
+	MUSE(15, true),
+	/** 吟游星 / Songweaver */
+	SONGWEAVER(16),
+	/** 全部 / All */
+	ALL(17);
 
 	@Getter
 	private byte classId;

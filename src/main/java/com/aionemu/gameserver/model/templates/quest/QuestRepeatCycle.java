@@ -20,7 +20,7 @@ public enum QuestRepeatCycle {
 		this.weekDay = weekDay;
 	}
 
-	/** 返回 day / Returns the day */
+	/** 返回星期值 / Returns the day */
 	public int getDay() {
 		return weekDay;
 	}

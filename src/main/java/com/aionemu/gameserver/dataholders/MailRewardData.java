@@ -51,7 +51,7 @@ public class MailRewardData {
 	 * 返回已加载的邮件奖励数量。
 	 * Returns the number of loaded mail rewards.
 	 *
-	 * template count
+	 * @return 已加载的邮件奖励数量 / Returns the number of loaded mail rewards.
 	 */
 	public int size() {
 		return templates.size();
@@ -61,9 +61,7 @@ public class MailRewardData {
 	 * 按奖励 ID 获取邮件奖励模板。
 	 * Returns the mail reward template for the given reward id.
 	 *
-	 * reward id
-	 *
-	 * @param rewardId
+	 * @param rewardId 奖励 ID / reward id
 	 * @return 邮件奖励模板或 null / mail reward template or null
 	 */
 	public MailRewardTemplate getMailReward(int rewardId) {

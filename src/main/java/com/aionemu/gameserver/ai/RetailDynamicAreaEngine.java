@@ -13,7 +13,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
-/** 真端 AI 控制的 MovingCollision 与 WindBox 实例状态。 */
+/**
+ * 真端 AI 控制的 MovingCollision 与 WindBox 实例状态。
+ * Retail AI-controlled instance states for MovingCollision and WindBox.
+ */
 public final class RetailDynamicAreaEngine {
 
 	private static final Map<WorldMapInstance, Map<String, Boolean>> STATES = new ConcurrentHashMap<>();

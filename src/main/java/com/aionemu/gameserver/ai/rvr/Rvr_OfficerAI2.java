@@ -72,8 +72,9 @@ public class Rvr_OfficerAI2 extends AggressiveNpcAI2
 		});
 	}
 	
-   /**
-	 * 进攻方魔族 / Attacker Asmodians
+	/**
+	 * 进攻方魔族。
+	 * Attacker Asmodians
 	 */
 	private void announceGeneralMiltarRescued() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
@@ -103,8 +104,9 @@ public class Rvr_OfficerAI2 extends AggressiveNpcAI2
 		});
 	}
 	
-   /**
-	 * 进攻方天族 / Attacker Elyos
+	/**
+	 * 进攻方天族。
+	 * Attacker Elyos
 	 */
 	private void announceGeneralMagkenRescued() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {

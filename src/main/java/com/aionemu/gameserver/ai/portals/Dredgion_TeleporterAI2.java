@@ -21,7 +21,7 @@ import com.aionemu.gameserver.services.instance.InstanceService;
  * Author: MATTY
  */
 
-@AIName("dredgion_teleporter") // Название AI
+@AIName("dredgion_teleporter") // AI 名称。 / AI name.
 
 /**
  * 传送门/传送点 AI：Dredgion Teleporter（@AIName "dredgion_teleporter"），继承 ActionItemNpcAI2。
@@ -32,12 +32,12 @@ public class Dredgion_TeleporterAI2 extends ActionItemNpcAI2 {
     private static final byte TELEPORT_HEADING = (byte) 25;
     private static final TeleportAnimation TELEPORT_ANIMATION = TeleportAnimation.BEAM_ANIMATION;
 
-    // Координаты телепортации для Нях
+    // 天族传送坐标。 / Elyos teleport coordinates.
     private static final float ELYOS_TELEPORT_X = 414f;
     private static final float ELYOS_TELEPORT_Y = 193f;
     private static final float ELYOS_TELEPORT_Z = 431f;
 
-	// Координаты телепортации для Асмов
+	// 魔族传送坐标。 / Asmodian teleport coordinates.
     private static final float ASMODIAN_TELEPORT_X = 399.3425f;
     private static final float ASMODIAN_TELEPORT_Y = 165.760f;
     private static final float ASMODIAN_TELEPORT_Z = 432.288f;
@@ -45,10 +45,10 @@ public class Dredgion_TeleporterAI2 extends ActionItemNpcAI2 {
     @Override
     protected void handleUseItemFinish(Player player) {
         switch (getNpcId()) {
-            case 730949: // Elyos teleport to Dredgion sites
+            case 730949: // 天族传送到德雷德吉翁据点。 / Elyos teleport to Dredgion sites.
                 handleTeleport(player);
-                break; // Важно!
-            case 730950: //Asmo teleport to Dredgion sites
+                break; // 重要！ / Important!
+            case 730950: // 魔族传送到德雷德吉翁据点。 / Asmodian teleport to Dredgion sites.
                 handleTeleport(player);
                 break;
         }
@@ -60,18 +60,18 @@ public class Dredgion_TeleporterAI2 extends ActionItemNpcAI2 {
         if (teleportId != 0) {
             float teleportX, teleportY, teleportZ;
 			
-			// Телепорт для Нях
+			// 天族传送。 / Elyos teleport.
             if (player.getRace() == Race.ELYOS) {
                 teleportX = ELYOS_TELEPORT_X;
                 teleportY = ELYOS_TELEPORT_Y;
                 teleportZ = ELYOS_TELEPORT_Z;
-            } else { // Телепорт для Асмов
+            } else { // 魔族传送。 / Asmodian teleport.
                 teleportX = ASMODIAN_TELEPORT_X;
                 teleportY = ASMODIAN_TELEPORT_Y;
                 teleportZ = ASMODIAN_TELEPORT_Z;
             }
 
-            goTo(player, teleportId, teleportX, teleportY, teleportZ); // Телепорт в Дерадикон
+            goTo(player, teleportId, teleportX, teleportY, teleportZ); // 传送到德雷德吉翁。 / Teleport to Dredgion.
 			
 			
         } else {
@@ -85,13 +85,13 @@ public class Dredgion_TeleporterAI2 extends ActionItemNpcAI2 {
         int level = player.getLevel();
 
         if (level >= 46 && level <= 50) {
-            return 300110000; // Baranath Dredgion 46-50
+            return 300110000; // Baranath 德雷德吉翁（46-50 级）。 / Baranath Dredgion 46-50.
         } else if (level >= 51 && level <= 54) {
-            return 300210000; // Chantra Dredgion 51-54
+            return 300210000; // Chantra 德雷德吉翁（51-54 级）。 / Chantra Dredgion 51-54.
         } else if (level >= 55 && level <= 64) {
-            return 300440000; // Terath Dredgion 55-64
+            return 300440000; // Terath 德雷德吉翁（55-64 级）。 / Terath Dredgion 55-64.
         } else if (level >= 65) {
-            return 301650000; // Ashunatal Dredgion 65-75
+            return 301650000; // Ashunatal 德雷德吉翁（65-75 级）。 / Ashunatal Dredgion 65-75.
         }
         return 0;
     }

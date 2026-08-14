@@ -14,7 +14,7 @@ import com.aionemu.gameserver.model.templates.stats.PetStatsTemplate;
 
 /**
  * 宠物模板（静态数据/XML）。
- * XML template.
+ * Pet template (static data / XML).
  *
  * @author IlBuono
  */
@@ -58,7 +58,7 @@ public class PetTemplate {
 		return nameId;
 	}
 
-	/** 返回 pet functions / Returns the pet functions */
+	/** 返回宠物函数列表 / Returns the pet functions */
 	public List<PetFunction> getPetFunctions() {
 		if (hasPlayerFuncs == null) {
 			hasPlayerFuncs = false;
@@ -92,7 +92,11 @@ public class PetTemplate {
 	}
 
 	/**
-	 * @param type 用于写入 SM_PET 包，仅检查所需项。 / Used to write to SM_PET packet, so checks only needed ones
+	 * 判断是否包含指定函数；写入 SM_PET 包时使用，仅检查所需项。
+	 * Checks whether the pet contains the given function; used for SM_PET packet, so checks only needed ones.
+	 *
+	 * @param type 宠物函数类型 / pet function type
+	 * @return 是否包含 / whether contained
 	 */
 	public boolean ContainsFunction(PetFunctionType type) {
 		if (type.getId() < 0) {
@@ -108,7 +112,11 @@ public class PetTemplate {
 	}
 
 	/**
-	 * Returns function if found, otherwise null
+	 * 找到则返回函数，否则为空。
+	 * Returns function if found, otherwise null.
+	 *
+	 * @param type 宠物函数类型 / pet function type
+	 * @return 匹配的宠物函数 / matching pet function
 	 */
 	public PetFunction getPetFunction(PetFunctionType type) {
 		for (PetFunction t : getPetFunctions()) {
@@ -124,7 +132,7 @@ public class PetTemplate {
 		return petStats;
 	}
 
-	/** 返回 condition reward / Returns the condition reward */
+	/** 返回条件奖励 / Returns the condition reward */
 	public final int getConditionReward() {
 		return conditionReward;
 	}

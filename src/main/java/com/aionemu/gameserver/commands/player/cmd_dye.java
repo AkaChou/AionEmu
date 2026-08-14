@@ -26,7 +26,7 @@ public class cmd_dye extends PlayerCommand {
 	 * Parses color arguments and applies the dye effect.
 	 *
 	 * @param player 执行命令的玩家 / invoking player
-	 * command parameters
+	 * @param params 命令参数 / command parameters
 	 */
 	@Override
 	public void execute(Player player, String... params) {

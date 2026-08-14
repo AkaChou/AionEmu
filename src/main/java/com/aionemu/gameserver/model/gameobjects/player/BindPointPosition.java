@@ -34,35 +34,35 @@ public class BindPointPosition {
 	}
 
 	/**
-	 * @return Returns the mapId.
+	 * @return 地图 ID / the mapId
 	 */
 	public int getMapId() {
 		return mapId;
 	}
 
 	/**
-	 * @return Returns the x.
+	 * @return X 坐标 / the x
 	 */
 	public float getX() {
 		return x;
 	}
 
 	/**
-	 * @return Returns the y.
+	 * @return Y 坐标 / the y
 	 */
 	public float getY() {
 		return y;
 	}
 
 	/**
-	 * @return Returns the z.
+	 * @return Z 坐标 / the z
 	 */
 	public float getZ() {
 		return z;
 	}
 
 	/**
-	 * @return Returns the heading.
+	 * @return 朝向 / the heading
 	 */
 	public byte getHeading() {
 		return heading;

@@ -19,7 +19,7 @@ final class GameShutdownHookFallbacks {
      * 返回回退用的 {@link ShutdownHook} 实例。
      * Return the fallback {@link ShutdownHook} instance.
      *
-     * Shutdown hook
+     * @return 关停钩子 / Shutdown hook
      */
     static ShutdownHook shutdownHook() {
         return ShutdownHookFallback.INSTANCE;

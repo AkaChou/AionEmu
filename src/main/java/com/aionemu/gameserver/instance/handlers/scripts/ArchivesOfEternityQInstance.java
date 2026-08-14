@@ -26,13 +26,13 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 @InstanceID(301570000)
 public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 {
-	/** ideternity qsado wi65an01 / ideternity qsado wi65an01 */
+		/** ideternity qsado wi65an01 / ideternity qsado wi65an01 */
 		private int IDEternityQSadoWi65An01;
-	/** ideternity qsado fi65an01 / ideternity qsado fi65an01 */
+		/** ideternity qsado fi65an01 / ideternity qsado fi65an01 */
 		private int IDEternityQSadoFi65An01;
-	/** ideternity qsado pr65an01 / ideternity qsado pr65an01 */
+		/** ideternity qsado pr65an01 / ideternity qsado pr65an01 */
 		private int IDEternityQSadoPr65An01;
-	/** ideternity qsado wi65an02 / ideternity qsado wi65an02 */
+		/** ideternity qsado wi65an02 / ideternity qsado wi65an02 */
 		private int IDEternityQSadoWi65An02;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
@@ -66,15 +66,15 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
-		   /**
-	 * MOBS
-	 */
+			/**
+			 * MOBS
+			 */
 			case 857782: //Lesser Fleshgolem.
 			    IDEternityQSadoWi65An01++;
 				if (IDEternityQSadoWi65An01 == 3) {
@@ -136,9 +136,9 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403303, Race.PC_ALL, 0);
 			break;
 			
-		   /**
-	 * MALE ELYOS
-	 */
+			/**
+			 * MALE ELYOS
+			 */
 			case 857788: //Archdaeva Of Eternal Storms.
 				despawnNpc(npc);
 				// 你获得了祝福之泉光环。 / You are graced with the aura of Blessed Spring.
@@ -165,9 +165,9 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403304, Race.PC_ALL, 0);
 				// sendMsg("[成功]：你成为了 <高阶守护者>"); / sendMsg("[SUCCES]: you are a <Archdaeva>");
 			break;
-		   /**
-	 * FEMALE ELYOS
-	 */
+			/**
+			 * FEMALE ELYOS
+			 */
 			case 857795: //Archdaeva Of Eternal Storms.
 				despawnNpc(npc);
 				// 你获得了祝福之泉光环。 / You are graced with the aura of Blessed Spring.
@@ -194,9 +194,9 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403304, Race.PC_ALL, 0);
 				// sendMsg("[成功]：你成为了 <高阶守护者>"); / sendMsg("[SUCCES]: you are a <Archdaeva>");
 			break;
-		   /**
-	 * MALE ASMODIANS
-	 */
+			/**
+			 * MALE ASMODIANS
+			 */
 			case 857799: //Archdaeva Of Eternal Storms.
 				despawnNpc(npc);
 				// 你获得了祝福之泉光环。 / You are graced with the aura of Blessed Spring.
@@ -223,9 +223,9 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403304, Race.PC_ALL, 0);
 				// sendMsg("[成功]：你成为了 <高阶守护者>"); / sendMsg("[SUCCES]: you are a <Archdaeva>");
 			break;
-		   /**
-	 * FEMALE ASMODIANS
-	 */
+			/**
+			 * FEMALE ASMODIANS
+			 */
 			case 857803: //Archdaeva Of Eternal Storms.
 				despawnNpc(npc);
 				// 你获得了祝福之泉光环。 / You are graced with the aura of Blessed Spring.
@@ -273,9 +273,9 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

@@ -137,7 +137,7 @@ public class GameHousingRuntimeBridge {
      * 解析城镇服务。
      * Resolve the town service.
      *
-     * Town service
+     * @return 城镇服务 / Town service
      */
     public TownService townService() {
         if (townServiceProvider == null) {
@@ -150,7 +150,7 @@ public class GameHousingRuntimeBridge {
      * 解析房屋服务。
      * Resolve the housing service.
      *
-     * Housing service
+     * @return 房屋服务 / Housing service
      */
     public HousingService housingService() {
         if (housingServiceProvider == null) {

@@ -17,8 +17,8 @@ public abstract class OutpostDAO implements DAO {
 	 * 加载全部前哨据点位置到给定映射中。
 	 * Loads all outpost locations into the given map.
 	 *
-	 * destination map
-	 * 若 successful 则为 true / true if successful
+	 * @param locations 目标映射 / destination map
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean loadOutposLocations(Map<Integer, OutpostLocation> locations);
 
@@ -26,8 +26,8 @@ public abstract class OutpostDAO implements DAO {
 	 * 更新单个前哨据点位置状态。
 	 * Updates a single outpost location state.
 	 *
-	 * outpost location
-	 * 若 successful 则为 true / true if successful
+	 * @param location 前哨位置 / outpost location
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean updateOutpostLocation(OutpostLocation location);
 
@@ -35,7 +35,7 @@ public abstract class OutpostDAO implements DAO {
 	 * 更新位置的便捷方法，委托给 {@link #updateOutpostLocation}。
 	 * Convenience method that delegates to {@link #updateOutpostLocation}.
 	 *
-	 * outpost location
+	 * @param location 前哨位置 / outpost location
 	 */
 	public void updateLocation(final OutpostLocation location) {
 		updateOutpostLocation(location);
@@ -45,7 +45,7 @@ public abstract class OutpostDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public String getClassName() {

@@ -25,7 +25,10 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** 真端实例级动态区域。 */
+/**
+ * 真端实例级动态区域。
+ * Retail instance-level dynamic areas.
+ */
 public final class RetailAreaEngine {
 
 	private static final Map<WorldMapInstance, Map<String, Boolean>> RESURRECT_STATES = new ConcurrentHashMap<>();

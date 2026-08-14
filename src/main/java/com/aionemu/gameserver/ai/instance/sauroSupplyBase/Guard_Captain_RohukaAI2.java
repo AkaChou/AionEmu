@@ -44,7 +44,7 @@ public class Guard_Captain_RohukaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void beritraFavor() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
 	}
 	
 	@Override
@@ -76,7 +76,7 @@ public class Guard_Captain_RohukaAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 60, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 60, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
 		}
 	}
 	
@@ -91,10 +91,10 @@ public class Guard_Captain_RohukaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void skill() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 18158, 100, getOwner()).useNoAnimationSkill(); //Wrathful Venom Burst.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 18158, 100, getOwner()).useNoAnimationSkill(); // 愤怒毒液爆发 / Wrathful Venom Burst.
 		   GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
-                GameEngineServices.skillEngine().getSkill(getOwner(), 18160, 100, getOwner()).useNoAnimationSkill(); //Virulence.
+                GameEngineServices.skillEngine().getSkill(getOwner(), 18160, 100, getOwner()).useNoAnimationSkill(); // 毒性 / Virulence.
 			}
 		}, 4000);
 	}

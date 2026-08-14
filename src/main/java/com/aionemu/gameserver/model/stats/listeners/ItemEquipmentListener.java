@@ -36,8 +36,11 @@ import com.aionemu.gameserver.services.SkillLearnService;
 public class ItemEquipmentListener {
 
 	/**
-	 * @param item
-	 * @param owner
+	 * 装备物品时应用其全部属性效果（魔石、神石、伊迪安石、随机属性等）。
+	 * Applies all stat effects of the item on equip (stones, godstone, Idian, random stats, etc.).
+	 *
+	 * @param item 被装备的物品 / equipped item
+	 * @param owner 装备玩家 / equipping player
 	 */
 	public static void onItemEquipment(Item item, Player owner) {
 		owner.getController().cancelUseItem();
@@ -80,8 +83,11 @@ public class ItemEquipmentListener {
 	}
 
 	/**
-	 * @param item
-	 * @param owner
+	 * 卸下物品时移除其全部属性效果。
+	 * Removes all stat effects of the item on unequip.
+	 *
+	 * @param item 被卸下的物品 / unequipped item
+	 * @param owner 卸装玩家 / unequipping player
 	 */
 	public static void onItemUnequipment(Item item, Player owner) {
 		owner.getController().cancelUseItem();
@@ -139,9 +145,12 @@ public class ItemEquipmentListener {
 	}
 
 	/**
-	 * @param item
-	 * @param cgs
-	 * @param player
+	 * 装备物品并应用模板属性修正。
+	 * Equips the item and applies its template stat modifiers.
+	 *
+	 * @param item 物品 / item
+	 * @param cgs 生物游戏属性 / creature game stats
+	 * @param player 装备玩家 / equipping player
 	 */
 	private static void onItemEquipment(Item item, CreatureGameStats<?> cgs, Player player) {
 		ItemTemplate itemTemplate = item.getItemTemplate();
@@ -248,9 +257,12 @@ public class ItemEquipmentListener {
 	}
 
 	/**
-	 * @param itemSetTemplate
-	 * @param player
-	 * @param isWeapon
+	 * 重新计算物品套装加成。
+	 * Recalculates the item set bonuses.
+	 *
+	 * @param itemSetTemplate 套装模板 / item set template
+	 * @param player 玩家 / player
+	 * @param isWeapon 是否为武器 / whether it is a weapon
 	 */
 	private static void recalculateItemSet(ItemSetTemplate itemSetTemplate, Player player, boolean isWeapon) {
 		if (itemSetTemplate == null) {
@@ -307,7 +319,7 @@ public class ItemEquipmentListener {
 			return;
 		}
         for (ManaStone stone : itemStones) {
-            if (stone != null) { // Добавляем проверку
+            if (stone != null) { // 添加空值检查 / add a null check
                addStoneStats(item, stone, cgs);
             }
         }
@@ -342,7 +354,7 @@ public class ItemEquipmentListener {
 		}
 	}
 
-	/** 移除 stone stats 1 / Removes stone stats 1 */
+	/** 移除单个魔石属性 / Removes one stone's stats */
 	public static void removeStoneStats1(Item item, ManaStone stone, CreatureGameStats<?> cgs) {
 		if (stone == null || item == null) {
 			return;
@@ -356,7 +368,10 @@ public class ItemEquipmentListener {
 	}
 
 	/**
-	 * @param player
+	 * 装备时应用神石效果。
+	 * Applies the godstone effect on equip.
+	 *
+	 * @param player 玩家 / player
 	 */
 	private static void addGodstoneEffect(Player player, Item item) {
 		if (item.getGodStone() != null) {
@@ -365,7 +380,10 @@ public class ItemEquipmentListener {
 	}
 
 	/**
-	 * @param player
+	 * 卸装时移除神石效果。
+	 * Removes the godstone effect on unequip.
+	 *
+	 * @param player 玩家 / player
 	 */
 	private static void removeGodstoneEffect(Player player, Item item) {
 		if (item.getGodStone() != null) {

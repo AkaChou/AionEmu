@@ -14,7 +14,7 @@ import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 
 /**
  * Events 窗口模板（静态数据/XML）。
- * XML template.
+ * Events Window Template (static data/XML).
  *
  * @author Ghostfur (Aion-Unique)
  */
@@ -68,17 +68,17 @@ public class EventsWindow {
 		return count;
 	}
 
-	/** 返回 max count of day / Returns the max count of day */
+	/** 返回每日最大次数 / Returns the max count of day */
 	public int getMaxCountOfDay() {
 		return dailyMaxCount;
 	}
 
-	/** 返回 period start / Returns the period start */
+	/** 返回周期开始时间 / Returns the period start */
 	public ZonedDateTime getPeriodStart() {
 		return DateTimeUtil.fromCalendar(pStart.toGregorianCalendar());
 	}
 
-	/** 返回 period end / Returns the period end */
+	/** 返回周期结束时间 / Returns the period end */
 	public ZonedDateTime getPeriodEnd() {
 		return DateTimeUtil.fromCalendar(pEnd.toGregorianCalendar());
 	}
@@ -98,12 +98,12 @@ public class EventsWindow {
 		return max_level;
 	}
 
-	/** 返回上次盖章 / Returns the last stamp*/
+	/** 返回上次盖章时间 / Returns the last stamp */
 	public Timestamp getLastStamp() {
 		return lastStamp;
 	}
 
-	/** 设置 last stamp / Sets the last stamp */
+	/** 设置上次盖章时间 / Sets the last stamp */
 	public void setLastStamp(Timestamp timestamp) {
 		lastStamp = timestamp;
 	}

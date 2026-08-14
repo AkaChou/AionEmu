@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * 升级结果物品模板（静态数据/XML）。
- * XML template.
+ * Upgrade result item template (static data/XML).
  *
  * @author Ranastic (Encom)
  */
@@ -45,7 +45,7 @@ public class UpgradeResultItem {
 		return item_id;
 	}
 
-	/** 获取升级材料。 / Returns the upgrade 材料. */
+	/** 获取升级材料。 / Returns the upgrade materials. */
 	public UpgradeMaterials getUpgrade_materials() {
 		return upgrade_materials;
 	}

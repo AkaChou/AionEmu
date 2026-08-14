@@ -14,6 +14,10 @@ import com.aionemu.gameserver.dataholders.PetMerchandData;
 import com.aionemu.gameserver.model.templates.pet.PetDopingEntry;
 import com.aionemu.gameserver.model.templates.pet.PetMerchandEntry;
 
+/**
+ * 从 XML 加载宠物定义（药物强化与商品价格倍率）。
+ * Loads pet definitions (doping items and merchant price rates) from XML.
+ */
 final class PetDefinitionLoader {
 
 	static Result load(File file) {

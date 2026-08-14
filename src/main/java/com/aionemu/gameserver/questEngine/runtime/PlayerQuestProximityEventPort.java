@@ -12,9 +12,12 @@ import java.util.function.BiPredicate;
 import java.util.function.ToIntFunction;
 
 /**
+ * 从真实 AI 回调捕获 NPC 邻近事实。
  * Captures NPC proximity facts from the actual AI callback.
  *
- * <p>The port is deliberately fail-closed: a missing target/player, a stale
+ * <p>端口刻意 fail-closed：目标/玩家缺失、模板 ID 过期、跨世界/实例回调、
+ * 或距离超出旧版 20 单位约定时，都不能创建类型化事件。
+ * The port is deliberately fail-closed: a missing target/player, a stale
  * template id, a cross-world/instance callback, or a distance outside the
  * legacy 20-unit contract cannot create a typed event.</p>
  */

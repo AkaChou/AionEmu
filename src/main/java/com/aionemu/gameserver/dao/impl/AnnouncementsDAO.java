@@ -35,7 +35,7 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	 * 加载全部公告。
 	 * Loads all announcements.
 	 *
-	 * announcement set
+	 * @return 公告集合 / announcement set
 	 */
 	@Override
 	public Set<Announcement> getAnnouncements() {
@@ -64,7 +64,7 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	 * 添加公告。
 	 * Adds an announcement.
 	 *
-	 * announcement object
+	 * @param announce 公告对象 / announcement object
 	 */
 	@Override
 	public void addAnnouncement(final Announcement announce) {
@@ -87,7 +87,7 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	 *
 	 * announcement id
 	 *
-	 * @param idAnnounce
+	 * @param idAnnounce 公告 ID / announcement id
 	 * @return 是否删除成功 / whether the delete succeeded
 	 */
 	@Override
@@ -107,10 +107,10 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
 	 *
-	 * @param s 数据库名 / database name
-	 * @param i 主版本 / major version
-	 * @param i1 次版本 / minor version
-	 * whether supported
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
 	 */
 	@Override
 	public boolean supports(String s, int i, int i1) {

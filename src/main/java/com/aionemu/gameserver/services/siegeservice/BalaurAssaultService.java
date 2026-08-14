@@ -57,7 +57,7 @@ public class BalaurAssaultService {
 	 * 获取服务单例，优先走 Spring ObjectProvider。
 	 * Returns the service singleton, preferring Spring ObjectProvider when available.
 	 *
-	 * service instance
+	 * @return 服务实例 / service instance
 	 */
 	public static BalaurAssaultService getInstance() {
 		ObjectProvider<BalaurAssaultService> provider = instanceProvider;
@@ -70,7 +70,7 @@ public class BalaurAssaultService {
 	 * 注入 Spring {@link ObjectProvider} 以覆盖默认单例。
 	 * Injects a Spring {@link ObjectProvider} to override the default singleton.
 	 *
-	 * Spring provider
+	 * @param provider Spring 提供者 / spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<BalaurAssaultService> provider) {
 		instanceProvider = provider;
@@ -359,9 +359,7 @@ public class BalaurAssaultService {
 	 * 判断要塞是否可发起龙族突击（去重、影响力、同图并发上限）。
 	 * Decides whether a fortress can start a Balaur assault (dedupe, influence, per-world limit).
 	 *
-	 * fortress location
-	 *
-	 * @param fortress
+	 * @param fortress 要塞据点 / fortress location
 	 * @return 是否可突击 / whether assault may start
 	 */
 	private boolean calculateFortressAssault(FortressLocation fortress) {
@@ -388,9 +386,7 @@ public class BalaurAssaultService {
 	 * 判断神器是否可发起龙族突击（当前始终 false）。
 	 * Decides whether an artifact can start a Balaur assault (currently always false).
 	 *
-	 * artifact location
-	 *
-	 * @param artifact
+	 * @param artifact 神器据点 / artifact location
 	 * @return 是否可突击 / whether assault may start
 	 */
 	private boolean calculateArtifactAssault(ArtifactLocation artifact) {
@@ -400,9 +396,9 @@ public class BalaurAssaultService {
 	 * GM/指令手动对指定据点发起突击。
 	 * Manually starts an assault on a location (GM/command).
 	 *
-	 * initiator
-	 * location id
-	 * delay in seconds
+	 * @param player 发起者 / initiator
+	 * @param location 据点 ID / location id
+	 * @param delay 延迟秒数 / delay in seconds
 	 */
 	public void startAssault(Player player, int location, int delay) {
 		if (fortressAssaults.containsKey(location)) {
@@ -435,8 +431,8 @@ public class BalaurAssaultService {
 	 * Rolls assault chance from influence/owned forts and config rate.
 	 *
 	 * @param isBalaurea 是否巴劳雷亚 / whether on Balaurea
-	 * fortress location
-	 * whether assault triggers
+	 * @param fortress 要塞据点 / fortress location
+	 * @return 是否触发突击 / whether assault triggers
 	 */
 	private boolean calcFortressInfluence(boolean isBalaurea, FortressLocation fortress) {
 		SiegeRace locationRace = fortress.getRace();
@@ -463,7 +459,7 @@ public class BalaurAssaultService {
 	 * 向在线玩家刷出组装型德雷吉恩 NPC。
 	 * Spawns an assembled dredgion NPC for all online players.
 	 *
-	 * assembled NPC template id
+	 * @param spawnId 组装 NPC 模板 ID / assembled NPC template id
 	 */
 	public void spawnDredgion(int spawnId) {
 		AssembledNpcTemplate template = DataManager.ASSEMBLED_NPC_DATA.getAssembledNpcTemplate(spawnId);

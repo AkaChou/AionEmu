@@ -66,7 +66,7 @@ public class GameWorldActivationGateway {
      * 解析掉落注册服务：优先 Spring，否则运行时桥。
      * Resolve drop-registration service: prefer Spring, otherwise runtime bridge.
      *
-     * DropRegistrationService instance
+     * @return DropRegistrationService 实例 / DropRegistrationService instance
      */
     private DropRegistrationService dropRegistrationService() {
         if (dropRegistrationServiceProvider == null) {
@@ -79,7 +79,7 @@ public class GameWorldActivationGateway {
      * 解析世界服务运行时桥：优先 Spring，否则新建。
      * Resolve the world-services runtime bridge: prefer Spring, otherwise create new.
      *
-     * Runtime bridge
+     * @return 运行时桥 / Runtime bridge
      */
     private GameWorldServicesRuntimeBridge runtimeBridge() {
         if (runtimeBridgeProvider == null) {

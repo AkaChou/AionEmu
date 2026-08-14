@@ -61,9 +61,9 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
      * 加载指定存储类型的物品栏；账号仓库会先解析为账号 ID。
      * Loads a storage of the given type for a player; account warehouse resolves to account id first.
      *
-     * player id
-     * storage type
-     * storage instance
+     * @param playerId 玩家 ID / player id
+     * @param storageType 存储类型 / storage type
+     * @return 存储实例 / storage instance
      */
     @Override
     public Storage loadStorage(int playerId, StorageType storageType) {
@@ -106,9 +106,9 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
      * 直接加载指定存储位置的物品列表（不封装为 Storage）。
      * Loads items of a storage type as a plain list (no Storage wrapper).
      *
-     * player id
-     * storage type
-     * item list
+     * @param playerId 玩家 ID / player id
+     * @param storageType 存储类型 / storage type
+     * @return 物品列表 / item list
      */
     @Override
     public List<Item> loadStorageDirect(int playerId, StorageType storageType) {
@@ -143,8 +143,8 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
      * 加载玩家已装备物品到装备栏对象。
      * Loads equipped items into an Equipment instance for the player.
      *
-     * 玩家 / player
-     * equipment
+     * @param player 玩家 / player
+     * @return 装备 / equipment
      */
     @Override
     public Equipment loadEquipment(Player player) {
@@ -180,7 +180,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
      *
      * player id
      *
-     * @param playerId
+     * @param playerId 玩家 ID / player id
      * @return 已装备物品列表 / equipped item list
      */
     @Override
@@ -269,7 +269,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
      *
      * player id
      *
-     * @param playerId
+     * @param playerId 玩家 ID / player id
      * @return 军团 ID；未加入或出错时返回 0 / legion id, or 0 if none/error
      */
     public int loadLegionId(final int playerId) {
@@ -293,7 +293,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
      * 持久化玩家全部脏物品（含账号仓/军团仓归属）。
      * Persists all dirty items of the player (resolves account/legion ownership).
      *
-     * 玩家 / player
+     * @param player 玩家 / player
      * @return 是否全部成功 / whether all operations succeeded
      */
     @Override
@@ -313,9 +313,9 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
      * 持久化单个物品（绑定玩家账号与军团）。
      * Persists a single item bound to the player's account and legion.
      *
-     * item
-     * 玩家 / player
-     * whether succeeded
+     * @param item 物品 / item
+     * @param player 玩家 / player
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean store(Item item, Player player) {
@@ -330,8 +330,8 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
      * Persists an item list by player id; resolves account/legion ownership when needed.
      *
      * @param items 物品列表 / item list
-     * player id
-     * whether succeeded
+     * @param playerId 玩家 ID / player id
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean store(List<Item> items, int playerId) {
@@ -358,7 +358,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
      * Batch inserts/updates/deletes items by persistent state within a transaction.
      *
      * @param items 物品列表 / item list
-     * player id
+     * @param playerId 玩家 ID / player id
      * @param accountId 账号 ID（账号仓用） / account id (for account warehouse)
      * @param legionId 军团 ID（军团仓用） / legion id (for legion warehouse)
      * @return 是否全部成功 / whether all operations succeeded
@@ -580,8 +580,8 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
      * 删除玩家非账号仓库的全部物品。
      * Deletes all non-account-warehouse items owned by the player.
      *
-     * player id
-     * whether succeeded
+     * @param playerId 玩家 ID / player id
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean deletePlayerItems(final int playerId) {
@@ -650,10 +650,10 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
      * 判断当前数据库是否受 MySQL 8 DAO 支持。
      * Returns whether the given database is supported by MySQL 8 DAOs.
      *
-     * database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

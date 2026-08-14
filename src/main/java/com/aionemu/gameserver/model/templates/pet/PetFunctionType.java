@@ -8,11 +8,25 @@ package com.aionemu.gameserver.model.templates.pet;
  */
 public enum PetFunctionType {
 	/** 仓库。 / Warehouse. */
-	WAREHOUSE(0, true), FOOD(1, 64), DOPING(2, 256), LOOT(3, 8), APPEARANCE(1), NONE(4, true), CHEER(5), // need test
-	/** 商品 / Merchand. */
-	MERCHAND(6), // need test
-	/** 包 / Bag. */
-	BAG(-1), WING(-2);
+	WAREHOUSE(0, true),
+	/** 食物。 / Food. */
+	FOOD(1, 64),
+	/** 兴奋剂。 / Doping. */
+	DOPING(2, 256),
+	/** 拾取。 / Loot. */
+	LOOT(3, 8),
+	/** 外观。 / Appearance. */
+	APPEARANCE(1),
+	/** 无。 / None. */
+	NONE(4, true),
+	/** 加油。 / Cheer. */
+	CHEER(5), // 需要测试。 / need test
+	/** 商品。 / Merchand. */
+	MERCHAND(6), // 需要测试。 / need test
+	/** 背包。 / Bag. */
+	BAG(-1),
+	/** 翅膀。 / Wing. */
+	WING(-2);
 
 	private short id;
 	private boolean isPlayerFunc = false;

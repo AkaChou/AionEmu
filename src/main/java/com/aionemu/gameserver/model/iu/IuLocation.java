@@ -38,13 +38,13 @@ public class IuLocation {
 		return isActive;
 	}
 
-	/** 设置 active iu / Sets the active iu */
+	/** 设置激活的 iu / Sets the active iu */
 	public void setActiveIu(Iu<IuLocation> iu) {
 		isActive = iu != null;
 		this.activeIu = iu;
 	}
 
-	/** 返回 active iu / Returns the active iu */
+	/** 返回激活的 iu / Returns the active iu */
 	public Iu<IuLocation> getActiveIu() {
 		return activeIu;
 	}
@@ -59,7 +59,7 @@ public class IuLocation {
 		return id;
 	}
 
-	/** 返回是否已刷新 / Returns the spawned */
+	/** 返回已生成对象列表 / Returns the spawned */
 	public List<VisibleObject> getSpawned() {
 		return spawned;
 	}

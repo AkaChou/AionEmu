@@ -51,7 +51,10 @@ public class RvrSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether rvr peace
+	 * 是否为和平状态。
+	 * Whether the rvr state is peace.
+	 *
+	 * @return 是否和平 / whether rvr peace
 	 */
 	public final boolean isRvrPeace() {
 		return rvrType.equals(RvrStateType.PEACE);

@@ -97,7 +97,7 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
      * 从库存表加载交易所位置（location=126）的物品。
      * Loads items from inventory at broker location (location=126).
      *
-     * list of items
+     * @return 物品列表 / list of items
      */
     private List<Item> getBrokerItems() {
         final List<Item> brokerItems = new ArrayList<>();
@@ -148,7 +148,7 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
      * Stores a broker item according to its persistent state.
      *
      * @param item 交易所物品 / broker item
-     * whether successful
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean store(BrokerItem item) {
@@ -186,7 +186,7 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
      * Inserts a broker entry.
      *
      * @param item 交易所物品 / broker item
-     * whether successful
+     * @return 是否成功 / whether successful
      */
     private boolean insertBrokerItem(Connection con, final BrokerItem item) throws SQLException {
         try (PreparedStatement stmt = con.prepareStatement(INSERT_BROKER_QUERY)) {
@@ -213,7 +213,7 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
      * Deletes a broker entry.
      *
      * @param item 交易所物品 / broker item
-     * whether successful
+     * @return 是否成功 / whether successful
      */
     private boolean deleteBrokerItem(Connection con, final BrokerItem item) throws SQLException {
         try (PreparedStatement stmt = con.prepareStatement(DELETE_BROKER_QUERY)) {
@@ -229,8 +229,8 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
      * 购买前检查物品是否仍可售。
      * Checks whether the item is still available for purchase.
      *
-     * item pointer id
-     * whether available
+     * @param itemForCheck 物品指针 ID / item pointer id
+     * @return 是否可用 / whether available
      */
     @Override
     public boolean preBuyCheck(int itemForCheck) {
@@ -252,7 +252,7 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
      * Updates the sold/settled state of a broker entry.
      *
      * @param item 交易所物品 / broker item
-     * whether successful
+     * @return 是否成功 / whether successful
      */
     private boolean updateBrokerItem(Connection con, final BrokerItem item) throws SQLException {
         try (PreparedStatement stmt = con.prepareStatement(UPDATE_BROKER_QUERY)) {
@@ -271,7 +271,7 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
      * Updates broker item count, price, split-sell and related fields.
      *
      * @param item 交易所物品 / broker item
-     * whether successful
+     * @return 是否成功 / whether successful
      */
     private boolean updateItem(Connection con, final BrokerItem item) throws SQLException {
         try (PreparedStatement stmt = con.prepareStatement(UPDATE_ITEM_QUERY)) {
@@ -293,7 +293,7 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
      * 获取已使用的玩家 ID 列表（用于 ID 分配）。
      * Returns used player ids (for id allocation).
      *
-     * array of used ids
+     * @return 已用 ID 数组 / array of used ids
      */
     @Override
     public int[] getUsedIDs() {
@@ -323,10 +323,10 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

@@ -78,7 +78,8 @@ public class LookingForParty extends AbstractLockManager {
 	}
 
 	/**
-	 * @param instanceMaskId Whether registred instance
+	 * @param instanceMaskId 副本掩码 ID / instance mask id
+	 * @return 是否已注册该副本 / Whether the instance is registered
 	 */
 	public boolean isRegistredInstance(int instanceMaskId) {
 		super.readLock();
@@ -110,7 +111,7 @@ public class LookingForParty extends AbstractLockManager {
 	}
 
 	/**
-	 * @return Whether penalty
+	 * @return 是否处于惩罚时间内 / Whether in penalty time
 	 */
 	public boolean hasPenalty() {
 		return System.currentTimeMillis() - penaltyTime <= 10000;

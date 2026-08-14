@@ -13,7 +13,7 @@ public class AionProcessExit {
      * 正常退出 JVM（可执行关闭钩子）。
      * Exit the JVM normally (shutdown hooks may run).
      *
-     * Exit status
+     * @param status 退出状态码 / Exit status
      */
     public void exit(int status) {
         System.exit(status);
@@ -23,7 +23,7 @@ public class AionProcessExit {
      * 强制终止 JVM（不执行关闭钩子）。
      * Halt the JVM immediately (shutdown hooks are skipped).
      *
-     * Exit status
+     * @param status 退出状态码 / Exit status
      */
     public void halt(int status) {
         Runtime.getRuntime().halt(status);

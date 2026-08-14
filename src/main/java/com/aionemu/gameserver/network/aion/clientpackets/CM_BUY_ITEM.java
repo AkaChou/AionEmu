@@ -65,19 +65,19 @@ public class CM_BUY_ITEM extends AionClientPacket {
 				break;
 			}
 			switch (tradeActionId) {
-			case 0: // [Private Store]
-			case 1: // [Sell To Shop]
-			case 17: // [Pet Seller]
-			case 18: // Inventory Shop
-			case 19: // Inventory to Shop x64
+			case 0: // [个人商店] / [Private Store]
+			case 1: // [卖给商店] / [Sell To Shop]
+			case 17: // [宠物商人] / [Pet Seller]
+			case 18: // 背包商店 / Inventory Shop
+			case 19: // 背包到商店 x64 / Inventory to Shop x64
 				tradeList.addSellItem(itemId, count);
 				break;
-			case 2: // [Repurchase]
+			case 2: // [回购] / [Repurchase]
 				repurchaseList.addRepurchaseItem(player, itemId, count);
 				break;
-			case 13: // [Buy From Shop]
-			case 14: // [Buy From Abyss Shop]
-			case 15: // [Buy From Reward Shop]
+			case 13: // [从商店购买] / [Buy From Shop]
+			case 14: // [从欧比斯商店购买] / [Buy From Abyss Shop]
+			case 15: // [从奖励商店购买] / [Buy From Reward Shop]
 				tradeList.addBuyItem(itemId, count);
 				break;
 			}
@@ -103,7 +103,7 @@ public class CM_BUY_ITEM extends AionClientPacket {
 			TradeListTemplate tlist = DataManager.TRADE_LIST_DATA.getTradeListTemplate(npc.getNpcId());
 			TradeListTemplate purchaseTemplate = DataManager.TRADE_LIST_DATA.getPurchaseListTemplate(npc.getNpcId());
 			switch (tradeActionId) {
-			case 1: // Sell To Shop [Panesterra 4.7]
+			case 1: // 卖给商店 [Panesterra 4.7] / Sell To Shop [Panesterra 4.7]
 				if (npc.getObjectTemplate().getTitleId() == 357001 || // Belus Relic Supervisor.
 						npc.getObjectTemplate().getTitleId() == 357002 || // Belus Abyss Equipment Merchand.
 						npc.getObjectTemplate().getTitleId() == 357013 || // Aspida Relic Supervisor.
@@ -157,25 +157,25 @@ public class CM_BUY_ITEM extends AionClientPacket {
 					TradeService.performSellToShop(player, tradeList);
 				}
 				break;
-			case 2: // [Repurchase]
+			case 2: // [回购] / [Repurchase]
 				GameFeatureServices.repurchaseService().repurchaseFromShop(player, repurchaseList);
 				break;
-			case 13: // [Buy From Shop]
+			case 13: // [从商店购买] / [Buy From Shop]
 				if (tlist != null && tlist.getTradeNpcType() == TradeNpcType.NORMAL) {
 					TradeService.performBuyFromShop(npc, player, tradeList);
 				}
 				break;
-			case 14: // [Buy From Abyss Shop]
+			case 14: // [从欧比斯商店购买] / [Buy From Abyss Shop]
 				if (tlist != null && tlist.getTradeNpcType() == TradeNpcType.ABYSS) {
 					TradeService.performBuyFromAbyssShop(npc, player, tradeList);
 				}
 				break;
-			case 15: // [Buy From Reward Shop]
+			case 15: // [从奖励商店购买] / [Buy From Reward Shop]
 				if (tlist != null && tlist.getTradeNpcType() == TradeNpcType.REWARD) {
 					TradeService.performBuyFromRewardShop(npc, player, tradeList);
 				}
 				break;
-			case 17: // [Pet Seller]
+			case 17: // [宠物商人] / [Pet Seller]
 				TradeService.performSellForKinahToShop(player, tradeList, purchaseTemplate);
 				break;
 			default:
@@ -183,7 +183,7 @@ public class CM_BUY_ITEM extends AionClientPacket {
 				break;
 			}
 		}
-		if (tradeActionId == 18 || tradeActionId == 19) { // Inventory Shop
+		if (tradeActionId == 18 || tradeActionId == 19) { // 背包商店 / Inventory Shop
 			TradeService.performSellToShop(player, tradeList);
 		}
 	}

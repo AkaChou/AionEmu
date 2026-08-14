@@ -12,6 +12,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  */
 
 public class Motion implements IExpirable {
+	/** 动作 ID 到槽位类型的映射表。 / Motion ID to slot type mapping. */
 	static final Map<Integer, Integer> motionType = new HashMap<Integer, Integer>();
 	static {
 		motionType.put(1, 1);

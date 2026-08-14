@@ -5,8 +5,8 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * FeedGroups 模板（静态数据/XML）。
- * XML template.
+ * 宠物喂食组集合：各类宠物食物对应的喂食组。
+ * Pet feed group set: feed item groups per pet food category.
  */
 
 public final class FeedGroups {

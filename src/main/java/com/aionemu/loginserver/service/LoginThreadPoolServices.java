@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 /**
  * 登录服线程池服务定位器，提供 {@link ThreadPoolManager} 的静态访问、缓存与 Spring 回退。
  * Login-server thread-pool service locator providing static access to {@link ThreadPoolManager}
- * local fallback.
+ * with caching and a local fallback.
  */
 @Component
 public final class LoginThreadPoolServices implements DisposableBean {
@@ -67,8 +67,8 @@ public final class LoginThreadPoolServices implements DisposableBean {
      * 缓存并返回已解析的线程池管理器。
      * Remember and return the resolved thread-pool manager.
      *
-     * resolved manager
-     * the same instance
+     * @param threadPoolManager 已解析的管理器 / resolved manager
+     * @return 同一实例 / the same instance
      */
     private static ThreadPoolManager remember(ThreadPoolManager threadPoolManager) {
         resolvedThreadPoolManager = threadPoolManager;

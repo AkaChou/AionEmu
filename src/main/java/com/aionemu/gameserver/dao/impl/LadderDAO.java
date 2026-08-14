@@ -112,8 +112,8 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
      * 设置玩家天梯失败场次。
      * Sets the player's ladder loss count.
      *
-     * 玩家 / player
-     * loss count
+     * @param player 玩家 / player
+     * @param losses 失败次数 / loss count
      */
     @Override
     public void setLosses(Player player, int losses) {
@@ -124,8 +124,8 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
      * 设置玩家天梯离开场次。
      * Sets the player's ladder leave count.
      *
-     * 玩家 / player
-     * leave count
+     * @param player 玩家 / player
+     * @param leaves 离开次数 / leave count
      */
     @Override
     public void setLeaves(Player player, int leaves) {
@@ -136,8 +136,8 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
      * 设置玩家天梯评分。
      * Sets the player's ladder rating.
      *
-     * 玩家 / player
-     * rating value
+     * @param player 玩家 / player
+     * @param rating 评级值 / rating value
      */
     @Override
     public void setRating(Player player, int rating) {
@@ -148,8 +148,8 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
      * 获取玩家天梯胜利场次。
      * Returns the player's ladder win count.
      *
-     * 玩家 / player
-     * win count
+     * @param player 玩家 / player
+     * @return 胜利次数 / win count
      */
     @Override
     public int getWins(Player player) {
@@ -160,8 +160,8 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
      * 获取玩家天梯失败场次。
      * Returns the player's ladder loss count.
      *
-     * 玩家 / player
-     * loss count
+     * @param player 玩家 / player
+     * @return 失败次数 / loss count
      */
     @Override
     public int getLosses(Player player) {
@@ -172,8 +172,8 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
      * 获取玩家天梯离开场次。
      * Returns the player's ladder leave count.
      *
-     * 玩家 / player
-     * leave count
+     * @param player 玩家 / player
+     * @return 离开次数 / leave count
      */
     @Override
     public int getLeaves(Player player) {
@@ -184,8 +184,8 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
      * 获取玩家天梯评分；无记录时默认 1000。
      * Returns the player's ladder rating; defaults to 1000 when unset.
      *
-     * 玩家 / player
-     * rating value
+     * @param player 玩家 / player
+     * @return 评级值 / rating value
      */
     @Override
     public int getRating(Player player) {
@@ -197,8 +197,8 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
      * 获取玩家当前天梯排名。
      * Returns the player's current ladder rank.
      *
-     * 玩家 / player
-     * rank position
+     * @param player 玩家 / player
+     * @return 排名位置 / rank position
      */
     @Override
     public int getRank(Player player) {
@@ -288,9 +288,9 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
      * 累加玩家天梯指定列的值；不存在则插入。
      * Increments a ladder column for the player, inserting a row when missing.
      *
-     * 玩家 / player
-     * column name
-     * value to add
+     * @param player 玩家 / player
+     * @param column 列名 / column name
+     * @param value 要添加的值 / value to add
      */
     private void addPlayerLadderData(Player player, String column, int value) {
         int playerId = player.getObjectId();
@@ -312,9 +312,9 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
      * 设置玩家天梯指定列的值；不存在则插入。
      * Sets a ladder column for the player, inserting a row when missing.
      *
-     * 玩家 / player
-     * column name
-     * value to set
+     * @param player 玩家 / player
+     * @param column 列名 / column name
+     * @param value 要设置的值 / value to set
      */
     private void setPlayerLadderData(Player player, String column, int value) {
         int playerId = player.getObjectId();
@@ -335,9 +335,9 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
      * 按玩家 ID 设置天梯指定列的值（仅更新）。
      * Sets a ladder column by player id (update only).
      *
-     * player id
-     * column name
-     * value to set
+     * @param playerId 玩家 ID / player id
+     * @param column 列名 / column name
+     * @param value 要设置的值 / value to set
      */
     public void setPlayerLadderData(Integer playerId, String column, int value) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -355,8 +355,8 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
      * 读取玩家天梯指定列的整数值。
      * Reads an integer ladder column for the player.
      *
-     * 玩家 / player
-     * column name
+     * @param player 玩家 / player
+     * @param column 列名 / column name
      * @return 列值，不存在则为 0 / column value, or 0 if missing
      */
     private int getPlayerLadderData(Player player, String column) {
@@ -384,8 +384,8 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
      * 按玩家 ID 读取天梯指定列的整数值。
      * Reads an integer ladder column by player id.
      *
-     * player id
-     * column name
+     * @param playerId 玩家 ID / player id
+     * @param column 列名 / column name
      * @return 列值，不存在则为 0 / column value, or 0 if missing
      */
     public int getPlayerLadderData(Integer playerId, String column) {
@@ -459,7 +459,7 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
      * 按玩家 ID 设置天梯上次更新时间。
      * Sets the ladder last-update timestamp by player id.
      *
-     * player id
+     * @param playerId 玩家 ID / player id
      * @param value 更新时间 / update timestamp
      */
     public void setPlayerLadderUpdate(Integer playerId, Timestamp value) {
@@ -478,8 +478,8 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
      * 加载玩家完整天梯数据；无记录时返回默认值。
      * Loads full ladder data for the player; returns defaults when missing.
      *
-     * 玩家 / player
-     * ladder data
+     * @param player 玩家 / player
+     * @return ladder data
      */
     public PlayerLadderData getPlayerLadderData(Player player) {
         int playerId = player.getObjectId();
@@ -516,11 +516,11 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
      * 是否支持该数据库。
      * Whether the database is supported.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
      *
-     * @return 若 supported 则为 true / true if supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

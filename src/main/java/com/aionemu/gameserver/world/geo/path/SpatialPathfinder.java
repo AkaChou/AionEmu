@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+/**
+ * 空间寻路器：基于网格的 A* 搜索，支持渐进扩大搜索范围的多次尝试。
+ * Spatial pathfinder: grid-based A* search with progressive expansion retries.
+ */
 final class SpatialPathfinder {
 
 	private static final int[] DELTAS = {-1, 0, 1};
@@ -22,11 +26,19 @@ final class SpatialPathfinder {
 		boolean test(float startX, float startY, float startZ, float endX, float endY, float endZ);
 	}
 
+	/**
+	 * 网格寻路主入口（默认绕行 24/12），返回途经点列表或 null。
+	 * Grid pathfinding entry (default detour 24/12), returns waypoints or null.
+	 */
 	static List<float[]> find(float startX, float startY, float startZ, float targetX, float targetY, float targetZ,
 			float step, int maxNodes, PointAllowed pointAllowed, EdgeAllowed edgeAllowed) {
 		return find(startX, startY, startZ, targetX, targetY, targetZ, step, maxNodes, 24, 12, pointAllowed, edgeAllowed);
 	}
 
+	/**
+	 * 渐进寻路：逐步放宽步长与绕行范围直至找到路径或耗尽预算。
+	 * Progressive pathfinding: gradually relaxes step and detour until a path is found or the budget is exhausted.
+	 */
 	static List<float[]> findProgressive(float startX, float startY, float startZ, float targetX, float targetY, float targetZ,
 			float step, int maxNodes, PointAllowed pointAllowed, EdgeAllowed edgeAllowed) {
 		float horizontalDistance = (float) Math.hypot(targetX - startX, targetY - startY);
@@ -141,6 +153,10 @@ final class SpatialPathfinder {
 		return null;
 	}
 
+	/**
+	 * 从目标节点回溯重建途经点列表。
+	 * Rebuilds the waypoint list by backtracking from the target node.
+	 */
 	private static List<float[]> reconstruct(SearchNode end, float startX, float startY, float startZ,
 			float targetX, float targetY, float targetZ, float step) {
 		List<float[]> reverse = new ArrayList<>();

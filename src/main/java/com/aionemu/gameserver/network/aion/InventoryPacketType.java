@@ -8,8 +8,16 @@ package com.aionemu.gameserver.network.aion;
  */
 public enum InventoryPacketType {
 
-	WAREHOUSE(false, false, false), INVENTORY(true, false, false), MAIL_REPURCHASE(false, true, false),
-	PRIVATE_STORE(false, false, true), WEAPON_SWITCH(true, false, false, true);
+	/** 仓库。 / Warehouse. */
+	WAREHOUSE(false, false, false),
+	/** 背包。 / Inventory. */
+	INVENTORY(true, false, false),
+	/** 邮件与回购。 / Mail and repurchase. */
+	MAIL_REPURCHASE(false, true, false),
+	/** 个人商店。 / Private store. */
+	PRIVATE_STORE(false, false, true),
+	/** 武器切换。 / Weapon switch. */
+	WEAPON_SWITCH(true, false, false, true);
 
 	private boolean isInventory;
 	private boolean isMailOrRepurchase;

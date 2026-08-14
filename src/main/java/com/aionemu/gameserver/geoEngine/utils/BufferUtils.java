@@ -49,7 +49,7 @@ public final class BufferUtils {
 	 *
 	 * @param buf 待克隆的缓冲 / buffer to clone
 	 * @return 克隆后的缓冲 / cloned buffer
-	 * unsupported buffer type。
+	 * @throws UnsupportedOperationException 不支持的缓冲类型 / unsupported buffer type
 	 */
 	public static Buffer clone(Buffer buf) {
 		if (buf instanceof FloatBuffer) {
@@ -115,7 +115,7 @@ public final class BufferUtils {
 	 * Create a FloatBuffer sized to hold the specified number of Vector3f entries.
 	 *
 	 * @param vertices 需要容纳的顶点数量 / number of vertices to hold
-	 * the requested new FloatBuffer
+	 * @return 请求的新 FloatBuffer / the requested new FloatBuffer
 	 */
 	public static FloatBuffer createVector3Buffer(int vertices) {
 		FloatBuffer vBuff = createFloatBuffer(3 * vertices);
@@ -253,7 +253,7 @@ public final class BufferUtils {
 	 * 将缓冲中指定位置的 Vector3f 与给定向量分量相乘并写回。
 	 * Multiply and store a Vector3f in-buffer.
 	 *
-	 * the vector to multiply against
+	 * @param toMult 要乘的向量 / the vector to multiply against
 	 * @param buf 含向量的缓冲 / the buffer containing the Vector3f
 	 * @param index 目标向量位置（按向量计，非 float） / position in terms of vectors not floats
 	 */
@@ -312,7 +312,7 @@ public final class BufferUtils {
 	 * Create a FloatBuffer sized to hold the specified number of Vector2f entries.
 	 *
 	 * @param vertices 需要容纳的顶点数量 / number of vertices to hold
-	 * the requested new FloatBuffer
+	 * @return 请求的新 FloatBuffer / the requested new FloatBuffer
 	 */
 	public static FloatBuffer createVector2Buffer(int vertices) {
 		FloatBuffer vBuff = createFloatBuffer(2 * vertices);
@@ -401,7 +401,7 @@ public final class BufferUtils {
 	 * Create a direct DoubleBuffer of the specified size (native byte order).
 	 *
 	 * @param size 需要存储的 double 数量 / required number of doubles to store
-	 * the new DoubleBuffer
+	 * @return 新生成的 DoubleBuffer / the new DoubleBuffer
 	 */
 	public static DoubleBuffer createDoubleBuffer(int size) {
 		DoubleBuffer buf = ByteBuffer.allocateDirect(8 * size).order(ByteOrder.nativeOrder()).asDoubleBuffer();
@@ -433,9 +433,7 @@ public final class BufferUtils {
 	 * 深拷贝 DoubleBuffer 内容（独立副本，变更不互相反映）。
 	 * Creates a separate DoubleBuffer with the same contents; use Buffer.duplicate() to share changes.
 	 *
-	 * the DoubleBuffer to copy
-	 *
-	 * @param buf
+	 * @param buf 要拷贝的 DoubleBuffer / the DoubleBuffer to copy
 	 * @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
 	 */
 	public static DoubleBuffer clone(DoubleBuffer buf) {
@@ -461,7 +459,7 @@ public final class BufferUtils {
 	 * Create a direct FloatBuffer of the specified size (native byte order).
 	 *
 	 * @param size 需要存储的 float 数量 / required number of floats to store
-	 * the new FloatBuffer
+	 * @return 新生成的 FloatBuffer / the new FloatBuffer
 	 */
 	public static FloatBuffer createFloatBuffer(int size) {
 		FloatBuffer buf = ByteBuffer.allocateDirect(4 * size).order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -493,9 +491,7 @@ public final class BufferUtils {
 	 * 深拷贝 FloatBuffer 内容（独立副本，变更不互相反映）。
 	 * Creates a separate FloatBuffer with the same contents; use Buffer.duplicate() to share changes.
 	 *
-	 * the FloatBuffer to copy
-	 *
-	 * @param buf
+	 * @param buf 要拷贝的 FloatBuffer / the FloatBuffer to copy
 	 * @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
 	 */
 	public static FloatBuffer clone(FloatBuffer buf) {
@@ -522,7 +518,7 @@ public final class BufferUtils {
 	 * Create a direct IntBuffer of the specified size (native byte order).
 	 *
 	 * @param size 需要存储的 int 数量 / required number of ints to store
-	 * the new IntBuffer
+	 * @return 新生成的 IntBuffer / the new IntBuffer
 	 */
 	public static IntBuffer createIntBuffer(int size) {
 		IntBuffer buf = ByteBuffer.allocateDirect(4 * size).order(ByteOrder.nativeOrder()).asIntBuffer();
@@ -554,9 +550,7 @@ public final class BufferUtils {
 	 * 深拷贝 IntBuffer 内容（独立副本，变更不互相反映）。
 	 * Creates a separate IntBuffer with the same contents; use Buffer.duplicate() to share changes.
 	 *
-	 * the IntBuffer to copy
-	 *
-	 * @param buf
+	 * @param buf 要拷贝的 IntBuffer / the IntBuffer to copy
 	 * @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
 	 */
 	public static IntBuffer clone(IntBuffer buf) {
@@ -582,7 +576,7 @@ public final class BufferUtils {
 	 * Create a direct ByteBuffer of the specified size (native byte order).
 	 *
 	 * @param size 需要存储的字节数 / required number of bytes to store
-	 * the new ByteBuffer
+	 * @return 新生成的 ByteBuffer / the new ByteBuffer
 	 */
 	public static ByteBuffer createByteBuffer(int size) {
 		ByteBuffer buf = ByteBuffer.allocateDirect(size).order(ByteOrder.nativeOrder());
@@ -615,7 +609,7 @@ public final class BufferUtils {
 	 * Generate a ByteBuffer from the given byte array.
 	 *
 	 * @param data 要写入的字节数据 / byte data to place into a new ByteBuffer
-	 * the new ByteBuffer
+	 * @return 新生成的 ByteBuffer / the new ByteBuffer
 	 */
 	public static ByteBuffer createByteBuffer(byte... data) {
 		ByteBuffer bb = createByteBuffer(data.length);
@@ -629,7 +623,7 @@ public final class BufferUtils {
 	 * Generate a ByteBuffer from the string's default-charset bytes.
 	 *
 	 * @param data 源字符串 / source string
-	 * the new ByteBuffer
+	 * @return 新生成的 ByteBuffer / the new ByteBuffer
 	 */
 	public static ByteBuffer createByteBuffer(String data) {
 		byte[] bytes = data.getBytes();
@@ -643,9 +637,7 @@ public final class BufferUtils {
 	 * 深拷贝 ByteBuffer 内容（独立副本，变更不互相反映）。
 	 * Creates a separate ByteBuffer with the same contents; use Buffer.duplicate() to share changes.
 	 *
-	 * the ByteBuffer to copy
-	 *
-	 * @param buf
+	 * @param buf 要拷贝的 ByteBuffer / the ByteBuffer to copy
 	 * @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
 	 */
 	public static ByteBuffer clone(ByteBuffer buf) {
@@ -671,7 +663,7 @@ public final class BufferUtils {
 	 * Create a direct ShortBuffer of the specified size (native byte order).
 	 *
 	 * @param size 需要存储的 short 数量 / required number of shorts to store
-	 * the new ShortBuffer
+	 * @return 新生成的 ShortBuffer / the new ShortBuffer
 	 */
 	public static ShortBuffer createShortBuffer(int size) {
 		ShortBuffer buf = ByteBuffer.allocateDirect(2 * size).order(ByteOrder.nativeOrder()).asShortBuffer();
@@ -721,9 +713,7 @@ public final class BufferUtils {
 	 * 深拷贝 ShortBuffer 内容（独立副本，变更不互相反映）。
 	 * Creates a separate ShortBuffer with the same contents; use Buffer.duplicate() to share changes.
 	 *
-	 * the ShortBuffer to copy
-	 *
-	 * @param buf
+	 * @param buf 要拷贝的 ShortBuffer / the ShortBuffer to copy
 	 * @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
 	 */
 	public static ShortBuffer clone(ShortBuffer buf) {

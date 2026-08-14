@@ -38,7 +38,7 @@ public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
 	 * 绑定挖掘舰地点。
 	 * Binds the dredgion location.
 	 *
-	 * location
+	 * @param zorshivDredgionLocation 挖掘舰地点 / dredgion location
 	 */
 	public ZorshivDredgion(ZL zorshivDredgionLocation) {
 		this.zorshivDredgionLocation = zorshivDredgionLocation;
@@ -105,7 +105,7 @@ public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
 	 * 获取绑定地点。
 	 * Returns the bound location.
 	 *
-	 * location
+	 * @return 绑定地点 / bound location
 	 */
 	public ZL getZorshivDredgionLocation() {
 		return zorshivDredgionLocation;
@@ -115,7 +115,7 @@ public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
 	 * 获取地点 ID。
 	 * Returns the location id.
 	 *
-	 * location id
+	 * @return 地点 ID / location id
 	 */
 	public int getZorshivDredgionLocationId() {
 		return zorshivDredgionLocation.getId();

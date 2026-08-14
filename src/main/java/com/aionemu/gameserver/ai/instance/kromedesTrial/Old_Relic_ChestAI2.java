@@ -26,11 +26,11 @@ public class Old_Relic_ChestAI2 extends NpcAI2
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
         if (dialogId == 1012) {
             switch (getNpcId()) {
-                case 730340: //Old Relic Chest.
-                if (player.getInventory().getItemCountByItemId(164000140) < 1) { //Explosive Bead.
+                case 730340: // 古代遗物宝箱 / Old Relic Chest.
+                if (player.getInventory().getItemCountByItemId(164000140) < 1) { // 爆破珠 / Explosive Bead.
                     PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1012));
                     PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400701));
-                    ItemService.addItem(player, 164000140, 1); //Explosive Bead.
+                    ItemService.addItem(player, 164000140, 1); // 爆破珠 / Explosive Bead.
                 } else {
                     PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 27));
                 }

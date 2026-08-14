@@ -11,8 +11,7 @@ import java.util.Iterator;
  * 管理员全服公告命令：以匿名或实名向全服居中广播。
  * Admin announce command: center-broadcasts a message server-wide, anonymously or named.
  *
- * @author Ben, Ritsu Smart Matching Enabled //announce anon This will work. as well as //announce a This will work.
- *         Both will match the "a" or "anon" to the "anonymous" flag.
+ * @author Ben, Ritsu
  */
 public class Announce extends AdminCommand {
 
@@ -28,8 +27,6 @@ public class Announce extends AdminCommand {
 	 * 执行全服公告：按 anonymous/name 前缀组装消息并广播。
 	 * Executes server announce: builds the message from anonymous/name prefix and broadcasts.
 	 *
-	 * admin
-	 * anonymous|name, message。
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -64,8 +61,6 @@ public class Announce extends AdminCommand {
 	 * 参数错误时输出 {@code //announce} 用法。
 	 * Prints {@code //announce} usage on invalid arguments.
 	 *
-	 * admin
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

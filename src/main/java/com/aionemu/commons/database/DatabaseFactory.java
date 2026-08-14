@@ -89,9 +89,7 @@ public final class DatabaseFactory {
      * 从当前上下文连接池获取连接，并确保 autoCommit 为 true
      * Obtain a connection from the current context pool and ensure autoCommit is true
      *
-     * JDBC connection
-     *
-     * @return
+     * @return JDBC 连接 / JDBC connection
      * @throws SQLException 获取连接失败时 / When obtaining a connection fails
      */
     public static Connection getConnection() throws SQLException {
@@ -206,7 +204,7 @@ public final class DatabaseFactory {
      * 获取当前数据库主版本号
      * Get the current database major version
      *
-     * Major version
+     * @return 主版本号 / Major version
      */
     public static int getDatabaseMajorVersion() {
         return state().databaseMajorVersion;
@@ -216,7 +214,7 @@ public final class DatabaseFactory {
      * 获取当前数据库次版本号
      * Get the current database minor version
      *
-     * Minor version
+     * @return 次版本号 / Minor version
      */
     public static int getDatabaseMinorVersion() {
         return state().databaseMinorVersion;

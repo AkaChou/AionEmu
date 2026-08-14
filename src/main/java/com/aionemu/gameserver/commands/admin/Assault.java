@@ -33,7 +33,6 @@ public class Assault extends AdminCommand {
 	 * 执行突袭刷怪：解析半径、数量、NPC 列表/预设与消失时间。
 	 * Executes assault spawn: parses radius, amount, NPC list/preset, and despawn time.
 	 *
-	 * admin
 	 * @param params 参数：半径、数量、NPC/预设、消失秒数 / radius, amount, npc/preset, despawn secs
 	 */
 	@Override
@@ -187,9 +186,7 @@ public class Assault extends AdminCommand {
 	 * 在指定秒数后删除本轮刷出的 NPC。
 	 * Deletes the spawned NPCs after the given number of seconds.
 	 *
-	 * admin
 	 * @param despawnList 待删除可见对象列表 / list of visible objects to despawn
-	 * delay in seconds
 	 */
 	private void despawnThem(final Player admin, final List<VisibleObject> despawnList, final int despawnTime) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -211,8 +208,6 @@ public class Assault extends AdminCommand {
 	 * 参数错误时输出 {@code //assault} 用法。
 	 * Prints {@code //assault} usage on invalid arguments.
 	 *
-	 * admin
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

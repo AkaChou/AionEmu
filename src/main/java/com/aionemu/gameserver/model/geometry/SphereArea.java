@@ -20,12 +20,15 @@ public class SphereArea implements Area {
 	protected ZoneName zoneName;
 
 	/**
-	 * @param zoneName
-	 * @param worldId
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param r
+	 * 创建球体区域。
+	 * Creates a sphere area.
+	 *
+	 * @param zoneName 区域名称 / zone name
+	 * @param worldId 世界 ID / world id
+	 * @param x 球心 X 坐标 / center x coord
+	 * @param y 球心 Y 坐标 / center y coord
+	 * @param z 球心 Z 坐标 / center z coord
+	 * @param r 半径 / radius
 	 */
 	public SphereArea(ZoneName zoneName, int worldId, float x, float y, float z, float r) {
 		this.x = x;
@@ -38,7 +41,8 @@ public class SphereArea implements Area {
 
 	@Deprecated
 	/**
-	 * @param point Whether inside 2 d
+	 * @param point 要检查的点 / point to check
+	 * @return 是否在二维区域内 / Whether inside 2D
 	 */
 	@Override
 	public boolean isInside2D(Point2D point) {
@@ -47,7 +51,7 @@ public class SphereArea implements Area {
 
 	@Deprecated
 	/**
-	 * @return Whether inside 2 d
+	 * @return 是否在二维区域内 / Whether inside 2D
 	 */
 	@Override
 	public boolean isInside2D(float x, float y) {
@@ -55,7 +59,8 @@ public class SphereArea implements Area {
 	}
 
 	/**
-	 * @param point Whether inside 3 d
+	 * @param point 要检查的点 / point to check
+	 * @return 是否在球体区域内 / Whether inside 3D
 	 */
 	@Override
 	public boolean isInside3D(Point3D point) {
@@ -63,7 +68,7 @@ public class SphereArea implements Area {
 	}
 
 	/**
-	 * @return Whether inside 3 d
+	 * @return 是否在球体区域内 / Whether inside 3D
 	 */
 	@Override
 	public boolean isInside3D(float x, float y, float z) {
@@ -71,7 +76,8 @@ public class SphereArea implements Area {
 	}
 
 	/**
-	 * @param point Whether inside z
+	 * @param point 要检查的点 / point to check
+	 * @return Z 坐标是否在球体范围内 / Whether inside z
 	 */
 	@Override
 	public boolean isInsideZ(Point3D point) {
@@ -79,7 +85,8 @@ public class SphereArea implements Area {
 	}
 
 	/**
-	 * @param z Whether inside z
+	 * @param z z 坐标 / z coord
+	 * @return Z 坐标是否在球体范围内 / Whether inside z
 	 */
 	@Override
 	public boolean isInsideZ(float z) {

@@ -43,7 +43,7 @@ public class ExactLevelFilter extends AbstractMatcherFilter<ILoggingEvent> {
 	 * 设置需要精确匹配的日志级别
 	 * Set the exact target log level
 	 *
-	 * Target level
+	 * @param targetLevel 目标日志级别 / Target level
 	 */
 	public void setTargetLevel(Level targetLevel) {
 		this.targetLevel = targetLevel;

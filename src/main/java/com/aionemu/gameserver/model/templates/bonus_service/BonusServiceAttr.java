@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 加成服务 Attr 模板（静态数据/XML）。
- * XML template.
+ * Bonus service attribute template (static data/XML).
  *
  * @author Ranastic (Encom)
  */

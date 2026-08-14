@@ -51,10 +51,10 @@ public class CM_MACBAN_CONTROL extends GsClientPacket {
     @Override
     protected void runImpl() {
         switch (type) {
-            case 0://unban
+            case 0:// 解除 MAC 封禁 / unban
                 LoginProtectionServices.bannedMacManager().unban(address, details);
                 break;
-            case 1://ban
+            case 1:// 执行 MAC 封禁 / ban
                 LoginProtectionServices.bannedMacManager().ban(address, time, details);
                 break;
         }

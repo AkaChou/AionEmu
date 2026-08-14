@@ -39,7 +39,7 @@ public class LegionStorageProxy extends Storage {
 		storage.increaseKinah(amount, updateType, actor);
 	}
 
-	/** Try 减少 Kinah / Try Decrease Kinah */
+	/** 尝试减少基纳。 / Try to decrease kinah. */
 	@Override
 	public boolean tryDecreaseKinah(long amount) {
 		return storage.tryDecreaseKinah(amount, actor);
@@ -141,7 +141,7 @@ public class LegionStorageProxy extends Storage {
 		return storage.getStorageType();
 	}
 
-	/** 在 LoadHandler / On Load Handler */
+	/** 加载回调。 / On load handler. */
 	@Override
 	public void onLoadHandler(Item item) {
 		storage.onLoadHandler(item);
@@ -153,13 +153,13 @@ public class LegionStorageProxy extends Storage {
 		return storage.remove(item);
 	}
 
-	/** 按物品 ID 返回 first item / Returns the first item by item id */
+	/** 按物品 ID 返回第一件物品 / Returns the first item by item id */
 	@Override
 	public Item getFirstItemByItemId(int itemId) {
 		return storage.getFirstItemByItemId(itemId);
 	}
 
-	/** 返回物品基纳 / Returns the items with kinah*/
+	/** 返回含基纳的物品列表 / Returns the items with kinah */
 	@Override
 	public List<Item> getItemsWithKinah() {
 		return storage.getItemsWithKinah();
@@ -195,7 +195,7 @@ public class LegionStorageProxy extends Storage {
 		return storage.isFull();
 	}
 
-	/** 返回 free slots / Returns the free slots */
+	/** 返回可用槽位数 / Returns the free slots */
 	@Override
 	public int getFreeSlots() {
 		return storage.getFreeSlots();
@@ -213,13 +213,13 @@ public class LegionStorageProxy extends Storage {
 		return storage.getLimit();
 	}
 
-	/** 大小 / size. */
+	/** 物品数量。 / Size. */
 	@Override
 	public int size() {
 		return storage.size();
 	}
 
-	/** 设置所有者 / Sets the owner*/
+	/** 设置所有者。 / Sets the owner. */
 	@Override
 	public void setOwner(Player player) {
 		throw new UnsupportedOperationException("LWH doesnt have owner");

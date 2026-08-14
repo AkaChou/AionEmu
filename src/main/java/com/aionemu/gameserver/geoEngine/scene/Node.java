@@ -86,7 +86,7 @@ public class Node extends Spatial implements Cloneable {
 	 * 返回本分支下所有几何中的顶点总数。
 	 * Returns the number of vertices contained in all geometry sub-branches of this node.
 	 *
-	 * vertex count of this branch
+	 * @return 顶点总数 / vertex count of this branch
 	 */
 	@Override
 	public int getVertexCount() {
@@ -106,7 +106,7 @@ public class Node extends Spatial implements Cloneable {
 	 *
 	 * @param child 待挂载子节点 / child to attach
 	 * @return 挂载后的子节点数量 / number of children maintained after attach
-	 * if child is null。
+	 * @throws NullPointerException 当子节点为 null 时 / if child is null
 	 */
 	public int attachChild(Spatial child) {
 		if (child == null) {
@@ -130,7 +130,7 @@ public class Node extends Spatial implements Cloneable {
 	 * @param child 待挂载子节点 / child to attach
 	 * @param index 插入索引 / insert index
 	 * @return 挂载后的子节点数量 / number of children maintained after attach
-	 * if child is null。
+	 * @throws NullPointerException 当子节点为 null 时 / if child is null
 	 */
 	public int attachChildAt(Spatial child, int index) {
 		if (child == null) {
@@ -248,7 +248,7 @@ public class Node extends Spatial implements Cloneable {
 	 * Returns the child at the given index.
 	 *
 	 * @param i 索引 / index
-	 * child at the index
+	 * @return 索引处的子节点 / child at the index
 	 */
 	public Spatial getChild(int i) {
 		return children.get(i);
@@ -315,9 +315,9 @@ public class Node extends Spatial implements Cloneable {
 	 * 子几何变更时向上传递给父节点。
 	 * Propagates a child-geometry change to the parent.
 	 *
-	 * related geometry
-	 * index 1
-	 * index 2
+	 * @param geometry 相关几何体 / related geometry
+	 * @param index1 索引 1 / index 1
+	 * @param index2 索引 2 / index 2
 	 */
 	public void childChange(Geometry geometry, int index1, int index2) {
 		// 仅传递给父级 / just pass to parent
@@ -332,7 +332,7 @@ public class Node extends Spatial implements Cloneable {
 	 *
 	 * @param other 目标可碰撞对象 / target collidable
 	 * @param results 碰撞结果收集器 / collision results collector
-	 * total collisions
+	 * @return 碰撞总数 / total collisions
 	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) {
@@ -405,7 +405,7 @@ public class Node extends Spatial implements Cloneable {
 	 * Convenience overload filtering descendants by subclass only.
 	 *
 	 * @param spatialSubclass 必须实现的子类 / required subclass
-	 * matching list
+	 * @return 匹配列表 / matching list
 	 * @see #descendantMatches(Class, String)
 	 */
 	public <T extends Spatial> List<T> descendantMatches(Class<T> spatialSubclass) {
@@ -416,8 +416,8 @@ public class Node extends Spatial implements Cloneable {
 	 * 按名称正则筛选后代的便捷重载。
 	 * Convenience overload filtering descendants by name regex only.
 	 *
-	 * name regex
-	 * matching list
+	 * @param nameRegex 名称正则 / name regex
+	 * @return 匹配列表 / matching list
 	 * @see #descendantMatches(Class, String)
 	 */
 	public <T extends Spatial> List<T> descendantMatches(String nameRegex) {
@@ -468,15 +468,14 @@ public class Node extends Spatial implements Cloneable {
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * aionjHungary.geoEngine.scene.Spatial#setTransform(aionjHungary.geoEngine.math
-	 * .Matrix3f, aionjHungary.geoEngine.math.Vector3f)
+	 * com.aionemu.gameserver.geoEngine.scene.Spatial#setTransform(Matrix3f, Vector3f, float)
 	 */
 	/**
 	 * 将均匀缩放变换下发到所有子节点。
 	 * Propagates a uniform-scale transform to all children.
 	 *
-	 * rotation
-	 * translation
+	 * @param rotation 旋转矩阵 / rotation
+	 * @param loc 平移 / translation
 	 * @param scale 均匀缩放 / uniform scale
 	 */
 	@Override
@@ -492,8 +491,8 @@ public class Node extends Spatial implements Cloneable {
 	 * 将非均匀缩放变换下发到所有子节点。
 	 * Propagates a non-uniform-scale transform to all children.
 	 *
-	 * rotation
-	 * translation
+	 * @param rotation 旋转矩阵 / rotation
+	 * @param loc 平移 / translation
 	 * @param scale 各轴缩放 / per-axis scale
 	 */
 	@Override
@@ -509,7 +508,7 @@ public class Node extends Spatial implements Cloneable {
 	 * 克隆本节点及其子树（Geometry 共享原 Mesh 引用）。
 	 * Clones this node and its subtree (Geometry shares the original Mesh reference).
 	 *
-	 * cloned node
+	 * @return 克隆节点 / cloned node
 	 */
 	@Override
 	public Node clone() throws CloneNotSupportedException {
@@ -530,7 +529,7 @@ public class Node extends Spatial implements Cloneable {
 	 * 返回碰撞标志。
 	 * Returns collision flags.
 	 *
-	 * collision flags
+	 * @return 碰撞标志 / collision flags
 	 */
 	@Override
 	public short getCollisionFlags() {

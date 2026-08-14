@@ -21,10 +21,10 @@ public class RegionUtil {
 	 * 由区域尺寸与二维坐标计算 2D 区域 ID。
 	 * Compute a 2D region id from region size and coordinates.
 	 *
-	 * region edge length
+	 * @param regionSize 区域边长 / region edge length
 	 * @param x 坐标 X / X coordinate
 	 * @param y 坐标 Y / Y coordinate
-	 * 2D region id
+	 * @return 2D 区域 ID / the 2D region id
 	 */
 	public static final int get2DRegionId(int regionSize, float x, float y) {
 		return (int) x / regionSize * X_2D_OFFSET + (int) y / regionSize;
@@ -34,11 +34,11 @@ public class RegionUtil {
 	 * 由区域尺寸与三维坐标计算 3D 区域 ID。
 	 * Compute a 3D region id from region size and coordinates.
 	 *
-	 * region edge length
+	 * @param regionSize 区域边长 / region edge length
 	 * @param x 坐标 X / X coordinate
 	 * @param y 坐标 Y / Y coordinate
 	 * @param z 坐标 Z / Z coordinate
-	 * 3D region id
+	 * @return 3D 区域 ID / the 3D region id
 	 */
 	public static final int get3DRegionId(int regionSize, float x, float y, float z) {
 		return (int) x / regionSize * X_3D_OFFSET + (int) y / regionSize * Y_3D_OFFSET + (int) z / regionSize;
@@ -50,7 +50,7 @@ public class RegionUtil {
 	 *
 	 * @param x 坐标 X / X coordinate
 	 * @param y 坐标 Y / Y coordinate
-	 * 2D region id
+	 * @return 2D 区域 ID / the 2D region id
 	 */
 	public static final int get2dRegionId(float x, float y) {
 		return get2DRegionId(WorldConfig.WORLD_REGION_SIZE, x, y);
@@ -63,7 +63,7 @@ public class RegionUtil {
 	 * @param x 坐标 X / X coordinate
 	 * @param y 坐标 Y / Y coordinate
 	 * @param z 坐标 Z / Z coordinate
-	 * 3D region id
+	 * @return 3D 区域 ID / the 3D region id
 	 */
 	public static final int get3dRegionId(float x, float y, float z) {
 		return get3DRegionId(WorldConfig.WORLD_REGION_SIZE, x, y, z);
@@ -73,8 +73,8 @@ public class RegionUtil {
 	 * 从 2D 区域 ID 还原区域起始 X。
 	 * Recover region start X from a 2D region id.
 	 *
-	 * 2D region id
-	 * start X
+	 * @param regionId 2D 区域 ID / the 2D region id
+	 * @return 区域起始 X / the start X
 	 */
 	public static final int getXFrom2dRegionId(int regionId) {
 		return regionId / X_2D_OFFSET * WorldConfig.WORLD_REGION_SIZE;
@@ -84,8 +84,8 @@ public class RegionUtil {
 	 * 从 2D 区域 ID 还原区域起始 Y。
 	 * Recover region start Y from a 2D region id.
 	 *
-	 * 2D region id
-	 * start Y
+	 * @param regionId 2D 区域 ID / the 2D region id
+	 * @return 区域起始 Y / the start Y
 	 */
 	public static final int getYFrom2dRegionId(int regionId) {
 		return regionId % X_2D_OFFSET * WorldConfig.WORLD_REGION_SIZE;
@@ -95,8 +95,8 @@ public class RegionUtil {
 	 * 从 3D 区域 ID 还原区域起始 X。
 	 * Recover region start X from a 3D region id.
 	 *
-	 * 3D region id
-	 * start X
+	 * @param regionId 3D 区域 ID / the 3D region id
+	 * @return 区域起始 X / the start X
 	 */
 	public static final int getXFrom3dRegionId(int regionId) {
 		return regionId / X_3D_OFFSET * WorldConfig.WORLD_REGION_SIZE;
@@ -106,8 +106,8 @@ public class RegionUtil {
 	 * 从 3D 区域 ID 还原区域起始 Y。
 	 * Recover region start Y from a 3D region id.
 	 *
-	 * 3D region id
-	 * start Y
+	 * @param regionId 3D 区域 ID / the 3D region id
+	 * @return 区域起始 Y / the start Y
 	 */
 	public static final int getYFrom3dRegionId(int regionId) {
 		return regionId % X_3D_OFFSET / Y_3D_OFFSET * WorldConfig.WORLD_REGION_SIZE;
@@ -117,8 +117,8 @@ public class RegionUtil {
 	 * 从 3D 区域 ID 还原区域起始 Z。
 	 * Recover region start Z from a 3D region id.
 	 *
-	 * 3D region id
-	 * start Z
+	 * @param regionId 3D 区域 ID / the 3D region id
+	 * @return 区域起始 Z / the start Z
 	 */
 	public static final int getZFrom3dRegionId(int regionId) {
 		return regionId % X_3D_OFFSET % Y_3D_OFFSET * WorldConfig.WORLD_REGION_SIZE;

@@ -30,8 +30,8 @@ public class DespawnableNode extends Node {
 	 * 设置指定实例是否激活。
 	 * Sets whether the given instance is active.
 	 *
-	 * instance id
-	 * whether active
+	 * @param instanceId 实例 ID / instance id
+	 * @param active 是否激活 / whether active
 	 */
 	public void setActive(int instanceId, boolean active) {
 		synchronized (instances) {
@@ -43,9 +43,8 @@ public class DespawnableNode extends Node {
 	 * 查询指定实例是否激活。
 	 * Queries whether the given instance is active.
 	 *
-	 * instance id
-	 *
-	 * @param instanceId 若 active 则为 true / true if active
+	 * @param instanceId 实例 ID / instance id
+	 * @return 若激活则为 true / true if active
 	 */
 	public boolean isActive(int instanceId) {
 		synchronized (instances) {
@@ -57,9 +56,7 @@ public class DespawnableNode extends Node {
 	 * 从普通 {@link Node} 复制名称、碰撞标志与子节点结构。
 	 * Copies name, collision flags and child structure from a plain {@link Node}.
 	 *
-	 * source node
-	 *
-	 * @param node
+	 * @param node 源节点 / source node
 	 * @throws CloneNotSupportedException 遇到不支持的子类型时 / when an unsupported child type is encountered
 	 */
 	public void copyFrom(Node node) throws CloneNotSupportedException {
@@ -82,7 +79,7 @@ public class DespawnableNode extends Node {
 	 *
 	 * @param other 目标可碰撞对象 / target collidable
 	 * @param results 碰撞结果收集器 / collision results collector
-	 * number of collisions
+	 * @return 碰撞数量 / number of collisions
 	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) {
@@ -141,7 +138,7 @@ public class DespawnableNode extends Node {
 	 * 深拷贝本节点及其类型/激活状态。
 	 * Deep-clones this node including type and active-instance state.
 	 *
-	 * cloned node
+	 * @return 克隆节点 / cloned node
 	 */
 	@Override
 	public Node clone() throws CloneNotSupportedException {
@@ -158,7 +155,7 @@ public class DespawnableNode extends Node {
 	 * 设置可消失类型。
 	 * Sets the despawnable type.
 	 *
-	 * type
+	 * @param type 可消失类型 / type
 	 */
 	public void setType(DespawnableType type) {
 		this.type = type;
@@ -201,8 +198,8 @@ public class DespawnableNode extends Node {
 		 * Looks up a type by its byte id.
 		 *
 		 * @param id 类型 ID / type id
-		 * matching type
-		 * when id is invalid
+		 * @return 匹配的类型 / matching type
+		 * @throws IllegalArgumentException 当 ID 无效时 / when id is invalid
 		 */
 		public static DespawnableType getById(byte id) {
 			for (DespawnableType type : values()) {
@@ -217,7 +214,7 @@ public class DespawnableNode extends Node {
 		 * 返回类型字节 ID。
 		 * Returns the type byte id.
 		 *
-		 * type id
+		 * @return 类型字节 ID / type id
 		 */
 		public byte getId() {
 			return id;

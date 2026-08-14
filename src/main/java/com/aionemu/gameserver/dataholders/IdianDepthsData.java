@@ -44,7 +44,7 @@ public class IdianDepthsData {
 	 * 返回已加载的伊迪安深渊地点数量。
 	 * Returns the number of loaded Idian Depths locations.
 	 *
-	 * location count
+	 * @return 已加载的Idian Depths 地点数量 / Returns the number of loaded Idian Depths locations.
 	 */
 	public int size() {
 		return idianDepths.size();

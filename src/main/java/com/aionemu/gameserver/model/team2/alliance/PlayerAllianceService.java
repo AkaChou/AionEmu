@@ -131,7 +131,7 @@ public class PlayerAllianceService {
 	}
 
 	@GlobalCallback(PlayerAllianceCreateCallback.class)
-	/** 创建指定协议类型的单人联盟。 */
+	/** 创建指定协议类型的单人联盟。 / Creates a single-player alliance of the given team type. */
 	public static final PlayerAlliance createAlliance(Player leader, TeamType type) {
 		PlayerAlliance newAlliance = new PlayerAlliance(new PlayerAllianceMember(leader), type);
 		alliances.put(newAlliance.getTeamId(), newAlliance);
@@ -152,7 +152,7 @@ public class PlayerAllianceService {
 		alliance.addMember(new PlayerAllianceMember(invited));
 	}
 
-	/** Change 小队 Rules / Change Group Rules */
+	/** 更改小队规则 / Change Group Rules */
 	public static final void changeGroupRules(PlayerAlliance alliance, LootGroupRules lootRules) {
 		alliance.onEvent(new ChangeAllianceLootRulesEvent(alliance, lootRules));
 	}
@@ -256,7 +256,7 @@ public class PlayerAllianceService {
 		return null;
 	}
 
-	/** Change 成员小队 / Change Member Group */
+	/** 更换成员小队 / Change Member Group */
 	public static void changeMemberGroup(Player player, int firstPlayer, int secondPlayer, int allianceGroupId) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		Preconditions.checkNotNull(alliance, "Alliance should not be null for group change");
@@ -285,7 +285,7 @@ public class PlayerAllianceService {
 		}
 	}
 
-	/** DistributeKinahIn 小队 / Distribute Kinah In Group */
+	/** 在队伍内分配基纳 / Distribute Kinah In Group */
 	public static void distributeKinahInGroup(Player player, long amount) {
 		PlayerAllianceGroup allianceGroup = player.getPlayerAllianceGroup2();
 		if (allianceGroup != null) {

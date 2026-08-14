@@ -53,7 +53,7 @@ public class LunaConsumeRewardsData {
 	 * 返回已加载的露娜消费奖励数量。
 	 * Returns the number of loaded Luna consume rewards.
 	 *
-	 * template count
+	 * @return 已加载的Luna 消耗奖励数量 / Returns the number of loaded Luna consume rewards.
 	 */
 	public int size() {
 		return lunaData.size();

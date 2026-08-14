@@ -41,8 +41,8 @@ public class AttackResult {
 	 * 以整数伤害与攻击状态构造结果。
 	 * Creates a result with integer damage and attack status.
 	 *
-	 * damage
-	 * attack status
+	 * @param damage 伤害 / damage
+	 * @param attackStatus 攻击状态 / attack status
 	 */
 	public AttackResult(int damage, AttackStatus attackStatus) {
 		this.damage = damage;
@@ -53,8 +53,8 @@ public class AttackResult {
 	 * 以浮点伤害与攻击状态构造结果。
 	 * Creates a result with float damage and attack status.
 	 *
-	 * damage
-	 * attack status
+	 * @param damage 伤害 / damage
+	 * @param attackStatus 攻击状态 / attack status
 	 */
 	public AttackResult(float damage, AttackStatus attackStatus) {
 		this.damage = damage;
@@ -65,8 +65,8 @@ public class AttackResult {
 	 * 以整数伤害、攻击状态与命中类型构造结果。
 	 * Creates a result with integer damage, attack status and hit type.
 	 *
-	 * damage
-	 * attack status
+	 * @param damage 伤害 / damage
+	 * @param attackStatus 攻击状态 / attack status
 	 * @param type 命中类型 / hit type
 	 */
 	public AttackResult(int damage, AttackStatus attackStatus, HitType type) {
@@ -78,8 +78,8 @@ public class AttackResult {
 	 * 以浮点伤害、攻击状态与命中类型构造结果。
 	 * Creates a result with float damage, attack status and hit type.
 	 *
-	 * damage
-	 * attack status
+	 * @param damage 伤害 / damage
+	 * @param attackStatus 攻击状态 / attack status
 	 * @param type 命中类型 / hit type
 	 */
 	public AttackResult(float damage, AttackStatus attackStatus, HitType type) {
@@ -91,7 +91,7 @@ public class AttackResult {
 	 * 返回取整后的伤害。
 	 * Returns damage as an int.
 	 *
-	 * integer damage
+	 * @return 整数伤害 / integer damage
 	 */
 	public int getDamage() {
 		return (int) damage;
@@ -101,7 +101,7 @@ public class AttackResult {
 	 * 返回精确（浮点）伤害。
 	 * Returns the exact float damage.
 	 *
-	 * exact damage
+	 * @return 精确伤害 / exact damage
 	 */
 	public float getExactDamage() {
 		return damage;
@@ -111,7 +111,7 @@ public class AttackResult {
 	 * 设置整数伤害。
 	 * Sets damage from an int.
 	 *
-	 * damage
+	 * @param damage 伤害 / damage
 	 */
 	public void setDamage(int damage) {
 		this.damage = damage;
@@ -121,7 +121,7 @@ public class AttackResult {
 	 * 设置浮点伤害。
 	 * Sets damage from a float.
 	 *
-	 * damage
+	 * @param damage 伤害 / damage
 	 */
 	public void setDamage(float damage) {
 		this.damage = damage;
@@ -131,7 +131,7 @@ public class AttackResult {
 	 * 返回攻击状态。
 	 * Returns the attack status.
 	 *
-	 * attack status
+	 * @return 攻击状态 / attack status
 	 */
 	public AttackStatus getAttackStatus() {
 		return attackStatus;
@@ -141,7 +141,7 @@ public class AttackResult {
 	 * 返回命中类型。
 	 * Returns the hit type.
 	 *
-	 * hit type
+	 * @return 命中类型 / hit type
 	 */
 	public HitType getDamageType() {
 		return hitType;
@@ -161,7 +161,7 @@ public class AttackResult {
 	 * 返回护盾类型位掩码。
 	 * Returns the shield type bitmask.
 	 *
-	 * shield type
+	 * @return 护盾类型 / shield type
 	 */
 	public int getShieldType() {
 		return shieldType;
@@ -181,7 +181,7 @@ public class AttackResult {
 	 * 返回反射伤害。
 	 * Returns reflected damage.
 	 *
-	 * reflected damage
+	 * @return 反射伤害 / reflected damage
 	 */
 	public int getReflectedDamage() {
 		return this.reflectedDamage;
@@ -191,7 +191,7 @@ public class AttackResult {
 	 * 设置反射伤害。
 	 * Sets reflected damage.
 	 *
-	 * reflected damage
+	 * @param reflectedDamage 反射伤害 / reflected damage
 	 */
 	public void setReflectedDamage(int reflectedDamage) {
 		this.reflectedDamage = reflectedDamage;
@@ -201,7 +201,7 @@ public class AttackResult {
 	 * 返回反射技能 ID。
 	 * Returns the reflected skill id.
 	 *
-	 * reflected skill id
+	 * @return 反射技能 ID / reflected skill id
 	 */
 	public int getReflectedSkillId() {
 		return this.reflectedSkillId;
@@ -211,7 +211,7 @@ public class AttackResult {
 	 * 设置反射技能 ID。
 	 * Sets the reflected skill id.
 	 *
-	 * skill id
+	 * @param skillId 技能 ID / skill id
 	 */
 	public void setReflectedSkillId(int skillId) {
 		this.reflectedSkillId = skillId;
@@ -221,7 +221,7 @@ public class AttackResult {
 	 * 返回保护技能 ID。
 	 * Returns the protected skill id.
 	 *
-	 * protected skill id
+	 * @return 保护技能 ID / protected skill id
 	 */
 	public int getProtectedSkillId() {
 		return this.protectedSkillId;
@@ -231,7 +231,7 @@ public class AttackResult {
 	 * 设置保护技能 ID。
 	 * Sets the protected skill id.
 	 *
-	 * skill id
+	 * @param skillId 技能 ID / skill id
 	 */
 	public void setProtectedSkillId(int skillId) {
 		this.protectedSkillId = skillId;
@@ -261,7 +261,7 @@ public class AttackResult {
 	 * 返回保护者对象 ID。
 	 * Returns the protector object id.
 	 *
-	 * protector id
+	 * @return 保护者对象 ID / protector id
 	 */
 	public int getProtectorId() {
 		return this.protectorId;
@@ -271,7 +271,7 @@ public class AttackResult {
 	 * 设置保护者对象 ID。
 	 * Sets the protector object id.
 	 *
-	 * protector id
+	 * @param protectorId 保护者对象 ID / protector id
 	 */
 	public void setProtectorId(int protectorId) {
 		this.protectorId = protectorId;
@@ -291,7 +291,7 @@ public class AttackResult {
 	 * 设置是否触发子效果。
 	 * Sets whether a sub-effect should be launched.
 	 *
-	 * whether to launch
+	 * @param launchSubEffect 是否触发子效果 / whether to launch
 	 */
 	public void setLaunchSubEffect(boolean launchSubEffect) {
 		this.launchSubEffect = launchSubEffect;
@@ -301,7 +301,7 @@ public class AttackResult {
 	 * 返回护盾消耗的 MP。
 	 * Returns MP consumed by the shield.
 	 *
-	 * shield MP
+	 * @return 护盾消耗 MP / shield MP
 	 */
 	public int getShieldMp() {
 		return this.shieldMp;
@@ -311,7 +311,7 @@ public class AttackResult {
 	 * 设置护盾消耗的 MP。
 	 * Sets MP consumed by the shield.
 	 *
-	 * shield MP
+	 * @param shieldMp 护盾消耗 MP / shield MP
 	 */
 	public void setShieldMp(int shieldMp) {
 		this.shieldMp = shieldMp;

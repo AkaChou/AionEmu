@@ -8,8 +8,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Summons，用于 ai 相关逻辑。
- * Summons for ai logic.
+ * 召唤物配置集合：按百分比阈值组织召唤物队伍。
+ * Summon configuration set: organizes summon groups by percentage thresholds.
  *
  * @author xTz
  */

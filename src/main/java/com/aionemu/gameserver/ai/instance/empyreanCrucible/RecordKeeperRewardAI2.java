@@ -30,7 +30,7 @@ public class RecordKeeperRewardAI2 extends NpcAI2
         PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 10));
 		if (dialogId == 10000) {
             switch (getNpcId()) {
-                case 205344: //Record Keeper Reward.
+                case 205344: // 记录者奖励 / Record Keeper Reward
                     getPosition().getWorldMapInstance().getInstanceHandler().doReward(player);
                 break;
             }

@@ -21,7 +21,7 @@ public abstract class BaseClientPacket extends AbstractPacket {
      * Creates a client packet with the given reader and opcode.
      *
      * @param packetReader 数据包读取器 / Packet reader
-     * Opcode
+     * @param opCode 操作码 / Opcode
      */
     public BaseClientPacket(PacketReader packetReader, int opCode) {
         super(opCode);
@@ -176,7 +176,7 @@ public abstract class BaseClientPacket extends AbstractPacket {
      * 从缓冲区读取以 \\0 结尾的字符串。
      * Reads a null-terminated string from this packet buffer.
      *
-     * String value
+     * @return 字符串值 / String value
      */
     protected final String readS() {
         StringBuffer sb = new StringBuffer();
@@ -196,8 +196,8 @@ public abstract class BaseClientPacket extends AbstractPacket {
      * 从缓冲区读取指定长度的字节数组。
      * Reads n bytes from this packet buffer, where n is length.
      *
-     * Number of bytes to read
-     * Byte array
+     * @param length 要读取的字节数 / Number of bytes to read
+     * @return 字节数组 / Byte array
      */
     protected final byte[] readB(int length) {
         byte[] result = new byte[length];

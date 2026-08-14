@@ -19,14 +19,20 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 @AIName("shademender")
 public class ShademenderAI2 extends AggressiveNpcAI2
 {
+	/**
+	 * 生物移动检测：对接近的魔族玩家施放征服者之热情增益（若尚未存在）。
+	 * Creature-move handler: applies Conqueror's Passion to approaching Asmodian players if not already active.
+	 *
+	 * @param creature 移动的生物 / moving creature
+	 */
 	@Override
     protected void handleCreatureMoved(Creature creature) {
         CreatureEventHandler.onCreatureSee(this, creature);
 	if (creature instanceof Player) {
 			final Player player = (Player) creature;
-		if (!creature.getEffectController().hasAbnormalEffect(20664)) { //Conqueror's Passion.
+		if (!creature.getEffectController().hasAbnormalEffect(20664)) { // 征服者之热情 / Conqueror's Passion.
 				if (player.getCommonData().getRace() == Race.ASMODIANS) {
-		        GameEngineServices.skillEngine().getSkill(getOwner(), 20664, 1, (Player) creature).useNoAnimationSkill(); //Conqueror's Passion.
+		        GameEngineServices.skillEngine().getSkill(getOwner(), 20664, 1, (Player) creature).useNoAnimationSkill(); // 征服者之热情 / Conqueror's Passion.
 				}
 			}
 	}
@@ -50,6 +56,6 @@ public class ShademenderAI2 extends AggressiveNpcAI2
 	}
 
 	private void conquerorPassion() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); //Conqueror's Passion.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); // 征服者之热情 / Conqueror's Passion.
 	}
 }

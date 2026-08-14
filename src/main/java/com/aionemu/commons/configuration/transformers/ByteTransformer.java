@@ -23,13 +23,13 @@ public class ByteTransformer implements PropertyTransformer<Byte> {
     public static final ByteTransformer SHARED_INSTANCE = new ByteTransformer();
 
     /**
- * 将字符串值转换为 Byte 对象
+     * 将字符串值转换为 Byte 对象
      * Transforms string value into Byte object
      *
-     * @param value 要转换的字符串值 String value to transform
-     * @param field 字段对象 Field that will be transformed
- * @return 转换后的 Byte 对象 Transformed Byte object
-     * @throws TransformationException 如果转换失败 if transformation fails
+     * @param value 要转换的字符串值 / String value to transform
+     * @param field 字段对象 / Field that will be transformed
+     * @return 转换后的 Byte 对象 / Transformed Byte object
+     * @throws TransformationException 如果转换失败 / if transformation fails
      */
     public Byte transform(String value, Field field) throws TransformationException {
         try {

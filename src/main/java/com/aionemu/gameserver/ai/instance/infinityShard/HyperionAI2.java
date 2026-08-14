@@ -48,7 +48,7 @@ public class HyperionAI2 extends AggressiveNpcAI2
 	}
 	
 	private void spawnIdeResonator() {
-		// 伊德谐振器正在为许珀里翁充能。 / Ide Resonators are charging the Hyperion.
+		// 伊德谐振器正在为希佩里安充能。 / Ide Resonators are charging the Hyperion.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDRuneWP_Charging, 0);
 		// 伊德能量充能第 1 阶段完成。 / Phase 1 of the Ide energy charging complete.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDRuneWP_Charger1_Completed, 3000);
@@ -56,7 +56,7 @@ public class HyperionAI2 extends AggressiveNpcAI2
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDRuneWP_Charger2_Completed, 9000);
 		// 伊德能量充能第 3 阶段完成。 / Phase 3 of the Ide energy charging complete.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDRuneWP_Charger3_Completed, 15000);
-		// 伊德能量充能各阶段完成。许珀里翁终极攻击即将来临。 / All phases of Ide energy charging complete. Hyperion ultimate attack imminent.
+		// 伊德能量充能各阶段完成。希佩里安终极攻击即将来临。 / All phases of Ide energy charging complete. Hyperion ultimate attack imminent.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDRuneWP_Charger4_Completed, 21000);
 		switch (Rnd.get(1, 4)) {
 		    case 1:
@@ -412,10 +412,10 @@ public class HyperionAI2 extends AggressiveNpcAI2
 	protected void handleBackHome() {
 		final WorldPosition p = getPosition();
 		if (p != null) {
-			deleteNpcs(p.getWorldMapInstance().getNpcs(231093)); //Ide Resonator.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(231094)); //Ide Resonator.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(231095)); //Ide Resonator.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(276519)); //Ide Resonator.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(231093)); // 伊德谐振器 / Ide Resonator
+			deleteNpcs(p.getWorldMapInstance().getNpcs(231094)); // 伊德谐振器 / Ide Resonator
+			deleteNpcs(p.getWorldMapInstance().getNpcs(231095)); // 伊德谐振器 / Ide Resonator
+			deleteNpcs(p.getWorldMapInstance().getNpcs(276519)); // 伊德谐振器 / Ide Resonator
 		}
 		addPercent();
 		super.handleBackHome();
@@ -437,13 +437,13 @@ public class HyperionAI2 extends AggressiveNpcAI2
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
 		if (p != null) {
-			deleteNpcs(p.getWorldMapInstance().getNpcs(231096)); //Hyperion Defense Combatant.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(231097)); //Hyperion Defense Scout.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(231098)); //Hyperion Defense Medic.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(233297)); //Hyperion Defense Assaulter.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(233298)); //Hyperion Defense Assassin.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(233299)); //Hyperion Defense Healer.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(231103)); //Summoned Ancien Tyrhund.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(231096)); // 希佩里安防卫战斗员 / Hyperion Defense Combatant
+			deleteNpcs(p.getWorldMapInstance().getNpcs(231097)); // 希佩里安防卫侦察兵 / Hyperion Defense Scout
+			deleteNpcs(p.getWorldMapInstance().getNpcs(231098)); // 希佩里安防卫医疗兵 / Hyperion Defense Medic
+			deleteNpcs(p.getWorldMapInstance().getNpcs(233297)); // 希佩里安防卫突击兵 / Hyperion Defense Assaulter
+			deleteNpcs(p.getWorldMapInstance().getNpcs(233298)); // 希佩里安防卫杀星 / Hyperion Defense Assassin
+			deleteNpcs(p.getWorldMapInstance().getNpcs(233299)); // 希佩里安防卫治疗师 / Hyperion Defense Healer
+			deleteNpcs(p.getWorldMapInstance().getNpcs(231103)); // 召唤的古代 Tyrhund / Summoned Ancien Tyrhund
 		}
 		percents.clear();
 		if (Cast != null) {

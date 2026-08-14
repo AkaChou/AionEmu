@@ -25,9 +25,9 @@ public abstract class InventoryDAO implements IDFactoryAwareDAO {
 	 * 加载指定类型的仓库。
 	 * Loads storage of the given type.
 	 *
-	 * player ID
-	 * storage type
-	 * storage
+	 * @param playerId 玩家 ID / player ID
+	 * @param storageType 存储类型 / storage type
+	 * @return 存储 / storage
 	 */
 	public abstract Storage loadStorage(int playerId, StorageType storageType);
 
@@ -35,9 +35,9 @@ public abstract class InventoryDAO implements IDFactoryAwareDAO {
 	 * 直接加载指定类型仓库中的物品列表。
 	 * Loads items of the given storage type directly.
 	 *
-	 * player ID
-	 * storage type
-	 * item list
+	 * @param playerId 玩家 ID / player ID
+	 * @param storageType 存储类型 / storage type
+	 * @return 物品列表 / item list
 	 */
 	public abstract List<Item> loadStorageDirect(int playerId, StorageType storageType);
 
@@ -45,8 +45,8 @@ public abstract class InventoryDAO implements IDFactoryAwareDAO {
 	 * 加载玩家装备。
 	 * Loads player equipment.
 	 *
-	 * 玩家 / player
-	 * equipment
+	 * @param player 玩家 / player
+	 * @return 装备 / equipment
 	 */
 	public abstract Equipment loadEquipment(Player player);
 
@@ -54,8 +54,8 @@ public abstract class InventoryDAO implements IDFactoryAwareDAO {
 	 * 按玩家 ID 加载装备物品列表。
 	 * Loads equipment items by player ID.
 	 *
-	 * player ID
-	 * item list
+	 * @param playerId 玩家 ID / player ID
+	 * @return 物品列表 / item list
 	 */
 	public abstract List<Item> loadEquipment(int playerId);
 
@@ -63,8 +63,8 @@ public abstract class InventoryDAO implements IDFactoryAwareDAO {
 	 * 存储玩家的全部物品数据。
 	 * Stores all item data for a player.
 	 *
-	 * 玩家 / player
-	 * whether successful
+	 * @param player 玩家 / player
+	 * @return 是否成功 / whether successful
 	 */
 	public abstract boolean store(Player player);
 
@@ -72,9 +72,9 @@ public abstract class InventoryDAO implements IDFactoryAwareDAO {
 	 * 存储玩家的单个物品。
 	 * Stores a single item for a player.
 	 *
-	 * item
-	 * 玩家 / player
-	 * whether successful
+	 * @param item 物品 / item
+	 * @param player 玩家 / player
+	 * @return 是否成功 / whether successful
 	 */
 	public abstract boolean store(Item item, Player player);
 
@@ -82,9 +82,9 @@ public abstract class InventoryDAO implements IDFactoryAwareDAO {
 	 * 按玩家 ID 存储单个物品。
 	 * Stores a single item by player ID.
 	 *
-	 * item
-	 * player ID
-	 * whether successful
+	 * @param item 物品 / item
+	 * @param playerId 玩家 ID / player ID
+	 * @return 是否成功 / whether successful
 	 */
 	public boolean store(Item item, int playerId) {
 		return store(Collections.singletonList(item), playerId);
@@ -95,8 +95,8 @@ public abstract class InventoryDAO implements IDFactoryAwareDAO {
 	 * Stores a list of items by player ID.
 	 *
 	 * @param items 物品列表 / item list
-	 * player ID
-	 * whether successful
+	 * @param playerId 玩家 ID / player ID
+	 * @return 是否成功 / whether successful
 	 */
 	public abstract boolean store(List<Item> items, int playerId);
 
@@ -104,11 +104,11 @@ public abstract class InventoryDAO implements IDFactoryAwareDAO {
 	 * 按玩家/账号/军团 ID 存储单个物品。
 	 * Stores a single item with player/account/legion IDs.
 	 *
-	 * item
-	 * player ID
-	 * 账号 ID / account ID
-	 * legion ID
-	 * whether successful
+	 * @param item 物品 / item
+	 * @param playerId 玩家 ID / player ID
+	 * @param accountId 账号 ID / account ID
+	 * @param legionId 军团 ID / legion ID
+	 * @return 是否成功 / whether successful
 	 */
 	public boolean store(Item item, Integer playerId, Integer accountId, Integer legionId) {
 		List<Item> temp = new ArrayList<>();
@@ -121,10 +121,10 @@ public abstract class InventoryDAO implements IDFactoryAwareDAO {
 	 * Stores a list of items with player/account/legion IDs.
 	 *
 	 * @param items 物品列表 / item list
-	 * player ID
-	 * 账号 ID / account ID
-	 * legion ID
-	 * whether successful
+	 * @param playerId 玩家 ID / player ID
+	 * @param accountId 账号 ID / account ID
+	 * @param legionId 军团 ID / legion ID
+	 * @return 是否成功 / whether successful
 	 */
 	public abstract boolean store(List<Item> items, Integer playerId, Integer accountId, Integer legionId);
 
@@ -145,8 +145,8 @@ public abstract class InventoryDAO implements IDFactoryAwareDAO {
 	 * 删除玩家的全部物品。
 	 * Deletes all items for a player.
 	 *
-	 * player ID
-	 * whether successful
+	 * @param playerId 玩家 ID / player ID
+	 * @return 是否成功 / whether successful
 	 */
 	public abstract boolean deletePlayerItems(int playerId);
 
@@ -154,7 +154,7 @@ public abstract class InventoryDAO implements IDFactoryAwareDAO {
 	 * 删除账号仓库。
 	 * Deletes account warehouse items.
 	 *
-	 * 账号 ID / account ID
+	 * @param accountId 账号 ID / account ID
 	 */
 	public abstract void deleteAccountWH(int accountId);
 
@@ -162,7 +162,7 @@ public abstract class InventoryDAO implements IDFactoryAwareDAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
 	 *
-	 * class name
+	 * @return 类名 / class name
 	 */
 	@Override
 	public String getClassName() {

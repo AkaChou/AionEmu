@@ -29,7 +29,7 @@ public abstract class BasePacket {
      * Construct packet with opcode.
      *
      * @param packetType 数据包类型 / Packet type
-     * Opcode
+     * @param opcode 操作码 / Opcode
      */
     protected BasePacket(BasePacket.PacketType packetType, int opcode) {
         this.packetType = packetType;
@@ -50,7 +50,7 @@ public abstract class BasePacket {
      * 设置操作码。
      * Set opcode.
      *
-     * Opcode
+     * @param opcode 操作码 / Opcode
      */
     protected void setOpcode(int opcode) {
         this.opcode = opcode;
@@ -60,7 +60,7 @@ public abstract class BasePacket {
      * 获取操作码。
      * Get opcode.
      *
-     * Opcode
+     * @return 操作码 / Opcode
      */
     public final int getOpcode() {
         return this.opcode;
@@ -90,7 +90,7 @@ public abstract class BasePacket {
      * 转换为字符串表示。
      * Convert to string representation.
      *
-     * String
+     * @return 字符串表示 / String representation
      */
     public String toString() {
         return String.format("[%s] 0x%02X %s", this.getPacketType().getName(), this.getOpcode(), this.getPacketName());
@@ -112,7 +112,7 @@ public abstract class BasePacket {
          * 构造类型。
          * Construct type.
          *
-         * Short name
+         * @param name 短名称 / Short name
          */
         private PacketType(String name) {
             this.name = name;
@@ -122,7 +122,7 @@ public abstract class BasePacket {
          * 获取短名称。
          * Get short name.
          *
-         * Short name
+         * @return 短名称 / Short name
          */
         public String getName() {
             return this.name;

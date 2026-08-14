@@ -21,9 +21,9 @@ public class SM_MACBAN_CONTROL extends LsServerPacket {
 	 * Constructs a MAC-ban control packet.
 	 *
 	 * @param type 控制类型 / control type
-	 * MAC address
+	 * @param address MAC 地址 / MAC address
 	 * @param time 时间戳/时长 / timestamp or duration
-	 * detail notes
+	 * @param details 详细备注 / detail notes
 	 */
 	public SM_MACBAN_CONTROL(byte type, String address, long time, String details) {
 		super(10);

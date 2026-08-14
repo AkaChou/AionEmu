@@ -23,7 +23,7 @@ final class GameWorldBootstrapFallbacks {
      * 回退 IDFactory。
      * Fallback IDFactory.
      *
-     * IDFactory singleton
+     * @return IDFactory 单例 / IDFactory singleton
      */
     static IDFactory idFactory() {
         return IdFactoryFallback.INSTANCE;
@@ -33,7 +33,7 @@ final class GameWorldBootstrapFallbacks {
      * 回退 ZoneService。
      * Fallback ZoneService.
      *
-     * ZoneService singleton
+     * @return ZoneService 单例 / ZoneService singleton
      */
     static ZoneService zoneService() {
         return ZoneServiceFallback.INSTANCE;
@@ -43,7 +43,7 @@ final class GameWorldBootstrapFallbacks {
      * 回退 HotspotTeleportService。
      * Fallback HotspotTeleportService.
      *
-     * HotspotTeleportService singleton
+     * @return HotspotTeleportService 单例 / HotspotTeleportService singleton
      */
     static HotspotTeleportService hotspotTeleportService() {
         return HotspotTeleportServiceFallback.INSTANCE;
@@ -53,7 +53,7 @@ final class GameWorldBootstrapFallbacks {
      * 回退 RoadService。
      * Fallback RoadService.
      *
-     * RoadService singleton
+     * @return RoadService 单例 / RoadService singleton
      */
     static RoadService roadService() {
         return RoadServiceFallback.INSTANCE;
@@ -63,7 +63,7 @@ final class GameWorldBootstrapFallbacks {
      * 回退 World。
      * Fallback World.
      *
-     * World singleton
+     * @return World 单例 / World singleton
      */
     static World world() {
         return WorldFallback.INSTANCE;

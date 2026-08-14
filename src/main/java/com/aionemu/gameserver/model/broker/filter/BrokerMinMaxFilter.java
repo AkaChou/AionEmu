@@ -14,8 +14,8 @@ public class BrokerMinMaxFilter extends BrokerFilter {
 	private int max;
 
 	/**
-	 * @param min
-	 * @param max
+	 * @param min 最小类别值 / min category value
+	 * @param max 最大类别值 / max category value
 	 */
 	public BrokerMinMaxFilter(int min, int max) {
 		this.min = min * 100000;

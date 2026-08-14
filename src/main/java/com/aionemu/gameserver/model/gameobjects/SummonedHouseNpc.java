@@ -21,19 +21,19 @@ public class SummonedHouseNpc extends SummonedObject<House> {
 		this.masterName = masterName;
 	}
 
-	/** 返回 creator id / Returns the creator id */
+	/** 返回创建者 ID / Returns the creator id */
 	@Override
 	public int getCreatorId() {
 		return getCreator().getAddress().getId();
 	}
 
-	/** 返回大师名称 / Returns the master name */
+	/** 返回主人名称 / Returns the master name */
 	@Override
 	public String getMasterName() {
 		return masterName;
 	}
 
-	/** 返回大师 / Returns the master*/
+	/** 返回主人 / Returns the master. */
 	@Override
 	public Creature getMaster() {
 		return null;

@@ -124,7 +124,7 @@ public class GameCustomEventsGateway {
      * 解析 FFA 服务：优先 Spring，否则经运行时桥回退。
      * Resolve FFA service: prefer Spring, otherwise fall back via runtime bridge.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private FFAService ffaService() {
         if (ffaServiceProvider == null) {
@@ -137,7 +137,7 @@ public class GameCustomEventsGateway {
      * 解析天梯服务。
      * Resolve ladder service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private LadderService ladderService() {
         if (ladderServiceProvider == null) {
@@ -150,7 +150,7 @@ public class GameCustomEventsGateway {
      * 解析 BG 服务。
      * Resolve BG service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private BGService bgService() {
         if (bgServiceProvider == null) {
@@ -163,7 +163,7 @@ public class GameCustomEventsGateway {
      * 解析强盗活动服务。
      * Resolve bandit service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private BanditService banditService() {
         if (banditServiceProvider == null) {
@@ -176,7 +176,7 @@ public class GameCustomEventsGateway {
      * 解析功能服务运行时桥：优先 Spring，否则新建。
      * Resolve feature-services runtime bridge: prefer Spring, otherwise create new.
      *
-     * Runtime bridge
+     * @return 运行时桥 / Runtime bridge
      */
     private GameFeatureServicesRuntimeBridge runtimeBridge() {
         if (runtimeBridgeProvider == null) {

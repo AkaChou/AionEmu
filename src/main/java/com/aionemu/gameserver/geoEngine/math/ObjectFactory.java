@@ -12,7 +12,7 @@ abstract class ObjectFactory<T> {
 	 * 获取（创建）一个实例。
 	 * Obtains (creates) an instance.
 	 *
-	 * new instance
+	 * @return 新实例 / new instance
 	 */
 	public T object() {
 		return create();
@@ -34,7 +34,7 @@ abstract class ObjectFactory<T> {
 	 * 创建新实例。
 	 * Creates a new instance.
 	 *
-	 * new instance
+	 * @return 新实例 / new instance
 	 */
 	protected abstract T create();
 }

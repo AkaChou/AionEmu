@@ -47,17 +47,17 @@ public class CM_APPEARANCE extends AionClientPacket {
 		final Player player = getConnection().getActivePlayer();
 
 		switch (type) {
-		case 0: // Change Char Name,
+		case 0: // 改名 / Change Char Name,
 			if (RenameService.renamePlayer(player, player.getName(), name, itemObjId)) {
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400157, name));
 			}
 			break;
-		case 1: // Change Legion Name
+		case 1: // 改军团名 / Change Legion Name
 			if (RenameService.renameLegion(player, name, itemObjId)) {
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400158, name));
 			}
 			break;
-		case 2: // cosmetic items
+		case 2: // 外观物品 / cosmetic items
 			Item item = player.getInventory().getItemByObjId(itemObjId);
 			if (item != null) {
 				for (AbstractItemAction action : item.getItemTemplate().getActions().getItemActions()) {

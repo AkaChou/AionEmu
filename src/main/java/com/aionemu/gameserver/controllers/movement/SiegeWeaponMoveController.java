@@ -31,7 +31,7 @@ public class SiegeWeaponMoveController extends SummonMoveController {
 	 * 使用指定召唤物构造控制器。
 	 * Construct the controller for the given summon.
 	 *
-	 * Summon owner
+	 * @param owner 召唤物 / Summon owner
 	 */
 	public SiegeWeaponMoveController(Summon owner) {
 		super(owner);
@@ -77,10 +77,10 @@ public class SiegeWeaponMoveController extends SummonMoveController {
 	 * 按速度插值向指定坐标移动，方向变化时广播移动包。
 	 * Interpolate toward the given coordinates by speed; broadcast when direction changes.
 	 *
-	 * Target X
-	 * Target Y
-	 * Target Z
-	 * Stop offset
+	 * @param targetX 目标 X 坐标 / Target X
+	 * @param targetY 目标 Y 坐标 / Target Y
+	 * @param targetZ 目标 Z 坐标 / Target Z
+	 * @param offset 停止偏移 / Stop offset
 	 */
 	protected void moveToLocation(float targetX, float targetY, float targetZ, float offset) {
 		boolean directionChanged;

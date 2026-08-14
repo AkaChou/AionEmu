@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 征服刷新点模板（静态数据/XML）。
- * XML template.
+ * Conquest spawn template (static data/XML).
  *
  * @author Rinzler (Encom)
  */
@@ -30,28 +30,31 @@ public class ConquestSpawnTemplate extends SpawnTemplate {
 		return id;
 	}
 
-	/** 返回 o state type / Returns the o state type */
+	/** 返回占领状态类型。 / Returns the occupation state type. */
 	public ConquestStateType getOStateType() {
 		return conquestType;
 	}
 
-	/** 设置 id / Sets the id */
+	/** 设置 ID。 / Sets the id. */
 	public void setId(int id) {
 		this.id = id;
 	}
 
-	/** 设置 o state type / Sets the o state type */
+	/** 设置占领状态类型。 / Sets the occupation state type. */
 	public void setOStateType(ConquestStateType conquestType) {
 		this.conquestType = conquestType;
 	}
 
-	/** 是否为征服。 / Whether conquest. */
+	/** 是否为征服状态。 / Whether this is a conquest state. */
 	public final boolean isConquest() {
 		return conquestType.equals(ConquestStateType.CONQUEST);
 	}
 
 	/**
-	 * @return Whether conquest peace
+	 * 是否为征服和平状态。
+	 * Whether this is a conquest peace state.
+	 *
+	 * @return 征服和平状态则为 true / true if conquest peace
 	 */
 	public final boolean isConquestPeace() {
 		return conquestType.equals(ConquestStateType.PEACE);

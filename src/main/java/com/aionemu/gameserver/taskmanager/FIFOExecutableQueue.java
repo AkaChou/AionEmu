@@ -40,7 +40,7 @@ public abstract class FIFOExecutableQueue implements Runnable {
 
 	/**
 	 * 当前队列状态：{@link #NONE} / {@link #QUEUED} / {@link #RUNNING}。
-	 * {@link #QUEUED} / {@link #RUNNING}.
+	 * Current queue state: {@link #NONE} / {@link #QUEUED} / {@link #RUNNING}.
 	 */
 	private volatile byte state = NONE;
 
@@ -123,7 +123,7 @@ public abstract class FIFOExecutableQueue implements Runnable {
 	 * 队列是否为空。
 	 * Whether the queue is empty.
 	 *
-	 * 若 empty 则为 true / True if empty
+	 * @return 若 empty 则为 true / true if empty
 	 */
 	protected abstract boolean isEmpty();
 

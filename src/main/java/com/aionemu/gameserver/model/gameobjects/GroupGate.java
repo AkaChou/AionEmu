@@ -13,10 +13,13 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 public class GroupGate extends SummonedObject<Creature> {
 
 	/**
-	 * @param objId
-	 * @param controller
-	 * @param spawnTemplate
-	 * @param objectTemplate
+	 * 构造队伍之门。
+	 * Constructs a group gate.
+	 *
+	 * @param objId 对象 ID / object id
+	 * @param controller NPC 控制器 / NPC controller
+	 * @param spawnTemplate 生成模板 / spawn template
+	 * @param objectTemplate NPC 模板 / NPC template
 	 */
 	public GroupGate(int objId, NpcController controller, SpawnTemplate spawnTemplate, NpcTemplate objectTemplate) {
 		super(objId, controller, spawnTemplate, objectTemplate, (byte) 1);
@@ -29,7 +32,10 @@ public class GroupGate extends SummonedObject<Creature> {
 	}
 
 	/**
-	 * @return NpcObjectType.GROUPGATE
+	 * 返回 NPC 对象类型 GROUPGATE。
+	 * Returns NpcObjectType.GROUPGATE.
+	 *
+	 * @return NPC 对象类型 / NpcObjectType.GROUPGATE
 	 */
 	@Override
 	public NpcObjectType getNpcObjectType() {

@@ -20,7 +20,7 @@ public abstract class BaseServerPacket extends BasePacket {
      * 使用操作码构造。
      * Construct with opcode.
      *
-     * Opcode
+     * @param opcode 操作码 / Opcode
      */
     protected BaseServerPacket(int opcode) {
         super(BasePacket.PacketType.SERVER, opcode);
@@ -49,7 +49,7 @@ public abstract class BaseServerPacket extends BasePacket {
      * 写入 32 位整数。
      * Write 32-bit integer.
      *
-     * Integer value
+     * @param value 整数值 / Integer value
      */
     protected final void writeD(int value) {
         this.buf.putInt(value);
@@ -69,7 +69,7 @@ public abstract class BaseServerPacket extends BasePacket {
      * 写入 8 位字节。
      * Write 8-bit byte.
      *
-     * Byte value
+     * @param value 字节值 / Byte value
      */
     protected final void writeC(int value) {
         this.buf.put((byte) value);

@@ -10,8 +10,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * 副本加成 Attr 模板（静态数据/XML）。
- * XML template.
+ * 副本加成属性模板（静态数据/XML）。
+ * Instance bonus attr template (static data/XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -23,7 +23,7 @@ public class InstanceBonusAttr {
 	@XmlAttribute(name = "buff_id", required = true)
 	protected int buffId;
 
-	/** 返回 penalty attr / Returns the penalty attr */
+	/** 返回属性修正列表。 / Returns the penalty attrs. */
 	public List<InstancePenaltyAttr> getPenaltyAttr() {
 		if (penaltyAttr == null) {
 			penaltyAttr = new ArrayList<InstancePenaltyAttr>();
@@ -31,12 +31,12 @@ public class InstanceBonusAttr {
 		return this.penaltyAttr;
 	}
 
-	/** 返回增益 ID / Returns the buff id */
+	/** 返回增益 ID。 / Returns the buff id. */
 	public int getBuffId() {
 		return buffId;
 	}
 
-	/** 设置 buff id / Sets the buff id */
+	/** 设置增益 ID。 / Sets the buff id. */
 	public void setBuffId(int value) {
 		this.buffId = value;
 	}

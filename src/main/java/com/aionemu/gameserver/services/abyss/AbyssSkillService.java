@@ -16,7 +16,7 @@ public class AbyssSkillService {
 	 * 移除同种族全部欧比斯技能后，在 5 星军官及以上重新授予对应技能。
 	 * Strip all same-race abyss skills, then re-grant skills for STAR5_OFFICER and above.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / target player
 	 */
 	public static final void updateSkills(Player player) {
 		AbyssRank abyssRank = player.getAbyssRank();
@@ -44,7 +44,7 @@ public class AbyssSkillService {
 	 * 玩家进世界时同步欧比斯技能。
 	 * Sync abyss skills when the player enters the world.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / target player
 	 */
 	public static final void onEnterWorld(Player player) {
 		updateSkills(player);

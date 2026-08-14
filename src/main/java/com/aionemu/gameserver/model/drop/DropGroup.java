@@ -53,21 +53,24 @@ public class DropGroup implements DropCalculator {
 		return race;
 	}
 
-	/** 返回 max items / Returns the max items */
+	/** 返回最大掉落数量 / Returns the max items */
 	public int getMaxItems() {
 		return maxItems;
 	}
 
 	/**
-	 * 是否为 Use 等级 BasedChanceReduction。
-	 * Whether use level based chance reduction.
+	 * 是否启用基于等级的掉率衰减。
+	 * Whether to use level based chance reduction.
 	 */
 	public boolean isUseLevelBasedChanceReduction() {
 		return useLevelBasedChanceReduction != null ? useLevelBasedChanceReduction : true;
 	}
 
 	/**
-	 * @return the name
+	 * 返回掉落组名称。
+	 * Returns the drop group name.
+	 *
+	 * @return 名称，未设置时为空串 / the name, empty string if unset
 	 */
 	public String getGroupName() {
 		if (group_name == null) {
@@ -90,22 +93,31 @@ public class DropGroup implements DropCalculator {
 		return copy;
 	}
 
-	/** 设置 NPC 专属掉落倍率，1 表示 1 倍。 */
+	/** 设置 NPC 专属掉落倍率，1 表示 1 倍。 / Sets the NPC-specific drop multiplier, 1 means 1x. */
 	public void setChanceMultiplier(float chanceMultiplier) {
 		this.chanceMultiplier = chanceMultiplier;
 	}
 
-	/** 返回 NPC 专属掉落倍率。 */
+	/** 返回 NPC 专属掉落倍率。 / Returns the NPC-specific drop multiplier. */
 	public float getChanceMultiplier() {
 		return chanceMultiplier;
 	}
 
-	/** 返回应用 NPC 和掉落组专属倍率后的基础概率。 */
+	/** 返回应用 NPC 和掉落组专属倍率后的基础概率。 / Returns the base chance after applying the NPC and drop-group multipliers. */
 	public float getAdjustedChance(Drop candidate) {
 		return candidate.getChance() * chanceMultiplier * dropGroupAdjustment / 100f;
 	}
 
-	/** 掉落 Calculator / Drop Calculator */
+	/**
+	 * 掉落计算器：在候选掉落中按有效概率抽取至多 max_items 个掉落项。
+	 * Drop calculator: draws up to max_items drops from the candidates by effective chance.
+	 *
+	 * @param result 掉落物结果集 / drop-item result set
+	 * @param index 当前索引 / current index
+	 * @param dropModifiers 掉落修正器 / drop modifiers
+	 * @param groupMembers 队伍成员（用于每人一份的掉落）/ group members (for each-member drops)
+	 * @return 下一个可用索引 / the next available index
+	 */
 	@Override
 	public int dropCalculator(Set<DropItem> result, int index, DropModifiers dropModifiers, Collection<Player> groupMembers) {
 		if (drop == null || drop.isEmpty()) {

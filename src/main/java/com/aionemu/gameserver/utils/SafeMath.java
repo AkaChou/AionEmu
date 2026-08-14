@@ -12,10 +12,10 @@ public class SafeMath {
 	 * 安全的 int 加法，溢出时抛出 {@link OverfowException}。
 	 * Safe int addition; throws {@link OverfowException} on overflow.
 	 *
-	 * Left operand
-	 * Right operand
-	 * Sum
-	 * On overflow
+	 * @param source 左操作数 / Left operand
+	 * @param value 右操作数 / Right operand
+	 * @return 和 / Sum
+	 * @throws OverfowException 溢出时 / On overflow
 	 */
 	public static int addSafe(int source, int value) throws OverfowException {
 		long s = (long) source + (long) value;
@@ -29,10 +29,10 @@ public class SafeMath {
 	 * 安全的 long 加法，溢出时抛出 {@link OverfowException}。
 	 * Safe long addition; throws {@link OverfowException} on overflow.
 	 *
-	 * Left operand
-	 * Right operand
-	 * Sum
-	 * On overflow
+	 * @param source 左操作数 / Left operand
+	 * @param value 右操作数 / Right operand
+	 * @return 和 / Sum
+	 * @throws OverfowException 溢出时 / On overflow
 	 */
 	public static long addSafe(long source, long value) throws OverfowException {
 		if ((source > 0 && value > Long.MAX_VALUE - source) || (source < 0 && value < Long.MIN_VALUE - source)) {
@@ -45,10 +45,10 @@ public class SafeMath {
 	 * 安全的 int 乘法，溢出时抛出 {@link OverfowException}。
 	 * Safe int multiplication; throws {@link OverfowException} on overflow.
 	 *
-	 * Left operand
-	 * Right operand
-	 * Product
-	 * On overflow
+	 * @param source 左操作数 / Left operand
+	 * @param value 右操作数 / Right operand
+	 * @return 积 / Product
+	 * @throws OverfowException 溢出时 / On overflow
 	 */
 	public static int multSafe(int source, int value) throws OverfowException {
 		long m = ((long) source) * ((long) value);
@@ -64,8 +64,8 @@ public class SafeMath {
 	 *
 	 * @param a 被乘数 / Left operand
 	 * @param b 乘数 / Right operand
-	 * Product
-	 * On overflow
+	 * @return 积 / Product
+	 * @throws OverfowException 溢出时 / On overflow
 	 */
 	public static long multSafe(long a, long b) throws OverfowException {
 

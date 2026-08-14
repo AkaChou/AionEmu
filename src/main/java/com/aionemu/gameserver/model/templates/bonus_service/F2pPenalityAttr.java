@@ -10,7 +10,7 @@ import com.aionemu.gameserver.skillengine.change.Func;
 
 /**
  * F2pPenalityAttr 模板（静态数据/XML）。
- * XML template.
+ * F2P penalty attribute template (static data/XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

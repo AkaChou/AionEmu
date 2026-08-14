@@ -62,7 +62,6 @@ public class Configure extends AdminCommand
 	 * 查看或设置配置类中的静态字段值。
 	 * Shows or sets a static field value on a config class.
 	 *
-	 * admin
 	 * @param params 参数：set|show、配置名、属性名、[新值] / set|show, config name, property, [new value]
 	 */
 	@Override
@@ -130,8 +129,6 @@ public class Configure extends AdminCommand
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
 	 *
-	 * admin
-	 * error message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

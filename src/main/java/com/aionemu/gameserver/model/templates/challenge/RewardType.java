@@ -12,7 +12,11 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum RewardType {
 	/** 无 / None. */
-	NONE, POINT, SPAWN;
+	NONE,
+	/** 积分 / Point. */
+	POINT,
+	/** 生成 / Spawn. */
+	SPAWN;
 
 	/** 值。 / Value. */
 	public String value() {

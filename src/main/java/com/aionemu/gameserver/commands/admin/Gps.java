@@ -19,7 +19,6 @@ public class Gps extends AdminCommand
 	 * Print the admin's current coordinates.
 	 *
 	 * @param admin 执行命令的管理员 / Admin executing the command
-	 * Unused
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -37,7 +36,6 @@ public class Gps extends AdminCommand
 	 * Failure callback (no extra syntax for this command).
 	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

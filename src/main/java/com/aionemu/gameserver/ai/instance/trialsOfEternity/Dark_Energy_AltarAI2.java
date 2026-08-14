@@ -66,6 +66,10 @@ public class Dark_Energy_AltarAI2 extends NpcAI2
 		}
 	}
 	
+	/**
+	 * 消耗黑色典籍完成祭坛使用：在永恒试炼副本内封锁黑色祭坛并移除相关 NPC。
+	 * Consumes a Black Tome to finish using the altar: blocks the dark altar and removes related NPCs in the Trials Of Eternity instance.
+	 */
 	protected void handleUseItemFinish(Player player) {
 		if (!player.getInventory().decreaseByItemId(185000301, 1)) {
 			// 需要黑色典籍阻断黑色祭坛的能量。 / You need a Black Tome to block the energy from the black altar.

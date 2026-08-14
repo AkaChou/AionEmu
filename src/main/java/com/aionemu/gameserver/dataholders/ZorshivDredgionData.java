@@ -44,7 +44,7 @@ public class ZorshivDredgionData {
 	 * 返回已加载的佐尔希夫龙舰地点数量。
 	 * Returns the number of loaded Zorshiv Dredgion locations.
 	 *
-	 * location count
+	 * @return 已加载的Zorshiv Dredgion 地点数量 / Returns the number of loaded Zorshiv Dredgion locations.
 	 */
 	public int size() {
 		return zorshivDredgion.size();
@@ -54,7 +54,7 @@ public class ZorshivDredgionData {
 	 * 返回全部佐尔希夫龙舰地点映射。
 	 * Returns the full Zorshiv Dredgion location map.
 	 *
-	 * location map
+	 * @return 完整的 Zorshiv Dredgion 地点映射 / Returns the full Zorshiv Dredgion location map.
 	 */
 	public Map<Integer, ZorshivDredgionLocation> getZorshivDredgionLocations() {
 		return zorshivDredgion;

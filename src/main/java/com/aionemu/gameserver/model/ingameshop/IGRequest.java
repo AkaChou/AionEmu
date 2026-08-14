@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.model.ingameshop;
 
 /**
- * 商城请求，用于 ingameshop 相关逻辑。
- * IG Request for ingameshop logic.
+ * 游戏内商城购买请求（含赠送与点数同步变体）。
+ * In-game shop purchase request (gift and toll-sync variants).
  *
  * @author KID
  */

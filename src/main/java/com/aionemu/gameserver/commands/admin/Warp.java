@@ -141,8 +141,6 @@ public class Warp extends AdminCommand {
 	 * 参数错误或 Geo 关闭时的提示。
 	 * Hint when parameters are invalid or Geo is disabled.
 	 *
-	 * 玩家 / Player
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

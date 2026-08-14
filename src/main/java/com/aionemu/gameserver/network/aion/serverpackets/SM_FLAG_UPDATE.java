@@ -14,6 +14,12 @@ public class SM_FLAG_UPDATE extends AionServerPacket {
 
 	Npc npc;
 
+	/**
+	 * 按旗帜 NPC 构造更新包。
+	 * Creates a flag update packet for the given flag NPC.
+	 *
+	 * @param npc 旗帜 NPC / flag NPC
+	 */
 	public SM_FLAG_UPDATE(Npc npc) {
 		this.npc = npc;
 	}

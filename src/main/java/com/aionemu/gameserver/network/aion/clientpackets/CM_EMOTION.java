@@ -51,27 +51,27 @@ public class CM_EMOTION extends AionClientPacket {
 		et = readC();
 		emotionType = EmotionType.getEmotionTypeById(et);
 		switch (emotionType) {
-		case SELECT_TARGET:// select target
-		case JUMP: // jump
-		case SIT: // resting
-		case STAND: // end resting
-		case LAND_FLYTELEPORT: // fly teleport land
-		case FLY: // fly up
-		case LAND: // land
+		case SELECT_TARGET:// 选择目标 / select target
+		case JUMP: // 跳跃 / jump
+		case SIT: // 休息 / resting
+		case STAND: // 结束休息 / end resting
+		case LAND_FLYTELEPORT: // 飞行传送降落 / fly teleport land
+		case FLY: // 起飞 / fly up
+		case LAND: // 降落 / land
 		case RIDE:
 		case RIDE_END:
 		case DIE: // 死亡 / die
-		case ATTACKMODE: // get equip weapon
-		case NEUTRALMODE: // remove equip weapon
-		case END_DUEL: // duel end
-		case WALK: // walk on
-		case RUN: // walk off
+		case ATTACKMODE: // 装备武器 / get equip weapon
+		case NEUTRALMODE: // 卸下武器 / remove equip weapon
+		case END_DUEL: // 决斗结束 / duel end
+		case WALK: // 开始行走 / walk on
+		case RUN: // 开始奔跑 / walk off
 			// case OPEN_DOOR: // 打开静态门 / open static doors
-		case CLOSE_DOOR: // close static doors
-		case POWERSHARD_ON: // powershard on
-		case POWERSHARD_OFF: // powershard off
-		case ATTACKMODE2: // get equip weapon
-		case NEUTRALMODE2: // remove equip weapon
+		case CLOSE_DOOR: // 关闭静态门 / close static doors
+		case POWERSHARD_ON: // 开启强化之刃 / powershard on
+		case POWERSHARD_OFF: // 关闭强化之刃 / powershard off
+		case ATTACKMODE2: // 装备武器 / get equip weapon
+		case NEUTRALMODE2: // 卸下武器 / remove equip weapon
 		case END_SPRINT:
 		case START_SPRINT:
 		case WINDSTREAM_STRAFE:

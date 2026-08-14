@@ -64,9 +64,7 @@ public class SkillData {
 	 * 按技能 ID 获取技能模板。
 	 * Returns the skill template for the given skill id.
 	 *
-	 * skill id
-	 *
-	 * @param skillId
+	 * @param skillId 技能 ID / skill id
 	 * @return 技能模板或 null / skill template or null
 	 */
 	public SkillTemplate getSkillTemplate(int skillId) {
@@ -77,7 +75,7 @@ public class SkillData {
 	 * 返回已加载的技能模板数量。
 	 * Returns the number of loaded skill templates.
 	 *
-	 * template count
+	 * @return 已加载的技能模板数量 / Returns the number of loaded skill templates.
 	 */
 	public int size() {
 		return skillData.size();
@@ -98,7 +96,7 @@ public class SkillData {
 	 * 返回技能组索引条目数量。
 	 * Returns the number of skill-group index entries.
 	 *
-	 * group count
+	 * @return 技能组索引条目数量 / Returns the number of skill-group index entries.
 	 */
 	public int sizeOfGroup() {
 		return skillGroup.size();
@@ -149,7 +147,7 @@ public class SkillData {
 	 * Returns skill ids that share the given delay id; lazily initializes cooldown groups if needed.
 	 *
 	 * @param delayId 延迟/冷却组 ID / delay or cooldown group id
-	 * skill id list
+	 * @return 共享该 delayId 的技能 ID 列表 / skill id list
 	 */
 	public ArrayList<Integer> getSkillsForDelayId(int delayId) {
 		if (cooldownGroups == null) {

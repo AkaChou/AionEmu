@@ -62,7 +62,7 @@ public class GameEventBootstrapGateway {
 
     /**
      * 使用指定进度报告器构造（包内 / 测试用）。
-     * test use).
+     * Construct with the given progress reporter (package-private / test use).
      *
      * @param progressReporter 进度报告器 / Progress reporter
      */
@@ -278,8 +278,8 @@ public class GameEventBootstrapGateway {
      * 执行并报告单个加载步骤。
      * Execute and report a single load step.
      *
-     * 步骤名 / Step name
-     * Loader logic
+     * @param stepName 步骤名 / Step name
+     * @param loader 加载逻辑 / Loader logic
      */
     private void loadStep(String stepName, Runnable loader) {
         progressReporter.stepStarted(stepName);

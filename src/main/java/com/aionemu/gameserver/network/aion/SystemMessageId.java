@@ -197,7 +197,7 @@ public enum SystemMessageId {
 	 * 获取客户端消息 ID。
 	 * Returns the client message id.
 	 *
-	 * message id
+	 * @return 消息 ID / message id
 	 */
 	public int getId() {
 		return _id;

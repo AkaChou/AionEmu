@@ -124,7 +124,7 @@ public class GameUtilityServicesGateway {
      * 解析工具服务运行时桥：优先 Spring，否则新建。
      * Resolve the utility-services runtime bridge: prefer Spring, otherwise create new.
      *
-     * Runtime bridge
+     * @return 运行时桥 / Runtime bridge
      */
     private GameUtilityServicesRuntimeBridge runtimeBridge() {
         if (runtimeBridgeProvider == null) {

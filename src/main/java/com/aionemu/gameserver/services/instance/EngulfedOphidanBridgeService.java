@@ -23,7 +23,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
 
-/****/
 /**
  * 淹没的奥菲丹桥副本报名服务，管理开启窗口与冷却。
  * Engulfed Ophidan Bridge registration service managing open windows and cooldowns.
@@ -39,8 +38,8 @@ public class EngulfedOphidanBridgeService {
 	public static final int maskId = 108;
 
 	/**
-	 * initEngulfedOphidan 方法。
-	 * initEngulfedOphidan method.
+	 * 初始化Engulfed Ophidan Bridge报名：按配置调度开启报名。
+* Initializes Engulfed Ophidan Bridge registration by scheduling open windows per config.
 	 */
 	public void initEngulfedOphidan() {
 		if (AutoGroupConfig.OPHIDAN_ENABLED) {
@@ -115,20 +114,20 @@ public class EngulfedOphidanBridgeService {
 	}
 
 	/**
-	 * isOphidanAvailable 方法。
-	 * isOphidanAvailable method.
-	 * result
+	 * 报名是否可用。
+	 * Whether registration is available.
+	 * @return 结果 / result
 	 */
 	public boolean isOphidanAvailable() {
 		return this.registerAvailable;
 	}
 
 	/**
-	 * getInstanceMaskId 方法。
-	 * getInstanceMaskId method.
+	 * 获取玩家的报名掩码 ID；等级不符时返回 0。
+	 * Returns the registration mask id for the player, or 0 if level mismatch.
 	 *
 	 * 玩家 / player
-	 * result
+	 * @return 结果 / result
 	 */
 	public byte getInstanceMaskId(Player player) {
 		int level = player.getLevel();
@@ -153,7 +152,7 @@ public class EngulfedOphidanBridgeService {
 	 * Whether cooldown is active.
 	 *
 	 * 玩家 / player
-	 * result
+	 * @return 结果 / result
 	 */
 	public boolean hasCoolDown(Player player) {
 		return this.playersWithCooldown.contains(player.getObjectId());
@@ -163,8 +162,8 @@ public class EngulfedOphidanBridgeService {
 	 * 显示报名窗口。
 	 * Shows the registration window.
 	 *
-	 * 玩家 / player
-	 * instanceMaskId
+	 * @param player 玩家 / player
+	 * @param instanceMaskId 副本掩码 ID / instance mask id
 	 */
 	public void showWindow(Player player, byte instanceMaskId) {
 		if (getInstanceMaskId(player) != instanceMaskId) {
@@ -182,7 +181,7 @@ public class EngulfedOphidanBridgeService {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 * result
+	 * @return 结果 / result
 	 */
 	public static EngulfedOphidanBridgeService getInstance() {
 		ObjectProvider<EngulfedOphidanBridgeService> provider = instanceProvider;
@@ -193,10 +192,10 @@ public class EngulfedOphidanBridgeService {
 	}
 
 	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
+	 * 设置服务提供者。
+	 * Sets the service provider.
 	 *
-	 * provider
+	 * @return 服务提供者 / provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<EngulfedOphidanBridgeService> provider) {
 		instanceProvider = provider;

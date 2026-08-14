@@ -118,7 +118,7 @@ public class SiegeLocationTemplate {
 		return this.artifactActivation;
 	}
 
-	/** 返回修理 / Returns the repair*/
+	/** 返回修理 / Returns the repair */
 	public DoorRepair getRepair() {
 		return this.doorRepair;
 	}
@@ -165,12 +165,12 @@ public class SiegeLocationTemplate {
 		return this.occupyRewardDark;
 	}
 
-	/** 返回队长技能光 / Returns the leader skill light*/
+	/** 返回光方队长技能 / Returns the leader skill light */
 	public List<LeaderSkillLight> getLeaderSkillLight() {
 		return this.leaderSkillLight;
 	}
 
-	/** 返回队长技能暗 / Returns the leader skill dark*/
+	/** 返回暗方队长技能 / Returns the leader skill dark */
 	public List<LeaderSkillDark> getLeaderSkillDark() {
 		return this.leaderSkillDark;
 	}
@@ -190,7 +190,7 @@ public class SiegeLocationTemplate {
 		return buffIdA;
 	}
 
-	/** 返回增益 IDe / Returns the buff id e */
+	/** 返回增益 ID E / Returns the buff id e */
 	public int getBuffIdE() {
 		return buffIdE;
 	}
@@ -223,12 +223,12 @@ public class SiegeLocationTemplate {
 		return fortressDependency;
 	}
 
-	/** 返回攻城时长 / Returns the siege duration*/
+	/** 返回攻城时长 / Returns the siege duration */
 	public int getSiegeDuration() {
 		return siegeDuration;
 	}
 
-	/** 返回影响力值 / Returns the influence value*/
+	/** 返回影响力值 / Returns the influence value */
 	public int getInfluenceValue() {
 		return influenceValue;
 	}

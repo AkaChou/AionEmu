@@ -69,8 +69,8 @@ public class FollowMotor extends AMovementMotor {
 	 * Create a motor that follows the given target.
 	 *
 	 * @param parentProcessor 父移动处理器 / Parent movement processor
-	 * Owner NPC
-	 * Follow target
+	 * @param owner 所属 NPC / owner NPC
+	 * @param target 跟随目标 / follow target
 	 */
 	public FollowMotor(MovementProcessor parentProcessor, Npc owner, VisibleObject target) {
 		super(owner, parentProcessor);
@@ -215,7 +215,7 @@ public class FollowMotor extends AMovementMotor {
 	 * 判断 NPC 当前是否允许移动（非恐惧、可执行移动且未施法）。
 	 * Whether the NPC may move (not under fear, can perform move, and not casting).
 	 *
-	 * @return {@code true} if movement is allowed。
+	 * @return 允许移动时为 true / {@code true} if movement is allowed
 	 */
 	private boolean canMove() {
 		return !this._owner.getEffectController().isUnderFear() && this._owner.canPerformMove()

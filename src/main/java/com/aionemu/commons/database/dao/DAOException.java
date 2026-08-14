@@ -31,7 +31,7 @@ public class DAOException extends RuntimeException {
      * 使用指定的错误消息构造异常
      * Constructs exception with specified message
      *
-     * Error message
+     * @param message 错误消息 / Error message
      */
     public DAOException(String message) {
         super(message);
@@ -41,7 +41,7 @@ public class DAOException extends RuntimeException {
      * 使用指定的错误消息和原因构造异常
      * Constructs exception with specified message and cause
      *
-     * Error message
+     * @param message 错误消息 / Error message
      * @param cause 异常原因 / Cause of exception
      */
     public DAOException(String message, Throwable cause) {

@@ -18,7 +18,7 @@ public class TheCatacombsEntranceAI2 extends NpcAI2
 {
 	@Override
     protected void handleDialogStart(Player player) {
-        if (player.getInventory().getFirstItemByItemId(185000181) != null) { //The Catacombs Key.
+        if (player.getInventory().getFirstItemByItemId(185000181) != null) { // 地下墓穴钥匙。 / The Catacombs Key.
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
         } else {
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 27));
@@ -29,16 +29,16 @@ public class TheCatacombsEntranceAI2 extends NpcAI2
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		int instanceId = getPosition().getInstanceId();
 		switch (getNpcId()) {
-		    case 701873: //The Catacombs Entrance.
+		    case 701873: // 地下墓穴入口。 / The Catacombs Entrance.
 		        switch (player.getWorldId()) {
-		            case 301140000: //Seized Danuar Sanctuary 4.8
-				        if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000181, 1)) { //The Catacombs Key.
+		            case 301140000: // 被占领的达努阿尔圣所 4.8 / Seized Danuar Sanctuary 4.8
+				        if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000181, 1)) { // 地下墓穴钥匙。 / The Catacombs Key.
 			                TeleportService2.teleportTo(player, 301140000, instanceId, 1032.0134f, 369.56287f, 297.8753f, (byte) 32);
 					    }
 				    break;
 			    } switch (player.getWorldId()) {
-				    case 301380000: //Danuar Sanctuary 4.8
-					    if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000181, 1)) { //The Catacombs Key.
+				    case 301380000: // 达努阿尔圣所 4.8 / Danuar Sanctuary 4.8
+					    if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000181, 1)) { // 地下墓穴钥匙。 / The Catacombs Key.
 					        TeleportService2.teleportTo(player, 301380000, instanceId, 1032.0134f, 369.56287f, 297.8753f, (byte) 32);
 						}
 					break;

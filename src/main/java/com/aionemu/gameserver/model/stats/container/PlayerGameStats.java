@@ -25,8 +25,8 @@ import com.aionemu.gameserver.utils.stats.CalculationType;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
- * 玩家游戏属性，用于属性相关逻辑。
- * Player Game Stats for stats logic.
+ * 玩家的游戏属性：含装备/魔石加成与速度缓存。
+ * Player game stats: includes equipment/manastone bonuses and speed caches.
  *
  * @author xavier
  */

@@ -64,7 +64,7 @@ public class Mesh {
 	 * Bounding volume that contains the mesh entirely. By default a BoundingBox (AABB).
 	 */
 	private BoundingVolume meshBound = new BoundingBox();
-	/** Collision acceleration structure (BIH tree) / Collision acceleration structure (BIH tree) */
+	/** 碰撞加速结构（BIH 树）。 / Collision acceleration structure (BIH tree). */
 	private CollisionData collisionTree = null;
 	// private EnumMap<VertexBuffer.Type, VertexBuffer> buffers = new EnumMap<Type,
 	// VertexBuffer>(VertexBuffer.Type.class);
@@ -75,7 +75,7 @@ public class Mesh {
 	private float pointSize = 1;
 	/** 线宽。 / Line width. */
 	private float lineWidth = 1;
-	/** 顶点数组对象 ID / Vertex-array object id */
+	/** 顶点数组对象 ID。 / Vertex-array object id. */
 	private transient int vertexArrayID = -1;
 	/** 顶点数。 / Vertex count. */
 	private int vertCount = -1;
@@ -121,7 +121,7 @@ public class Mesh {
 	 * 返回图元模式。
 	 * Returns the primitive mode.
 	 *
-	 * primitive mode
+	 * @return 图元模式 / primitive mode
 	 */
 	public Mode getMode() {
 		return mode;
@@ -162,7 +162,7 @@ public class Mesh {
 	 * 返回点大小。
 	 * Returns the point size.
 	 *
-	 * point size
+	 * @return 点大小 / point size
 	 */
 	public float getPointSize() {
 		return pointSize;
@@ -172,7 +172,7 @@ public class Mesh {
 	 * 设置点大小。
 	 * Sets the point size.
 	 *
-	 * point size
+	 * @param pointSize 点大小 / point size
 	 */
 	public void setPointSize(float pointSize) {
 		this.pointSize = pointSize;
@@ -182,7 +182,7 @@ public class Mesh {
 	 * 返回线宽。
 	 * Returns the line width.
 	 *
-	 * line width
+	 * @return 线宽 / line width
 	 */
 	public float getLineWidth() {
 		return lineWidth;
@@ -192,7 +192,7 @@ public class Mesh {
 	 * 设置线宽。
 	 * Sets the line width.
 	 *
-	 * line width
+	 * @param lineWidth 线宽 / line width
 	 */
 	public void setLineWidth(float lineWidth) {
 		this.lineWidth = lineWidth;
@@ -234,13 +234,13 @@ public class Mesh {
 		// 交错时不包含索引缓冲 / index buffer not included when interleaving
 		vbs.remove(getBuffer(Type.Index));
 
-		int stride = 0; // aka bytes per vertex
+		int stride = 0; // 即每顶点字节数 / aka bytes per vertex
 		for (int i = 0; i < vbs.size(); i++) {
 			VertexBuffer vb = vbs.get(i);
 			// if (vb.getFormat() != Format.Float){
 			// throw new UnsupportedOperationException("Cannot interleave vertex buffer.\n"
 			// +
-			// “包含非 float 数据。”); / "Contains not-float data.");
+			// “包含非 float 数据。” / "Contains not-float data.");
 			// }
 			stride += vb.componentsLength;
 			vb.getData().clear(); // reset position & limit (used later)
@@ -305,7 +305,7 @@ public class Mesh {
 	 * Converts a buffer size to an element count based on the primitive mode.
 	 *
 	 * @param bufSize 缓冲元素规模 / buffer element size
-	 * primitive count
+	 * @return 图元数 / primitive count
 	 */
 	private int computeNumElements(int bufSize) {
 		switch (mode) {
@@ -353,7 +353,7 @@ public class Mesh {
 	 * Returns the triangle count for the given LOD (currently ignores lod; same as {@link #getTriangleCount()}).
 	 *
 	 * @param lod LOD 级别（未使用） / LOD level (unused)
-	 * triangle count
+	 * @return 三角形数 / triangle count
 	 */
 	public int getTriangleCount(int lod) {
 		return elementCount;
@@ -363,7 +363,7 @@ public class Mesh {
 	 * 返回三角形（图元）数。
 	 * Returns the triangle (element) count.
 	 *
-	 * element count
+	 * @return 图元（元素）数 / element count
 	 */
 	public int getTriangleCount() {
 		return elementCount;
@@ -373,7 +373,7 @@ public class Mesh {
 	 * 返回顶点数。
 	 * Returns the vertex count.
 	 *
-	 * vertex count
+	 * @return 顶点数 / vertex count
 	 */
 	public int getVertexCount() {
 		return vertCount;
@@ -393,7 +393,7 @@ public class Mesh {
 	 * 手动设置顶点数。
 	 * Manually sets the vertex count.
 	 *
-	 * vertex count
+	 * @param count 顶点数 / vertex count
 	 */
 	public void setVertexCount(int count) {
 		this.vertCount = count;
@@ -419,7 +419,7 @@ public class Mesh {
 				// 缓冲区接受的格式 / accepted format for buffers
 				ShortBuffer sib = (ShortBuffer) ib.getData();
 
-				// 获取三角形顶点索引 / aquire triangle's vertex indices
+				// 获取三角形顶点索引 / acquire triangle's vertex indices
 				int vertIndex = index * 3;
 				int vert1 = sib.get(vertIndex);
 				int vert2 = sib.get(vertIndex + 1);
@@ -469,7 +469,7 @@ public class Mesh {
 	 * 返回顶点数组对象 ID。
 	 * Returns the vertex-array object id.
 	 *
-	 * VAO id
+	 * @return 顶点数组对象 ID / VAO id
 	 */
 	public int getId() {
 		return vertexArrayID;
@@ -479,7 +479,7 @@ public class Mesh {
 	 * 设置顶点数组对象 ID（仅可设置一次）。
 	 * Sets the vertex-array object id (only once).
 	 *
-	 * VAO id
+	 * @param id 顶点数组对象 ID / VAO id
 	 */
 	public void setId(int id) {
 		if (vertexArrayID != -1) {
@@ -507,10 +507,10 @@ public class Mesh {
 	 * Collides via the collision tree and writes hits into results.
 	 *
 	 * @param other 目标可碰撞对象 / target collidable
-	 * world transform
+	 * @param worldMatrix 世界变换 / world transform
 	 * @param worldBound 世界包围体 / world bound
 	 * @param results 结果收集器 / results collector
-	 * number of collisions
+	 * @return 碰撞数量 / number of collisions
 	 */
 	public int collideWith(Collidable other, Matrix4f worldMatrix, BoundingVolume worldBound,
 			CollisionResults results) {
@@ -527,7 +527,7 @@ public class Mesh {
 	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
-	 * data
+	 * @param buf 数据 / data
 	 */
 	public void setBuffer(Type type, int components, FloatBuffer buf) {
 		VertexBuffer vb = buffers.get(type.ordinal());
@@ -552,7 +552,7 @@ public class Mesh {
 	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
-	 * data
+	 * @param buf 数据 / data
 	 */
 	public void setBuffer(Type type, int components, float[] buf) {
 		setBuffer(type, components, BufferUtils.createFloatBuffer(buf));
@@ -564,7 +564,7 @@ public class Mesh {
 	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
-	 * data
+	 * @param buf 数据 / data
 	 */
 	public void setBuffer(Type type, int components, IntBuffer buf) {
 		VertexBuffer vb = buffers.get(type.ordinal());
@@ -582,7 +582,7 @@ public class Mesh {
 	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
-	 * data
+	 * @param buf 数据 / data
 	 */
 	public void setBuffer(Type type, int components, int[] buf) {
 		setBuffer(type, components, BufferUtils.createIntBuffer(buf));
@@ -594,7 +594,7 @@ public class Mesh {
 	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
-	 * data
+	 * @param buf 数据 / data
 	 */
 	public void setBuffer(Type type, int components, ShortBuffer buf) {
 		VertexBuffer vb = buffers.get(type.ordinal());
@@ -612,7 +612,7 @@ public class Mesh {
 	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
-	 * data
+	 * @param buf 数据 / data
 	 */
 	public void setBuffer(Type type, int components, byte[] buf) {
 		setBuffer(type, components, BufferUtils.createByteBuffer(buf));
@@ -624,7 +624,7 @@ public class Mesh {
 	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
-	 * data
+	 * @param buf 数据 / data
 	 */
 	public void setBuffer(Type type, int components, ByteBuffer buf) {
 		VertexBuffer vb = buffers.get(type.ordinal());
@@ -666,7 +666,7 @@ public class Mesh {
 	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
-	 * data
+	 * @param buf 数据 / data
 	 */
 	public void setBuffer(Type type, int components, short[] buf) {
 		setBuffer(type, components, BufferUtils.createShortBuffer(buf));
@@ -688,7 +688,7 @@ public class Mesh {
 	 * Gets the Float data buffer of the given type.
 	 *
 	 * @param type 缓冲类型 / buffer type
-	 * FloatBuffer, or null
+	 * @return FloatBuffer，或 null / FloatBuffer, or null
 	 */
 	public FloatBuffer getFloatBuffer(Type type) {
 		VertexBuffer vb = getBuffer(type);
@@ -703,7 +703,7 @@ public class Mesh {
 	 * Gets the Short data buffer of the given type.
 	 *
 	 * @param type 缓冲类型 / buffer type
-	 * ShortBuffer, or null
+	 * @return ShortBuffer，或 null / ShortBuffer, or null
 	 */
 	public ShortBuffer getShortBuffer(Type type) {
 		VertexBuffer vb = getBuffer(type);
@@ -741,7 +741,7 @@ public class Mesh {
 	 * 按比例缩放 2D 纹理坐标（仅支持 Float、2 分量）。
 	 * Scales 2D texture coordinates by the given factor (Float format, 2 components only).
 	 *
-	 * scale factor
+	 * @param scaleFactor 缩放因子 / scale factor
 	 */
 	public void scaleTextureCoordinates(Vector2f scaleFactor) {
 		VertexBuffer tc = getBuffer(Type.TexCoord);
@@ -788,7 +788,7 @@ public class Mesh {
 	 * 返回网格包围体。
 	 * Returns the mesh bounding volume.
 	 *
-	 * bounding volume
+	 * @return 包围体 / bounding volume
 	 */
 	public BoundingVolume getBound() {
 		return meshBound;
@@ -798,7 +798,7 @@ public class Mesh {
 	 * 设置网格包围体。
 	 * Sets the mesh bounding volume.
 	 *
-	 * bounding volume
+	 * @param modelBound 包围体 / bounding volume
 	 */
 	public void setBound(BoundingVolume modelBound) {
 		meshBound = modelBound;
@@ -808,7 +808,7 @@ public class Mesh {
 	 * 返回全部顶点缓冲映射。
 	 * Returns the map of all vertex buffers.
 	 *
-	 * buffer map
+	 * @return 缓冲映射 / buffer map
 	 */
 	public IntMap<VertexBuffer> getBuffers() {
 		return buffers;
@@ -818,7 +818,7 @@ public class Mesh {
 	 * 返回碰撞标志。
 	 * Returns collision flags.
 	 *
-	 * collision flags
+	 * @return 碰撞标志 / collision flags
 	 */
 	public short getCollisionFlags() {
 		return collisionFlags;
@@ -828,7 +828,7 @@ public class Mesh {
 	 * 设置碰撞标志。
 	 * Sets collision flags.
 	 *
-	 * collision flags
+	 * @param collisionFlags 碰撞标志 / collision flags
 	 */
 	public void setCollisionFlags(short collisionFlags) {
 		this.collisionFlags = collisionFlags;
@@ -838,7 +838,7 @@ public class Mesh {
 	 * 从碰撞标志低 8 位取得材质 ID。
 	 * Returns the material id from the low 8 bits of collision flags.
 	 *
-	 * material id
+	 * @return 材质 ID / material id
 	 */
 	public byte getMaterialId() {
 		return (byte) (collisionFlags & 0xFF);
@@ -848,7 +848,7 @@ public class Mesh {
 	 * 从碰撞标志高 8 位取得碰撞意图掩码。
 	 * Returns the intention mask from the high 8 bits of collision flags.
 	 *
-	 * intention mask
+	 * @return 碰撞意图掩码 / intention mask
 	 */
 	public byte getIntentions() {
 		return (byte) (collisionFlags >> 8);

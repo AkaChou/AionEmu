@@ -14,7 +14,7 @@ public class AttackerCriticalStatusObserver extends AttackCalcObserver {
 	protected AttackStatus status;
 
 	/**
-	 * attack status
+	 * @param status 攻击状态 / attack status
 	 * @param count 剩余次数 / remaining count
 	 * @param value 暴击数值 / critical value
 	 * @param isPercent 是否百分比 / whether percent-based
@@ -28,7 +28,7 @@ public class AttackerCriticalStatusObserver extends AttackCalcObserver {
 	 * 获取剩余次数。
 	 * Get remaining count.
 	 *
-	 * remaining count
+	 * @return 剩余次数 / remaining count
 	 */
 	public int getCount() {
 		return acStatus.getCount();

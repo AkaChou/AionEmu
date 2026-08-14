@@ -22,7 +22,10 @@ public class CollectItems {
 	protected List<CollectItem> collectItem;
 
 	/**
-	 * 获取 collectItem 属性值。 / Gets the value of the collectItem property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the collectItem property. <p> For example, to add a new item, do as follows: <pre> getCollectItem().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link CollectItem }
+	 * 返回收集物品列表（惰性初始化，修改会直接反映到 JAXB 对象）。
+	 * Returns the collect item list (lazily initialized; modifications are reflected in the JAXB object).
+	 *
+	 * @return 收集物品列表 / list of {@link CollectItem}
 	 */
 	public List<CollectItem> getCollectItem() {
 		if (collectItem == null) {

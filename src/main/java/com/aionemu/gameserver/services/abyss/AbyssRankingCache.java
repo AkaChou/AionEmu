@@ -142,7 +142,7 @@ public class AbyssRankingCache {
 	 * 获取单例（优先 Spring {@link ObjectProvider}）。
 	 * Obtain the singleton (prefer Spring {@link ObjectProvider}).
 	 *
-	 * Cache instance
+	 * @return 缓存实例 / cache instance
 	 */
 	public static final AbyssRankingCache getInstance() {
 		ObjectProvider<AbyssRankingCache> provider = instanceProvider;

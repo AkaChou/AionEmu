@@ -16,6 +16,16 @@ public class SM_COALESCENCE_RESULT extends AionServerPacket {
 	private long bonusCount;
 	private boolean isBonus;
 
+	/**
+	 * 构造融合结果包。
+	 * Creates a coalescence result packet.
+	 *
+	 * @param itemTemplateId 产出物品模板 ID / resulting item template id
+	 * @param itemObjId 产出物品对象 ID / resulting item object id
+	 * @param bonusTemplateId 额外奖励模板 ID，无奖励时为 0 / bonus template id, 0 if none
+	 * @param bonusCount 额外奖励数量 / bonus count
+	 * @param isBonus 是否附带额外奖励 / whether a bonus reward is included
+	 */
 	public SM_COALESCENCE_RESULT(int itemTemplateId, int itemObjId, int bonusTemplateId, long bonusCount,
 			boolean isBonus) {
 		this.itemTemplateId = itemTemplateId;

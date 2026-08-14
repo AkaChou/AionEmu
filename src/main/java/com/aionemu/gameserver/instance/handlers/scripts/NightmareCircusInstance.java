@@ -49,7 +49,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	private int freneticNightmareKilled;
 	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	/** 对象 / objects */
+		/** 对象 / objects */
 		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	
 	/**
@@ -72,7 +72,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -359,7 +359,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -563,7 +563,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	 * 处理 despawnNpcs。
 	 * Handle despawnNpcs.
 	 *
-	 * npcs
+	 * @param npcs NPC 列表 / npcs
 	 */
 	
 	protected void despawnNpcs(List<Npc> npcs) {
@@ -590,9 +590,9 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
@@ -625,8 +625,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
 	 *
-	 * 玩家 / player
-	 * result
+	 * @param player 玩家 / player
+	 * @return 结果 / result
 	 */
 	@Override
     public boolean onReviveEvent(Player player) {

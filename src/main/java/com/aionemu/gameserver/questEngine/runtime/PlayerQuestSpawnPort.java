@@ -18,7 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * 否则用默认实例 1 (与传送端口一致,不猜测)。slot 幂等,不重复刷怪。
  */
 public final class PlayerQuestSpawnPort implements QuestSpawnPort {
-	/** 固定签名的 spawn 委托 (生产 = QuestService, 测试 = 记录器)。 */
+	/** 固定签名的 spawn 委托（生产 = QuestService，测试 = 记录器）。 / Fixed-signature spawn delegate (production = QuestService, tests = recorder). */
 	@FunctionalInterface
 	public interface SpawnCall {
 		Npc spawn(int worldId, int instanceId, int templateId, float x, float y, float z, byte heading);
@@ -96,6 +96,8 @@ public final class PlayerQuestSpawnPort implements QuestSpawnPort {
 		}
 		if (!registry.register(snapshot, slot, npc)) {
 			deleteUnregistered(npc);
+			// 本 NPC 创建期间另一个 after-commit 执行已赢得该 slot；只有那个句柄仍权威时，
+			// 期望的 slot 状态才被满足，不报告无条件的成功。
 			// Another after-commit execution won the slot while this NPC was being
 			// created. The desired slot state is still satisfied only if that handle
 			// remains authoritative; do not report an unconditional success.
@@ -121,7 +123,7 @@ public final class PlayerQuestSpawnPort implements QuestSpawnPort {
 		}
 		Player player = players.find(snapshot.playerId());
 		if (player == null) {
-			// 提交已成功但玩家已登出:无可参考实例,best-effort 跳过。
+			// 提交已成功但玩家已登出：无可参考实例，best-effort 跳过。 / Commit succeeded but player logged out: no instance reference available, best-effort skip.
 			return false;
 		}
 		ResolvedLocation resolved = resolve(snapshot, location);

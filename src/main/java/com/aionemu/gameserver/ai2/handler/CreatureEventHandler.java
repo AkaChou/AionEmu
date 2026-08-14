@@ -31,7 +31,7 @@ public class CreatureEventHandler {
 	 * 生物在已知列表中移动时触发：检查仇恨，并对玩家触发距离任务。
 	 * Fired when a creature moves in the known list: checks aggro and triggers distance quests for players.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param creature 移动的生物 / moving creature
 	 */
 	public static void onCreatureMoved(NpcAI2 npcAI, Creature creature) {
@@ -46,7 +46,7 @@ public class CreatureEventHandler {
 	 * 生物进入视野时触发：恢复丢失目标、检查仇恨，并对玩家触发距离任务。
 	 * Fired when a creature enters sight: recovers lost target, checks aggro, and triggers distance quests for players.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param creature 进入视野的生物 / creature that became visible
 	 */
 	public static void onCreatureSee(NpcAI2 npcAI, Creature creature) {
@@ -68,7 +68,7 @@ public class CreatureEventHandler {
 	 * 检查生物是否触发仇恨（喊话范围、仇恨范围、敌对与视线）。
 	 * Checks whether the creature should trigger aggro (shout range, aggro range, hostility, and line of sight).
 	 *
-	 * NPC AI instance
+	 * @param ai NPC AI 实例 / NPC AI instance
 	 * @param creature 待检查的生物 / creature to evaluate
 	 */
 	protected static void checkAggro(NpcAI2 ai, Creature creature) {

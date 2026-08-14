@@ -88,7 +88,7 @@ public class Config {
 	 * 配置目录路径。
 	 * Config directory path.
 	 *
-	 * config directory
+	 * @return 配置目录路径 / config directory path
 	 */
 	private static String configDir() {
 		return Objects.requireNonNull(System.getProperty("aion.config.dir"), "aion.config.dir is not configured");

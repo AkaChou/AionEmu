@@ -27,19 +27,19 @@ public class IdReward {
 	@XmlAttribute(name = "race")
 	protected Race race;
 
-	 /**
-	  * 获取 id 属性值。
-	  * Gets the value of the id property
-	  */
+	/**
+	 * 获取 id 属性值。
+	 * Gets the value of the id property
+	 */
 	public int getId() {
 		return id;
 	}
 
-	 /**
-	  * 获取 race 属性值。
-	  * Gets the value of the race property
-	  * @return possible object is {@link Race }
-	  */
+	/**
+	 * 获取 race 属性值。
+	 * Gets the value of the race property
+	 * @return 可能的对象类型 / possible object is {@link Race }
+	 */
 	public Race getRace() {
 		return race;
 	}

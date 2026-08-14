@@ -22,18 +22,26 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "MeshList", propOrder = { "meshMaterials" })
 public class MeshList {
 
+	/** 网格材料列表。 / Mesh material list. */
 	@XmlElement(name = "mesh", required = true)
 	protected List<MeshMaterial> meshMaterials;
 
+	/** 世界 ID。 / World id. */
 	@XmlAttribute(name = "world_id", required = true)
 	protected int worldId;
 
+	/** 网格路径到材料 ID 的映射。 / Map of mesh path to material id. */
 	@XmlTransient
 	Map<String, Integer> materialIdsByPath = new HashMap<String, Integer>();
 
+	/** 路径哈希到区域名称的映射。 / Map of path hash to zone name. */
 	@XmlTransient
 	Map<Integer, String> pathZones = new HashMap<Integer, String>();
 
+	/**
+	 * JAXB 反序列化后处理：将网格材料整理为查询映射并释放中间列表。
+	 * Post-unmarshal processing: reorganizes mesh materials into lookup maps and releases the intermediate list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		if (meshMaterials == null) {
 			return;
@@ -53,10 +61,11 @@ public class MeshList {
 	}
 
 	/**
-	 * Find material ID for the specific mesh
+	 * 查找指定网格路径对应的材料 ID。
+	 * Finds the material ID for the specific mesh.
 	 *
-	 * @param meshPath Mesh geo path
-	 * @return 0 if not found
+	 * @param meshPath 网格几何路径 / Mesh geo path
+	 * @return 材料 ID，未找到时为 0 / material id, 0 if not found
 	 */
 	public int getMeshMaterialId(String meshPath) {
 		Integer materialId = materialIdsByPath.get(meshPath);
@@ -66,7 +75,7 @@ public class MeshList {
 		return materialId;
 	}
 
-	/** 返回 mesh paths / Returns the mesh paths */
+	/** 返回网格路径 / Returns the mesh paths */
 	public Set<String> getMeshPaths() {
 		return materialIdsByPath.keySet();
 	}

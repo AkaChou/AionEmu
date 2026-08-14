@@ -56,8 +56,7 @@ public class MacroList {
 	 *
 	 * @param macroPosition 宏槽位 / macro slot
 	 * @param macroXML 宏 XML 内容 / macro XML contents
-	 * @return 新增成功且可入库则为 true；覆盖已有槽位则为 false
-	 *         / true if newly added and storable; false if an existing slot was replaced
+	 * @return 新增成功且可入库则为 true；覆盖已有槽位则为 false / true if newly added and storable; false if an existing slot was replaced
 	 */
 	public synchronized boolean addMacro(int macroPosition, String macroXML) {
 		if (macrosses.containsKey(macroPosition)) {
@@ -118,7 +117,8 @@ public class MacroList {
 		} else if (packet == 3) {
 			currentIndex = 13;
 			endIndex = 18;
-		} else { // packet == 4
+		} else {
+			// 包类型为 4。 / packet == 4
 			currentIndex = 19;
 			endIndex = 24;
 		}

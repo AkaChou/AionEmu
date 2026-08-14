@@ -43,8 +43,8 @@ public class MathObjectObserver extends ActionObserver {
 	}
 
 	/**
-	 * math object
-	 * creature
+	 * @param mathObject 数学区域对象 / math object
+	 * @param creature 被观察生物 / observed creature
 	 * @param type 行为类型 / action type
 	 */
 	public MathObjectObserver(MathObject mathObject, Creature creature, MathObjectType type) {

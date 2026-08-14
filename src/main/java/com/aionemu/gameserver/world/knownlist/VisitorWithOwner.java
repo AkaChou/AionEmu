@@ -15,7 +15,7 @@ public interface VisitorWithOwner<T, V> {
 	 * Visits a single object together with its owner.
 	 *
 	 * @param object 被访问对象 / visited object
-	 * owner
+	 * @param owner 所有者 / owner
 	 */
 	void visit(T object, V owner);
 }

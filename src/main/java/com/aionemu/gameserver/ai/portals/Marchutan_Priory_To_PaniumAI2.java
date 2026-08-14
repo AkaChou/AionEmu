@@ -32,9 +32,9 @@ public class Marchutan_Priory_To_PaniumAI2 extends NpcAI2
 		if (dialogId == 10000) {
 			TeleportService2.teleportTo(player, 120010000, 1605.1316f, 1389.4412f, 193.12852f, (byte) 4, TeleportAnimation.BEAM_ANIMATION);
 		} else if (dialogId == 10001) {
-			QuestState qs = player.getQuestStateList().getQuestState(20521); // ? .
+			QuestState qs = player.getQuestStateList().getQuestState(20521); // 检查房产任务是否完成。 / Checks whether the housing quest is completed.
 			if (qs == null || qs.getStatus() != QuestStatus.COMPLETE) {
-                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(20521)); // ? .
+                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(20521)); // 未完成任务提示。 / Not-completed quest message.
 				return true;
 			} else {
                 TeleportService2.teleportTo(player, 220110000, 1760.1392f, 2007.7195f, 196.34007f, (byte) 110, TeleportAnimation.BEAM_ANIMATION);

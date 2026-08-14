@@ -44,7 +44,7 @@ public class JAXBUtil {
 	 * @param clazz 目标类型 / Target class
 	 *
 	 * @param <T> 结果类型 / Result type
-	 * Object or null
+	 * @return 对象或 null / Object or null
 	 */
 	public static <T> T unmarshal(InputStream is, Class<T> clazz) {
 		try {
@@ -64,12 +64,12 @@ public class JAXBUtil {
 	 * 从文件反序列化对象。
 	 * Unmarshal an object from a file.
 	 *
-	 * File
+	 * @param file 文件 / File
 	 * @param clazz 目标类型 / Target class
 	 *
 	 * @param <T> 结果类型 / Result type
-	 * Object
-	 * On read/bind failure。
+	 * @return 对象 / Object
+	 * @throws JAXBException 读取/绑定失败时 / On read/bind failure
 	 */
 	public static <T> T unmarshal(File file, Class<T> clazz) throws JAXBException {
 		try (InputStream is = new java.io.FileInputStream(file)) {
@@ -83,11 +83,11 @@ public class JAXBUtil {
 	 * 从 XML 字符串反序列化对象（带 schema 校验）。
 	 * Unmarshal an object from an XML string (with schema validation).
 	 *
-	 * XML string
+	 * @param stream XML 字符串 / XML string
 	 * @param clazz 目标类型 / Target class
 	 *
 	 * @param <T> 结果类型 / Result type
-	 * Object or null
+	 * @return 对象或 null / Object or null
 	 */
 	public static <T> T unmarshal(String stream, Class<T> clazz) {
 		try {
@@ -108,8 +108,8 @@ public class JAXBUtil {
 	 * Marshal an object to a file.
 	 *
 	 * @param file 输出路径 / Output path
-	 * Class
-	 * Object
+	 * @param clazz 类型 / Class
+	 * @param object 对象 / Object
 	 *
 	 * @param <T> 对象类型 / Object type
 	 */
@@ -130,11 +130,11 @@ public class JAXBUtil {
 	 * 将对象序列化为 XML 字符串。
 	 * Marshal an object to an XML string.
 	 *
-	 * Class
-	 * Object
+	 * @param clazz 类型 / Class
+	 * @param object 对象 / Object
 	 *
 	 * @param <T> 对象类型 / Object type
-	 * XML string or null
+	 * @return XML 字符串或 null / XML string or null
 	 */
 	public static <T> String marshal(Class<T> clazz, T object) {
 		try {
@@ -156,12 +156,11 @@ public class JAXBUtil {
 	 * 校验 XML 字符串是否符合类型 schema。
 	 * Validate an XML string against the type's schema.
 	 *
-	 * XML string
-	 * Class
+	 * @param xml XML 字符串 / XML string
+	 * @param clazz 类型 / Class
 	 *
-	 * @param xml
 	 * @param <T> 类型参数 / Type param
-	 * @param clazz 若 valid 则为 true / True if valid
+	 * @return 若有效则为 true / True if valid
 	 */
 	public static <T> boolean validate(String xml, Class<T> clazz) {
 		try {
@@ -183,11 +182,10 @@ public class JAXBUtil {
 	 * Validate input-stream XML against the type's schema.
 	 *
 	 * @param is 输入流 / Input stream
-	 * Class
+	 * @param clazz 类型 / Class
 	 *
-	 * @param is
 	 * @param <T> 类型参数 / Type param
-	 * @param clazz 若 valid 则为 true / True if valid
+	 * @return 若有效则为 true / True if valid
 	 */
 	public static <T> boolean validate(InputStream is, Class<T> clazz) {
 		try {
@@ -208,8 +206,8 @@ public class JAXBUtil {
 	 * 由 JAXB 模型运行时生成 schema。
 	 * Generate a schema at runtime from the JAXB model.
 	 *
-	 * Class
-	 * Schema or null
+	 * @param clazz 类型 / Class
+	 * @return Schema 或 null / Schema or null
 	 */
 	private static Schema getSchema(Class<?> clazz) {
 		try {
@@ -232,10 +230,10 @@ public class JAXBUtil {
 	 * 用外部 XSD URL 校验 XML 字符串。
 	 * Validate an XML string against an external XSD URL.
 	 *
-	 * XML string
+	 * @param xmlString XML 字符串 / XML string
 	 * @param schemaUrl Schema URL
 	 *
-	 * @return 若 valid 则为 true / True if valid
+	 * @return 若有效则为 true / True if valid
 	 */
 	public static boolean validateSchema(String xmlString, URL schemaUrl) {
 		try {

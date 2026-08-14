@@ -18,6 +18,13 @@ public class SM_FLAG_INFO extends AionServerPacket {
 	private NpcTemplate npcTemplate;
 	private int npcId;
 
+	/**
+	 * 按旗帜序号与 NPC 构造信息包。
+	 * Creates a flag info packet for the given index and flag NPC.
+	 *
+	 * @param count 旗帜序号 / flag index
+	 * @param npc 旗帜 NPC，可为空 / flag NPC, may be null
+	 */
 	public SM_FLAG_INFO(int count, Npc npc) {
 		this.count = count;
 		this._npc = npc;

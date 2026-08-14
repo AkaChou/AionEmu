@@ -38,7 +38,7 @@ public class CalculatedPlayerStatsTemplate extends PlayerStatsTemplate {
 		return ClassStats.getAttackSpeedFor(playerClass) / 1000f;
 	}
 
-	/** 返回黑名单 / Returns the block */
+	/** 返回格挡 / Returns the block */
 	@Override
 	public int getBlock() {
 		return ClassStats.getBlockFor(playerClass);

@@ -48,7 +48,7 @@ public class RelinquishCraftStatus {
 	 * 获取服务单例（优先 Spring ObjectProvider）。
 	 * Get the service singleton (prefer Spring ObjectProvider when available).
 	 *
-	 * Service instance
+	 * @return 服务实例 / Service instance
 	 */
 	public static final RelinquishCraftStatus getInstance() {
 		ObjectProvider<RelinquishCraftStatus> provider = instanceProvider;
@@ -72,8 +72,8 @@ public class RelinquishCraftStatus {
 	 * 放弃专家制作头衔：扣费、降级至专家下限，并清理配方与任务。
 	 * Relinquish expert craft status: charge fee, demote to expert min level, clean recipes and quests.
 	 *
-	 * 玩家 / Player
-	 * Related NPC
+	 * @param player 玩家 / Player
+	 * @param npc 相关 NPC / Related NPC
 	 */
 	public static void relinquishExpertStatus(Player player, Npc npc) {
 		CraftLearnTemplate craftLearnTemplate = CraftSkillUpdateService.npcBySkill.get(npc.getNpcId());
@@ -95,8 +95,8 @@ public class RelinquishCraftStatus {
 	 * 放弃大师制作头衔：扣费、降级至大师下限，并清理配方与任务。
 	 * Relinquish master craft status: charge fee, demote to master min level, clean recipes and quests.
 	 *
-	 * 玩家 / Player
-	 * Related NPC
+	 * @param player 玩家 / Player
+	 * @param npc 相关 NPC / Related NPC
 	 */
 	public static void relinquishMasterStatus(Player player, Npc npc) {
 		CraftLearnTemplate craftLearnTemplate = CraftSkillUpdateService.npcBySkill.get(npc.getNpcId());
@@ -118,11 +118,11 @@ public class RelinquishCraftStatus {
 	 * 校验是否可放弃指定区间内的制作头衔。
 	 * Validate whether the craft status in the given level range can be relinquished.
 	 *
-	 * 玩家 / Player
+	 * @param player 玩家 / Player
 	 * @param skill 技能条目 / Skill entry
-	 * Craft learn template
-	 * Minimum level
-	 * Maximum level
+	 * @param craftLearnTemplate 制作学习模板 / Craft learn template
+	 * @param minValue 最低等级 / Minimum level
+	 * @param maxValue 最高等级 / Maximum level
 	 *
 	 * @return 是否允许放弃 / Whether relinquish is allowed
 	 */
@@ -141,8 +141,8 @@ public class RelinquishCraftStatus {
 	 * 按势力价格服务扣减基纳，失败时提示消息。
 	 * Decrease kinah using race-aware price service; notify on failure.
 	 *
-	 * 玩家 / Player
-	 * Base price
+	 * @param player 玩家 / Player
+	 * @param basePrice 基础价格 / Base price
 	 *
 	 * @return 是否扣费成功 / Whether decrease succeeded
 	 */
@@ -158,8 +158,8 @@ public class RelinquishCraftStatus {
 	 * 删除指定技能在给定等级及以上的全部配方。
 	 * Remove all recipes for the skill at or above the given skill point level.
 	 *
-	 * 玩家 / Player
-	 * Skill id
+	 * @param player 玩家 / Player
+	 * @param skillId 技能 ID / Skill id
 	 * @param level 技能点阈值 / Skill-point threshold
 	 */
 	public static void removeRecipesAbove(Player player, int skillId, int level) {
@@ -175,8 +175,8 @@ public class RelinquishCraftStatus {
 	 * 删除制作头衔相关任务状态，并刷新任务列表。
 	 * Delete craft-status related quest states and refresh the quest list.
 	 *
-	 * Skill id
-	 * 玩家 / Player
+	 * @param skillId 技能 ID / Skill id
+	 * @param player 玩家 / Player
 	 * @param isExpert 是否同时清理专家任务 / Whether to also clear expert quests
 	 */
 	public static void deleteCraftStatusQuests(int skillId, Player player, boolean isExpert) {
@@ -210,7 +210,7 @@ public class RelinquishCraftStatus {
 	 * 当玩家专家/大师数量超出配置上限时，强制降级多余技能。
 	 * Force-demote excess expert/master craft skills when over configured limits.
 	 *
-	 * 玩家 / Player
+	 * @param player 玩家 / Player
 	 * @param isExpert 是否处理专家（false 为大师，并会递归处理专家） / Process expert (false for master, then recurse to expert)
 	 */
 	public static void removeExcessCraftStatus(Player player, boolean isExpert) {
@@ -288,7 +288,7 @@ public class RelinquishCraftStatus {
 	 * 获取技能变更消息 ID。
 	 * Get skill-change message id.
 	 *
-	 * Message id
+	 * @return 技能变更消息 ID / Message id
 	 */
 	public static int getSkillMessageId() {
 		return skillMessageId;

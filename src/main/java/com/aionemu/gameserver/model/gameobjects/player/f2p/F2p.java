@@ -9,7 +9,7 @@ import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 
 /**
  * F2p 游戏对象。
- * F 2 p game object.
+ * F2p game object.
  */
 
 public class F2p {
@@ -44,7 +44,7 @@ public class F2p {
 		}
 	}
 
-	/** 返回 f 2 p account / Returns the f 2 p account */
+	/** 返回 F2p 账号 / Returns the F2p account */
 	public F2pAccount getF2pAccount() {
 		return f2pAccount;
 	}

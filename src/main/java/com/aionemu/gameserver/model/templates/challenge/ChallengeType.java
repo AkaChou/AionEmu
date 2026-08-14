@@ -12,7 +12,9 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum ChallengeType {
 	/** 军团。 / Legion. */
-	LEGION(1), TOWN(2);
+	LEGION(1),
+	/** 城镇。 / Town. */
+	TOWN(2);
 
 	private int id;
 

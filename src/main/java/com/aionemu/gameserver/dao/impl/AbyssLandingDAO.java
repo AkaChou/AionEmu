@@ -31,7 +31,7 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
      * 持久化登陆点（委托更新）。
      * Persists a landing location (delegates to update).
      *
-     * landing location
+     * @param location 登陆点位置 / landing location
      */
     @Override
     public void store(LandingLocation location) {
@@ -43,7 +43,7 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
      * Loads all landing locations; missing rows are inserted automatically.
      *
      * @param locations 登陆点映射 / landing location map
-     * whether successful
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean loadLandingLocations(final Map<Integer, LandingLocation> locations) {
@@ -88,8 +88,8 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
      * 更新登陆点。
      * Updates a landing location.
      *
-     * landing location
-     * whether successful
+     * @param locations 登陆点位置 / landing location
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean updateLandingLocation(final LandingLocation locations) {
@@ -118,8 +118,8 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
      * 插入登陆点。
      * Inserts a landing location.
      *
-     * landing location
-     * whether successful
+     * @param locations 登陆点位置 / landing location
+     * @return 是否成功 / whether successful
      */
     private boolean insertLandingLocation(final LandingLocation locations) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -149,10 +149,10 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 世界引导服务定位器：向 IDFactory / Zone / Hotspot / Road / World 注入 Spring 提供者。
- * Zone / Hotspot / Road / World.
+ * World-bootstrap service locator: injects Spring providers into IDFactory / Zone / Hotspot / Road / World.
  */
 @Component
 public final class GameWorldBootstrapServices implements DisposableBean {
@@ -49,11 +49,11 @@ public final class GameWorldBootstrapServices implements DisposableBean {
      * 构造并注册各世界引导组件的实例提供者。
      * Construct and register instance providers for world-bootstrap components.
      *
-     * IDFactory provider
-     * ZoneService provider
-     * HotspotTeleportService provider
-     * RoadService provider
-     * World provider
+     * @param idFactoryProvider IDFactory 提供者 / IDFactory provider
+     * @param zoneServiceProvider ZoneService 提供者 / ZoneService provider
+     * @param hotspotTeleportServiceProvider HotspotTeleportService 提供者 / HotspotTeleportService provider
+     * @param roadServiceProvider RoadService 提供者 / RoadService provider
+     * @param worldProvider World 提供者 / World provider
      */
     public GameWorldBootstrapServices(ObjectProvider<IDFactory> idFactoryProvider,
             ObjectProvider<ZoneService> zoneServiceProvider,
@@ -78,7 +78,7 @@ public final class GameWorldBootstrapServices implements DisposableBean {
      * 解析 IDFactory：优先 Spring，否则回退。
      * Resolve IDFactory: prefer Spring, otherwise fallback.
      *
-     * IDFactory instance
+     * @return IDFactory 实例 / IDFactory instance
      */
     public static IDFactory idFactory() {
         IDFactory resolved = resolvedIdFactory;
@@ -96,7 +96,7 @@ public final class GameWorldBootstrapServices implements DisposableBean {
      * 解析 ZoneService：优先 Spring，否则回退。
      * Resolve ZoneService: prefer Spring, otherwise fallback.
      *
-     * ZoneService instance
+     * @return ZoneService 实例 / ZoneService instance
      */
     public static ZoneService zoneService() {
         ZoneService resolved = resolvedZoneService;
@@ -114,7 +114,7 @@ public final class GameWorldBootstrapServices implements DisposableBean {
      * 解析 HotspotTeleportService：优先 Spring，否则回退。
      * Resolve HotspotTeleportService: prefer Spring, otherwise fallback.
      *
-     * HotspotTeleportService instance
+     * @return HotspotTeleportService 实例 / HotspotTeleportService instance
      */
     public static HotspotTeleportService hotspotTeleportService() {
         HotspotTeleportService resolved = resolvedHotspotTeleportService;
@@ -132,7 +132,7 @@ public final class GameWorldBootstrapServices implements DisposableBean {
      * 解析 World：优先 Spring，否则回退。
      * Resolve World: prefer Spring, otherwise fallback.
      *
-     * World instance
+     * @return World 实例 / World instance
      */
     public static World world() {
         World resolved = resolvedWorld;

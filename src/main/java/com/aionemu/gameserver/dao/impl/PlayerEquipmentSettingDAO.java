@@ -60,8 +60,8 @@ public class PlayerEquipmentSettingDAO extends com.aionemu.gameserver.dao.Player
 	 * 插入或更新玩家装备预设。
 	 * Inserts or updates a player's equipment setting.
 	 *
-	 * 玩家 / player
-	 * equipment setting
+	 * @param player 玩家 / player
+	 * @param equipmentSetting 装备设置 / equipment setting
 	 */
 	@Override
 	public void insertEquipmentSetting(Player player, EquipmentSetting equipmentSetting) {
@@ -103,10 +103,10 @@ public class PlayerEquipmentSettingDAO extends com.aionemu.gameserver.dao.Player
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
 	 *
-	 * database name
-	 * major version
-	 * minor version
-	 * whether supported
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
 	 */
 	@Override
 	public boolean supports(String databaseName, int majorVersion, int minorVersion) {

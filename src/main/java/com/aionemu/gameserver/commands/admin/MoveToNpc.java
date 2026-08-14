@@ -27,8 +27,6 @@ public class MoveToNpc extends AdminCommand {
 	 * 按 NPC Id 或名称解析并传送；名称匹配多个时列出其余 Id。
 	 * Resolve NPC by id or name and teleport; list alternate ids when the name matches more than one.
 	 *
-	 * 执行 GM / Admin player
-	 * NPC id or name
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -74,8 +72,6 @@ public class MoveToNpc extends AdminCommand {
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
 	 *
-	 * 玩家 / Player
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

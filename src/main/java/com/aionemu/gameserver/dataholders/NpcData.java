@@ -50,7 +50,7 @@ public class NpcData {
 	 * 返回已加载的 NPC 模板数量。
 	 * Returns the number of loaded NPC templates.
 	 *
-	 * template count
+	 * @return 已加载的NPC 模板数量 / Returns the number of loaded NPC templates.
 	 */
 	public int size() {
 		return npcData.size();
@@ -60,8 +60,8 @@ public class NpcData {
 	 * 按 ID 返回 NPC 模板。
 	 * Returns the {@link NpcTemplate} for the given id.
 	 *
-	 * NPC 模板 ID / npc template id
-	 * template or null
+	 * @param id NPC 模板 ID / npc template id
+	 * @return 模板或 null / template or null
 	 */
 	public NpcTemplate getNpcTemplate(int id) {
 		return npcData.get(id);

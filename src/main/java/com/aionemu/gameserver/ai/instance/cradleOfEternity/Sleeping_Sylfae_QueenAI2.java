@@ -45,7 +45,7 @@ public class Sleeping_Sylfae_QueenAI2 extends GeneralNpcAI2 {
 					npc.getController().onDelete();
 				    QuestService.addNewSpawn(301550000, player.getInstanceId(), 834122, player.getX() + 2, player.getY() + 2, player.getZ() + 1, (byte) 0);
 					effectController.removeEffect(21340); //Sylfae Queens Blessing.
-					effectController.removeEffect(21344); //Beguiling Visions.
+					effectController.removeEffect(21344); // 魅惑幻象 / Beguiling Visions.
 			    break;
 			}
 		} else if (dialogId == 1011 && questId != 0) {

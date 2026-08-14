@@ -32,10 +32,10 @@ public class FeedingMantutuAI2 extends ShifterAI2
 		if (boss != null && boss.isSpawned() && !NpcActions.isAlreadyDead(boss)) {
 			Npc npc = null;
 			switch (getNpcId()) {
-				case 701387: //Water Supply.
+				case 701387: // 供水装置 / Water Supply.
 					npc = (Npc) spawn(281129, 712.042f, 490.5559f, 939.7027f, (byte) 0);
 				break;
-				case 701386: //Feed Supply.
+				case 701386: // 饲料供给装置 / Feed Supply.
 					npc = (Npc) spawn(281128, 714.62634f, 504.4552f, 939.60675f, (byte) 0);
 				break;
 			}

@@ -30,12 +30,12 @@ public enum PetAction {
 		this.actionId = actionId;
 	}
 
-	/** 返回 action id / Returns the action id */
+	/** 返回动作 ID / Returns the action id */
 	public int getActionId() {
 		return actionId;
 	}
 
-	/** 按 ID 返回 action / Returns the action by id */
+	/** 按 ID 返回动作 / Returns the action by id */
 	public static PetAction getActionById(int actionId) {
 		PetAction action = petActions.get(actionId);
 		return action != null ? action : UNKNOWN;

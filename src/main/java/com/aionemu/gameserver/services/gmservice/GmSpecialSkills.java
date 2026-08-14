@@ -10,23 +10,23 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 public enum GmSpecialSkills {
 	/** 权限等级 1：GM / Access level 1: GM */
 	AccessLevel1(1, AdminConfig.ADMIN_TAG_1, "\ue042GM\ue043", new int[]{240, 241, 282}),
-    /** Access level 2: HEAD-GM / Access level 2: HEAD-GM */
+    /** 权限等级 2：HEAD-GM / Access level 2: HEAD-GM */
     AccessLevel2(2, AdminConfig.ADMIN_TAG_1, "\ue042HEAD-GM\ue043", new int[]{240, 241, 282}),
-    /** Access level 3: Admin / Access level 3: Admin */
+    /** 权限等级 3：Admin / Access level 3: Admin */
     AccessLevel3(3, AdminConfig.ADMIN_TAG_1, "\ue042Admin\ue043", new int[]{240, 241, 282}),
-    /** Access level 4: Unity-Master / Access level 4: Unity-Master */
+    /** 权限等级 4：Unity-Master / Access level 4: Unity-Master */
     AccessLevel4(4, AdminConfig.ADMIN_TAG_1, "\ue042Unity-Master\ue043", new int[]{240, 241, 282}),
-    /** Access level 5: Unity-Management / Access level 5: Unity-Management */
+    /** 权限等级 5：Unity-Management / Access level 5: Unity-Management */
     AccessLevel5(5, AdminConfig.ADMIN_TAG_1, "\ue042Unity-Management\ue043", new int[]{240, 241, 277, 282, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 395, 396}),
-    /** Access level 6: Unity-Developer / Access level 6: Unity-Developer */
+    /** 权限等级 6：Unity-Developer / Access level 6: Unity-Developer */
     AccessLevel6(6, AdminConfig.ADMIN_TAG_1, "\ue042Unity-Developer\ue043", new int[]{240, 241, 277, 282, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 395, 396}),
-	/** Access level 7: Unity-Developer / Access level 7: Unity-Developer */
+	/** 权限等级 7：Unity-Developer / Access level 7: Unity-Developer */
 	AccessLevel7(7, AdminConfig.ADMIN_TAG_1, "\ue042Unity-Developer\ue043", new int[]{240, 241, 277, 282, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 395, 396}),
-	/** Access level 8: Unity-Developer / Access level 8: Unity-Developer */
+	/** 权限等级 8：Unity-Developer / Access level 8: Unity-Developer */
 	AccessLevel8(8, AdminConfig.ADMIN_TAG_1, "\ue042Unity-Developer\ue043", new int[]{240, 241, 277, 282, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 395, 396}),
-	/** Access level 9: Unity-Developer / Access level 9: Unity-Developer */
+	/** 权限等级 9：Unity-Developer / Access level 9: Unity-Developer */
 	AccessLevel9(9, AdminConfig.ADMIN_TAG_1, "\ue042Unity-Developer\ue043", new int[]{240, 241, 277, 282, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 395, 396}),
-	/** Access level 10: Unity-Developer / Access level 10: Unity-Developer */
+	/** 权限等级 10：Unity-Developer / Access level 10: Unity-Developer */
 	AccessLevel10(10, AdminConfig.ADMIN_TAG_1, "\ue042Unity-Developer\ue043", new int[]{240, 241, 277, 282, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 395, 396});
     private final int level;
     private final String nameLevel;
@@ -53,7 +53,7 @@ public enum GmSpecialSkills {
 	 * 获取权限显示名称标签。
 	 * Get the access-level display name tag.
 	 *
-	 * Name tag
+	 * @return 名称标签 / name tag
 	 */
     public String getName() {
         return nameLevel;

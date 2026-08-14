@@ -38,32 +38,32 @@ import java.util.concurrent.Future;
 @InstanceID(300560000)
 public class ShugoImperialTombInstance extends GeneralInstanceHandler
 {
- /** tombraid 任务 a1 / tomb raid task a1 */
+        /** tombraid 任务 a1 / tomb raid task a1 */
         private Future<?> tombRaidTaskA1;
-	/** tombraid 任务 b1 / tomb raid task b1 */
+		/** tombraid 任务 b1 / tomb raid task b1 */
 		private Future<?> tombRaidTaskB1;
-	/** tombraid 任务 c1 / tomb raid task c1 */
+		/** tombraid 任务 c1 / tomb raid task c1 */
 		private Future<?> tombRaidTaskC1;
-	/** tombraid 任务 c2 / tomb raid task c2 */
+		/** tombraid 任务 c2 / tomb raid task c2 */
 		private Future<?> tombRaidTaskC2;
 	/////////////////////////////////
-	/** strong kobold worker / strong kobold worker */
+		/** strong kobold worker / strong kobold worker */
 		private int strongKoboldWorker;
-	/** diligent kobold worker / diligent kobold worker */
+		/** diligent kobold worker / diligent kobold worker */
 		private int diligentKoboldWorker;
-	/** swift krall graverobber / swift krall graverobber */
+		/** swift krall graverobber / swift krall graverobber */
 		private int swiftKrallGraverobber;
-	/** krall lookout commander / krall lookout commander */
+		/** krall lookout commander / krall lookout commander */
 		private int krallLookoutCommander;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
-	/** imperialtomb 任务 / imperial tomb task */
+		/** imperialtomb 任务 / imperial tomb task */
 		private final List<Future<?>> imperialTombTask = new ArrayList<Future<?>>();
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -151,7 +151,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -250,7 +250,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
         spawn(219505, 321.05954f, 430.44263f, 294.58875f, (byte) 115);
 	}
 	
-   /**
+	/**
 	 * TOMB RAID A
 	 */
 	private void startTombRaidA1_1() {
@@ -416,7 +416,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		}, 190000);
 	}
 	
-   /**
+	/**
 	 * TOMB RAID B
 	 */
 	private void startTombRaidB1_1() {
@@ -642,7 +642,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		}, 190000);
 	}
 	
-   /**
+	/**
 	 * TOMB RAID C-1
 	 */
 	private void startTombRaidC1_1() {
@@ -838,7 +838,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		}, 190000);
 	}
 	
-   /**
+	/**
 	 * TOMB RAID C-2
 	 */
 	private void startTombRaidC1_2() {
@@ -1044,8 +1044,8 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {

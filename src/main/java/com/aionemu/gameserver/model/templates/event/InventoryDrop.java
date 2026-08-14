@@ -10,7 +10,7 @@ import com.aionemu.gameserver.model.Race;
 
 /**
  * 背包掉落模板（静态数据/XML）。
- * XML template.
+ * Inventory Drop Template (static data/XML).
  *
  * @author Rolandas
  */
@@ -52,17 +52,17 @@ public class InventoryDrop {
 		return dropItem;
 	}
 
-	/** 返回开始等级 / Returns the start level*/
+	/** 返回开始等级 / Returns the start level */
 	public int getStartLevel() {
 		return startLevel;
 	}
 
-	/** 返回结束等级 / Returns the end level*/
+	/** 返回结束等级 / Returns the end level */
 	public int getEndLevel() {
 		return endLevel;
 	}
 
-	/** 返回间隔 / Returns the interval*/
+	/** 返回间隔 / Returns the interval */
 	public int getInterval() {
 		return interval;
 	}
@@ -72,12 +72,12 @@ public class InventoryDrop {
 		return count;
 	}
 
-	/** 返回 max count of day / Returns the max count of day */
+	/** 返回每日最大次数 / Returns the max count of day */
 	public int getMaxCountOfDay() {
 		return maxCountOfDay;
 	}
 
-	/** 返回 clean time / Returns the clean time */
+	/** 返回清理时间 / Returns the clean time */
 	public int getCleanTime() {
 		return cleanTime;
 	}

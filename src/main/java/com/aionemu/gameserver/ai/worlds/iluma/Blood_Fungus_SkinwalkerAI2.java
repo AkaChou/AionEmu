@@ -15,7 +15,7 @@ public class Blood_Fungus_SkinwalkerAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(243235, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Aether Fungus Rotron.
+		spawn(243235, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 奥德真菌 Rotron / Aether Fungus Rotron.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-/** Real {@link QuestEventPort}: freezes the pre-event player facts for one owner. */
+/** 真实 {@link QuestEventPort}：为单个任务拥有者冻结事件前玩家事实。 / Real {@link QuestEventPort}: freezes the pre-event player facts for one owner. */
 public final class PlayerQuestEventPort implements QuestEventPort {
 	@FunctionalInterface
 	interface EventActivitySource {
@@ -99,6 +99,8 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 		snapshot = snapshot.withTeamFacts(new QuestTeamFacts(player.isInGroup2(), player.isInAlliance2()));
 		return switch (event) {
 			case QuestEvent.TalkToNpc talk -> snapshot.withInteractionObjectId(talk.interactionObjectId());
+			// 只有 TalkToNpc 携带权威的对话所有者。其他所有事件必须对对话动作使用对象 0，
+			// 而不是从玩家当前目标或物品/NPC 模板 ID 猜测。
 			// Only TalkToNpc carries an authoritative dialog owner. Every other
 			// event must use object 0 for dialog actions rather than guessing from
 			// the player's current target or an item/NPC template id.

@@ -61,12 +61,12 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	 * Simplified constructor: percent total hit, no radius/heal/protect/MP.
 	 *
 	 * @param hit 单次数值 / per-hit value
-	 * total amount
+	 * @param totalHit 总量或反射百分比 / total amount or reflect percent
 	 * @param percent 是否百分比 / whether percent
-	 * effect
+	 * @param effect 关联技能效果 / associated skill effect
 	 * @param type 命中类型 / hit type
-	 * shield type
-	 * probability
+	 * @param shieldType 护盾类型 / shield type
+	 * @param probability 触发概率 / trigger probability
 	 */
 	public AttackShieldObserver(int hit, int totalHit, boolean percent, Effect effect, HitType type, int shieldType,
 			int probability) {
@@ -79,12 +79,12 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	 *
 	 * @param hit 单次数值 / per-hit value
 	 * @param effectorDamage 保护者承伤 / protector damage share
-	 * total amount
+	 * @param totalHit 总量或反射百分比 / total amount or reflect percent
 	 * @param percent 是否百分比 / whether percent
-	 * effect
+	 * @param effect 关联技能效果 / associated skill effect
 	 * @param type 命中类型 / hit type
-	 * shield type
-	 * probability
+	 * @param shieldType 护盾类型 / shield type
+	 * @param probability 触发概率 / trigger probability
 	 */
 	public AttackShieldObserver(int hit, int effectorDamage, int totalHit, boolean percent, Effect effect, HitType type,
 			int shieldType, int probability) {
@@ -96,13 +96,13 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	 * Constructor with MP cost.
 	 *
 	 * @param hit 单次数值 / per-hit value
-	 * total amount
+	 * @param totalHit 总量或反射百分比 / total amount or reflect percent
 	 * @param percent 是否百分比 / whether percent
-	 * effect
+	 * @param effect 关联技能效果 / associated skill effect
 	 * @param type 命中类型 / hit type
-	 * shield type
-	 * probability
-	 * MP percent
+	 * @param shieldType 护盾类型 / shield type
+	 * @param probability 触发概率 / trigger probability
+	 * @param mpValue 吸收时消耗 MP 百分比 / MP percent on absorb
 	 */
 	public AttackShieldObserver(int hit, int totalHit, boolean percent, Effect effect, HitType type, int shieldType,
 			int probability, int mpValue) {
@@ -117,31 +117,31 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	 * @param totalHit 总量或反射百分比 / total amount or reflect percent
 	 * @param hitPercent hit 是否百分比 / whether hit is percent
 	 * @param totalHitPercent totalHit 是否百分比 / whether totalHit is percent
-	 * effect
+	 * @param effect 关联技能效果 / associated skill effect
 	 * @param type 命中类型 / hit type
-	 * shield type
-	 * probability
-	 * min radius
-	 * max radius
-	 * heal type
+	 * @param shieldType 护盾类型 / shield type
+	 * @param probability 触发概率 / trigger probability
+	 * @param minradius 反射最小半径 / reflect min radius
+	 * @param maxradius 反射最大半径 / reflect max radius
+	 * @param healType 转治疗类型 / convert-heal type
 	 * @param effectorDamage 保护者承伤 / protector damage
-	 * MP percent
+	 * @param mpValue 吸收时消耗 MP 百分比 / MP percent on absorb
 	 */
 	public AttackShieldObserver(int hit, int totalHit, boolean hitPercent, boolean totalHitPercent, Effect effect,
 			HitType type, int shieldType, int probability, int minradius, int maxradius, HealType healType,
 			int effectorDamage, int mpValue) {
 		this.hit = hit;
-		this.totalHit = totalHit;// total absorbed dmg for shield, percentage for reflector
+		this.totalHit = totalHit;// 护盾的总吸收量，反射时为反射百分比 / total absorbed dmg for shield, percentage for reflector
 		this.effect = effect;
 		this.hitPercent = hitPercent;
 		this.totalHitPercent = totalHitPercent;
 		this.hitType = type;
 		this.shieldType = shieldType;
 		this.probability = probability;
-		this.minradius = minradius;// only for reflector
-		this.maxradius = maxradius;// only for reflector
-		this.healType = healType;// only for convertheal
-		this.effectorDamage = effectorDamage;// only for protect
+		this.minradius = minradius;// 仅用于反射护盾 / only for reflector
+		this.maxradius = maxradius;// 仅用于反射护盾 / only for reflector
+		this.healType = healType;// 仅用于转治疗护盾 / only for convertheal
+		this.effectorDamage = effectorDamage;// 仅用于保护护盾 / only for protect
 		this.mpValue = mpValue;
 	}
 
@@ -151,7 +151,7 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	 *
 	 * @param attackList 攻击结果列表 / attack result list
 	 * @param attackerEffect 攻击方效果 / attacker effect
-	 * attacker
+	 * @param attacker 攻击者 / attacker
 	 */
 	@Override
 	public void checkShield(List<AttackResult> attackList, Effect attackerEffect, Creature attacker) {

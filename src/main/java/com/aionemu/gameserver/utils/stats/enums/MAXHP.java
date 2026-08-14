@@ -9,10 +9,10 @@ public enum MAXHP {
 	SCOUT(1.0297f, 40.823f, 219), ASSASSIN(1.0488f, 40.38f, 222), RANGER(0.5f, 38.5f, 133), MAGE(0.7554f, 29.457f, 132),
 	SORCERER(0.6352f, 24.852f, 112), SPIRIT_MASTER(1, 20.6f, 157), PRIEST(1.0303f, 40.824f, 201),
 	CLERIC(0.9277f, 35.988f, 229), CHANTER(0.9277f, 35.988f, 229),
-	// 资讯类 4.3 / News Class 4.3
+	// 新职业 4.3 / New Class 4.3
 	TECHNIST(1.0297f, 40.823f, 219), GUNSLINGER(1.0488f, 40.38f, 222), MUSE(0.7554f, 29.457f, 132),
 	SONGWEAVER(1, 20.6f, 157),
-	// 资讯类 4.5 / News Class 4.5
+	// 新职业 4.5 / New Class 4.5
 	AETHERTECH(0.9277f, 35.988f, 229);
 
 	/**

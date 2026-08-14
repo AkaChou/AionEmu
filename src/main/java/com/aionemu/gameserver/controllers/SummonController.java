@@ -143,8 +143,9 @@ public class SummonController extends CreatureController<Summon> {
 
 		if (milis - lastAttackMilis + 300 < attackSpeed) {
 			/**
-	 * 权宜处理 / Hack!
-	 */
+			 * 权宜处理。
+			 * Hack!
+			 */
 			return;
 		}
 		lastAttackMilis = milis;
@@ -156,12 +157,13 @@ public class SummonController extends CreatureController<Summon> {
 	 * 受到攻击时广播伤害并更新主人面板。
 	 * On being attacked, broadcasts damage and updates the master's panel.
 	 *
-	 * attacker
-	 * skill id
+	 * @param creature 攻击者 / attacker
+	 * @param skillId 技能 ID / skill id
 	 * @param type 伤害类型 / damage type
-	 * damage amount
+	 * @param damage 伤害值 / damage amount
 	 * @param notifyAttack 是否通知攻击 / whether to notify attack
 	 * @param log 伤害日志类型 / damage log type
+	 * @param attackStatus 攻击状态 / attack status
 	 */
 	@Override
 	public void onAttack(Creature creature, int skillId, TYPE type, int damage, boolean notifyAttack, LOG log,

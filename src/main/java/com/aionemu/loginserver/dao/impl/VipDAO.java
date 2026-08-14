@@ -12,7 +12,8 @@ import com.aionemu.loginserver.model.Vip;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * MySQL account VIP persistence.
+ * 账号 VIP 状态 DAO 的 MySQL 8 实现。
+ * MySQL 8 account VIP persistence.
  */
 @Slf4j
 public class VipDAO extends com.aionemu.loginserver.dao.VipDAO {

@@ -15,7 +15,7 @@ public class Blackened_GraveAI2 extends NpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(284262, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Executioner Penemon.
+		spawn(284262, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 行刑者佩内蒙 / Executioner Penemon
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);

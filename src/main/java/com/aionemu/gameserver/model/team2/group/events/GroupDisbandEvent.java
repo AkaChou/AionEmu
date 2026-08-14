@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.google.common.base.Predicate;
 
 /**
- * 队伍 Disband 活动，用于团队2相关逻辑。
+ * 队伍解散事件（团队2）。
  * Group Disband Event for team 2 logic.
  *
  * @author ATracer
@@ -17,13 +17,16 @@ public class GroupDisbandEvent extends AlwaysTrueTeamEvent implements Predicate<
 	private final PlayerGroup group;
 
 	/**
-	 * @param group
+	 * 以指定队伍构造解散事件。
+	 * Constructs a disband event for the given group.
+	 *
+	 * @param group 目标队伍 / target group
 	 */
 	public GroupDisbandEvent(PlayerGroup group) {
 		this.group = group;
 	}
 
-	/** 处理活动。 / Handle event. */
+	/** 处理事件。 / Handle event. */
 	@Override
 	public void handleEvent() {
 		group.applyOnMembers(this);

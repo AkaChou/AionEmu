@@ -256,17 +256,17 @@ public class SpawnSpotTemplate {
 		this.walkerIdx = walkerIndex;
 	}
 
-	/** 返回 x / Returns the x */
+	/** 返回 x 坐标 / Returns the x */
 	public float getX() {
 		return x;
 	}
 
-	/** 返回 y / Returns the y */
+	/** 返回 y 坐标 / Returns the y */
 	public float getY() {
 		return y;
 	}
 
-	/** 返回 z / Returns the z */
+	/** 返回 z 坐标 / Returns the z */
 	public float getZ() {
 		return z;
 	}
@@ -276,27 +276,27 @@ public class SpawnSpotTemplate {
 		return h;
 	}
 
-	/** 返回 entity id / Returns the entity id */
+	/** 返回实体 ID / Returns the entity id */
 	public int getEntityId() {
 		return entityId;
 	}
 
-	/** 设置 entity id / Sets the entity id */
+	/** 设置实体 ID / Sets the entity id */
 	public void setEntityId(int entityId) {
 		this.entityId = entityId;
 	}
 
-	/** 返回 walker id / Returns the walker id */
+	/** 返回巡游者 ID / Returns the walker id */
 	public String getWalkerId() {
 		return walkerId;
 	}
 
-	/** 设置 walker id / Sets the walker id */
+	/** 设置巡游者 ID / Sets the walker id */
 	public void setWalkerId(String walkerId) {
 		this.walkerId = walkerId;
 	}
 
-	/** 返回 walker index / Returns the walker index */
+	/** 返回巡游者索引 / Returns the walker index */
 	public int getWalkerIndex() {
 		if (walkerIdx == null) {
 			return 0;
@@ -304,7 +304,7 @@ public class SpawnSpotTemplate {
 		return walkerIdx;
 	}
 
-	/** 返回 random walk / Returns the random walk */
+	/** 返回随机行走 / Returns the random walk */
 	public int getRandomWalk() {
 		return randomWalk;
 	}
@@ -314,12 +314,12 @@ public class SpawnSpotTemplate {
 		return fly;
 	}
 
-	/** 返回 anchor / Returns the anchor */
+	/** 返回锚点 / Returns the anchor */
 	public String getAnchor() {
 		return anchor;
 	}
 
-	/** 返回 model / Returns the model */
+	/** 返回模型 / Returns the model */
 	public SpawnModel getModel() {
 		return model;
 	}
@@ -340,7 +340,7 @@ public class SpawnSpotTemplate {
 		return astate;
 	}
 
-	/** 返回 b state / Returns the b state */
+	/** 返回 b 状态 / Returns the b state */
 	public int getBState() {
 		if (bstate == null) {
 			return 0;
@@ -348,7 +348,7 @@ public class SpawnSpotTemplate {
 		return bstate;
 	}
 
-	/** 返回 c state / Returns the c state */
+	/** 返回 c 状态 / Returns the c state */
 	public int getCState() {
 		if (cstate == null) {
 			return 0;
@@ -356,7 +356,7 @@ public class SpawnSpotTemplate {
 		return cstate;
 	}
 
-	/** 返回 d state / Returns the d state */
+	/** 返回 d 状态 / Returns the d state */
 	public int getDState() {
 		if (dstate == null) {
 			return 0;
@@ -364,7 +364,7 @@ public class SpawnSpotTemplate {
 		return dstate;
 	}
 
-	/** 返回 e state / Returns the e state */
+	/** 返回 e 状态 / Returns the e state */
 	public int getEState() {
 		if (estate == null) {
 			return 0;
@@ -372,7 +372,7 @@ public class SpawnSpotTemplate {
 		return estate;
 	}
 
-	/** 返回 f state / Returns the f state */
+	/** 返回 f 状态 / Returns the f state */
 	public int getFState() {
 		if (fstate == null) {
 			return 0;
@@ -380,7 +380,7 @@ public class SpawnSpotTemplate {
 		return fstate;
 	}
 
-	/** 返回 i state / Returns the i state */
+	/** 返回 i 状态 / Returns the i state */
 	public int getIState() {
 		if (istate == null) {
 			return 0;
@@ -388,7 +388,7 @@ public class SpawnSpotTemplate {
 		return istate;
 	}
 
-	/** 返回 m state / Returns the m state */
+	/** 返回 m 状态 / Returns the m state */
 	public int getMState() {
 		if (mstate == null) {
 			return 0;
@@ -396,7 +396,7 @@ public class SpawnSpotTemplate {
 		return mstate;
 	}
 
-	/** 返回 n state / Returns the n state */
+	/** 返回 n 状态 / Returns the n state */
 	public int getNState() {
 		if (nstate == null) {
 			return 0;
@@ -404,7 +404,7 @@ public class SpawnSpotTemplate {
 		return nstate;
 	}
 
-	/** 返回 o state / Returns the o state */
+	/** 返回 o 状态 / Returns the o state */
 	public int getOState() {
 		if (ostate == null) {
 			return 0;
@@ -412,7 +412,7 @@ public class SpawnSpotTemplate {
 		return ostate;
 	}
 
-	/** 返回 p state / Returns the p state */
+	/** 返回 p 状态 / Returns the p state */
 	public int getPState() {
 		if (pstate == null) {
 			return 0;
@@ -420,7 +420,7 @@ public class SpawnSpotTemplate {
 		return pstate;
 	}
 
-	/** 返回 r state / Returns the r state */
+	/** 返回 r 状态 / Returns the r state */
 	public int getRState() {
 		if (rstate == null) {
 			return 0;
@@ -428,7 +428,7 @@ public class SpawnSpotTemplate {
 		return rstate;
 	}
 
-	/** 返回 t state / Returns the t state */
+	/** 返回 t 状态 / Returns the t state */
 	public int getTState() {
 		if (tstate == null) {
 			return 0;
@@ -436,7 +436,7 @@ public class SpawnSpotTemplate {
 		return tstate;
 	}
 
-	/** 返回 z state / Returns the z state */
+	/** 返回 z 状态 / Returns the z state */
 	public int getZState() {
 		if (zstate == null) {
 			return 0;
@@ -444,7 +444,7 @@ public class SpawnSpotTemplate {
 		return zstate;
 	}
 
-	/** 返回 iu state / Returns the iu state */
+	/** 返回 IU 状态 / Returns the iu state */
 	public int getIUState() {
 		if (iustate == null) {
 			return 0;
@@ -452,7 +452,7 @@ public class SpawnSpotTemplate {
 		return iustate;
 	}
 
-	/** 返回 op state / Returns the op state */
+	/** 返回 OP 状态 / Returns the op state */
 	public int getOPState() {
 		if (opstate == null) {
 			return 0;
@@ -460,12 +460,12 @@ public class SpawnSpotTemplate {
 		return opstate;
 	}
 	
-	/** 返回 alternate ids / Returns the alternate ids */
+	/** 返回备用 ID / Returns the alternate ids */
 	public String getAlternateIds() {
 		return alternateIdValues;
 	}
 	
-	/** 返回 select probs / Returns the select probs */
+	/** 返回选择概率 / Returns the select probs */
 	public String getSelectProbs() {
 		return selectprobValues;
 	}

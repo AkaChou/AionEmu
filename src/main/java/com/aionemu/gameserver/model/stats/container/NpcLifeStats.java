@@ -8,15 +8,18 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.services.LifeStatsRestoreService;
 
 /**
- * NPCLife 属性，用于属性相关逻辑。
- * Npc Life Stats for stats logic.
+ * NPC 的生命值/魔法值属性与恢复逻辑。
+ * NPC HP/MP stats and restore logic.
  *
  * @author ATracer
  */
 public class NpcLifeStats extends CreatureLifeStats<Npc> {
 
 	/**
-	 * @param owner
+	 * 创建 NPC 生命属性。
+	 * Creates NPC life stats.
+	 *
+	 * @param owner 所属 NPC / owner NPC
 	 */
 	public NpcLifeStats(Npc owner) {
 		super(owner, owner.getGameStats().getMaxHp().getCurrent(), owner.getGameStats().getMaxMp().getCurrent());
@@ -56,7 +59,7 @@ public class NpcLifeStats extends CreatureLifeStats<Npc> {
 		}
 	}
 
-	/** Start resting / Start resting */
+	/** 开始休息（触发恢复任务） / Start resting (triggers restore task) */
 	public void startResting() {
 		triggerRestoreTask();
 	}

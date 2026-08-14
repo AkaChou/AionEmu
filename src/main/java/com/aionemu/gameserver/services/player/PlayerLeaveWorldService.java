@@ -187,7 +187,6 @@ public class PlayerLeaveWorldService {
 		player.getInventory().setOwner(null);
 		player.getWarehouse().setOwner(null);
 		player.getStorage(StorageType.ACCOUNT_WAREHOUSE.getId()).setOwner(null);
-		// ****//
 		PacketSendUtility.broadcastPacket(player, new SM_DELETE(player, 2), 50);
 		PlayerAccountData pad = player.getPlayerAccount().getPlayerAccountData(player.getObjectId());
 		pad.setEquipment(player.getEquipment().getEquippedItems());

@@ -22,13 +22,13 @@ public class BooleanTransformer implements PropertyTransformer<Boolean> {
     public static final BooleanTransformer SHARED_INSTANCE = new BooleanTransformer();
 
     /**
- * 将字符串值转换为 Boolean 对象
+     * 将字符串值转换为 Boolean 对象
      * Transforms string value into Boolean object
      *
-     * @param value 要转换的字符串值 String value to transform
-     * @param field 字段对象 Field that will be transformed
- * @return 转换后的 Boolean 对象 Transformed Boolean object
-     * @throws TransformationException 如果输入字符串格式无效 if string value has invalid format
+     * @param value 要转换的字符串值 / String value to transform
+     * @param field 字段对象 / Field that will be transformed
+     * @return 转换后的 Boolean 对象 / Transformed Boolean object
+     * @throws TransformationException 如果输入字符串格式无效 / if string value has invalid format
      */
     public Boolean transform(String value, Field field) throws TransformationException {
         if (!("true".equalsIgnoreCase(value) || "1".equals(value))) {

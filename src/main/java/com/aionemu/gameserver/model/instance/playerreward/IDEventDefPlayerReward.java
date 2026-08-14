@@ -17,7 +17,7 @@ public class IDEventDefPlayerReward extends InstancePlayerReward {
 	}
 
 	/**
-	 * @return Whether rewarded
+	 * @return 是否已奖励 / whether rewarded
 	 */
 	public boolean isRewarded() {
 		return isRewarded;

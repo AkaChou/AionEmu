@@ -58,9 +58,7 @@ public class HouseNpcsData {
 	 * 按房屋地址获取刷怪点列表。
 	 * Returns the spawn point list for the given house address.
 	 *
-	 * house address
-	 *
-	 * @param address
+	 * @param address 房屋地址 / house address
 	 * @return 刷怪点列表，不存在则为 null / spawn list, or null if absent
 	 */
 	public List<HouseSpawn> getSpawnsByAddress(int address) {

@@ -1,8 +1,8 @@
 package com.aionemu.commons.scripting.classlistener;
 
 /**
- * 类生命周期监听器接口
- * Class lifecycle listener interface
+ * 类生命周期监听器接口。
+ * Class lifecycle listener interface.
  *
  * 该接口定义了类加载和卸载时的回调方法：
  * This interface defines callback methods for class loading and unloading:

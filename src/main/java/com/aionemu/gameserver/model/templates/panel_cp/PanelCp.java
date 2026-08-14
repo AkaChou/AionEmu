@@ -59,17 +59,17 @@ public class PanelCp {
 		return panelCpType;
 	}
 
-	/** 返回 learn skill / Returns the learn skill */
+	/** 返回学习技能 / Returns the learn skill */
 	public int getLearnSkill() {
 		return learnSkill;
 	}
 
-	/** 返回 additional skill / Returns the additional skill */
+	/** 返回附加技能 / Returns the additional skill */
 	public int getAdditionalSkill() {
 		return additionalSkill;
 	}
 
-	/** 返回 stats id / Returns the stats id */
+	/** 返回属性 ID / Returns the stats id */
 	public int getStatsId() {
 		return statsId;
 	}
@@ -84,27 +84,27 @@ public class PanelCp {
 		return statValue;
 	}
 
-	/** 返回 cost / Returns the cost */
+	/** 返回消耗 / Returns the cost */
 	public int getCost() {
 		return cost;
 	}
 
-	/** 返回数量最大 / Returns the count max*/
+	/** 返回最大数量 / Returns the max count. */
 	public int getCountMax() {
 		return countMax;
 	}
 
-	/** 返回 cost adj / Returns the cost adj */
+	/** 返回消耗调整 / Returns the cost adj */
 	public int getCostAdj() {
 		return costAdj;
 	}
 
-	/** 返回 pre cond id / Returns the pre cond id */
+	/** 返回前置条件 ID / Returns the pre cond id */
 	public int getPreCondId() {
 		return preCondId;
 	}
 
-	/** 返回 pre enchant count / Returns the pre enchant count */
+	/** 返回前置强化次数 / Returns the pre enchant count */
 	public int getPreEnchantCount() {
 		return preEnchantCount;
 	}

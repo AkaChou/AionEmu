@@ -19,7 +19,8 @@ import javax.crypto.Cipher;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * STS token-auth crypto. Private key must match the NC public blob patched into Game.dll
+ * STS token-auth 加密工具：私钥须与打进 Game.dll 0xE4D270 处的 NC 公钥 blob 匹配（见 scripts/patch_game_dll_sts_auth_key.py）。
+ * STS token-auth crypto: the private key must match the NC public blob patched into Game.dll
  * at 0xE4D270 (see scripts/patch_game_dll_sts_auth_key.py).
  */
 @Slf4j
@@ -61,7 +62,7 @@ public final class StsAuthCrypto {
     }
 
     public String publicKeyFingerprint() {
-        // first 24 chars is enough to confirm DLL/server match
+        // 前 24 个字符即可确认 DLL 与服务器密钥匹配。 / first 24 chars is enough to confirm DLL/server match
         return publicKeyB64.length() <= 24 ? publicKeyB64 : publicKeyB64.substring(0, 24);
     }
 

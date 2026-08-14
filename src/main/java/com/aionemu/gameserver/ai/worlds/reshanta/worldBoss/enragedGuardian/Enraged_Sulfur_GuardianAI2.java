@@ -47,7 +47,7 @@ public class Enraged_Sulfur_GuardianAI2 extends AggressiveNpcAI2
 			        }
 				});
 			}
-		}, 3600000); //1Hr.
+		}, 3600000); // 1 小时 / 1Hr.
 	}
 	
 	private void announceAb1NamedAppears() {

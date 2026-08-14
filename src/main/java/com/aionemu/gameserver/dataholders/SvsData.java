@@ -44,7 +44,7 @@ public class SvsData {
 	 * 返回已加载的 SVS 地点数量。
 	 * Returns the number of loaded SVS locations.
 	 *
-	 * location count
+	 * @return 已加载的SVS 地点数量 / Returns the number of loaded SVS locations.
 	 */
 	public int size() {
 		return svs.size();

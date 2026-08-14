@@ -28,16 +28,14 @@ public class AionPacketHandler {
 	 * 从给定 ByteBuffer 读取一个包。
 	 * Reads one packet from the given ByteBuffer.
 	 *
-	 * packet data
-	 *
+	 * @param data 包数据 / packet data
 	 * @param client 客户端连接 / client connection
-	 * @param client
 	 * @return 解析出的客户端包，未知包返回 null / client packet, or null if unknown
 	 */
 	public AionClientPacket handle(ByteBuffer data, AionConnection client) {
 		State state = client.getState();
 		int id = data.getShort() & 0xffff;
-		/* Second opcodec. */
+		/* 第二个操作码字节。 / Second opcodec. */
 		data.position(data.position() + 3);
 
 		return getPacket(state, id, data, client);
@@ -47,7 +45,7 @@ public class AionPacketHandler {
 	 * 注册客户端包原型。
 	 * Registers a client packet prototype.
 	 *
-	 * packet prototype
+	 * @param packetPrototype 包原型 / packet prototype
 	 */
 	public void addPacketPrototype(AionClientPacket packetPrototype) {
 		AionClientPacket previous = packetsPrototypes.putIfAbsent(packetPrototype.getOpcode(), packetPrototype);
@@ -63,8 +61,8 @@ public class AionPacketHandler {
 	 * @param state 连接状态 / connection state
 	 * @param id opcode
 	 * @param buf 包缓冲区 / packet buffer
-	 * connection
-	 * packet instance or null
+	 * @param con 连接 / connection
+	 * @return 包实例或 null / packet instance or null
 	 */
 	private AionClientPacket getPacket(State state, int id, ByteBuffer buf, AionConnection con) {
 		AionClientPacket prototype = packetsPrototypes.get(id);
@@ -113,7 +111,7 @@ public class AionPacketHandler {
 	 * Whether the packet name matches the chat display filter (* or empty = all).
 	 *
 	 * @param filterlist 逗号分隔过滤列表 / comma-separated filter list
-	 * packet name
+	 * @param PacketName 包名 / packet name
 	 *
 	 * @return 若 shown 则为 true / true if shown
 	 */
@@ -139,8 +137,8 @@ public class AionPacketHandler {
 	 * Copies the first count bytes from the buffer (from offset 5) for debug display.
 	 *
 	 * @param buf 源缓冲区 / source buffer
-	 * byte count
-	 * copy buffer
+	 * @param count 字节数 / byte count
+	 * @return 复制缓冲区 / copy buffer
 	 */
 	private ByteBuffer getByteBuffer(ByteBuffer buf, int count) {
 
@@ -168,7 +166,7 @@ public class AionPacketHandler {
 	 *
 	 * @param state 连接状态 / connection state
 	 * @param id opcode
-	 * packet data
+	 * @param data 包数据 / packet data
 	 */
 	private void unknownPacket(State state, int id, ByteBuffer data) {
 		if (NetworkConfig.DISPLAY_UNKNOWNPACKETS) {

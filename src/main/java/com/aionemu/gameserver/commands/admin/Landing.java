@@ -71,7 +71,6 @@ public class Landing extends AdminCommand
      * Show help on invalid arguments.
      *
      * @param player 接收提示的玩家 / Player receiving the hint
-     * Failure message
      */
     @Override
     public void onFail(Player player, String message) {

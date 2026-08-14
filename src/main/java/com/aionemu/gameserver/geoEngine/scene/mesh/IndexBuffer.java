@@ -15,7 +15,7 @@ public abstract class IndexBuffer {
 	 * Reads the index value at the given position.
 	 *
 	 * @param i 索引位置 / index position
-	 * index value
+	 * @return 索引值 / index value
 	 */
 	public abstract int get(int i);
 
@@ -24,7 +24,7 @@ public abstract class IndexBuffer {
 	 * Writes an index value at the given position.
 	 *
 	 * @param i 索引位置 / index position
-	 * index value
+	 * @param value 索引值 / index value
 	 */
 	public abstract void put(int i, int value);
 
@@ -32,7 +32,7 @@ public abstract class IndexBuffer {
 	 * 返回缓冲中的元素个数。
 	 * Returns the number of elements in the buffer.
 	 *
-	 * element count
+	 * @return 元素个数 / element count
 	 */
 	public abstract int size();
 
@@ -40,7 +40,7 @@ public abstract class IndexBuffer {
 	 * 返回底层 NIO 缓冲。
 	 * Returns the underlying NIO buffer.
 	 *
-	 * underlying buffer
+	 * @return 底层缓冲 / underlying buffer
 	 */
 	public abstract Buffer getBuffer();
 }

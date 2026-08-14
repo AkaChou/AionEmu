@@ -45,7 +45,7 @@ public class DPHealEffect extends HealOverTimeEffect {
 	 * Returns current DP.
 	 *
 	 * @param effect 运行时效果 / runtime effect
-	 * current DP
+	 * @return 当前 DP / current DP
 	 */
 	@Override
 	protected int getCurrentStatValue(Effect effect) {
@@ -57,7 +57,7 @@ public class DPHealEffect extends HealOverTimeEffect {
 	 * Returns max DP.
 	 *
 	 * @param effect 运行时效果 / runtime effect
-	 * max DP
+	 * @return DP 上限 / max DP
 	 */
 	@Override
 	protected int getMaxStatValue(Effect effect) {

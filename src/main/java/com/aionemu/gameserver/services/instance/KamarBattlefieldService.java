@@ -23,7 +23,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
 
-/****/
 /**
  * 卡玛战场报名服务，管理开启窗口与冷却。
  * Kamar Battlefield registration service managing open windows and cooldowns.
@@ -39,8 +38,8 @@ public class KamarBattlefieldService {
 	public static final int maskId = 107;
 
 	/**
-	 * initKamarBattlefield 方法。
-	 * initKamarBattlefield method.
+	 * 初始化卡玛战场报名：按配置调度开启报名。
+	 * Initializes Kamar Battlefield registration by scheduling open windows per config.
 	 */
 	public void initKamarBattlefield() {
 		if (AutoGroupConfig.KAMAR_ENABLED) {
@@ -86,8 +85,8 @@ public class KamarBattlefieldService {
 	}
 
 	/**
-	 * startKamarRegistration 方法。
-	 * startKamarRegistration method.
+	 * 开启报名窗口。
+	 * Starts the registration window.
 	 */
 	public void startKamarRegistration() {
 		this.registerAvailable = true;
@@ -107,20 +106,20 @@ public class KamarBattlefieldService {
 	}
 
 	/**
-	 * isKamarAvailable 方法。
-	 * isKamarAvailable method.
-	 * result
+	 * 报名是否可用。
+	 * Whether registration is available.
+	 * @return 结果 / result
 	 */
 	public boolean isKamarAvailable() {
 		return this.registerAvailable;
 	}
 
 	/**
-	 * getInstanceMaskId 方法。
-	 * getInstanceMaskId method.
+	 * 获取玩家的报名掩码 ID；等级不符时返回 0。
+	 * Returns the registration mask id for the player, or 0 if level mismatch.
 	 *
 	 * 玩家 / player
-	 * result
+	 * @return 结果 / result
 	 */
 	public byte getInstanceMaskId(Player player) {
 		int level = player.getLevel();
@@ -145,7 +144,7 @@ public class KamarBattlefieldService {
 	 * Whether cooldown is active.
 	 *
 	 * 玩家 / player
-	 * result
+	 * @return 结果 / result
 	 */
 	public boolean hasCoolDown(Player player) {
 		return this.playersWithCooldown.contains(player.getObjectId());
@@ -155,8 +154,8 @@ public class KamarBattlefieldService {
 	 * 显示报名窗口。
 	 * Shows the registration window.
 	 *
-	 * 玩家 / player
-	 * instanceMaskId
+	 * @param player 玩家 / player
+	 * @param instanceMaskId 副本掩码 ID / instance mask id
 	 */
 	public void showWindow(Player player, byte instanceMaskId) {
 		if (getInstanceMaskId(player) != instanceMaskId) {
@@ -174,7 +173,7 @@ public class KamarBattlefieldService {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 * result
+	 * @return 结果 / result
 	 */
 	public static KamarBattlefieldService getInstance() {
 		ObjectProvider<KamarBattlefieldService> provider = instanceProvider;
@@ -185,10 +184,10 @@ public class KamarBattlefieldService {
 	}
 
 	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
+	 * 设置服务提供者。
+	 * Sets the service provider.
 	 *
-	 * provider
+	 * @return 服务提供者 / provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<KamarBattlefieldService> provider) {
 		instanceProvider = provider;

@@ -31,10 +31,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.LongAdder;
 
+/**
+ * 寻路服务：基于 {@link PathData} 提供生物寻路查询、结果缓存与队列调度。
+ * Pathfinding service: provides creature path queries, result caching and queue scheduling over {@link PathData}.
+ */
 @Slf4j
 public final class PathService implements DisposableBean {
 
 	private static final int MIN_LOCATION_TIMEOUT_MS = 1_000;
+	// ponytail: 有界同步检查；仅当本地路径点仍耗尽预算时再放宽。
 	// ponytail: bounded synchronous check; raise only if local waypoints still exhaust it.
 	private static final int WAYPOINT_SEARCH_MAX_NODES = 512;
 	private static final float MAX_GROUND_GEO_SEGMENT = 49;

@@ -26,8 +26,8 @@ public class CM_REPORT_PLAYER extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		readB(1); // unknown byte.
-		player = readS(); // the name of the reported person.
+		readB(1); // 未知字节 / unknown byte.
+		player = readS(); // 被举报人姓名 / the name of the reported person.
 	}
 
 	@Override

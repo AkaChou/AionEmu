@@ -11,8 +11,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.rewards.IdReward;
 
 /**
- * Boss 奖励组模板（静态数据/XML）。
- * XML template.
+ * Boss 奖励组：Boss 掉落的物品种族条目列表。
+ * Boss reward group: item race entries dropped by bosses.
  *
  * @author Rolandas
  */

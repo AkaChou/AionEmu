@@ -46,7 +46,7 @@ public class AbyssCore implements ZoneHandler {
 	 * 进入核心区：为非 GM 玩家挂载碰撞致死观察者。
 	 * Enter core zone: attach a collision-die observer for non-GM players.
 	 *
-	 * creature
+	 * @param creature 进入区域的生物 / creature entering the zone
 	 * @param zone     区域实例 / zone instance
 	 */
 	@Override
@@ -63,7 +63,7 @@ public class AbyssCore implements ZoneHandler {
 	 * 离开核心区：移除碰撞致死观察者。
 	 * Leave core zone: remove the collision-die observer.
 	 *
-	 * creature
+	 * @param creature 离开区域的生物 / creature leaving the zone
 	 * @param zone     区域实例 / zone instance
 	 */
 	@Override

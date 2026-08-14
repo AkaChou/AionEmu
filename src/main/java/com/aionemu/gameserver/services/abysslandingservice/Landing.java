@@ -107,7 +107,7 @@ public abstract class Landing<RL extends LandingLocation> {
 	 * 着陆点是否已关闭。
 	 * Whether the landing is closed.
 	 *
-	 * Closed flag
+	 * @return 是否已关闭 / closed flag
 	 */
 	public boolean isClosed() {
 		return closed.get();
@@ -128,7 +128,8 @@ public abstract class Landing<RL extends LandingLocation> {
 	}
 
 	/**
-	 * Current level
+	 * 当前等级。
+	 * Current level.
 	 */
 	public int getLevel() {
 		return this.level;
@@ -142,7 +143,8 @@ public abstract class Landing<RL extends LandingLocation> {
 	}
 
 	/**
-	 * Landing DAO
+	 * 欧比斯着陆点 DAO。
+	 * Landing DAO.
 	 */
 	private AbyssLandingDAO getDAO() {
 		return DAOManager.getDAO(AbyssLandingDAO.class);

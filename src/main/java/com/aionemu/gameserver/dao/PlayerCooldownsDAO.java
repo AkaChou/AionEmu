@@ -15,7 +15,7 @@ public abstract class PlayerCooldownsDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -26,7 +26,7 @@ public abstract class PlayerCooldownsDAO implements DAO {
 	 * 加载玩家冷却时间数据。
 	 * Loads player cooldown data.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void loadPlayerCooldowns(Player player);
 
@@ -34,7 +34,7 @@ public abstract class PlayerCooldownsDAO implements DAO {
 	 * 存储玩家冷却时间数据。
 	 * Stores player cooldown data.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void storePlayerCooldowns(Player player);
 }

@@ -62,9 +62,9 @@ public class GameServerTable {
      * @param defaultAddress 默认网络地址（通常公网） / Default network address (usually public)
      * @param ipRanges IP 段映射（通常局域网） / IP range mappings (usually LAN)
      * @param port 客户端端口 / Client port
-     * Max players
+     * @param maxPlayers 最大在线人数 / Max players
      * @param password 配置中的服务器密码 / Server password from config
-     * Auth response
+     * @return 认证响应 / Auth response
      */
     public GsAuthResponse registerGameServer(GsConnection gsConnection, byte requestedId, byte[] defaultAddress,
             List<IPRange> ipRanges, int port, int maxPlayers, String password) {
@@ -101,9 +101,7 @@ public class GameServerTable {
      * 按 ID 获取游戏服信息。
      * Get GameServerInfo by gameserver id.
      *
-     * GameServer id
-     *
-     * @param gameServerId
+     * @param gameServerId 游戏服 ID / GameServer id
      * @return 游戏服信息 / GameServer info
      */
     public GameServerInfo getGameServerInfo(byte gameServerId) {
@@ -130,7 +128,7 @@ public class GameServerTable {
      * 若账号在任意游戏服在线则踢下线。
      * Kick account from any GameServer if it is logged in.
      *
-     * Account to kick
+     * @param account 待踢账号 / Account to kick
      */
     public void kickAccountFromGameServer(Account account) {
         for (GameServerInfo gsi : getGameServers()) {
@@ -145,7 +143,7 @@ public class GameServerTable {
      * 获取 {@link GameServersDAO} 快捷方法。
      * Shortcut for {@link GameServersDAO}.
      *
-     * DAO instance
+     * @return DAO 实例 / DAO instance
      */
     private GameServersDAO getDAO() {
         return DAOManager.getDAO(GameServersDAO.class);
@@ -155,8 +153,8 @@ public class GameServerTable {
      * 向指定游戏服转发 pong。
      * Forward pong to the given GameServer.
      *
-     * GameServer id
-     * Process id
+     * @param serverId 游戏服 ID / GameServer id
+     * @param pid 进程 ID / Process id
      */
     public void pong(byte serverId, int pid) {
         for (GameServerInfo gsi : getGameServers()) {

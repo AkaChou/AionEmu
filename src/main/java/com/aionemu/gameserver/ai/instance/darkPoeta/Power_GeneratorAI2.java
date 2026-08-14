@@ -72,7 +72,7 @@ public class Power_GeneratorAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 18126, 46, getOwner()).useNoAnimationSkill(); //Electrocution.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18126, 46, getOwner()).useNoAnimationSkill(); // 电击。 / Electrocution.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -106,19 +106,19 @@ public class Power_GeneratorAI2 extends AggressiveNpcAI2
 					if (!isAlreadyDead()) {
 						switch (Rnd.get(1, 5)) {
 						    case 1:
-							    spawn(281088, x, y, z, (byte) 0); //Light Generator Core.
+							    spawn(281088, x, y, z, (byte) 0); // 光明发电机核心。 / Light Generator Core.
 							break;
 							case 2:
-							    spawn(281089, x, y, z, (byte) 0); //Wave Generator Core.
+							    spawn(281089, x, y, z, (byte) 0); // 波动发电机核心。 / Wave Generator Core.
 							break;
 							case 3:
-							    spawn(281090, x, y, z, (byte) 0); //Torpidity Generator Core.
+							    spawn(281090, x, y, z, (byte) 0); // 麻痹发电机核心。 / Torpidity Generator Core.
 							break;
 							case 4:
-							    spawn(281091, x, y, z, (byte) 0); //Shockwave Generator Core.
+							    spawn(281091, x, y, z, (byte) 0); // 冲击波发电机核心。 / Shockwave Generator Core.
 							break;
 							case 5:
-							    spawn(281092, x, y, z, (byte) 0); //Confusion Generator Core.
+							    spawn(281092, x, y, z, (byte) 0); // 混乱发电机核心。 / Confusion Generator Core.
 							break;
 						}
 					}
@@ -161,11 +161,11 @@ public class Power_GeneratorAI2 extends AggressiveNpcAI2
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
 		if (p != null) {
-			deleteNpcs(p.getWorldMapInstance().getNpcs(281088)); //Light Generator Core.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(281089)); //Wave Generator Core.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(281090)); //Torpidity Generator Core.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(281091)); //Shockwave Generator Core.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(281092)); //Confusion Generator Core.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(281088)); // 光明发电机核心。 / Light Generator Core.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(281089)); // 波动发电机核心。 / Wave Generator Core.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(281090)); // 麻痹发电机核心。 / Torpidity Generator Core.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(281091)); // 冲击波发电机核心。 / Shockwave Generator Core.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(281092)); // 混乱发电机核心。 / Confusion Generator Core.
 		}
 		cancelPhaseTask();
 		super.handleDied();

@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 全局掉落物品模板（静态数据/XML）。
- * XML template.
+ * Global drop items template (static data/XML).
  *
  * @author Wnkrz
  */

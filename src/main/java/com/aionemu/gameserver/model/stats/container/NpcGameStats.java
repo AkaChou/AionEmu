@@ -13,8 +13,8 @@ import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster.BroadcastMode;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * NPC 游戏属性，用于属性相关逻辑。
- * Npc Game Stats for stats logic.
+ * NPC 的游戏属性：基础属性计算与缓存。
+ * NPC game stats: base stat calculation and caching.
  *
  * @author xavier
  */

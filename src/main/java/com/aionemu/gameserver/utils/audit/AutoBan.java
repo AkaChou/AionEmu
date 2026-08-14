@@ -19,7 +19,7 @@ public class AutoBan {
 	 * 对玩家执行配置的自动处罚。
 	 * Applies the configured automatic punishment to the player.
 	 *
-	 * target player
+	 * @param player 目标玩家 / target player
 	 * @param message 处罚原因消息 / punishment reason message
 	 */
 	protected static void punishment(Player player, String message) {

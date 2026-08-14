@@ -133,9 +133,7 @@ public class TownService {
 	 * 根据生物位置解析所在城镇 ID（NPC 优先用自身 townId）。
 	 * Resolves town id from a creature's position (NPC uses its own townId first).
 	 *
-	 * creature
-	 *
-	 * @param creature
+	 * @param creature 生物 / creature
 	 * @return 城镇 ID，未命中为 0 / town id, or 0 if none
 	 */
 	public int getTownIdByPosition(Creature creature) {

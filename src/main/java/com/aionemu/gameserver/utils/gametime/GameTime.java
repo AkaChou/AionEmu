@@ -58,7 +58,7 @@ public class GameTime implements Cloneable {
 		private int _days;
 
 		/**
-		 * Day count
+		 * @param days 天数 / Day count
 		 */
 		Monthes(int days) {
 			_days = days;
@@ -68,7 +68,7 @@ public class GameTime implements Cloneable {
 		 * 获取该月天数。
 		 * Get days in this month.
 		 *
-		 * Days
+		 * @return 天数 / Days
 		 */
 		public int getDays() {
 			return _days;
@@ -94,7 +94,7 @@ public class GameTime implements Cloneable {
 	 * Minutes contained in the given month.
 	 *
 	 * @param m 月份 / Month
-	 * Minutes in this month
+	 * @return 该月分钟数 / Minutes in this month
 	 */
 	public int getProperMinutesInMonth(Monthes m) {
 		return m.getDays() * MINUTES_IN_DAY;
@@ -171,7 +171,7 @@ public class GameTime implements Cloneable {
 	 * 获取游戏年份（0 起）。
 	 * Get game year (from 0).
 	 *
-	 * Year
+	 * @return 年份 / Year
 	 */
 	public int getYear() {
 		return gameTime / MINUTES_IN_YEAR;
@@ -181,7 +181,7 @@ public class GameTime implements Cloneable {
 	 * 获取游戏月份（1–12）。
 	 * Get game month (1–12).
 	 *
-	 * Month 1–12
+	 * @return 月份 1–12 / Month 1–12
 	 */
 	public int getMonth() {
 		int answer = 1;
@@ -204,7 +204,7 @@ public class GameTime implements Cloneable {
 	 * 获取游戏日（1–当月天数）。
 	 * Get game day (1–days in month).
 	 *
-	 * Day
+	 * @return 日 / Day
 	 */
 	public int getDay() {
 		int answer = 1;
@@ -226,7 +226,7 @@ public class GameTime implements Cloneable {
 	 * 获取游戏小时（0–23）。
 	 * Get game hour (0–23).
 	 *
-	 * Hour 0–23
+	 * @return 小时 0–23 / Hour 0–23
 	 */
 	public int getHour() {
 		return (gameTime % MINUTES_IN_DAY) / (MINUTES_IN_HOUR);
@@ -236,7 +236,7 @@ public class GameTime implements Cloneable {
 	 * 获取游戏分钟（0–59）。
 	 * Get game minute (0–59).
 	 *
-	 * Minute 0–59
+	 * @return 分钟 0–59 / Minute 0–59
 	 */
 	public int getMinute() {
 		return (gameTime % MINUTES_IN_HOUR);
@@ -246,7 +246,7 @@ public class GameTime implements Cloneable {
 	 * 获取当前时段。
 	 * Get current day-time period.
 	 *
-	 * DayTime
+	 * @return 时段 / DayTime
 	 */
 	public DayTime getDayTime() {
 		return dayTime;
@@ -256,7 +256,7 @@ public class GameTime implements Cloneable {
 	 * 将游戏时间换算为近似真实时间（÷12）。
 	 * Convert game time to approximate real time (÷12).
 	 *
-	 * Converted value
+	 * @return 换算后的值 / Converted value
 	 * @author vlog
 	 */
 	public int convertTime() {
@@ -290,7 +290,7 @@ public class GameTime implements Cloneable {
 	 * Whether this time is greater than the given one.
 	 *
 	 * @param gt 比较对象 / Other game time
-	 * @return 若 greater 则为 true / True if greater
+	 * @return 若大于则为 true / True if greater
 	 */
 	public boolean isGreaterThan(GameTime gt) {
 		return this.getTime() > gt.getTime();
@@ -301,7 +301,7 @@ public class GameTime implements Cloneable {
 	 * Whether this time is less than the given one.
 	 *
 	 * @param gt 比较对象 / Other game time
-	 * @return 若 less 则为 true / True if less
+	 * @return 若小于则为 true / True if less
 	 */
 	public boolean isLessThan(GameTime gt) {
 		return this.getTime() < gt.getTime();
@@ -312,7 +312,7 @@ public class GameTime implements Cloneable {
 	 * Equality by total minutes.
 	 *
 	 * @param o 对象 / Object
-	 * 若 equal 则为 true / True if equal
+	 * @return 若相等则为 true / True if equal
 	 * @author vlog
 	 */
 	@Override
@@ -324,7 +324,7 @@ public class GameTime implements Cloneable {
 	 * 按总分钟数生成哈希码。
 	 * Hash code by total minutes.
 	 *
-	 * Hash code
+	 * @return 哈希码 / Hash code
 	 */
 	@Override
 	public int hashCode() {
@@ -335,7 +335,7 @@ public class GameTime implements Cloneable {
 	 * 克隆为相同分钟数的新实例。
 	 * Clone as a new instance with the same minutes.
 	 *
-	 * Clone
+	 * @return 克隆实例 / Clone
 	 */
 	@Override
 	public Object clone() {

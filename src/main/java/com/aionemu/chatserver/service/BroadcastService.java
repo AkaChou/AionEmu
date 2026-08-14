@@ -20,7 +20,7 @@ public class BroadcastService {
      * 获取单例（已废弃，迁移至 Boot 后请使用注入）。
      * Return the singleton (deprecated; prefer injection after Boot migration).
      *
-     * Singleton instance
+     * @return 单例实例 / singleton instance
      * @deprecated boot-migration
      */
     @Deprecated(since = "boot-migration")
@@ -54,7 +54,7 @@ public class BroadcastService {
      * 向处于消息频道内的所有客户端广播。
      * Broadcast a message to all clients present in the message channel.
      *
-     * Message
+     * @param message 消息 / message
      */
     public void broadcastMessage(Message message) {
         for (ChatClient client : clients.values()) {
@@ -68,8 +68,8 @@ public class BroadcastService {
      * 向指定客户端发送频道消息包。
      * Send a channel message packet to the given client.
      *
-     * @param chatClient 目标客户端 / Target chat client
-     * Message
+     * @param chatClient 目标客户端 / target chat client
+     * @param message 消息 / message
      */
     public void sendMessage(ChatClient chatClient, Message message) {
         ClientChannelHandler cch = chatClient.getChannelHandler();

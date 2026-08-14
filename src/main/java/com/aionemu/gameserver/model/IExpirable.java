@@ -19,6 +19,6 @@ public interface IExpirable {
 	/** 是否立即过期 / Whether expire now */
 	public boolean canExpireNow();
 
-	/** expire Message / expire Message */
+	/** 发送到期提示消息 / Send the expire message */
 	public void expireMessage(Player player, int time);
 }

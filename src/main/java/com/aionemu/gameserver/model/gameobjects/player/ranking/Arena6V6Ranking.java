@@ -12,7 +12,7 @@ public class Arena6V6Ranking {
 	private int rank;
 	private int bestRank;
 
-	// 竞赛点数 / competiton Points
+	// 竞赛点数 / Competition points
 	private int points;
 	private int lastPoints;
 	private int highPoints;

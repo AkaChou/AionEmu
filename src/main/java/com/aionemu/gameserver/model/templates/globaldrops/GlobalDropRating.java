@@ -9,7 +9,7 @@ import com.aionemu.gameserver.model.templates.npc.NpcRating;
 
 /**
  * 全局掉落 Rating 模板（静态数据/XML）。
- * XML template.
+ * Global drop rating template (static data/XML).
  *
  * @author Wnkrz
  */
@@ -19,7 +19,7 @@ public class GlobalDropRating {
 	@XmlAttribute(name = "rating", required = true)
 	protected NpcRating rating;
 
-	/** 返回 rating / Returns the rating */
+	/** 返回 NPC 等级。 / Returns the rating. */
 	public NpcRating getRating() {
 		return rating;
 	}

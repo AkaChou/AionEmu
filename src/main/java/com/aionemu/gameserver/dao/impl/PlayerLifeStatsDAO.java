@@ -122,7 +122,7 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
      * 批量更新玩家生命状态。
      * Batch updates player life stats.
      *
-     * players
+     * @param players 玩家集合 / players
      */
     public void updatePlayerLifeStats(Iterable<Player> players) {
         try (Connection con = DatabaseFactory.getConnection()) {
@@ -169,10 +169,10 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

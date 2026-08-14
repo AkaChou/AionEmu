@@ -27,7 +27,7 @@ public class ChatServerLifecycleGateway {
      * 注入可选的聊天服运行时提供者。
      * Injects an optional chat-server runtime provider.
      *
-     * runtime ObjectProvider
+     * @param chatServerRuntimeProvider 聊天服运行时提供者 / runtime ObjectProvider
      */
     @Autowired(required = false)
     void setChatServerRuntimeProvider(ObjectProvider<ChatServerRuntime> chatServerRuntimeProvider) {
@@ -38,7 +38,7 @@ public class ChatServerLifecycleGateway {
      * 注入可选的聊天运行时桥提供者。
      * Injects an optional chat runtime-bridge provider.
      *
-     * runtime-bridge ObjectProvider
+     * @param runtimeBridgeProvider 运行时桥提供者 / runtime-bridge ObjectProvider
      */
     @Autowired(required = false)
     void setRuntimeBridgeProvider(ObjectProvider<ChatServerRuntimeBridge> runtimeBridgeProvider) {
@@ -87,7 +87,7 @@ public class ChatServerLifecycleGateway {
      * 懒加载并缓存运行时桥；无 Provider 时新建默认实例。
      * Lazily loads and caches the runtime bridge; creates a default when no provider is present.
      *
-     * runtime bridge
+     * @return 运行时桥 / runtime bridge
      */
     private synchronized ChatServerRuntimeBridge runtimeBridge() {
         if (runtimeBridge == null) {

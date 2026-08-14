@@ -20,8 +20,8 @@ public abstract class AionClientPacket extends BaseClientPacket<LoginConnection>
      * Construct client packet and bind the connection.
      *
      * @param buf 包体数据 / Packet data
-     * Login connection
-     * Packet opcode
+     * @param client 登录连接 / Login connection
+     * @param opcode 包操作码 / Packet opcode
      */
     protected AionClientPacket(ByteBuffer buf, LoginConnection client, int opcode) {
         super(buf, opcode);

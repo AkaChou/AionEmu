@@ -56,7 +56,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
      * Spring injection entry: uses process runtime bridge halt.
      *
      * @param services 服务开关配置 / service enablement properties
-     * transport boundary
+     * @param transportBoundary 传输边界 / transport boundary
      * @param serviceLifecycles 各服务生命周期实现 / service lifecycle beans
      * @param runtimeBridge 进程运行时桥接 / process runtime bridge
      */
@@ -75,7 +75,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
      * Test constructor: uses a default process bridge halt.
      *
      * @param services 服务开关配置 / service enablement properties
-     * transport boundary
+     * @param transportBoundary 传输边界 / transport boundary
      * @param serviceLifecycles 各服务生命周期实现 / service lifecycle beans
      */
     AionServiceLauncher(
@@ -91,7 +91,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
      * Core constructor: sorts lifecycles by phase and binds the halt action.
      *
      * @param services 服务开关配置 / service enablement properties
-     * transport boundary
+     * @param transportBoundary 传输边界 / transport boundary
      * @param serviceLifecycles 各服务生命周期实现 / service lifecycle beans
      * @param haltAction 进程中止动作 / process halt action
      */
@@ -114,7 +114,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
      * Starts each embedded service after application bootstrap according to config.
      *
      * @param args 应用启动参数 / application arguments
-     * if any service fails to start。
+     * @throws Exception 任一服务启动失败时抛出 / if any service fails to start
      */
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -169,7 +169,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
      *
      * @param serviceLifecycle 目标服务生命周期 / target service lifecycle
      * @param args 应用启动参数 / application arguments
-     * if start fails。
+     * @throws Exception 启动失败时抛出 / if start fails
      */
     private void startService(AionServiceLifecycle serviceLifecycle, ApplicationArguments args) throws Exception {
         String name = serviceLifecycle.getName();
@@ -185,7 +185,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
      * 仅执行一次的优雅关闭请求。
      * Runs a graceful shutdown request at most once.
      *
-     * shutdown action
+     * @param shutdown 关闭动作 / shutdown action
      */
     void requestGracefulShutdown(Runnable shutdown) {
         if (gracefulShutdownRequested.compareAndSet(false, true)) {

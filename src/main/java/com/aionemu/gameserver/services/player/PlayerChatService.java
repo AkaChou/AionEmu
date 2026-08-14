@@ -21,11 +21,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class PlayerChatService {
 
 	/**
-	 * isFlooding 方法。
-	 * isFlooding method.
+	 * 刷屏检测：超过限额则禁言 2 分钟。
+	 * Flood detection: gags the player for 2 minutes when over the limit.
 	 *
-	 * 玩家 / player
-	 * result
+	 * @param player 玩家 / player
+	 * @return 是否判定为刷屏 / whether flooding
 	 */
 	public static boolean isFlooding(final Player player) {
 		player.setLastMessageTime();
@@ -53,9 +53,9 @@ public class PlayerChatService {
 	 * 记录聊天日志。
 	 * Logs chat messages.
 	 *
-	 * 玩家 / player
-	 * type
-	 * message
+	 * @param player 玩家 / player
+	 * @param type 聊天类型 / chat type
+	 * @param message 消息内容 / message content
 	 */
 	public static void chatLogging(Player player, ChatType type, String message) {
 		switch (type) {

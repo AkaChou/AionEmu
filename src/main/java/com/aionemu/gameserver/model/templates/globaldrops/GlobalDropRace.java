@@ -9,7 +9,7 @@ import com.aionemu.gameserver.model.Race;
 
 /**
  * 全局掉落种族模板（静态数据/XML）。
- * XML template.
+ * Global drop race template (static data/XML).
  *
  * @author Wnkrz
  */

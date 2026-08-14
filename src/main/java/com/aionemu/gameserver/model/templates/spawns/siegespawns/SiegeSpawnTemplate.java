@@ -49,7 +49,7 @@ public class SiegeSpawnTemplate extends SpawnTemplate {
 		return siegeModType;
 	}
 
-	/** 设置 siege id / Sets the siege id */
+	/** 设置攻城 ID / Sets the siege id */
 	public void setSiegeId(int siegeId) {
 		this.siegeId = siegeId;
 	}
@@ -82,7 +82,7 @@ public class SiegeSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether assault
+	 * @return 是否处于袭击状态 / whether assault
 	 */
 	public final boolean isAssault() {
 		return siegeModType.equals(SiegeModType.ASSAULT);

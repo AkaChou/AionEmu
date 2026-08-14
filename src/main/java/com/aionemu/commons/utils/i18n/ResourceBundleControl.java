@@ -41,7 +41,7 @@ public class ResourceBundleControl extends ResourceBundle.Control {
      * 使用指定编码构造。
      * Construct with the given encoding.
      *
-     * Character encoding
+     * @param encoding 字符编码 / character encoding
      */
     public ResourceBundleControl(String encoding) {
         this.encoding = encoding;
@@ -51,15 +51,15 @@ public class ResourceBundleControl extends ResourceBundle.Control {
      * 创建 ResourceBundle 实例（支持自定义编码的 properties）。
      * Create a ResourceBundle instance (properties with custom encoding).
      *
-     * Base name
-     * Locale
-     * Format
-     * Class loader
-     * Whether to reload
-     * Resource bundle
-     * On I/O failure
-     * On access failure
-     * On instantiation failure。
+     * @param baseName 资源基名 / base name
+     * @param locale 区域 / locale
+     * @param format 格式（java.class 或 java.properties） / format (java.class or java.properties)
+     * @param loader 类加载器 / class loader
+     * @param reload 是否重新加载 / whether to reload
+     * @return 资源包；无法加载时为 null / resource bundle, or null when not loadable
+     * @throws IOException I/O 失败时 / on I/O failure
+     * @throws IllegalAccessException 访问失败时 / on access failure
+     * @throws InstantiationException 实例化失败时 / on instantiation failure
      */
     @Override
     public ResourceBundle newBundle(String baseName, Locale locale, String format,
@@ -120,11 +120,8 @@ public class ResourceBundleControl extends ResourceBundle.Control {
      * 通过无参构造实例化 ResourceBundle 子类。
      * Instantiate a ResourceBundle subclass via its default constructor.
      *
-     * Bundle class
-     * Instance
-     * On access failure
-     *
-     * @param bundleClass
+     * @param bundleClass 资源包类 / bundle class
+     * @return 资源包实例 / bundle instance
      * @throws InstantiationException 实例化失败 / On instantiation failure
      */
     private ResourceBundle newResourceBundle(Class<? extends ResourceBundle> bundleClass)

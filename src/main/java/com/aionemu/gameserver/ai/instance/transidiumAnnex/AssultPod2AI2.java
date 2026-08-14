@@ -42,11 +42,11 @@ public class AssultPod2AI2 extends AggressiveNpcAI2
 					spawn(297188, 381.7059f, 628.5631f, 688.8357f, (byte) 44);
 					spawn(297188, 392.7062f, 641.847f, 688.8357f, (byte) 49);
 					spawn(297188, 396.56906f, 625.99023f, 688.86523f, (byte) 45);
-					// FXMon_Smoke.
+					// 烟雾特效 / FXMon_Smoke
 					spawn(297352, 379.51096f, 395.966f, 688.8357f, (byte) 78);
 					spawn(297352, 394.50833f, 385.5321f, 688.8357f, (byte) 70);
 					spawn(297352, 397.13196f, 401.5456f, 688.86523f, (byte) 75);
-					spawn(297307, 372.43204f, 649.92316f, 688.81293f, (byte) 78, 167); //Aspida Advance Corridor Shield.
+					spawn(297307, 372.43204f, 649.92316f, 688.81293f, (byte) 78, 167); // 阿斯皮达进阶走廊护盾 / Aspida Advance Corridor Shield
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					    @Override
 					    public void run() {

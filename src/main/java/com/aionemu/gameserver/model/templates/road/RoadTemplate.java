@@ -54,7 +54,7 @@ public class RoadTemplate {
 		return radius;
 	}
 
-	/** 返回居中 / Returns the center*/
+	/** 返回居中 / Returns the center. */
 	public RoadPoint getCenter() {
 		return center;
 	}

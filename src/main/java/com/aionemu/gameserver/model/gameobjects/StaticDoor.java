@@ -23,10 +23,13 @@ public class StaticDoor extends StaticObject {
 	private EnumSet<StaticDoorState> states;
 
 	/**
-	 * @param objectId
-	 * @param controller
-	 * @param spawnTemplate
-	 * @param objectTemplate
+	 * 构造静态门。
+	 * Constructs a static door.
+	 *
+	 * @param objectId 对象 ID / object id
+	 * @param controller 静态对象控制器 / static-object controller
+	 * @param spawnTemplate 生成模板 / spawn template
+	 * @param objectTemplate 静态门模板 / static-door template
 	 */
 	public StaticDoor(int objectId, StaticObjectController controller, SpawnTemplate spawnTemplate,
 			StaticDoorTemplate objectTemplate, int instanceId) {
@@ -35,23 +38,29 @@ public class StaticDoor extends StaticObject {
 	}
 
 	/**
-	 * @return the open state from states set
+	 * 是否处于开启状态。
+	 * Whether the door is open.
+	 *
+	 * @return 是否开启 / whether open
 	 */
 	public boolean isOpen() {
 		return states.contains(StaticDoorState.OPENED);
 	}
 
-	/** 返回 states / Returns the states */
+	/** 返回状态集合 / Returns the states */
 	public EnumSet<StaticDoorState> getStates() {
 		return states;
 	}
 
 	/**
-	 * @param open the open state to set
+	 * 设置门的开启状态并广播表情包。
+	 * Sets the door's open state and broadcasts the emotion packet.
+	 *
+	 * @param open 是否开启 / whether open
 	 */
 	public void setOpen(boolean open) {
 		EmotionType emotion;
-		int packetState = 0; // not important IMO, similar to internal state
+		int packetState = 0; // 不重要，与内部状态类似 / not important, similar to internal state
 		if (open) {
 			emotion = EmotionType.OPEN_DOOR;
 			states.remove(StaticDoorState.CLICKABLE);
@@ -70,7 +79,7 @@ public class StaticDoor extends StaticObject {
 		PacketSendUtility.broadcastPacket(this, new SM_EMOTION(this.getSpawn().getStaticId(), emotion, packetState));
 	}
 
-	/** 更换状态 / Change State*/
+	/** 更换状态 / Change state. */
 	public void changeState(boolean open, int state) {
 		state = state & 0xF;
 		StaticDoorState.setStates(state, states);

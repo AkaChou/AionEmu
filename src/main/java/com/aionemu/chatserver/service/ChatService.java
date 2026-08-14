@@ -32,7 +32,7 @@ public class ChatService {
      * 获取单例（已废弃，迁移至 Boot 后请使用注入）。
      * Return the singleton (deprecated; prefer injection after Boot migration).
      *
-     * Singleton instance
+     * @return 单例实例 / singleton instance
      * @deprecated boot-migration
      */
     @Deprecated(since = "boot-migration")
@@ -65,16 +65,12 @@ public class ChatService {
      * 由游戏服侧注册玩家并生成认证令牌。
      * Register a player from the game-server side and generate an auth token.
      *
-     * Player id
-     * Login account
-     * Nickname
-     *
-     * @param playerId
-     * @return 聊天客户端对象 / Chat client
-     * @param playerLogin
-     * @throws NoSuchAlgorithmException 摘要算法不可用 / Digest algorithm unavailable
-     * @param nick
-     * @throws UnsupportedEncodingException 字符编码不支持 / Encoding unsupported
+     * @param playerId 玩家 ID / player id
+     * @param playerLogin 登录账号 / login account
+     * @param nick 角色昵称 / nickname
+     * @return 聊天客户端对象 / chat client
+     * @throws NoSuchAlgorithmException 摘要算法不可用 / digest algorithm unavailable
+     * @throws UnsupportedEncodingException 字符编码不支持 / encoding unsupported
      */
     public ChatClient registerPlayer(int playerId, String playerLogin, String nick) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -91,8 +87,8 @@ public class ChatService {
      * 将动态随机段与账号摘要拼接为 48 字节令牌。
      * Build a 48-byte token from a random dynamic segment and the account digest.
      *
-     * Account digest
-     * Full token
+     * @param accountToken 账号摘要 / account digest
+     * @return 完整令牌 / full token
      */
     private byte[] generateToken(byte[] accountToken) {
         byte[] dynamicToken = new byte[16];
@@ -112,12 +108,12 @@ public class ChatService {
      * 处理客户端侧连接认证：校验令牌并绑定通道处理器。
      * Handle client-side connection auth: verify token and bind the channel handler.
      *
-     * Player id
-     * Token
-     * Identifier bytes
-     * @param channelHandler 通道处理器 / Channel handler
-     * @param realName 真实角色名 / Real character name
-     * Encoding unsupported。
+     * @param playerId 玩家 ID / player id
+     * @param token 认证令牌 / auth token
+     * @param identifier 标识字节 / identifier bytes
+     * @param channelHandler 通道处理器 / channel handler
+     * @param realName 真实角色名 / real character name
+     * @throws UnsupportedEncodingException 字符编码不支持 / encoding unsupported
      */
     public void registerPlayerConnection(int playerId, byte[] token, byte[] identifier, ClientChannelHandler channelHandler, String realName) throws UnsupportedEncodingException {
         ChatClient chatClient = players.get(playerId);
@@ -141,10 +137,10 @@ public class ChatService {
      * 将玩家加入指定频道（群组类频道避免重复加入）。
      * Join the player to the given channel (group channels avoid duplicate joins).
      *
-     * @param chatClient 聊天客户端 / Chat client
-     * Channel index
-     * Channel identifier
-     * @return 加入的频道；未找到或重复群组则为 null / Joined channel, or null if missing/duplicate group
+     * @param chatClient 聊天客户端 / chat client
+     * @param channelIndex 频道索引 / channel index
+     * @param channelIdentifier 频道标识 / channel identifier
+     * @return 加入的频道；未找到或重复群组则为 null / joined channel, or null if missing/duplicate group
      */
     public Channel registerPlayerWithChannel(ChatClient chatClient, int channelIndex, byte[] channelIdentifier) {
         Channel channel = ChatChannels.getChannelByIdentifier(channelIdentifier);
@@ -164,7 +160,7 @@ public class ChatService {
      * 玩家下线：移除会话、广播集合并关闭通道。
      * Player logout: remove session, leave broadcast set, and close the channel.
      *
-     * Player id
+     * @param playerId 玩家 ID / player id
      */
     public void playerLogout(int playerId) {
         ChatClient chatClient = players.get(playerId);
@@ -183,8 +179,8 @@ public class ChatService {
      * 对在线玩家设置禁言截止时间。
      * Set gag end time for an online player.
      *
-     * Player id
-     * @param gagTime 禁言截止时间戳 / Gag end timestamp
+     * @param playerId 玩家 ID / player id
+     * @param gagTime 禁言截止时间戳 / gag end timestamp
      */
     public void gagPlayer(int playerId, long gagTime) {
         if (players.containsKey(playerId)) {

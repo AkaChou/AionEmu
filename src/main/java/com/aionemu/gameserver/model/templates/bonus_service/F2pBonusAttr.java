@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * F2p 加成 Attr 模板（静态数据/XML）。
- * XML template.
+ * F2P bonus attribute template (static data/XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

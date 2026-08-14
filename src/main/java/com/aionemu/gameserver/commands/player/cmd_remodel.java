@@ -43,7 +43,7 @@ public class cmd_remodel extends PlayerCommand {
 			return;
 		}
 
-		if (params.length == 1) { // Use target
+		if (params.length == 1) { // 使用目标 / Use target
 			int itemId = Integer.parseInt(params[0]);
 			if (admin.getInventory().decreaseByItemId(186000202, 1)) {
 				if (remodelItem(admin, itemId)) {
@@ -97,7 +97,7 @@ public class cmd_remodel extends PlayerCommand {
 	 * Forwards varargs to {@link #executeCommand(Player, String[])}.
 	 *
 	 * @param player 执行命令的玩家 / invoking player
-	 * command parameters
+	 * @param params 命令参数 / command parameters
 	 */
 	@Override
 	public void execute(Player player, String... params) {

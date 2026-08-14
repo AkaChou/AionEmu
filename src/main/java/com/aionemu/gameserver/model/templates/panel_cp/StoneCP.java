@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Stone 创造点模板（静态数据/XML）。
- * XML template.
+ * 石创造点模板（静态数据/XML）。
+ * Stone CP template (static data / XML).
  */
 
 @XmlType(name = "stone_cp")

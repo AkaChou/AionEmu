@@ -36,16 +36,16 @@ public class Refuge_CorridorAI2 extends NpcAI2
 			return true;
 		} if (dialogId == 10000) {
 			switch (getNpcId()) {
-			    case 805613: //Krotan Refuge Corridor [Elyos]
-			    case 805627: //Krotan Refuge Corridor [Asmodians]
+			    case 805613: // 克罗坦避难走廊 [天族]。 / Krotan Refuge Corridor [Elyos].
+			    case 805627: // 克罗坦避难走廊 [魔族]。 / Krotan Refuge Corridor [Asmodians].
 				    TeleportService2.teleportTo(player, 400010000, 1425.239f, 1006.4445f, 2976.326f, (byte) 99);
 			    break;
-			    case 805614: //Miren Refuge Corridor [Elyos]
-			    case 805628: //Miren Refuge Corridor [Asmodians]
+			    case 805614: // 拉米兰避难走廊 [天族]。 / Miren Refuge Corridor [Elyos].
+			    case 805628: // 拉米兰避难走廊 [魔族]。 / Miren Refuge Corridor [Asmodians].
 				    TeleportService2.teleportTo(player, 400010000, 1164.388f, 2019.7821f, 2943.519f, (byte) 80);
 			    break;
-			    case 805615: //Kysis Refuge Corridor [Elyos]
-			    case 805629: //Kysis Refuge Corridor [Asmodians]
+			    case 805615: // 德奇沙斯避难走廊 [天族]。 / Kysis Refuge Corridor [Elyos].
+			    case 805629: // 德奇沙斯避难走廊 [魔族]。 / Kysis Refuge Corridor [Asmodians].
 				    TeleportService2.teleportTo(player, 400010000, 1740.073f, 1702.1339f, 3025.284f, (byte) 1);
 			    break;
 			}

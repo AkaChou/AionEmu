@@ -37,8 +37,8 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	 * 加载玩家惩罚数据。
 	 * Loads player punishments.
 	 *
-	 * 玩家 / player
-	 * punishment type
+	 * @param player 玩家 / player
+	 * @param punishmentType 惩罚类型 / punishment type
 	 */
 	@Override
 	public void loadPlayerPunishments(final Player player, final PunishmentType punishmentType) {
@@ -66,8 +66,8 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	 * 保存玩家惩罚数据。
 	 * Stores player punishments.
 	 *
-	 * 玩家 / player
-	 * punishment type
+	 * @param player 玩家 / player
+	 * @param punishmentType 惩罚类型 / punishment type
 	 */
 	@Override
 	public void storePlayerPunishments(final Player player, final PunishmentType punishmentType) {
@@ -91,10 +91,10 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	 * 惩罚指定玩家。
 	 * Punishes a player by id.
 	 *
-	 * player id
-	 * punishment type
-	 * duration in seconds
-	 * reason
+	 * @param playerId 玩家 ID / player id
+	 * @param punishmentType 惩罚类型 / punishment type
+	 * @param duration 秒数时长 / duration in seconds
+	 * @param reason 原因 / reason
 	 */
 	@Override
 	public void punishPlayer(final int playerId, final PunishmentType punishmentType, final long duration, final String reason) {
@@ -116,9 +116,9 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	 * 惩罚玩家（基于当前计时器）。
 	 * Punishes a player based on current timers.
 	 *
-	 * 玩家 / player
-	 * punishment type
-	 * reason
+	 * @param player 玩家 / player
+	 * @param punishmentType 惩罚类型 / punishment type
+	 * @param reason 原因 / reason
 	 */
 	@Override
 	public void punishPlayer(final Player player, final PunishmentType punishmentType, final String reason) {
@@ -133,8 +133,8 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	 * 解除玩家惩罚。
 	 * Unpunishes a player.
 	 *
-	 * player id
-	 * punishment type
+	 * @param playerId 玩家 ID / player id
+	 * @param punishmentType 惩罚类型 / punishment type
 	 */
 	@Override
 	public void unpunishPlayer(final int playerId, final PunishmentType punishmentType) {
@@ -153,8 +153,8 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	 * 获取角色封禁信息。
 	 * Gets character ban info.
 	 *
-	 * player id
-	 * ban info
+	 * @param playerId 玩家 ID / player id
+	 * @return 封禁信息 / ban info
 	 */
 	@Override
 	public CharacterBanInfo getCharBanInfo(final int playerId) {
@@ -181,10 +181,10 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
 	 *
-	 * @param s 数据库名 / database name
-	 * @param i 主版本 / major version
-	 * @param i1 次版本 / minor version
-	 * whether supported
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
 	 */
 	@Override
 	public boolean supports(String s, int i, int i1) {

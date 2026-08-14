@@ -38,7 +38,6 @@ public class Auction extends AdminCommand {
 	 * 执行拍卖管理：add/remove/addrandom 子命令。
 	 * Executes auction management: add/remove/addrandom subcommands.
 	 *
-	 * admin
 	 * @param params 参数：子命令与区域/类型/价格等 / subcommand and zone/type/price args
 	 */
 	@Override
@@ -287,8 +286,6 @@ public class Auction extends AdminCommand {
 	 * 参数错误时输出 {@code //auction} 用法。
 	 * Prints {@code //auction} usage on invalid arguments.
 	 *
-	 * admin
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

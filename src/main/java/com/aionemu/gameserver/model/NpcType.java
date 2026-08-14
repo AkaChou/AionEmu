@@ -7,7 +7,17 @@ package com.aionemu.gameserver.model;
 
 public enum NpcType {
 	/** 可攻击 / Attackable. */
-	ATTACKABLE(0), PEACE(2), AGGRESSIVE(8), INVULNERABLE(10), NON_ATTACKABLE(38), UNKNOWN(54);
+	ATTACKABLE(0),
+	/** 和平 / Peace */
+	PEACE(2),
+	/** 好战 / Aggressive */
+	AGGRESSIVE(8),
+	/** 无敌 / Invulnerable */
+	INVULNERABLE(10),
+	/** 不可攻击 / Non Attackable */
+	NON_ATTACKABLE(38),
+	/** 未知 / Unknown */
+	UNKNOWN(54);
 
 	private int someClientSideId;
 

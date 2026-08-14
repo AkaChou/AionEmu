@@ -32,7 +32,7 @@ public class CM_ITEM_REMODEL extends AionClientPacket {
 	 */
 	@Override
 	protected void readImpl() {
-		readD(); // npcId
+		readD(); // NPC 编号 / npcId
 		keepItemId = readD();
 		extractItemId = readD();
 	}

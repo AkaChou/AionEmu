@@ -35,16 +35,16 @@ public class Elyos_Elite_Combat_MageAI2 extends NpcAI2
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
-				case 220575: //Elyos Elite Combat Mage.
+				case 220575: // 天族精英战斗法师 / Elyos Elite Combat Mage.
 					announce1StDefense();
 				break;
-				case 220577: //Elyos Elite Combat Mage.
+				case 220577: // 天族精英战斗法师 / Elyos Elite Combat Mage.
 					announce2NdDefense();
 				break;
-				case 220579: //Elyos Elite Combat Mage.
+				case 220579: // 天族精英战斗法师 / Elyos Elite Combat Mage.
 					announce3RdDefense();
 				break;
-				case 220581: //Elyos Elite Combat Mage.
+				case 220581: // 天族精英战斗法师 / Elyos Elite Combat Mage.
 					announce4ThDefense();
 			    break;
 			}

@@ -22,13 +22,13 @@ public class PatternTransformer implements PropertyTransformer<Pattern> {
     public static final PatternTransformer SHARED_INSTANCE = new PatternTransformer();
 
     /**
- * 将字符串值转换为 Pattern 对象
+     * 将字符串值转换为 Pattern 对象
      * Transforms string value into Pattern object
      *
-     * @param value 要转换的字符串值（正则表达式）String value to transform (regular expression)
-     * @param field 字段对象 Field that will be transformed
- * @return 转换后的 Pattern 对象 Transformed Pattern object
-     * @throws TransformationException 如果正则表达式无效 if regular expression is invalid
+     * @param value 要转换的字符串值（正则表达式）/ String value to transform (regular expression)
+     * @param field 字段对象 / Field that will be transformed
+     * @return 转换后的 Pattern 对象 / Transformed Pattern object
+     * @throws TransformationException 如果正则表达式无效 / if regular expression is invalid
      */
     public Pattern transform(String value, Field field) throws TransformationException {
         try {

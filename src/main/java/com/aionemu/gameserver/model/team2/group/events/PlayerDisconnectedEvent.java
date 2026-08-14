@@ -11,7 +11,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 
 /**
- * 玩家 Disconnected 活动，用于团队2相关逻辑。
+ * 玩家断线事件（团队2）。
  * Player Disconnected Event for team 2 logic.
  *
  * @author ATracer
@@ -27,14 +27,17 @@ public class PlayerDisconnectedEvent implements Predicate<Player>, TeamEvent {
 	}
 
 	/**
-	 * Player should be in group before disconnection
+	 * 断线前玩家必须已在队伍中。
+	 * Player should be in group before disconnection.
+	 *
+	 * @return 是否满足条件 / whether the condition holds
 	 */
 	@Override
 	public boolean checkCondition() {
 		return group.hasMember(player.getObjectId());
 	}
 
-	/** 处理活动。 / Handle event. */
+	/** 处理事件。 / Handle event. */
 	@Override
 	public void handleEvent() {
 		if (group.onlineMembers() <= 1) {

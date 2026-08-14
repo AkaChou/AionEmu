@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 全局掉落 NPC 模板（静态数据/XML）。
- * XML template.
+ * Global drop NPC template (static data/XML).
  *
  * @author Wnkrz
  */
@@ -17,7 +17,7 @@ public class GlobalDropNpc {
 	@XmlAttribute(name = "npc_id", required = true)
 	protected int npcId;
 
-	/** 返回 NPC ID / Returns the npc id */
+	/** 返回 NPC ID。 / Returns the npc id. */
 	public int getNpcId() {
 		return npcId;
 	}

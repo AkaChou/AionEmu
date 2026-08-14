@@ -11,7 +11,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-/** Structural compiler shared by XML and Java DSL front ends. */
+/**
+ * XML 与 Java DSL 前端共用的结构化编译器。
+ * Structural compiler shared by XML and Java DSL front ends.
+ */
 public final class QuestDefinitionCompiler {
 	private QuestDefinitionCompiler() {
 	}
@@ -190,7 +193,10 @@ public final class QuestDefinitionCompiler {
 		return new CompiledQuestDefinition(definition);
 	}
 
-	/** Restores the legacy {@code QuestService.startQuest} eligibility gate on every acquisition route. */
+	/**
+	 * 在每条接取路由上恢复旧版 {@code QuestService.startQuest} 资格门槛。
+	 * Restores the legacy {@code QuestService.startQuest} eligibility gate on every acquisition route.
+	 */
 	private static QuestDefinition restoreStartEligibilityContract(QuestDefinition definition) {
 		Map<String, QuestStatus> statuses = new HashMap<>();
 		for (QuestNode node : definition.nodes()) {
@@ -223,7 +229,10 @@ public final class QuestDefinitionCompiler {
 			definition.progressLayout(), definition.nodes(), normalized);
 	}
 
-	/** Restores the complete client-side acquisition dialog chain before a repeat quest starts again. */
+	/**
+	 * 重复任务再次开始前恢复完整的客户端接取对话链。
+	 * Restores the complete client-side acquisition dialog chain before a repeat quest starts again.
+	 */
 	private static QuestDefinition restoreRepeatStartDialogContract(QuestDefinition definition) {
 		if (definition.metadata().repeatPolicy().maxRepeatCount() <= 1) {
 			return definition;
@@ -296,6 +305,9 @@ public final class QuestDefinitionCompiler {
 	}
 
 	/**
+	 * 为明确写明了奖励确认路由但省略了初始 {@code -1}/{@code 1009} 预览的定义
+	 * 恢复旧版交还握手。旧任务引擎对每个 REWARD 状态终点 NPC 统一处理；
+	 * 在这里降级可让 XML 与 Java DSL 所有者行为一致。
 	 * Restores the legacy turn-in handshake for definitions that spell out reward
 	 * confirmation routes but omit the initial {@code -1}/{@code 1009} preview.
 	 * The old quest engine handled this uniformly for every REWARD-state end NPC;
@@ -436,6 +448,9 @@ public final class QuestDefinitionCompiler {
 	}
 
 	/**
+	 * 返回一条转换覆盖的图源。没有显式源节点的转换在运行时是刻意的通配
+	 * （规划器会用当前快照匹配其条件）。当单一状态条件约束该通配时可以
+	 * 接受这种形式；有界节点集足以做可达性与冲突分析。
 	 * Returns the graph sources covered by a transition.  A transition without
 	 * an explicit source is a deliberate wildcard at runtime (the planner
 	 * matches its conditions against the current snapshot).  It is safe to
@@ -551,7 +566,10 @@ public final class QuestDefinitionCompiler {
 		return false;
 	}
 
-	/** Returns null when a condition depends on live facts rather than the quest projection. */
+	/**
+	 * 当条件依赖实时事实而非任务投影时返回 null。
+	 * Returns null when a condition depends on live facts rather than the quest projection.
+	 */
 	private static Boolean conditionMatchesNode(QuestCondition condition, QuestNode node) {
 		NodeProjection projection = node.projection();
 		if (condition instanceof QuestCondition.StatusIs status) {

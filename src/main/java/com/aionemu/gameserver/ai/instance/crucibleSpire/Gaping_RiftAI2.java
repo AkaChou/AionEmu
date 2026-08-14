@@ -18,6 +18,7 @@ public class Gaping_RiftAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleCreatureAggro(Creature creature) {
+		// 对挑衅者使用自爆技能，10 秒后删除自身。 / Use the explosion skill on the aggroing creature and delete self after 10 seconds.
 		AI2Actions.useSkill(this, 18058);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override

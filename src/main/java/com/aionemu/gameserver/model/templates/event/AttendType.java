@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlEnum;
 
 @XmlEnum
 public enum AttendType {
-	/** Pc Basic / Pc Basic */
+	/** PC 基础 / PC Basic */
 	PC_BASIC(0), BASIC(1), ANNIVERSARY(2);
 
 	private int id;

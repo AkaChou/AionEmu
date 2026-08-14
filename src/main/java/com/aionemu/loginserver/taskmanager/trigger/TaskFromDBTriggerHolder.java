@@ -23,7 +23,7 @@ public enum TaskFromDBTriggerHolder {
      * 获取对应的触发器实现类。
      * Returns the associated trigger implementation class.
      *
-     * trigger class
+     * @return 触发器实现类 / trigger class
      */
     public Class<? extends TaskFromDBTrigger> getTriggerClass() {
         return triggerClass;

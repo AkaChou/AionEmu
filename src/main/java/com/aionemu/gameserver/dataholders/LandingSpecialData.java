@@ -42,7 +42,7 @@ public class LandingSpecialData {
 	 * 返回已加载的特殊登陆据点数量。
 	 * Returns the number of loaded special landing locations.
 	 *
-	 * location count
+	 * @return 已加载的特殊着陆点数量 / Returns the number of loaded special landing locations.
 	 */
 	public int size() {
 		return landingSpecial.size();

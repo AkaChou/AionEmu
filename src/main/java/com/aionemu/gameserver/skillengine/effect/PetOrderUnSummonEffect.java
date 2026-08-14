@@ -8,6 +8,10 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.summons.UnsummonType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * 宠物解散命令效果：解除施法者当前召唤的宠物（无宠物时不生效）。
+ * Pet unsummon order effect: releases the caster's currently summoned pet (no-op without a summon).
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PetOrderUnSummonEffect")
 public class PetOrderUnSummonEffect extends EffectTemplate {

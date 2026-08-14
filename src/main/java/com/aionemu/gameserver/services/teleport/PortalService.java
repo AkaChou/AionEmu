@@ -50,8 +50,8 @@ public class PortalService {
 	 * Ports a player into the target instance/area along a portal path.
 	 *
 	 * @param portalPath 门户路径模板 / Portal path template
-	 * 玩家 / Player
-	 * Interacting NPC object id
+	 * @param player 玩家 / Player
+	 * @param npcObjectId 交互 NPC 对象 ID / Interacting NPC object id
 	 */
 	public static void port(final PortalPath portalPath, final Player player, int npcObjectId) {
 		if (!CustomConfig.ENABLE_INSTANCES) {
@@ -470,8 +470,8 @@ public class PortalService {
 						DataManager.INSTANCE_COOLTIME_DATA.getInstanceEntranceCooltime(player, loc.getWorldId()));
 			} else {
 				player.getPortalCooldownList().addEntry(loc.getWorldId());
-				// 你已成功进入该区域，消耗一次允许进入次数。 / You have successfully entered the area, consuming one of your permitted
-				// 条目。 / entries.
+				// 你已成功进入该区域，消耗一次允许进入次数。
+				// You have successfully entered the area, consuming one of your permitted entries.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_DUNGEON_COUNT_USE);
 			}
 		}
@@ -494,7 +494,7 @@ public class PortalService {
 		case 301580000: // [Quest] Sanctuary Dungeon.
 		case 301630000: // Contaminated Underpath.
 		case 301631000: // [Event] Contaminated Underpath.
-		case 301632000: // 험난한 오염된 지하 통로.
+		case 301632000: // [艰难] 污染地下通道。 / [Harsh] Contaminated Underpath.
 		case 301640000: // Secret Munitions Factory.
 		case 301690000: // [Quest] Aether Mine.
 		case 301720000: // Mirash Sanctuary.

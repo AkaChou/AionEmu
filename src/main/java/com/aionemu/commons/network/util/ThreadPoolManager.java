@@ -88,7 +88,7 @@ public class ThreadPoolManager implements Executor {
      * 计算数据包池大小。
      * Compute packet pool size.
      *
-     * Pool size
+     * @return 数据包池大小 / Packet pool size
      */
     private int packetPoolSize() {
         return Math.max(2, Runtime.getRuntime().availableProcessors() * 2);
@@ -98,7 +98,7 @@ public class ThreadPoolManager implements Executor {
      * 执行数据包任务。
      * Execute packet task.
      *
-     * Task
+     * @param pkt 数据包任务 / Packet task
      */
     @Override
     public void execute(final Runnable pkt) {

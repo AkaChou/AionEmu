@@ -11,8 +11,8 @@ import java.sql.Timestamp;
 public class LoginBannedIpService {
 
     /**
-     * 启动 IP 封禁控制器（加载缓存/调度等）。
-     * schedule, etc.).
+     * 启动 IP 封禁控制器（加载缓存、调度等）。
+     * Start the banned-IP controller (load cache, schedule, etc.).
      */
     public void start() {
         BannedIpController.start();
@@ -45,7 +45,7 @@ public class LoginBannedIpService {
      * Ban an IP until the given expire time.
      *
      * @param ip IP 地址 / IP address
-     * expire timestamp
+     * @param expireTime 过期时间戳 / expire timestamp
      *
      * @return 操作是否成功 / whether the ban succeeded
      */

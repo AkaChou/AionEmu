@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 宠物奖励模板（静态数据/XML）。
- * XML template.
+ * Pet rewards template (static data / XML).
  *
  * @author Rolandas
  */
@@ -28,7 +28,7 @@ public class PetRewards {
 	@XmlAttribute
 	protected boolean loved = false;
 
-	/** 返回 results / Returns the results */
+	/** 返回奖励结果列表 / Returns the results */
 	public List<PetFeedResult> getResults() {
 		if (results == null) {
 			results = new ArrayList<PetFeedResult>();
@@ -42,8 +42,8 @@ public class PetRewards {
 	}
 
 	/**
-	 * @return 是否处于喜爱状态。 / Whether loved
-	  */
+	 * @return 是否为喜爱食物 / Whether loved
+	 */
 	public boolean isLoved() {
 		return loved;
 	}

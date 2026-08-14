@@ -38,45 +38,45 @@ import java.util.concurrent.Future;
 @InstanceID(300130000)
 public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 {
-	/** twilightbattlefield 任务 / twilight battlefield task */
+		/** twilightbattlefield 任务 / twilight battlefield task */
 		private Future<?> twilightBattlefieldTask;
-	/**
-	 * whether timer1 started
-	 */
+		/**
+		 * whether timer1 started
+		 */
 		private boolean isStartTimer1 = false;
-	/** 是否启动计时器2 / is start timer2 */
+		/** 是否启动计时器2 / is start timer2 */
 		private boolean isStartTimer2 = false;
-	/** 是否启动计时器3 / is start timer3 */
+		/** 是否启动计时器3 / is start timer3 */
 		private boolean isStartTimer3 = false;
-	/** 是否启动计时器4 / is start timer4 */
+		/** 是否启动计时器4 / is start timer4 */
 		private boolean isStartTimer4 = false;
-	/** 是否启动计时器5 / is start timer5 */
+		/** 是否启动计时器5 / is start timer5 */
 		private boolean isStartTimer5 = false;
-	/** 是否启动计时器6 / is start timer6 */
+		/** 是否启动计时器6 / is start timer6 */
 		private boolean isStartTimer6 = false;
-	/** 是否启动计时器7 / is start timer7 */
+		/** 是否启动计时器7 / is start timer7 */
 		private boolean isStartTimer7 = false;
-	/** 是否启动计时器8 / is start timer8 */
+		/** 是否启动计时器8 / is start timer8 */
 		private boolean isStartTimer8 = false;
-	/** 是否启动计时器9 / is start timer9 */
+		/** 是否启动计时器9 / is start timer9 */
 		private boolean isStartTimer9 = false;
-	/** 是否启动计时器10 / is start timer10 */
+		/** 是否启动计时器10 / is start timer10 */
 		private boolean isStartTimer10 = false;
-	/** 是否启动计时器11 / is start timer11 */
+		/** 是否启动计时器11 / is start timer11 */
 		private boolean isStartTimer11 = false;
-	/** 是否启动计时器12 / is start timer12 */
+		/** 是否启动计时器12 / is start timer12 */
 		private boolean isStartTimer12 = false;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-	/** twilight battlefield chest / twilight battlefield chest */
+		/** twilight battlefield chest / twilight battlefield chest */
 		private List<Npc> twilightBattlefieldChest = new ArrayList<Npc>();
 	
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
@@ -92,7 +92,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -162,7 +162,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -722,9 +722,9 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
@@ -763,8 +763,8 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
 	 *
-	 * 玩家 / player
-	 * zone
+	 * @param player 玩家 / player
+	 * @param zone 区域 / zone
 	 */
 	@Override
     public void onEnterZone(Player player, ZoneInstance zone) {

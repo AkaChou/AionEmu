@@ -76,7 +76,7 @@ public abstract class AbstractCronTask implements Runnable {
 	 * 服务器变量键名，用于持久化下次运行时间。
 	 * Server-variable key used to persist the next run time.
 	 *
-	 * Variable name
+	 * @return 服务器变量键名 / the variable name
 	 */
 	abstract protected String getServerTimeVariable();
 
@@ -97,7 +97,7 @@ public abstract class AbstractCronTask implements Runnable {
 	 * 若构造时已到点，是否允许立即执行一次。
 	 * Whether an immediate run is allowed when already due at construction.
 	 *
-	 * 若 allowed 则为 true / True if allowed
+	 * @return 若 allowed 则为 true / true if allowed
 	 */
 	abstract protected boolean canRunOnInit();
 
@@ -112,9 +112,9 @@ public abstract class AbstractCronTask implements Runnable {
 	 * 使用 Cron 表达式初始化任务并安排下次调度。
 	 * Initialize with a Cron expression and schedule the next run.
 	 *
-	 * Cron expression
-	 * Invalid expression。
-	 * Expression is null
+	 * @param cronExpression Cron 表达式 / the Cron expression
+	 * @throws ParseException 表达式无效时 / when the expression is invalid
+	 * @throws NullPointerException 表达式为 null 时 / when the expression is null
 	 */
 	public AbstractCronTask(String cronExpression) throws ParseException {
 		if (cronExpression == null)
@@ -158,8 +158,8 @@ public abstract class AbstractCronTask implements Runnable {
 	}
 
 	/**
-	 * 若仍有延迟则再调度；否则执行 preRun / 任务 / 保存 / postRun。
-	 * task / save / postRun.
+	 * 若仍有延迟则再调度；否则依次执行 preRun → 任务 → 保存 → postRun。
+	 * If still delayed, re-schedules; otherwise runs preRun → task → save → postRun.
 	 */
 	@Override
 	public final void run() {

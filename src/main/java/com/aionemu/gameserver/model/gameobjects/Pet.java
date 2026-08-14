@@ -21,10 +21,13 @@ public class Pet extends VisibleObject {
 	private final PetTemplate petTemplate;
 
 	/**
-	 * @param petTemplate
-	 * @param controller
-	 * @param commonData
-	 * @param master
+	 * 构造宠物。
+	 * Constructs a pet.
+	 *
+	 * @param petTemplate 宠物模板 / pet template
+	 * @param controller 宠物控制器 / pet controller
+	 * @param commonData 宠物公共数据 / pet common data
+	 * @param master 主人玩家 / master player
 	 */
 	public Pet(PetTemplate petTemplate, PetController controller, PetCommonData commonData, Player master) {
 		super(commonData.getObjectId(), controller, null, commonData, new WorldPosition(master.getWorldId()));
@@ -34,12 +37,12 @@ public class Pet extends VisibleObject {
 		this.moveController = new PetMoveController();
 	}
 
-	/** 返回大师 / Returns the master*/
+	/** 返回主人 / Returns the master. */
 	public Player getMaster() {
 		return master;
 	}
 
-	/** 返回 pet id / Returns the pet id */
+	/** 返回宠物 ID / Returns the pet id */
 	public int getPetId() {
 		return objectTemplate.getTemplateId();
 	}
@@ -55,7 +58,7 @@ public class Pet extends VisibleObject {
 		return (PetCommonData) objectTemplate;
 	}
 
-	/** 返回 move controller / Returns the move controller */
+	/** 返回移动控制器 / Returns the move controller */
 	public final MoveController getMoveController() {
 		return moveController;
 	}

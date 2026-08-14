@@ -15,7 +15,7 @@ public class Forest_Of_Life_Brohum_ChangelingAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(242883, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Young Forest Of Life Brohum.
+		spawn(242883, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 年幼 Forest Of Life Brohum / Young Forest Of Life Brohum.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

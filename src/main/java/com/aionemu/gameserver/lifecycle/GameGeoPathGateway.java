@@ -78,7 +78,7 @@ public class GameGeoPathGateway {
      * 解析地理服务。
      * Resolve the geo service.
      *
-     * Geo service
+     * @return 地理服务 / Geo service
      */
     private GeoService geoService() {
         if (geoServiceProvider == null) {
@@ -91,7 +91,7 @@ public class GameGeoPathGateway {
      * 解析 PATH 服务。
      * Resolve the path service.
      *
-     * Path service
+     * @return PATH 服务 / Path service
      */
     private PathService pathService() {
         if (pathServiceProvider == null) {

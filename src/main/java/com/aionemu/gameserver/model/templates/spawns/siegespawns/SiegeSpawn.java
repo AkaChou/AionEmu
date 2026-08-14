@@ -51,7 +51,7 @@ public class SiegeSpawn {
 			return race;
 		}
 
-		/** 返回 siege mod templates / Returns the siege mod templates */
+		/** 返回要塞模式模板 / Returns the siege mod templates */
 		public List<SiegeModTemplate> getSiegeModTemplates() {
 			return SiegeModTemplates;
 		}

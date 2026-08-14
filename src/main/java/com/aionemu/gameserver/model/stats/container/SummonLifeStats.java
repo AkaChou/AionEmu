@@ -12,8 +12,8 @@ import com.aionemu.gameserver.services.LifeStatsRestoreService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 召唤物 Life 属性，用于属性相关逻辑。
- * Summon Life Stats for stats logic.
+ * 召唤物的生命值/魔法值属性与恢复逻辑。
+ * Summon HP/MP stats and restore logic.
  *
  * @author ATracer
  */
@@ -45,7 +45,7 @@ public class SummonLifeStats extends CreatureLifeStats<Summon> {
 	protected void onReduceMp() {
 	}
 
-	/** 返回所有者 / Returns the owner*/
+	/** 返回所有者 / Returns the owner. */
 	@Override
 	public Summon getOwner() {
 		return (Summon) super.getOwner();

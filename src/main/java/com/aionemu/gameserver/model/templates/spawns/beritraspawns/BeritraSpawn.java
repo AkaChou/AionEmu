@@ -32,7 +32,7 @@ public class BeritraSpawn {
 	@XmlElement(name = "beritra_type")
 	private List<BeritraSpawn.BeritraStateTemplate> BeritraStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回要塞模式模板 / Returns the siege mod templates */
 	public List<BeritraStateTemplate> getSiegeModTemplates() {
 		return BeritraStateTemplate;
 	}

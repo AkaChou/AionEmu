@@ -25,7 +25,6 @@ public class ChargeTemplate {
 	 * 获取充能阶段技能 ID。
 	 * Gets charge-stage skill id.
 	 *
-	 * skill id
 	 */
 	public int getSkillId() {
 		return skill_id;
@@ -35,7 +34,6 @@ public class ChargeTemplate {
 	 * 获取充能时间。
 	 * Gets charge time.
 	 *
-	 * time in millis
 	 */
 	public int getTime() {
 		return time;

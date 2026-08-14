@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 线程未捕获异常处理器：记录错误，预留 OOM 与线程重启扩展点。
- * thread restart.
+ * Uncaught-exception handler: logs the error, reserving extension points for OOM and thread-restart handling.
  *
  * @author -Nemesiss-
  */

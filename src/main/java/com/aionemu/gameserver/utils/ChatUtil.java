@@ -27,7 +27,7 @@ public class ChatUtil {
 	 * Formats map coordinates as a clickable location link.
 	 *
 	 * @param label 链接显示文本 / Link display label
-	 * World map id
+	 * @param worldId 世界地图 ID / World map id
 	 * @param x X 坐标 / X coordinate
 	 * @param y Y 坐标 / Y coordinate
 	 * @param z Z 坐标 / Z coordinate
@@ -51,9 +51,7 @@ public class ChatUtil {
 	 * 将物品 ID 格式化为物品链接。
 	 * Formats an item id as an item link.
 	 *
-	 * Item id
-	 *
-	 * @param itemId
+	 * @param itemId 物品 ID / Item id
 	 * @return 物品链接字符串 / Item link string
 	 */
 	public static String item(long itemId) {
@@ -64,9 +62,7 @@ public class ChatUtil {
 	 * 将配方 ID 格式化为配方链接。
 	 * Formats a recipe id as a recipe link.
 	 *
-	 * Recipe id
-	 *
-	 * @param recipeId
+	 * @param recipeId 配方 ID / Recipe id
 	 * @return 配方链接字符串 / Recipe link string
 	 */
 	public static String recipe(long recipeId) {
@@ -77,9 +73,7 @@ public class ChatUtil {
 	 * 将任务 ID 格式化为任务链接。
 	 * Formats a quest id as a quest link.
 	 *
-	 * Quest id
-	 *
-	 * @param questId
+	 * @param questId 任务 ID / Quest id
 	 * @return 任务链接字符串 / Quest link string
 	 */
 	public static String quest(int questId) {

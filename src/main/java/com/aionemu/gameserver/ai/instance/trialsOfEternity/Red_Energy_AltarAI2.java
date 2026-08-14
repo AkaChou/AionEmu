@@ -66,6 +66,10 @@ public class Red_Energy_AltarAI2 extends NpcAI2
 		}
 	}
 	
+	/**
+	 * 消耗红色典籍完成祭坛使用：在永恒试炼副本内封锁红色祭坛并移除相关 NPC。
+	 * Consumes a Red Tome to finish using the altar: blocks the red altar and removes related NPCs in the Trials Of Eternity instance.
+	 */
 	protected void handleUseItemFinish(Player player) {
 		if (!player.getInventory().decreaseByItemId(185000299, 1)) {
 			// 需要红色典籍阻断红色祭坛的能量。 / You need a Red Tome to block the energy from the red altar.

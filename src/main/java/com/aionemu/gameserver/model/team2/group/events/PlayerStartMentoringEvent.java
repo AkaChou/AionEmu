@@ -13,7 +13,7 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.google.common.base.Predicate;
 
 /**
- * 玩家 StartMentoring 活动，用于团队2相关逻辑。
+ * 玩家开始指导事件（团队2）。
  * Player Start Mentoring Event for team 2 logic.
  *
  * @author ATracer
@@ -28,7 +28,7 @@ public class PlayerStartMentoringEvent extends AlwaysTrueTeamEvent implements Pr
 		this.player = player;
 	}
 
-	/** 处理活动。 / Handle event. */
+	/** 处理事件。 / Handle event. */
 	@Override
 	public void handleEvent() {
 		if (group.filterMembers(new MentorSuiteFilter(player)).size() == 0) {

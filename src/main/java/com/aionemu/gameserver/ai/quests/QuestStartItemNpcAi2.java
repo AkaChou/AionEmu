@@ -30,6 +30,10 @@ public class QuestStartItemNpcAi2 extends ActionItemNpcAI2 {
 	}
 
 	@Override
+	/**
+	 * 使用任务启动物品后，弹出与该物品关联任务的开始对话框。
+	 * After using the quest start item, opens the dialog to start the quests related to this NPC.
+	 */
 	protected void handleUseItemFinish(Player player) {
 		List<Integer> relatedQuests = GameEngineServices.questEngine().getQuestNpc(getOwner().getNpcId()).getOnQuestStart();
 		int dialogId = relatedQuests.isEmpty() ? -1 : 26;

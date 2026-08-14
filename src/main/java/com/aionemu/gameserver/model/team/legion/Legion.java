@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public class Legion {
 
-	/** 军团信息 / Legion Information */
+	/** 军团信息。 / Legion information. */
 	private ServiceBuff serviceBuff;
 	private int legionId = 0;
 	private String legionName = "";
@@ -52,7 +52,8 @@ public class Legion {
 	private LegionTerritory territory;
 
 	/**
-	 * 仅在创建军团时调用！。 / Only called when a legion is created!.
+	 * 仅在创建军团时调用！
+	 * Only called when a legion is created!
 	 */
 	public Legion(int legionId, String legionName) {
 		this();
@@ -67,7 +68,7 @@ public class Legion {
 		this.legionWarehouse = new LegionWarehouse(this);
 		this.legionHistory = new TreeSet<LegionHistory>(new Comparator<LegionHistory>() {
 
-			/** 比较 / compare. */
+			/** 比较。 / Compare. */
 			@Override
 			public int compare(LegionHistory o1, LegionHistory o2) {
 				return o1.getTime().getTime() < o2.getTime().getTime() ? 1 : -1;
@@ -133,9 +134,10 @@ public class Legion {
 	}
 
 	/**
-	 * 添加 legionMember 到 legionMembers 列表。 / Add a legionMember to the legionMembers list
+	 * 将成员对象 ID 添加到成员列表。
+	 * Adds a member object id to the members list.
 	 *
-	 * @param playerObjId
+	 * @param playerObjId 玩家对象 ID / player object id
 	 */
 	public boolean addLegionMember(int playerObjId) {
 		if (canAddMember()) {
@@ -146,22 +148,24 @@ public class Legion {
 	}
 
 	/**
-	 * 删除 legionMember 从 legionMembers 列表。 / Delete a legionMember from the legionMembers list
+	 * 将成员对象 ID 从成员列表移除。
+	 * Removes a member object id from the members list.
 	 *
-	 * @param playerObjId
+	 * @param playerObjId 玩家对象 ID / player object id
 	 */
 	public void deleteLegionMember(int playerObjId) {
 		legionMembers.remove(Integer.valueOf(playerObjId));
 	}
 
 	/**
-	 * 将权限。
-	 * This method will set the permissions
+	 * 设置各职位权限。
+	 * Sets the permissions for all ranks.
 	 *
-	 * @param deputyPermission
-	 * @param centurionPermission
-	 * @param legionaryPermission
-	 * @return true or false
+	 * @param deputyPermission 副官权限 / deputy permission
+	 * @param centurionPermission 百夫长权限 / centurion permission
+	 * @param legionaryPermission 军团兵权限 / legionary permission
+	 * @param volunteerPermission 志愿兵权限 / volunteer permission
+	 * @return 是否设置成功 / true or false
 	 */
 	public boolean setLegionPermissions(short deputyPermission, short centurionPermission, short legionaryPermission,
 			short volunteerPermission) {
@@ -250,8 +254,8 @@ public class Legion {
 	}
 
 	/**
-	 * 将军团 hasenough 成员等级 up。
-	 * This method will check whether a legion has enough members to level up
+	 * 检查军团是否拥有足够的成员升级。
+	 * Checks whether the legion has enough members to level up.
 	 *
 	 * @return true or false
 	 */
@@ -277,10 +281,10 @@ public class Legion {
 	}
 
 	/**
-	 * 将 return 基纳 pricerequired 等级 up。
-	 * This method will return the kinah price required to level up
+	 * 返回升级所需的基纳价格。
+	 * Returns the kinah price required to level up.
 	 *
-	 * @return int
+	 * @return 基纳价格 / kinah price
 	 */
 	public int getKinahPrice() {
 		switch (getLegionLevel()) {
@@ -303,10 +307,10 @@ public class Legion {
 	}
 
 	/**
-	 * 将 returncontributionpointsrequired 等级 up。
-	 * This method will return the contribution points required to level up
+	 * 返回升级所需的贡献点数。
+	 * Returns the contribution points required to level up.
 	 *
-	 * @return int
+	 * @return 贡献点数 / contribution points
 	 */
 	public int getContributionPrice() {
 		switch (getLegionLevel()) {
@@ -329,10 +333,10 @@ public class Legion {
 	}
 
 	/**
-	 * 将 returntrue 军团 able 成员。
-	 * This method will return true if a legion is able to add a member
+	 * 若军团可添加成员则返回 true。
+	 * Returns true if the legion is able to add a member.
 	 *
-	 * @return
+	 * @return 是否可添加成员 / whether a member can be added
 	 */
 	private boolean canAddMember() {
 		int memberSize = getLegionMembers().size();
@@ -365,15 +369,19 @@ public class Legion {
 	}
 
 	/**
-	 * 将新公告列表。
-	 * This method will add a new announcement to the list
+	 * 将新公告添加到公告列表。
+	 * Adds a new announcement to the list.
+	 *
+	 * @param unixTime 公告时间戳 / announcement timestamp
+	 * @param announcement 公告内容 / announcement text
 	 */
 	public void addAnnouncementToList(Timestamp unixTime, String announcement) {
 		this.announcementList.put(unixTime, announcement);
 	}
 
 	/**
-	 * This method removes the first entry
+	 * 移除最早的一条公告。
+	 * Removes the first entry.
 	 */
 	public void removeFirstEntry() {
 		this.announcementList.remove(this.announcementList.firstEntry().getKey());
@@ -418,7 +426,11 @@ public class Legion {
 	}
 
 	/**
-	 * 检查对象 ID 是否在列表中。 / This function checks if object id is in list.
+	 * 检查对象 ID 是否在成员列表中。
+	 * Checks whether the object id is in the members list.
+	 *
+	 * @param playerObjId 玩家对象 ID / player object id
+	 * @return 是否为成员 / whether a member
 	 */
 	public boolean isMember(int playerObjId) {
 		return legionMembers.contains(playerObjId);
@@ -453,10 +465,10 @@ public class Legion {
 	}
 
 	/**
-	 * 获取仓库 slots。
-	 * Get warehouse slots
+	 * 获取仓库槽位数。
+	 * Gets the warehouse slots.
 	 *
-	 * @return warehouse slots
+	 * @return 仓库槽位数 / warehouse slots
 	 */
 	public int getWarehouseSlots() {
 		switch (getLegionLevel()) {
@@ -492,7 +504,7 @@ public class Legion {
 		return legionHistory;
 	}
 
-	/** 按 tab id 返回 legion history / Returns the legion history by tab id */
+	/** 按标签 ID 返回军团历史。 / Returns the legion history by tab id. */
 	public Collection<LegionHistory> getLegionHistoryByTabId(int tabType) {
 		if (legionHistory.isEmpty()) {
 			return legionHistory;
@@ -516,12 +528,14 @@ public class Legion {
 	/** 添加加成。 / Adds bonus. */
 	public void addBonus() {
 		ArrayList<Player> members = getOnlineLegionMembers();
-		// 레기온 창고란 같은 레기온원들 끼리 공동으로 사용하는 창고의 개념이다.
-		// 즉, 다른 레기온원이 이곳에 물건을 넣으면, 자신 외에 다른 권한을 가진 레기온원이 꺼내서 사용할 수 있다는 것.
-		// 아직 영혼 각인하지 않은 무기, 방어구라든지 각종 소비 아이템, 심지어 키나까지도 레기온원들 끼리 공동으로 사용할 수 있게 해주는 아주
-		// 편리한 시스템이다.
-		// 레기온 창고는 레기온을 설립하면 바로 이용이 가능하며, 레기온 창고의 이용 방식은 일반 창고와 동일하다.
-		// 레기온의 레벨이 올라갈 수록 레기온 창고의 슬롯 수를 늘릴 수 있다.
+		// 军团仓库是军团成员共用的仓库，成员可放入或取出物品。
+		// The legion warehouse is shared by all legion members, who may deposit or withdraw items.
+		// 即使尚未灵魂刻印的武器、防具、各类消耗品乃至基纳，都可供军团成员共用，非常便利。
+		// Even non-soulbound weapons, armor, consumables and kinah can be shared among members; a very convenient system.
+		// 军团创建后即可使用仓库，其使用方式与普通仓库相同。
+		// The warehouse is available right after the legion is founded and works like the regular warehouse.
+		// 军团等级越高，军团仓库的槽位越多。
+		// The higher the legion level, the more warehouse slots become available.
 		if (members.size() >= 2 && members.size() <= 9) {
 			if (hasBonus.compareAndSet(false, true)) {
 				for (Player member : members) {
@@ -561,7 +575,7 @@ public class Legion {
 		}
 	}
 
-	/** 是否拥有加成。 / Whether bonus. */
+	/** 是否拥有加成。 / Whether a bonus is active. */
 	public boolean hasBonus() {
 		return hasBonus.get();
 	}
@@ -589,7 +603,7 @@ public class Legion {
 		return description;
 	}
 
-	/** 返回军团加入类型 / Returns the legion join type*/
+	/** 返回军团加入类型。 / Returns the legion join type. */
 	public int getLegionJoinType() {
 		return joinType;
 	}
@@ -604,56 +618,59 @@ public class Legion {
 		this.description = description;
 	}
 
-	/** 设置最小加入等级 / Sets the min join level*/
+	/** 设置最小加入等级。 / Sets the min join level. */
 	public void setMinJoinLevel(int minJoinLevel) {
 		this.minJoinLevel = minJoinLevel;
 	}
 
-	/** 设置加入类型 / Sets the join type*/
+	/** 设置加入类型。 / Sets the join type. */
 	public void setJoinType(int joinType) {
 		this.joinType = joinType;
 	}
 
-	/** 返回 join request map / Returns the join request map */
+	/** 返回加入申请映射。 / Returns the join request map. */
 	public Map<Integer, LegionJoinRequest> getJoinRequestMap() {
 		return joinRequestMap;
 	}
 
-	/** 按玩家 ID 返回 join request / Returns the join request by player id */
+	/** 按玩家 ID 返回加入申请。 / Returns the join request by player id. */
 	public LegionJoinRequest getJoinRequestByPlayerId(int playerId) {
 		return joinRequestMap.get(playerId);
 	}
 
 	/**
-	 * @param playerId Deletes join request
+	 * 删除玩家的加入申请。
+	 * Deletes the join request of a player.
+	 *
+	 * @param playerId 玩家 ID / player id
 	 */
 	public void deleteJoinRequest(int playerId) {
 		joinRequestMap.remove(playerId);
 	}
 
-	/** 添加 join request / Adds join request */
+	/** 添加加入申请。 / Adds a join request. */
 	public void addJoinRequest(LegionJoinRequest joinRequest) {
 		if (!joinRequestMap.containsKey(joinRequest.getPlayerId())) {
 			this.joinRequestMap.put(joinRequest.getPlayerId(), joinRequest);
 		}
 	}
 
-	/** 清除 territory / Clear territory */
+	/** 清除领地。 / Clears the territory. */
 	public void clearTerritory() {
 		setTerritory(new LegionTerritory(0));
 	}
 
-	/** 拥有领地 / owns Terretory. */
+	/** 是否拥有领地。 / Whether the legion owns a territory. */
 	public boolean ownsTerretory() {
 		return getTerritory().getId() > 0;
 	}
 
-	/** 返回 territory / Returns the territory */
+	/** 返回领地。 / Returns the territory. */
 	public LegionTerritory getTerritory() {
 		return territory;
 	}
 
-	/** 设置 territory / Sets the territory */
+	/** 设置领地。 / Sets the territory. */
 	public void setTerritory(LegionTerritory territory) {
 		this.territory = territory;
 	}

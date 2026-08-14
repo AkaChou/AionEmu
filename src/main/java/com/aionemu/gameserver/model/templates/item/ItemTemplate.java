@@ -28,8 +28,8 @@ import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
- * 物品模板（静态数据/XML）。
- * XML template.
+ * 物品模板：定义物品全部静态属性（分类、品质、装备、强化等）。
+ * Item template: defines all static item attributes (category, quality, equipment, enchantment, etc.).
  */
 
 @XmlAccessorType(XmlAccessType.NONE)

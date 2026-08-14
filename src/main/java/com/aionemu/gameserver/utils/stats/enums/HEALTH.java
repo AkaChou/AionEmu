@@ -8,9 +8,9 @@ public enum HEALTH {
 	WARRIOR(110), GLADIATOR(115), TEMPLAR(100), SCOUT(100), ASSASSIN(100), RANGER(90), MAGE(90), SORCERER(90),
 	SPIRIT_MASTER(90), PRIEST(95), CLERIC(110), CHANTER(105),
 
-	// 资讯类 4.3 / News Class 4.3
+	// 新职业 4.3 / New Class 4.3
 	TECHNIST(100), GUNSLINGER(105), MUSE(95), SONGWEAVER(100),
-	// 资讯类 4.5 / News Class 4.5
+	// 新职业 4.5 / New Class 4.5
 	AETHERTECH(100);
 
 	/**
@@ -27,7 +27,7 @@ public enum HEALTH {
 	 * 获取该职业的基础属性值。
 	 * Returns the baseline attribute value for this class.
 	 *
-	 * Attribute value
+	 * @return 基础属性值 / baseline attribute value
 	 */
 	public int getValue() {
 		return value;

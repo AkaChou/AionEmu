@@ -41,7 +41,7 @@ public class FearfulBeastAI2 extends GeneralNpcAI2
      * 处理看见生物事件。
      * Handle seeing a creature.
      *
-     * creature
+     * @param creature 生物 / creature
      */
     @Override
     protected void handleCreatureSee(Creature creature) {
@@ -53,7 +53,7 @@ public class FearfulBeastAI2 extends GeneralNpcAI2
      * 处理生物移动事件。
      * Handle creature-moved.
      *
-     * creature
+     * @param creature 生物 / creature
      */
     @Override
     protected void handleCreatureMoved(Creature creature) {

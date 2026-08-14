@@ -44,7 +44,7 @@ public class LegionDominionData {
 	 * 返回已加载的军团领地数量。
 	 * Returns the number of loaded legion dominion locations.
 	 *
-	 * location count
+	 * @return 已加载的军团领地战地点数量 / Returns the number of loaded legion dominion locations.
 	 */
 	public int size() {
 		return legionDominion.size();

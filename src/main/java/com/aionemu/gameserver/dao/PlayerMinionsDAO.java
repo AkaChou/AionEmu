@@ -18,7 +18,7 @@ public abstract class PlayerMinionsDAO implements IDFactoryAwareDAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -37,7 +37,7 @@ public abstract class PlayerMinionsDAO implements IDFactoryAwareDAO {
 	 * 移除玩家的指定迷你宠物。
 	 * Removes the given minion from the player.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param minionObjId 迷你宠物对象 ID / minion object id
 	 */
 	public abstract boolean removePlayerMinion(Player player, int minionObjId);
@@ -54,7 +54,7 @@ public abstract class PlayerMinionsDAO implements IDFactoryAwareDAO {
 	 * 获取玩家全部迷你宠物。
 	 * Returns all minions owned by the player.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @return 迷你宠物列表 / list of minions
 	 */
 	public abstract List<MinionCommonData> getPlayerMinions(Player player);
@@ -63,7 +63,7 @@ public abstract class PlayerMinionsDAO implements IDFactoryAwareDAO {
 	 * 更新迷你宠物成长点数。
 	 * Updates the minion growth points.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param minionCommonData 迷你宠物公共数据 / minion common data
 	 */
 	public abstract boolean updatePlayerMinionGrowthPoint(Player player, MinionCommonData minionCommonData);
@@ -77,7 +77,7 @@ public abstract class PlayerMinionsDAO implements IDFactoryAwareDAO {
 	 * 进化迷你宠物。
 	 * Evolves the minion.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param minionCommonData 迷你宠物公共数据 / minion common data
 	 */
 	public abstract boolean evolutionMinion(Player player, MinionCommonData minionCommonData);
@@ -86,9 +86,9 @@ public abstract class PlayerMinionsDAO implements IDFactoryAwareDAO {
 	 * 锁定/解锁迷你宠物。
 	 * Locks or unlocks a minion.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param minionObjId 迷你宠物对象 ID / minion object id
-	 * lock flag
+	 * @param isLocked 锁定标记 / lock flag
 	 */
 	public abstract boolean lockMinions(Player player, int minionObjId, int isLocked);
 
@@ -96,9 +96,9 @@ public abstract class PlayerMinionsDAO implements IDFactoryAwareDAO {
 	 * 保存迷你宠物增益包。
 	 * Saves the minion doping bag.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param minionCommonData 迷你宠物公共数据 / minion common data
-	 * doping bag
+	 * @param bag 补给包 / doping bag
 	 */
 	public abstract boolean saveDopingBag(Player player, MinionCommonData minionCommonData, MinionDopingBag bag);
 

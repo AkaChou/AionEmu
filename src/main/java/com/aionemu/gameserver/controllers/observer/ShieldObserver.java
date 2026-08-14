@@ -34,8 +34,8 @@ public class ShieldObserver extends ActionObserver {
 	}
 
 	/**
-	 * shield
-	 * creature
+	 * @param shield 护盾对象 / shield object
+	 * @param creature 被观察生物 / observed creature
 	 */
 	public ShieldObserver(Shield shield, Creature creature) {
 		super(ObserverType.MOVE);

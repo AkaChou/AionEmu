@@ -14,8 +14,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 
 /**
- * Change 联盟 Leader 活动，用于团队2相关逻辑。
- * Change Alliance Leader Event for team 2 logic.
+ * 联盟队长变更事件。
+ * Change Alliance Leader Event.
  */
 
 public class ChangeAllianceLeaderEvent extends ChangeLeaderEvent<PlayerAlliance> {

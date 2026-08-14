@@ -4,8 +4,8 @@ import com.aionemu.gameserver.model.dynamicrift.DynamicRiftLocation;
 import com.aionemu.gameserver.model.dynamicrift.DynamicRiftStateType;
 
 /**
- * 动态裂隙入口默认实现：切入 OPEN / 回到 CLOSED。
- * back to CLOSED.
+ * 动态裂隙入口默认实现：切入 OPEN，结束后回到 CLOSED。
+ * Default Dynamic Rift entry: switches to OPEN, then back to CLOSED.
  *
  * @author Rinzler (Encom)
  */
@@ -15,7 +15,7 @@ public class Portal extends DynamicRift<DynamicRiftLocation> {
 	 * 绑定动态裂隙地点。
 	 * Binds the Dynamic Rift location.
 	 *
-	 * location
+	 * @param dynamicRift 动态裂隙地点 / dynamic rift location
 	 */
 	public Portal(DynamicRiftLocation dynamicRift) {
 		super(dynamicRift);

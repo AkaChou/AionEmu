@@ -24,7 +24,7 @@ public class PlayerMovedCondition extends Condition {
 	 * 获取是否允许移动施放。
 	 * Gets whether moving is allowed for casting.
 	 *
-	 * allow flag
+	 * @return 允许标记 / allow flag
 	 */
 	public boolean isAllow() {
 		return allow;
@@ -35,7 +35,7 @@ public class PlayerMovedCondition extends Condition {
 	 * Validates whether the skill environment satisfies this condition.
 	 *
 	 * @param skill 技能环境 / skill environment
-	 * whether valid
+	 * @return 是否有效 / whether valid
 	 */
 	@Override
 	public boolean validate(Skill skill) {

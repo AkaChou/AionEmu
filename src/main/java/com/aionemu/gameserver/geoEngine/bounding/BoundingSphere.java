@@ -61,7 +61,7 @@ public class BoundingSphere extends BoundingVolume {
 	 * 返回包围体类型（球体）。
 	 * Returns the bounding-volume type (Sphere).
 	 *
-	 * type enum Sphere
+	 * @return 类型枚举（球体） / type enum (Sphere)
 	 */
 	@Override
 	public Type getType() {
@@ -72,7 +72,7 @@ public class BoundingSphere extends BoundingVolume {
 	 * 获取包围球半径。
 	 * Returns the radius of the bounding sphere.
 	 *
-	 * radius of the bounding sphere
+	 * @return 球半径 / radius of the bounding sphere
 	 */
 	public float getRadius() {
 		return radius;
@@ -82,7 +82,7 @@ public class BoundingSphere extends BoundingVolume {
 	 * 设置包围球半径。
 	 * Sets the radius of this bounding sphere.
 	 *
-	 * new radius of the bounding sphere
+	 * @param radius 新球半径 / new radius of the bounding sphere
 	 */
 	public void setRadius(float radius) {
 		this.radius = radius;
@@ -175,7 +175,7 @@ public class BoundingSphere extends BoundingVolume {
 	 * Welzl 递归步骤：逐步纳入边界点，求最小包围球。
 	 * Recursive Welzl step that builds a minimum sphere a few points at a time.
 	 *
-	 * array of points to look through
+	 * @param points 待处理的点数组 / array of points to look through
 	 * @param p 使用的点列表大小 / size of the list to be used
 	 * @param b 当前已纳入球面的点数 / number of points currently on the sphere boundary
 	 * @param ap 点缓冲偏移（模拟 C++ 指针算术） / buffer offset simulating C++ pointer arithmetic
@@ -530,8 +530,10 @@ public class BoundingSphere extends BoundingVolume {
 	 *
 	 * @param temp_radius 另一球半径 / other sphere radius
 	 * @param temp_center 另一球中心 / other sphere center
+	 * @param temp_radius 另一球半径 / other sphere radius
+	 * @param temp_center 另一球中心 / other sphere center
 	 * @param rVal 结果存储 / destination sphere
-	 * merge result
+	 * @return 合并结果 / merge result
 	 */
 	private BoundingVolume merge(float temp_radius, Vector3f temp_center, BoundingSphere rVal) {
 		Vector3f vect1 = Vector3f.newInstance();
@@ -643,8 +645,8 @@ public class BoundingSphere extends BoundingVolume {
 	 * 与 AABB 包围盒相交检测。
 	 * Intersection test against an axis-aligned bounding box.
 	 *
-	 * axis-aligned bounding box
-	 * whether they intersect
+	 * @param bb 轴对齐包围盒 / axis-aligned bounding box
+	 * @return 是否相交 / whether they intersect
 	 */
 	@Override
 	public boolean intersectsBoundingBox(BoundingBox bb) {
@@ -672,8 +674,8 @@ public class BoundingSphere extends BoundingVolume {
 	 * 与射线是否相交（仅布尔结果）。
 	 * Tests whether this sphere intersects a ray (boolean only).
 	 *
-	 * ray
-	 * whether they intersect
+	 * @param ray 射线 / ray
+	 * @return 是否相交 / whether they intersect
 	 */
 	@Override
 	public boolean intersects(Ray ray) {
@@ -703,9 +705,7 @@ public class BoundingSphere extends BoundingVolume {
 	 * 射线与球碰撞，将交点写入 results，返回碰撞点数量。
 	 * Collides a ray with this sphere, adding hits to results; returns hit count.
 	 *
-	 * ray
-	 *
-	 * @param results 碰撞结果收集器 / collision results collector
+	 * @param ray 射线 / ray
 	 * @param results 碰撞结果收集器 / collision results collector
 	 * @return 碰撞点数量（0/1/2） / number of collision points (0/1/2)
 	 */
@@ -766,7 +766,7 @@ public class BoundingSphere extends BoundingVolume {
 	 * @param other 可碰撞对象 / collidable
 	 * @param results 碰撞结果收集器 / collision results collector
 	 * @return 碰撞点数量 / number of collision points
-	 * unsupported collision type。
+	 * @throws UnsupportedCollisionException 不支持的碰撞类型 / unsupported collision type
 	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) {
@@ -782,8 +782,6 @@ public class BoundingSphere extends BoundingVolume {
 	 * 判断点是否严格位于球内（不含球面）。
 	 * Tests whether a point lies strictly inside the sphere (surface excluded).
 	 *
-	 * point to test
-	 *
 	 * @param point 检测点 / point to test
 	 * @return 是否在球内 / whether the point is inside
 	 */
@@ -796,8 +794,8 @@ public class BoundingSphere extends BoundingVolume {
 	 * 判断点是否与球相交（含球面）。
 	 * Tests whether a point intersects the sphere (surface included).
 	 *
-	 * point to test
-	 * whether the point intersects
+	 * @param point 检测点 / point to test
+	 * @return 点是否与球相交 / whether the point intersects
 	 */
 	@Override
 	public boolean intersects(Vector3f point) {
@@ -807,8 +805,6 @@ public class BoundingSphere extends BoundingVolume {
 	/**
 	 * 点到球表面的有符号距离（负值表示在球内）。
 	 * Signed distance from a point to the sphere surface (negative if inside).
-	 *
-	 * point to test
 	 *
 	 * @param point 检测点 / point to test
 	 * @return 有符号距离 / signed distance to the edge
@@ -822,7 +818,7 @@ public class BoundingSphere extends BoundingVolume {
 	 * 返回球体积 (4/3)πr³。
 	 * Returns the sphere volume (4/3)πr³.
 	 *
-	 * volume
+	 * @return 体积 / volume
 	 */
 	@Override
 	public float getVolume() {

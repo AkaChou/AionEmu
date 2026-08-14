@@ -39,7 +39,7 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 	private long startTime;
     /** 门映射 / door map */
     private Map<Integer, StaticDoor> doors;
-    /** 副本计时器 / instance timer */
+        /** 副本计时器 / instance timer */
         private Future<?> instanceTimer;
     /** 副本是否已销毁 / whether the instance is destroyed */
     protected boolean isInstanceDestroyed = false;
@@ -80,21 +80,21 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 			}, 60000);
 		}
 	}
-/**
- * 处理 openFirstDoors。
- * Handle openFirstDoors.
- */
+	/**
+	 * 处理 openFirstDoors。
+	 * Handle openFirstDoors.
+	 */
 
 	protected void openFirstDoors() {
 		openDoor(8);
 		openDoor(93);
 	}
-/**
- * 打开指定门。
- * Open the given door.
- *
- * doorId
- */
+	/**
+	 * 打开指定门。
+	 * Open the given door.
+	 * 
+	 * @param doorId 门 ID / doorId
+	 */
 
 	protected void openDoor(int doorId) {
 		StaticDoor door = doors.get(doorId);
@@ -107,8 +107,8 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
@@ -195,9 +195,9 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param lastAttacker 最后攻击者 / last attacker
-	 * result
+	 * @return 结果 / result
 	 */
 	@Override
 	public boolean onDie(final Player player, Creature lastAttacker) {

@@ -1,6 +1,9 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-/** Immutable per-player facts emitted by an authoritative instance settlement callback. */
+/**
+ * 权威副本结算回调为每个玩家发出的不可变事实。
+ * Immutable per-player facts emitted by an authoritative instance settlement callback.
+ */
 public record QuestPvpInstanceFacts(int playerId, String instanceKind, int worldId,
 		int instanceId, boolean rewardSettled, Integer score, Integer playerKills, Integer monsterKills) {
 	public QuestPvpInstanceFacts {

@@ -20,8 +20,8 @@ public class AttackCalcObserver {
 	 * 检查防御方攻击状态是否命中（如格挡、闪避触发）。
 	 * Check whether a defender attack status matches (e.g. block/dodge trigger).
 	 *
-	 * attack status
-	 * default false
+	 * @param status 攻击状态 / attack status
+	 * @return 默认返回 false / false by default
 	 */
 	public boolean checkStatus(AttackStatus status) {
 		return false;
@@ -32,8 +32,8 @@ public class AttackCalcObserver {
 	 * Check and apply shield/reflect/protect effects on the attack list.
 	 *
 	 * @param attackList 攻击结果列表 / attack result list
-	 * associated effect
-	 * attacker
+	 * @param effect 关联效果 / associated effect
+	 * @param attacker 攻击者 / attacker
 	 */
 	public void checkShield(List<AttackResult> attackList, Effect effect, Creature attacker) {
 
@@ -43,8 +43,8 @@ public class AttackCalcObserver {
 	 * 检查攻击方攻击状态是否命中。
 	 * Check whether an attacker attack status matches.
 	 *
-	 * attack status
-	 * default false
+	 * @param status 攻击状态 / attack status
+	 * @return 默认返回 false / false by default
 	 */
 	public boolean checkAttackerStatus(AttackStatus status) {
 		return false;
@@ -70,10 +70,8 @@ public class AttackCalcObserver {
 	 * 检查攻击方暴击状态。
 	 * Check attacker critical status.
 	 *
-	 * attack status
-	 *
+	 * @param status 攻击状态 / attack status
 	 * @param isSkill 是否技能攻击 / whether skill attack
-	 * @param isSkill
 	 * @return 暴击状态（默认失败） / critical status (default fail)
 	 */
 	public AttackerCriticalStatus checkAttackerCriticalStatus(AttackStatus status, boolean isSkill) {

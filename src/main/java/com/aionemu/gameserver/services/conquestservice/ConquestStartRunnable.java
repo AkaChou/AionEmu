@@ -42,7 +42,7 @@ public class ConquestStartRunnable implements Runnable {
 		GameLocationBootstrapServices.conquestService().smolderingFireTempleMsg(id);
 		// 库穆基洞穴 5.3 现已开放！！！ / Kumuki Cave 5.3 is now open !!!
 		GameLocationBootstrapServices.conquestService().kumukiCaveMsg(id);
-		// IDEventDefMsg 5.6 is now open !!!。
+		// IDEventDefMsg 5.6 现已开放！ / IDEventDefMsg 5.6 is now open !!!
 		GameLocationBootstrapServices.conquestService().IDEventDefMsg(id);
 		// 提亚玛兰塔之眼现已开放！！！ / Tiamaranta's Eye is now open !!!
 		GameLocationBootstrapServices.conquestService().tiamarantaMsg(id);

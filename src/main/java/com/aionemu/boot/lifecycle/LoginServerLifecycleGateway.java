@@ -19,7 +19,7 @@ public class LoginServerLifecycleGateway {
      * 注入可选的登录启动序列生命周期提供者。
      * Injects an optional login startup-sequence lifecycle provider.
      *
-     * startup-sequence ObjectProvider
+     * @param startupSequenceLifecycleProvider 启动序列生命周期提供者 / startup-sequence ObjectProvider
      */
     @Autowired(required = false)
     void setStartupSequenceLifecycleProvider(ObjectProvider<LoginStartupSequenceLifecycle> startupSequenceLifecycleProvider) {
@@ -30,7 +30,7 @@ public class LoginServerLifecycleGateway {
      * 注入可选的登录运行时桥提供者。
      * Injects an optional login runtime-bridge provider.
      *
-     * runtime-bridge ObjectProvider
+     * @param runtimeBridgeProvider 运行时桥提供者 / runtime-bridge ObjectProvider
      */
     @Autowired(required = false)
     void setRuntimeBridgeProvider(ObjectProvider<LoginServerRuntimeBridge> runtimeBridgeProvider) {
@@ -81,7 +81,7 @@ public class LoginServerLifecycleGateway {
      * 解析登录运行时桥；无 Provider 时新建默认实例。
      * Resolves the login runtime bridge; creates a default when no provider is present.
      *
-     * runtime bridge
+     * @return 运行时桥 / runtime bridge
      */
     private LoginServerRuntimeBridge runtimeBridge() {
         if (runtimeBridgeProvider == null) {

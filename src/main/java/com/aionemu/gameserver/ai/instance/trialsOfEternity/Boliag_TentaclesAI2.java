@@ -13,6 +13,10 @@ import com.aionemu.gameserver.ai2.*;
 @AIName("Dimension_Boss_Portal")
 public class Boliag_TentaclesAI2 extends AggressiveNpcAI2
 {
+	/**
+	 * 触手死亡时在原位置刷新对应的传送门，随后移除自身。
+	 * On death, spawns the corresponding portal at this tentacle's position, then removes itself.
+	 */
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {

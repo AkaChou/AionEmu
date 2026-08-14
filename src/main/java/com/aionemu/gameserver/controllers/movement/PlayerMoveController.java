@@ -19,7 +19,7 @@ public class PlayerMoveController extends PlayableMoveController<Player> {
 	 * 使用指定玩家构造控制器。
 	 * Construct the controller for the given player.
 	 *
-	 * Player owner
+	 * @param owner 玩家 / Player owner
 	 */
 	public PlayerMoveController(Player owner) {
 		super(owner);
@@ -29,7 +29,7 @@ public class PlayerMoveController extends PlayableMoveController<Player> {
 	 * 更新坠落中状态并在超过阈值时计算伤害。
 	 * Update falling state and calculate damage when the threshold is exceeded.
 	 *
-	 * Current Z
+	 * @param newZ 当前 Z 坐标 / Current Z
 	 */
 	public void updateFalling(float newZ) {
 		if (lastFallZ != 0) {

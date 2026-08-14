@@ -52,7 +52,7 @@ public class SteelRakeCabineInstance extends GeneralInstanceHandler {
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc 掉落 NPC / dropper NPC
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -114,7 +114,7 @@ public class SteelRakeCabineInstance extends GeneralInstanceHandler {
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc 死亡的 NPC / dying NPC
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -124,7 +124,7 @@ public class SteelRakeCabineInstance extends GeneralInstanceHandler {
 			    despawnNpc(npc);
 			break;
 			case 219033: //Golden Eye Mantutu.
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Steel Rake Cabine>");
+				// 成功逃脱提示（原调试输出已注释）。 / Success-escape notice (debug output commented out).
 /* 				spawn(700554, 736.64728f, 493.73834f, 941.4781f, (byte) 45); //Pirate Ship Treasure Box.
 				spawn(700554, 720.41028f, 511.63718f, 939.7604f, (byte) 90); //Pirate Ship Treasure Box.
 		        spawn(700554, 739.51251f, 506.14313f, 941.4781f, (byte) 77); //Pirate Ship Treasure Box.

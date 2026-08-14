@@ -14,8 +14,11 @@ public class Emotion implements IExpirable {
 	private int dispearTime;
 
 	/**
-	 * @param id
-	 * @param dispearTime
+	 * 构造表情对象。
+	 * Constructs an emotion.
+	 *
+	 * @param id 表情 ID / emotion id
+	 * @param dispearTime 过期时间戳（秒，0 表示永不过期） / expire timestamp in seconds (0 = never)
 	 */
 	public Emotion(int id, int dispearTime) {
 		this.id = id;
@@ -23,7 +26,10 @@ public class Emotion implements IExpirable {
 	}
 
 	/**
-	 * @return the id
+	 * 获取表情 ID。
+	 * Returns the emotion id.
+	 *
+	 * @return 表情 ID / emotion id
 	 */
 	public int getId() {
 		return id;

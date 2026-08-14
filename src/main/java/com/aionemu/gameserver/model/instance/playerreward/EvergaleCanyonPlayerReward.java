@@ -180,7 +180,7 @@ public class EvergaleCanyonPlayerReward extends InstancePlayerReward {
 	}
 
 	/**
-	 * @return Whether boost morale
+	 * @return 是否士气强化中 / whether boost morale
 	 */
 	public boolean hasBoostMorale() {
 		return boostMorale.hasInstanceBuff();

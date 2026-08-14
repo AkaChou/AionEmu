@@ -824,7 +824,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether special purpose
+	 * @return 是否特殊用途 / Whether special purpose
 	 */
 	public boolean hasSpecialPurpose() {
 		return template.hasSpecialPurpose();
@@ -859,7 +859,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether asyunatar
+	 * @return 是否为阿休纳塔尔无畏舰 / Whether asyunatar
 	 */
 	public boolean isAsyunatar() {
 		switch (this) {
@@ -872,8 +872,8 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return 是否为 Kamar 类型。 / Whether kamar
-	  */
+	 * @return 是否为卡玛尔战场 / Whether kamar battlefield
+	 */
 	public boolean isKamar() {
 		switch (this) {
 		case KAMAR_BATTLEFIELD:
@@ -885,7 +885,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether ophidan
+	 * @return 是否为吞噬奥菲丹桥 / Whether ophidan
 	 */
 	public boolean isOphidan() {
 		switch (this) {
@@ -898,7 +898,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether suspicious ophidan
+	 * @return 是否为可疑奥菲丹桥 / Whether suspicious ophidan
 	 */
 	public boolean isSuspiciousOphidan() {
 		switch (this) {
@@ -911,7 +911,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether bastion
+	 * @return 是否为铁壁战线 / Whether bastion
 	 */
 	public boolean isBastion() {
 		switch (this) {
@@ -924,7 +924,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether idgel dome
+	 * @return 是否为 Idgel Dome / Whether idgel dome
 	 */
 	public boolean isIdgelDome() {
 		switch (this) {
@@ -937,7 +937,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether idgel dome landmark
+	 * @return 是否为 Idgel Dome 地标 / Whether idgel dome landmark
 	 */
 	public boolean isIdgelDomeLandmark() {
 		switch (this) {
@@ -950,8 +950,8 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return 是否为黄金神庙训练所。 / Whether hall of tenacity
-	  */
+	 * @return 是否为黄金神庙训练所 / Whether hall of tenacity
+	 */
 	public boolean isHallOfTenacity() {
 		switch (this) {
 		case HALL_OF_TENACITY:
@@ -963,7 +963,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether grand arena training camp
+	 * @return 是否为大竞技场训练营 / Whether grand arena training camp
 	 */
 	public boolean isGrandArenaTrainingCamp() {
 		switch (this) {
@@ -976,8 +976,8 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return 是否为 IDRun 类型。 / Whether id run
-	  */
+	 * @return 是否为 IDRun 类型 / Whether id run
+	 */
 	public boolean isIDRun() {
 		switch (this) {
 		case IDRUN:
@@ -1059,7 +1059,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether pv pffa arena
+	 * @return 是否为混沌竞技场 / Whether pvp ffa arena
 	 */
 	public boolean isPvPFFAArena() {
 		switch (this) {
@@ -1076,7 +1076,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether training pv pffa arena
+	 * @return 是否为混沌修炼场 / Whether training pvp ffa arena
 	 */
 	public boolean isTrainingPvPFFAArena() {
 		switch (this) {
@@ -1093,7 +1093,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether training harmony arena
+	 * @return 是否为合作修炼场 / Whether training harmony arena
 	 */
 	public boolean isTrainingHarmonyArena() {
 		switch (this) {
@@ -1115,7 +1115,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether harmony arena
+	 * @return 是否为合作竞技场 / Whether harmony arena
 	 */
 	public boolean isHarmonyArena() {
 		switch (this) {
@@ -1132,7 +1132,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether glory arena
+	 * @return 是否为荣耀竞技场 / Whether glory arena
 	 */
 	public boolean isGloryArena() {
 		switch (this) {
@@ -1147,7 +1147,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether pvp arena
+	 * @return 是否为 PvP 竞技场 / Whether pvp arena
 	 */
 	public boolean isPvpArena() {
 		return isHarmonyArena() || isTrainingHarmonyArena() || isTrainingPvPFFAArena() || isPvPFFAArena()
@@ -1155,7 +1155,8 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @param level Whether level permit
+	 * @param level 角色等级 / player level
+	 * @return 等级是否在允许范围内 / Whether the level is permitted
 	 */
 	public boolean hasLevelPermit(int level) {
 		return level >= getMinLevel() && level <= getMaxLevel();

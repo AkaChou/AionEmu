@@ -10,8 +10,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 玩家队伍 Invite，用于团队2相关逻辑。
- * Player Group Invite for team 2 logic.
+ * 玩家队伍邀请请求处理器（团队2）。
+ * Player Group Invite handler for team 2 logic.
  */
 
 public class PlayerGroupInvite extends RequestResponseHandler {

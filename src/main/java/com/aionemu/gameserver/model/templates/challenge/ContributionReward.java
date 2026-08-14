@@ -6,7 +6,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Contribution 奖励模板（静态数据/XML）。
+ * 贡献奖励模板（静态数据/XML）。
  * XML template.
  */
 
@@ -30,12 +30,12 @@ public class ContributionReward {
 		return this.itemCount;
 	}
 
-	/** 返回 reward id / Returns the reward id */
+	/** 返回奖励 ID / Returns the reward id */
 	public int getRewardId() {
 		return this.rewardId;
 	}
 
-	/** 返回 number / Returns the number */
+	/** 返回编号 / Returns the number */
 	public int getNumber() {
 		return this.number;
 	}

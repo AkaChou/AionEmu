@@ -93,10 +93,10 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 	}
 
 	/**
-	 * 获取 secondsleft 对象 usehasnoexpirationreturn1。
-	 * Gets seconds left for the object use. If has no expiration return -1
+	 * 获取对象剩余可用秒数，无过期时间时返回 -1。
+	 * Gets seconds left for the object use, -1 if no expiration.
 	 *
-	 * @return
+	 * @return 剩余秒数 / seconds left
 	 */
 	public int getUseSecondsLeft() {
 		if (expireEnd == 0) {
@@ -126,13 +126,13 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		return (T) objectTemplate;
 	}
 
-	/** 返回 x / Returns the x */
+	/** 返回 X 坐标 / Returns the x */
 	@Override
 	public float getX() {
 		return x;
 	}
 
-	/** 设置 x / Sets the x */
+	/** 设置 X 坐标 / Sets the x */
 	public void setX(float x) {
 		if (this.x != x) {
 			this.x = x;
@@ -144,13 +144,13 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		}
 	}
 
-	/** 返回 y / Returns the y */
+	/** 返回 Y 坐标 / Returns the y */
 	@Override
 	public float getY() {
 		return y;
 	}
 
-	/** 设置 y / Sets the y */
+	/** 设置 Y 坐标 / Sets the y */
 	public void setY(float y) {
 		if (this.y != y) {
 			this.y = y;
@@ -161,13 +161,13 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		}
 	}
 
-	/** 返回 z / Returns the z */
+	/** 返回 Z 坐标 / Returns the z */
 	@Override
 	public float getZ() {
 		return z;
 	}
 
-	/** 设置 z / Sets the z */
+	/** 设置 Z 坐标 / Sets the z */
 	public void setZ(float z) {
 		if (this.z != z) {
 			this.z = z;
@@ -178,13 +178,13 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		}
 	}
 
-	/** 返回 heading / Returns the heading */
+	/** 返回朝向 / Returns the heading */
 	@Override
 	public byte getHeading() {
 		return heading;
 	}
 
-	/** 设置 heading / Sets the heading */
+	/** 设置朝向 / Sets the heading */
 	public void setHeading(byte heading) {
 		if (this.heading != heading) {
 			this.heading = heading;
@@ -195,28 +195,28 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		}
 	}
 
-	/** 返回 rotation / Returns the rotation */
+	/** 返回旋转角度 / Returns the rotation */
 	public int getRotation() {
 		int rotation = this.heading & 0xFF;
 		return rotation * 3;
 	}
 
-	/** 设置 rotation / Sets the rotation */
+	/** 设置旋转角度 / Sets the rotation */
 	public void setRotation(int rotation) {
 		setHeading((byte) Math.ceil(rotation / 3f));
 	}
 
-	/** 返回 place location / Returns the place location */
+	/** 返回放置位置 / Returns the place location */
 	public PlaceLocation getPlaceLocation() {
 		return ((PlaceableHouseObject) objectTemplate).getLocation();
 	}
 
-	/** 返回 place area / Returns the place area */
+	/** 返回放置区域 / Returns the place area */
 	public PlaceArea getPlaceArea() {
 		return ((PlaceableHouseObject) objectTemplate).getArea();
 	}
 
-	/** 返回 placement limit / Returns the placement limit */
+	/** 返回放置数量上限 / Returns the placement limit */
 	public int getPlacementLimit(boolean trial) {
 		LimitType limitType = ((PlaceableHouseObject) objectTemplate).getPlacementLimit();
 		HouseType size = HouseType.fromValue(ownerHouse.getBuilding().getSize());
@@ -226,12 +226,12 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		return limitType.getObjectPlaceLimit(size);
 	}
 
-	/** 返回 quality / Returns the quality */
+	/** 返回品质 / Returns the quality */
 	public ItemQuality getQuality() {
 		return ((AbstractHouseObject) objectTemplate).getQuality();
 	}
 
-	/** 返回 talking distance / Returns the talking distance */
+	/** 返回对话距离 / Returns the talking distance */
 	public float getTalkingDistance() {
 		return ((AbstractHouseObject) objectTemplate).getTalkingDistance();
 	}
@@ -241,7 +241,7 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		return ((AbstractHouseObject) objectTemplate).getCategory();
 	}
 
-	/** 返回 owner house / Returns the owner house */
+	/** 返回所属房屋 / Returns the owner house */
 	public House getOwnerHouse() {
 		return ownerHouse;
 	}
@@ -251,24 +251,24 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		return ownerHouse.getOwnerId();
 	}
 
-	/** 返回所有者已使用数量 / Returns the owner used count*/
+	/** 返回所有者已使用数量 / Returns the owner used count. */
 	public int getOwnerUsedCount() {
 		return ownerUsedCount;
 	}
 
-	/** 递增所有者已用次数 / Increment Owner Used Count */
+	/** 递增所有者已用次数 / Increments the owner used count. */
 	public void incrementOwnerUsedCount() {
 		this.ownerUsedCount++;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
-	/** 递增 visitor used count / Increment Visitor Used Count */
+	/** 递增访客使用次数 / Increments the visitor used count. */
 	public void incrementVisitorUsedCount() {
 		this.visitorUsedCount++;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
-	/** 设置所有者已使用数量 / Sets the owner used count*/
+	/** 设置所有者已使用数量 / Sets the owner used count. */
 	public void setOwnerUsedCount(int ownerUsedCount) {
 		if (this.ownerUsedCount != ownerUsedCount) {
 			this.ownerUsedCount = ownerUsedCount;
@@ -276,12 +276,12 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		}
 	}
 
-	/** 返回 visitor used count / Returns the visitor used count */
+	/** 返回访客使用次数 / Returns the visitor used count */
 	public int getVisitorUsedCount() {
 		return visitorUsedCount;
 	}
 
-	/** 设置 visitor used count / Sets the visitor used count */
+	/** 设置访客使用次数 / Sets the visitor used count */
 	public void setVisitorUsedCount(int visitorUsedCount) {
 		if (this.visitorUsedCount != visitorUsedCount) {
 			this.visitorUsedCount = visitorUsedCount;
@@ -290,14 +290,17 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 	}
 
 	/**
-	 * @return 表示玩家已生成该对象，而非游戏服务器侧。 / Means the player has it spawned, not the game server
+	 * 对象是否由玩家生成，而非游戏服务器侧。
+	 * Whether the object was spawned by the player rather than the game server.
+	 *
+	 * @return 是否由玩家生成 / whether spawned by the player
 	 */
 	public boolean isSpawnedByPlayer() {
 		return x != 0 || y != 0 || z != 0;
 	}
 
 	@SuppressWarnings("unchecked")
-	/** 返回 controller / Returns the controller */
+	/** 返回控制器 / Returns the controller */
 	@Override
 	public PlaceableObjectController<T> getController() {
 		return (PlaceableObjectController<T>) super.getController();
@@ -326,11 +329,11 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		this.setHeading((byte) 0);
 	}
 
-	/** 使用时 / on Use. */
+	/** 使用时 / On use. */
 	public void onUse(Player player) {
 	}
 
-	/** 在 DialogRequest / On Dialog Request */
+	/** 对话框请求时 / On dialog request */
 	public void onDialogRequest(Player player) {
 		onUse(player);
 	}
@@ -340,12 +343,12 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 
 	}
 
-	/** 返回 color / Returns the color */
+	/** 返回颜色 / Returns the color */
 	public Integer getColor() {
 		return color;
 	}
 
-	/** 设置 color / Sets the color */
+	/** 设置颜色 / Sets the color */
 	public void setColor(Integer color) {
 		if (color != this.color) {
 			this.color = color;
@@ -353,12 +356,12 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		}
 	}
 
-	/** 返回 color expire end / Returns the color expire end */
+	/** 返回颜色过期时间 / Returns the color expire end */
 	public int getColorExpireEnd() {
 		return colorExpireEnd;
 	}
 
-	/** 设置 color expire end / Sets the color expire end */
+	/** 设置颜色过期时间 / Sets the color expire end */
 	public void setColorExpireEnd(int colorExpireEnd) {
 		this.colorExpireEnd = colorExpireEnd;
 	}

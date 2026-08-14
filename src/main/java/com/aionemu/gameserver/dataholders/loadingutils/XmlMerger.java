@@ -71,8 +71,8 @@ public class XmlMerger {
 	 * 创建 XmlMerger；基准目录默认为源文件所在目录。
 	 * Creates an XmlMerger with base directory set to the source file's parent.
 	 *
-	 * source file
-	 * destination file
+	 * @param source 源文件 / source file
+	 * @param target 目标文件 / destination file
 	 */
 	public XmlMerger(File source, File target) {
 		this(source, target, source.getParentFile());
@@ -82,9 +82,9 @@ public class XmlMerger {
 	 * 创建 XmlMerger，并指定 import 解析的基准目录。
 	 * Creates an XmlMerger with an explicit base directory for resolving imports.
 	 *
-	 * source file
-	 * destination file
-	 * root directory for relative import paths
+	 * @param source 源文件 / source file
+	 * @param target 目标文件 / destination file
+	 * @param baseDir 相对导入路径的根目录 / root directory for relative import paths
 	 */
 	public XmlMerger(File source, File target, File baseDir) {
 		this.baseDir = baseDir;
@@ -252,7 +252,7 @@ public class XmlMerger {
 	 * 处理单个 {@code import} 元素，将其替换为对应文件/目录内容。
 	 * Processes one {@code import} element and replaces it with the imported file or directory content.
 	 *
-	 * import start element
+	 * @param element 导入起始元素 / import start element
 	 * @param writer 目标写入器 / destination writer
 	 * @param metadata 文件哈希元数据 / file-hash metadata
 	 * on event writing errors。
@@ -297,11 +297,11 @@ public class XmlMerger {
 	 * 从 {@link StartElement} 提取属性值。
 	 * Extracts an attribute value from a {@link StartElement} event.
 	 *
-	 * start element
+	 * @param element 起始元素 / start element
 	 * attribute QName
 	 * @param def 默认值，可为 null / default value, or null if required
 	 * @param onErrorMessage 缺失且无默认值时的错误信息 / error message when missing and no default
-	 * attribute value
+	 * @param name 属性值 / attribute value
 	 * if the attribute is missing and no default is set。
 	 */
 	private String getAttributeValue(StartElement element, QName name, String def, String onErrorMessage)

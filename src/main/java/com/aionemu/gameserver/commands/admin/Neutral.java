@@ -89,8 +89,6 @@ public class Neutral extends AdminCommand {
 	 * 参数错误时显示语法与 help 提示。
 	 * Show syntax and help hint when parameters are invalid.
 	 *
-	 * 玩家 / Player
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

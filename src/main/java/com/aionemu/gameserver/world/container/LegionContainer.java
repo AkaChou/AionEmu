@@ -59,9 +59,7 @@ public class LegionContainer implements Iterable<Legion> {
 	 * 按军团 ID 查找。
 	 * Looks up a legion by ID.
 	 *
-	 * legion ID
-	 *
-	 * @param legionId
+	 * @param legionId 军团 ID / legion ID
 	 * @return 军团实例，不存在则返回 null / legion instance, or null if absent
 	 */
 	public synchronized Legion get(int legionId) {
@@ -93,9 +91,8 @@ public class LegionContainer implements Iterable<Legion> {
 	 * 是否包含指定 ID 的军团。
 	 * Whether a legion with the given ID is present.
 	 *
-	 * legion ID
-	 *
-	 * @param legionId 存在则为 true / true if present
+	 * @param legionId 军团 ID / legion ID
+	 * @return 存在则为 true / true if present
 	 */
 	public synchronized boolean contains(int legionId) {
 		return legionsById.containsKey(legionId);

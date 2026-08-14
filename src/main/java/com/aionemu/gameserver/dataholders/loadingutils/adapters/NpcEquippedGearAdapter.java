@@ -17,7 +17,7 @@ public class NpcEquippedGearAdapter extends XmlAdapter<NpcEquipmentList, NpcEqui
 	 * Marshaling is not implemented and always returns null.
 	 *
 	 * @param v 运行时装备 / runtime gear
-	 * always null
+	 * @return 始终为 null / always null
 	 */
 	@Override
 	public NpcEquipmentList marshal(NpcEquippedGear v) throws Exception {

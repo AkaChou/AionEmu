@@ -48,30 +48,30 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	private Race spawnRace;
 	/** 开始时间 / start time */
 	private long startTime;
-	/** 准备计时器 / timer prepare */
+		/** 准备计时器 / timer prepare */
 		private Future<?> timerPrepare;
-	/** 副本计时器 / timer instance */
+		/** 副本计时器 / timer instance */
 		private Future<?> timerInstance;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
 	
 	// 准备时间。 / Preparation Time.
-	/** 准备计时秒数 / prepare timer seconds */
+		/** 准备计时秒数 / prepare timer seconds */
 		private int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
 	// 副本持续计时。 / Duration Instance Time.
-	/** 副本计时秒数 / instance timer seconds */
+		/** 副本计时秒数 / instance timer seconds */
 		private int instanceTimerSeconds = 1800000; //...30Min
 	/** 副本奖励对象 / instance reward object */
 	private StonespearReachReward instanceReward;
-	/** stonespear task1 / stonespear task1 */
+		/** stonespear task1 / stonespear task1 */
 		private final List<Future<?>> stonespearTask1 = new ArrayList<>();
-	/** stonespear task2 / stonespear task2 */
+		/** stonespear task2 / stonespear task2 */
 		private final List<Future<?>> stonespearTask2 = new ArrayList<>();
-	/** stonespear task3 / stonespear task3 */
+		/** stonespear task3 / stonespear task3 */
 		private final List<Future<?>> stonespearTask3 = new ArrayList<>();
-	/** stonespear task4 / stonespear task4 */
+		/** stonespear task4 / stonespear task4 */
 		private final List<Future<?>> stonespearTask4 = new ArrayList<>();
-	/** stonespear task5 / stonespear task5 */
+		/** stonespear task5 / stonespear task5 */
 		private final List<Future<?>> stonespearTask5 = new ArrayList<>();
 	/** spawn positions / spawn positions */
 	
@@ -110,9 +110,9 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 		/** first wave / first wave */
 		
 		private final int[] firstWave;
-		/** second wave / second wave */
+				/** second wave / second wave */
 				private final int[] secondWave;
-		/** third wave / third wave */
+				/** third wave / third wave */
 				private final int[] thirdWave;
 		
 		RaidType(int[] firstWave, int[] secondWave, int[] thirdWave) {
@@ -124,7 +124,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 		 * 返回 first wave。
 		 * Return the first wave.
 		 *
-		 * result
+		 * @return 结果 / result
 		 */
 		
 		public int[] getFirstWave() { return firstWave; }
@@ -132,14 +132,14 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 		 * 返回 second wave。
 		 * Return the second wave.
 		 *
-		 * result
+		 * @return 结果 / result
 		 */
 		public int[] getSecondWave() { return secondWave; }
 		/**
 		 * 返回 third wave。
 		 * Return the third wave.
 		 *
-		 * result
+		 * @return 结果 / result
 		 */
 		public int[] getThirdWave() { return thirdWave; }
 	}
@@ -147,8 +147,8 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
 	 *
-	 * visible object
-	 * result
+	 * @param object 可见对象 / visible object
+	 * @return 结果 / result
 	 */
 	
 	protected StonespearReachPlayerReward getPlayerReward(Integer object) {
@@ -174,7 +174,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
 	 *
-	 * result
+	 * @return 结果 / result
 	 */
 	@Override
 	public InstanceReward<?> getInstanceReward() {
@@ -184,7 +184,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -242,7 +242,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -1075,9 +1075,9 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
@@ -1110,8 +1110,8 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
 	 *
-	 * 玩家 / player
-	 * result
+	 * @param player 玩家 / player
+	 * @return 结果 / result
 	 */
 	@Override
 	public boolean onReviveEvent(Player player) {

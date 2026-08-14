@@ -68,8 +68,8 @@ public class DredgionSchedule {
 	@XmlRootElement(name = "dredgion")
 	public static class Dredgion {
 		/**
-	 * 无畏舰 ID / Dredgion ID。 Dredgion ID
-	 */
+		 * 无畏舰 ID / Dredgion ID
+		 */
 		@XmlAttribute(required = true)
 		private int id;
 

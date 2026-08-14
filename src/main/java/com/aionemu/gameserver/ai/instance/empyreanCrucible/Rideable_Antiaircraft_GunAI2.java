@@ -37,7 +37,7 @@ public class Rideable_Antiaircraft_GunAI2 extends ActionItemNpcAI2
 	
 	private int getMorphSkill() {
 		switch (getNpcId()) {
-			case 701199: //Rideable Antiaircraft Gun.
+			case 701199: // 骑乘型对空炮 / Rideable Antiaircraft Gun
 				return 0x4E5133;
 		}
 		return 0;

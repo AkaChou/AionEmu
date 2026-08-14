@@ -68,8 +68,8 @@ public class SvsSchedule {
 	@XmlRootElement(name = "svs")
 	public static class Svs {
 		/**
-	 * SvS ID
-	 */
+		 * SvS ID / SvS ID
+		 */
 		@XmlAttribute(required = true)
 		private int id;
 

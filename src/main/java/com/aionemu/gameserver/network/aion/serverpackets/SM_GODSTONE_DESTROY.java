@@ -16,8 +16,8 @@ public class SM_GODSTONE_DESTROY extends AionServerPacket {
 	private int time;
 
 	/**
-	 * Item object ID
-	 * Godstone ID
+	 * @param objectId 物品对象 ID / Item object ID
+	 * @param godstoneId 神石 ID / Godstone ID
 	 * @param time 相关时间参数 / Related time parameter
 	 */
 	public SM_GODSTONE_DESTROY(int objectId, int godstoneId, int time) {

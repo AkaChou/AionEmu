@@ -55,9 +55,7 @@ public class ItemSetData {
 	 * 按套装 ID 获取套装模板。
 	 * Returns the item-set template for the given set id.
 	 *
-	 * item-set id
-	 *
-	 * @param itemSetId
+	 * @param itemSetId 物品套装 ID / item-set id
 	 * @return 套装模板或 null / item-set template or null
 	 */
 	public ItemSetTemplate getItemSetTemplate(int itemSetId) {
@@ -68,9 +66,7 @@ public class ItemSetData {
 	 * 按部件物品 ID 获取所属套装模板。
 	 * Returns the item-set template associated with the given part item id.
 	 *
-	 * part item id
-	 *
-	 * @param itemId
+	 * @param itemId 部件物品 ID / part item id
 	 * @return 套装模板或 null / item-set template or null
 	 */
 	public ItemSetTemplate getItemSetTemplateByItemId(int itemId) {
@@ -81,7 +77,7 @@ public class ItemSetData {
 	 * 返回已加载的套装数量。
 	 * Returns the number of loaded item sets.
 	 *
-	 * set count
+	 * @return 已加载的物品套装数量 / Returns the number of loaded item sets.
 	 */
 	public int size() {
 		return sets.size();

@@ -9,7 +9,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 
 /**
- * Change 队伍 LootRules 活动，用于团队2相关逻辑。
+ * 变更队伍拾取规则事件（团队2）。
  * Change Group Loot Rules Event for team 2 logic.
  *
  * @author ATracer
@@ -31,7 +31,7 @@ public class ChangeGroupLootRulesEvent extends AlwaysTrueTeamEvent implements Pr
 		return true;
 	}
 
-	/** 处理活动。 / Handle event. */
+	/** 处理事件。 / Handle event. */
 	@Override
 	public void handleEvent() {
 		group.setLootGroupRules(lootGroupRules);

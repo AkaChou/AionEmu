@@ -40,7 +40,7 @@ public class WorldMap {
 	 * 根据模板创建地图并初始化默认/双生实例。
 	 * Create a map from template and initialize default/twin instances.
 	 *
-	 * map template
+	 * @param worldMapTemplate 地图模板 / the map template
 	 * @param world 所属世界 / owning world
 	 */
 	public WorldMap(WorldMapTemplate worldMapTemplate, World world) {
@@ -63,7 +63,7 @@ public class WorldMap {
 	 * 地图名称。
 	 * Map name.
 	 *
-	 * name
+	 * @return 地图名称 / the name
 	 */
 	public String getName() {
 		return worldMapTemplate.getName();
@@ -73,7 +73,7 @@ public class WorldMap {
 	 * 水位高度。
 	 * Water level height.
 	 *
-	 * water level
+	 * @return 水位高度 / the water level
 	 */
 	public int getWaterLevel() {
 		return worldMapTemplate.getWaterLevel();
@@ -83,7 +83,7 @@ public class WorldMap {
 	 * 坠落死亡高度。
 	 * Death-fall height.
 	 *
-	 * death level
+	 * @return 坠落死亡高度 / the death level
 	 */
 	public int getDeathLevel() {
 		return worldMapTemplate.getDeathLevel();
@@ -103,7 +103,7 @@ public class WorldMap {
 	 * 世界尺寸（边长）。
 	 * World size (edge length).
 	 *
-	 * size
+	 * @return 世界尺寸 / the size
 	 */
 	public int getWorldSize() {
 		return worldMapTemplate.getWorldSize();
@@ -113,7 +113,7 @@ public class WorldMap {
 	 * 地图 ID。
 	 * Map id.
 	 *
-	 * map id
+	 * @return 地图 ID / the map id
 	 */
 	public Integer getMapId() {
 		return worldMapTemplate.getMapId();
@@ -123,7 +123,7 @@ public class WorldMap {
 	 * 是否允许飞行。
 	 * Whether flying is allowed.
 	 *
-	 * flying allowed
+	 * @return 允许飞行则为 true / true if flying allowed
 	 */
 	public boolean isPossibleFly() {
 		return (worldOptions & ZoneAttributes.FLY.getId()) != 0;
@@ -133,7 +133,7 @@ public class WorldMap {
 	 * 是否排除 Buff 效果。
 	 * Whether buffs are excluded.
 	 *
-	 * except buff
+	 * @return 排除 Buff 则为 true / true if buffs are excluded
 	 */
 	public boolean isExceptBuff() {
 		return worldMapTemplate.isExceptBuff();
@@ -143,7 +143,7 @@ public class WorldMap {
 	 * 是否允许滑翔。
 	 * Whether gliding is allowed.
 	 *
-	 * gliding allowed
+	 * @return 允许滑翔则为 true / true if gliding allowed
 	 */
 	public boolean canGlide() {
 		return (worldOptions & ZoneAttributes.GLIDE.getId()) != 0;
@@ -153,7 +153,7 @@ public class WorldMap {
 	 * 是否允许放置 Kisk。
 	 * Whether placing a kisk is allowed.
 	 *
-	 * kisk allowed
+	 * @return 允许放置 Kisk 则为 true / true if kisk placement allowed
 	 */
 	public boolean canPutKisk() {
 		return (worldOptions & ZoneAttributes.BIND.getId()) != 0;
@@ -163,7 +163,7 @@ public class WorldMap {
 	 * 是否允许召回。
 	 * Whether recall is allowed.
 	 *
-	 * recall allowed
+	 * @return 允许召回则为 true / true if recall allowed
 	 */
 	public boolean canRecall() {
 		return (worldOptions & ZoneAttributes.RECALL.getId()) != 0;
@@ -173,7 +173,7 @@ public class WorldMap {
 	 * 是否允许骑乘。
 	 * Whether riding is allowed.
 	 *
-	 * riding allowed
+	 * @return 允许骑乘则为 true / true if riding allowed
 	 */
 	public boolean canRide() {
 		return (worldOptions & ZoneAttributes.RIDE.getId()) != 0;
@@ -193,7 +193,7 @@ public class WorldMap {
 	 * 是否允许 PvP。
 	 * Whether PvP is allowed.
 	 *
-	 * PvP allowed
+	 * @return 允许 PvP 则为 true / true if PvP allowed
 	 */
 	public boolean isPvpAllowed() {
 		return (worldOptions & ZoneAttributes.PVP_ENABLED.getId()) != 0;
@@ -223,7 +223,7 @@ public class WorldMap {
 	 * 开启一项世界选项。
 	 * Enable a world option flag.
 	 *
-	 * option
+	 * @param option 世界选项 / the world option
 	 */
 	public void setWorldOption(ZoneAttributes option) {
 		worldOptions |= option.getId();
@@ -233,7 +233,7 @@ public class WorldMap {
 	 * 关闭一项世界选项。
 	 * Disable a world option flag.
 	 *
-	 * option
+	 * @param option 世界选项 / the world option
 	 */
 	public void removeWorldOption(ZoneAttributes option) {
 		worldOptions &= ~option.getId();
@@ -243,9 +243,7 @@ public class WorldMap {
 	 * 判断运行时选项是否相对模板发生了覆盖。
 	 * Whether the runtime option differs from the template flag.
 	 *
-	 * option
-	 *
-	 * @param option
+	 * @param option 世界选项 / the world option
 	 * @return 已覆盖返回 true / true if overridden
 	 */
 	public boolean hasOverridenOption(ZoneAttributes option) {
@@ -259,7 +257,7 @@ public class WorldMap {
 	 * 配置的实例（双生）数量。
 	 * Configured instance (twin) count.
 	 *
-	 * instance count
+	 * @return 配置的实例数量 / the instance count
 	 */
 	public int getInstanceCount() {
 		int twinCount = worldMapTemplate.getTwinCount();
@@ -280,8 +278,8 @@ public class WorldMap {
 	 * 按实例 ID 返回实例；双生数量校验失败时抛异常。
 	 * Return instance by id; throws if id exceeds twin count.
 	 *
-	 * instance id
-	 * world map instance
+	 * @param instanceId 实例 ID / the instance id
+	 * @return 世界地图实例 / the world map instance
 	 */
 	public WorldMapInstance getWorldMapInstanceById(int instanceId) {
 		if (worldMapTemplate.getTwinCount() != 0) {
@@ -297,8 +295,8 @@ public class WorldMap {
 	 * 按实例 ID 取实例；0 视为 1。
 	 * Get instance by id; 0 is treated as 1.
 	 *
-	 * instance id
-	 * world map instance
+	 * @param instanceId 实例 ID / the instance id
+	 * @return 世界地图实例 / the world map instance
 	 */
 	private WorldMapInstance getWorldMapInstance(int instanceId) {
 		// instanceId 为计数，部分代码仍用 0 表示默认副本 / instanceId is a count, some code still uses 0 for the default instance
@@ -312,7 +310,7 @@ public class WorldMap {
 	 * 按实例 ID 移除实例；0 视为 1。
 	 * Remove instance by id; 0 is treated as 1.
 	 *
-	 * instance id
+	 * @param instanceId 实例 ID / the instance id
 	 */
 	public void removeWorldMapInstance(int instanceId) {
 		// instanceId 为计数，部分代码仍用 0 表示默认副本 / instanceId is a count, some code still uses 0 for the default instance
@@ -326,8 +324,8 @@ public class WorldMap {
 	 * 将实例加入本地图；0 视为 1。
 	 * Add an instance to this map; 0 is treated as 1.
 	 *
-	 * instance id
-	 * map instance
+	 * @param instanceId 实例 ID / the instance id
+	 * @param instance 地图实例 / the map instance
 	 */
 	public void addInstance(int instanceId, WorldMapInstance instance) {
 		// instanceId 为计数，部分代码仍用 0 表示默认副本 / instanceId is a count, some code still uses 0 for the default instance
@@ -341,7 +339,7 @@ public class WorldMap {
 	 * 返回所属世界。
 	 * Return the owning world.
 	 *
-	 * world
+	 * @return 所属世界 / the owning world
 	 */
 	public World getWorld() {
 		return world;
@@ -351,7 +349,7 @@ public class WorldMap {
 	 * 返回地图模板。
 	 * Return the map template.
 	 *
-	 * template
+	 * @return 地图模板 / the map template
 	 */
 	public final WorldMapTemplate getTemplate() {
 		return worldMapTemplate;
@@ -361,7 +359,7 @@ public class WorldMap {
 	 * 分配并返回下一个实例 ID。
 	 * Allocate and return the next instance id.
 	 *
-	 * new instance id
+	 * @return 新实例 ID / the new instance id
 	 */
 	public int getNextInstanceId() {
 		return nextInstanceId.incrementAndGet();
@@ -381,7 +379,7 @@ public class WorldMap {
 	 * 实例迭代器。
 	 * Iterator over instances.
 	 *
-	 * iterator
+	 * @return 实例迭代器 / the iterator
 	 */
 	public Iterator<WorldMapInstance> iterator() {
 		return instancesSnapshot().iterator();
@@ -391,7 +389,7 @@ public class WorldMap {
 	 * 当前全部可用实例 ID。
 	 * All currently available instance ids.
 	 *
-	 * instance id collection
+	 * @return 实例 ID 集合 / the instance id collection
 	 */
 	public Collection<Integer> getAvailableInstanceIds() {
 		synchronized (instances) {
@@ -403,7 +401,7 @@ public class WorldMap {
 	 * 当前全部实例快照。
 	 * Snapshot of all current instances.
 	 *
-	 * instance collection
+	 * @return 全部实例集合 / the instance collection
 	 */
 	public Collection<WorldMapInstance> getInstances() {
 		return instancesSnapshot();
@@ -423,7 +421,7 @@ public class WorldMap {
 	 * 实例值快照。
 	 * Snapshot of instance values.
 	 *
-	 * instance list
+	 * @return 实例列表 / the instance list
 	 */
 	private List<WorldMapInstance> instancesSnapshot() {
 		synchronized (instances) {

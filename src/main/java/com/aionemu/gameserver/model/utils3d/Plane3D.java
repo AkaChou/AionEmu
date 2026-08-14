@@ -3,8 +3,8 @@ package com.aionemu.gameserver.model.utils3d;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Plane3D，用于工具3d 相关逻辑。
- * Plane 3 D for utils 3 d logic.
+ * 三维平面，用于 3D 工具逻辑。
+ * Plane 3D for utils 3D logic.
  *
  * @author M@xx
  */
@@ -41,18 +41,18 @@ public class Plane3D {
 		normalization = Math.sqrt(a * a + b * b + c * c);
 	}
 
-	/** 返回居中 / Returns the center*/
+	/** 返回平面中心点 / Returns the center */
 	public Point3D getCenter() {
 		return p0;
 	}
 
-	/** 返回 point distance / Returns the point distance */
+	/** 返回点到平面距离 / Returns the point distance */
 	public double getPointDistance(Point3D p) {
 		double n = a * p.x + b * p.y + c * p.z + d;
 		return n / normalization;
 	}
 
-	/** 相交 / intersect. */
+	/** 判断线段是否与平面相交 / intersect. */
 	public boolean intersect(Point3D l0, Point3D l1) {
 		double distanceL0 = getPointDistance(l0);
 		double distanceL1 = getPointDistance(l1);
@@ -63,7 +63,7 @@ public class Plane3D {
 		return false;
 	}
 
-	/** 交点 / intersection. */
+	/** 计算线段与平面交点 / intersection. */
 	public Point3D intersection(Point3D la, Point3D lb) {
 		double[] v1 = new double[] { la.x - p0.x, la.y - p0.y, la.z - p0.z };
 

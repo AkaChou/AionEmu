@@ -71,7 +71,7 @@ public class InstanceExitData {
 	 * 返回已加载的副本出口数量。
 	 * Returns the number of loaded instance exits.
 	 *
-	 * exit count
+	 * @return 已加载的副本出口数量 / Returns the number of loaded instance exits.
 	 */
 	public int size() {
 		return instanceExits.size();

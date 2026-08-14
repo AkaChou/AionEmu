@@ -26,8 +26,11 @@ public class TownSpawnMap {
 	private Map<Integer, TownSpawn> townSpawnsData = new HashMap<Integer, TownSpawn>();
 
 	/**
-	 * @param u
-	 * @param parent
+	 * 反序列化后将城镇出生列表转为按城镇 ID 索引的映射。
+	 * Build the town-id-indexed map after unmarshalling.
+	 *
+	 * @param u JAXB 反序列化器 / Unmarshaller
+	 * @param parent 父对象 / Parent object
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		townSpawnsData.clear();

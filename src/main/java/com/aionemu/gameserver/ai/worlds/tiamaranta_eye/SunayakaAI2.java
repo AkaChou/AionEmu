@@ -35,12 +35,12 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 	private AtomicBoolean isAggred = new AtomicBoolean(false);
 
 	private void simmeringRage() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20651, 1, getOwner()).useNoAnimationSkill(); //Simmering Rage.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 20651, 1, getOwner()).useNoAnimationSkill(); // 积攒的怒火 / Simmering Rage.
 		getOwner().getEffectController().removeEffect(8763);
 	}
 
 	private void rageOfTheDragonLords() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 8763, 1, getOwner()).useNoAnimationSkill(); //Rage Of The Dragon Lords
+		GameEngineServices.skillEngine().getSkill(getOwner(), 8763, 1, getOwner()).useNoAnimationSkill(); // 龙帝之怒 / Rage Of The Dragon Lords
 	}
 
 	@Override
@@ -48,18 +48,18 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
 			switch (getNpcId()) {
-				case 218553: //Governor Sunayaka.
-				case 219311: //Berserker Sunayaka.
+				case 218553: // 总督苏纳亚卡 / Governor Sunayaka.
+				case 219311: // 狂战士苏纳亚卡 / Berserker Sunayaka.
 				//////////////////////////////////
-				case 249144: //Governor Sunayaka.
-				case 249145: //Berserker Sunayaka.
+				case 249144: // 总督苏纳亚卡 / Governor Sunayaka.
+				case 249145: // 狂战士苏纳亚卡 / Berserker Sunayaka.
 					// 狂战士苏纳亚卡在开战 15 分钟后狂暴。 / Berserker Sunayaka goes berserk 15 minutes after the battle starts.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401459, 0);
 					getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							if (player.isOnline()) {
-								PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900)); //15 Minutes.
+								PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900)); // 15 分钟 / 15 Minutes.
 							}
 						}
 					});
@@ -78,7 +78,7 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 								}
 							});
 						}
-					}, 900000); //15Min...
+					}, 900000); // 15 分钟 / 15Min...
 				break;
 			}
 		}

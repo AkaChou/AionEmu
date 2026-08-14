@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * 艾特里亚 Passport 奖励模板（静态数据/XML）。
- * XML template.
+ * Atreian Passport Rewards Template (static data/XML).
  *
  * @author Falke_34
  */
@@ -41,12 +41,12 @@ public class AtreianPassportRewards {
 		return rewardItemCount;
 	}
 
-	/** 返回 reward item num / Returns the reward item num */
+	/** 返回奖励物品序号 / Returns the reward item num */
 	public int getRewardItemNum() {
 		return rewardItemNum;
 	}
 
-	/** 返回 reward permit level / Returns the reward permit level */
+	/** 返回奖励发放等级 / Returns the reward permit level */
 	public int getRewardPermitLevel() {
 		return rewardPermitLevel;
 	}

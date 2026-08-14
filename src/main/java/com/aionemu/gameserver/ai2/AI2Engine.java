@@ -79,7 +79,7 @@ public class AI2Engine implements GameEngine {
 	 * 按 {@link AIName} 注解将 AI 类注册到名称映射表。
 	 * Registers an AI class into the name map using its {@link AIName} annotation.
 	 *
-	 * AI implementation class
+	 * @param class1 AI 实现类 / AI implementation class
 	 */
 	public void registerAI(Class<? extends AbstractAI> class1) {
 		AIName nameAnnotation = class1.getAnnotation(AIName.class);
@@ -92,10 +92,8 @@ public class AI2Engine implements GameEngine {
 	 * 按名称创建 AI 实例并绑定到所有者。
 	 * Creates an AI instance by name and binds it to the owner.
 	 *
-	 * AI name
-	 *
+	 * @param name AI 名称 / AI name
 	 * @param owner 所有者生物 / owner creature
-	 * @param owner
 	 * @return 装配好的 AI 实例 / configured AI instance
 	 */
 	public final AI2 setupAI(String name, Creature owner) {
@@ -131,8 +129,8 @@ public class AI2Engine implements GameEngine {
 	 * 使用 {@link AiNames} 枚举为 NPC 装配 AI。
 	 * Sets up AI for an NPC using an {@link AiNames} enum value.
 	 *
-	 * AI name enum
-	 * target NPC
+	 * @param aiName AI 名称枚举 / AI name enum
+	 * @param owner 目标 NPC / target NPC
 	 */
 	public void setupAI(AiNames aiName, Npc owner) {
 		setupAI(aiName.getName(), owner);
@@ -157,7 +155,7 @@ public class AI2Engine implements GameEngine {
 	 * 获取引擎单例（优先 Spring Provider，否则回退静态持有者）。
 	 * Returns the engine singleton (Spring provider first, else static holder).
 	 *
-	 * AI2Engine instance
+	 * @return AI2Engine 实例 / AI2Engine instance
 	 */
 	public static final AI2Engine getInstance() {
 		ObjectProvider<AI2Engine> provider = instanceProvider;

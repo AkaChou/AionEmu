@@ -32,8 +32,8 @@ public final class Ray implements Cloneable, Collidable {
 	 * 按原点与方向构造射线（直接持有引用）。
 	 * Constructs a ray from origin and direction (holds references directly).
 	 *
-	 * origin
-	 * direction
+	 * @param origin 原点 / origin
+	 * @param direction 方向 / direction
 	 */
 	public Ray(Vector3f origin, Vector3f direction) {
 		this.origin = origin;
@@ -46,7 +46,7 @@ public final class Ray implements Cloneable, Collidable {
 	 *
 	 * @param t 三角形 / triangle
 	 * @param loc 交点存储 / hit-point storage
-	 * whether they intersect
+	 * @return 是否相交 / whether they intersect
 	 */
 	public boolean intersectWhere(Triangle t, Vector3f loc) {
 		return this.intersectWhere(t.get(0), t.get(1), t.get(2), loc);
@@ -60,7 +60,7 @@ public final class Ray implements Cloneable, Collidable {
 	 * @param v1 顶点 1 / vertex 1
 	 * @param v2 顶点 2 / vertex 2
 	 * @param loc 交点存储 / hit-point storage
-	 * whether they intersect
+	 * @return 是否相交 / whether they intersect
 	 */
 	public boolean intersectWhere(Vector3f v0, Vector3f v1, Vector3f v2, Vector3f loc) {
 		return this.intersects(v0, v1, v2, loc, false, false);
@@ -72,7 +72,7 @@ public final class Ray implements Cloneable, Collidable {
 	 *
 	 * @param t 三角形 / triangle
 	 * @param loc 平面坐标存储 / planar-coord storage
-	 * whether they intersect
+	 * @return 是否相交 / whether they intersect
 	 */
 	public boolean intersectWherePlanar(Triangle t, Vector3f loc) {
 		return this.intersectWherePlanar(t.get(0), t.get(1), t.get(2), loc);
@@ -86,7 +86,7 @@ public final class Ray implements Cloneable, Collidable {
 	 * @param v1 顶点 1 / vertex 1
 	 * @param v2 顶点 2 / vertex 2
 	 * @param loc 平面坐标存储 / planar-coord storage
-	 * whether they intersect
+	 * @return 是否相交 / whether they intersect
 	 */
 	public boolean intersectWherePlanar(Vector3f v0, Vector3f v1, Vector3f v2, Vector3f loc) {
 		return this.intersects(v0, v1, v2, loc, true, false);
@@ -102,7 +102,7 @@ public final class Ray implements Cloneable, Collidable {
 	 * @param store 结果存储；null 仅测试 / result storage; null tests only
 	 * @param doPlanar true 时 store 写 (t,w1,w2)，否则写世界坐标 / planar vs world coords
 	 * @param quad true 时按四边形重心条件判定 / use quad barycentric condition when true
-	 * whether they intersect
+	 * @return 是否相交 / whether they intersect
 	 */
 	private boolean intersects(Vector3f v0, Vector3f v1, Vector3f v2, Vector3f store, boolean doPlanar, boolean quad) {
 		float diffDotNorm;
@@ -214,7 +214,7 @@ public final class Ray implements Cloneable, Collidable {
 	 * @param v1 顶点 1 / vertex 1
 	 * @param v2 顶点 2 / vertex 2
 	 * @param loc 平面坐标存储 / planar-coord storage
-	 * whether they intersect
+	 * @return 是否相交 / whether they intersect
 	 */
 	public boolean intersectWherePlanarQuad(Vector3f v0, Vector3f v1, Vector3f v2, Vector3f loc) {
 		return this.intersects(v0, v1, v2, loc, true, true);
@@ -226,7 +226,7 @@ public final class Ray implements Cloneable, Collidable {
 	 *
 	 * @param p 平面 / plane
 	 * @param loc 交点存储 / hit-point storage
-	 * whether they intersect
+	 * @return 是否相交 / whether they intersect
 	 */
 	public boolean intersectsWherePlane(Plane p, Vector3f loc) {
 		float denominator = p.getNormal().dot(this.direction);
@@ -248,8 +248,8 @@ public final class Ray implements Cloneable, Collidable {
 	 *
 	 * @param other 另一可碰撞体 / other collidable
 	 * @param results 碰撞结果收集器 / collision results collector
-	 * hit count
-	 * unsupported collision type。
+	 * @return 命中数 / hit count
+	 * @throws UnsupportedCollisionException 不支持的碰撞类型 / unsupported collision type.
 	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) {
@@ -274,8 +274,8 @@ public final class Ray implements Cloneable, Collidable {
 	 * 点到本射线（半射线，参数 ≥ 0）的最短距离平方。
 	 * Squared distance from a point to this half-ray (parameter ≥ 0).
 	 *
-	 * query point
-	 * squared distance
+	 * @param point 查询点 / query point
+	 * @return 距离平方 / squared distance
 	 */
 	public float distanceSquared(Vector3f point) {
 		Vector3f tempVa = Vector3f.newInstance();
@@ -299,7 +299,7 @@ public final class Ray implements Cloneable, Collidable {
 	 * 返回射线原点（内部引用）。
 	 * Returns the ray origin (internal reference).
 	 *
-	 * origin
+	 * @return 原点 / origin
 	 */
 	public Vector3f getOrigin() {
 		return this.origin;
@@ -309,7 +309,7 @@ public final class Ray implements Cloneable, Collidable {
 	 * 拷贝设置射线原点。
 	 * Copies and sets the ray origin.
 	 *
-	 * new origin
+	 * @param origin 新原点 / new origin
 	 */
 	public void setOrigin(Vector3f origin) {
 		this.origin.set(origin);
@@ -319,7 +319,7 @@ public final class Ray implements Cloneable, Collidable {
 	 * 返回射线最大长度限制。
 	 * Returns the maximum ray length limit.
 	 *
-	 * length limit
+	 * @return 长度上限 / length limit
 	 */
 	public float getLimit() {
 		return this.limit;
@@ -339,7 +339,7 @@ public final class Ray implements Cloneable, Collidable {
 	 * 返回射线方向（内部引用）。
 	 * Returns the ray direction (internal reference).
 	 *
-	 * direction
+	 * @return 方向 / direction
 	 */
 	public Vector3f getDirection() {
 		return this.direction;
@@ -349,7 +349,7 @@ public final class Ray implements Cloneable, Collidable {
 	 * 拷贝设置射线方向。
 	 * Copies and sets the ray direction.
 	 *
-	 * new direction
+	 * @param direction 新方向 / new direction
 	 */
 	public void setDirection(Vector3f direction) {
 		this.direction.set(direction);
@@ -359,7 +359,7 @@ public final class Ray implements Cloneable, Collidable {
 	 * 从另一射线拷贝原点与方向。
 	 * Copies origin and direction from another ray.
 	 *
-	 * source ray
+	 * @param source 源射线 / source ray
 	 */
 	public void set(Ray source) {
 		this.origin.set(source.getOrigin());
@@ -380,7 +380,7 @@ public final class Ray implements Cloneable, Collidable {
 	 * 返回运行时类标签。
 	 * Returns the runtime class tag.
 	 *
-	 * class object
+	 * @return 类对象 / class object
 	 */
 	public Class<? extends Ray> getClassTag() {
 		return this.getClass();
@@ -390,7 +390,7 @@ public final class Ray implements Cloneable, Collidable {
 	 * 深拷贝本射线（原点与方向独立克隆）。
 	 * Deep-clones this ray (origin and direction cloned independently).
 	 *
-	 * clone
+	 * @return 克隆 / clone
 	 */
 	public Ray clone() {
 		try {

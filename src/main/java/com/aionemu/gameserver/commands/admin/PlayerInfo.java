@@ -39,7 +39,6 @@ public class PlayerInfo extends AdminCommand
 	 * 输出基础信息，并按第二参数切换 item/group/skill/loc/legion/ap/gp/chars/knownlist/visual 等详情。
 	 * Print basic info and switch on the second arg for item/group/skill/loc/legion/ap/gp/chars/knownlist/visual details.
 	 *
-	 * 执行 GM / Admin player
 	 * @param params 角色名与详情开关 / Character name and detail switch
 	 */
 	@Override
@@ -220,8 +219,6 @@ public class PlayerInfo extends AdminCommand
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
 	 *
-	 * 玩家 / Player
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

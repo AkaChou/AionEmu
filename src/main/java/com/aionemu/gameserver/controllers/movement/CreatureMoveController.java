@@ -40,7 +40,7 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	 * 使用指定所有者构造控制器。
 	 * Construct the controller for the given owner.
 	 *
-	 * Owner
+	 * @param owner 所有者 / Owner
 	 */
 	public CreatureMoveController(T owner) {
 		this.owner = owner;
@@ -58,7 +58,7 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	 * 返回目标 X 坐标。
 	 * Return the target X coordinate.
 	 *
-	 * Target X
+	 * @return 目标 X 坐标 / Target X
 	 */
 	@Override
 	public float getTargetX2() {
@@ -69,7 +69,7 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	 * 返回目标 Y 坐标。
 	 * Return the target Y coordinate.
 	 *
-	 * Target Y
+	 * @return 目标 Y 坐标 / Target Y
 	 */
 	@Override
 	public float getTargetY2() {
@@ -80,7 +80,7 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	 * 返回目标 Z 坐标。
 	 * Return the target Z coordinate.
 	 *
-	 * Target Z
+	 * @return 目标 Z 坐标 / Target Z
 	 */
 	@Override
 	public float getTargetZ2() {
@@ -155,7 +155,7 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	 * 返回上次移动更新时间戳。
 	 * Return the last move update timestamp.
 	 *
-	 * Timestamp
+	 * @return 时间戳 / Timestamp
 	 */
 	public long getLastMoveUpdate() {
 		return lastMoveUpdate;
@@ -165,7 +165,7 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	 * 返回当前移动掩码。
 	 * Return the current movement mask.
 	 *
-	 * Movement mask
+	 * @return 移动掩码 / Movement mask
 	 */
 	@Override
 	public byte getMovementMask() {

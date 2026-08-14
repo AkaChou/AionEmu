@@ -24,21 +24,21 @@ public class PortalItem {
 	protected int quantity;
 
 	/**
-	 * @return the id
+	 * @return 物品 ID / the id
 	 */
 	public int getId() {
 		return id;
 	}
 
 	/**
-	 * @return the itemid
+	 * @return 物品编号 / the itemid
 	 */
 	public int getItemid() {
 		return itemid;
 	}
 
 	/**
-	 * @return the quantity
+	 * @return 数量 / the quantity
 	 */
 	public int getQuantity() {
 		return quantity;

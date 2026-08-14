@@ -26,6 +26,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * 从客户端文件加载风之轨迹（windstream）路线定义，并映射到服务器世界 ID。
+ * Loads windstream route definitions from client files and maps them to server world IDs.
+ */
 public final class WindstreamDefinitionLoader {
 	private static final float SOURCE_ENDPOINT_TOLERANCE = 50;
 

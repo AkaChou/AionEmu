@@ -123,7 +123,7 @@ public class ZoneData {
 	 * 返回已加载的区域数量。
 	 * Returns the number of loaded zones.
 	 *
-	 * zone count
+	 * @return 已加载的区域数量 / Returns the number of loaded zones.
 	 */
 	public int size() {
 		return count;
@@ -133,9 +133,7 @@ public class ZoneData {
 	 * 获取天气区域序号（从 1 开始）；模板未登记时返回 0。
 	 * Returns the weather-zone order number (starting from 1), or 0 if the template is unregistered.
 	 *
-	 * zone template
-	 *
-	 * @param template
+	 * @param template 区域模板 / zone template
 	 * @return 天气区域序号，未登记则为 0 / weather-zone id or 0
 	 */
 	public int getWeatherZoneId(ZoneTemplate template) {

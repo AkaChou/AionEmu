@@ -84,7 +84,6 @@ public class InstanceRift extends AdminCommand
 	 * Validate whether the instance rift location id exists.
 	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
-	 * Location id
 	 *
 	 * @return 若 valid 则为 true / True if valid
 	 */

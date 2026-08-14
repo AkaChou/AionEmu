@@ -32,8 +32,8 @@ public class PlayerVarsDAO extends com.aionemu.gameserver.dao.PlayerVarsDAO {
      * 加载玩家全部自定义变量。
      * Loads all custom variables for a player.
      *
-     * player id
-     * variable map
+     * @param playerId 玩家 ID / player id
+     * @return 变量映射 / variable map
      */
     @Override
     public Map<String, Object> load(final int playerId) {
@@ -61,9 +61,9 @@ public class PlayerVarsDAO extends com.aionemu.gameserver.dao.PlayerVarsDAO {
      * 设置玩家变量。
      * Sets a player variable.
      *
-     * player id
-     * variable key
-     * variable value
+     * @param playerId 玩家 ID / player id
+     * @param key 变量键 / variable key
+     * @param value 变量值 / variable value
      *
      * @return 是否设置成功 / whether the set succeeded
      */
@@ -87,8 +87,8 @@ public class PlayerVarsDAO extends com.aionemu.gameserver.dao.PlayerVarsDAO {
      * 删除玩家变量。
      * Removes a player variable.
      *
-     * player id
-     * variable key
+     * @param playerId 玩家 ID / player id
+     * @param key 变量键 / variable key
      *
      * @return 是否删除成功 / whether the remove succeeded
      */
@@ -111,10 +111,10 @@ public class PlayerVarsDAO extends com.aionemu.gameserver.dao.PlayerVarsDAO {
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * @param s 数据库名 / database name
-     * @param i 主版本 / major version
-     * @param i1 次版本 / minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String s, int i, int i1) {

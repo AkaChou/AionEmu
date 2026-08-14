@@ -36,7 +36,7 @@ final class GameServerNetworkFallbacks {
      * 返回登录服连接回退实例。
      * Return the login-server fallback.
      *
-     * Login server
+     * @return 登录服连接 / Login server
      */
     static LoginServer loginServer() {
         return LoginServerFallback.INSTANCE;
@@ -46,7 +46,7 @@ final class GameServerNetworkFallbacks {
      * 返回聊天服连接回退实例。
      * Return the chat-server fallback.
      *
-     * Chat server
+     * @return 聊天服连接 / Chat server
      */
     static ChatServer chatServer() {
         return ChatServerFallback.INSTANCE;

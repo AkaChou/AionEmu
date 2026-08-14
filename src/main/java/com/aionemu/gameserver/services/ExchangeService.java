@@ -198,9 +198,9 @@ public class ExchangeService {
 	 * 向交易栏添加物品（含可堆叠增量）并通知双方。
 	 * Adds an item to the exchange offer (including stack increments) and notifies both players.
 	 *
-	 * active player
-	 * item object id
-	 * count
+	 * @param activePlayer 主动玩家 / active player
+	 * @param itemObjId 物品对象 ID / item object id
+	 * @param itemCount 数量 / count
 	 */
 	public void addItem(Player activePlayer, int itemObjId, long itemCount) {
 		Item item = activePlayer.getInventory().getItemByObjId(itemObjId);

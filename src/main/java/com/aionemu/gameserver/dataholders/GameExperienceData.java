@@ -48,7 +48,7 @@ public class GameExperienceData {
 	 * 返回体验物品模板数量。
 	 * Returns the number of game experience templates.
 	 *
-	 * template count
+	 * @return 游戏经验模板数量 / Returns the number of game experience templates.
 	 */
 	public int size() {
 		return experienceData.size();

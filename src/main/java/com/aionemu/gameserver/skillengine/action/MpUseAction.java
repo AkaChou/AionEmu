@@ -54,7 +54,7 @@ public class MpUseAction extends Action {
 		}
 		int changeMpPercent = skill.getBoostSkillCost();
 		if (changeMpPercent != 0) {
-			// changeMpPercent is negative
+ // changeMpPercent 为负 / changeMpPercent is negative
 			valueWithDelta = valueWithDelta - ((valueWithDelta / ((100 / changeMpPercent))));
 		}
 		effector.getLifeStats().reduceMp(valueWithDelta);

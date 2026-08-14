@@ -50,7 +50,7 @@ public class LoginServerRuntimeBridge {
      * 注入可选的登录进程运行时桥提供者。
      * Injects an optional login process runtime-bridge provider.
      *
-     * process-bridge ObjectProvider
+     * @param processBridgeProvider 登录进程运行时桥提供者 / process-bridge ObjectProvider
      */
     @Autowired(required = false)
     void setProcessBridgeProvider(ObjectProvider<LoginProcessRuntimeBridge> processBridgeProvider) {

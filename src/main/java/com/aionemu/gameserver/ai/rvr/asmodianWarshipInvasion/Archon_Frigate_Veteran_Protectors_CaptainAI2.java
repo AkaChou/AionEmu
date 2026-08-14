@@ -21,6 +21,10 @@ public class Archon_Frigate_Veteran_Protectors_CaptainAI2 extends AggressiveNpcA
 	}
 	
 	@Override
+	/**
+	 * 死亡后清除护卫队，并召唤特级战斗队长与多名特级突击队长接替。
+	 * On death, despawns the protectors and spawns the special grade combat captain with several assault leaders as reinforcements.
+	 */
 	protected void handleDied() {
 		despawnNpc(240664);
 		despawnNpc(240665);

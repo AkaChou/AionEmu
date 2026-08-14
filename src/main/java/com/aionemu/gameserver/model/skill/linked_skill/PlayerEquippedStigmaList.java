@@ -44,7 +44,7 @@ public final class PlayerEquippedStigmaList implements StigmaList<Player> {
 		return allItems.toArray(new EquippedStigmasEntry[allItems.size()]);
 	}
 
-	/** 返回 all items as integer / Returns the all items as integer */
+	/** 返回全部物品 ID 列表 / Returns all items as integers */
 	public List<Integer> getAllItemsAsInteger() {
 		HashSet<Integer> equippedIds = new HashSet<Integer>();
 		for (EquippedStigmasEntry i : itemList.values()) {
@@ -53,7 +53,7 @@ public final class PlayerEquippedStigmaList implements StigmaList<Player> {
 		return Arrays.asList(equippedIds.toArray(new Integer[0]));
 	}
 
-	/** 返回 deleted items / Returns the deleted items */
+	/** 返回已删除物品 / Returns the deleted items */
 	public EquippedStigmasEntry[] getDeletedItems() {
 		return deletedItems.toArray(new EquippedStigmasEntry[deletedItems.size()]);
 	}
@@ -80,7 +80,7 @@ public final class PlayerEquippedStigmaList implements StigmaList<Player> {
 		return removed;
 	}
 
-	/** Removes one entry in memory so the caller can persist it on an existing transaction. */
+	/** 仅从内存移除一项，由调用方在既有事务中持久化。 / Removes one entry in memory so the caller can persist it on an existing transaction. */
 	public synchronized boolean removeInTransaction(int itemId) {
 		EquippedStigmasEntry entry = itemList.get(itemId);
 		if (entry != null) {
@@ -91,7 +91,7 @@ public final class PlayerEquippedStigmaList implements StigmaList<Player> {
 		return entry != null;
 	}
 
-	/** Marks all changes stored after the owning JDBC transaction commits. */
+	/** 标记所有变更已在所属 JDBC 事务提交后存储。 / Marks all changes stored after the owning JDBC transaction commits. */
 	public synchronized void markStored() {
 		for (EquippedStigmasEntry entry : itemList.values()) {
 			entry.setPersistentState(PersistentState.UPDATED);
@@ -101,7 +101,7 @@ public final class PlayerEquippedStigmaList implements StigmaList<Player> {
 		}
 	}
 
-	/** Captures list ownership and entry states for caller-owned transaction rollback. */
+	/** 捕获列表归属与各条目状态，供调用方持有事务回滚用。 / Captures list ownership and entry states for caller-owned transaction rollback. */
 	public synchronized TransactionSnapshot transactionSnapshot() {
 		return new TransactionSnapshot();
 	}

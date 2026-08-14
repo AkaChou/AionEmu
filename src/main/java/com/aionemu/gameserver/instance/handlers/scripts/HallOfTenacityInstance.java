@@ -44,17 +44,17 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
 	private boolean isInstanceDestroyed = false;
 	/** 副本奖励对象 / instance reward object */
 	protected HallOfTenacityReward instanceReward;
-    /** 副本是否已开始 / whether the instance started */
+        /** 副本是否已开始 / whether the instance started */
         protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    /** hot 任务 / hot task */
+        /** hot 任务 / hot task */
         private final List<Future<?>> hotTask = new ArrayList<Future<?>>();
-/**
- * 返回玩家奖励记录。
- * Return the player's reward record.
- *
- * visible object
- * result
- */
+    /**
+     * 返回玩家奖励记录。
+     * Return the player's reward record.
+     * 
+     * @param object 可见对象 / visible object
+     * @return 结果 / result
+     */
 
     protected HallOfTenacityPlayerReward getPlayerReward(Integer object) {
 		instanceReward.regPlayerReward(object);
@@ -69,7 +69,7 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
      * 返回本副本奖励对象。
      * Return this instance's reward object.
      *
-     * result
+     * @return 结果 / result
      */
     @Override
 	public InstanceReward<?> getInstanceReward() {
@@ -159,10 +159,10 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
             }
         });
     }
-/**
- * 启动副本计时/任务。
- * Start instance timer/tasks.
- */
+    /**
+     * 启动副本计时/任务。
+     * Start instance timer/tasks.
+     */
 
     protected void startInstanceTask() {
 	instanceTime = System.currentTimeMillis();
@@ -221,12 +221,12 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
             }
         }, 150000));//after enter 1 min 30s will show enter battle window
     }
-/**
- * 处理 sendRequest。
- * Handle sendRequest.
- *
- * @param player 玩家 / player
- */
+    /**
+     * 处理 sendRequest。
+     * Handle sendRequest.
+     * 
+     * @param player 玩家 / player
+     */
 
     public void sendRequest(final Player player) {
         RequestResponseHandler responseHandler = new RequestResponseHandler(player) {
@@ -234,8 +234,8 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
              * 处理 acceptRequest。
              * Handle acceptRequest.
              *
-             * requester
-             * responder
+             * @param requester 请求者 / requester
+             * @param responder 响应者 / responder
              */
             @Override
             public void acceptRequest(Creature requester, Player responder) {
@@ -245,8 +245,8 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
              * 处理 denyRequest。
              * Handle denyRequest.
              *
-             * requester
-             * responder
+             * @param requester 请求者 / requester
+             * @param responder 响应者 / responder
              */
             @Override
             public void denyRequest(Creature requester, Player responder) {
@@ -257,12 +257,12 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
             PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(907265, 60, 0));
         }
     }
-/**
- * 停止副本并结算。
- * Stop the instance and settle.
- *
- * @param race 阵营 / race
- */
+    /**
+     * 停止副本并结算。
+     * Stop the instance and settle.
+     * 
+     * @param race 阵营 / race
+     */
 
     protected void stopInstance(Race race) {
         stopInstanceTask();
@@ -270,10 +270,10 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
         instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
         reward();
     }
-/**
- * 处理 reward。
- * Handle reward.
- */
+    /**
+     * 处理 reward。
+     * Handle reward.
+     */
 
     protected void reward() {
 
@@ -296,14 +296,14 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
         }
         return 0;
     }
-/**
- * 向副本内玩家发送消息。
- * Send a message to players in the instance.
- *
- * message
- * 阵营 / race
- * time
- */
+    /**
+     * 向副本内玩家发送消息。
+     * Send a message to players in the instance.
+     * 
+     * @param msg 消息 / message
+     * @param race 阵营 / race
+     * @param time 时间 / time
+     */
 
     protected void sendMsg(final int msg, final Race race, int time) {
 	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

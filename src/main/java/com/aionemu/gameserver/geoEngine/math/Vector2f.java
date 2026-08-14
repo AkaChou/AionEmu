@@ -52,7 +52,7 @@ public final class Vector2f implements Cloneable {
 	 * 拷贝构造。
 	 * Copy constructor.
 	 *
-	 * Source vector
+	 * @param vector2f 源向量 / Source vector
 	 */
 	public Vector2f(Vector2f vector2f) {
 		this.x = vector2f.x;
@@ -65,7 +65,7 @@ public final class Vector2f implements Cloneable {
 	 *
 	 * @param x X 分量 / X component
 	 * @param y Y 分量 / Y component
-	 * This vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector2f set(float x, float y) {
 		this.x = x;
@@ -77,8 +77,8 @@ public final class Vector2f implements Cloneable {
 	 * 从另一向量拷贝分量。
 	 * Copies components from another vector.
 	 *
-	 * Source vector
-	 * This vector
+	 * @param vec 源向量 / Source vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector2f set(Vector2f vec) {
 		this.x = vec.x;
@@ -122,9 +122,9 @@ public final class Vector2f implements Cloneable {
 	 * 就地加上给定分量。
 	 * Adds the given components in place.
 	 *
-	 * X increment
-	 * Y increment
-	 * This vector
+	 * @param addX X 增量 / X increment
+	 * @param addY Y 增量 / Y increment
+	 * @return 本向量 / This vector
 	 */
 	public Vector2f addLocal(float addX, float addY) {
 		this.x += addX;
@@ -173,7 +173,7 @@ public final class Vector2f implements Cloneable {
 	 * 2D cross product (result is a 3D vector along Z).
 	 *
 	 * @param v 另一向量 / Other vector
-	 * Cross-product result
+	 * @return 叉积结果 / Cross-product result
 	 */
 	public Vector3f cross(Vector2f v) {
 		return new Vector3f(0.0f, 0.0f, this.determinant(v));
@@ -184,7 +184,7 @@ public final class Vector2f implements Cloneable {
 	 * 2D determinant (signed area): x·vy − y·vx.
 	 *
 	 * @param v 另一向量 / Other vector
-	 * Determinant value
+	 * @return 行列式值 / Determinant value
 	 */
 	public float determinant(Vector2f v) {
 		return this.x * v.y - this.y * v.x;
@@ -194,9 +194,9 @@ public final class Vector2f implements Cloneable {
 	 * 向目标向量线性插值（就地）。
 	 * Linearly interpolates toward a target vector in place.
 	 *
-	 * Target vector
-	 * Interpolation factor [0,1]
-	 * This vector
+	 * @param finalVec 目标向量 / Target vector
+	 * @param changeAmnt 插值因子 [0,1] / Interpolation factor [0,1]
+	 * @return 本向量 / This vector
 	 */
 	public Vector2f interpolate(Vector2f finalVec, float changeAmnt) {
 		this.x = (1.0f - changeAmnt) * this.x + changeAmnt * finalVec.x;
@@ -208,10 +208,10 @@ public final class Vector2f implements Cloneable {
 	 * 在起止向量之间线性插值，结果写入本向量。
 	 * Linearly interpolates between two vectors into this.
 	 *
-	 * Start vector
-	 * End vector
-	 * Interpolation factor [0,1]
-	 * This vector
+	 * @param beginVec 起始向量 / Start vector
+	 * @param finalVec 结束向量 / End vector
+	 * @param changeAmnt 插值因子 [0,1] / Interpolation factor [0,1]
+	 * @return 本向量 / This vector
 	 */
 	public Vector2f interpolate(Vector2f beginVec, Vector2f finalVec, float changeAmnt) {
 		this.x = (1.0f - changeAmnt) * beginVec.x + changeAmnt * finalVec.x;
@@ -240,7 +240,7 @@ public final class Vector2f implements Cloneable {
 	 * 向量长度（模）。
 	 * Vector length (magnitude).
 	 *
-	 * Length
+	 * @return 长度 / Length
 	 */
 	public float length() {
 		return FastMath.sqrt(this.lengthSquared());
@@ -250,7 +250,7 @@ public final class Vector2f implements Cloneable {
 	 * 长度平方。
 	 * Squared length.
 	 *
-	 * Squared length
+	 * @return 长度平方 / Squared length
 	 */
 	public float lengthSquared() {
 		return this.x * this.x + this.y * this.y;
@@ -261,7 +261,7 @@ public final class Vector2f implements Cloneable {
 	 * Squared distance to another vector.
 	 *
 	 * @param v 另一向量 / Other vector
-	 * Squared distance
+	 * @return 距离平方 / Squared distance
 	 */
 	public float distanceSquared(Vector2f v) {
 		double dx = this.x - v.x;
@@ -273,9 +273,9 @@ public final class Vector2f implements Cloneable {
 	 * 到指定坐标的距离平方。
 	 * Squared distance to the given coordinates.
 	 *
-	 * Target X
-	 * Target Y
-	 * Squared distance
+	 * @param otherX 目标 X / Target X
+	 * @param otherY 目标 Y / Target Y
+	 * @return 距离平方 / Squared distance
 	 */
 	public float distanceSquared(float otherX, float otherY) {
 		double dx = this.x - otherX;
@@ -288,7 +288,7 @@ public final class Vector2f implements Cloneable {
 	 * Euclidean distance to another vector.
 	 *
 	 * @param v 另一向量 / Other vector
-	 * Distance
+	 * @return 距离 / Distance
 	 */
 	public float distance(Vector2f v) {
 		return FastMath.sqrt(this.distanceSquared(v));
@@ -298,8 +298,8 @@ public final class Vector2f implements Cloneable {
 	 * 标量乘法，返回新向量。
 	 * Multiplies by a scalar and returns a new vector.
 	 *
-	 * Scalar
-	 * Result vector
+	 * @param scalar 标量 / Scalar
+	 * @return 结果向量 / Result vector
 	 */
 	public Vector2f mult(float scalar) {
 		return new Vector2f(this.x * scalar, this.y * scalar);
@@ -309,8 +309,8 @@ public final class Vector2f implements Cloneable {
 	 * 就地标量乘法。
 	 * Multiplies by a scalar in place.
 	 *
-	 * Scalar
-	 * This vector
+	 * @param scalar 标量 / Scalar
+	 * @return 本向量 / This vector
 	 */
 	public Vector2f multLocal(float scalar) {
 		this.x *= scalar;
@@ -339,9 +339,9 @@ public final class Vector2f implements Cloneable {
 	 * 标量乘法，结果写入指定存储向量。
 	 * Multiplies by a scalar and stores the result.
 	 *
-	 * Scalar
+	 * @return 标量 / Scalar
 	 * @param product 结果存储；为 null 时新建 / Result store; created if null
-	 * Result vector
+	 * @param scalar 结果向量 / Result vector
 	 */
 	public Vector2f mult(float scalar, Vector2f product) {
 		if (null == product) {
@@ -356,8 +356,8 @@ public final class Vector2f implements Cloneable {
 	 * 标量除法，返回新向量。
 	 * Divides by a scalar and returns a new vector.
 	 *
-	 * Scalar
-	 * Result vector
+	 * @param scalar 标量 / Scalar
+	 * @return 结果向量 / Result vector
 	 */
 	public Vector2f divide(float scalar) {
 		return new Vector2f(this.x / scalar, this.y / scalar);
@@ -367,8 +367,8 @@ public final class Vector2f implements Cloneable {
 	 * 就地标量除法。
 	 * Divides by a scalar in place.
 	 *
-	 * Scalar
-	 * This vector
+	 * @param scalar 标量 / Scalar
+	 * @return 本向量 / This vector
 	 */
 	public Vector2f divideLocal(float scalar) {
 		this.x /= scalar;
@@ -390,7 +390,7 @@ public final class Vector2f implements Cloneable {
 	 * 就地取反。
 	 * Negates in place.
 	 *
-	 * This vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector2f negateLocal() {
 		this.x = -this.x;
@@ -403,7 +403,7 @@ public final class Vector2f implements Cloneable {
 	 * Subtracts another vector and returns a new vector.
 	 *
 	 * @param vec 另一向量 / Other vector
-	 * Result vector
+	 * @return 结果向量 / Result vector
 	 */
 	public Vector2f subtract(Vector2f vec) {
 		return this.subtract(vec, null);
@@ -415,7 +415,7 @@ public final class Vector2f implements Cloneable {
 	 *
 	 * @param vec 另一向量 / Other vector
 	 * @param store 结果存储；为 null 时新建 / Result store; created if null
-	 * Result vector
+	 * @return 结果向量 / Result vector
 	 */
 	public Vector2f subtract(Vector2f vec, Vector2f store) {
 		if (store == null) {
@@ -430,9 +430,9 @@ public final class Vector2f implements Cloneable {
 	 * 减去给定分量，返回新向量。
 	 * Subtracts the given components and returns a new vector.
 	 *
-	 * X to subtract
-	 * Y to subtract
-	 * Result vector
+	 * @param valX 要减去的 X / X to subtract
+	 * @param valY 要减去的 Y / Y to subtract
+	 * @return 结果向量 / Result vector
 	 */
 	public Vector2f subtract(float valX, float valY) {
 		return new Vector2f(this.x - valX, this.y - valY);
@@ -459,9 +459,9 @@ public final class Vector2f implements Cloneable {
 	 * 就地减去给定分量。
 	 * Subtracts the given components in place.
 	 *
-	 * X to subtract
-	 * Y to subtract
-	 * This vector
+	 * @param valX 要减去的 X / X to subtract
+	 * @param valY 要减去的 Y / Y to subtract
+	 * @return 本向量 / This vector
 	 */
 	public Vector2f subtractLocal(float valX, float valY) {
 		this.x -= valX;
@@ -473,7 +473,7 @@ public final class Vector2f implements Cloneable {
 	 * 归一化，返回新单位向量。
 	 * Returns a new normalized unit vector.
 	 *
-	 * Unit vector
+	 * @return 单位向量 / Unit vector
 	 */
 	public Vector2f normalize() {
 		float length = this.length();
@@ -487,7 +487,7 @@ public final class Vector2f implements Cloneable {
 	 * 就地归一化。
 	 * Normalizes in place.
 	 *
-	 * This vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector2f normalizeLocal() {
 		float length = this.length();
@@ -501,8 +501,8 @@ public final class Vector2f implements Cloneable {
 	 * 与另一向量的最小夹角（弧度，基于点积）。
 	 * Smallest angle to another vector in radians (via dot product).
 	 *
-	 * Other vector
-	 * Angle in radians
+	 * @param otherVector 另一向量 / Other vector
+	 * @return 夹角（弧度） / Angle in radians
 	 */
 	public float smallestAngleBetween(Vector2f otherVector) {
 		float dotProduct = this.dot(otherVector);
@@ -514,9 +514,7 @@ public final class Vector2f implements Cloneable {
 	 * 与另一向量的有向夹角（弧度，基于 atan2）。
 	 * Signed angle to another vector in radians (via atan2).
 	 *
-	 * Other vector
-	 *
-	 * @param otherVector
+	 * @param otherVector 另一向量 / other vector
 	 * @return 有向夹角（弧度） / Signed angle in radians
 	 */
 	public float angleBetween(Vector2f otherVector) {
@@ -528,7 +526,7 @@ public final class Vector2f implements Cloneable {
 	 * 获取 X 分量。
 	 * Gets the X component.
 	 *
-	 * X component
+	 * @return X 分量 / X component
 	 */
 	public float getX() {
 		return this.x;
@@ -539,7 +537,7 @@ public final class Vector2f implements Cloneable {
 	 * Sets the X component.
 	 *
 	 * @param x X 分量 / X component
-	 * This vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector2f setX(float x) {
 		this.x = x;
@@ -550,7 +548,7 @@ public final class Vector2f implements Cloneable {
 	 * 获取 Y 分量。
 	 * Gets the Y component.
 	 *
-	 * Y component
+	 * @return Y 分量 / Y component
 	 */
 	public float getY() {
 		return this.y;
@@ -561,7 +559,7 @@ public final class Vector2f implements Cloneable {
 	 * Sets the Y component.
 	 *
 	 * @param y Y 分量 / Y component
-	 * This vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector2f setY(float y) {
 		this.y = y;
@@ -572,7 +570,7 @@ public final class Vector2f implements Cloneable {
 	 * 获取极角（弧度，取负 atan2）。
 	 * Gets the polar angle in radians (negated atan2).
 	 *
-	 * Angle in radians
+	 * @return 夹角（弧度） / Angle in radians
 	 */
 	public float getAngle() {
 		return -FastMath.atan2(this.y, this.x);
@@ -582,7 +580,7 @@ public final class Vector2f implements Cloneable {
 	 * 将本向量置零。
 	 * Sets this vector to zero.
 	 *
-	 * This vector
+	 * @return 本向量 / This vector
 	 */
 	public Vector2f zero() {
 		this.y = 0.0f;
@@ -594,7 +592,7 @@ public final class Vector2f implements Cloneable {
 	 * 哈希码。
 	 * Hash code.
 	 *
-	 * Hash value
+	 * @return 哈希值 / Hash value
 	 */
 	public int hashCode() {
 		int hash = 37;
@@ -607,7 +605,7 @@ public final class Vector2f implements Cloneable {
 	 * 浅克隆。
 	 * Shallow clone.
 	 *
-	 * Cloned vector
+	 * @return 克隆向量 / Cloned vector
 	 */
 	public Vector2f clone() {
 		try {
@@ -656,7 +654,7 @@ public final class Vector2f implements Cloneable {
 	 * 字符串表示，形如 {@code (x, y)}。
 	 * String representation of the form {@code (x, y)}.
 	 *
-	 * String
+	 * @return 字符串表示 / String
 	 */
 	public String toString() {
 		return "(" + this.x + ", " + this.y + ")";
@@ -667,8 +665,8 @@ public final class Vector2f implements Cloneable {
 	 * Reads components from an external input.
 	 *
 	 * @param in 输入流 / Input stream
-	 * I/O error
-	 * Class not found
+	 * @throws IOException I/O 错误 / I/O error
+	 * @throws ClassNotFoundException 类未找到 / Class not found
 	 */
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
 		this.x = in.readFloat();
@@ -679,9 +677,7 @@ public final class Vector2f implements Cloneable {
 	 * 将分量写入外部输出。
 	 * Writes components to an external output.
 	 *
-	 * Output stream
-	 *
-	 * @param out I / O error
+	 * @param out 输出流 / output stream
 	 */
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeFloat(this.x);
@@ -692,7 +688,7 @@ public final class Vector2f implements Cloneable {
 	 * 返回运行时类标记。
 	 * Returns the runtime class tag.
 	 *
-	 * Class object
+	 * @return 类对象 / Class object
 	 */
 	public Class<? extends Vector2f> getClassTag() {
 		return this.getClass();

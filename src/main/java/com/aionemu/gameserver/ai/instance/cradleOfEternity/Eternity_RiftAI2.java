@@ -28,7 +28,7 @@ public class Eternity_RiftAI2 extends NpcAI2
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 104) {
 			switch (getNpcId()) {
-			    case 806053: //Eternity Rift.
+			    case 806053: // 永恒裂痕 / Eternity Rift.
 				    if (player.getCommonData().getRace() == Race.ASMODIANS) {
 					    TeleportService2.teleportTo(player, 220120000, 448.4795f, 499.93314f, 299.85013f, (byte) 0);
 				    } else if (player.getCommonData().getRace() == Race.ELYOS) {

@@ -31,8 +31,6 @@ public class AtreianBestiary extends AdminCommand {
 	 * 执行图鉴击杀：校验模板后增加击杀计数。
 	 * Executes bestiary kill: validates the template then increments kill count.
 	 *
-	 * admin
-	 * npc id
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -55,8 +53,6 @@ public class AtreianBestiary extends AdminCommand {
 	 * 参数错误时输出 {@code //bestiary} 用法。
 	 * Prints {@code //bestiary} usage on invalid arguments.
 	 *
-	 * admin
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

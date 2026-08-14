@@ -13,7 +13,7 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 
 /**
  * 伊迪安深渊刷新点模板（静态数据/XML）。
- * XML template.
+ * Idian Depths spawn XML template.
  *
  * @author Rinzler (Encom)
  */
@@ -32,7 +32,7 @@ public class IdianDepthsSpawn {
 	@XmlElement(name = "idian_depths_type")
 	private List<IdianDepthsSpawn.IdianDepthsStateTemplate> IdianDepthsStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回要塞模式模板 / Returns the siege mod templates */
 	public List<IdianDepthsStateTemplate> getSiegeModTemplates() {
 		return IdianDepthsStateTemplate;
 	}

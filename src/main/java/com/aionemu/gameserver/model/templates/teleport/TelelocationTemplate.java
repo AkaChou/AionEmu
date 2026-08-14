@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Telelocation 模板（静态数据/XML）。
- * XML template.
+ * 传送地点模板（静态数据/XML）。
+ * Telelocation template (static data/XML).
  *
  * @author orz
  */
@@ -16,7 +16,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class TelelocationTemplate {
 
 	/**
-	 * Location Id
+	 * 地点 ID / Location id
 	 */
 	@XmlAttribute(name = "loc_id", required = true)
 	private int locId;
@@ -24,7 +24,7 @@ public class TelelocationTemplate {
 	@XmlAttribute(name = "mapid", required = true)
 	private int mapid = 0;
 	/**
-	 * location name
+	 * 地点名称 / location name
 	 */
 	@XmlAttribute(name = "name", required = true)
 	private String name = "";

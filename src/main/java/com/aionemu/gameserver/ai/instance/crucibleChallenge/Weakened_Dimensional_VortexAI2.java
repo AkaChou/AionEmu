@@ -29,7 +29,7 @@ public class Weakened_Dimensional_VortexAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19570, 46, getOwner()).useNoAnimationSkill(); //Dimensional Vortex.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19570, 46, getOwner()).useNoAnimationSkill(); // 次元漩涡 / Dimensional Vortex.
 				startLifeTask();
 			}
 		}, 1000);

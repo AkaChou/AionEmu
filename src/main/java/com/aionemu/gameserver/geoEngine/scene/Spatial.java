@@ -88,7 +88,7 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 * 设置名称（非 null 时 intern）。
 	 * Sets the name (interned when non-null).
 	 *
-	 * spatial's new name
+	 * @param name 空间节点的新名称 / spatial's new name
 	 */
 	public void setName(String name) {
 		if (name != null) {
@@ -100,7 +100,7 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 * 返回名称。
 	 * Returns the name of this spatial.
 	 *
-	 * this spatial's name
+	 * @return 空间节点名称 / this spatial's name
 	 */
 	public String getName() {
 		return name;
@@ -110,17 +110,17 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 * 返回父节点；为 null 时表示根节点。
 	 * Retrieves this node's parent. If null, this is a root node.
 	 *
-	 * parent of this node
+	 * @return 父节点 / parent of this node
 	 */
 	public Node getParent() {
 		return parent;
 	}
 
 	/**
-	 * {@link Node#detachChild(Spatial)} 调用，请勿直接调用。
+	 * 由 {@link Node#attachChild(Spatial)} 与 {@link Node#detachChild(Spatial)} 调用，请勿直接调用。
 	 * Called by {@link Node#attachChild(Spatial)} and {@link Node#detachChild(Spatial)} — do not call directly.
 	 *
-	 * parent of this node
+	 * @param parent 父节点 / parent of this node
 	 */
 	protected void setParent(Node parent) {
 		this.parent = parent;
@@ -145,7 +145,7 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 * Determines whether the provided node is a parent, grandparent, etc. of this spatial.
 	 *
 	 * @param ancestor 待查找的祖先 / ancestor object to look for
-	 * @return 若 the ancestor is found 则为 true / true if the ancestor is found
+	 * @return 若找到该祖先则为 true / true if the ancestor is found
 	 */
 	public boolean hasAncestor(Node ancestor) {
 		if (parent == null) {
@@ -167,7 +167,7 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 * 设置本空间节点的包围体。
 	 * Sets the bounding object for this spatial.
 	 *
-	 * bounding object for this spatial
+	 * @param modelBound 包围体 / bounding object for this spatial
 	 */
 	public abstract void setModelBound(BoundingVolume modelBound);
 
@@ -175,7 +175,7 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 * 返回本节点下所有顶点数量之和。
 	 * Returns the sum of all vertices under this spatial.
 	 *
-	 * vertex count
+	 * @return 顶点数 / vertex count
 	 */
 	public abstract int getVertexCount();
 
@@ -183,7 +183,7 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 * 返回本节点下所有三角形数量之和。
 	 * Returns the sum of all triangles under this spatial.
 	 *
-	 * triangle count
+	 * @return 三角形数 / triangle count
 	 */
 	public abstract int getTriangleCount();
 
@@ -191,7 +191,7 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 * 从碰撞标志低 8 位取得材质 ID。
 	 * Returns the material id from the low 8 bits of collision flags.
 	 *
-	 * material id
+	 * @return 材质 ID / material id
 	 */
 	public byte getMaterialId() {
 		return (byte) (getCollisionFlags() & 0xFF);
@@ -201,7 +201,7 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 * 从碰撞标志高 8 位取得碰撞意图掩码。
 	 * Returns the intention mask from the high 8 bits of collision flags.
 	 *
-	 * intention mask
+	 * @return 碰撞意图掩码 / intention mask
 	 */
 	public byte getIntentions() {
 		return (byte) (getCollisionFlags() >> 8);
@@ -211,7 +211,7 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 * 返回碰撞标志。
 	 * Returns collision flags.
 	 *
-	 * collision flags
+	 * @return 碰撞标志 / collision flags
 	 */
 	public abstract short getCollisionFlags();
 
@@ -229,7 +229,7 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 *
 	 * @param spatialSubclass 必须实现的子类；null 表示任意 Spatial / subclass that must be implemented; null matches all
 	 * @param nameRegex 名称正则；null 表示任意名称 / name regex; null matches all names
-	 * 若 class and name both match 则为 true / true if class and name both match
+	 * @return 若子类与名称均匹配则为 true / true if class and name both match
 	 * @see java.util.regex.Pattern
 	 */
 	public boolean matches(Class<? extends Spatial> spatialSubclass, String nameRegex) {
@@ -268,8 +268,8 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 * 设置变换（旋转、平移、均匀缩放）。
 	 * Sets transform from rotation, translation and uniform scale.
 	 *
-	 * rotation
-	 * translation
+	 * @param rotation 旋转矩阵 / rotation
+	 * @param loc 平移 / translation
 	 * @param scale 均匀缩放 / uniform scale
 	 */
 	public abstract void setTransform(Matrix3f rotation, Vector3f loc, float scale);
@@ -278,8 +278,8 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 * 设置变换（旋转、平移、向量缩放；默认取 scale.x 作为均匀缩放）。
 	 * Sets transform from rotation, translation and vector scale (default uses scale.x as uniform scale).
 	 *
-	 * rotation
-	 * translation
+	 * @param rotation 旋转矩阵 / rotation
+	 * @param loc 平移 / translation
 	 * @param scale 缩放向量 / scale vector
 	 */
 	public void setTransform(Matrix3f rotation, Vector3f loc, Vector3f scale) {
@@ -290,7 +290,7 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 * 浅克隆。
 	 * Shallow clone.
 	 *
-	 * clone instance
+	 * @return 克隆实例 / clone instance
 	 */
 	@Override
 	public Spatial clone() throws CloneNotSupportedException {

@@ -24,6 +24,7 @@ public class GameSystemGateway {
     private static final long BYTES_PER_MEGABYTE = 1024L * 1024L;
 
     // ponytail: fixed AionEmu banner art; caption via I18n
+    // ponytail: 固定的 AionEmu 横幅艺术字；文案经 I18n 提供。
     /**
      * 固定 AionEmu 横幅艺术字行（文案经 I18n）。
      * Fixed AionEmu banner art lines (caption via I18n).

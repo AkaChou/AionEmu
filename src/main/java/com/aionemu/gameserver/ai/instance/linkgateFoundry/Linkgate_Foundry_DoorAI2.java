@@ -31,6 +31,12 @@ public class Linkgate_Foundry_DoorAI2 extends NpcAI2
 		handleUseItemStart(player);
 	}
 	
+	/**
+	 * 使用物品交互的进度条流程：延迟结束后调用 {@link #handleUseItemFinish}。
+	 * Item-use interaction with a progress bar: calls {@link #handleUseItemFinish} after the delay.
+	 *
+	 * @param player 交互玩家 / interacting player
+	 */
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {

@@ -68,9 +68,9 @@ public class DropRegistrationService {
 	 * 使用玩家等级注册 NPC 掉落。
 	 * Registers NPC drops using the player's level.
 	 *
-	 * dead NPC
+	 * @param npc 死亡的 NPC / dead NPC
 	 * @param player 主要拾取玩家 / primary looter
-	 * group members
+	 * @param groupMembers 队伍成员 / group members
 	 */
 	public void registerDrop(Npc npc, Player player, Collection<Player> groupMembers) {
 		registerDrop(npc, player, player.getLevel(), groupMembers);
@@ -103,17 +103,17 @@ public class DropRegistrationService {
 	 * Initializes the service (drops are loaded on demand by NpcTemplate).
 	 */
 	public final void init() {
-		// Drops are loaded on demand by NpcTemplate#getNpcDrop().
+		// 掉落按需由 NpcTemplate#getNpcDrop() 加载。 / Drops are loaded on demand by NpcTemplate#getNpcDrop().
 	}
 
 	/**
 	 * 在 NPC 死亡后注册全部掉落（NPC 表、任务、活动与全局掉落）。
 	 * Registers full drops after NPC death (NPC table, quest, event, and global drops).
 	 *
-	 * dead NPC
+	 * @param npc 死亡的 NPC / dead NPC
 	 * @param player 主要拾取玩家 / primary looter
 	 * @param highestLevel 队伍最高等级 / highest group level
-	 * group members
+	 * @param groupMembers 队伍成员 / group members
 	 */
 	public void registerDrop(Npc npc, Player player, int highestLevel, Collection<Player> groupMembers) {
 
@@ -218,10 +218,10 @@ public class DropRegistrationService {
 	 * 根据 NPC 与玩家状态构建掉落修正参数。
 	 * Builds drop modifiers from NPC and player state.
 	 *
-	 * target NPC
-	 * reference player
+	 * @param npc 目标 NPC / target NPC
+	 * @param player 参考玩家 / reference player
 	 * @param highestLevel 队伍最高等级 / highest group level
-	 * drop modifiers
+	 * @return 掉落修正参数 / drop modifiers
 	 */
 	public DropModifiers createDropModifiers(Npc npc, Player player, int highestLevel) {
 		DropModifiers modifiers = new DropModifiers();
@@ -391,10 +391,10 @@ public class DropRegistrationService {
 	 *
 	 * @param index 掉落索引 / drop index
 	 * @param playerObjId 归属玩家对象 ID / owner player object id
-	 * NPC object id
-	 * item id
-	 * count
-	 * drop item
+	 * @param objId NPC 对象 ID / NPC object id
+	 * @param itemId 物品 ID / item id
+	 * @param count 数量 / count
+	 * @return 掉落物品记录 / drop item
 	 */
 	public DropItem regDropItem(int index, int playerObjId, int objId, int itemId, long count) {
 		DropItem item = new DropItem(new Drop(itemId, 1, 1, 100, false, false));

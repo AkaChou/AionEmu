@@ -5,8 +5,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Disassemble 物品模板（静态数据/XML）。
- * XML template.
+ * 分解物品组中的单条产出：概率与产出物品。
+ * Single output entry of a disassemble group: probability and produced item.
  *
  * @author BeckUp.Media
  */

@@ -11,8 +11,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.PlayerClass;
 
 /**
- * 物品技能 Enhance 模板（静态数据/XML）。
- * XML template.
+ * 物品技能强化模板：按职业绑定技能列表。
+ * Item skill enhance template: binds skills by player class.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

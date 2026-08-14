@@ -9,8 +9,8 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.change.Func;
 
 /**
- * 加成 PenaltyAttr 模板（静态数据/XML）。
- * XML template.
+ * 加成惩罚属性模板（静态数据/XML）。
+ * Bonus Penalty Attr Template (static data/XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -35,12 +35,12 @@ public class BonusPenaltyAttr {
 		stat = value;
 	}
 
-	/** 返回 func / Returns the func */
+	/** 返回修正函数 / Returns the func */
 	public Func getFunc() {
 		return func;
 	}
 
-	/** 设置 func / Sets the func */
+	/** 设置修正函数 / Sets the func */
 	public void setFunc(Func value) {
 		func = value;
 	}

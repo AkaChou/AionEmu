@@ -28,8 +28,8 @@ public abstract class PlayerEventsWindowDAO implements DAO {
 	 * 插入一条活动窗口记录。
 	 * Inserts an events-window record.
 	 *
-	 * 账号 ID / account id
-	 * event id
+	 * @param accountId 账号 ID / account id
+	 * @param eventId 事件 ID / event id
 	 * @param last_stamp 最后时间戳 / last stamp
 	 */
 	public abstract void insert(int accountId, int eventId, Timestamp last_stamp);
@@ -38,11 +38,11 @@ public abstract class PlayerEventsWindowDAO implements DAO {
 	 * 存储活动窗口进度。
 	 * Stores events-window progress.
 	 *
-	 * 账号 ID / account id
-	 * event id
+	 * @param accountId 账号 ID / account id
+	 * @param eventId 事件 ID / event id
 	 * @param last_stamp 最后时间戳 / last stamp
-	 * elapsed time
-	 * 若 successful 则为 true / true if successful
+	 * @param elapsed 已用时间 / elapsed time
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean store(int accountId, int eventId, Timestamp last_stamp, int elapsed);
 
@@ -50,8 +50,8 @@ public abstract class PlayerEventsWindowDAO implements DAO {
 	 * 删除活动窗口记录。
 	 * Deletes an events-window record.
 	 *
-	 * 账号 ID / account id
-	 * event id
+	 * @param accountId 账号 ID / account id
+	 * @param eventId 事件 ID / event id
 	 */
 	public abstract void delete(int accountId, int eventId);
 
@@ -59,8 +59,8 @@ public abstract class PlayerEventsWindowDAO implements DAO {
 	 * 获取活动最后时间戳。
 	 * Returns the last stamp for the event.
 	 *
-	 * 账号 ID / account id
-	 * event id
+	 * @param accountId 账号 ID / account id
+	 * @param eventId 事件 ID / event id
 	 * @return 最后时间戳 / last stamp
 	 */
 	public abstract Timestamp getLastStamp(int accountId, int eventId);
@@ -69,9 +69,9 @@ public abstract class PlayerEventsWindowDAO implements DAO {
 	 * 获取活动已用时间。
 	 * Returns elapsed time for the event.
 	 *
-	 * 账号 ID / account id
-	 * event id
-	 * elapsed time
+	 * @param accountId 账号 ID / account id
+	 * @param eventId 事件 ID / event id
+	 * @return 已用时间 / elapsed time
 	 */
 	public abstract int getElapsed(int accountId, int eventId);
 
@@ -79,9 +79,9 @@ public abstract class PlayerEventsWindowDAO implements DAO {
 	 * 更新活动已用时间。
 	 * Updates elapsed time for the event.
 	 *
-	 * 账号 ID / account id
-	 * event id
-	 * elapsed time
+	 * @param accountId 账号 ID / account id
+	 * @param eventId 事件 ID / event id
+	 * @param elapsed 已用时间 / elapsed time
 	 */
 	public abstract void updateElapsed(int accountId, int eventId, int elapsed);
 
@@ -89,9 +89,9 @@ public abstract class PlayerEventsWindowDAO implements DAO {
 	 * 获取已领取奖励次数。
 	 * Returns the reward-received count.
 	 *
-	 * 账号 ID / account id
-	 * event id
-	 * reward received count
+	 * @param accountId 账号 ID / account id
+	 * @param eventId 事件 ID / event id
+	 * @return 已领取奖励次数 / reward received count
 	 */
 	public abstract int getRewardRecivedCount(int accountId, int eventId);
 
@@ -99,9 +99,9 @@ public abstract class PlayerEventsWindowDAO implements DAO {
 	 * 设置已领取奖励次数。
 	 * Sets the reward-received count.
 	 *
-	 * 账号 ID / account id
-	 * event id
-	 * reward received count
+	 * @param accountId 账号 ID / account id
+	 * @param eventId 事件 ID / event id
+	 * @param rewardRecivedCount 已领取奖励次数 / reward received count
 	 */
 	public abstract void setRewardRecivedCount(int accountId, int eventId, int rewardRecivedCount);
 
@@ -109,8 +109,8 @@ public abstract class PlayerEventsWindowDAO implements DAO {
 	 * 获取账号下全部活动窗口 ID。
 	 * Returns all events-window IDs for the account.
 	 *
-	 * 账号 ID / account id
-	 * list of event ids
+	 * @param accountId 账号 ID / account id
+	 * @return 事件 ID 列表 / list of event ids
 	 */
 	public abstract List<Integer> getEventsWindow(int accountId);
 
@@ -118,7 +118,7 @@ public abstract class PlayerEventsWindowDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	public final String getClassName() {
 		return PlayerEventsWindowDAO.class.getName();

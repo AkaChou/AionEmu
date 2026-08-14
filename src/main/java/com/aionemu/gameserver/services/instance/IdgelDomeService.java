@@ -23,7 +23,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
 
-/****/
 /**
  * 伊吉尔穹顶报名服务，管理开启窗口与冷却。
  * Idgel Dome registration service managing open windows and cooldowns.
@@ -40,8 +39,8 @@ public class IdgelDomeService {
 	public static final int maskId = 111;
 
 	/**
-	 * initIdgelDome 方法。
-	 * initIdgelDome method.
+	 * 初始化伊德盖尔巨蛋报名：按配置调度开启报名。
+	 * Initializes Idgel Dome registration by scheduling open windows per config.
 	 */
 	public void initIdgelDome() {
 		if (AutoGroupConfig.IDGEL_ENABLED) {
@@ -116,20 +115,20 @@ public class IdgelDomeService {
 	}
 
 	/**
-	 * isIdgelAvailable 方法。
-	 * isIdgelAvailable method.
-	 * result
+	 * 报名是否可用。
+	 * Whether registration is available.
+	 * @return 结果 / result
 	 */
 	public boolean isIdgelAvailable() {
 		return this.registerAvailable;
 	}
 
 	/**
-	 * getInstanceMaskId 方法。
-	 * getInstanceMaskId method.
+	 * 获取玩家的报名掩码 ID；等级不符时返回 0。
+	 * Returns the registration mask id for the player, or 0 if level mismatch.
 	 *
 	 * 玩家 / player
-	 * result
+	 * @return 结果 / result
 	 */
 	public byte getInstanceMaskId(Player player) {
 		int level = player.getLevel();
@@ -154,7 +153,7 @@ public class IdgelDomeService {
 	 * Whether cooldown is active.
 	 *
 	 * 玩家 / player
-	 * result
+	 * @return 结果 / result
 	 */
 	public boolean hasCoolDown(Player player) {
 		return this.playersWithCooldown.contains(player.getObjectId());
@@ -164,8 +163,8 @@ public class IdgelDomeService {
 	 * 显示报名窗口。
 	 * Shows the registration window.
 	 *
-	 * 玩家 / player
-	 * instanceMaskId
+	 * @param player 玩家 / player
+	 * @param instanceMaskId 副本掩码 ID / instance mask id
 	 */
 	public void showWindow(Player player, byte instanceMaskId) {
 		if (getInstanceMaskId(player) != instanceMaskId) {
@@ -183,7 +182,7 @@ public class IdgelDomeService {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 * result
+	 * @return 结果 / result
 	 */
 	public static IdgelDomeService getInstance() {
 		ObjectProvider<IdgelDomeService> provider = instanceProvider;
@@ -194,10 +193,10 @@ public class IdgelDomeService {
 	}
 
 	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
+	 * 设置服务提供者。
+	 * Sets the service provider.
 	 *
-	 * provider
+	 * @return 服务提供者 / provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<IdgelDomeService> provider) {
 		instanceProvider = provider;

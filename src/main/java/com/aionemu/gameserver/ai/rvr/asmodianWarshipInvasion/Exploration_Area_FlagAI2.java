@@ -27,7 +27,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 	protected void handleUseItemFinish(Player player) {
 		switch (getNpcId()) {
 		   /**
-			* 
+			* 探索区 1 的入侵触发。 / Exploration area 1 invasion trigger.
 			*/
 			case 805854: //DF6_A1_BattleField_1_1.
 				announceF6Invasion();
@@ -46,7 +46,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 			break;
 			
 		   /**
-			* 
+			* 探索区 2 的入侵触发。 / Exploration area 2 invasion trigger.
 			*/
 			case 805856: //DF6_A1_BattleField_2_1.
 				announceF6Invasion();
@@ -65,7 +65,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 			break;
 			
 		   /**
-			* 
+			* 探索区 3 的入侵触发。 / Exploration area 3 invasion trigger.
 			*/
 			case 805858: //DF6_A1_BattleField_3_1.
 				announceF6Invasion();
@@ -84,7 +84,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 			break;
 			
 		   /**
-			* 
+			* 探索区 4 的入侵触发。 / Exploration area 4 invasion trigger.
 			*/
 			case 805860: //DF6_A1_BattleField_4_1.
 				announceF6Invasion();
@@ -122,7 +122,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 	}
 	
    /**
-	* 
+	* 探索区 1 的敌军生成（预留，当前为空实现）。 / Enemy spawns for exploration area 1 (reserved, currently empty).
 	*/
 	private void explorationAreaStart1_1() {
 		//spawn(240672, 
@@ -137,7 +137,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 	}
 	
    /**
-	* 
+	* 探索区 2 的敌军生成（预留，当前为空实现）。 / Enemy spawns for exploration area 2 (reserved, currently empty).
 	*/
 	private void explorationAreaStart2_1() {
 		
@@ -150,7 +150,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 	}
 	
    /**
-	* 
+	* 探索区 3 的敌军生成（预留，当前为空实现）。 / Enemy spawns for exploration area 3 (reserved, currently empty).
 	*/
 	private void explorationAreaStart3_1() {
 		
@@ -163,7 +163,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 	}
 	
    /**
-	* 
+	* 探索区 4 的敌军生成（预留，当前为空实现）。 / Enemy spawns for exploration area 4 (reserved, currently empty).
 	*/
 	private void explorationAreaStart4_1() {
 		

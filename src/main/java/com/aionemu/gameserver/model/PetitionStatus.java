@@ -8,7 +8,11 @@ package com.aionemu.gameserver.model;
  */
 public enum PetitionStatus {
 	/** 待处理 / Pending. */
-	PENDING(0), IN_PROGRESS(1), REPLIED(2);
+	PENDING(0),
+	/** 处理中 / In Progress */
+	IN_PROGRESS(1),
+	/** 已回复 / Replied */
+	REPLIED(2);
 
 	private int element;
 

@@ -16,7 +16,7 @@ public abstract class AI2Request {
 	 * Invoked when the player accepts the request.
 	 *
 	 * @param requester 请求发起者 / request initiator
-	 * responding player
+	 * @param responder 应答玩家 / responding player
 	 */
 	public abstract void acceptRequest(Creature requester, Player responder);
 
@@ -25,7 +25,7 @@ public abstract class AI2Request {
 	 * Invoked when the player denies the request; empty by default.
 	 *
 	 * @param requester 请求发起者 / request initiator
-	 * responding player
+	 * @param responder 应答玩家 / responding player
 	 */
 	public void denyRequest(Creature requester, Player responder) {
 	};

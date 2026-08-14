@@ -3,7 +3,10 @@ package com.aionemu.gameserver.questEngine.definition;
 import java.util.Objects;
 import java.util.Optional;
 
-/** One immutable canonical catalog entry. Metadata-only entries never expose an executable owner. */
+/**
+ * 一条不可变的规范目录条目；仅元数据条目从不暴露可执行归属。
+ * One immutable canonical catalog entry. Metadata-only entries never expose an executable owner.
+ */
 public record QuestCatalogEntry(int id, int version, QuestCatalogEntryMode mode,
 		QuestMetadata metadata, Optional<CompiledQuestDefinition> executable) {
 	public QuestCatalogEntry {

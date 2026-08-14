@@ -38,6 +38,6 @@ public class TechGolemAI2 extends AggressiveNpcAI2
 			public void run() {
 				AI2Actions.deleteOwner(TechGolemAI2.this);
 			}
-		}, 120000); //...2 Min
+		}, 120000); // 2 分钟后自毁 / Self-destruct after 2 minutes
 	}
 }

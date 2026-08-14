@@ -70,7 +70,7 @@ public class PlayerAllianceLeavedEvent extends PlayerLeavedEvent<PlayerAllianceM
 
 		if (leavedPlayer.isInInstance()) {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				/** 运行 / run. */
+				/** 运行 / Run. */
 				@Override
 				public void run() {
 					if (!leavedPlayer.isInAlliance2()) {

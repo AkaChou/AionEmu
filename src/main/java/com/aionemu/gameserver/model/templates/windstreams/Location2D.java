@@ -8,8 +8,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.flypath.FlyPathType;
 
 /**
- * 位置2D 模板（静态数据/XML）。
- * XML template.
+ * 二维地点模板（静态数据/XML）。
+ * 2D location template (static data/XML).
  *
  * @author LokiReborn
  */
@@ -35,14 +35,20 @@ public class Location2D {
 	}
 
 	/**
-	 * @return the id
+	 * 返回地点 ID。
+	 * Returns the location id.
+	 *
+	 * @return 地点 ID / location id
 	 */
 	public int getId() {
 		return id;
 	}
 
 	/**
-	 * @return the boost
+	 * 返回地点状态。
+	 * Returns the location state.
+	 *
+	 * @return 状态 / state
 	 */
 	public int getState() {
 		return state;

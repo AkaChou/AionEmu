@@ -48,7 +48,7 @@ public class StoneCpData {
 	 * 返回已加载的 CP 石数量。
 	 * Returns the number of loaded CP stones.
 	 *
-	 * template count
+	 * @return 已加载的CP 石数量 / Returns the number of loaded CP stones.
 	 */
 	public int size() {
 		return stoneData.size();

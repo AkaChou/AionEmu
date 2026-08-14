@@ -34,7 +34,7 @@ public class SeasonRankingResult {
 		this.playerId = playerId;
 	}
 
-	/** 获取点。 / Returns the points. */
+	/** 获取分数 / Returns the points. */
 	public int getPoints() {
 		return pc;
 	}

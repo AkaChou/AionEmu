@@ -96,7 +96,7 @@ public class Shutdown extends Thread {
             log.error(I18n.get("log.203da8e5761c", t));
         }
 
-        /* Shuting down threadpools */
+        /* 关闭线程池 / Shutting down threadpools */
         try {
             LoginThreadPoolServices.threadPoolManager().shutdown();
         } catch (Throwable t) {
@@ -122,7 +122,7 @@ public class Shutdown extends Thread {
             log.error(I18n.get("log.432427ebe7b1", t));
         }
 
-        /* Shuting down DB connections */
+        /* 关闭数据库连接 / Shutting down DB connections */
         try {
             DatabaseFactory.shutdown();
         } catch (Throwable t) {

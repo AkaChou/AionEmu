@@ -10,8 +10,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**
- * Disassemble 物品 Groups 模板（静态数据/XML）。
- * XML template.
+ * 分解物品组模板：按等级、职业与种族过滤产出条目。
+ * Disassemble item group template: filters entries by level, class and race.
  *
  * @author BeckUp.Media
  */

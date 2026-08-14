@@ -90,8 +90,8 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
      * 从结果集提取城镇对象。
      * Extracts a Town from the result set.
      *
-     * result set
-     * town
+     * @param rset 结果集 / result set
+     * @return 村庄 / town
      * SQL exception
      */
     private Town extractTownFromResultSet(ResultSet rset) throws SQLException {
@@ -111,7 +111,7 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
      * 按持久化状态存储城镇（新增或更新）。
      * Stores a town according to its persistent state (insert or update).
      *
-     * town
+     * @param town 村庄 / town
      */
     @Override
     public void store(Town town) {
@@ -135,7 +135,7 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
      * 插入新城镇记录。
      * Inserts a new town record.
      *
-     * town
+     * @param town 村庄 / town
      */
     private void insertTown(Town town) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -154,7 +154,7 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
      * 更新城镇等级与积分；无行受影响时回退为插入。
      * Updates town level and points; falls back to insert if no row is affected.
      *
-     * town
+     * @param town 村庄 / town
      */
     private void updateTown(Town town) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -189,7 +189,7 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
      * 使用 UPSERT 写入城镇数据。
      * Upserts town data.
      *
-     * town
+     * @param town 村庄 / town
      */
     public void upsertTown(Town town) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -209,7 +209,7 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
      * Binds town fields to the prepared statement.
      *
      * @param stmt 预编译语句 / prepared statement
-     * town
+     * @param town 村庄 / town
      * SQL exception
      */
     private void setTownStatementParameters(PreparedStatement stmt, Town town) throws SQLException {
@@ -275,10 +275,10 @@ public class TownDAO extends com.aionemu.gameserver.dao.TownDAO {
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

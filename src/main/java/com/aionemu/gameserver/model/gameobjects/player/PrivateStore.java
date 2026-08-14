@@ -17,7 +17,8 @@ public class PrivateStore {
 	private String storeMessage;
 
 	/**
-	 * 将玩家绑定到商店并创建物品列表。 / This method binds a player to the store and creates a list of items.
+	 * 将玩家绑定到商店并创建物品列表。
+	 * This method binds a player to the store and creates a list of items.
 	 */
 	public PrivateStore(Player owner) {
 		this.owner = owner;
@@ -70,7 +71,7 @@ public class PrivateStore {
 	}
 
 	/**
-	 * @param itemObjId return tradeItem
+	 * @param itemObjId 要查找的物品对象 ID / item object id to look up
 	 */
 	public synchronized TradePSItem getTradeItemByObjId(int itemObjId) {
 		TradePSItem item = items.get(itemObjId);
@@ -78,7 +79,8 @@ public class PrivateStore {
 	}
 
 	/**
-	 * 减少上架物品数量，售罄时移除。 / Decreases a listed item count and removes it when sold out.
+	 * 减少上架物品数量，售罄时移除。
+	 * Decreases a listed item count and removes it when sold out.
 	 */
 	public synchronized void decreaseItemCount(int itemObjId, long count) {
 		TradePSItem item = items.get(itemObjId);

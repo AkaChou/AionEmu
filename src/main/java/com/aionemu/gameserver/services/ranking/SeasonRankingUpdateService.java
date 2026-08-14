@@ -44,8 +44,8 @@ public class SeasonRankingUpdateService {
 	 * 重新计算指定榜单并替换内存缓存。
 	 * Recalculate the given ranking table and replace the in-memory cache.
 	 *
-	 * Ranking table ID
-	 * Ranking name
+	 * @param tableId 排行表 ID / Ranking table ID
+	 * @param rankingName 排行名称 / Ranking name
 	 */
 	private void renewPlayerRanking(int tableId, String rankingName) {
 		List<SM_SEASON_RANKING> newlyCalculated;
@@ -59,9 +59,7 @@ public class SeasonRankingUpdateService {
 	 * 从 DAO 读取竞争排名并按 94 条分页组装下发包。
 	 * Load competition ranking from DAO and build dispatch packets in pages of 94 entries.
 	 *
-	 * Ranking table ID
-	 *
-	 * @param tableid
+	 * @param tableid 排行表 ID / Ranking table ID
 	 * @return 排行下发包列表 / Ranking dispatch packets
 	 */
 	private List<SM_SEASON_RANKING> loadRankPacket(int tableid) {
@@ -83,9 +81,7 @@ public class SeasonRankingUpdateService {
 	 * 获取指定榜单的缓存下发包列表。
 	 * Get the cached dispatch packets for a ranking table.
 	 *
-	 * Ranking table ID
-	 *
-	 * @param tableId
+	 * @param tableId 排行表 ID / Ranking table ID
 	 * @return 下发包列表 / Dispatch packets
 	 */
 	public List<SM_SEASON_RANKING> getPlayers(int tableId) {
@@ -100,7 +96,7 @@ public class SeasonRankingUpdateService {
 	 * 获取服务单例（优先 Spring ObjectProvider，否则回退本地单例）。
 	 * Get the service singleton (prefer Spring ObjectProvider, otherwise local holder).
 	 *
-	 * Service instance
+	 * @return 服务实例 / Service instance
 	 */
 	public static final SeasonRankingUpdateService getInstance() {
 		ObjectProvider<SeasonRankingUpdateService> provider = instanceProvider;

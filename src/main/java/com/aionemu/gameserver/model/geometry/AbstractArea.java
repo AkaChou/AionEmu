@@ -10,12 +10,14 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 public abstract class AbstractArea implements Area {
 
 	/**
-	 * Minimal z of area
+	 * 区域的最小 Z 值。
+	 * Minimal z of area.
 	 */
 	private final float minZ;
 
 	/**
-	 * Maximal Z of area
+	 * 区域的最大 Z 值。
+	 * Maximal Z of area.
 	 */
 	private final float maxZ;
 
@@ -24,10 +26,13 @@ public abstract class AbstractArea implements Area {
 	private int worldId;
 
 	/**
-	 * 创建新 AbstractArea 带 min 并 maxz。 / Creates new AbstractArea with min and max z
+	 * 创建带 minZ 和 maxZ 的 AbstractArea。
+	 * Creates new AbstractArea with min and max z.
 	 *
-	 * @param zoneName min z
-	 * @param worldId max z
+	 * @param zoneName 区域名称 / zone name
+	 * @param worldId 世界 ID / world id
+	 * @param minZ 最小 Z 坐标 / minimal z
+	 * @param maxZ 最大 Z 坐标 / maximal z
 	 */
 	protected AbstractArea(ZoneName zoneName, int worldId, float minZ, float maxZ) {
 		if (minZ > maxZ) {

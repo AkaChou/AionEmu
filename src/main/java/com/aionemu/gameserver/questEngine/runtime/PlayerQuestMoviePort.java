@@ -8,6 +8,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import java.util.Objects;
 
 /**
+ * 真实 {@link QuestMoviePort}：提交后以请求的客户端资源类型发送 {@link SM_PLAY_MOVIE}。
  * Real {@link QuestMoviePort}: after commit, sends {@link SM_PLAY_MOVIE} with the requested client resource type.
  * The movie-end callback ({@code MovieEnd(movieId)}) is the authoritative client
  * event; this port never estimates movie duration with a local timer.
@@ -59,7 +60,7 @@ public final class PlayerQuestMoviePort implements QuestMoviePort {
 		}
 		Player player = players.find(snapshot.playerId());
 		if (player == null) {
-			// 提交已成功但玩家已登出:无可发送对象,best-effort 跳过。
+			// 提交已成功但玩家已登出：无可发送对象，best-effort 跳过。 / Commit succeeded but player logged out: nothing to send to, best-effort skip.
 			return false;
 		}
 		return play.play(player, movieId, type);

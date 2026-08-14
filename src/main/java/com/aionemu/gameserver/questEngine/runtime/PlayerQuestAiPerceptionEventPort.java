@@ -13,7 +13,7 @@ import java.util.function.BiPredicate;
 import java.util.function.ToDoubleBiFunction;
 import java.util.function.ToIntFunction;
 
-/** Captures the NPC/recipient facts at the aggro-list callback boundary. */
+/** 在仇恨列表回调边界捕获 NPC/接受者事实。 / Captures the NPC/recipient facts at the aggro-list callback boundary. */
 public final class PlayerQuestAiPerceptionEventPort implements QuestAiPerceptionEventPort {
 	private final BiPredicate<Creature, Npc> hostileSource;
 	private final ToDoubleBiFunction<Npc, Player> distance;

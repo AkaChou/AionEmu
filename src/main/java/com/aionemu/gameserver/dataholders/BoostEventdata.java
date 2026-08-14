@@ -50,7 +50,7 @@ public class BoostEventdata {
 	 * 返回已加载的增益活动数量。
 	 * Returns the number of loaded boost events.
 	 *
-	 * template count
+	 * @return 已加载的加成事件数量 / Returns the number of loaded boost events.
 	 */
 	public int size() {
 		return templates.size();
@@ -60,9 +60,7 @@ public class BoostEventdata {
 	 * 按 ID 获取增益活动模板。
 	 * Returns the boost event template for the given id.
 	 *
-	 * event id
-	 *
-	 * @param buffId
+	 * @param buffId 增益 ID / buff id
 	 * @return 模板，不存在则为 null / template or null
 	 */
 	public BoostEvents getInstanceBonusattr(int buffId) {

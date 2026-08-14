@@ -62,7 +62,7 @@ public class GameSiegeScheduleLifecycle {
      * 是否已成功加载。
      * Whether loading completed successfully.
      *
-     * true when loaded
+     * @return 已加载为 {@code true} / {@code true} when loaded
      */
     public synchronized boolean isLoaded() {
         return loaded;
@@ -82,7 +82,7 @@ public class GameSiegeScheduleLifecycle {
      * 最近一次失败异常。
      * Last failure throwable.
      *
-     * throwable or null
+     * @return 失败异常，无则为 null / throwable or null
      */
     public synchronized Throwable getLastFailure() {
         return lastFailure;

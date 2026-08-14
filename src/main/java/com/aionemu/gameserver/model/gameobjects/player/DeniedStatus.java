@@ -7,7 +7,7 @@ package com.aionemu.gameserver.model.gameobjects.player;
  * @author Sweetkr
  */
 public enum DeniedStatus {
-	/** View Details / View Details */
+	/** 查看详情 / View Details */
 	VIEW_DETAILS(1), TRADE(2), GROUP(4), GUILD(8), FRIEND(16), DUEL(32);
 
 	private int id;

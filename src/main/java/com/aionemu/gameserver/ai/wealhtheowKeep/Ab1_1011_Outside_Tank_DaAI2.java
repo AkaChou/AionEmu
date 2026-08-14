@@ -26,14 +26,18 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @AIName("Ab1_1011_Outside_Tank_Da")
 public class Ab1_1011_Outside_Tank_DaAI2 extends NpcAI2
 {
-	protected int startBarAnimation = 1;
-	protected int cancelBarAnimation = 2;
+	protected int startBarAnimation = 1; // 读条开始动画 ID / start cast bar animation ID
+	protected int cancelBarAnimation = 2; // 读条取消动画 ID / cancel cast bar animation ID
 	
 	@Override
 	protected void handleDialogStart(Player player) {
 		handleUseItemStart(player);
 	}
 	
+	/**
+	 * 带读条的物品交互：延迟结束后触发使用完成逻辑，交互中断则取消任务。
+	 * Item use with a cast bar: triggers the finish logic after the delay, cancels the task on abort.
+	 */
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {
@@ -64,6 +68,7 @@ public class Ab1_1011_Outside_Tank_DaAI2 extends NpcAI2
 	}
 	
 	protected void handleUseItemFinish(Player player) {
+		// 登上武器，持续 2 小时后删除并安排重生。 / Board the weapon for 2h, then delete and schedule respawn.
 		GameEngineServices.skillEngine().applyEffectDirectly(21593, player, player, 7200000 * 1); //Board The Weapon.
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);

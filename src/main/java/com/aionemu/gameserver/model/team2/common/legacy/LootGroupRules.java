@@ -60,22 +60,25 @@ public class LootGroupRules {
 	}
 
 	/**
-	 * @param quality
-	 * @return
+	 * 按物品品质返回对应的分配规则。
+	 * Return the distribution rule for the given item quality.
+	 *
+	 * @param quality 物品品质 / Item quality
+	 * @return 是否按该品质规则分配 / Whether the rule applies
 	 */
 	public boolean getQualityRule(ItemQuality quality) {
 		switch (quality) {
-		case COMMON: // White
+		case COMMON: // 白色 / White
 			return common_item_above != 0;
-		case RARE: // Green
+		case RARE: // 绿色 / Green
 			return superior_item_above != 0;
-		case LEGEND: // Blue
+		case LEGEND: // 蓝色 / Blue
 			return heroic_item_above != 0;
-		case UNIQUE: // Yellow
+		case UNIQUE: // 黄色 / Yellow
 			return fabled_item_above != 0;
-		case MYTHIC: // Orange
+		case MYTHIC: // 橙色 / Orange
 			return ethernal_item_above != 0;
-		case EPIC: // Purple
+		case EPIC: // 紫色 / Purple
 			return true;
 		default:
 			break;
@@ -84,71 +87,74 @@ public class LootGroupRules {
 	}
 
 	/**
-	 * @param quality
-	 * @return
+	 * 判断是否为杂项物品（垃圾品质且开启杂项分配）。
+	 * Whether the item is a misc item (junk quality with misc distribution enabled).
+	 *
+	 * @param quality 物品品质 / Item quality
+	 * @return 是否为杂项 / Whether misc
 	 */
 	public boolean isMisc(ItemQuality quality) {
 		return quality.equals(ItemQuality.JUNK) && misc == 1;
 	}
 
 	/**
-	 * @return the lootRule
+	 * @return 拾取规则 / The loot rule
 	 */
 	public LootRuleType getLootRule() {
 		return lootRule;
 	}
 
 	/**
-	 * @return the autodistribution
+	 * @return 自动分配方式 / The autodistribution
 	 */
 	public LootDistribution getAutodistribution() {
 		return autodistribution;
 	}
 
 	/**
-	 * @return the common_item_above
+	 * @return 普通品质分配门槛 / The common item above
 	 */
 	public int getCommonItemAbove() {
 		return common_item_above;
 	}
 
 	/**
-	 * @return the superior_item_above
+	 * @return 稀有品质分配门槛 / The superior item above
 	 */
 	public int getSuperiorItemAbove() {
 		return superior_item_above;
 	}
 
 	/**
-	 * @return the heroic_item_above
+	 * @return 传颂品质分配门槛 / The heroic item above
 	 */
 	public int getHeroicItemAbove() {
 		return heroic_item_above;
 	}
 
 	/**
-	 * @return the fabled_item_above
+	 * @return 唯一品质分配门槛 / The fabled item above
 	 */
 	public int getFabledItemAbove() {
 		return fabled_item_above;
 	}
 
 	/**
-	 * @return the ethernal_item_above
+	 * @return 神话品质分配门槛 / The ethernal item above
 	 */
 	public int getEthernalItemAbove() {
 		return ethernal_item_above;
 	}
 
 	/**
-	 * @return the nrMisc
+	 * @return 杂项分配数量 / The nrMisc
 	 */
 	public int getNrMisc() {
 		return nrMisc;
 	}
 
 	/**
-	 * @param nrMisc .
+	 * @param nrMisc 设置的杂项分配数量 / The nrMisc to set
 	 */
 	public void setNrMisc(int nrMisc) {
 		this.nrMisc = nrMisc;
@@ -184,14 +190,14 @@ public class LootGroupRules {
 	}
 
 	/**
-	 * @return the nrRoundRobin
+	 * @return 轮转分配次数 / The nrRoundRobin
 	 */
 	public int getNrRoundRobin() {
 		return nrRoundRobin;
 	}
 
 	/**
-	 * @param nrRoundRobin .
+	 * @param nrRoundRobin 设置的轮转分配次数 / The nrRoundRobin to set
 	 */
 	public void setNrRoundRobin(int nrRoundRobin) {
 		this.nrRoundRobin = nrRoundRobin;

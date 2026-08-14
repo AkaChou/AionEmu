@@ -23,8 +23,8 @@ public class RegionChannel extends RaceChannel {
      * 创建区域公共频道。
      * Creates a region public channel.
      *
-     * map id
-     * 阵营 / race
+     * @param mapId 地图 ID / map id
+     * @param race 阵营 / race
      * @param identifier 字符串标识 / string identifier
      */
     public RegionChannel(int mapId, Race race, String identifier) {

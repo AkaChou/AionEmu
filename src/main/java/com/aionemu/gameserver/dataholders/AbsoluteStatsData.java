@@ -48,9 +48,7 @@ public class AbsoluteStatsData {
 	 * 按属性集 ID 获取修正模板。
 	 * Returns the modifiers template for the given stat-set id.
 	 *
-	 * stat-set id
-	 *
-	 * @param statSetId
+	 * @param statSetId 属性套装 ID / stat-set id
 	 * @return 修正模板，不存在则为 null / modifiers template or null
 	 */
 	public ModifiersTemplate getTemplate(int statSetId) {
@@ -61,7 +59,7 @@ public class AbsoluteStatsData {
 	 * 返回已加载的属性集数量。
 	 * Returns the number of loaded stat sets.
 	 *
-	 * template count
+	 * @return 已加载的属性套装数量 / Returns the number of loaded stat sets.
 	 */
 	public int size() {
 		return absoluteStatsData.size();

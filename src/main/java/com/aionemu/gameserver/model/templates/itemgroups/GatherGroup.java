@@ -11,8 +11,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.rewards.IdReward;
 
 /**
- * 采集奖励组模板（静态数据/XML）。
- * XML template.
+ * 采集奖励组：采集产出的物品种族条目。
+ * Gather reward group: item race entries from gathering.
  *
  * @author Rolandas
  */

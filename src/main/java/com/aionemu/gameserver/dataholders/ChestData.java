@@ -54,7 +54,7 @@ public class ChestData {
 	 * 返回已加载的宝箱数量。
 	 * Returns the number of loaded chests.
 	 *
-	 * template count
+	 * @return 已加载的宝箱数量 / Returns the number of loaded chests.
 	 */
 	public int size() {
 		return chestData.size();
@@ -64,9 +64,7 @@ public class ChestData {
 	 * 按 NPC ID 获取宝箱模板。
 	 * Returns the chest template for the given NPC id.
 	 *
-	 * npc id
-	 *
-	 * @param npcId
+	 * @param npcId NPC ID / npc id
 	 * @return 模板，不存在则为 null / template or null
 	 */
 	public ChestTemplate getChestTemplate(int npcId) {

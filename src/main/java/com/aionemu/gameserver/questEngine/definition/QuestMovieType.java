@@ -1,10 +1,13 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-/** Client-side movie resource family used by {@code SM_PLAY_MOVIE}. */
+/**
+ * {@code SM_PLAY_MOVIE} 使用的客户端影片资源族。
+ * Client-side movie resource family used by {@code SM_PLAY_MOVIE}.
+ */
 public enum QuestMovieType {
-	/** CutScenes.xml entry (packet type 0). */
+	/** CutScenes.xml 条目（包类型 0）。/ CutScenes.xml entry (packet type 0). */
 	CUTSCENE(0),
-	/** CutSceneMovies.xml entry (packet type 1). */
+	/** CutSceneMovies.xml 条目（包类型 1）。/ CutSceneMovies.xml entry (packet type 1). */
 	CUTSCENE_MOVIE(1);
 
 	private final int wireValue;

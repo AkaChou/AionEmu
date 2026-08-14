@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-/** Tracks inventory rows already written inside one caller-owned quest transaction. */
+/** 跟踪已在单个调用方任务事务内写入的背包行。 / Tracks inventory rows already written inside one caller-owned quest transaction. */
 final class QuestInventoryPersistenceStage {
 	private static final QuestInventoryPersistenceStage NONE = new QuestInventoryPersistenceStage();
 
@@ -59,6 +59,8 @@ final class QuestInventoryPersistenceStage {
 		for (Map.Entry<Item, PersistentState> entry : originalStates.entrySet()) {
 			if (entry.getValue() == PersistentState.NEW
 					&& entry.getKey().getPersistentState() == PersistentState.NEW) {
+				// 该行现在存在于打开的 JDBC 事务中。后续变更会把 UPDATED 移到 UPDATE_REQUIRED，
+				// 而未变更的后续端口会跳过它。
 				// The row now exists in the open JDBC transaction. A later mutation will
 				// move UPDATED to UPDATE_REQUIRED, while an unchanged later port skips it.
 				entry.getKey().setPersistentState(PersistentState.UPDATED);

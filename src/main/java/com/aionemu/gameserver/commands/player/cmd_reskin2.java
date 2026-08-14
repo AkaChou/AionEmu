@@ -34,7 +34,7 @@ public class cmd_reskin2 extends PlayerCommand {
 	 * Parses target player/item and starts the VIP reskin flow.
 	 *
 	 * @param admin 执行命令的玩家 / invoking player
-	 * command parameters
+	 * @param params 命令参数 / command parameters
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -169,8 +169,8 @@ public class cmd_reskin2 extends PlayerCommand {
 	 * Shows a confirmation dialog, then applies the look and charges costs.
 	 *
 	 * @param admin 执行命令的玩家 / invoking player
-	 * toll cost
-	 * item id
+	 * @param toll 点数费用 / toll cost
+	 * @param itemId 物品 ID / item id
 	 * @param items 候选物品列表 / candidate item list
 	 */
 	public void reskin(final Player admin, final int toll, final int itemId, final List<Item> items) {
@@ -206,7 +206,7 @@ public class cmd_reskin2 extends PlayerCommand {
 	 * Shows usage when arguments are invalid.
 	 *
 	 * @param admin 执行命令的玩家 / invoking player
-	 * failure message
+	 * @param message 失败提示消息 / failure message
 	 */
 	@Override
 	public void onFail(Player admin, String message) {

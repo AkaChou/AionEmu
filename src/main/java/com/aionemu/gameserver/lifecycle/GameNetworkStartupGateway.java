@@ -67,7 +67,7 @@ public class GameNetworkStartupGateway {
      * 是否处于 boot-embedded 运行模式。
      * Whether the process is in boot-embedded mode.
      *
-     * @return {@code true} if boot-embedded。
+     * @return 处于 boot-embedded 模式为 {@code true} / {@code true} if boot-embedded
      */
     public boolean isBootEmbedded() {
         return runtimeBridge().isBootEmbedded();
@@ -114,7 +114,7 @@ public class GameNetworkStartupGateway {
      * 解析网络启动运行时桥：优先 Spring 提供者，否则新建。
      * Resolve the network-startup runtime bridge: prefer Spring provider, otherwise a new instance.
      *
-     * Runtime bridge
+     * @return 运行时桥 / Runtime bridge
      */
     private GameNetworkStartupRuntimeBridge runtimeBridge() {
         if (runtimeBridgeProvider == null) {

@@ -46,12 +46,12 @@ public class WeatherTable {
 		return zoneCount;
 	}
 
-	/** 返回 weather count / Returns the weather count */
+	/** 返回天气数量 / Returns the weather count */
 	public int getWeatherCount() {
 		return weatherCount;
 	}
 
-	/** 返回 weather after / Returns the weather after */
+	/** 返回下一天气条目 / Returns the weather after */
 	public WeatherEntry getWeatherAfter(WeatherEntry entry) {
 		if (entry.getWeatherName() == null || entry.isAfter()) {
 			return null;
@@ -71,7 +71,7 @@ public class WeatherTable {
 		return null;
 	}
 
-	/** 返回 weathers for zone / Returns the weathers for zone */
+	/** 返回区域天气列表 / Returns the weathers for a zone */
 	public List<WeatherEntry> getWeathersForZone(int zoneId) {
 		List<WeatherEntry> result = new ArrayList<WeatherEntry>();
 		for (WeatherEntry entry : getZoneData()) {

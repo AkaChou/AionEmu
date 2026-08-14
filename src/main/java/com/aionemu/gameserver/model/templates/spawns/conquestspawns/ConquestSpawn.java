@@ -13,7 +13,7 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 
 /**
  * 征服刷新点模板（静态数据/XML）。
- * XML template.
+ * Conquest spawn template (static data/XML).
  *
  * @author Rinzler (Encom)
  */
@@ -32,7 +32,7 @@ public class ConquestSpawn {
 	@XmlElement(name = "conquest_type")
 	private List<ConquestSpawn.ConquestStateTemplate> ConquestStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回攻城模式模板列表。 / Returns the siege mod templates. */
 	public List<ConquestStateTemplate> getSiegeModTemplates() {
 		return ConquestStateTemplate;
 	}

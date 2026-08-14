@@ -22,7 +22,7 @@ public class SM_ACCOUNT_TOLL_INFO extends LsServerPacket {
 	 *
 	 * @param toll 通行点余额 / toll balance
 	 * @param luna 月华余额 / luna balance
-	 * account name
+	 * @param accountName 账号名 / account name
 	 */
 	public SM_ACCOUNT_TOLL_INFO(long toll, long luna, String accountName) {
 		super(0x09);

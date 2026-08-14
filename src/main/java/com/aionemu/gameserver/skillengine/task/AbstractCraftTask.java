@@ -77,7 +77,7 @@ public abstract class AbstractCraftTask extends AbstractInteractionTask {
 		 * 获取暴击 ID。
 		 * Returns the crit id.
 		 *
-		 * crit id
+		 * @return 暴击 ID / crit id
 		 */
 		public int getCritId() {
 			return critId;
@@ -87,7 +87,7 @@ public abstract class AbstractCraftTask extends AbstractInteractionTask {
 		 * 获取发包用暴击 ID（NONE 时回退为 1）。
 		 * Returns the packet crit id (falls back to 1 for NONE).
 		 *
-		 * packet id
+		 * @return 发包用暴击 ID / packet crit id
 		 */
 		public int getPacketId() {
 			return critId > 0 ? critId : 1;
@@ -98,8 +98,8 @@ public abstract class AbstractCraftTask extends AbstractInteractionTask {
 	 * 构造制作任务。
 	 * Creates a craft task.
 	 *
-	 * requesting player
-	 * responder
+	 * @param requestor 发起玩家 / requesting player
+	 * @param responder 响应目标 / responder
 	 * @param skillLvlDiff 技能等级差 / skill level difference
 	 */
 	public AbstractCraftTask(Player requestor, VisibleObject responder, int skillLvlDiff) {

@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.IntFunction;
 
-/** Production start-eligibility projection backed only by canonical catalog metadata. */
+/** 仅由规范目录元数据支撑的生产开始资格投影。 / Production start-eligibility projection backed only by canonical catalog metadata. */
 public final class PlayerQuestStartEligibilityPort implements QuestStartEligibilityPort {
 	private final QuestPlayerPort players;
 	private final IntFunction<QuestMetadata> metadataByQuest;

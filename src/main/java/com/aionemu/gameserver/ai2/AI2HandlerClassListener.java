@@ -63,7 +63,7 @@ public class AI2HandlerClassListener implements ClassListener {
 	 * Returns whether the class is valid for AI registration (concrete, non-interface, public).
 	 *
 	 * @param clazz 待检查类 / class to check
-	 * whether valid
+	 * @return 是否有效 / whether valid
 	 */
 	public boolean isValidClass(Class<?> clazz) {
 		final int modifiers = clazz.getModifiers();

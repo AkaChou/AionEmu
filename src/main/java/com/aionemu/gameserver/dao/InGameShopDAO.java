@@ -18,11 +18,11 @@ public abstract class InGameShopDAO implements DAO {
 	 * 删除游戏内商城物品。
 	 * Deletes an in-game shop item.
 	 *
-	 * item ID
-	 * category
+	 * @param itemId 物品 ID / item ID
+	 * @param category 类别 / category
 	 * @param list 列表序号 / list index
 	 * @param param 附加参数 / extra parameter
-	 * whether successful
+	 * @return 是否成功 / whether successful
 	 */
 	public abstract boolean deleteIngameShopItem(int itemId, byte category, byte list, int param);
 
@@ -38,18 +38,18 @@ public abstract class InGameShopDAO implements DAO {
 	 * 保存游戏内商城物品。
 	 * Saves an in-game shop item.
 	 *
-	 * object or record ID
-	 * item template ID
+	 * @param paramInt1 对象或记录 ID / object or record ID
+	 * @param paramInt2 物品模板 ID / item template ID
 	 * @param paramLong1 价格或数量相关值 / price or count related value
 	 * @param paramLong2 价格或数量相关值 / price or count related value
-	 * category
-	 * sub-category
-	 * list index
+	 * @param paramByte1 类别 / category
+	 * @param paramByte2 子类别 / sub-category
+	 * @param paramInt3 列表索引 / list index
 	 * @param paramInt4 销量或附加数值 / sales or extra value
-	 * extra flag
-	 * extra flag
-	 * title or name
-	 * description
+	 * @param paramByte3 附加标记 / extra flag
+	 * @param paramByte4 附加标记 / extra flag
+	 * @param paramString1 标题或名称 / title or name
+	 * @param paramString2 描述 / description
 	 */
 	public abstract void saveIngameShopItem(int paramInt1, int paramInt2, long paramLong1, long paramLong2,
 			byte paramByte1, byte paramByte2, int paramInt3, int paramInt4, byte paramByte3, byte paramByte4,
@@ -59,9 +59,9 @@ public abstract class InGameShopDAO implements DAO {
 	 * 增加商品销量。
 	 * Increases sales count for an item.
 	 *
-	 * shop object ID
-	 * current sales
-	 * whether successful
+	 * @param object 商店对象 ID / shop object ID
+	 * @param current 当前销量 / current sales
+	 * @return 是否成功 / whether successful
 	 */
 	public abstract boolean increaseSales(int object, int current);
 
@@ -69,7 +69,7 @@ public abstract class InGameShopDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
 	 *
-	 * class name
+	 * @return 类名 / class name
 	 */
 	@Override
 	public String getClassName() {

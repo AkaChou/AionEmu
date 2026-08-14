@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.function.IntFunction;
 
 /**
+ * 真实 {@link QuestEffectPort}：提交后向玩家发送升天变身与飞行传送数据包。
  * Real {@link QuestEffectPort}: after commit, sends the ascension-morph and
  * flight-teleport packets to the player. Both effects mirror the legacy
  * handler wiring (see {@code _1002Request_Of_The_Elim}).
@@ -67,7 +68,7 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 		}
 		Player player = players.find(snapshot.playerId());
 		if (player == null) {
-			// 提交已成功但玩家已登出:无可发送对象,best-effort 跳过。
+			// 提交已成功但玩家已登出：无可发送对象，best-effort 跳过。 / Commit succeeded but player logged out: nothing to send to, best-effort skip.
 			return false;
 		}
 		PacketSendUtility.sendPacket(player, new SM_ASCENSION_MORPH(ascensionId));
@@ -213,7 +214,7 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 		}
 		Player player = players.find(snapshot.playerId());
 		if (player == null) {
-			// 提交已成功但玩家已登出:无可发送对象,best-effort 跳过。
+			// 提交已成功但玩家已登出：无可发送对象，best-effort 跳过。 / Commit succeeded but player logged out: nothing to send to, best-effort skip.
 			return false;
 		}
 		player.setState(CreatureState.FLIGHT_TELEPORT);

@@ -127,7 +127,7 @@ public class SM_PLAYER_SPAWN extends AionServerPacket {
 				// 档案/摇篮/永恒试炼。 / Archives/Cradle/Trials Of Eternity.
 				player.getWorldId() == 301540000 || player.getWorldId() == 301550000 || player.getWorldId() == 301560000
 				||
-				// 阿德玛之陨与西奥波莫斯试验室。 / Adma's Fall. & Theobomos Test Chamber.
+				// 阿德玛之陨与泰奥勃莫斯试验室。 / Adma's Fall. & Theobomos Test Chamber.
 				player.getWorldId() == 301600000 || player.getWorldId() == 301610000 ||
 				// 龙视者之巢与阿舒纳塔尔战舰。 / Drakenseer's Lair. & Ashunatal Dredgion.
 				player.getWorldId() == 301620000 || player.getWorldId() == 301650000 ||

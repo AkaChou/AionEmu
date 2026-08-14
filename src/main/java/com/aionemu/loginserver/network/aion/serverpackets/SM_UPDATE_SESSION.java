@@ -42,6 +42,6 @@ public class SM_UPDATE_SESSION extends AionServerPacket {
     protected void writeImpl(LoginConnection con) {
         writeD(accountId);
         writeD(loginOk);
-        writeC(0x00);// sysmsg if smth is wrong
+        writeC(0x00);// 出错时的系统消息 / sysmsg if smth is wrong
     }
 }

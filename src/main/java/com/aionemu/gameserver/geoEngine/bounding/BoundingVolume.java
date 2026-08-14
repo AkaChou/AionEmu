@@ -42,7 +42,7 @@ public abstract class BoundingVolume implements Collidable {
 	 * 以给定中心构造包围体。
 	 * Constructs a bounding volume with the given center.
 	 *
-	 * center point
+	 * @param center 中心点 / center point
 	 */
 	public BoundingVolume(Vector3f center) {
 		this.center.set(center);
@@ -52,7 +52,7 @@ public abstract class BoundingVolume implements Collidable {
 	 * 获取应优先检测的裁剪平面索引。
 	 * Returns the clip-plane index that should be checked first.
 	 *
-	 * plane index
+	 * @return 平面索引 / plane index
 	 */
 	public int getCheckPlane() {
 		return checkPlane;
@@ -72,7 +72,7 @@ public abstract class BoundingVolume implements Collidable {
 	 * 返回此包围体的类型。
 	 * Returns the type of this bounding volume.
 	 *
-	 * type enum
+	 * @return 类型枚举 / type enum
 	 */
 	public abstract Type getType();
 
@@ -91,7 +91,7 @@ public abstract class BoundingVolume implements Collidable {
 	 * Returns which side of a plane the volume lies on (positive, negative, or none/straddling).
 	 *
 	 * @param plane 检测平面 / plane to test against
-	 * side relative to the plane
+	 * @return 平面侧 / side relative to the plane
 	 */
 	public abstract Plane.Side whichSide(Plane plane);
 
@@ -99,7 +99,7 @@ public abstract class BoundingVolume implements Collidable {
 	 * 根据点集计算包围体。
 	 * Computes a bounding volume that encompasses a collection of points.
 	 *
-	 * point buffer
+	 * @param points 点缓冲 / point buffer
 	 */
 	public abstract void computeFromPoints(FloatBuffer points);
 
@@ -126,7 +126,7 @@ public abstract class BoundingVolume implements Collidable {
 	 * Clones this volume into the given store (creates a new one if null or wrong class).
 	 *
 	 * @param store 存储目标 / destination store
-	 * cloned bounding volume
+	 * @return 克隆的包围体 / cloned bounding volume
 	 */
 	public abstract BoundingVolume clone(BoundingVolume store);
 
@@ -134,7 +134,7 @@ public abstract class BoundingVolume implements Collidable {
 	 * 获取中心点引用。
 	 * Returns the center vector reference.
 	 *
-	 * center
+	 * @return 中心点 / center
 	 */
 	public final Vector3f getCenter() {
 		return center;
@@ -156,7 +156,7 @@ public abstract class BoundingVolume implements Collidable {
 	 * 设置中心点引用。
 	 * Sets the center vector reference.
 	 *
-	 * new center
+	 * @param newCenter 新中心 / new center
 	 */
 	public final void setCenter(Vector3f newCenter) {
 		center = newCenter;
@@ -166,8 +166,8 @@ public abstract class BoundingVolume implements Collidable {
 	 * 计算中心到给定点的距离。
 	 * Distance from the volume center to the given point.
 	 *
-	 * target point
-	 * distance
+	 * @param point 目标点 / target point
+	 * @return 距离 / distance
 	 */
 	public final float distanceTo(Vector3f point) {
 		return center.distance(point);
@@ -177,8 +177,8 @@ public abstract class BoundingVolume implements Collidable {
 	 * 计算中心到给定点的距离平方。
 	 * Squared distance from the volume center to the given point.
 	 *
-	 * target point
-	 * squared distance
+	 * @param point 目标点 / target point
+	 * @return 距离平方 / squared distance
 	 */
 	public final float distanceSquaredTo(Vector3f point) {
 		return center.distanceSquared(point);
@@ -188,7 +188,7 @@ public abstract class BoundingVolume implements Collidable {
 	 * 计算最近边到给定点的距离。
 	 * Distance from the nearest edge of this volume to the given point.
 	 *
-	 * target point
+	 * @param point 目标点 / target point
 	 * @return 到边的距离 / distance to edge
 	 */
 	public abstract float distanceToEdge(Vector3f point);
@@ -198,7 +198,7 @@ public abstract class BoundingVolume implements Collidable {
 	 * Whether this volume and the other intersect (contain, overlap, or touch).
 	 *
 	 * @param bv 另一包围体 / other volume
-	 * 若 intersecting 则为 true / true if intersecting
+	 * @return 若相交则为 true / true if intersecting
 	 */
 	public abstract boolean intersects(BoundingVolume bv);
 
@@ -206,8 +206,8 @@ public abstract class BoundingVolume implements Collidable {
 	 * 判断射线是否与本包围体相交。
 	 * Whether a ray intersects this bounding volume.
 	 *
-	 * ray to test
-	 * 若 intersecting 则为 true / true if intersecting
+	 * @param ray 待测射线 / ray to test
+	 * @return 若相交则为 true / true if intersecting
 	 */
 	public abstract boolean intersects(Ray ray);
 
@@ -216,7 +216,7 @@ public abstract class BoundingVolume implements Collidable {
 	 * Whether this volume intersects the given sphere.
 	 *
 	 * @param bs 包围球 / bounding sphere
-	 * 若 intersecting 则为 true / true if intersecting
+	 * @return 若相交则为 true / true if intersecting
 	 */
 	public abstract boolean intersectsSphere(BoundingSphere bs);
 
@@ -225,7 +225,7 @@ public abstract class BoundingVolume implements Collidable {
 	 * Whether this volume intersects the given axis-aligned box.
 	 *
 	 * @param bb 包围盒 / bounding box
-	 * 若 intersecting 则为 true / true if intersecting
+	 * @return 若相交则为 true / true if intersecting
 	 */
 	public abstract boolean intersectsBoundingBox(BoundingBox bb);
 
@@ -239,8 +239,8 @@ public abstract class BoundingVolume implements Collidable {
 	 * 判断点是否严格包含于包围体内。
 	 * Whether the given point is strictly contained inside this volume.
 	 *
-	 * point to check
-	 * 若 contained 则为 true / true if contained
+	 * @param point 待检测点 / point to check
+	 * @return 若包含则为 true / true if contained
 	 */
 	public abstract boolean contains(Vector3f point);
 
@@ -248,8 +248,8 @@ public abstract class BoundingVolume implements Collidable {
 	 * 判断点是否与包围体相交（接触或在内部）。
 	 * Whether the given point intersects (touches or is inside) this volume.
 	 *
-	 * point to check
-	 * 若 intersecting 则为 true / true if intersecting
+	 * @param point 待检测点 / point to check
+	 * @return 若相交则为 true / true if intersecting
 	 */
 	public abstract boolean intersects(Vector3f point);
 
@@ -257,7 +257,7 @@ public abstract class BoundingVolume implements Collidable {
 	 * 返回包围体体积。
 	 * Returns the volume of this bounding volume.
 	 *
-	 * volume
+	 * @return 体积 / volume
 	 */
 	public abstract float getVolume();
 
@@ -265,7 +265,7 @@ public abstract class BoundingVolume implements Collidable {
 	 * 浅克隆，中心向量深拷贝。
 	 * Clones this volume with a deep-copied center vector.
 	 *
-	 * clone
+	 * @return 克隆体 / clone
 	 */
 	@Override
 	public BoundingVolume clone() {

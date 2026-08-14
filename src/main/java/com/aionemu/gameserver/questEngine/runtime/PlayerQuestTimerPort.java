@@ -15,7 +15,7 @@ import java.util.Objects;
 public final class PlayerQuestTimerPort implements QuestTimerPort {
 	public enum Command { START_QUEST, START_INVISIBLE, CANCEL_QUEST }
 
-	/** 可注入的计时器调用委托 (生产 = QuestService, 测试 = 记录器)。 */
+	/** 可注入的计时器调用委托（生产 = QuestService，测试 = 记录器）。 / Injectable timer invocation delegate (production = QuestService, tests = recorder). */
 	@FunctionalInterface
 	public interface TimerInvoker {
 		boolean apply(Player player, int questId, int seconds, Command command,
@@ -72,7 +72,7 @@ public final class PlayerQuestTimerPort implements QuestTimerPort {
 		}
 		Player player = players.find(snapshot.playerId());
 		if (player == null) {
-			// 提交已成功但玩家已登出:无可调度对象,best-effort 跳过。
+			// 提交已成功但玩家已登出：无可调度对象，best-effort 跳过。 / Commit succeeded but player logged out: nothing to schedule, best-effort skip.
 			return false;
 		}
 		return invoke.apply(player, snapshot.questId(), seconds, command, policy, identity);

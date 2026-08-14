@@ -32,7 +32,6 @@ public class Announcements extends AdminCommand {
 	 * 执行公告管理：list/add/delete 子命令。
 	 * Executes announcement management: list/add/delete subcommands.
 	 *
-	 * admin
 	 * @param params 参数：list|add|delete 及附加参数 / list|add|delete and extra args
 	 */
 	@Override
@@ -115,8 +114,6 @@ public class Announcements extends AdminCommand {
 	 * 参数错误时输出 {@code //announcements} 用法。
 	 * Prints {@code //announcements} usage on invalid arguments.
 	 *
-	 * admin
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

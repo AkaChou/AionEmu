@@ -54,7 +54,7 @@ public class AGameProcessor {
 	 *
 	 * @param r 待执行任务 / Task to run
 	 * @param delay 延时毫秒数 / Delay in milliseconds
-	 * Scheduled future
+	 * @return 调度句柄 / Scheduled future
 	 */
 	public ScheduledFuture<?> schedule(Runnable r, long delay) {
 		r = new RunnableTaskWrapper((Runnable) r);
@@ -73,7 +73,7 @@ public class AGameProcessor {
 	 * @param r 待执行任务 / Task to run
 	 * @param delay 初始延时毫秒数 / Initial delay in milliseconds
 	 * @param period 周期毫秒数 / Period in milliseconds
-	 * Scheduled future
+	 * @return 调度句柄 / Scheduled future
 	 */
 	public ScheduledFuture<?> scheduleAtFixedRate(Runnable r, long delay, long period) {
 		r = new RunnableTaskWrapper((Runnable) r);
@@ -122,7 +122,7 @@ public class AGameProcessor {
 		 * 创建空任务容器。
 		 * Create an empty task holder.
 		 *
-		 * New holder
+		 * @return 新容器 / New holder
 		 */
 		public static Task create() {
 			return new Task();
@@ -159,7 +159,7 @@ public class AGameProcessor {
 		 * 使用全局线程配置中的最大无告警运行时间包装任务。
 		 * Wrap a runnable with the global max runtime without warning.
 		 *
-		 * Original runnable
+		 * @param runnable 原始任务 / Original runnable
 		 */
 		private RunnableTaskWrapper(Runnable runnable) {
 			super(runnable, ThreadConfig.MAXIMUM_RUNTIME_IN_MILLISEC_WITHOUT_WARNING);

@@ -47,8 +47,8 @@ public class DredgionService2 {
 	}
 
 	/**
-	 * initDredgion 方法。
-	 * initDredgion method.
+	 * 初始化Dredgion报名：按配置调度开启报名。
+* Initializes Dredgion registration by scheduling open windows per config.
 	 */
 	public void initDredgion() {
 		if (AutoGroupConfig.DREDGION_ENABLED) {
@@ -146,20 +146,20 @@ public class DredgionService2 {
 	}
 
 	/**
-	 * isDredgionAvailable 方法。
-	 * isDredgionAvailable method.
-	 * result
+	 * 报名是否可用。
+	 * Whether registration is available.
+	 * @return 结果 / result
 	 */
 	public boolean isDredgionAvailable() {
 		return this.registerAvailable;
 	}
 
 	/**
-	 * getInstanceMaskId 方法。
-	 * getInstanceMaskId method.
+	 * 获取玩家的报名掩码 ID；等级不符时返回 0。
+	 * Returns the registration mask id for the player, or 0 if level mismatch.
 	 *
 	 * 玩家 / player
-	 * result
+	 * @return 结果 / result
 	 */
 	public byte getInstanceMaskId(Player player) {
 		int level = player.getLevel();
@@ -190,7 +190,7 @@ public class DredgionService2 {
 	 * Whether cooldown is active.
 	 *
 	 * 玩家 / player
-	 * result
+	 * @return 结果 / result
 	 */
 	public boolean hasCoolDown(Player player) {
 		return this.playersWithCooldown.contains(player.getObjectId());
@@ -200,8 +200,8 @@ public class DredgionService2 {
 	 * 显示报名窗口。
 	 * Shows the registration window.
 	 *
-	 * 玩家 / player
-	 * instanceMaskId
+	 * @param player 玩家 / player
+	 * @param instanceMaskId 副本掩码 ID / instance mask id
 	 */
 	public void showWindow(Player player, int instanceMaskId) {
 		if (getInstanceMaskId(player) != instanceMaskId) {
@@ -219,7 +219,7 @@ public class DredgionService2 {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 * result
+	 * @return 结果 / result
 	 */
 	public static DredgionService2 getInstance() {
 		ObjectProvider<DredgionService2> provider = instanceProvider;
@@ -230,8 +230,8 @@ public class DredgionService2 {
 	}
 
 	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
+	 * 设置服务提供者。
+	 * Sets the service provider.
 	 *
 	 * @param instanceProvider 副本提供者 / instanceProvider
 	 */

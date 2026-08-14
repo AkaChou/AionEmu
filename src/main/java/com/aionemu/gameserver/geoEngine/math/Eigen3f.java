@@ -212,11 +212,9 @@ public class Eigen3f {
 	 * 判断矩阵是否具有正秩，并记录最大行。
 	 * Tests whether the matrix has positive rank and records the dominant row.
 	 *
-	 * input matrix
-	 *
+	 * @param matrix 输入矩阵 / input matrix
 	 * @param maxMagnitudeStore 最大幅值输出 [0] / max magnitude output [0]
 	 * @param maxRowStore 最大行向量输出 / dominant row vector output
-	 * @param maxRowStore
 	 * @return 若最大幅值 ≥ 容差则为 true / true if max magnitude ≥ tolerance
 	 */
 	private boolean positiveRank(Matrix3f matrix, float[] maxMagnitudeStore, Vector3f maxRowStore) {
@@ -295,7 +293,7 @@ public class Eigen3f {
 	 * Returns the eigenvalue at the given index.
 	 *
 	 * @param i 索引（0~2） / index (0~2)
-	 * eigenvalue
+	 * @return 特征值 / eigenvalue
 	 */
 	public float getEigenValue(int i) {
 		return this.eigenValues[i];
@@ -306,7 +304,7 @@ public class Eigen3f {
 	 * Returns the eigenvector at the given index.
 	 *
 	 * @param i 索引（0~2） / index (0~2)
-	 * eigenvector
+	 * @return 特征向量 / eigenvector
 	 */
 	public Vector3f getEigenVector(int i) {
 		return this.eigenVectors[i];

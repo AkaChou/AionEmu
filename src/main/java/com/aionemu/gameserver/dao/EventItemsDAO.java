@@ -14,7 +14,7 @@ public abstract class EventItemsDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
 	 *
-	 * class name
+	 * @return 类名 / class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -25,7 +25,7 @@ public abstract class EventItemsDAO implements DAO {
 	 * 加载玩家的活动物品。
 	 * Loads event items for a player.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void loadItems(Player player);
 
@@ -33,7 +33,7 @@ public abstract class EventItemsDAO implements DAO {
 	 * 存储玩家的活动物品。
 	 * Stores event items for a player.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void storeItems(Player player);
 
@@ -41,7 +41,7 @@ public abstract class EventItemsDAO implements DAO {
 	 * 删除指定模板 ID 的活动物品记录。
 	 * Deletes event item records for the given item template ID.
 	 *
-	 * item template ID
+	 * @param itemId 物品模板 ID / item template ID
 	 */
 	public abstract void deleteItems(final int itemId);
 }

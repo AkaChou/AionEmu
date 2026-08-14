@@ -80,7 +80,7 @@ public class Fallen_Sea_JotunAI2 extends AggressiveNpcAI2
 				    PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_Nepilim_Summon_MSG_01, 0);
 					// 尤顿战斗人员的支援再次开始。 / The support of the Jotun combatants has started again.
 				    PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_Nepilim_Summon_MSG_03, 10000);
-					GameEngineServices.skillEngine().getSkill(getOwner(), 23008, 60, getOwner()).useNoAnimationSkill(); //Steaming Geyser.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 23008, 60, getOwner()).useNoAnimationSkill(); // 蒸腾的间歇泉 / Steaming Geyser.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();

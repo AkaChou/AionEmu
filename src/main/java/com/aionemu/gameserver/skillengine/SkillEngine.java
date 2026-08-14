@@ -43,10 +43,9 @@ public class SkillEngine {
 	 * 为玩家已学习技能创建 Skill 实例。
 	 * Creates a Skill for a skill the player has learned.
 	 *
-	 * casting player
-	 * skill id
-	 * first target
-	 *
+	 * @param player 施法玩家 / casting player
+	 * @param skillId 技能 ID / skill id
+	 * @param firstTarget 首选目标 / first target
 	 * @return Skill 实例，模板不存在时为 null / skill instance, or null if template missing
 	 */
 	public Skill getSkillFor(Player player, int skillId, VisibleObject firstTarget) {
@@ -62,10 +61,9 @@ public class SkillEngine {
 	 * 按模板为玩家已学习技能创建 Skill 实例（非激怒激活时须已学习）。
 	 * Creates a Skill from a template for a learned player skill (must be learned unless PROVOKED).
 	 *
-	 * casting player
-	 * skill template
-	 * first target
-	 *
+	 * @param player 施法玩家 / casting player
+	 * @param template 技能模板 / skill template
+	 * @param firstTarget 首选目标 / first target
 	 * @return Skill 实例，未学习且非激怒时为 null / skill instance, or null if not learned and not provoked
 	 */
 	public Skill getSkillFor(Player player, SkillTemplate template, VisibleObject firstTarget) {
@@ -87,11 +85,11 @@ public class SkillEngine {
 	 * 按模板与指定技能等级为玩家创建 Skill 实例。
 	 * Creates a Skill for a player with an explicit skill level.
 	 *
-	 * casting player
-	 * skill template
-	 * first target
-	 * skill level
-	 * skill instance
+	 * @param player 施法玩家 / casting player
+	 * @param template 技能模板 / skill template
+	 * @param firstTarget 首选目标 / first target
+	 * @param skillLevel 技能等级 / skill level
+	 * @return Skill 实例 / skill instance
 	 */
 	public Skill getSkillFor(Player player, SkillTemplate template, VisibleObject firstTarget, int skillLevel) {
 		Creature target = null;
@@ -105,11 +103,10 @@ public class SkillEngine {
 	 * 为未学习技能（如物品技能）创建 Skill 实例。
 	 * Creates a Skill for skills not learned by the player (e.g. item skills).
 	 *
-	 * caster
-	 * skill id
-	 * skill level
-	 * first target
-	 *
+	 * @param creature 施法者 / caster
+	 * @param skillId 技能 ID / skill id
+	 * @param skillLevel 技能等级 / skill level
+	 * @param firstTarget 首选目标 / first target
 	 * @return Skill 实例，模板不存在时为 null / skill instance, or null if template missing
 	 */
 	public Skill getSkill(Creature creature, int skillId, int skillLevel, VisibleObject firstTarget) {
@@ -120,10 +117,10 @@ public class SkillEngine {
 	 * 为未学习技能创建 Skill，可附带物品模板。
 	 * Creates a Skill for non-learned skills, optionally bound to an item template.
 	 *
-	 * caster
-	 * skill id
-	 * skill level
-	 * first target
+	 * @param creature 施法者 / caster
+	 * @param skillId 技能 ID / skill id
+	 * @param skillLevel 技能等级 / skill level
+	 * @param firstTarget 首选目标 / first target
 	 * @param itemTemplate 关联物品模板，可为 null / related item template, may be null
 	 * @return Skill 实例，模板不存在时为 null / skill instance, or null if template missing
 	 */
@@ -144,7 +141,7 @@ public class SkillEngine {
 	 * 获取技能引擎实例（优先 Spring 提供者，否则静态单例）。
 	 * Returns the skill engine instance (Spring provider if set, else static singleton).
 	 *
-	 * skill engine instance
+	 * @return 技能引擎实例 / skill engine instance
 	 */
 	public static SkillEngine getInstance() {
 		ObjectProvider<SkillEngine> provider = instanceProvider;
@@ -168,9 +165,9 @@ public class SkillEngine {
 	 * 强制直接对目标应用技能效果（忽略学习状态，可指定持续时长）。
 	 * Applies a skill effect directly to the target as a forced effect (optional duration).
 	 *
-	 * skill id
-	 * caster
-	 * effected creature
+	 * @param skillId 技能 ID / skill id
+	 * @param effector 施法者 / caster
+	 * @param effected 受影响生物 / effected creature
 	 * @param duration 强制持续时长（毫秒），&gt;0 时锁定时长 / forced duration in ms; &gt;0 locks duration
 	 */
 	public void applyEffectDirectly(int skillId, Creature effector, Creature effected, int duration) {

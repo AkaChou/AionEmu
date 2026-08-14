@@ -27,14 +27,14 @@ public class cmd_job extends PlayerCommand {
 	 */
 	@Override
 	public void execute(Player player, String... params) {
-		player.getSkillList().addSkill(player, 30002, 499); // Vita
-		player.getSkillList().addSkill(player, 30003, 499); // Ether
-		player.getSkillList().addSkill(player, 40001, 550); // Cuisine
-		player.getSkillList().addSkill(player, 40002, 550); // Armes
-		player.getSkillList().addSkill(player, 40003, 550); // Armure
-		player.getSkillList().addSkill(player, 40004, 550); // Couture
-		player.getSkillList().addSkill(player, 40007, 550); // Alchimie
-		player.getSkillList().addSkill(player, 40008, 550); // Artisanat
+		player.getSkillList().addSkill(player, 30002, 499); // 采集 / Vita
+		player.getSkillList().addSkill(player, 30003, 499); // 奥德采集 / Ether
+		player.getSkillList().addSkill(player, 40001, 550); // 烹饪 / Cuisine
+		player.getSkillList().addSkill(player, 40002, 550); // 武器制作 / Armes
+		player.getSkillList().addSkill(player, 40003, 550); // 防具制作 / Armure
+		player.getSkillList().addSkill(player, 40004, 550); // 缝纫 / Couture
+		player.getSkillList().addSkill(player, 40007, 550); // 炼金 / Alchimie
+		player.getSkillList().addSkill(player, 40008, 550); // 手工制作 / Artisanat
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class cmd_job extends PlayerCommand {
 	 * Shows usage when arguments are invalid.
 	 *
 	 * @param player 执行命令的玩家 / invoking player
-	 * failure message
+	 * @param message 失败提示消息 / failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

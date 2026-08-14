@@ -11,7 +11,7 @@ import com.aionemu.gameserver.model.templates.towerofeternity.TowerOfEternityTem
 import com.aionemu.gameserver.services.towerofeternityservice.TowerOfEternity;
 
 /**
- * 高塔 Of 永恒位置，用于 towerofeternity 相关逻辑。
+ * 永恒之塔位置，用于 towerofeternity 相关逻辑。
  * Tower Of Eternity Location for towerofeternity logic.
  */
 
@@ -36,7 +36,7 @@ public class TowerOfEternityLocation {
 		return isActive;
 	}
 
-	/** 设置 active tower of eternity / Sets the active tower of eternity */
+	/** 设置当前的永恒之塔 / Sets the active tower of eternity */
 	public void setActiveTowerOfEternity(TowerOfEternity<TowerOfEternityLocation> towerOfEternity) {
 		isActive = towerOfEternity != null;
 		this.activeTowerOfEternity = towerOfEternity;
@@ -47,7 +47,7 @@ public class TowerOfEternityLocation {
 		return template.getWorldId();
 	}
 
-	/** 返回 active tower of eternity / Returns the active tower of eternity */
+	/** 返回当前永恒之塔 / Returns the active tower of eternity */
 	public TowerOfEternity<TowerOfEternityLocation> getActiveTowerOfEternity() {
 		return activeTowerOfEternity;
 	}

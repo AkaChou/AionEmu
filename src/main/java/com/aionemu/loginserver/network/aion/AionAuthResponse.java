@@ -137,7 +137,7 @@ public enum AionAuthResponse {
      * 构造响应枚举。
      * Construct response enum.
      *
-     * Message id
+     * @param msgId 消息 ID / message id
      */
     AionAuthResponse(int msgId) {
         messageId = msgId;

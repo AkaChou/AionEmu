@@ -44,7 +44,7 @@ public class GMMode extends AdminCommand {
 
         if (params[0].toLowerCase().equals("on")) {
             if (params[1].equals("y")){
-                GameRuntimeServices.gmService().onPlayerAvailable(admin); //send available message
+                GameRuntimeServices.gmService().onPlayerAvailable(admin); // 发送上线公告 / send available message
                 admin.setWispable();
             } else if (params[1].toLowerCase().equals("n")) {
                 PacketSendUtility.sendMessage(admin, "You are Back Online");
@@ -57,7 +57,7 @@ public class GMMode extends AdminCommand {
             if (!admin.isGmMode()) {
                 admin.setGmMode(true);
 
-                //GameRuntimeServices.gmService().onPlayerLogin(admin); //put gm into gmlist
+                //GameRuntimeServices.gmService().onPlayerLogin(admin); // 将 GM 加入 GM 列表 / put gm into gmlist
 
                 admin.clearKnownlist();
                 PacketSendUtility.sendPacket(admin, new SM_PLAYER_INFO(admin, false));
@@ -68,8 +68,8 @@ public class GMMode extends AdminCommand {
         }
         if (params[0].equals("off")) {
             if (params[1].toLowerCase().equals("y")){
-                GameRuntimeServices.gmService().onPlayerUnavailable(admin); //send unavailable message
-                GameRuntimeServices.gmService().onPlayerLogedOut(admin); //remove gm into gmlist
+                GameRuntimeServices.gmService().onPlayerUnavailable(admin); // 发送下线公告 / send unavailable message
+                GameRuntimeServices.gmService().onPlayerLogedOut(admin); // 将 GM 从列表移除 / remove gm into gmlist
             } else if (params[1].toLowerCase().equals("n")) {
                 PacketSendUtility.sendMessage(admin, "You are in Offline Status");
                 PacketSendUtility.sendMessage(admin, "you are now Unavailable but can be Whisperable by players");

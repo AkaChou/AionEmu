@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * 宠物 Doping 条目模板（静态数据/XML）。
- * XML template.
+ * 宠物兴奋剂条目模板（静态数据/XML）。
+ * Pet doping entry template (static data / XML).
  *
  * @author Rolandas
  */
@@ -38,28 +38,28 @@ public class PetDopingEntry {
 	}
 
 	/**
-	 * @return the id
+	 * @return 条目 ID / the id
 	 */
 	public short getId() {
 		return id;
 	}
 
 	/**
-	 * @return the usedrink
+	 * @return 是否使用饮品 / the usedrink
 	 */
 	public boolean isUseDrink() {
 		return usedrink;
 	}
 
 	/**
-	 * @return the usefood
+	 * @return 是否使用食物 / the usefood
 	 */
 	public boolean isUseFood() {
 		return usefood;
 	}
 
 	/**
-	 * @return the usescroll
+	 * @return 卷轴使用数 / the usescroll
 	 */
 	public int getScrollsUsed() {
 		return usescroll;

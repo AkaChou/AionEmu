@@ -28,7 +28,7 @@ public class cmd_preview extends PlayerCommand {
 	 * Parses the item id and starts a short appearance preview.
 	 *
 	 * @param admin 执行命令的玩家 / invoking player
-	 * item-id parameters
+	 * @param params 物品 ID 参数 / item-id parameters
 	 */
 	public void executeCommand(Player admin, String[] params) {
 
@@ -53,7 +53,7 @@ public class cmd_preview extends PlayerCommand {
 	 * Forwards varargs to {@link #executeCommand(Player, String[])}.
 	 *
 	 * @param player 执行命令的玩家 / invoking player
-	 * command parameters
+	 * @param params 命令参数 / command parameters
 	 */
 	@Override
 	public void execute(Player player, String... params) {

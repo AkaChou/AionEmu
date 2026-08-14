@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * 游戏经验模板（静态数据/XML）。
- * XML template.
+ * Game Experience Template (static data/XML).
  *
  * @author Rinzler (Encom)
  */

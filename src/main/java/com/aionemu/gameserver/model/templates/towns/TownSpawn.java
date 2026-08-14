@@ -26,8 +26,11 @@ public class TownSpawn {
 	private Map<Integer, TownLevel> townLevelsData = new HashMap<Integer, TownLevel>();
 
 	/**
-	 * @param u
-	 * @param parent
+	 * 反序列化后将城镇等级列表转为按等级索引的映射。
+	 * Build the level-indexed map after unmarshalling.
+	 *
+	 * @param u JAXB 反序列化器 / Unmarshaller
+	 * @param parent 父对象 / Parent object
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		townLevelsData.clear();

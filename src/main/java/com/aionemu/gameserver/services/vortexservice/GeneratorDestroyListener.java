@@ -19,7 +19,7 @@ public class GeneratorDestroyListener extends OnDieEventCallback {
 	 * 绑定所属漩涡事件。
 	 * Binds the owning vortex event.
 	 *
-	 * vortex event
+	 * @param vortex 漩涡事件 / vortex event
 	 */
 	public GeneratorDestroyListener(DimensionalVortex vortex) {
 		this.vortex = vortex;
@@ -29,7 +29,7 @@ public class GeneratorDestroyListener extends OnDieEventCallback {
 	 * 死亡前钩子（空实现）。
 	 * Pre-death hook (no-op).
 	 *
-	 * dying AI
+	 * @param obj 濒死 AI / dying AI
 	 */
 	@Override
 	public void onBeforeDie(AbstractAI obj) {
@@ -39,7 +39,7 @@ public class GeneratorDestroyListener extends OnDieEventCallback {
 	 * 死亡后标记生成器摧毁并停止入侵。
 	 * After death, marks the generator destroyed and stops the invasion.
 	 *
-	 * dying AI
+	 * @param obj 濒死 AI / dying AI
 	 */
 	@Override
 	public void onAfterDie(AbstractAI obj) {

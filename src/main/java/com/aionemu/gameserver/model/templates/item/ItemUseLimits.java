@@ -10,8 +10,8 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
- * 物品 UseLimits 模板（静态数据/XML）。
- * XML template.
+ * 物品使用限制模板：延迟、性别、军阶与可用区域。
+ * Item use-limits template: delay, gender, rank and use area.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -42,27 +42,27 @@ public class ItemUseLimits {
 	@XmlAttribute(name = "rank_max")
 	private int maxRank = AbyssRankEnum.SUPREME_COMMANDER.getId();
 
-	/** 返回 delay id / Returns the delay id */
+	/** 返回延迟 ID / Returns the delay id */
 	public int getDelayId() {
 		return useDelayId;
 	}
 
-	/** 设置 delay id / Sets the delay id */
+	/** 设置延迟 ID / Sets the delay id */
 	public void setDelayId(int delayId) {
 		useDelayId = delayId;
 	}
 
-	/** 返回延迟时间 / Returns the delay time*/
+	/** 返回延迟时间 / Returns the delay time */
 	public int getDelayTime() {
 		return useDelay;
 	}
 
-	/** 设置 delay time / Sets the delay time */
+	/** 设置延迟时间 / Sets the delay time */
 	public void setDelayTime(int useDelay) {
 		this.useDelay = useDelay;
 	}
 
-	/** 返回 use area / Returns the use area */
+	/** 返回可用区域 / Returns the use area */
 	public ZoneName getUseArea() {
 		if (usearea == null)
 			return null;
@@ -73,18 +73,21 @@ public class ItemUseLimits {
 		return null;
 	}
 
-	/** 返回 ownership world / Returns the ownership world */
+	/** 返回拥有者世界 / Returns the ownership world */
 	public int getOwnershipWorld() {
 		return ownershipWorldId;
 	}
 
-	/** 返回 gender permitted / Returns the gender permitted */
+	/** 返回允许性别 / Returns the gender permitted */
 	public Gender getGenderPermitted() {
 		return genderPermitted;
 	}
 
 	/**
-	 * @return Whether ride usable
+	 * 骑乘状态下是否可用。
+	 * Whether usable while riding.
+	 *
+	 * @return 是否可骑乘使用 / Whether ride usable
 	 */
 	public boolean isRideUsable() {
 		if (rideUsable == null) {
@@ -93,12 +96,12 @@ public class ItemUseLimits {
 		return rideUsable;
 	}
 
-	/** 返回最小军阶 / Returns the min rank*/
+	/** 返回最小军阶 / Returns the min rank */
 	public int getMinRank() {
 		return minRank;
 	}
 
-	/** 返回最大军阶 / Returns the max rank*/
+	/** 返回最大军阶 / Returns the max rank */
 	public int getMaxRank() {
 		return maxRank;
 	}

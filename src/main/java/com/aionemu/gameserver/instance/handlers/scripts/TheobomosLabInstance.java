@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 /**
- * 西奥博莫斯实验室副本事件处理器。
+ * 泰奥勃莫斯实验室副本事件处理器。
  * Instance event handler for Theobomos Lab.
  *
  * @author Encom
@@ -32,20 +32,20 @@ import java.util.concurrent.Future;
 @InstanceID(310110000)
 public class TheobomosLabInstance extends GeneralInstanceHandler
 {
-	/** silikor guard / silikor guard */
+		/** silikor guard / silikor guard */
 		private int silikorGuard;
-	/** 是否启动计时器 / is start timer */
+		/** 是否启动计时器 / is start timer */
 		private boolean isStartTimer = false;
-	/** elementsealingstone 任务 / element sealing stone task */
+		/** elementsealingstone 任务 / element sealing stone task */
 		private Future<?> elementSealingStoneTask;
-	/** element sealing stone / element sealing stone */
+		/** element sealing stone / element sealing stone */
 		private List<Npc> elementSealingStone = new ArrayList<Npc>();
 	
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -225,7 +225,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
      * 处理死亡事件。
      * Handle a death event.
      *
-     * npc
+     * @param npc NPC / npc
      */
     @Override
     public void onDie(Npc npc) {
@@ -317,9 +317,9 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

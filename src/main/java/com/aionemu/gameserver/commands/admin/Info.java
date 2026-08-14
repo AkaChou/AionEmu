@@ -36,7 +36,6 @@ public class Info extends AdminCommand {
 	 * Dump detailed info for the currently selected player, NPC or gatherable.
 	 *
 	 * @param admin 执行命令的管理员 / Admin executing the command
-	 * Unused
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

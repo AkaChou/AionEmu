@@ -66,6 +66,10 @@ public class Blue_Energy_AltarAI2 extends NpcAI2
 		}
 	}
 	
+	/**
+	 * 消耗蓝色典籍完成祭坛使用：在永恒试炼副本内封锁蓝色祭坛并移除相关 NPC。
+	 * Consumes a Blue Tome to finish using the altar: blocks the blue altar and removes related NPCs in the Trials Of Eternity instance.
+	 */
 	protected void handleUseItemFinish(Player player) {
 		if (!player.getInventory().decreaseByItemId(185000298, 1)) {
 			// 需要蓝色典籍阻断蓝色祭坛的能量。 / You need a Blue Tome to block the energy from the blue altar.

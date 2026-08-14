@@ -4,7 +4,7 @@ import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.templates.housing.HousingJukeBox;
 
 /**
- * JukeBox 对象。
+ * 点唱机对象。
  * Juke Box Object game object.
  */
 

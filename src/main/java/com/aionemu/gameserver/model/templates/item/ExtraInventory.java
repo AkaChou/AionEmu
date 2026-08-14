@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Extra 背包模板（静态数据/XML）。
- * XML template.
+ * 额外背包模板：扩展背包 ID。
+ * Extra inventory template: extended cube id.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

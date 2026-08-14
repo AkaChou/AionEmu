@@ -35,8 +35,8 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 	 * 加载玩家配方列表。
 	 * Loads a player's recipe list.
 	 *
-	 * player id
-	 * recipe list
+	 * @param playerId 玩家 ID / player id
+	 * @return 配方列表 / recipe list
 	 */
 	@Override
 	public RecipeList load(final int playerId) {
@@ -62,8 +62,8 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 	 * 为玩家添加配方。
 	 * Adds a recipe for the player.
 	 *
-	 * player id
-	 * recipe id
+	 * @param playerId 玩家 ID / player id
+	 * @param recipeId 配方 ID / recipe id
 	 *
 	 * @return 是否添加成功 / whether the insert succeeded
 	 */
@@ -82,8 +82,8 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 	 * 删除玩家配方。
 	 * Deletes a recipe from the player.
 	 *
-	 * player id
-	 * recipe id
+	 * @param playerId 玩家 ID / player id
+	 * @param recipeId 配方 ID / recipe id
 	 *
 	 * @return 是否删除成功 / whether the delete succeeded
 	 */
@@ -120,10 +120,10 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
 	 *
-	 * @param s 数据库名 / database name
-	 * @param i 主版本 / major version
-	 * @param i1 次版本 / minor version
-	 * whether supported
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
 	 */
 	@Override
 	public boolean supports(String s, int i, int i1) {

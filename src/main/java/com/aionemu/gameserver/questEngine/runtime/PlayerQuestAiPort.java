@@ -40,7 +40,7 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 		BROADCAST_INTERACTION_EMOTION
 	}
 
-	/** 可注入的 AI 命令委托 (生产 = 真实 AI 调用, 测试 = 记录器)。 */
+	/** 可注入的 AI 命令委托（生产 = 真实 AI 调用，测试 = 记录器）。 / Injectable AI command delegate (production = real AI calls, tests = recorder). */
 	@FunctionalInterface
 	public interface AiCall {
 		boolean apply(Npc npc, Player player, VisibleObject target, Command command, String argument);
@@ -78,6 +78,8 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 
 	/**
 	 * 向玩家同步常驻 NPC 信息。生产实现发送真实的 {@code SM_NPC_INFO}，测试可注入无副作用记录器。
+	 * Syncs the persistent NPC info to the player. Production sends the real {@code SM_NPC_INFO};
+	 * tests may inject a side-effect-free recorder.
 	 */
 	@FunctionalInterface
 	public interface NpcInfoCall {
@@ -378,12 +380,12 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 		}
 		Npc npc = registry.get(snapshot, slot);
 		if (npc == null) {
-			// 该 slot 无 handle (可能从未 spawn 或已清理):无法寻址,best-effort 跳过。
+			// 该 slot 无 handle（可能从未 spawn 或已清理）：无法寻址，best-effort 跳过。 / No handle for this slot (never spawned or cleaned up): not addressable, best-effort skip.
 			return false;
 		}
 		Player player = players.find(snapshot.playerId());
 		if (player == null) {
-			// 玩家已登出:无可跟随/攻击的对象上下文,best-effort 跳过。
+			// 玩家已登出：无可跟随/攻击的对象上下文，best-effort 跳过。 / Player logged out: no follow/attack context available, best-effort skip.
 			return false;
 		}
 		VisibleObject target = null;
@@ -399,7 +401,7 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 		return ai.apply(npc, player, target, command, argument);
 	}
 
-	/** 在当前地图实例中选择第一个已生成且存活的目标 NPC。 */
+	/** 在当前地图实例中选择第一个已生成且存活的目标 NPC。 / Picks the first spawned and living target NPC in the current world instance. */
 	private static Npc findLivingNpc(Player player, int templateId) {
 		if (player == null || player.getPosition() == null || player.getPosition().getWorldMapInstance() == null) {
 			return null;

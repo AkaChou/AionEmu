@@ -142,7 +142,7 @@ public abstract class EffectTemplate {
 	 * 获取效果基础数值。
 	 * Returns the base effect value.
 	 *
-	 * base value
+	 * @return 基础数值 / base value
 	 */
 	public int getValue() {
 		return value;
@@ -156,7 +156,7 @@ public abstract class EffectTemplate {
 	 * 获取每技能等级的数值增量。
 	 * Returns the per-skill-level delta.
 	 *
-	 * level delta
+	 * @return 每级增量 / level delta
 	 */
 	public int getDelta() {
 		return delta;
@@ -174,7 +174,7 @@ public abstract class EffectTemplate {
 	 * 获取第二时长参数（主持续时长）。
 	 * Returns the primary duration parameter (duration2).
 	 *
-	 * duration
+	 * @return 第二时长参数 / duration2
 	 */
 	public int getDuration2() {
 		return duration2;
@@ -184,7 +184,7 @@ public abstract class EffectTemplate {
 	 * 获取第一时长参数。
 	 * Returns the secondary duration parameter (duration1).
 	 *
-	 * duration param
+	 * @return 第一时长参数 / duration1
 	 */
 	public int getDuration1() {
 		return duration1;
@@ -194,7 +194,7 @@ public abstract class EffectTemplate {
 	 * 获取随机时间偏移。
 	 * Returns the random time offset.
 	 *
-	 * random time
+	 * @return 随机时间偏移 / random time
 	 */
 	public int getRandomTime() {
 		return randomTime;
@@ -214,7 +214,7 @@ public abstract class EffectTemplate {
 	 * 获取属性变更列表。
 	 * Returns the stat change list.
 	 *
-	 * changes
+	 * @return 属性变更列表 / changes
 	 */
 	public List<Change> getChange() {
 		return change;
@@ -224,7 +224,7 @@ public abstract class EffectTemplate {
 	 * 获取效果 ID。
 	 * Returns the effect id.
 	 *
-	 * effect id
+	 * @return 效果 ID / effect id
 	 */
 	public int getEffectid() {
 		return effectid;
@@ -234,7 +234,7 @@ public abstract class EffectTemplate {
 	 * 获取效果在技能中的位置序号。
 	 * Returns the effect position index within the skill.
 	 *
-	 * position
+	 * @return 位置序号 / position
 	 */
 	public int getPosition() {
 		return position;
@@ -244,7 +244,7 @@ public abstract class EffectTemplate {
 	 * 获取基础等级要求。
 	 * Returns the basic level requirement.
 	 *
-	 * basic level
+	 * @return 基础等级要求 / basic level
 	 */
 	public int getBasicLvl() {
 		return basicLvl;
@@ -262,7 +262,7 @@ public abstract class EffectTemplate {
 	 * 获取技能元素属性。
 	 * Returns the skill element.
 	 *
-	 * element
+	 * @return 元素属性 / element
 	 */
 	public SkillElement getElement() {
 		return element;
@@ -282,7 +282,7 @@ public abstract class EffectTemplate {
 	 * 获取前置效果触发概率（0–100）。
 	 * Returns the pre-effect trigger probability (0–100).
 	 *
-	 * probability
+	 * @return 触发概率 / probability
 	 */
 	public int getPreEffectProb() {
 		return preEffectProb;
@@ -314,7 +314,7 @@ public abstract class EffectTemplate {
 	 * 获取暴击附加伤害 1。
 	 * Returns critical bonus damage 1.
 	 *
-	 * bonus damage
+	 * @return 暴击附加伤害 / bonus damage
 	 */
 	public int getCritAddDmg1() {
 		return critAddDmg1;
@@ -324,7 +324,7 @@ public abstract class EffectTemplate {
 	 * 获取暴击附加伤害 2。
 	 * Returns critical bonus damage 2.
 	 *
-	 * bonus damage
+	 * @return 暴击附加伤害 / bonus damage
 	 */
 	public int getCritAddDmg2() {
 		return critAddDmg2;
@@ -338,7 +338,7 @@ public abstract class EffectTemplate {
 	 * 获取效果条件集合。
 	 * Returns the effect conditions.
 	 *
-	 * conditions
+	 * @return 条件集合 / conditions
 	 */
 	public Conditions getEffectConditions() {
 		return effectConditions;
@@ -378,7 +378,7 @@ public abstract class EffectTemplate {
 	 * 获取效果类型（反序列化后缓存）。
 	 * Returns the effect type (cached after unmarshalling).
 	 *
-	 * effect type
+	 * @return 效果类型 / effect type
 	 */
 	public EffectType getEffectType() {
 		return effectType;
@@ -388,7 +388,7 @@ public abstract class EffectTemplate {
 	 * 获取子效果配置。
 	 * Returns the sub-effect configuration.
 	 *
-	 * sub-effect
+	 * @return 子效果配置 / sub-effect
 	 */
 	public SubEffect getSubEffect() {
 		return subEffect;
@@ -414,7 +414,7 @@ public abstract class EffectTemplate {
 	 * @param effect 运行中效果 / runtime effect
 	 * @param statEnum 相关抗性属性，可为 null / related resist stat, may be null
 	 * @param spellStatus 成功时设置的法术状态，可为 null / spell status on success, may be null
-	 * 若 successful 则为 true / true if successful
+	 * @return 若成功则为 true / true if successful
 	 */
 	public boolean calculate(Effect effect, StatEnum statEnum, SpellStatus spellStatus) {
 		if (effect.getSkillTemplate().isPassive()) {

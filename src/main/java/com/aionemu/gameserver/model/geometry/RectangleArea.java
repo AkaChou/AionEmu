@@ -16,62 +16,69 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 public class RectangleArea extends AbstractArea {
 
 	/**
-	 * Min x point
+	 * 最小 X 坐标。
+	 * Min x point.
 	 */
 	private final float minX;
 
 	/**
-	 * @return the minX
+	 * @return 最小 X 坐标 / the min x
 	 */
 	public float getMinX() {
 		return minX;
 	}
 
 	/**
-	 * @return the maxX
+	 * @return 最大 X 坐标 / the max x
 	 */
 	public float getMaxX() {
 		return maxX;
 	}
 
 	/**
-	 * @return the minY
+	 * @return 最小 Y 坐标 / the min y
 	 */
 	public float getMinY() {
 		return minY;
 	}
 
 	/**
-	 * @return the maxY
+	 * @return 最大 Y 坐标 / the max y
 	 */
 	public float getMaxY() {
 		return maxY;
 	}
 
 	/**
-	 * Max x point
+	 * 最大 X 坐标。
+	 * Max x point.
 	 */
 	private final float maxX;
 
 	/**
-	 * Min y point
+	 * 最小 Y 坐标。
+	 * Min y point.
 	 */
 	private final float minY;
 
 	/**
-	 * Max y point
+	 * 最大 Y 坐标。
+	 * Max y point.
 	 */
 	private final float maxY;
 
 	/**
-	 * 创建新 area 从给定 points.Pointorderdoesn ' tmatter。 / Creates new area from given points. Point order doesn't matter
+	 * 由给定点创建新的矩形区域，点的顺序无关紧要。
+	 * Creates new area from given points. Point order doesn't matter.
 	 *
-	 * @param zoneName   point
-	 * @param worldId   point
-	 * @param p1   point
-	 * @param p2   point
-	 * @param p3 minimal z
-	 * @param p4 maximal z
+	 * @param zoneName 区域名称 / zone name
+	 * @param worldId 世界 ID / world id
+	 * @param p1 顶点 1 / point 1
+	 * @param p2 顶点 2 / point 2
+	 * @param p3 顶点 3 / point 3
+	 * @param p4 顶点 4 / point 4
+	 * @param minZ 最小 Z 坐标 / minimal z
+	 * @param maxZ 最大 Z 坐标 / maximal z
 	 */
 	public RectangleArea(ZoneName zoneName, int worldId, Point p1, Point p2, Point p3, Point p4, int minZ, int maxZ) {
 		super(zoneName, worldId, minZ, maxZ);
@@ -89,14 +96,17 @@ public class RectangleArea extends AbstractArea {
 	}
 
 	/**
-	 * 创建新为从给定 coords。 / Creates new are from given coords
+	 * 由给定坐标创建新的矩形区域。
+	 * Creates new area from given coords.
 	 *
-	 * @param zoneName mimal x point
-	 * @param worldId minimal y point
-	 * @param minX maximal x point
-	 * @param minY maximal y point
-	 * @param maxX minimal z point
-	 * @param maxY maximal z point
+	 * @param zoneName 区域名称 / zone name
+	 * @param worldId 世界 ID / world id
+	 * @param minX 最小 X 坐标 / minimal x point
+	 * @param minY 最小 Y 坐标 / minimal y point
+	 * @param maxX 最大 X 坐标 / maximal x point
+	 * @param maxY 最大 Y 坐标 / maximal y point
+	 * @param minZ 最小 Z 坐标 / minimal z point
+	 * @param maxZ 最大 Z 坐标 / maximal z point
 	 */
 	public RectangleArea(ZoneName zoneName, int worldId, float minX, float minY, float maxX, float maxY, float minZ,
 			float maxZ) {
@@ -116,7 +126,7 @@ public class RectangleArea extends AbstractArea {
 	}
 
 	/**
-	 * @return Whether inside 3 d
+	 * @return 是否在三维区域内 / Whether inside 3D
 	 */
 	@Override
 	public boolean isInside3D(float x, float y, float z) {
@@ -188,7 +198,7 @@ public class RectangleArea extends AbstractArea {
 			d = MathUtil.getDistance(x, y, cp.getX(), cp.getY());
 			if (d < distance) {
 				closestPoint = cp;
-				// distance = d;。
+				// distance = d;
 			}
 			return closestPoint;
 		}

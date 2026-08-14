@@ -8,8 +8,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Tradein 列表模板（静态数据/XML）。
- * XML template.
+ * 兑换列表模板：一组可兑换物品。
+ * Tradein list template: a set of tradein items.
  *
  * @author MrPoke
  */
@@ -20,7 +20,7 @@ public class TradeinList {
 	@XmlElement(name = "tradein_item")
 	protected List<TradeinItem> tradeinItem;
 
-	/** 返回 tradein item / Returns the tradein item */
+	/** 返回兑换物品列表 / Returns the tradein item */
 	public List<TradeinItem> getTradeinItem() {
 		return this.tradeinItem;
 	}

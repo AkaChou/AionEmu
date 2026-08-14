@@ -55,7 +55,7 @@ public class ItemCustomSetData {
 	 * 返回已加载的自定义套装数量。
 	 * Returns the number of loaded custom sets.
 	 *
-	 * template count
+	 * @return 已加载的自定义套装数量 / Returns the number of loaded custom sets.
 	 */
 	public int size() {
 		return custom.size();

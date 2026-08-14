@@ -63,7 +63,7 @@ public final class GameGameplayServices implements DisposableBean {
      * 解析决斗服务。
      * Resolve the duel service.
      *
-     * Duel service
+     * @return 决斗服务 / Duel service
      */
     public static DuelService duelService() {
         ObjectProvider<DuelService> provider = duelServiceProvider;

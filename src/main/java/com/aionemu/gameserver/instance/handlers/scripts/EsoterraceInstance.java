@@ -34,7 +34,7 @@ import java.util.Set;
 @InstanceID(300250000)
 public class EsoterraceInstance extends GeneralInstanceHandler
 {
-	/** lab manager killed / lab manager killed */
+		/** lab manager killed / lab manager killed */
 		private int labManagerKilled;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
@@ -67,7 +67,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -111,8 +111,8 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
@@ -129,7 +129,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
      * 处理死亡事件。
      * Handle a death event.
      *
-     * npc
+     * @param npc NPC / npc
      */
     @Override
     public void onDie(Npc npc) {
@@ -188,9 +188,9 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 				spawn(799580, 1034.11f, 985.01f, 327.35095f, (byte) 105); //Keening Sirokin.
 				spawn(701025, 1038.636963f, 987.741455f, 328.356415f, (byte) 0, 725); //Sundries Box.
             break;
-		   /**
-	 * 实验室空调室内将遭遇第二个命名怪“穆鲁甘队长”。 / Inside the Laboratory Air Conditioning Room, players will encounter the second Named Monster of Esoterrace, "Captain Murugan" Be wary of "Captain Murugan's" deadly combo skills, expect the primary target to take massive damage throughout the encounter! When Captain Murugan is defeated, two doors will open in the Laboratory Air Conditioning Room, granting access to Chilled Treasure chests which contain Abyss relics
-	 */
+			/**
+			 * 实验室空调室内将遭遇第二个命名怪“穆鲁甘队长”。 / Inside the Laboratory Air Conditioning Room, players will encounter the second Named Monster of Esoterrace, "Captain Murugan" Be wary of "Captain Murugan's" deadly combo skills, expect the primary target to take massive damage throughout the encounter! When Captain Murugan is defeated, two doors will open in the Laboratory Air Conditioning Room, granting access to Chilled Treasure chests which contain Abyss relics
+			 */
 			case 217195: //Captain Murugan.
 				switch (Rnd.get(1, 2)) {
 				    case 1:
@@ -223,9 +223,9 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 				// 生物实验室外墙已坍塌。 / The outer wall of the Bio Lab has collapsed.
 				sendMsgByRace(1400924, Race.PC_ALL, 0);
             break;
-		   /**
-	 * 击败“凯克斯克拉”后刷新宝箱，含欧比斯遗物与白金勋章等。 / When "Kexkra" is defeated, a treasure chest will spawn containing Abyss relics and Platinum Medals. In addition, the treasure chest has a chance to contain Fabled armor from the Surama set
-	 */
+			/**
+			 * 击败“凯克斯克拉”后刷新宝箱，含欧比斯遗物与白金勋章等。 / When "Kexkra" is defeated, a treasure chest will spawn containing Abyss relics and Platinum Medals. In addition, the treasure chest has a chance to contain Fabled armor from the Surama set
+			 */
 			case 217204: //Kexkra.
 			    despawnNpc(npc);
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Esoterrace>");
@@ -239,9 +239,9 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 				spawn(217206, 1315.99f, 1170.77f, 51.8004f, (byte) 87); //Warden Surama.
 				spawn(701047, 1316.5045f, 1171.0127f, 52.589924f, (byte) 0, 180); //Flame Wall.
             break;
-		   /**
-	 * 开战面对“凯克斯克拉原型”；随后典狱长苏拉玛会加入战斗。 / Players will start this encounter facing the "Kexkra Prototype" As the encounter wears on, an event will cause Warden Surama to join the battle. When Warden Surama is defeated, two treasure chests will spawn, one of which has a chance to contain Fabled armor from the Surama series, and the other Fabled weapons from the Surama series
-	 */
+            /**
+             * 开战面对“凯克斯克拉原型”；随后典狱长苏拉玛会加入战斗。 / Players will start this encounter facing the "Kexkra Prototype" As the encounter wears on, an event will cause Warden Surama to join the battle. When Warden Surama is defeated, two treasure chests will spawn, one of which has a chance to contain Fabled armor from the Surama series, and the other Fabled weapons from the Surama series
+             */
             case 217206: //Warden Surama.
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Esoterrace>");
 				spawn(701044, 1341.19f, 1181.25f, 51.515f, (byte) 67); //Esoterrace Dimensional Rift Exit.
@@ -281,9 +281,9 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

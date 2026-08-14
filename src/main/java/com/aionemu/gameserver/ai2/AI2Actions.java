@@ -41,7 +41,7 @@ public class AI2Actions {
 	 * Silently kills the target using the AI owner as the last attacker.
 	 *
 	 * @param ai2 AI 实例 / AI instance
-	 * target creature
+	 * @param target 目标生物 / target creature
 	 */
 	public static void killSilently(AbstractAI ai2, Creature target) {
 		target.getController().onDie(ai2.getOwner());
@@ -52,7 +52,7 @@ public class AI2Actions {
 	 * Silently kills the AI owner by the given attacker.
 	 *
 	 * @param ai2 AI 实例 / AI instance
-	 * attacker
+	 * @param attacker 攻击者 / attacker
 	 */
 	public static void dieSilently(AbstractAI ai2, Creature attacker) {
 		ai2.getOwner().getController().onDie(attacker);
@@ -63,7 +63,7 @@ public class AI2Actions {
 	 * Uses a skill (or queues an intention to use it later).
 	 *
 	 * @param ai2 AI 实例 / AI instance
-	 * skill id
+	 * @param skillId 技能 ID / skill id
 	 */
 	public static void useSkill(AbstractAI ai2, int skillId) {
 		ai2.getOwner().getController().useSkill(skillId);
@@ -74,8 +74,8 @@ public class AI2Actions {
 	 * Creates and force-applies a skill effect to the target with 100% success.
 	 *
 	 * @param ai2 AI 实例 / AI instance
-	 * skill template
-	 * target creature
+	 * @param template 技能模板 / skill template
+	 * @param target 目标生物 / target creature
 	 */
 	public static void applyEffect(AbstractAI ai2, SkillTemplate template, Creature target) {
 		Effect effect = new Effect(ai2.getOwner(), target, template, template.getLvl(), 0);
@@ -89,7 +89,7 @@ public class AI2Actions {
 	 * Applies a skill effect to the AI owner itself.
 	 *
 	 * @param ai2 AI 实例 / AI instance
-	 * skill id
+	 * @param skillId 技能 ID / skill id
 	 */
 	public static void applyEffectSelf(AbstractAI ai2, int skillId) {
 		SkillTemplate st = DataManager.SKILL_DATA.getSkillTemplate(skillId);
@@ -113,7 +113,7 @@ public class AI2Actions {
 	 * Sets the target to the given creature.
 	 *
 	 * @param ai2 AI 实例 / AI instance
-	 * target creature
+	 * @param target 目标生物 / target creature
 	 */
 	public static void targetCreature(AbstractAI ai2, Creature target) {
 		ai2.getOwner().setTarget(target);
@@ -136,7 +136,7 @@ public class AI2Actions {
 	 * Fires an individual NPC event on the target.
 	 *
 	 * @param ai2 AI 实例 / AI instance
-	 * target NPC
+	 * @param target 目标 NPC / target NPC
 	 */
 	public static void fireIndividualEvent(AbstractAI ai2, Npc target) {
 		target.getAi2().onIndividualNpcEvent(ai2.getOwner());
@@ -147,7 +147,7 @@ public class AI2Actions {
 	 * Fires an instance NPC-kill event.
 	 *
 	 * @param ai2 AI 实例 / AI instance
-	 * related player
+	 * @param player 相关玩家 / related player
 	 */
 	public static void fireNpcKillInstanceEvent(AbstractAI ai2, Player player) {
 		ai2.getPosition().getWorldMapInstance().getInstanceHandler().onDie((Npc) ai2.getOwner());
@@ -158,7 +158,7 @@ public class AI2Actions {
 	 * Registers drop distribution.
 	 *
 	 * @param ai2 AI 实例 / AI instance
-	 * main player
+	 * @param player 主要玩家 / main player
 	 * @param registeredPlayers 已登记玩家集合 / registered players
 	 */
 	public static void registerDrop(AbstractAI ai2, Player player, Collection<Player> registeredPlayers) {
@@ -169,7 +169,7 @@ public class AI2Actions {
 	 * 安排 NPC 重生。
 	 * Schedules NPC respawn.
 	 *
-	 * NPC AI instance
+	 * @param ai2 NPC AI 实例 / NPC AI instance
 	 */
 	public static void scheduleRespawn(NpcAI2 ai2) {
 		ai2.getOwner().getController().scheduleRespawn();
@@ -180,9 +180,9 @@ public class AI2Actions {
 	 * Processes quest dialog selection and returns the result.
 	 *
 	 * @param ai2 AI 实例 / AI instance
-	 * 玩家 / player
-	 * quest id
-	 * dialog id
+	 * @param player 玩家 / player
+	 * @param questId 任务 ID / quest id
+	 * @param dialogId 对话框 ID / dialog id
 	 *
 	 * @return 对话框选择结果 / dialog selection result
 	 */
@@ -209,7 +209,7 @@ public class AI2Actions {
 		 * 是否处理成功。
 		 * Returns whether the dialog was handled successfully.
 		 *
-		 * whether successful
+		 * @return 是否成功 / whether successful
 		 */
 		public boolean isSuccess() {
 			return success;
@@ -219,7 +219,7 @@ public class AI2Actions {
 		 * 获取任务环境。
 		 * Returns the quest environment.
 		 *
-		 * quest environment
+		 * @return 任务环境 / quest environment
 		 */
 		public QuestEnv getEnv() {
 			return env;
@@ -231,10 +231,10 @@ public class AI2Actions {
 	 * Adds a request/response handler to the player with senderId defaulting to the AI owner's objectId.
 	 *
 	 * @param ai2 AI 实例 / AI instance
-	 * 玩家 / player
-	 * request id
-	 * request callback
-	 * request parameters
+	 * @param player 玩家 / player
+	 * @param requestId 请求 ID / request id
+	 * @param request 请求回调 / request callback
+	 * @param requestParams 请求参数 / request parameters
 	 */
 	public static void addRequest(AbstractAI ai2, Player player, int requestId, AI2Request request,
 			Object... requestParams) {
@@ -246,12 +246,12 @@ public class AI2Actions {
 	 * Adds a request/response handler to the player; cancels when moving out of range.
 	 *
 	 * @param ai2 AI 实例 / AI instance
-	 * 玩家 / player
-	 * request id
-	 * sender id
+	 * @param player 玩家 / player
+	 * @param requestId 请求 ID / request id
+	 * @param senderId 发送者 ID / sender id
 	 * @param range 有效范围（0 表示不限） / valid range (0 = unlimited)
-	 * request callback
-	 * request parameters
+	 * @param request 请求回调 / request callback
+	 * @param requestParams 请求参数 / request parameters
 	 */
 	public static void addRequest(AbstractAI ai2, Player player, int requestId, int senderId, int range,
 			final AI2Request request, Object... requestParams) {
@@ -288,11 +288,11 @@ public class AI2Actions {
 	 * Adds a request/response handler to the player (no range limit).
 	 *
 	 * @param ai2 AI 实例 / AI instance
-	 * 玩家 / player
-	 * request id
-	 * sender id
-	 * request callback
-	 * request parameters
+	 * @param player 玩家 / player
+	 * @param requestId 请求 ID / request id
+	 * @param senderId 发送者 ID / sender id
+	 * @param request 请求回调 / request callback
+	 * @param requestParams 请求参数 / request parameters
 	 */
 	public static void addRequest(AbstractAI ai2, Player player, int requestId, int senderId, final AI2Request request,
 			Object... requestParams) {

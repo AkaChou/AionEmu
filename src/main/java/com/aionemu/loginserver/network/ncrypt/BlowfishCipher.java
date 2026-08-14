@@ -233,7 +233,7 @@ public class BlowfishCipher {
      * Initializes one S-box.
      *
      * @param b 工作缓冲 / work buffer
-     * target S-box
+     * @param sBox 目标 S-box / target S-box
      */
     private void initSBox(byte[] b, int[] sBox) {
         for (int j = 0; j < 256; j += 2) {
@@ -258,8 +258,8 @@ public class BlowfishCipher {
      * Ciphers the given byte-array range with Blowfish.
      *
      * @param data 待加密字节数组 / byte array to be ciphered
-     * offset
-     * length
+     * @param offset 起始偏移 / offset
+     * @param length 加密长度 / length
      */
     public void cipher(byte[] data, int offset, int length) {
         int blockNumber = length >> 3;
@@ -305,8 +305,8 @@ public class BlowfishCipher {
      * Deciphers the given byte-array range with Blowfish.
      *
      * @param data 待解密字节数组 / byte array to be deciphered
-     * offset
-     * length
+     * @param offset 起始偏移 / offset
+     * @param length 解密长度 / length
      */
     public void decipher(byte[] data, int offset, int length) {
         int blocks = length >> 3;
@@ -368,8 +368,8 @@ public class BlowfishCipher {
      * Converts 4 bytes to an integer (little-endian).
      *
      * @param b 字节数组 / byte array
-     * offset
-     * integer value
+     * @param offset 起始偏移 / offset
+     * @return 整数值 / integer value
      */
     private int byteArrayToInteger(byte[] b, int offset) {
         return (b[offset + 3] & 0xFF) << 24 | (b[offset + 2] & 0xFF) << 16 | (b[offset + 1] & 0xFF) << 8
@@ -380,9 +380,9 @@ public class BlowfishCipher {
      * 将整数写入字节数组（小端）。
      * Writes an integer into a byte array (little-endian).
      *
-     * integer value
+     * @param value 整数值 / integer value
      * @param b 目标字节数组 / destination byte array
-     * offset
+     * @param offset 起始偏移 / offset
      */
     private void integerToByteArray(int value, byte[] b, int offset) {
         b[offset] = (byte) (value & 0xFF);

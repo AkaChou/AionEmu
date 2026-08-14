@@ -38,7 +38,6 @@ public class InstanceEngineManager extends AdminCommand {
 	 * Handle start/stop/restart/hot/karma subcommands.
 	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
-	 * Subcommand
 	 */
 	@Override
 	public void execute(final Player player, String... params) {

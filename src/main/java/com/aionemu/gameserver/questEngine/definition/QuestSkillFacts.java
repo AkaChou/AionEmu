@@ -1,6 +1,9 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-/** Immutable facts for a successful player skill-use callback. */
+/**
+ * 玩家技能使用成功回调的不可变事实。
+ * Immutable facts for a successful player skill-use callback.
+ */
 public record QuestSkillFacts(int casterId, int skillId, int targetObjectId,
 		int targetTemplateId, int targetPlayerId, int worldId, int instanceId,
 		boolean castSucceeded) {

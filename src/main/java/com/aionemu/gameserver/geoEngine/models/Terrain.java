@@ -29,7 +29,7 @@ public class Terrain {
 	 * 设置高度图；全同高度时压缩存储。
 	 * Sets the heightmap; compresses to a single value when all samples match.
 	 *
-	 * height samples
+	 * @param heightmap 高度采样 / height samples
 	 * size along X
 	 * size along Y
 	 */
@@ -56,7 +56,7 @@ public class Terrain {
 	 * 设置地形材质图。
 	 * Sets the terrain material map.
 	 *
-	 * material bytes
+	 * @param materials 材质字节 / material bytes
 	 * size along X
 	 * size along Y
 	 */
@@ -119,7 +119,7 @@ public class Terrain {
 	 * 在射线起点附近与地形做碰撞检测。
 	 * Collides the ray against terrain near the ray origin.
 	 *
-	 * ray
+	 * @param ray 射线 / ray
 	 * @param results 碰撞结果收集器 / collision results collector
 	 */
 	public void collideAtOrigin(Ray ray, CollisionResults results) {
@@ -130,7 +130,7 @@ public class Terrain {
 	 * 沿射线 2D 投影路径逐步检测地形碰撞。
 	 * Walks the ray's 2D projection and tests terrain collision stepwise.
 	 *
-	 * ray
+	 * @param ray 射线 / ray
 	 * target X
 	 * target Y
 	 * @param results 碰撞结果（可为 null） / results (may be null)
@@ -164,12 +164,12 @@ public class Terrain {
 	 *
 	 * @param x 世界 X / world X
 	 * @param y 世界 Y / world Y
-	 * ray
+	 * @param ray 射线 / ray
 	 * @param p1or4 复用顶点缓冲 / reusable vertex
 	 * @param p2 复用顶点缓冲 / reusable vertex
 	 * @param p3 复用顶点缓冲 / reusable vertex
 	 * @param results 结果收集器（可为 null） / results (may be null)
-	 * 若 hit 则为 true / true if hit
+	 * @return 若 hit 则为 true / true if hit
 	 */
 	private boolean collideNearXY(float x, float y, Ray ray, Vector3f p1or4, Vector3f p2, Vector3f p3, CollisionResults results) {
 		int xIndexNorth = (int) (x / HEIGHTMAP_UNIT_SIZE);

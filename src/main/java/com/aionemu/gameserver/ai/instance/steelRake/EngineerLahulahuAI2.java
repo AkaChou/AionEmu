@@ -35,6 +35,10 @@ public class EngineerLahulahuAI2 extends AggressiveNpcAI2
 	private Npc npc10;
 	private Npc npc11;
 	
+	/**
+	 * 登记副本内参与战斗的 12 个 NPC。
+	 * Register the 12 NPCs that take part in the fight.
+	 */
 	private void registerNpcs() {
 		WorldMapInstance instance = getPosition().getWorldMapInstance();
 		npc = instance.getNpc(281111);
@@ -57,6 +61,12 @@ public class EngineerLahulahuAI2 extends AggressiveNpcAI2
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
 	
+	/**
+	 * 按血量百分比触发阶段技能：95% 时登记 NPC 并开始循环技能，25% 时切换为 18132。
+	 * Trigger phase skills by HP percentage: at 95% register NPCs and start the skill loop, at 25% switch to skill 18132.
+	 *
+	 * @param hpPercentage 当前血量百分比 / current HP percentage
+	 */
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 95 && !isStart) {
 			registerNpcs();
@@ -86,6 +96,10 @@ public class EngineerLahulahuAI2 extends AggressiveNpcAI2
 		}, 10000);
 	}
 	
+	/**
+	 * 随机从已登记的 NPC 中挑选一组释放技能，10 秒后再次执行。
+	 * Pick a random group of registered NPCs to cast the skill, then repeat after 10 seconds.
+	 */
 	private void useSkills() {
 		if (getPosition().isSpawned() && !isAlreadyDead() && isStart) {
 			switch (Rnd.get(1, 8)) {

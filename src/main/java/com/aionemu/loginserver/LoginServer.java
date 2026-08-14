@@ -105,7 +105,7 @@ public class LoginServer {
      * Start LoginServer with the given startup sequence lifecycle.
      *
      * @param args 启动参数 / Startup arguments
-     * Startup sequence lifecycle
+     * @param startupSequenceLifecycle 启动序列生命周期 / Startup sequence lifecycle
      */
     public void start(final String[] args, LoginStartupSequenceLifecycle startupSequenceLifecycle) {
         startupSequenceLifecycle.start();

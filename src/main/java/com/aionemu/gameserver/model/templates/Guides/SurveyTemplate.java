@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * Survey 模板（静态数据/XML）。
- * XML template.
+ * Survey template (static data/XML).
  *
  * @author xTz
  */

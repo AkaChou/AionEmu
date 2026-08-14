@@ -82,7 +82,7 @@ public class FlarestormAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 18911, 1, getOwner()).useNoAnimationSkill(); //Orb Of Annihilation.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18911, 1, getOwner()).useNoAnimationSkill(); // 湮灭之球 / Orb Of Annihilation.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -114,7 +114,7 @@ public class FlarestormAI2 extends AggressiveNpcAI2
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
-						spawn(281646, x, y, z, (byte) 0); //Calamity.
+						spawn(281646, x, y, z, (byte) 0); // 灾厄 / Calamity.
 					}
 				}
 			}, 3000);

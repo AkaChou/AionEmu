@@ -34,7 +34,7 @@ public class GameNetworkStartupRuntimeBridge {
      * 是否处于 boot-embedded 运行模式。
      * Whether the process is in boot-embedded mode.
      *
-     * @return {@code true} if boot-embedded。
+     * @return 处于 boot-embedded 模式为 {@code true} / {@code true} if boot-embedded
      */
     public boolean isBootEmbedded() {
         return AionRuntimeMode.isBootEmbedded();

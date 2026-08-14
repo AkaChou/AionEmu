@@ -60,7 +60,8 @@ public class CmdTeleportToNamed extends AbstractGMHandler {
 	}
 
 	/**
-	 * @param admin
+	 * @param admin 管理员 / the admin
+	 * @param message 失败信息 / failure message
 	 */
 	public void onFail(Player admin, String message) {
 		PacketSendUtility.sendMessage(admin, "syntax //movetonpc <npc_id|npc name>");

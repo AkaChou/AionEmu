@@ -27,7 +27,7 @@ public class FlyRingObserver extends ActionObserver {
 	/** 上一位置 / Previous position */
 	private Point3D oldPosition;
 	/** 奥德之翼技能模板 / Wings Of Aether skill template */
-	SkillTemplate skillTemplate = DataManager.SKILL_DATA.getSkillTemplate(260); // Wings Of Aether 4.8
+	SkillTemplate skillTemplate = DataManager.SKILL_DATA.getSkillTemplate(260); // 奥德之翼 4.8 / Wings Of Aether 4.8
 
 	/**
 	 * 空构造（字段为 null）。
@@ -41,8 +41,8 @@ public class FlyRingObserver extends ActionObserver {
 	}
 
 	/**
-	 * fly ring
-	 * 玩家 / player
+	 * @param ring 飞行环 / fly ring
+	 * @param player 被观察玩家 / observed player
 	 */
 	public FlyRingObserver(FlyRing ring, Player player) {
 		super(ObserverType.MOVE);
@@ -69,8 +69,8 @@ public class FlyRingObserver extends ActionObserver {
 			}
 		}
 		if (passedThrough) {
-			if (ring.getTemplate().getMap() == 210020000 || // Eltnen.
-					ring.getTemplate().getMap() == 220020000 || // Morheim.
+			if (ring.getTemplate().getMap() == 210020000 || // 埃尔特内 / Eltnen.
+					ring.getTemplate().getMap() == 220020000 || // 莫尔海姆 / Morheim.
 					ring.getTemplate().getMap() == 400010000 || isQuestActive() || isInstanceActive()) {
 				Effect speedUp = new Effect(player, player, skillTemplate, skillTemplate.getLvl(), 0);
 				speedUp.initialize();
@@ -86,7 +86,7 @@ public class FlyRingObserver extends ActionObserver {
 	 * 副本处理器是否激活本飞行环。
 	 * Whether the instance handler activates this fly ring.
 	 *
-	 * whether active
+	 * @return 是否激活 / whether active
 	 */
 	private boolean isInstanceActive() {
 		return ring.getPosition().getWorldMapInstance().getInstanceHandler().onPassFlyingRing(player, ring.getName());

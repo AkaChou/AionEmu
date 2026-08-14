@@ -6,8 +6,20 @@ package com.aionemu.gameserver.model.siege;
  */
 
 public enum SiegeType {
-	/** 要塞 / Fortress. */
-	FORTRESS(0), ARTIFACT(1), BOSSRAID_LIGHT(2), BOSSRAID_DARK(3), INDUN(4), UNDERPASS(5), TOWER(6);
+	/** 要塞。 / Fortress. */
+	FORTRESS(0),
+	/** 神器。 / Artifact. */
+	ARTIFACT(1),
+	/** 光之首领突袭。 / Boss Raid Light. */
+	BOSSRAID_LIGHT(2),
+	/** 暗之首领突袭。 / Boss Raid Dark. */
+	BOSSRAID_DARK(3),
+	/** 副本。 / Indun. */
+	INDUN(4),
+	/** 地下通道。 / Underpass. */
+	UNDERPASS(5),
+	/** 塔。 / Tower. */
+	TOWER(6);
 
 	private int typeId;
 

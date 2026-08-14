@@ -30,7 +30,6 @@ public class DelSkill extends AdminCommand {
 	 * 按玩家名或当前目标删除指定技能或全部非烙印技能。
 	 * Removes a skill or all non-stigma skills by player name or current target.
 	 *
-	 * admin
 	 * @param params 玩家名与技能 ID/all，或目标下的技能 ID/all / player name and skillId/all, or skillId/all on target
 	 */
 	@Override
@@ -106,9 +105,6 @@ public class DelSkill extends AdminCommand {
 	 * 校验技能是否存在且非烙印技能。
 	 * Validates that the skill exists and is not a stigma skill.
 	 *
-	 * admin
-	 * target player
-	 * skill id
 	 *
 	 * @return 可删除则为 true / true if removable
 	 */
@@ -128,8 +124,6 @@ public class DelSkill extends AdminCommand {
 	 * 删除单个技能或全部非烙印技能。
 	 * Removes one skill or all non-stigma skills.
 	 *
-	 * admin
-	 * target player
 	 * @param skillId 技能 ID（0 表示全部） / skill id (0 means all)
 	 * @param playerSkillList 技能列表（删除全部时使用） / skill list (used when removing all)
 	 */
@@ -154,8 +148,6 @@ public class DelSkill extends AdminCommand {
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
 	 *
-	 * admin
-	 * error message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

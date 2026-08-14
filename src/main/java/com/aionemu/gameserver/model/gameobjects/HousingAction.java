@@ -6,9 +6,9 @@ package com.aionemu.gameserver.model.gameobjects;
  */
 
 public enum HousingAction {
-	/** 未知 / Unk. */
+	/** 未知 / Unknown. */
 	UNK(-1), ENTER_DECORATION(1), EXIT_DECORATION(2), ADD_ITEM(3), DELETE_ITEM(4), SPAWN_OBJECT(5), MOVE_OBJECT(6),
-	/** 消失对象 / Despawn Object*/
+	/** 消失对象 / Despawn Object. */
 	DESPAWN_OBJECT(7), ENTER_RENOVATION(14), EXIT_RENOVATION(15), CHANGE_APPEARANCE(16);
 
 	private int id;
@@ -22,7 +22,7 @@ public enum HousingAction {
 		return id;
 	}
 
-	/** 按 ID 返回 action type / Returns the action type by id */
+	/** 按 ID 返回动作类型 / Returns the action type by id */
 	public static HousingAction getActionTypeById(int id) {
 		for (HousingAction actionType : values()) {
 			if (actionType.getTypeId() == id) {

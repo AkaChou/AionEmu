@@ -24,7 +24,7 @@ public class LunaReward {
 		return itemId;
 	}
 
-	/** 返回 lount / Returns the lount */
+	/** 返回 l_count 计数 / Returns the l_count */
 	public int getLount() {
 		return lCount;
 	}

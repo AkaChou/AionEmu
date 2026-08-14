@@ -28,7 +28,6 @@ public class Motion {
 	 * 获取动作名称。
 	 * Gets motion name.
 	 *
-	 * name
 	 */
 	public String getName() {
 		return this.name;
@@ -38,7 +37,6 @@ public class Motion {
 	 * 获取播放速度（百分比）。
 	 * Gets playback speed (percent).
 	 *
-	 * speed
 	 */
 	public int getSpeed() {
 		return this.speed;
@@ -48,7 +46,6 @@ public class Motion {
 	 * 是否瞬时技能（无前摇）。
 	 * Whether this is an instant skill (no cast wind-up).
 	 *
-	 * whether instant
 	 */
 	public boolean getInstantSkill() {
 		return this.instantSkill;

@@ -308,8 +308,8 @@ public class ServerPacketsOpcodes {
 	 * Returns the opcode for the given server packet class.
 	 *
 	 * @param packetClass 服务端包类 / server packet class
-	 * opcode
-	 * if not registered
+	 * @return 操作码 / opcode
+	 * @throws IllegalArgumentException 未注册时 / if not registered
 	 */
 	static int getOpcode(Class<? extends AionServerPacket> packetClass) {
 		Integer opcode = opcodes.get(packetClass);
@@ -324,8 +324,8 @@ public class ServerPacketsOpcodes {
 	 * Registers a server packet opcode; skips if opcode &lt; 0, throws on duplicate.
 	 *
 	 * @param packetClass 服务端包类 / server packet class
-	 * opcode
-	 * used opcode set
+	 * @param opcode 操作码 / opcode
+	 * @param idSet 已使用操作码集合 / used opcode set
 	 */
 	private static void addPacketOpcode(Class<? extends AionServerPacket> packetClass, int opcode, Set<Integer> idSet) {
 		if (opcode < 0) {

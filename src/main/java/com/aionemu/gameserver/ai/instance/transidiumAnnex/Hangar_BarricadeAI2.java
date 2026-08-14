@@ -18,7 +18,7 @@ public class Hangar_BarricadeAI2 extends NpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21515, 1, getOwner()).useNoAnimationSkill(); //Unyielding Aether.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21515, 1, getOwner()).useNoAnimationSkill(); // 不屈奥德 / Unyielding Aether
 		GameEngineServices.skillEngine().getSkill(getOwner(), 22783, 1, getOwner()).useNoAnimationSkill();
 	}
 	

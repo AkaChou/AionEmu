@@ -618,9 +618,17 @@ public class CustomConfig {
 	@Property(key = "gameserver.protector.conqueror.2nd.rank.kills", defaultValue = "10")
 	public static int PROTECTOR_CONQUEROR_2ND_RANK_KILLS;
 
+	/**
+	 * 神石触发率倍率。
+	 * Godstone activation rate multiplier.
+	 */
 	@Property(key = "gameserver.rates.godstone.activation.rate", defaultValue = "1.0")
 	public static float GODSTONE_ACTIVATION_RATE;
 
+	/**
+	 * 神石判定冷却时间（毫秒）。
+	 * Godstone evaluation cooldown in milliseconds.
+	 */
 	@Property(key = "gameserver.rates.godstone.evaluation.cooldown_millis", defaultValue = "750")
 	public static int GODSTONE_EVALUATION_COOLDOWN_MILLIS;
 

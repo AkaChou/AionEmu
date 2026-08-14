@@ -29,7 +29,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/** Strict XML front end for the canonical definition IR. */
+/**
+ * 规范定义 IR 的严格 XML 前端。
+ * Strict XML front end for the canonical definition IR.
+ */
 public final class QuestDefinitionXmlCompiler {
 	private QuestDefinitionXmlCompiler() {
 	}
@@ -69,7 +72,10 @@ public final class QuestDefinitionXmlCompiler {
 		return QuestDefinitionCompiler.compile(parse(input, schema));
 	}
 
-	/** Parses and validates XML without requiring executable nodes or transitions. */
+	/**
+	 * 解析并校验 XML，不要求存在可执行节点或转换。
+	 * Parses and validates XML without requiring executable nodes or transitions.
+	 */
 	public static QuestDefinition parse(InputStream input) {
 		return parse(input, classpathSchema());
 	}
@@ -110,9 +116,15 @@ public final class QuestDefinitionXmlCompiler {
 		}
 	}
 
-	/** 按需初始化 classpath XSD，使外部数据加载不依赖 JAR 内资源。 */
+	/**
+	 * 按需初始化 classpath XSD，使外部数据加载不依赖 JAR 内资源。
+	 * Initializes the classpath XSD lazily so external data loading does not depend on JAR-internal resources.
+	 */
 	private static final class ClasspathSchemaHolder {
-		/** Schema 线程安全，可供并行任务编译共享。 */
+		/**
+		 * Schema 线程安全，可供并行任务编译共享。
+		 * The Schema is thread-safe and shared by parallel quest compilations.
+		 */
 		private static final Schema SCHEMA = buildClasspathSchema();
 	}
 
@@ -565,7 +577,10 @@ public final class QuestDefinitionXmlCompiler {
 		}
 	}
 
-	/** Shared strict dialog-id list/range parser used by talk-to-npc.dialog-ids and npc-dialog.dialog-ids. */
+	/**
+	 * talk-to-npc.dialog-ids 与 npc-dialog.dialog-ids 共用的严格对话 id 列表/区间解析器。
+	 * Shared strict dialog-id list/range parser used by talk-to-npc.dialog-ids and npc-dialog.dialog-ids.
+	 */
 	static List<Integer> dialogIds(Element element, String attributeName) {
 		String raw = attribute(element, attributeName);
 		List<Integer> dialogIds = new ArrayList<>();
@@ -675,7 +690,10 @@ public final class QuestDefinitionXmlCompiler {
 		return events.getFirst();
 	}
 
-	/** Single {@code npc-id} or space-separated {@code npc-ids} both lower to a kill event. */
+	/**
+	 * 单个 {@code npc-id} 或空格分隔的 {@code npc-ids} 都降级为击杀事件。
+	 * Single {@code npc-id} or space-separated {@code npc-ids} both lower to a kill event.
+	 */
 	private static QuestEvent parseKillNpc(Element element) {
 		if (element.hasAttribute("npc-id") && element.hasAttribute("npc-ids")) {
 			return fail("AMBIGUOUS_KILL_NPC_EVENT", "declare npc-id or npc-ids, not both");

@@ -43,7 +43,7 @@ public class BaseData {
 	 * 返回已加载的据点数量。
 	 * Returns the number of loaded bases.
 	 *
-	 * location count
+	 * @return 已加载的基地数量 / Returns the number of loaded bases.
 	 */
 	public int size() {
 		return base.size();

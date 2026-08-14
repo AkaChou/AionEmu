@@ -20,6 +20,10 @@ import java.util.List;
 public class Goldenspark_ApparatusAI2 extends ActionItemNpcAI2
 {
 	@Override
+	/**
+	 * 在 Secret Munitions Factory 副本中使用装置后，清除副本内的所有 Golden Living Bomb。
+	 * After using the apparatus in the Secret Munitions Factory instance, removes all golden living bombs in the instance.
+	 */
 	protected void handleUseItemFinish(Player player) {
 		WorldPosition worldPosition = player.getPosition();
 		if (worldPosition.isInstanceMap()) {

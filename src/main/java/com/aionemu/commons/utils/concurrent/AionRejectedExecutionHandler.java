@@ -17,7 +17,7 @@ public final class AionRejectedExecutionHandler implements RejectedExecutionHand
      * Handle a rejected task.
      *
      * @param r        被拒绝任务 / Rejected task
-     * Thread pool
+     * @param executor 线程池 / Thread pool
      */
     @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {

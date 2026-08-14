@@ -15,7 +15,7 @@ public class Giant_Razorback_FrillneckAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(242963, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Razorback Frillneck Runt.
+		spawn(242963, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 年幼 Razorback Frillneck / Razorback Frillneck Runt.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

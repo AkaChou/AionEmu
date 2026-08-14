@@ -44,7 +44,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	 * 处理受到攻击事件。
 	 * Handle being attacked.
 	 *
-	 * creature
+	 * @param creature 攻击者 / attacker
 	 */
 	@Override
 	protected void handleAttack(Creature creature) {
@@ -55,7 +55,8 @@ public class GeneralNpcAI2 extends NpcAI2
 	 * 处理盟友需要支援事件。
 	 * Handle ally needs-support.
 	 *
-	 * creature
+	 * @param creature 盟友 / ally
+	 * @return 是否已处理 / whether handled
 	 */
 	@Override
 	protected boolean handleCreatureNeedsSupport(Creature creature) {
@@ -66,7 +67,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	@Override
 	protected void handleDialogStart(Player player) {
@@ -77,7 +78,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	 * 玩家结束与本 NPC 对话。
 	 * Player finishes dialog with this NPC.
 	 *
-	 * creature
+	 * @param player 玩家 / player
 	 */
 	@Override
 	protected void handleDialogFinish(Player creature) {
@@ -151,7 +152,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	 * 处理目标变更事件。
 	 * Handle target changed.
 	 *
-	 * creature
+	 * @param creature 新目标 / new target
 	 */
 	@Override
 	protected void handleTargetChanged(Creature creature) {
@@ -163,7 +164,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	 * 处理看不见生物事件。
 	 * Handle creature-not-see.
 	 *
-	 * creature
+	 * @param creature 离开视野的生物 / creature that left sight
 	 */
 	@Override
 	protected void handleCreatureNotSee(Creature creature) {
@@ -196,7 +197,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	 * 处理生物移动事件。
 	 * Handle creature-moved.
 	 *
-	 * creature
+	 * @param creature 移动的生物 / moved creature
 	 */
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
@@ -216,7 +217,8 @@ public class GeneralNpcAI2 extends NpcAI2
 	 * 判断是否可处理指定 AI 事件类型。
 	 * Whether the given AI event type can be handled.
 	 *
-	 * AI event type
+	 * @param eventType AI 事件类型 / AI event type
+	 * @return 是否可处理 / whether it can be handled
 	 */
 	@Override
 	protected boolean canHandleEvent(AIEventType eventType) {

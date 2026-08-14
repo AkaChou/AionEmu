@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Godstone 信息模板（静态数据/XML）。
- * XML template.
+ * 神石信息模板：触发技能与概率、破损概率。
+ * Godstone info template: trigger skill and probability, break probability.
  */
 
 @XmlAccessorType(XmlAccessType.NONE)

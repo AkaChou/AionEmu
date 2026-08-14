@@ -37,7 +37,7 @@ public class NpcAI2 extends AITemplate {
 	 * 获取 NPC 所有者。
 	 * Returns the NPC owner.
 	 *
-	 * NPC owner
+	 * @return NPC 所有者 / NPC owner
 	 */
 	@Override
 	public Npc getOwner() {
@@ -48,7 +48,7 @@ public class NpcAI2 extends AITemplate {
 	 * 获取 NPC 模板。
 	 * Returns the NPC object template.
 	 *
-	 * NPC template
+	 * @return NPC 模板 / NPC template
 	 */
 	protected NpcTemplate getObjectTemplate() {
 		return getOwner().getObjectTemplate();
@@ -58,7 +58,7 @@ public class NpcAI2 extends AITemplate {
 	 * 获取刷新模板。
 	 * Returns the spawn template.
 	 *
-	 * spawn template
+	 * @return 刷新模板 / spawn template
 	 */
 	protected SpawnTemplate getSpawnTemplate() {
 		return getOwner().getSpawn();
@@ -68,7 +68,7 @@ public class NpcAI2 extends AITemplate {
 	 * 获取生命状态。
 	 * Returns the life stats.
 	 *
-	 * life stats
+	 * @return 生命状态 / life stats
 	 */
 	protected NpcLifeStats getLifeStats() {
 		return getOwner().getLifeStats();
@@ -88,7 +88,7 @@ public class NpcAI2 extends AITemplate {
 	 * 获取部落。
 	 * Returns the tribe.
 	 *
-	 * tribe
+	 * @return 部落 / tribe
 	 */
 	protected TribeClass getTribe() {
 		return getOwner().getTribe();
@@ -108,7 +108,7 @@ public class NpcAI2 extends AITemplate {
 	 * 获取已知对象列表。
 	 * Returns the known list.
 	 *
-	 * known list
+	 * @return 已知对象列表 / known list
 	 */
 	protected KnownList getKnownList() {
 		return getOwner().getKnownList();
@@ -118,7 +118,7 @@ public class NpcAI2 extends AITemplate {
 	 * 获取仇恨列表。
 	 * Returns the aggro list.
 	 *
-	 * aggro list
+	 * @return 仇恨列表 / aggro list
 	 */
 	protected AggroList getAggroList() {
 		return getOwner().getAggroList();
@@ -128,7 +128,7 @@ public class NpcAI2 extends AITemplate {
 	 * 获取技能列表。
 	 * Returns the NPC skill list.
 	 *
-	 * skill list
+	 * @return 技能列表 / skill list
 	 */
 	protected NpcSkillList getSkillList() {
 		return getOwner().getSkillList();
@@ -138,7 +138,7 @@ public class NpcAI2 extends AITemplate {
 	 * 获取创建者对象。
 	 * Returns the creator object.
 	 *
-	 * creator
+	 * @return 创建者 / creator
 	 */
 	protected VisibleObject getCreator() {
 		return getOwner().getCreator();
@@ -158,7 +158,7 @@ public class NpcAI2 extends AITemplate {
 	 * 获取 NPC 模板 ID。
 	 * Returns the NPC template id.
 	 *
-	 * NPC id
+	 * @return NPC 模板 ID / NPC id
 	 */
 	protected int getNpcId() {
 		return getOwner().getNpcId();
@@ -168,7 +168,7 @@ public class NpcAI2 extends AITemplate {
 	 * 获取创建者 ID。
 	 * Returns the creator id.
 	 *
-	 * creator id
+	 * @return 创建者 ID / creator id
 	 */
 	protected int getCreatorId() {
 		return getOwner().getCreatorId();
@@ -178,9 +178,8 @@ public class NpcAI2 extends AITemplate {
 	 * 判断与指定对象是否在三维距离范围内。
 	 * Returns whether the given object is within 3D range.
 	 *
-	 * target object
-	 * range
-	 *
+	 * @param object 目标对象 / target object
+	 * @param range 距离范围 / range
 	 * @return 是否在范围内 / whether in range
 	 */
 	protected boolean isInRange(VisibleObject object, int range) {
@@ -260,7 +259,7 @@ public class NpcAI2 extends AITemplate {
 	 * 处理目标变更事件（可触发喊话）。
 	 * Handles target-changed (may trigger shout).
 	 *
-	 * new target
+	 * @param creature 新目标 / new target
 	 */
 	@Override
 	protected void handleTargetChanged(Creature creature) {
@@ -275,9 +274,7 @@ public class NpcAI2 extends AITemplate {
 	 * 按问题返回 NPC 特有投票答案。
 	 * Returns NPC-specific poll answers for the given question.
 	 *
-	 * AI question
-	 *
-	 * @param question
+	 * @param question 问题 / question
 	 * @return 答案，未知问题返回 null / answer, or null if unknown
 	 */
 	@Override

@@ -22,7 +22,6 @@ public class Invul extends AdminCommand {
 	 * Toggle the invoker's invulnerability.
 	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
-	 * Unused
 	 */
 	@Override
 	public void execute(Player player, String... params) {

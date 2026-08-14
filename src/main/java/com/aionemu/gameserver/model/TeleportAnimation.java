@@ -6,10 +6,20 @@ package com.aionemu.gameserver.model;
  */
 
 public enum TeleportAnimation {
-	/** No Animation / No Animation */
-	NO_ANIMATION(0, 0), BEAM_ANIMATION(1, 3), JUMP_ANIMATION(3, 10), JUMP_ANIMATION_2(4, 10), FIRE_ANIMATION(4, 0x0B), // 5.0
-	/** Jump Animation 3 / Jump Animation 3 */
-	JUMP_ANIMATION_3(8, 3), MAGE_ANIMATION(8, 10);
+	/** 无动画 / No Animation */
+	NO_ANIMATION(0, 0),
+	/** 光束动画 / Beam Animation */
+	BEAM_ANIMATION(1, 3),
+	/** 跳跃动画 / Jump Animation */
+	JUMP_ANIMATION(3, 10),
+	/** 跳跃动画 2 / Jump Animation 2 */
+	JUMP_ANIMATION_2(4, 10),
+	/** 火焰动画 / Fire Animation */
+	FIRE_ANIMATION(4, 0x0B), // 5.0
+	/** 跳跃动画 3 / Jump Animation 3 */
+	JUMP_ANIMATION_3(8, 3),
+	/** 法师动画 / Mage Animation */
+	MAGE_ANIMATION(8, 10);
 
 	private int startAnimation;
 	private int endAnimation;

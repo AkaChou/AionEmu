@@ -14,6 +14,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * 从 XML 加载 NPC 寻路行为定义（最大追击时间、寻路失败反应、返回方式等）。
+ * Loads NPC path-finding behavior definitions (max chase time, pathfind-fail reaction, return mode, etc.) from XML.
+ */
 final class NpcPathBehaviorDefinitionLoader {
 
 	static NpcPathBehaviorData load(File file) {

@@ -1,6 +1,9 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-/** Static bonus metadata copied from a legacy quest template. */
+/**
+ * 从旧版任务模板复制的静态奖励元数据。
+ * Static bonus metadata copied from a legacy quest template.
+ */
 public record QuestBonus(String type, Integer level, Integer skill) {
 	public QuestBonus {
 		if (type == null || type.isBlank()) {

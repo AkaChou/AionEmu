@@ -2,7 +2,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import java.util.Objects;
 
-/** Immutable structured audit record for a failed or degraded typed-owner invocation. */
+/** 失败或降级的类型化任务拥有者调用的不可变结构化审计记录。 / Immutable structured audit record for a failed or degraded typed-owner invocation. */
 public record QuestAuditEvent(int questId, String eventType, QuestDispatchContract contract,
 	QuestRouteResult result, String sourceNode, String targetNode, int npcId, int dialogId,
 	QuestFailureStage failureStage, boolean committed, Throwable failure) {

@@ -9,7 +9,7 @@ import com.aionemu.gameserver.world.WorldMapInstance;
  */
 
 public interface AutoInstanceHandler {
-	/** 初始化 / initsialize. */
+	/** 初始化 / Initialize. */
 	public abstract void initsialize(int instanceMaskId);
 
 	/** 副本创建 / On Instance Create*/

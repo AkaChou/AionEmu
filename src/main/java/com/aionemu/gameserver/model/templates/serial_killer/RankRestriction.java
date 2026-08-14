@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * 军阶 Restriction 模板（静态数据/XML）。
+ * 军阶限制模板（静态数据/XML）。
  * XML template.
  */
 
@@ -23,7 +23,7 @@ public class RankRestriction {
 	@XmlAttribute(name = "rank_num", required = true)
 	protected int rankNum;
 
-	/** 返回 penalty attr / Returns the penalty attr */
+	/** 返回惩罚属性列表 / Returns the penalty attr */
 	public List<RankPenaltyAttr> getPenaltyAttr() {
 		if (penaltyAttr == null) {
 			penaltyAttr = new ArrayList<RankPenaltyAttr>();
@@ -31,12 +31,12 @@ public class RankRestriction {
 		return this.penaltyAttr;
 	}
 
-	/** 返回 rank num / Returns the rank num */
+	/** 返回军阶编号 / Returns the rank num */
 	public int getRankNum() {
 		return rankNum;
 	}
 
-	/** 设置 rank num / Sets the rank num */
+	/** 设置军阶编号 / Sets the rank num */
 	public void setRankNum(int value) {
 		this.rankNum = value;
 	}

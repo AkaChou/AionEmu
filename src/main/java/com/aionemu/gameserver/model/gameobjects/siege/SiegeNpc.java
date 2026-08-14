@@ -19,10 +19,13 @@ public class SiegeNpc extends Npc {
 	private SiegeRace siegeRace;
 
 	/**
-	 * @param objId
-	 * @param controller
-	 * @param spawnTemplate
-	 * @param objectTemplate SiegeNpc constructor
+	 * 创建要塞 NPC。
+	 * Creates a siege NPC.
+	 *
+	 * @param objId 对象 ID / object id
+	 * @param controller NPC 控制器 / NPC controller
+	 * @param spawnTemplate 要塞刷新点模板 / siege spawn template
+	 * @param objectTemplate NPC 模板 / NPC template
 	 */
 	public SiegeNpc(int objId, NpcController controller, SiegeSpawnTemplate spawnTemplate, NpcTemplate objectTemplate) {
 		super(objId, controller, spawnTemplate, objectTemplate);
@@ -46,7 +49,7 @@ public class SiegeNpc extends Npc {
 		return (SiegeSpawnTemplate) super.getSpawn();
 	}
 
-	/** 是否会主动攻击 / Whether aggressive to */
+	/** 判断是否对指定生物主动攻击（敌对阵营要塞 NPC 视为主动）。 / Whether aggressive to the given creature (enemy-race siege NPCs count as aggressive). */
 	public boolean isAggressiveTo(Creature creature) {
 		if ((creature instanceof SiegeNpc) && getSiegeRace() != ((SiegeNpc) creature).getSiegeRace()) {
 			return true;

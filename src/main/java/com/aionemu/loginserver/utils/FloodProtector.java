@@ -27,7 +27,7 @@ public class FloodProtector {
      * 获取单例实例（已弃用，请走 boot 注入）。
      * Returns the singleton instance (deprecated; prefer boot injection).
      *
-     * singleton instance
+     * @return 单例实例 / singleton instance
      */
     @Deprecated(since = "boot-migration")
     public static final FloodProtector getInstance() {
@@ -39,7 +39,7 @@ public class FloodProtector {
      * Legacy IP flood check: bans the IP via BannedIp service when reconnects are too fast (deprecated).
      *
      * @param ip 客户端 IP / client IP
-     * @return 是否已被 / 应被封禁 / whether the IP is or should be banned
+     * @return 该 IP 是否已被或应被封禁 / whether the IP is or should be banned
      */
     @Deprecated
     public boolean addIp_nn(String ip) {
@@ -63,7 +63,7 @@ public class FloodProtector {
      * Returns whether the IP reconnects too fast; if so, places it into an in-memory temporary ban.
      *
      * @param ip 客户端 IP / client IP
-     * @return true 表示过快 / 已临时封禁 / true if too fast or currently banned
+     * @return 是否重连过快或已临时封禁 / true if too fast or currently banned
      */
     public boolean tooFast(String ip) {
         String[] exclIps = Config.EXCLUDED_IP.split(",");

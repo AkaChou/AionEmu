@@ -69,7 +69,7 @@ public class ItemEnchantData {
 	 * 返回强化与授权模板的总数量。
 	 * Returns the total number of enchant and authorize templates.
 	 *
-	 * total template count
+	 * @return 模板总数 / total template count
 	 */
 	public int size() {
 		return enchants.size() + authorizes.size();

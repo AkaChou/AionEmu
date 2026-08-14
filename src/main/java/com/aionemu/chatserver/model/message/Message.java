@@ -41,9 +41,9 @@ public class Message {
      * 创建聊天消息。
      * Creates a chat message.
      *
-     * channel
+     * @param channel 消息所属频道 / message channel
      * @param text 文本字节 / text bytes
-     * sender
+     * @param sender 消息发送者 / message sender
      */
     public Message(Channel channel, byte[] text, ChatClient sender) {
         this.channel = channel;
@@ -69,7 +69,7 @@ public class Message {
      * 返回文本字节长度。
      * Returns the text byte length.
      *
-     * byte length
+     * @return 文本字节长度 / Returns the text byte length.
      */
     public int size() {
         return text.length;

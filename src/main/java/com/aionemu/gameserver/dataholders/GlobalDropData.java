@@ -43,7 +43,7 @@ public class GlobalDropData {
 	 * 返回全局掉落规则数量。
 	 * Returns the number of global drop rules.
 	 *
-	 * rule count
+	 * @return 全局掉落规则数量 / Returns the number of global drop rules.
 	 */
 	public int size() {
 		return globalDropRules.size();

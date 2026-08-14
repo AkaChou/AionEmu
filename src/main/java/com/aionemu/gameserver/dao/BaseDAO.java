@@ -14,8 +14,8 @@ public abstract class BaseDAO implements DAO {
 	 * 加载所有据点位置。
 	 * Loads all base locations.
 	 *
-	 * target map
-	 * whether successful
+	 * @param locations 目标映射 / target map
+	 * @return 是否成功 / whether successful
 	 */
 	public abstract boolean loadBaseLocations(Map<Integer, BaseLocation> locations);
 
@@ -23,8 +23,8 @@ public abstract class BaseDAO implements DAO {
 	 * 更新据点位置。
 	 * Updates a base location.
 	 *
-	 * base location
-	 * whether successful
+	 * @param location 基地位置 / base location
+	 * @return 是否成功 / whether successful
 	 */
 	public abstract boolean updateBaseLocation(BaseLocation location);
 
@@ -32,7 +32,7 @@ public abstract class BaseDAO implements DAO {
 	 * 更新据点位置（委托给 {@link #updateBaseLocation}）。
 	 * Updates a base location (delegates to {@link #updateBaseLocation}).
 	 *
-	 * base location
+	 * @param location 基地位置 / base location
 	 */
 	public void updateLocation(final BaseLocation location) {
 		updateBaseLocation(location);
@@ -42,7 +42,7 @@ public abstract class BaseDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
 	 *
-	 * class name
+	 * @return 类名 / class name
 	 */
 	@Override
 	public String getClassName() {

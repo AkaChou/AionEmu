@@ -84,9 +84,7 @@ public class InstanceEngine implements GameEngine {
 	 * 按世界地图 ID 创建新的副本处理器；未注册时返回默认处理器。
 	 * Create a new instance handler for the given world-map id; returns the dummy handler if none is registered.
 	 *
-	 * world-map id
-	 *
-	 * @param worldId
+	 * @param worldId 世界地图 ID / world-map id
 	 * @return 处理器实例 / handler instance
 	 */
 	public InstanceHandler getNewInstanceHandler(int worldId) {
@@ -109,7 +107,7 @@ public class InstanceEngine implements GameEngine {
 	 * 将带 {@link InstanceID} 注解的处理器类注册到注册表。
 	 * Register a handler class annotated with {@link InstanceID} into the registry.
 	 *
-	 * handler class
+	 * @param handler 处理器类 / handler class
 	 */
 	final void addInstanceHandlerClass(Class<? extends InstanceHandler> handler) {
 		InstanceID idAnnotation = handler.getAnnotation(InstanceID.class);
@@ -141,7 +139,7 @@ public class InstanceEngine implements GameEngine {
 	 * 返回副本引擎单例。
 	 * Return the instance-engine singleton.
 	 *
-	 * engine instance
+	 * @return 引擎实例 / engine instance
 	 */
 	public static final InstanceEngine getInstance() {
 		ObjectProvider<InstanceEngine> provider = instanceProvider;
@@ -155,7 +153,7 @@ public class InstanceEngine implements GameEngine {
 	 * 设置 Spring 实例提供者。
 	 * Set the Spring instance provider.
 	 *
-	 * Spring provider
+	 * @param provider Spring 提供者 / Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<InstanceEngine> provider) {
 		instanceProvider = provider;

@@ -68,8 +68,8 @@ public class VortexSchedule {
 	@XmlRootElement(name = "vortex")
 	public static class Vortex {
 		/**
-	 * 漩涡 ID / Vortex ID
-	 */
+		 * 漩涡 ID / Vortex ID
+		 */
 		@XmlAttribute(required = true)
 		private int id;
 

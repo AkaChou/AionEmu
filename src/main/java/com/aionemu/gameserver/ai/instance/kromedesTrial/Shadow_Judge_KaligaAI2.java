@@ -130,7 +130,7 @@ public class Shadow_Judge_KaligaAI2 extends AggressiveNpcAI2
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
-						spawn(217111, x, y, z, (byte) 0); //Kaliga's Bloodwing.
+						spawn(217111, x, y, z, (byte) 0); // 卡利加的蝠翼 / Kaliga's Bloodwing.
 					}
 				}
 			}, 3000);
@@ -171,7 +171,7 @@ public class Shadow_Judge_KaligaAI2 extends AggressiveNpcAI2
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
 		if (p != null) {
-			deleteNpcs(p.getWorldMapInstance().getNpcs(217111)); //Kaliga's Bloodwing.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(217111)); // 卡利加的蝠翼 / Kaliga's Bloodwing.
 		}
 		cancelPhaseTask();
 		super.handleDied();

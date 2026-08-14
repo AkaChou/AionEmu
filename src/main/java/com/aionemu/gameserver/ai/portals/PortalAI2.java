@@ -70,7 +70,7 @@ public class PortalAI2 extends ActionItemNpcAI2
 			        }
 				});
 			}
-		}, 600000); //10 Minutes.
+		}, 600000); // 10 分钟。 / 10 minutes.
 	}
 	
 	@Override

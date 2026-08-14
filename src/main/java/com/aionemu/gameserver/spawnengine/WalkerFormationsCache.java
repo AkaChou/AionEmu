@@ -28,9 +28,8 @@ class WalkerFormationsCache {
 	 * 获取指定世界与实例的巡逻编队容器；不存在时自动创建。
 	 * Returns the instance walker formations for the world, creating if absent.
 	 *
-	 * 世界 ID / world id
-	 * instance id
-	 *
+	 * @param worldId 世界 ID / world id
+	 * @param instanceId 实例 ID / instance id
 	 * @return 实例巡逻编队 / instance walker formations
 	 */
 	protected static InstanceWalkerFormations getInstanceFormations(int worldId, int instanceId) {
@@ -46,8 +45,8 @@ class WalkerFormationsCache {
 	 * 实例销毁时清理对应巡逻编队缓存。
 	 * Clears walker formation cache when an instance is destroyed.
 	 *
-	 * 世界 ID / world id
-	 * instance id
+	 * @param worldId 世界 ID / world id
+	 * @param instanceId 实例 ID / instance id
 	 */
 	protected static void onInstanceDestroy(int worldId, int instanceId) {
 		getInstanceFormations(worldId, instanceId).onInstanceDestroy();

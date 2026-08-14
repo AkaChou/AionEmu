@@ -329,7 +329,7 @@ public class XmlDataLoader {
 	 * 单独加载物品模板数据（与主静态数据并行路径）。
 	 * Loads item template data on a path parallel to main static data.
 	 *
-	 * item data
+	 * @return 物品数据 / item data
 	 */
 	public ItemData loadItemData() {
 		return loadItemData(Config.cacheFile(ITEM_CACHE_XML_FILE), Config.dataFile(ITEM_DATA_DIR));
@@ -339,9 +339,9 @@ public class XmlDataLoader {
 	 * 指定缓存与源目录加载物品数据。
 	 * Loads item data using the given cache file and source directory.
 	 *
-	 * cache file
+	 * @param cachedXml 缓存文件 / cache file
 	 * item XML directory
-	 * item data
+	 * @param itemDataDir 物品数据 / item data
 	 */
 	ItemData loadItemData(File cachedXml, File itemDataDir) {
 		makeCacheDirectory(cachedXml.getParentFile());
@@ -388,9 +388,9 @@ public class XmlDataLoader {
 	 * Creates a StaticData Unmarshaller wired with progress reporting.
 	 *
 	 * @param progressReporter 进度报告器 / progress reporter
-	 * total section count
+	 * @param totalSections 分段总数 / total section count
 	 * @param sectionEntryCounts 各分区条目数 / per-section entry counts
-	 * configured unmarshaller
+	 * @return 配置的反序列化器 / configured unmarshaller
 	 */
 	Unmarshaller createStaticDataUnmarshaller(StaticDataProgressReporter progressReporter, int totalSections, Map<String, Integer> sectionEntryCounts)
 			throws Exception {
@@ -425,8 +425,8 @@ public class XmlDataLoader {
 	 * 异步校验已重建的静态数据缓存（XSD）。
 	 * Asynchronously validates a rebuilt static-data cache against the XSD.
 	 *
-	 * cache file
-	 * validation future
+	 * @param cachedXml 缓存文件 / cache file
+	 * @return 校验 Future / validation future
 	 */
 	Future<?> validateCacheAsync(File cachedXml) {
 		return submitValidationTask(() -> validateCache(cachedXml));
@@ -437,7 +437,7 @@ public class XmlDataLoader {
 	 * Submits a validation task to the long-running thread pool.
 	 *
 	 * @param task 校验任务 / validation runnable
-	 * task future
+	 * @return 任务 Future / task future
 	 */
 	Future<?> submitValidationTask(Runnable task) {
 		return GameThreadPoolServices.threadPoolManager().submitLongRunning(task);
@@ -656,7 +656,7 @@ public class XmlDataLoader {
 	 * 创建并返回描述静态数据 XML 的 {@link Schema}。
 	 * Creates and returns the {@link Schema} for static-data XML files.
 	 *
-	 * schema object
+	 * @return 模式对象 / schema object
 	 */
 	private Schema getSchema() {
 		Schema schema = null;

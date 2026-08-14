@@ -30,9 +30,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("wealhtheow_keep_boss")
 public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 {
-	private Future<?> phaseTask;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
+	private Future<?> phaseTask; // 阶段任务句柄 / phase task handle
+	private AtomicBoolean isAggred = new AtomicBoolean(false); // 是否已受击 / whether it was attacked
+	private AtomicBoolean isStartedEvent = new AtomicBoolean(false); // 阶段事件是否已启动 / whether the phase event started
 	
 	@Override
     protected void handleSpawned() {
@@ -54,6 +54,10 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
 	
+	/**
+	 * 按血量百分比阈值（95/75/55/35/15）触发阶段事件。
+	 * Triggers phase events at HP percentage thresholds (95/75/55/35/15).
+	 */
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 95) {
 			if (isStartedEvent.compareAndSet(false, true)) {
@@ -78,6 +82,10 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 		}
 	}
 	
+	/**
+	 * 每 15 秒在存活的玩家附近生成爆炸牺牲品；玩家不足 6 人时每人一个，否则随机 6 至人数上限个。
+	 * Every 15s spawns explosive sacrifices near living players: one per player when fewer than 6, otherwise a random 6 to size count.
+	 */
 	private void startPhaseTask() {
 		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -107,6 +115,10 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 		}, 3000, 15000);
 	}
 	
+	/**
+	 * 在指定玩家位置生成爆炸牺牲品（延迟 3 秒，BOSS 存活时才生成）。
+	 * Spawns an explosive sacrifice at the player's position (3s delay, only while the boss is alive).
+	 */
 	private void spawnExplosiveSacrifice(Player player) {
 		final float x = player.getX();
 		final float y = player.getY();
@@ -123,6 +135,10 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 		}
 	}
 	
+	/**
+	 * 收集已知范围内所有存活的玩家。
+	 * Collects all living players in the known list.
+	 */
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
@@ -153,6 +169,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 		if (p != null) {
 			deleteNpcs(p.getWorldMapInstance().getNpcs(855262)); //Explosive Sacrifice.
 		}
+		// 死亡后 10 秒在固定位置生成 3 个宝箱。 / Spawns 3 treasure chests at fixed spots 10s after death.
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {

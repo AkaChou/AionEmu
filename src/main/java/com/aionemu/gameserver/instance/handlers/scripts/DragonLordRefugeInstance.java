@@ -46,7 +46,7 @@ import java.util.Set;
 @InstanceID(300520000)
 public class DragonLordRefugeInstance extends GeneralInstanceHandler
 {
-	/** tiamat buff / tiamat buff */
+		/** tiamat buff / tiamat buff */
 		private int tiamatBuff;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
@@ -78,7 +78,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -113,7 +113,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -772,7 +772,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 * 移除指定 NPC。
 	 * Despawn the given NPC.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	protected void despawnNpc(Npc npc) {
@@ -784,7 +784,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 * 处理 despawnNpcs。
 	 * Handle despawnNpcs.
 	 *
-	 * npcs
+	 * @param npcs NPC 列表 / npcs
 	 */
 	
 	protected void despawnNpcs(List<Npc> npcs) {
@@ -796,8 +796,8 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 * 返回 npc。
 	 * Return the npc.
 	 *
-	 * NPC
-	 * result
+	 * @param npcId NPC / NPC
+	 * @return 结果 / result
 	 */
 	
 	protected Npc getNpc(int npcId) {
@@ -810,8 +810,8 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 * 返回 npcs。
 	 * Return the npcs.
 	 *
-	 * NPC
-	 * result
+	 * @param npcId NPC / NPC
+	 * @return 结果 / result
 	 */
 	
 	protected List<Npc> getNpcs(int npcId) {
@@ -824,7 +824,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 * 处理 killNpc。
 	 * Handle killNpc.
 	 *
-	 * npcs
+	 * @param npcs NPC 列表 / npcs
 	 */
 	
 	protected void killNpc(List<Npc> npcs) {
@@ -851,9 +851,9 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

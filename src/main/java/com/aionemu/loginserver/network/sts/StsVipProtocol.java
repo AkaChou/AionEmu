@@ -16,7 +16,10 @@ import java.util.regex.Pattern;
 
 import lombok.extern.slf4j.Slf4j;
 
-/** China-client STS/1.0 framing for membership stage + token auth. */
+/**
+ * 国服客户端 STS/1.0 协议封装：负责会员阶段与 token 认证的报文编解码。
+ * China-client STS/1.0 framing for membership stage + token auth.
+ */
 @Slf4j
 public final class StsVipProtocol {
 
@@ -29,6 +32,14 @@ public final class StsVipProtocol {
     private StsVipProtocol() {
     }
 
+    /**
+     * 将 VIP 等级与经验解析为分数（经验优先，其次按等级表）。
+     * Resolves a score from VIP level and exp (exp wins, otherwise the level table is used).
+     *
+     * @param vipLevel VIP 等级 / vip level
+     * @param vipExp VIP 经验 / vip exp
+     * @return 分数 / score
+     */
     public static long resolveScore(int vipLevel, long vipExp) {
         if (vipExp > 0) {
             return vipExp;
@@ -39,6 +50,14 @@ public final class StsVipProtocol {
         return LEVEL_TO_SCORE[Math.min(vipLevel, LEVEL_TO_SCORE.length - 1)];
     }
 
+    /**
+     * 从输入流读取并解析一个 STS 请求（请求行、头部与 body）。
+     * Reads and parses one STS request (request line, headers and body) from the input stream.
+     *
+     * @param input 输入流 / input stream
+     * @return 解析后的请求，流结束时为 null / parsed request, or null on end of stream
+     * @throws IOException 流读取失败或报文不完整 / on stream errors or truncated messages
+     */
     public static ParsedRequest readRequest(InputStream input) throws IOException {
         String requestLine = readLine(input);
         if (requestLine == null) {

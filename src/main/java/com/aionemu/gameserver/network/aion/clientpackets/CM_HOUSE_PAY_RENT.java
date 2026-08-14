@@ -59,7 +59,7 @@ public class CM_HOUSE_PAY_RENT extends AionClientPacket {
 		long payTime = house.getNextPay() != null ? house.getNextPay().getTime() : (long) GameHousingServices.maintenanceTask().getRunTime() * 1000;
 		int counter = weekCount;
 		while ((--counter) >= 0) {
-			payTime += GameHousingServices.maintenanceTask().getPeriod() * 1000L; // Convert seconds to milliseconds
+			payTime += GameHousingServices.maintenanceTask().getPeriod() * 1000L; // 将秒转换为毫秒 / Convert seconds to milliseconds
 		}
 
 		// 检查是否试图预付超过 4 周 / Check if trying to pay more than 4 weeks in advance

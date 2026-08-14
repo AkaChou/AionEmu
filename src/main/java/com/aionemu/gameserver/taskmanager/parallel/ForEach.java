@@ -86,8 +86,8 @@ public final class ForEach<E> extends CountedCompleter<E> {
 	 * 构造指定分片的并行 for-each 任务。
 	 * Construct a parallel for-each task for the given slice.
 	 *
-	 * Parent completer
-	 * Predicate operation
+	 * @param rootTask  父完成器 / Parent completer
+	 * @param operation 元素操作谓词 / Predicate operation
 	 * @param lo        下界（含）/ Inclusive lower bound
 	 * @param hi        上界（不含）/ Exclusive upper bound
 	 * @param list      元素数组 / Element array

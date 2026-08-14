@@ -34,6 +34,7 @@ public class IDTiamat2HardKahrunAI2 extends NpcAI2
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
 			    case 833483: //Kahrun (Reian Leader)
+			        // 卡伦（莱族领袖）。 / Kahrun (Reian Leader).
 				    SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(300630000, 730625, 503.219757f, 516.651733f, 242.604065f, (byte) 0);
 				    template.setEntityId(4);
 				    portal.put(730625, SpawnEngine.spawnObject(template, instanceId));

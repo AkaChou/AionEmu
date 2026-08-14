@@ -26,7 +26,7 @@ public class MessagerAddition {
 	 * 向玩家发送居中亮黄公告。
 	 * Send a bright-yellow center announcement to a player.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
 	public static void announce(Player player, String msg) {
@@ -37,7 +37,7 @@ public class MessagerAddition {
 	 * 向玩家发送普通金色消息。
 	 * Send a normal golden message to a player.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
 	public static void message(Player player, String msg) {
@@ -48,7 +48,7 @@ public class MessagerAddition {
 	 * 向玩家发送白色消息。
 	 * Send a white message to a player.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
 	public static void whiteMsg(Player player, String msg) {
@@ -59,7 +59,7 @@ public class MessagerAddition {
 	 * 向玩家发送居中白色消息。
 	 * Send a white center message to a player.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
 	public static void whiteMsgOnCtr(Player player, String msg) {
@@ -70,7 +70,7 @@ public class MessagerAddition {
 	 * 向玩家发送黄色消息。
 	 * Send a yellow message to a player.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
 	public static void yellowMsg(Player player, String msg) {
@@ -81,7 +81,7 @@ public class MessagerAddition {
 	 * 向玩家发送居中黄色消息。
 	 * Send a yellow center message to a player.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
 	public static void yellowMsgOnCtr(Player player, String msg) {

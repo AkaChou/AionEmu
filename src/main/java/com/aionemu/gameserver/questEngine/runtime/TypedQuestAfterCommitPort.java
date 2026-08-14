@@ -4,7 +4,7 @@ import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 
 import java.util.Objects;
 
-/** Routes the closed after-commit action set to typed protocol ports. */
+/** 将封闭的提交后动作集路由到类型化协议端口。 / Routes the closed after-commit action set to typed protocol ports. */
 public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 	private final QuestDialogPort dialogPort;
 	private final QuestTeleportPort teleportPort;
@@ -110,7 +110,7 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 		this.systemMessagePort = systemMessagePort;
 	}
 
-	/** 广播 port 由生产侧在 dispatcher 构造后注入, 打破 composition 循环。 */
+	/** 广播 port 由生产侧在 dispatcher 构造后注入，打破 composition 循环。 / The broadcast port is injected after dispatcher construction to break the composition cycle. */
 	public void withBroadcastPort(QuestBroadcastPort broadcastPort) {
 		this.broadcastPort = Objects.requireNonNull(broadcastPort, "broadcastPort");
 	}

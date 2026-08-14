@@ -9,8 +9,12 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_FRIEND_STATUS extends AionServerPacket {
 
+	/** 对好友展示的可见状态（在线/隐身）/ friend-visible status (online/invisible) */
 	byte status;
 
+	/**
+	 * @param status 对好友展示的可见状态 / friend-visible status
+	 */
 	public SM_FRIEND_STATUS(byte status) {
 		this.status = status;
 	}

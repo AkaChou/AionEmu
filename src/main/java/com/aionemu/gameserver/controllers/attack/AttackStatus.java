@@ -21,9 +21,9 @@ public enum AttackStatus {
 	RESIST(6, true, false),
 	/** 副手抵抗 / Off-hand resist */
 	OFFHAND_RESIST(7),
-	/** Main-hand BUF / Main-hand BUF */
+	/** 主手增益状态 / Main-hand BUF */
 	BUF(8),
-	/** Off-hand BUF / Off-hand BUF */
+	/** 副手增益状态 / Off-hand BUF */
 	OFFHAND_BUF(9),
 	/** 主手普通命中 / Main-hand normal hit */
 	NORMALHIT(10),
@@ -61,7 +61,7 @@ public enum AttackStatus {
 	 * 仅指定类型 ID 的构造（非反击、非暴击）。
 	 * Constructs a status with only a type id (non-counter, non-critical).
 	 *
-	 * type id
+	 * @param type 类型 ID / type id
 	 */
 	private AttackStatus(int type) {
 		this(type, false, false);
@@ -71,9 +71,9 @@ public enum AttackStatus {
 	 * 完整构造攻击状态。
 	 * Fully constructs an attack status.
 	 *
-	 * type id
+	 * @param type 类型 ID / type id
 	 * @param counterSkill 是否反击技能状态 / whether counter-skill
-	 * whether critical
+	 * @param isCritical 是否暴击 / whether critical
 	 */
 	private AttackStatus(int type, boolean counterSkill, boolean isCritical) {
 		this.type = type;
@@ -85,7 +85,7 @@ public enum AttackStatus {
 	 * 返回状态类型 ID。
 	 * Returns the status type id.
 	 *
-	 * type id
+	 * @return 类型 ID / type id
 	 */
 	public final int getId() {
 		return type;
@@ -105,7 +105,7 @@ public enum AttackStatus {
 	 * 是否为暴击类状态。
 	 * Returns whether this status is critical.
 	 *
-	 * whether critical
+	 * @return 是否暴击 / whether critical
 	 */
 	public final boolean isCritical() {
 		return isCritical;
@@ -115,10 +115,8 @@ public enum AttackStatus {
 	 * 将主手状态映射为对应的副手状态。
 	 * Maps a main-hand status to its off-hand counterpart.
 	 *
-	 * main-hand status
-	 * off-hand status
-	 *
-	 * @param mainHandStatus
+	 * @param mainHandStatus 主手状态 / main-hand status
+	 * @return 副手状态 / off-hand status
 	 * @throws IllegalArgumentException 无法映射时 / if the status cannot be mapped
 	 */
 	public static final AttackStatus getOffHandStats(AttackStatus mainHandStatus) {
@@ -155,8 +153,8 @@ public enum AttackStatus {
 	 * 将任意变体状态归一为基本防御/命中状态（忽略主副手与暴击）。
 	 * Normalizes any variant status to its base defensive/hit status (ignores hand and critical).
 	 *
-	 * original status
-	 * base status
+	 * @param status 原始状态 / original status
+	 * @return 基本状态 / base status
 	 */
 	public static final AttackStatus getBaseStatus(AttackStatus status) {
 		switch (status) {
@@ -189,8 +187,8 @@ public enum AttackStatus {
 	 * 将基本状态提升为对应的暴击状态。
 	 * Elevates a base status to its critical counterpart.
 	 *
-	 * original status
-	 * critical status
+	 * @param status 原始状态 / original status
+	 * @return 暴击状态 / critical status
 	 */
 	public static final AttackStatus getCriticalStatusFor(AttackStatus status) {
 		switch (status) {

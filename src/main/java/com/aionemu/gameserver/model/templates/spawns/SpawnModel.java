@@ -26,7 +26,7 @@ public class SpawnModel {
 		return tribe;
 	}
 
-	/** 返回 ai / Returns the ai */
+	/** 返回 AI / Returns the ai */
 	public String getAi() {
 		return ai;
 	}

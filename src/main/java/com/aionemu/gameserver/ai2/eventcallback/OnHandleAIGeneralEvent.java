@@ -49,7 +49,7 @@ public abstract class OnHandleAIGeneralEvent implements Callback<AbstractAI> {
 	 * 返回本回调的基类类型，用于回调系统注册与匹配。
 	 * Return this callback's base class type for registration and matching.
 	 *
-	 * @return {@link OnHandleAIGeneralEvent} class。
+	 * @return 本回调的基类类型 / base callback class type
 	 */
 	@Override
 	public Class<? extends Callback> getBaseClass() {
@@ -60,8 +60,8 @@ public abstract class OnHandleAIGeneralEvent implements Callback<AbstractAI> {
 	 * 通用事件处理前的钩子，由子类实现。
 	 * Hook before general-event handling, implemented by subclasses.
 	 *
-	 * AI instance
-	 * Event type
+	 * @param obj AI 实例 / AI instance
+	 * @param eventType 事件类型 / Event type
 	 */
 	protected abstract void onBeforeHandleGeneralEvent(AbstractAI obj, AIEventType eventType);
 
@@ -69,8 +69,8 @@ public abstract class OnHandleAIGeneralEvent implements Callback<AbstractAI> {
 	 * 通用事件处理后的钩子，由子类实现。
 	 * Hook after general-event handling, implemented by subclasses.
 	 *
-	 * AI instance
-	 * Event type
+	 * @param obj AI 实例 / AI instance
+	 * @param eventType 事件类型 / Event type
 	 */
 	protected abstract void onAfterHandleGeneralEvent(AbstractAI obj, AIEventType eventType);
 }

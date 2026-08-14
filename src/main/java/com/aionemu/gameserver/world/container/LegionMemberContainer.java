@@ -46,9 +46,7 @@ public class LegionMemberContainer {
 	 * 按 objectId 获取基础成员。
 	 * Returns a basic member from the cache by objectId.
 	 *
-	 * member objectId
-	 *
-	 * @param memberObjId
+	 * @param memberObjId 成员 objectId / member objectId
 	 * @return 成员实例，不存在则返回 null / member instance, or null if absent
 	 */
 	public synchronized LegionMember getMember(int memberObjId) {
@@ -73,9 +71,7 @@ public class LegionMemberContainer {
 	 * 按 objectId 获取扩展成员。
 	 * Returns an extended member from the cache by objectId.
 	 *
-	 * member objectId
-	 *
-	 * @param memberObjId
+	 * @param memberObjId 成员 objectId / member objectId
 	 * @return 扩展成员实例，不存在则返回 null / extended member, or null if absent
 	 */
 	public synchronized LegionMemberEx getMemberEx(int memberObjId) {
@@ -86,9 +82,7 @@ public class LegionMemberContainer {
 	 * 按名称获取扩展成员。
 	 * Returns an extended member from the cache by name.
 	 *
-	 * member name
-	 *
-	 * @param memberName
+	 * @param memberName 成员名称 / member name
 	 * @return 扩展成员实例，不存在则返回 null / extended member, or null if absent
 	 */
 	public synchronized LegionMemberEx getMemberEx(String memberName) {
@@ -111,9 +105,8 @@ public class LegionMemberContainer {
 	 * 是否缓存了指定 objectId 的基础成员。
 	 * Whether a basic member with the given objectId is cached.
 	 *
-	 * member objectId
-	 *
-	 * @param memberObjId 存在则为 true / true if present
+	 * @param memberObjId 成员 objectId / member objectId
+	 * @return 存在则为 true / true if present
 	 */
 	public synchronized boolean contains(int memberObjId) {
 		return legionMemberById.containsKey(memberObjId);
@@ -123,9 +116,8 @@ public class LegionMemberContainer {
 	 * 是否缓存了指定 objectId 的扩展成员。
 	 * Whether an extended member with the given objectId is cached.
 	 *
-	 * member objectId
-	 *
-	 * @param memberObjId 存在则为 true / true if present
+	 * @param memberObjId 成员 objectId / member objectId
+	 * @return 存在则为 true / true if present
 	 */
 	public synchronized boolean containsEx(int memberObjId) {
 		return legionMemberExById.containsKey(memberObjId);
@@ -135,9 +127,8 @@ public class LegionMemberContainer {
 	 * 是否缓存了指定名称的扩展成员。
 	 * Whether an extended member with the given name is cached.
 	 *
-	 * member name
-	 *
-	 * @param memberName 存在则为 true / true if present
+	 * @param memberName 成员名称 / member name
+	 * @return 存在则为 true / true if present
 	 */
 	public synchronized boolean containsEx(String memberName) {
 		return legionMemberExByName.containsKey(memberName);

@@ -311,14 +311,17 @@ public class LoginServer {
 	 * 由 CM_ACCOUNT_AUTH_RESPONSE 调用，通知游戏服客户端认证结果。
 	 * Called by CM_ACCOUNT_AUTH_RESPONSE to notify GameServer of client authentication results.
 	 *
-	 * 账号 ID / Account id
-	 * Account name
-	 * @param result 是否认证成功 / Whether authentication succeeded
-	 * @param accountTime 账号时间信息 / Account time info
-	 * Access level
-	 * Membership level
-	 * Toll balance
-	 * Luna balance
+	 * @param accountId 账号 ID / account id
+	 * @param accountName 账号名 / account name
+	 * @param result 是否认证成功 / whether authentication succeeded
+	 * @param accountTime 账号时间信息 / account time info
+	 * @param accessLevel 权限等级 / access level
+	 * @param membership 会员等级 / membership level
+	 * @param toll 特级点余额 / toll balance
+	 * @param luna 露娜点余额 / luna balance
+	 * @param vipLevel VIP 等级 / vip level
+	 * @param vipExp VIP 经验 / vip exp
+	 * @param vipExpireTime VIP 到期时间 / vip expire time
 	 */
 	public void accountAuthenticationResponse(int accountId, String accountName, boolean result,
 			AccountTime accountTime, byte accessLevel, byte membership, long toll, long luna, byte vipLevel, long vipExp,
@@ -419,7 +422,7 @@ public class LoginServer {
 			AionConnection client = loggedInAccounts.get(accountId);
 			if (client != null) {
 				closeClientWithCheck(client, accountId);
-			} else { // This account is not logged in on this GameServer but LS thinks different...
+			} else { // 该账号未在本游戏服登录，但登录服认为已登录。 / This account is not logged in on this GameServer but LS thinks different...
 				sendAccountDisconnected(accountId);
 			}
 		}

@@ -44,7 +44,7 @@ public class IuData {
 	 * 返回已加载的 IU 地点数量。
 	 * Returns the number of loaded IU locations.
 	 *
-	 * location count
+	 * @return 已加载的IU 地点数量 / Returns the number of loaded IU locations.
 	 */
 	public int size() {
 		return iu.size();

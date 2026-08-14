@@ -41,7 +41,7 @@ public class TribeRelationsData {
 	 * 返回已加载的种族数量。
 	 * Returns the number of loaded tribes.
 	 *
-	 * tribe count
+	 * @return 已加载的种族数量 / Returns the number of loaded tribes.
 	 */
 	public int size() {
 		return tribeNameMap.size();
@@ -51,9 +51,7 @@ public class TribeRelationsData {
 	 * 判断该种族是否配置了攻击性关系。
 	 * Returns whether the tribe has any aggressive relations configured.
 	 *
-	 * tribe
-	 *
-	 * @param tribeName
+	 * @param tribeName 种族名 / tribe name
 	 * @return 存在攻击性关系则为 true / true if aggressive relations exist
 	 */
 	public boolean hasAggressiveRelations(TribeClass tribeName) {
@@ -69,9 +67,7 @@ public class TribeRelationsData {
 	 * 判断该种族是否配置了敌对关系。
 	 * Returns whether the tribe has any hostile relations configured.
 	 *
-	 * tribe
-	 *
-	 * @param tribeName
+	 * @param tribeName 种族名 / tribe name
 	 * @return 存在敌对关系则为 true / true if hostile relations exist
 	 */
 	public boolean hasHostileRelations(TribeClass tribeName) {
@@ -87,9 +83,7 @@ public class TribeRelationsData {
 	 * 判断该种族是否配置了支援关系。
 	 * Returns whether the tribe has any support relations configured.
 	 *
-	 * tribe
-	 *
-	 * @param tribeName
+	 * @param tribeName 种族名 / tribe name
 	 * @return 存在支援关系则为 true / true if support relations exist
 	 */
 	public boolean hasSupportRelations(TribeClass tribeName) {
@@ -105,9 +99,7 @@ public class TribeRelationsData {
 	 * 判断该种族是否配置了友好关系。
 	 * Returns whether the tribe has any friendly relations configured.
 	 *
-	 * tribe
-	 *
-	 * @param tribeName
+	 * @param tribeName 种族名 / tribe name
 	 * @return 存在友好关系则为 true / true if friendly relations exist
 	 */
 	public boolean hasFriendRelations(TribeClass tribeName) {
@@ -123,9 +115,7 @@ public class TribeRelationsData {
 	 * 判断该种族是否配置了无关系。
 	 * Returns whether the tribe has any none relations configured.
 	 *
-	 * tribe
-	 *
-	 * @param tribeName
+	 * @param tribeName 种族名 / tribe name
 	 * @return 存在无关系配置则为 true / true if none relations exist
 	 */
 	public boolean hasNoneRelations(TribeClass tribeName) {
@@ -141,9 +131,7 @@ public class TribeRelationsData {
 	 * 判断该种族是否配置了中立关系。
 	 * Returns whether the tribe has any neutral relations configured.
 	 *
-	 * tribe
-	 *
-	 * @param tribeName
+	 * @param tribeName 种族名 / tribe name
 	 * @return 存在中立关系则为 true / true if neutral relations exist
 	 */
 	public boolean hasNeutralRelations(TribeClass tribeName) {
@@ -159,9 +147,8 @@ public class TribeRelationsData {
 	 * 判断种族 1 对种族 2 是否为攻击性关系（友好优先排除）。
 	 * Returns whether tribe1 is aggressive toward tribe2 (friendly takes priority).
 	 *
-	 * source tribe
-	 * target tribe
-	 *
+	 * @param tribeName1 源种族 / source tribe
+	 * @param tribeName2 目标种族 / target tribe
 	 * @return 攻击性关系则为 true / true if aggressive
 	 */
 	public boolean isAggressiveRelation(TribeClass tribeName1, TribeClass tribeName2) {
@@ -181,9 +168,8 @@ public class TribeRelationsData {
 	 * 判断种族 1 对种族 2 是否为支援关系。
 	 * Returns whether tribe1 supports tribe2.
 	 *
-	 * source tribe
-	 * target tribe
-	 *
+	 * @param tribeName1 源种族 / source tribe
+	 * @param tribeName2 目标种族 / target tribe
 	 * @return 支援关系则为 true / true if support
 	 */
 	public boolean isSupportRelation(TribeClass tribeName1, TribeClass tribeName2) {
@@ -200,9 +186,8 @@ public class TribeRelationsData {
 	 * 判断种族 1 对种族 2 是否为友好关系。
 	 * Returns whether tribe1 is friendly toward tribe2.
 	 *
-	 * source tribe
-	 * target tribe
-	 *
+	 * @param tribeName1 源种族 / source tribe
+	 * @param tribeName2 目标种族 / target tribe
 	 * @return 友好关系则为 true / true if friendly
 	 */
 	public boolean isFriendlyRelation(TribeClass tribeName1, TribeClass tribeName2) {
@@ -219,9 +204,8 @@ public class TribeRelationsData {
 	 * 判断种族 1 对种族 2 是否为中立关系。
 	 * Returns whether tribe1 is neutral toward tribe2.
 	 *
-	 * source tribe
-	 * target tribe
-	 *
+	 * @param tribeName1 源种族 / source tribe
+	 * @param tribeName2 目标种族 / target tribe
 	 * @return 中立关系则为 true / true if neutral
 	 */
 	public boolean isNeutralRelation(TribeClass tribeName1, TribeClass tribeName2) {
@@ -238,9 +222,8 @@ public class TribeRelationsData {
 	 * 判断种族 1 对种族 2 是否为无关系。
 	 * Returns whether tribe1 has a none relation toward tribe2.
 	 *
-	 * source tribe
-	 * target tribe
-	 *
+	 * @param tribeName1 源种族 / source tribe
+	 * @param tribeName2 目标种族 / target tribe
 	 * @return 无关系则为 true / true if none
 	 */
 	public boolean isNoneRelation(TribeClass tribeName1, TribeClass tribeName2) {
@@ -256,9 +239,8 @@ public class TribeRelationsData {
 	 * 判断种族 1 对种族 2 是否为敌对关系。
 	 * Returns whether tribe1 is hostile toward tribe2.
 	 *
-	 * source tribe
-	 * target tribe
-	 *
+	 * @param tribeName1 源种族 / source tribe
+	 * @param tribeName2 目标种族 / target tribe
 	 * @return 敌对关系则为 true / true if hostile
 	 */
 	public boolean isHostileRelation(TribeClass tribeName1, TribeClass tribeName2) {
@@ -275,9 +257,7 @@ public class TribeRelationsData {
 	 * 判断是否存在任意种族支援指定种族。
 	 * Returns whether any tribe is configured as a supporter of the given tribe.
 	 *
-	 * target tribe
-	 *
-	 * @param tribeName
+	 * @param tribeName 种族名 / tribe name
 	 * @return 存在支援者则为 true / true if any supporter exists
 	 */
 	public boolean hasAnySupporter(TribeClass tribeName) {

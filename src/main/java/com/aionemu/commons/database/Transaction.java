@@ -27,7 +27,7 @@ public class Transaction {
      * Constructor, creates a new transaction
      *
      * @param con 数据库连接 / Database connection
-     * If setting auto-commit mode fails。
+     * @throws SQLException 设置自动提交模式失败时 / If setting auto-commit mode fails
      */
     Transaction(Connection con) throws SQLException {
         this.connection = con;
@@ -38,10 +38,8 @@ public class Transaction {
      * 执行插入或更新操作
      * Execute an insert or update operation
      *
- * SQL statement
- *
- * @param sql
- * @throws SQLException 如果执行 SQL 语句失败 / If executing SQL statement fails
+     * @param sql SQL 语句 / SQL statement
+     * @throws SQLException 如果执行 SQL 语句失败 / If executing SQL statement fails
      */
     public void insertUpdate(String sql) throws SQLException {
         this.insertUpdate(sql, null);
@@ -51,11 +49,9 @@ public class Transaction {
      * 执行插入或更新操作，支持批处理
      * Execute an insert or update operation with batch support
      *
- * SQL statement
-     *
+     * @param sql SQL 语句 / SQL statement
      * @param iusth 批处理处理器 / Batch handler
- * @param iusth
- * @throws SQLException 如果执行 SQL 语句失败 / If executing SQL statement fails
+     * @throws SQLException 如果执行 SQL 语句失败 / If executing SQL statement fails
      */
     public void insertUpdate(String sql, IUStH iusth) throws SQLException {
         PreparedStatement statement = this.connection.prepareStatement(sql);
@@ -72,7 +68,7 @@ public class Transaction {
      *
      * @param name 保存点名称 / Savepoint name
      * @return 保存点对象 / Savepoint object
-     * If setting savepoint fails。
+     * @throws SQLException 设置保存点失败时 / If setting savepoint fails
      */
     public Savepoint setSavepoint(String name) throws SQLException {
         return this.connection.setSavepoint(name);
@@ -83,7 +79,7 @@ public class Transaction {
      * Release a savepoint
      *
      * @param savepoint 保存点对象 / Savepoint object
-     * If releasing savepoint fails。
+     * @throws SQLException 释放保存点失败时 / If releasing savepoint fails
      */
     public void releaseSavepoint(Savepoint savepoint) throws SQLException {
         this.connection.releaseSavepoint(savepoint);
@@ -93,7 +89,7 @@ public class Transaction {
      * 提交事务
      * Commit the transaction
      *
-     * If committing transaction fails。
+     * @throws SQLException 提交事务失败时 / If committing transaction fails
      */
     public void commit() throws SQLException {
         this.commit(null);
@@ -104,7 +100,7 @@ public class Transaction {
      * Commit the transaction with rollback to specified savepoint on error
      *
      * @param rollBackToOnError 发生错误时回滚到的保存点 / Savepoint to rollback to on error
-     * If committing or rolling back transaction fails。
+     * @throws SQLException 提交或回滚事务失败时 / If committing or rolling back transaction fails
      */
     public void commit(Savepoint rollBackToOnError) throws SQLException {
         try {

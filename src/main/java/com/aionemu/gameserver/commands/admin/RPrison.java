@@ -30,8 +30,6 @@ public class RPrison extends AdminCommand {
 	 * 解除指定在线玩家的监狱状态。
 	 * Clear the prison state of the named online player.
 	 *
-	 * 执行 GM / Admin player
-	 * Character name
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -60,8 +58,6 @@ public class RPrison extends AdminCommand {
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
 	 *
-	 * 玩家 / Player
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

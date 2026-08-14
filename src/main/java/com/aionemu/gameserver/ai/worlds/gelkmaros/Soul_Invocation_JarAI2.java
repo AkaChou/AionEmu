@@ -32,6 +32,10 @@ public class Soul_Invocation_JarAI2 extends NpcAI2
 		handleUseItemStart(player);
 	}
 	
+	/**
+	 * 使用物品 NPC：先展示使用进度条，对话延迟结束后执行完成逻辑；中途中断则取消任务。
+	 * Item-use NPC: shows the use progress bar, runs the finish logic after the talk delay, or cancels the task on abort.
+	 */
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {

@@ -19,7 +19,7 @@ public class DiedEventHandler {
 	 * 处理完整死亡流程：执行简化死亡逻辑并清空目标。
 	 * Handles full death flow: runs simple death logic and clears the target.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onDie(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
@@ -35,7 +35,7 @@ public class DiedEventHandler {
 	 * 处理简化死亡：可选喊话，切换到 DIED 状态并清空仇恨。
 	 * Handles simple death: optional shout, switches to DIED state, and clears aggro.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onSimpleDie(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {

@@ -38,6 +38,10 @@ public class BoliagAI2 extends AggressiveNpcAI2
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
 	
+	/**
+	 * 根据血量百分比触发阶段事件：30% 刷新传送门与小怪，20%/10% 追加刷新小怪。
+	 * Triggers phase events by HP percentage: spawns portals and adds at 30%, more adds at 20% and 10%.
+	 */
 	private void checkPercentage(int hpPercentage) {
 		for (Integer percent: percents) {
 			if (hpPercentage <= percent) {
@@ -57,14 +61,18 @@ public class BoliagAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void addPercent() {
 		percents.clear();
 		Collections.addAll(percents, new Integer[]{30});
 	}
-	
+
+	/**
+	 * 刷新通往布利温心脏的传送门及周围小怪。
+	 * Spawns the portals leading to Boliag's heart along with surrounding adds.
+	 */
 	private void spawnBossPortal() {
-		//?  .   ?  ??  .
+		// 布利温的触手出现了，破坏触手可移动到布利温的心脏部位。 / Boliag's tentacles have appeared. Destroy them to move to Boliag's heart.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_03_Dimension_02, 0);
 		spawn(246937, 229.87758f, 1049.37230f, 706.75494f, (byte) 84);
 		spawn(246442, 226.18071f, 1048.9526f, 706.75494f, (byte) 86);

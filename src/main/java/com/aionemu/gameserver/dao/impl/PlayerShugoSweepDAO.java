@@ -64,11 +64,11 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
      * 新增扫荡记录。
      * Adds a sweep record.
      *
-     * player id
+     * @param playerId 玩家 ID / player id
      * @param dice 免费骰子 / free dice
      * @param step 扫荡步数 / sweep step
-     * board id
-     * whether succeeded
+     * @param boardId 公告板 ID / board id
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean add(final int playerId, final int dice, final int step, final int boardId) {
@@ -91,7 +91,7 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
      * 清空全部扫荡记录。
      * Deletes all sweep records.
      *
-     * whether succeeded
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean delete() {
@@ -110,8 +110,8 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
      * 持久化玩家扫荡数据。
      * Stores player sweep data.
      *
-     * 玩家 / player
-     * whether succeeded
+     * @param player 玩家 / player
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean store(Player player) {
@@ -148,8 +148,8 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
      * Updates player sweep record.
      *
      * @param con 数据库连接 / database connection
-     * 玩家 / player
-     * whether succeeded
+     * @param player 玩家 / player
+     * @return 是否成功 / whether succeeded
      */
     private boolean updatePlayerSweep(Connection con, Player player) {
         try (PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
@@ -176,10 +176,10 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
      * Sets sweep data by object id.
      *
      * @param obj 玩家对象 ID / player object id
-     * free dice
+     * @param freeDice free dice
      * @param step 扫荡步数 / sweep step
-     * board id
-     * whether succeeded
+     * @param boardId 公告板 ID / board id
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean setShugoSweepByObjId(int obj, final int freeDice, final int step, int boardId) {
@@ -202,10 +202,10 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

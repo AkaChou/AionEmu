@@ -24,7 +24,7 @@ final class GameEventRuntimeFallbacks {
      * 返回事件服务回退实例。
      * Return the event-service fallback instance.
      *
-     * Event service
+     * @return 事件服务 / Event service
      */
     static EventService eventService() {
         return EventServiceFallback.INSTANCE;

@@ -46,17 +46,17 @@ public class WeatherEntry {
 		return zoneId;
 	}
 
-	/** 返回 code / Returns the code */
+	/** 返回天气代码 / Returns the code */
 	public int getCode() {
 		return weatherCode;
 	}
 
-	/** 返回 att ranking / Returns the att ranking */
+	/** 返回占领排名 / Returns the att ranking */
 	public int getAttRanking() {
 		return attRanking;
 	}
 
-	/** Whether 前 / Whether before */
+	/** 是否为前序天气 / Whether before */
 	public Boolean isBefore() {
 		if (isBefore == null) {
 			return false;
@@ -64,7 +64,7 @@ public class WeatherEntry {
 		return isBefore;
 	}
 
-	/** 是否后 / Whether after*/
+	/** 是否为后续天气 / Whether after. */
 	public Boolean isAfter() {
 		if (isAfter == null) {
 			return false;

@@ -1,6 +1,9 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-/** Immutable, single-event facts captured at the authoritative proximity boundary. */
+/**
+ * 在权威邻近边界处捕获的不可变单事件事实。
+ * Immutable, single-event facts captured at the authoritative proximity boundary.
+ */
 public record QuestProximityFacts(int recipientId, int targetObjectId, int targetNpcId,
 		int recipientWorldId, int targetWorldId, int recipientInstanceId, int targetInstanceId,
 		double distance, double maximumDistance) {

@@ -20,8 +20,8 @@ public abstract class GaleCycloneObserver extends ActionObserver {
 	private double oldRange;
 
 	/**
-	 * 玩家 / player
-	 * cyclone creature
+	 * @param player 被观察玩家 / observed player
+	 * @param creature 旋涡生物 / cyclone creature
 	 */
 	public GaleCycloneObserver(Player player, Creature creature) {
 		super(ObserverType.MOVE);

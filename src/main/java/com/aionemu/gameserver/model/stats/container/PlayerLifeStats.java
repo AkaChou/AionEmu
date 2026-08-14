@@ -18,8 +18,8 @@ import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster.BroadcastMode;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 玩家 Life 属性，用于属性相关逻辑。
- * Player Life Stats for stats logic.
+ * 玩家的生命值/魔法值/飞行时间属性与恢复逻辑。
+ * Player HP/MP/fly-time stats and restore logic.
  *
  * @author ATracer, sphinx
  */

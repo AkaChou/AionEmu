@@ -17,9 +17,9 @@ public class SM_GATHER_STATUS extends AionServerPacket {
 	private int gatherableobjid;
 
 	/**
-	 * Player object ID
+	 * @param playerobjid 玩家对象 ID / Player object ID
 	 * @param gatherableobjid 可采集物对象 ID / Gatherable object ID
-	 * Gathering status
+	 * @param status 采集状态 / Gathering status
 	 */
 	public SM_GATHER_STATUS(int playerobjid, int gatherableobjid, int status) {
 		this.playerobjid = playerobjid;

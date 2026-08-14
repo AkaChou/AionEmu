@@ -30,7 +30,7 @@ public enum Race {
      * 构造种族枚举。
      * Constructs a race enum value.
      *
-     * race id
+     * @param raceId 种族 ID / race id
      */
     private Race(int raceId) {
         this.raceId = raceId;

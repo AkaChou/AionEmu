@@ -27,7 +27,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-/** Explicit production owner allow-list for definitions in the quests directory. */
+/**
+ * quests 目录中定义的显式生产环境所有者白名单。
+ * Explicit production owner allow-list for definitions in the quests directory.
+ */
 public final class QuestDefinitionCatalogManifest {
 	private static final String RESOURCE =
 		"aion/data/static_data/quest_definition/quest_definition_catalog.xml";
@@ -63,7 +66,10 @@ public final class QuestDefinitionCatalogManifest {
 		this.entries = List.copyOf(entries);
 	}
 
-	/** Load the explicit production owner manifest from classpath resources. */
+	/**
+	 * 从 classpath 资源加载显式生产环境所有者清单。
+	 * Load the explicit production owner manifest from classpath resources.
+	 */
 	public static QuestCatalog compile(ClassLoader loader) {
 		Objects.requireNonNull(loader, "loader");
 		try (InputStream input = loader.getResourceAsStream(RESOURCE)) {
@@ -78,7 +84,10 @@ public final class QuestDefinitionCatalogManifest {
 		}
 	}
 
-	/** Load the production catalog and quest definitions from the external game-data directory. */
+	/**
+	 * 从外部游戏数据目录加载生产目录与任务定义。
+	 * Load the production catalog and quest definitions from the external game-data directory.
+	 */
 	public static QuestCatalog compile(Path questDefinitionDirectory) {
 		Objects.requireNonNull(questDefinitionDirectory, "questDefinitionDirectory");
 		Path directory = questDefinitionDirectory.toAbsolutePath().normalize();
@@ -100,7 +109,10 @@ public final class QuestDefinitionCatalogManifest {
 		}
 	}
 
-	/** Parse and validate an explicit production owner manifest. */
+	/**
+	 * 解析并校验显式生产环境所有者清单。
+	 * Parse and validate an explicit production owner manifest.
+	 */
 	public static QuestDefinitionCatalogManifest load(InputStream input) {
 		Objects.requireNonNull(input, "input");
 		try (InputStream schema = QuestDefinitionCatalogManifest.class.getResourceAsStream(SCHEMA)) {
@@ -171,7 +183,10 @@ public final class QuestDefinitionCatalogManifest {
 		}
 	}
 
-	/** Compile only the entries explicitly promoted to production ownership. */
+	/**
+	 * 仅编译显式提升为生产环境所有者的条目。
+	 * Compile only the entries explicitly promoted to production ownership.
+	 */
 	public static QuestCatalog compile(InputStream manifest, ClassLoader loader) {
 		Objects.requireNonNull(loader, "loader");
 		QuestDefinitionCatalogManifest parsed = load(manifest);
@@ -276,8 +291,10 @@ public final class QuestDefinitionCatalogManifest {
 	}
 
 	/**
-	 * 并行编译任务 XML 资源，按输入顺序返回结果。Compiles quest XML resources in parallel, preserving input order.
-	 * 编译管线无共享可变状态，Schema 静态化后线程安全。The compile pipeline has no shared mutable state,
+	 * 并行编译任务 XML 资源，按输入顺序返回结果。
+	 * Compiles quest XML resources in parallel, preserving input order.
+	 * 编译管线无共享可变状态，Schema 静态化后线程安全。
+	 * The compile pipeline has no shared mutable state,
 	 * and the shared Schema is thread-safe, so per-resource work can run concurrently.
 	 */
 	static List<QuestCatalogEntry> compileResourceEntries(List<String> resources, ClassLoader loader,

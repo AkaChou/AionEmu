@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 伊迪安深渊刷新点模板（静态数据/XML）。
- * XML template.
+ * Idian Depths spawn XML template.
  *
  * @author Rinzler (Encom)
  */
@@ -46,6 +46,7 @@ public class IdianDepthsSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
+	 * 伊迪安深渊是否开启。
 	 * @return Whether idian depths open
 	 */
 	public final boolean isIdianDepthsOpen() {
@@ -53,6 +54,7 @@ public class IdianDepthsSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
+	 * 伊迪安深渊是否关闭。
 	 * @return Whether idian depths closed
 	 */
 	public final boolean isIdianDepthsClosed() {

@@ -127,9 +127,13 @@ public class GameServer {
 	 * NPC counting set (startup/diagnostics).
 	 */
 	public static HashSet<String> npcs_count = new HashSet<String>();
-	private static int ELYOS_COUNT = 0;
+	/** 魔族角色计数 / Asmodian character count */
 	private static int ASMOS_COUNT = 0;
+	/** 天族角色计数 / Elyos character count */
+	private static int ELYOS_COUNT = 0;
+	/** 天族角色比例 / Elyos character ratio */
 	private static double ELYOS_RATIO = 0.0;
+	/** 魔族角色比例 / Asmodian character ratio */
 	private static double ASMOS_RATIO = 0.0;
 	private static final ReentrantLock lock = new ReentrantLock(true);
 

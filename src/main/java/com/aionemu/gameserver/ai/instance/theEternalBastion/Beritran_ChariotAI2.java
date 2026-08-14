@@ -23,6 +23,7 @@ public class Beritran_ChariotAI2 extends NpcAI2
 	@Override
     protected void handleDialogStart(Player player) {
         if (player.getInventory().getFirstItemByItemId(185000137) != null) { //Mobile Turret Key.
+        // 移动炮塔钥匙。 / Mobile Turret Key.
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 10));
         } else {
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 27));
@@ -33,9 +34,12 @@ public class Beritran_ChariotAI2 extends NpcAI2
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000137, 1)) { //Mobile Turret Key.
+		// 移动炮塔钥匙。 / Mobile Turret Key.
 		    switch (getNpcId()) {
 			    case 701624: //Beritran Chariot.
+			    // 贝里特兰战车。 / Beritran Chariot.
 				case 702689: //Beritran Chariot.
+				// 贝里特兰战车。 / Beritran Chariot.
 				    GameEngineServices.skillEngine().getSkill(player, 21141, 1, player).useNoAnimationSkill();
 				break;
 			}

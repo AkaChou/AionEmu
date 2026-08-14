@@ -25,7 +25,7 @@ public abstract class GsServerPacket extends BaseServerPacket {
      * Writes this packet's data for the given connection into the buffer.
      *
      * @param con 目标游戏服连接 / target game-server connection
-     * write buffer
+     * @param buffer 写出缓冲 / write buffer
      */
     public final synchronized void write(GsConnection con, ByteBuffer buffer) {
         setBuf(buffer);

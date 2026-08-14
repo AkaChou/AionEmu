@@ -62,7 +62,7 @@ public class Tricorn_FoodAI2 extends NpcAI2
 	}
 	
 	protected void handleUseItemFinish(Player player) {
-		spawn(216621, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Sweetsteppe.
+		spawn(216621, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 甜香草原 / Sweetsteppe.
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);
 	}

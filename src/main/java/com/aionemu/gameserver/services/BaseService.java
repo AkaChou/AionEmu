@@ -67,16 +67,16 @@ public class BaseService {
 		String weekly = "0 0 9 ? * WED *";
 		GameCronServices.cronService().schedule(new Runnable() {
 			public void run() {
-				// 艾特南。 / Elten.
+				// 埃尔特内。 / Elten.
 				capture(45, Race.NPC);
 				capture(46, Race.NPC);
-				// 海隆。 / Heiron.
+				// 因特尔蒂卡。 / Heiron.
 				capture(47, Race.NPC);
 				capture(48, Race.NPC);
 				// 莫尔海姆。 / Morheim.
 				capture(49, Race.NPC);
 				capture(50, Race.NPC);
-				// 贝卢斯兰。 / Beluslan.
+				// 贝鲁斯兰。 / Beluslan.
 				capture(51, Race.NPC);
 				capture(52, Race.NPC);
 				// 雷珊塔。 / Reshanta.

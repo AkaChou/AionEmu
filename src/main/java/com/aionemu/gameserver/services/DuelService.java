@@ -158,8 +158,8 @@ public class DuelService {
 	 * 撤回决斗请求并通知双方。
 	 * Cancels a duel request and notifies both players.
 	 *
-	 * owner cancelling
-	 * target
+	 * @param owner 撤回请求者 / owner cancelling
+	 * @param target 目标玩家 / target
 	 */
 	private void cancelDuelRequest(Player owner, Player target) {
 		PacketSendUtility.sendPacket(target, SM_SYSTEM_MESSAGE.STR_DUEL_REQUESTER_WITHDRAW_REQUEST(owner.getName()));
@@ -170,8 +170,8 @@ public class DuelService {
 	 * 正式开始决斗：发包、广播并创建超时任务。
 	 * Starts the duel: sends packets, broadcasts and creates a timeout task.
 	 *
-	 * requester
-	 * responder
+	 * @param requester 决斗发起者 / requester
+	 * @param responder 应战者 / responder
 	 */
 	private void startDuel(final Player requester, final Player responder) {
 		PacketSendUtility.sendPacket(requester, SM_DUEL.SM_DUEL_STARTED(responder.getObjectId()));
@@ -185,8 +185,8 @@ public class DuelService {
 	 * 向附近玩家广播决斗开始消息。
 	 * Broadcasts duel-start message to nearby players.
 	 *
-	 * player 1
-	 * player 2
+	 * @param player1 决斗玩家 1 / player 1
+	 * @param player2 决斗玩家 2 / player 2
 	 */
 	private void startDuelMsg(final Player player1, final Player player2) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {

@@ -51,8 +51,8 @@ public class ZorshivDredgionSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return 是否处于和平状态。 / Whether peace
-	  */
+	 * @return 是否处于和平状态 / Whether peace
+	 */
 	public final boolean isPeace() {
 		return zorshivDredgionType.equals(ZorshivDredgionStateType.PEACE);
 	}

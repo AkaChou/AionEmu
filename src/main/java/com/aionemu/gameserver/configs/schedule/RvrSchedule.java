@@ -68,8 +68,8 @@ public class RvrSchedule {
 	@XmlRootElement(name = "rvr")
 	public static class Rvr {
 		/**
-	 * RvR ID
-	 */
+		 * RvR ID / RvR ID
+		 */
 		@XmlAttribute(required = true)
 		private int id;
 

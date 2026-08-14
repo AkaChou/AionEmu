@@ -63,7 +63,7 @@ enum AbyssSkills {
 	 * 返回该军阶的技能 ID 数组。
 	 * Returns the skill-id array for this rank.
 	 *
-	 * Skill ids
+	 * @return 技能 ID 数组 / skill ids
 	 */
 	public int[] getSkills() {
 		return skills;
@@ -73,9 +73,9 @@ enum AbyssSkills {
 	 * 按种族与军阶查找技能；未匹配时记录警告并返回空数组。
 	 * Look up skills by race and rank; logs a warning and returns empty array when unmatched.
 	 *
-	 * 阵营 / Race
-	 * Rank
-	 * Skill-id array
+	 * @param race 阵营 / Race
+	 * @param rank 军阶 / Rank
+	 * @return 技能 ID 数组 / skill-id array
 	 */
 	public static int[] getSkills(Race race, AbyssRankEnum rank) {
 		for (AbyssSkills aSkills : values()) {

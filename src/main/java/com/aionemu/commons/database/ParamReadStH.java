@@ -15,11 +15,11 @@ import java.sql.SQLException;
  */
 public interface ParamReadStH extends ReadStH {
     /**
- * 设置 SQL 语句的参数
+     * 设置 SQL 语句的参数
      * Set parameters for the SQL statement
      *
- * @param stmt 预处理 SQL 语句对象 / The PreparedStatement object
- * If a SQL error occurs while setting parameters。
+     * @param stmt 预处理 SQL 语句对象 / The PreparedStatement object
+     * @throws SQLException 设置参数时发生 SQL 错误 / If a SQL error occurs while setting parameters
      */
     void setParams(PreparedStatement stmt) throws SQLException;
 }

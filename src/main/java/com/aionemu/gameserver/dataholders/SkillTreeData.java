@@ -78,9 +78,9 @@ public class SkillTreeData {
 	 * 查找可学习技能：职业+阵营专用、职业通用、全职业通用三类。
 	 * Finds learnable skills: class+race specific, class-only, and general (all class/race).
 	 *
-	 * player class
-	 * level
-	 * 阵营 / race
+	 * @param playerClass 职业 / player class
+	 * @param level 等级 / level
+	 * @param race 阵营 / race
 	 * @return 匹配的学习模板数组 / matching learn templates
 	 */
 	public SkillLearnTemplate[] getTemplatesFor(PlayerClass playerClass, int level, Race race) {
@@ -109,9 +109,7 @@ public class SkillTreeData {
 	 * 按技能 ID 返回全部学习模板。
 	 * Returns all learn templates for the given skill id.
 	 *
-	 * skill id
-	 *
-	 * @param skillId
+	 * @param skillId 技能 ID / skill id
 	 * @return 学习模板数组 / learn template array
 	 */
 	public SkillLearnTemplate[] getTemplatesForSkill(int skillId) {
@@ -128,9 +126,7 @@ public class SkillTreeData {
 	 * 判断技能是否出现在技能树中（可学习）。
 	 * Returns whether the skill appears in the skill tree (is learnable).
 	 *
-	 * skill id
-	 *
-	 * @param skillId
+	 * @param skillId 技能 ID / skill id
 	 * @return 是否可学习 / whether it is a learned skill
 	 */
 	public boolean isLearnedSkill(int skillId) {

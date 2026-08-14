@@ -32,7 +32,7 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
      * Loads outpost locations; missing rows are inserted automatically.
      *
      * @param locations 前哨据点映射 / outpost location map
-     * whether successful
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean loadOutposLocations(Map<Integer, OutpostLocation> locations) {
@@ -72,8 +72,8 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
      * 更新前哨据点。
      * Updates an outpost location.
      *
-     * outpost location
-     * whether successful
+     * @param location 据点位置 / outpost location
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean updateOutpostLocation(OutpostLocation location) {
@@ -96,8 +96,8 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
      * 插入前哨据点（默认种族 NPC）。
      * Inserts an outpost location (default race NPC).
      *
-     * outpost location
-     * whether successful
+     * @param location 据点位置 / outpost location
+     * @return 是否成功 / whether successful
      */
     private boolean insertOutpostLocation(OutpostLocation location) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -120,7 +120,7 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
      * Batch-updates outpost locations.
      *
      * @param locations 前哨据点映射 / outpost location map
-     * whether successful
+     * @return 是否成功 / whether successful
      */
     public boolean updateOutpostLocations(Map<Integer, OutpostLocation> locations) {
         try (Connection con = DatabaseFactory.getConnection()) {
@@ -154,10 +154,10 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

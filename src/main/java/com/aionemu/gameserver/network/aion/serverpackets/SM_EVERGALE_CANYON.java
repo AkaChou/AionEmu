@@ -10,6 +10,12 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 public class SM_EVERGALE_CANYON extends AionServerPacket {
 	private int action;
 
+	/**
+	 * 按动作类型构造状态包。
+	 * Creates a status packet for the given action type.
+	 *
+	 * @param id 动作类型 / action type
+	 */
 	public SM_EVERGALE_CANYON(int id) {
 		this.action = id;
 	}

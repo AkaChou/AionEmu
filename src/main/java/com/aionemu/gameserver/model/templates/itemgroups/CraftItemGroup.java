@@ -11,8 +11,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.rewards.CraftItem;
 
 /**
- * 制作物品奖励组模板（静态数据/XML）。
- * XML template.
+ * 制作物品奖励组：制作产出的物品条目。
+ * Craft item reward group: item entries produced by crafting.
  *
  * @author Rolandas
  */

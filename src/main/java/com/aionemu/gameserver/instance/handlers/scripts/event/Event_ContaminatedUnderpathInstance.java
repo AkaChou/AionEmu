@@ -86,8 +86,8 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
 	 *
-	 * visible object
-	 * result
+	 * @param object 玩家对象 ID / player object id
+	 * @return 玩家奖励记录 / player reward record
 	 */
 	
 	protected IDEventDefPlayerReward getPlayerReward(Integer object) {
@@ -113,7 +113,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
 	 *
-	 * result
+	 * @return 副本奖励对象 / instance reward object
 	 */
 	@Override
 	public InstanceReward<?> getInstanceReward() {
@@ -130,8 +130,8 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc 目标 NPC / target NPC
 	 */
 	@Override
     public void handleUseItemFinish(Player player, Npc npc) {
@@ -141,7 +141,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				spawnPrototype();
 				startContaminedUnderPath1();
 				sendMsg("[START]: Wave <1/4>");
-				// 1     ?.
+				// 第 1 波。 / Wave 1.
 				sendMsgByRace(1404504, Race.PC_ALL, 0);
 			break;
 			case 703474: //IDEVENT_SWSwitch_02a.
@@ -160,22 +160,20 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				// 3     ?.
 				sendMsgByRace(1404506, Race.PC_ALL, 0);
 			break;
-		   /**
-	 * 5. 击杀最终 Boss：共有多级控制单元。 / 5. Kill The Final Boss Monster: A total of "4 levels of control units" appear, and monsters of different characteristics come in each stage. Be careful that the character dies when entering the contaminated floor. Step 4 After you click on the controller, kill the dead boss monster, the body resuscitator Voodoo, and the attack will be completed
-	 */
+			// 5. 击杀最终 Boss：共有多级控制单元。 / 5. Kill The Final Boss Monster: multiple control-unit stages appear.
 			case 703476: //IDEVENT_SWSwitch_04a.
 			    despawnNpc(npc);
 			    startContaminedUnderPath4();
 				underpathTaskA3.cancel(true);
 				sendMsg("[START]: Wave <4/4>");
-				//？？？ III / ?? ? III
+				// ？？？ III / ??? III
 				sendMsgByRace(1404507, Race.PC_ALL, 0);
 			break;
 			case 836149: //IDEvent_Def_In_Door.
 				if (player.getInventory().decreaseByItemId(186000495, 1)) {
 					killNpc(getNpcs(836149));
 			    } else {
-					//?    .
+					// 需要钥匙才能开门。 / A key is required to open the door.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404524));
 				}
             break;
@@ -186,7 +184,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc 死亡的 NPC / dead NPC
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -201,7 +199,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 					deleteNpc(703473);
 					underpathTaskA1.cancel(true);
 					sendMsg("[START]: Wave 1 End");
-					//2    .
+					// 第 2 波。 / Wave 2.
 					sendMsgByRace(1404508, Race.PC_ALL, 0);
 					spawn(703474, 230.04181f, 206.23842f, 160.28148f, (byte) 30);
 				}
@@ -213,7 +211,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 					deleteNpc(703474);
 					underpathTaskA2.cancel(true);
 					sendMsg("[START]: Wave 2 End");
-					//3    .
+					// 第 3 波。 / Wave 3.
 					sendMsgByRace(1404509, Race.PC_ALL, 0);
 					spawn(703475, 230.04181f, 206.23842f, 160.28148f, (byte) 30);
 				}
@@ -225,7 +223,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 					deleteNpc(703475);
 					underpathTaskA3.cancel(true);
 					sendMsg("[START]: Wave 3 End");
-					//4    .
+					// 第 4 波。 / Wave 4.
 					sendMsgByRace(1404510, Race.PC_ALL, 0);
 					spawn(703476, 230.04181f, 206.23842f, 160.28148f, (byte) 30);
 				}
@@ -580,8 +578,9 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		return rank;
 	}
 	
-   /**
-	 * 3. 安装炮塔：可在指定位置安装各类炮塔。 / 3. Installing The Turret: You can install various types of turrets on an empty turret, or upgrade the installed turret using the "Aura Of Patience". The turrets become increasingly stronger turrets as you upgrade
+	/**
+	 * 3. 安装炮塔：可在指定位置安装各类炮塔。
+	 * 3. Installing The Turret: install various turret types on empty turrets, or upgrade them with the "Aura Of Patience".
 	 */
 	private void spawnPrototype() {
 		sp(836050, 235.97508f, 215.58057f, 160.34032f, (byte) 30, 2000, 0, null);
@@ -633,8 +632,8 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * 玩家打开门时处理。
 	 * Handle a player opening a door.
 	 *
-	 * 玩家 / player
-	 * doorId
+	 * @param player 玩家 / player
+	 * @param doorId 门 ID / door id
 	 */
 	@Override
 	public void onOpenDoor(Player player, int doorId) {
@@ -643,7 +642,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			doors.get(57).setOpen(true);
 			// 片刻后第一通道将强制开放。请准备。 / After a while, the first passage is forcibly released. Please prepare.
 			sendMsgByRace(1404511, Race.PC_ALL, 0);
-			// 使用空���塔召唤炮塔。 / Summon the turret using an empty turret.
+			// 使用空炮塔召唤炮塔。 / Summon the turret using an empty turret.
 			sendMsgByRace(1404528, Race.PC_ALL, 5000);
 			// 使用强力生命的守护者石像可获得强大力量。 / You can get strong strength by using Deva stone statue of powerful life.
 			sendMsgByRace(1404530, Race.PC_ALL, 10000);
@@ -671,13 +670,9 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			doReward(player);
 		}
 		startPrepareTimer();
-	   /**
-	 * 2. 开始战斗：点击入口后战斗开始。 / 2. Start Combat: When you click on the entrance, the battle begins, and after a certain time, the monster starts to gather. If you kill a monster, you can acquire a 'Guardian energy', which can be used to build a turret or to strengthen your skills. Tip 1. Let's use 'prison keys' to get items faster. After the battle begins, you can use your key to open the prison door between the stairs to kill the contaminated Dog. It can help you to shorten your attack time because you can acquire 50 points of 'Guardian Power' when you deal with the contaminated Dog. The 'prison key' will be paid through three surveys. Additional purchases can be made through a dedicated store if necessary. Tip 2. Let's get rid of the gangs! Gold stems often appear inside the interior. At the time of the treatment, you can acquire the 'Power of Suho' at random, so let's do not miss it. 4. Enhance Your Skills: If you click on the stone statue located on the entrance side, you can strengthen your ability by using the power of guardian
-	 */
-		ItemService.addItem(player, 186000495, 1); //?  (Open Door Prison)
-	   /**
-	 * 1. 变身：进入污染地下通道时自动变为传送形态。 / 1. Transformation: When entering the contaminated underground passage, it automatically transforms into a form of transfer. Basically, you can use the 'Berta' skill, you cannot use your skills
-	 */
+		// 2. 开始战斗：点击入口后战斗开始。 / 2. Start Combat: clicking the entrance begins the battle.
+		ItemService.addItem(player, 186000495, 1); // 监狱钥匙（开门用） / Prison Key (Open Door Prison)
+		// 1. 变身：进入污染地下通道时自动变为传送形态。 / 1. Transformation: entering the passage auto-transforms you.
 		final int IDEventDef = skillRace == Race.ASMODIANS ? 4940 : 4935;
 		GameEngineServices.skillEngine().applyEffectDirectly(IDEventDef, player, player, 1200000 * 1);
 	}
@@ -734,8 +729,9 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		sendPacket(0, 0);
 	}
 	
-   /**
-	 * 主要补偿/奖励信息：开启 S 级与 A 级宝箱等。 / Major compensation information Major rewards open the "S Rank" treasure box and "A Rank" treasure box, and the following item comes out
+	/**
+	 * 主要补偿/奖励信息：开启 S 级与 A 级宝箱等。
+	 * Major compensation: open the "S Rank" and "A Rank" treasure boxes for rewards.
 	 */
 	@Override
 	public void doReward(Player player) {
@@ -747,17 +743,17 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				case 1: //Rank S
 				    playerReward.setScoreAP(25000);
 					playerReward.setWrapCashIDEventDefLiveSRank(1);
-					ItemService.addItem(player, 188058265, 1); //S?  ??.
+					ItemService.addItem(player, 188058265, 1); // S 级宝箱 / S-rank box.
 				break;
 				case 2: //Rank A
 				    playerReward.setScoreAP(15000);
 					playerReward.setWrapCashIDEventDefLiveARank(1);
-					ItemService.addItem(player, 188058266, 1); //A?  ??.
+					ItemService.addItem(player, 188058266, 1); // A 级宝箱 / A-rank box.
 				break;
 				case 3: //Rank B
 				    playerReward.setScoreAP(10000);
 					playerReward.setWrapCashIDEventDefLiveBRank(1);
-					ItemService.addItem(player, 188058267, 1); //B?  ??.
+					ItemService.addItem(player, 188058267, 1); // B 级宝箱 / B-rank box.
 				break;
 			}
 			AbyssPointsService.addAp(player, playerReward.getScoreAP());
@@ -803,50 +799,50 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
         }
     }
 	/**
-	 * 处理 sp。
-	 * Handle sp.
+	 * 延迟刷出 NPC。
+	 * Delayed NPC spawn.
 	 *
-	 * NPC
+	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * time
+	 * @param time 延迟毫秒 / delay millis
 	 */
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
 	/**
-	 * 处理 sp。
-	 * Handle sp.
+	 * 延迟刷出 NPC 并广播消息。
+	 * Delayed NPC spawn with a broadcast message.
 	 *
-	 * NPC
+	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * time
-	 * message
-	 * 阵营 / race
+	 * @param time 延迟毫秒 / delay millis
+	 * @param msg 消息 ID / message id
+	 * @param race 目标阵营 / target race
 	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
 	/**
-	 * 处理 sp。
-	 * Handle sp.
+	 * 延迟刷出带实体 ID 的 NPC 并广播消息。
+	 * Delayed NPC spawn with entity id and a broadcast message.
 	 *
-	 * NPC
+	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * entity id
-	 * time
-	 * message
-	 * 阵营 / race
+	 * @param entityId 实体 ID / entity id
+	 * @param time 延迟毫秒 / delay millis
+	 * @param msg 消息 ID / message id
+	 * @param race 目标阵营 / target race
 	 */
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
@@ -867,16 +863,16 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
         }, time));
     }
 	/**
-	 * 处理 sp。
-	 * Handle sp.
+	 * 延迟刷出带巡路线 NPC。
+	 * Delayed NPC spawn with a walker route.
 	 *
-	 * NPC
+	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * time
-	 * walkerId
+	 * @param time 延迟毫秒 / delay millis
+	 * @param walkerId 巡路线 ID / walker id
 	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
@@ -899,7 +895,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * 移除指定 NPC。
 	 * Despawn the given NPC.
 	 *
-	 * npc
+	 * @param npc 目标 NPC / target NPC
 	 */
 	
 	protected void despawnNpc(Npc npc) {
@@ -917,7 +913,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * 处理 killNpc。
 	 * Handle killNpc.
 	 *
-	 * npcs
+	 * @param npcs NPC 列表 / NPC list
 	 */
 	
 	protected void killNpc(List<Npc> npcs) {
@@ -926,11 +922,11 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
         }
     }
 	/**
-	 * 返回 npcs。
-	 * Return the npcs.
+	 * 返回指定 ID 的 NPC 列表。
+	 * Return the NPC list for the given id.
 	 *
-	 * NPC
-	 * result
+	 * @param npcId NPC ID / NPC id
+	 * @return NPC 列表 / NPC list
 	 */
 	
 	protected List<Npc> getNpcs(int npcId) {
@@ -993,12 +989,12 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		});
 	}
 	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
+	 * 按阵营广播系统消息。
+	 * Broadcasts a system message by race.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 ID / message id
+	 * @param race 目标阵营 / target race
+	 * @param time 延迟毫秒 / delay millis
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

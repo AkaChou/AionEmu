@@ -24,7 +24,7 @@ public class PacketSendUtility {
 	 * 向玩家发送金色（GOLDEN_YELLOW）系统消息。
 	 * Send a golden-yellow system message to a player.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
 	public static void sendMessage(Player player, String msg) {
@@ -35,7 +35,7 @@ public class PacketSendUtility {
 	 * 向玩家发送白色消息。
 	 * Send a white message to a player.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
 	public static void sendWhiteMessage(Player player, String msg) {
@@ -46,7 +46,7 @@ public class PacketSendUtility {
 	 * 向玩家发送居中白色消息。
 	 * Send a white center message to a player.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
 	public static void sendWhiteMessageOnCenter(Player player, String msg) {
@@ -57,7 +57,7 @@ public class PacketSendUtility {
 	 * 向玩家发送黄色消息。
 	 * Send a yellow message to a player.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
 	public static void sendYellowMessage(Player player, String msg) {
@@ -68,7 +68,7 @@ public class PacketSendUtility {
 	 * 向玩家发送居中黄色消息。
 	 * Send a yellow center message to a player.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
 	public static void sendYellowMessageOnCenter(Player player, String msg) {
@@ -79,7 +79,7 @@ public class PacketSendUtility {
 	 * 向玩家发送亮黄消息。
 	 * Send a bright-yellow message to a player.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
 	public static void sendBrightYellowMessage(Player player, String msg) {
@@ -90,7 +90,7 @@ public class PacketSendUtility {
 	 * 向玩家发送居中亮黄消息。
 	 * Send a bright-yellow center message to a player.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
 	public static void sendBrightYellowMessageOnCenter(Player player, String msg) {
@@ -101,7 +101,7 @@ public class PacketSendUtility {
 	 * 以小队队长频道样式发送系统消息。
 	 * Send a system message styled as group-leader chat.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param sender 发送者显示名 / Sender display name
 	 * @param msg 消息内容 / Message text
 	 */
@@ -113,7 +113,7 @@ public class PacketSendUtility {
 	 * 以白色系统样式发送消息（sender 未使用）。
 	 * Send a white system-style message (sender unused).
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param sender 发送者（未使用） / Sender (unused)
 	 * @param msg 消息内容 / Message text
 	 */
@@ -125,7 +125,7 @@ public class PacketSendUtility {
 	 * 以命令频道样式发送系统消息。
 	 * Send a system message styled as command chat.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param sender 发送者显示名 / Sender display name
 	 * @param msg 消息内容 / Message text
 	 */
@@ -137,7 +137,7 @@ public class PacketSendUtility {
 	 * 以军团频道样式发送系统消息。
 	 * Send a system message styled as legion chat.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param sender 发送者显示名 / Sender display name
 	 * @param msg 消息内容 / Message text
 	 */
@@ -149,7 +149,7 @@ public class PacketSendUtility {
 	 * 以联军频道样式发送系统消息。
 	 * Send a system message styled as coalition chat.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param sender 发送者显示名 / Sender display name
 	 * @param msg 消息内容 / Message text
 	 */
@@ -161,7 +161,7 @@ public class PacketSendUtility {
 	 * 以联盟频道样式发送系统消息。
 	 * Send a system message styled as league chat.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param sender 发送者显示名 / Sender display name
 	 * @param msg 消息内容 / Message text
 	 */
@@ -173,7 +173,7 @@ public class PacketSendUtility {
 	 * 向玩家发送居中警告消息（联盟警报样式）。
 	 * Send a center warning message (league-alert style).
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
 	public static void sendWarnMessageOnCenter(Player player, String msg) {
@@ -184,8 +184,8 @@ public class PacketSendUtility {
 	 * 向玩家发送服务端数据包（连接存在时）。
 	 * Send a server packet to a player when the connection exists.
 	 *
-	 * Target player
-	 * Server packet
+	 * @param player 目标玩家 / Target player
+	 * @param packet 服务器包 / Server packet
 	 */
 	public static void sendPacket(Player player, AionServerPacket packet) {
 		if (player.getClientConnection() != null) {
@@ -197,8 +197,8 @@ public class PacketSendUtility {
 	 * 延迟向玩家发送数据包。
 	 * Schedule a delayed packet send to a player.
 	 *
-	 * Target player
-	 * Server packet
+	 * @param player 目标玩家 / Target player
+	 * @param packet 服务器包 / Server packet
 	 * @param time 延迟毫秒 / Delay in milliseconds
 	 */
 	public static void playerSendPacketTime(final Player player, final AionServerPacket packet, int time) {
@@ -216,8 +216,8 @@ public class PacketSendUtility {
 	 * 延迟向 NPC 已知列表中的在线玩家广播数据包。
 	 * Schedule a delayed packet broadcast to online players in an NPC known-list.
 	 *
-	 * Source NPC
-	 * Server packet
+	 * @param npc 来源 NPC / Source NPC
+	 * @param packet 服务器包 / Server packet
 	 * @param time 延迟毫秒 / Delay in milliseconds
 	 */
 	public static void npcSendPacketTime(final Npc npc, final AionServerPacket packet, int time) {
@@ -241,7 +241,7 @@ public class PacketSendUtility {
 	 * Schedule a delayed golden message to all online players.
 	 *
 	 * @param player 触发上下文玩家（未用于过滤） / Context player (unused for filtering)
-	 * Message text
+	 * @param message 消息文本 / Message text
 	 * @param time 延迟毫秒 / Delay in milliseconds
 	 */
 	public static void sendMessageTime(final Player player, final String message, int time) {
@@ -264,8 +264,8 @@ public class PacketSendUtility {
 	 * 向玩家已知列表广播包，可选同时发给自己。
 	 * Broadcast a packet to a player's known-list, optionally including self.
 	 *
-	 * Source player
-	 * Server packet
+	 * @param player 来源玩家 / Source player
+	 * @param packet 服务器包 / Server packet
 	 * @param toSelf 是否发给自己 / Whether to send to self
 	 */
 	public static void broadcastPacket(Player player, AionServerPacket packet, boolean toSelf) {
@@ -280,7 +280,7 @@ public class PacketSendUtility {
 	 * Broadcast to a visible object's known-list and also deliver to self if it is a player.
 	 *
 	 * @param visibleObject 源可见对象 / Source visible object
-	 * Server packet
+	 * @param packet 服务器包 / Server packet
 	 */
 	public static void broadcastPacketAndReceive(VisibleObject visibleObject, AionServerPacket packet) {
 		if (visibleObject instanceof Player) {
@@ -294,7 +294,7 @@ public class PacketSendUtility {
 	 * Broadcast a packet to online players in a visible object's known-list.
 	 *
 	 * @param visibleObject 源可见对象 / Source visible object
-	 * Server packet
+	 * @param packet 服务器包 / Server packet
 	 */
 	public static void broadcastPacket(VisibleObject visibleObject, final AionServerPacket packet) {
 		visibleObject.getKnownList().doOnAllPlayers(new Visitor<Player>() {
@@ -312,7 +312,7 @@ public class PacketSendUtility {
 	 * Broadcast a packet to online known-list players accepted by a filter.
 	 *
 	 * @param visibleObject 源可见对象 / Source visible object
-	 * Server packet
+	 * @param packet 服务器包 / Server packet
 	 * @param filter 玩家过滤器 / Player filter
 	 */
 	public static void broadcastPacket(VisibleObject visibleObject, AionServerPacket packet, ObjectFilter<Player> filter) {
@@ -330,8 +330,8 @@ public class PacketSendUtility {
 	 * 向玩家已知列表中通过过滤器的对象广播包，可选发给自己。
 	 * Broadcast to known-list players accepted by a filter, optionally including self.
 	 *
-	 * Source player
-	 * Server packet
+	 * @param player 来源玩家 / Source player
+	 * @param packet 服务器包 / Server packet
 	 * @param toSelf 是否发给自己 / Whether to send to self
 	 * @param filter 玩家过滤器 / Player filter
 	 */
@@ -355,8 +355,8 @@ public class PacketSendUtility {
 	 * Broadcast a packet to known players within a 3D distance.
 	 *
 	 * @param visibleObject 源可见对象 / Source visible object
-	 * Server packet
-	 * 3D distance
+	 * @param packet 服务器包 / Server packet
+	 * @param distance 3D 距离 / 3D distance
 	 */
 	public static void broadcastPacket(final VisibleObject visibleObject, final AionServerPacket packet,
 			final int distance) {
@@ -374,7 +374,7 @@ public class PacketSendUtility {
 	 * 向全服通过过滤器的玩家广播包。
 	 * Broadcast a packet to all world players accepted by a filter.
 	 *
-	 * Server packet
+	 * @param packet 服务器包 / Server packet
 	 * @param filter 玩家过滤器 / Player filter
 	 */
 	public static void broadcastFilteredPacket(final AionServerPacket packet, final ObjectFilter<Player> filter) {
@@ -393,8 +393,8 @@ public class PacketSendUtility {
 	 * 向军团所有在线成员广播包。
 	 * Broadcast a packet to all online legion members.
 	 *
-	 * Legion
-	 * Server packet
+	 * @param legion 军团 / Legion
+	 * @param packet 服务器包 / Server packet
 	 */
 	public static void broadcastPacketToLegion(Legion legion, AionServerPacket packet) {
 		for (Player onlineLegionMember : legion.getOnlineLegionMembers()) {
@@ -406,8 +406,8 @@ public class PacketSendUtility {
 	 * 向军团在线成员广播包，排除指定玩家。
 	 * Broadcast a packet to online legion members excluding one player.
 	 *
-	 * Legion
-	 * Server packet
+	 * @param legion 军团 / Legion
+	 * @param packet 服务器包 / Server packet
 	 * @param playerObjId 排除的玩家对象 ID / Excluded player object id
 	 */
 	public static void broadcastPacketToLegion(Legion legion, AionServerPacket packet, int playerObjId) {
@@ -423,7 +423,7 @@ public class PacketSendUtility {
 	 * Broadcast a packet to all players in a siege zone.
 	 *
 	 * @param zone 攻城区域 / Siege zone
-	 * Server packet
+	 * @param packet 服务器包 / Server packet
 	 */
 	public static void broadcastPacketToZone(SiegeZoneInstance zone, final AionServerPacket packet) {
 		zone.doOnAllPlayers(new Visitor<Player>() {

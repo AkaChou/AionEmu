@@ -87,8 +87,8 @@ public class PacketProcessor<T extends AConnection> {
      *
      * @param minThreads 最小线程数 / Minimum threads
      * @param maxThreads 最大线程数 / Maximum threads
-     * Spawn threshold
-     * Kill threshold
+     * @param threadSpawnThreshold 线程创建阈值 / Spawn threshold
+     * @param threadKillThreshold 线程销毁阈值 / Kill threshold
      */
     public PacketProcessor(int minThreads, int maxThreads, int threadSpawnThreshold, int threadKillThreshold) {
         this(minThreads, maxThreads, threadSpawnThreshold, threadKillThreshold, new DummyExecutor());
@@ -100,8 +100,8 @@ public class PacketProcessor<T extends AConnection> {
      *
      * @param minThreads 最小线程数 / Minimum threads
      * @param maxThreads 最大线程数 / Maximum threads
-     * Spawn threshold
-     * Kill threshold
+     * @param threadSpawnThreshold 线程创建阈值 / Spawn threshold
+     * @param threadKillThreshold 线程销毁阈值 / Kill threshold
      * @param executor 数据包执行器 / Packet executor
      */
     public PacketProcessor(int minThreads, int maxThreads, int threadSpawnThreshold, int threadKillThreshold, Executor executor) {
@@ -115,10 +115,10 @@ public class PacketProcessor<T extends AConnection> {
      *
      * @param minThreads 最小线程数 / Minimum threads
      * @param maxThreads 最大线程数 / Maximum threads
-     * Spawn threshold
-     * Kill threshold
+     * @param threadSpawnThreshold 线程创建阈值 / Spawn threshold
+     * @param threadKillThreshold 线程销毁阈值 / Kill threshold
      * @param executor 数据包执行器 / Packet executor
-     * Thread factory
+     * @param threadFactory 线程工厂 / Thread factory
      */
     PacketProcessor(int minThreads, int maxThreads, int threadSpawnThreshold, int threadKillThreshold, Executor executor, ThreadFactory threadFactory) {
         this.lock = new ReentrantLock();
@@ -180,9 +180,9 @@ public class PacketProcessor<T extends AConnection> {
      * 用工厂创建并命名受服务上下文包装的线程。
      * Create and name a service-context-wrapped thread via factory.
      *
-     * Task
-     * Thread name
-     * Thread
+     * @param task 任务 / Task
+     * @param name 线程名 / Thread name
+     * @return 线程 / Thread
      */
     private Thread newManagedThread(Runnable task, String name) {
         Thread thread = threadFactory.newThread(ServiceContext.wrap(task, serviceContext));
@@ -223,7 +223,7 @@ public class PacketProcessor<T extends AConnection> {
      * Get first packet whose connection can be locked.
      *
      * @return 可用数据包 / Available packet
-     * Wait interrupted。
+     * @throws InterruptedException 等待被中断 / Wait interrupted
      */
     private BaseClientPacket<T> getFirstAviable() throws InterruptedException {
         while (true) {

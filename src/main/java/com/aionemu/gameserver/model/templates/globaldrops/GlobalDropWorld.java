@@ -9,7 +9,7 @@ import com.aionemu.gameserver.world.WorldDropType;
 
 /**
  * 全局掉落世界模板（静态数据/XML）。
- * XML template.
+ * Global drop world template (static data/XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

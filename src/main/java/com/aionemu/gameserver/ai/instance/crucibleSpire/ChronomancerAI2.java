@@ -38,11 +38,11 @@ public class ChronomancerAI2 extends NpcAI2 {
 				    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
-							despawnNpc(701772); //Stair.
+							despawnNpc(701772); // 楼梯 / Stair.
 						}
 					}, 5000);
 					spawnFloor(pfloor + 1);
-					spawn(701000, 263.55551f, 1249.5244f, 240.73053f, (byte) 0, 56); //Wall.
+					spawn(701000, 263.55551f, 1249.5244f, 240.73053f, (byte) 0, 56); // 墙 / Wall.
 					TeleportService2.teleportTo(player, 302400000, instanceId, 219.33264f, 1249.4528f, 240.85301f, (byte) 0);
 					if (pfloor == 39) {
 						TeleportService2.teleportTo(player, 302400000, instanceId, 210.42656f, 249.58434f, 971.39510f, (byte) 0);
@@ -53,7 +53,13 @@ public class ChronomancerAI2 extends NpcAI2 {
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 		return true;
 	}
-	
+
+	/**
+	 * 在指定楼层生成挑战怪物。
+	 * Spawn the challenge monsters for the given floor.
+	 *
+	 * @param next 下一层楼层号 / next floor number
+	 */
 	private void spawnFloor(int next) {
 		switch (next) {
 			case 1:
@@ -64,6 +70,12 @@ public class ChronomancerAI2 extends NpcAI2 {
 		}
 	}
 	
+	/**
+	 * 删除副本中指定 ID 的全部 NPC。
+	 * Delete all NPCs of the given ID in the instance.
+	 *
+	 * @param npcId 要删除的 NPC ID / NPC ID to delete
+	 */
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

@@ -44,7 +44,7 @@ public class RiftManager {
 	 * 登记裂隙生成组模板（按锚点名索引）。
 	 * Registers rift spawn-group templates (indexed by anchor name).
 	 *
-	 * Spawn group
+	 * @param spawn 生成组 / Spawn group
 	 */
 	public static void addRiftSpawnTemplate(SpawnGroup2 spawn) {
 		if (spawn.hasPool()) {
@@ -135,7 +135,7 @@ public class RiftManager {
 	 * 返回当前已生成裂隙 NPC 的快照副本。
 	 * Returns a snapshot copy of currently spawned rift NPCs.
 	 *
-	 * Rift NPC list
+	 * @return 裂隙 NPC 列表 / Rift NPC list
 	 */
 	public static List<Npc> getSpawned() {
         synchronized (rifts) {

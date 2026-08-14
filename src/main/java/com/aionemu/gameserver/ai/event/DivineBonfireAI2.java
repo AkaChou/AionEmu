@@ -25,7 +25,7 @@ public class DivineBonfireAI2 extends GeneralNpcAI2 {
     @Override
     protected void handleDialogStart(Player player) {
         switch (getNpcId()) {
-            case 831795: { //Divine Bonfire
+            case 831795: { // 神圣篝火 / Divine Bonfire
                 super.handleDialogStart(player);
                 break;
             }

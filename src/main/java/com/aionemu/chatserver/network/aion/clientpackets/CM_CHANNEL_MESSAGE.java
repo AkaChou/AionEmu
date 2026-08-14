@@ -32,9 +32,9 @@ public class CM_CHANNEL_MESSAGE extends AbstractClientPacket {
      * 构造频道消息客户端包。
      * Constructs a channel message client packet.
      *
-     * packet reader
+     * @param packetReader 包读取器 / packet reader
      * @param gameChannelHandler 客户端通道处理器 / client channel handler
-     * broadcast service
+     * @param broadcastService 广播服务 / broadcast service
      */
     public CM_CHANNEL_MESSAGE(PacketReader packetReader, ClientChannelHandler gameChannelHandler, BroadcastService broadcastService) {
         super(packetReader, gameChannelHandler, 0x18);

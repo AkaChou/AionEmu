@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * 宠物属性模板（静态数据/XML）。
- * XML template.
+ * Pet stats template (static data / XML).
  *
  * @author M@xx
  */
@@ -30,27 +30,27 @@ public class PetStatsTemplate {
 	@XmlAttribute(name = "altitude", required = true)
 	private float altitude;
 
-	/** 返回 reaction / Returns the reaction */
+	/** 返回反应动作 / Returns the reaction */
 	public String getReaction() {
 		return reaction;
 	}
 
-	/** 返回 run speed / Returns the run speed */
+	/** 返回奔跑速度 / Returns the run speed */
 	public float getRunSpeed() {
 		return runSpeed;
 	}
 
-	/** 返回 walk speed / Returns the walk speed */
+	/** 返回行走速度 / Returns the walk speed */
 	public float getWalkSpeed() {
 		return walkSpeed;
 	}
 
-	/** 返回 height / Returns the height */
+	/** 返回高度 / Returns the height */
 	public float getHeight() {
 		return height;
 	}
 
-	/** 返回 altitude / Returns the altitude */
+	/** 返回飞行高度 / Returns the altitude */
 	public float getAltitude() {
 		return altitude;
 	}

@@ -7,9 +7,9 @@ package com.aionemu.gameserver.utils.stats.enums;
 public enum SPEED {
 	WARRIOR(6), GLADIATOR(6), TEMPLAR(6), SCOUT(6), ASSASSIN(6), RANGER(6), MAGE(6), SORCERER(6), SPIRIT_MASTER(6),
 	PRIEST(6), CLERIC(6), CHANTER(6),
-	// 资讯类 4.3 / News Class 4.3
+	// 新职业 4.3 / New Class 4.3
 	TECHNIST(6), GUNSLINGER(6), MUSE(6), SONGWEAVER(6),
-	// 资讯类 4.5 / News Class 4.5
+	// 新职业 4.5 / New Class 4.5
 	AETHERTECH(6);
 
 	/**
@@ -26,7 +26,7 @@ public enum SPEED {
 	 * 获取该职业的基础属性值。
 	 * Returns the baseline attribute value for this class.
 	 *
-	 * Attribute value
+	 * @return 基础属性值 / baseline attribute value
 	 */
 	public int getValue() {
 		return value;

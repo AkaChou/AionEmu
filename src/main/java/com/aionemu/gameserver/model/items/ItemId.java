@@ -84,9 +84,9 @@ public enum ItemId {
 	SHAPER_TOKEN(186000133), // Aion 3.0
 	/** Worthiness Ticket / Worthiness Ticket */
 	WORTHINESS_TICKET(186000134), // Aion 2.5 ~ Aion 2.6
-	/** Arena Of Chaos Ticket / Arena Of Chaos Ticket */
+	/** 混沌竞技场入场券 / Arena Of Chaos Ticket */
 	ARENA_OF_CHAOS_TICKET(186000135), // Aion 2.7
-	/** Arena Of Discipline Ticket / Arena Of Discipline Ticket */
+	/** 孤独竞技场入场券 / Arena Of Discipline Ticket */
 	ARENA_OF_DISCIPLINE_TICKET(186000136), // Aion 2.7
 	/** Courage Insignia / Courage Insignia */
 	COURAGE_INSIGNIA(186000137), // Aion 2.7
@@ -96,9 +96,9 @@ public enum ItemId {
 	INSECT_FOSSIL_FRAGMENT(186000139), // Aion 2.6
 	/** Animal Fossil Fragment / Animal Fossil Fragment */
 	ANIMAL_FOSSIL_FRAGMENT(186000140), // Aion 2.6
-	/** Arena Of Chaos Ticket Level 2 / Arena Of Chaos Ticket Level 2 */
+	/** 混沌竞技场入场券 2 级 / Arena Of Chaos Ticket Level 2 */
 	ARENA_OF_CHAOS_TICKET_LEVEL_2(186000141), // Aion 3.0
-	/** Arena Of Discipline Ticket Level 2 / Arena Of Discipline Ticket Level 2 */
+	/** 孤独竞技场入场券 2 级 / Arena Of Discipline Ticket Level 2 */
 	ARENA_OF_DISCIPLINE_TICKET_LEVEL_2(186000142), // Aion 3.0
 	/** Karon Coin / Karon Coin */
 	KARON_COIN(186000143), // Aion 3.0
@@ -108,9 +108,9 @@ public enum ItemId {
 	MITHRIL_MEDAL(186000147), // Aion 3.0
 	/** Opportunity Token / Opportunity Token */
 	OPPORTUNITY_TOKEN(186000165), // Aion 3.0
-	/** Arena Of Harmony Ticket / Arena Of Harmony Ticket */
+	/** 合作竞技场入场券 / Arena Of Harmony Ticket */
 	ARENA_OF_HARMONY_TICKET(186000184), // Aion 3.5
-	/** Arena Of Glory Ticket / Arena Of Glory Ticket */
+	/** 荣耀竞技场入场券 / Arena Of Glory Ticket */
 	ARENA_OF_GLORY_TICKET(186000185), // Aion 3.5
 	/** 军团硬币 / Legion Coin*/
 	LEGION_COIN(186000199), // Aion 3.5

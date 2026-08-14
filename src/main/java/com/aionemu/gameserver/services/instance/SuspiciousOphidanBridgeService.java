@@ -23,7 +23,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
 
-/****/
 /**
  * 可疑的奥菲丹桥副本报名服务，管理开启窗口与冷却。
  * Suspicious Ophidan Bridge registration service managing open windows and cooldowns.
@@ -39,8 +38,8 @@ public class SuspiciousOphidanBridgeService {
 	public static final int maskId = 122;
 
 	/**
-	 * initSuspiciousOphidan 方法。
-	 * initSuspiciousOphidan method.
+	 * 初始化Suspicious Ophidan Bridge报名：按配置调度开启报名。
+* Initializes Suspicious Ophidan Bridge registration by scheduling open windows per config.
 	 */
 	public void initSuspiciousOphidan() {
 		if (AutoGroupConfig.OPHIDAN_WARPATH_ENABLED) {
@@ -104,20 +103,20 @@ public class SuspiciousOphidanBridgeService {
 	}
 
 	/**
-	 * isSuspiciousAvailable 方法。
-	 * isSuspiciousAvailable method.
-	 * result
+	 * 报名是否可用。
+	 * Whether registration is available.
+	 * @return 结果 / result
 	 */
 	public boolean isSuspiciousAvailable() {
 		return this.registerAvailable;
 	}
 
 	/**
-	 * getInstanceMaskId 方法。
-	 * getInstanceMaskId method.
+	 * 获取玩家的报名掩码 ID；等级不符时返回 0。
+	 * Returns the registration mask id for the player, or 0 if level mismatch.
 	 *
 	 * 玩家 / player
-	 * result
+	 * @return 结果 / result
 	 */
 	public byte getInstanceMaskId(Player player) {
 		int level = player.getLevel();
@@ -142,7 +141,7 @@ public class SuspiciousOphidanBridgeService {
 	 * Whether cooldown is active.
 	 *
 	 * 玩家 / player
-	 * result
+	 * @return 结果 / result
 	 */
 	public boolean hasCoolDown(Player player) {
 		return this.playersWithCooldown.contains(player.getObjectId());
@@ -152,8 +151,8 @@ public class SuspiciousOphidanBridgeService {
 	 * 显示报名窗口。
 	 * Shows the registration window.
 	 *
-	 * 玩家 / player
-	 * instanceMaskId
+	 * @param player 玩家 / player
+	 * @param instanceMaskId 副本掩码 ID / instance mask id
 	 */
 	public void showWindow(Player player, byte instanceMaskId) {
 		if (getInstanceMaskId(player) != instanceMaskId) {
@@ -171,7 +170,7 @@ public class SuspiciousOphidanBridgeService {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 * result
+	 * @return 结果 / result
 	 */
 	public static SuspiciousOphidanBridgeService getInstance() {
 		ObjectProvider<SuspiciousOphidanBridgeService> provider = instanceProvider;
@@ -182,10 +181,10 @@ public class SuspiciousOphidanBridgeService {
 	}
 
 	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
+	 * 设置服务提供者。
+	 * Sets the service provider.
 	 *
-	 * provider
+	 * @return 服务提供者 / provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<SuspiciousOphidanBridgeService> provider) {
 		instanceProvider = provider;

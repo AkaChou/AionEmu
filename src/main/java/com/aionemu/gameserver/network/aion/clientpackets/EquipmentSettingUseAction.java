@@ -8,7 +8,7 @@ import com.aionemu.gameserver.model.items.ItemSlot;
 
 /**
  * 装备方案应用动作（穿戴/卸下/切换主副手）。
- * unequip / switch hands).
+ * Equipment preset apply action (equip / unequip / switch hands).
  */
 class EquipmentSettingUseAction {
 
@@ -38,9 +38,9 @@ class EquipmentSettingUseAction {
 	private final int itemObjectId;
 
 	/**
-	 * action type
-	 * slot
-	 * item object id
+	 * 动作类型 / action type
+	 * 目标槽位掩码 / slot
+	 * 物品对象 ID / item object id
 	 */
 	EquipmentSettingUseAction(int action, long slot, int itemObjectId) {
 		this.action = action;
@@ -52,7 +52,7 @@ class EquipmentSettingUseAction {
 	 * 对目标执行本动作。
 	 * Applies this action to the target.
 	 *
-	 * equipment target
+	 * @param target 装备方案应用目标 / equipment preset target
 	 * @return 是否变更成功 / whether changed
 	 */
 	boolean apply(EquipmentSettingUseTarget target) {

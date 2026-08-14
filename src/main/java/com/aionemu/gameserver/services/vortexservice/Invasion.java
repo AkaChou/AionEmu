@@ -34,7 +34,7 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 	 * 绑定漩涡地点。
 	 * Binds the vortex location.
 	 *
-	 * vortex location
+	 * @param vortex 漩涡地点 / vortex location
 	 */
 	public Invasion(VortexLocation vortex) {
 		super(vortex);
@@ -77,8 +77,8 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 	 * 将玩家加入攻/守方并维护对应同盟。
 	 * Adds a player to invader/defender side and maintains the matching alliance.
 	 *
-	 * 玩家 / player
-	 * whether invader
+	 * @param player 玩家 / player
+	 * @param isInvader 是否攻方 / whether invader
 	 */
 	@Override
 	public void addPlayer(Player player, boolean isInvader) {
@@ -113,8 +113,8 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 	 * 将玩家踢出并在攻方场景内时传送回家点。
 	 * Kicks a player and teleports home when still inside the invasion world as invader.
 	 *
-	 * 玩家 / player
-	 * whether invader
+	 * @param player 玩家 / player
+	 * @param isInvader 是否攻方 / whether invader
 	 */
 	@Override
 	public void kickPlayer(Player player, boolean isInvader) {
@@ -146,7 +146,7 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 	 * 向守方玩家弹出加入同盟确认；同意后入队。
 	 * Prompts a defender to join the defence alliance; accepts join on confirm.
 	 *
-	 * defender
+	 * @param defender 守方玩家 / defender
 	 */
 	@Override
 	public void updateDefenders(Player defender) {
@@ -183,8 +183,8 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 	 * 拒绝对话处理（恒为 true）。
 	 * Deny-dialog handler (always true).
 	 *
-	 * 玩家 / player
-	 * always true
+	 * @param player 玩家 / player
+	 * @return 恒为 true / always true
 	 */
 	private boolean onDeny(Player player) {
 		return true;
@@ -194,7 +194,7 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 	 * 将攻方玩家直接加入攻方列表。
 	 * Directly registers an invader player.
 	 *
-	 * invader
+	 * @param invader 攻方玩家 / invader
 	 */
 	@Override
 	public void updateInvaders(Player invader) {

@@ -44,7 +44,7 @@ public class NightmareCircusData {
 	 * 返回已加载的梦魇马戏团地点数量。
 	 * Returns the number of loaded Nightmare Circus locations.
 	 *
-	 * location count
+	 * @return 已加载的噩梦马戏团地点数量 / Returns the number of loaded Nightmare Circus locations.
 	 */
 	public int size() {
 		return nightmareCircus.size();

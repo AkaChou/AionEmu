@@ -366,12 +366,12 @@ public class SpawnGroup2 extends AbstractLockManager {
 		return npcId;
 	}
 
-	/** Ge Temporary Spawn / Ge Temporary Spawn */
+	/** 获取临时刷新 / Gets the temporary spawn */
 	public TemporarySpawn geTemporarySpawn() {
 		return temporarySpawn;
 	}
 
-	/** 返回 pool / Returns the pool */
+	/** 返回刷新池大小 / Returns the pool */
 	public int getPool() {
 		return pool;
 	}
@@ -383,18 +383,18 @@ public class SpawnGroup2 extends AbstractLockManager {
 		return pool > 0;
 	}
 
-	/** 返回 respawn time / Returns the respawn time */
+	/** 返回重生时间 / Returns the respawn time */
 	public int getRespawnTime() {
 		return respawnTime;
 	}
 
-	/** 设置 respawn time / Sets the respawn time */
+	/** 设置重生时间 / Sets the respawn time */
 	public void setRespawnTime(int respawnTime) {
 		this.respawnTime = respawnTime;
 	}
 
 	/**
-	 * @return Whether temporary spawn
+	 * @return 是否为临时刷新 / whether temporary spawn
 	 */
 	public boolean isTemporarySpawn() {
 		return temporarySpawn != null;
@@ -405,7 +405,7 @@ public class SpawnGroup2 extends AbstractLockManager {
 		return handlerType;
 	}
 
-	/** 返回 rnd template / Returns the rnd template */
+	/** 返回随机刷新模板 / Returns a random spawn template */
 	public SpawnTemplate getRndTemplate(int instanceId) {
 		final List<SpawnTemplate> allTemplates = spots;
 		List<SpawnTemplate> templates = new ArrayList<SpawnTemplate>();
@@ -444,7 +444,7 @@ public class SpawnGroup2 extends AbstractLockManager {
 	}
 
 	/**
-	 * @return Whether template used
+	 * @return 模板是否已被使用 / whether template used
 	 */
 	public boolean isTemplateUsed(int instanceId, SpawnTemplate template) {
 		super.readLock();
@@ -476,7 +476,7 @@ public class SpawnGroup2 extends AbstractLockManager {
 		}
 	}
 
-	/** 返回 difficult id / Returns the difficult id */
+	/** 返回难度 ID / Returns the difficult id */
 	public byte getDifficultId() {
 		return difficultId;
 	}

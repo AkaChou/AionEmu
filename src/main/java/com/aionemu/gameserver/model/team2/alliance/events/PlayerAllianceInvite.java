@@ -32,7 +32,7 @@ public class PlayerAllianceInvite extends RequestResponseHandler {
 		this.invited = invited;
 	}
 
-	/** 接受请求 / Accept Request */
+	/** 接受邀请 / Accept the request. */
 	@Override
 	public void acceptRequest(Creature requester, Player responder) {
 		if (PlayerAllianceService.canInvite(inviter, invited)) {
@@ -83,7 +83,7 @@ public class PlayerAllianceInvite extends RequestResponseHandler {
 		}
 	}
 
-	/** 拒绝请求 / Deny Request */
+	/** 拒绝邀请 / Deny the request. */
 	@Override
 	public void denyRequest(Creature requester, Player responder) {
 		// %0 拒绝了你加入联盟的邀请。 / %0 has declined your invitation to join the alliance.

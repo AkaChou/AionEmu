@@ -32,11 +32,11 @@ import java.util.concurrent.Future;
 @InstanceID(300050000)
 public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 {
-	/** carpus 岛储藏室任务 / carpus isle storeroom task */
+		/** carpus 岛储藏室任务 / carpus isle storeroom task */
 		private Future<?> carpusIsleStoreroomTask;
-	/** 是否启动计时器 / is start timer */
+		/** 是否启动计时器 / is start timer */
 		private boolean isStartTimer = false;
-	/** carpus isle storeroom treasure box suscess / carpus isle storeroom treasure box suscess */
+		/** carpus isle storeroom treasure box suscess / carpus isle storeroom treasure box suscess */
 		private List<Npc> CarpusIsleStoreroomTreasureBoxSuscess = new ArrayList<Npc>();
 	
 	/**
@@ -54,7 +54,7 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -98,9 +98,9 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param flyingRing 飞行环标识 / flying-ring id
-	 * result
+	 * @return 结果 / result
 	 */
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {

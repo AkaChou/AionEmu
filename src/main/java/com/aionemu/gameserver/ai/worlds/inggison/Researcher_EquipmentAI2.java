@@ -62,7 +62,7 @@ public class Researcher_EquipmentAI2 extends NpcAI2
 	}
 	
 	protected void handleUseItemFinish(Player player) {
-		spawn(216615, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Valkinas The Scholar.
+		spawn(216615, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 学者 Valkinas / Valkinas The Scholar.
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);
 	}

@@ -11,7 +11,7 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
 /**
  * 活动掉落模板（静态数据/XML）。
- * XML template.
+ * Event Drop Template (static data/XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -49,22 +49,22 @@ public class EventDrop {
 		return count;
 	}
 
-	/** 返回概率 / Returns the chance*/
+	/** 返回概率 / Returns the chance */
 	public float getChance() {
 		return chance;
 	}
 
-	/** 返回 min diff / Returns the min diff */
+	/** 返回最小等级差 / Returns the min diff */
 	public int getMinDiff() {
 		return minDiff;
 	}
 
-	/** 返回 max diff / Returns the max diff */
+	/** 返回最大等级差 / Returns the max diff */
 	public int getMaxDiff() {
 		return maxDiff;
 	}
 
-	/** 返回 loc id / Returns the loc id */
+	/** 返回地区 ID / Returns the loc id */
 	public int getLocId() {
 		return locId;
 	}
@@ -74,12 +74,12 @@ public class EventDrop {
 		return npcId;
 	}
 
-	/** 返回 min lvl / Returns the min lvl */
+	/** 返回最低等级 / Returns the min lvl */
 	public int getMinLvl() {
 		return minLvl;
 	}
 
-	/** 返回 max lvl / Returns the max lvl */
+	/** 返回最高等级 / Returns the max lvl */
 	public int getMaxLvl() {
 		return maxLvl;
 	}

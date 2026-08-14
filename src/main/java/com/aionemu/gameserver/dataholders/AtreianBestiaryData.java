@@ -50,7 +50,7 @@ public class AtreianBestiaryData {
 	 * 返回按图鉴 ID 索引的模板数量。
 	 * Returns the number of templates indexed by book id.
 	 *
-	 * template count
+	 * @return 按图鉴 ID 索引的模板数量 / Returns the number of templates indexed by book id.
 	 */
 	public int size() {
 		return idsHolder.size();
@@ -71,7 +71,7 @@ public class AtreianBestiaryData {
 	 * 返回按 NPC ID 索引的条目数量。
 	 * Returns the number of entries indexed by NPC id.
 	 *
-	 * NPC-index count
+	 * @return 按 NPC ID 索引的条目数量 / Returns the number of entries indexed by NPC id.
 	 */
 	public int sizeByNpcId() {
 		return npcIdsHolder.size();
@@ -81,9 +81,7 @@ public class AtreianBestiaryData {
 	 * 按 NPC ID 获取图鉴模板。
 	 * Returns the bestiary template for the given NPC id.
 	 *
-	 * npc id
-	 *
-	 * @param id
+	 * @param id NPC ID / npc id
 	 * @return 模板，不存在则为 null / template or null
 	 */
 	public AtreianBestiaryTemplate getAtreianBestiaryTemplateByNpcId(int id) {

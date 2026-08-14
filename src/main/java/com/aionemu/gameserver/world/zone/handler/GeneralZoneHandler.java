@@ -5,7 +5,7 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 /**
  * 空实现的通用区域处理器（占位 / 默认处理器）。
- * default handler).
+ * General zone handler with empty implementations (placeholder / default handler).
  *
  * @author MrPoke
  */

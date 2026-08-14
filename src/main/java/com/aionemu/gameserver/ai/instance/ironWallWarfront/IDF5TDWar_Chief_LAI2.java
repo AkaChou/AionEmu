@@ -26,34 +26,34 @@ public class IDF5TDWar_Chief_LAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
 			switch (getNpcId()) {
-				case 233518: //Elyos Supply Base Beta Officer.
+				case 233518: // 天族补给基地贝塔军官 / Elyos Supply Base Beta Officer.
 				    announceIDF5TDWarLV01();
 				break;
-				case 233519: //Elyos Military Supply Base Officer.
+				case 233519: // 天族军事补给基地军官 / Elyos Military Supply Base Officer.
 				    announceIDF5TDWarLV02();
 				break;
-				case 233520: //Elyos Supply Base Alpha Officer.
+				case 233520: // 天族补给基地阿尔法军官 / Elyos Supply Base Alpha Officer.
 					announceIDF5TDWarLV03();
 				break;
-				case 233521: //Elyos Artillery Base Officer.
+				case 233521: // 天族炮兵基地军官 / Elyos Artillery Base Officer.
 					announceIDF5TDWarLV04();
 				break;
-				case 233522: //Elyos Sentry Post Alpha Officer.
+				case 233522: // 天族哨所阿尔法军官 / Elyos Sentry Post Alpha Officer.
 					announceIDF5TDWarLV05();
 				break;
-				case 233523: //Elyos Sentry Post Beta Officer.
+				case 233523: // 天族哨所贝塔军官 / Elyos Sentry Post Beta Officer.
 					announceIDF5TDWarLV06();
 				break;
-				case 233524: //Elyos Holy Grounds Officer.
+				case 233524: // 天族圣地军官 / Elyos Holy Grounds Officer.
 					announceIDF5TDWarLV07();
 				break;
-				case 233525: //Elyos Command Center Officer.
+				case 233525: // 天族指挥中心军官 / Elyos Command Center Officer.
 					announceIDF5TDWarLV08();
 				break;
-				case 233526: //Elyos Headquarters Alpha Officer.
+				case 233526: // 天族总部阿尔法军官 / Elyos Headquarters Alpha Officer.
 					announceIDF5TDWarLV09();
 				break;
-				case 233527: //Elyos Headquarters Beta Officer.
+				case 233527: // 天族总部贝塔军官 / Elyos Headquarters Beta Officer.
 					announceIDF5TDWarLV10();
 				break;
 			}

@@ -39,7 +39,7 @@ public final class BIHTriangle {
 	 * 返回顶点 A。
 	 * Returns vertex A.
 	 *
-	 * vertex A
+	 * @return 顶点 A / vertex A
 	 */
 	public Vector3f get1() {
 		return pointa;
@@ -49,7 +49,7 @@ public final class BIHTriangle {
 	 * 返回顶点 B。
 	 * Returns vertex B.
 	 *
-	 * vertex B
+	 * @return 顶点 B / vertex B
 	 */
 	public Vector3f get2() {
 		return pointb;
@@ -59,7 +59,7 @@ public final class BIHTriangle {
 	 * 返回顶点 C。
 	 * Returns vertex C.
 	 *
-	 * vertex C
+	 * @return 顶点 C / vertex C
 	 */
 	public Vector3f get3() {
 		return pointc;
@@ -69,7 +69,7 @@ public final class BIHTriangle {
 	 * 返回质心。
 	 * Returns the centroid.
 	 *
-	 * centroid
+	 * @return 质心 / centroid
 	 */
 	public Vector3f getCenter() {
 		return center;
@@ -79,7 +79,7 @@ public final class BIHTriangle {
 	 * 计算并返回单位法线（每次新建向量）。
 	 * Computes and returns the unit normal (allocates a new vector each call).
 	 *
-	 * unit normal
+	 * @return 单位法线 / unit normal
 	 */
 	public Vector3f getNormal() {
 		Vector3f normal = new Vector3f(pointb);
@@ -94,7 +94,7 @@ public final class BIHTriangle {
 	 *
 	 * @param axis 轴索引 0/1/2 对应 x/y/z / axis index 0/1/2 for x/y/z
 	 * @param left {@code true} 取最小，否则取最大 / {@code true} for min, else max
-	 * extreme component
+	 * @return 极值分量 / extreme component
 	 */
 	public float getExtreme(int axis, boolean left) {
 		float v1, v2, v3;

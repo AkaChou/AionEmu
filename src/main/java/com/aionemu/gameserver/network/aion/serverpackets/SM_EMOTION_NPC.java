@@ -18,6 +18,14 @@ public class SM_EMOTION_NPC extends AionServerPacket {
 	private int emotionType = 0;
 	private boolean isPlayer = false;
 
+	/**
+	 * 构造 NPC 情绪状态包。
+	 * Creates an NPC emotion state packet.
+	 *
+	 * @param npc 目标 NPC / target NPC
+	 * @param state 动画状态 / animation state
+	 * @param et 情绪类型 / emotion type
+	 */
 	public SM_EMOTION_NPC(Npc npc, int state, EmotionType et) {
 		this.npc = npc;
 		this.state = state;
@@ -25,6 +33,14 @@ public class SM_EMOTION_NPC extends AionServerPacket {
 		this.isPlayer = false;
 	}
 
+	/**
+	 * 构造玩家情绪状态包。
+	 * Creates a player emotion state packet.
+	 *
+	 * @param player 目标玩家 / target player
+	 * @param state 动画状态 / animation state
+	 * @param et 情绪类型 / emotion type
+	 */
 	public SM_EMOTION_NPC(Player player, int state, EmotionType et) {
 		this.player = player;
 		this.state = state;

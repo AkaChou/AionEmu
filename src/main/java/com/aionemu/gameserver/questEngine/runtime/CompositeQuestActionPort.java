@@ -13,7 +13,9 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * 将封闭的必需动作集合分发到各类型化领域端口。
  * Dispatches the closed required-action set to typed domain ports.
+ * 状态动作仍归 {@link QuestStatePort} 所有；没有动作通过字符串钩子路由。
  * State actions remain owned by {@link QuestStatePort}; no action is routed by a string hook.
  */
 public final class CompositeQuestActionPort implements QuestActionPort {
@@ -77,6 +79,7 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 				if (equipment == null) {
 					throw new SQLException("equipment actions require an equipment port");
 				}
+				// 先卸下装备：任务可能立即消耗归还的物品。
 				// Unequip first: a quest may immediately consume the returned item.
 				participants.add(equipment.apply(connection, snapshot, buckets.unequips()));
 			}
@@ -99,6 +102,8 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 	}
 
 	/**
+	 * 货币端口暴露了批量的相对与精确操作。对同一持久化种类混用操作类型
+	 * 会丢弃源动作顺序，使 preflight 与 apply 观察到不同的余额。
 	 * The currency port exposes batched relative and exact operations. Mixing
 	 * operation types for one persistent kind would discard the source action
 	 * order, so preflight and apply could observe different balances.
@@ -177,6 +182,7 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 					&& !(action instanceof QuestAction.AbandonQuest)) {
 					throw new IllegalArgumentException("unsupported quest action: " + action.getClass().getName());
 				}
+				// SetVariable、IncrementVariable、SetStatus、CompleteQuest 由 QuestStatePort 应用。
 				// SetVariable, IncrementVariable, SetStatus, and CompleteQuest are applied by QuestStatePort.
 			}
 			return new Buckets(List.copyOf(removals), List.copyOf(gives), List.copyOf(unequips),

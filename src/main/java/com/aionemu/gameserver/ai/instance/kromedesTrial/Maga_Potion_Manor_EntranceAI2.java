@@ -26,7 +26,7 @@ public class Maga_Potion_Manor_EntranceAI2 extends NpcAI2
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
         if (dialogId == 1012) {
             switch (getNpcId()) {
-                case 730341: //Maga's Potion.
+                case 730341: // 玛加药剂 / Maga's Potion.
                 if (player.getInventory().getItemCountByItemId(164000143) < 1) {
                     PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1012));
                     PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400701));

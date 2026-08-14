@@ -32,7 +32,7 @@ public class RvrSpawn {
 	@XmlElement(name = "rvr_type")
 	private List<RvrSpawn.RvrStateTemplate> RvrStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回阵营战状态模板 / Returns the rvr state templates */
 	public List<RvrStateTemplate> getSiegeModTemplates() {
 		return RvrStateTemplate;
 	}

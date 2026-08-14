@@ -81,7 +81,7 @@ public class Spawn {
 		return npcId;
 	}
 
-	/** 返回 pool / Returns the pool */
+	/** 返回刷新池大小 / Returns the pool */
 	public int getPool() {
 		return pool;
 	}
@@ -91,7 +91,7 @@ public class Spawn {
 		return temporaySpawn;
 	}
 
-	/** 返回 respawn time / Returns the respawn time */
+	/** 返回重生时间 / Returns the respawn time */
 	public int getRespawnTime() {
 		return respawnTime;
 	}
@@ -101,7 +101,7 @@ public class Spawn {
 		return handler;
 	}
 
-	/** 返回 spawn spot templates / Returns the spawn spot templates */
+	/** 返回刷新点模板列表 / Returns the spawn spot templates */
 	public List<SpawnSpotTemplate> getSpawnSpotTemplates() {
 		if (spawnTemplates == null) {
 			spawnTemplates = new ArrayList<SpawnSpotTemplate>();
@@ -109,7 +109,7 @@ public class Spawn {
 		return spawnTemplates;
 	}
 
-	/** 添加 spawn spot / Adds spawn spot */
+	/** 添加刷新点 / Adds a spawn spot */
 	public void addSpawnSpot(SpawnSpotTemplate template) {
 		getSpawnSpotTemplates().add(template);
 	}
@@ -139,7 +139,7 @@ public class Spawn {
 		this.eventTemplate = eventTemplate;
 	}
 
-	/** 返回 difficult id / Returns the difficult id */
+	/** 返回难度 ID / Returns the difficult id */
 	public byte getDifficultId() {
 		return difficultId;
 	}

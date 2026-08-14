@@ -77,7 +77,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * 复制构造，从另一矩阵复制全部元素。
 	 * Copy constructor; copies all elements from another matrix.
 	 *
-	 * source matrix
+	 * @param mat 源矩阵 / source matrix
 	 */
 	public Matrix3f(Matrix3f mat) {
 		this.set(mat);
@@ -104,7 +104,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * Sets this matrix equal to the given matrix; loads identity if null.
 	 *
 	 * @param matrix 源矩阵，可为 null / source matrix, may be null
-	 * this matrix
+	 * @return 本矩阵（链式调用） / this matrix
 	 */
 	public Matrix3f set(Matrix3f matrix) {
 		if (null == matrix) {
@@ -130,7 +130,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * @param i 行索引（0–2） / row index (0–2)
 	 * @param j 列索引（0–2） / column index (0–2)
 	 * @return 该位置的元素值 / element value at that position
-	 * if indices are out of range。
+	 * @throws IllegalArgumentException 索引越界时 / if indices are out of range.
 	 */
 	public float get(int i, int j) {
 		switch (i) {
@@ -187,7 +187,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 *
 	 * @param data 目标数组，长度须为 9 或 16 / destination array of length 9 or 16
 	 * @param rowMajor true 为行主序，false 为列主序 / true for row-major, false for column-major
-	 * if array length is invalid。
+	 * @throws IllegalArgumentException 数组长度非法时 / if array length is invalid.
 	 */
 	public void get(float[] data, boolean rowMajor) {
 		if (data.length == 9) {
@@ -244,7 +244,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * Gets the specified column vector (allocates storage).
 	 *
 	 * @param i 列索引（0–2） / column index (0–2)
-	 * the column vector
+	 * @return 列向量 / the column vector
 	 */
 	public Vector3f getColumn(int i) {
 		return this.getColumn(i, null);
@@ -257,7 +257,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * @param i 列索引（0–2） / column index (0–2)
 	 * @param store 结果存储，可为 null / result storage, may be null
 	 * @return 列向量（store 或新建） / the column vector (store or new)
-	 * if column index is invalid。
+	 * @throws IllegalArgumentException 列索引非法时 / if column index is invalid.
 	 */
 	public Vector3f getColumn(int i, Vector3f store) {
 		if (store == null) {
@@ -295,7 +295,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * Gets the specified row vector (allocates storage).
 	 *
 	 * @param i 行索引（0–2） / row index (0–2)
-	 * the row vector
+	 * @return 行向量 / the row vector
 	 */
 	public Vector3f getRow(int i) {
 		return this.getRow(i, null);
@@ -308,7 +308,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * @param i 行索引（0–2） / row index (0–2)
 	 * @param store 结果存储，可为 null / result storage, may be null
 	 * @return 行向量（store 或新建） / the row vector (store or new)
-	 * if row index is invalid。
+	 * @throws IllegalArgumentException 行索引非法时 / if row index is invalid.
 	 */
 	public Vector3f getRow(int i, Vector3f store) {
 		if (store == null) {
@@ -383,9 +383,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 *
 	 * @param i 列索引（0–2） / column index (0–2)
 	 * @param column 列向量；为 null 时忽略 / column vector; ignored if null
-	 * this matrix
-	 *
-	 * @return
+	 * @return 本矩阵（链式调用） / this matrix
 	 * @throws IllegalArgumentException 列索引非法时 / if column index is invalid
 	 */
 	public Matrix3f setColumn(int i, Vector3f column) {
@@ -426,9 +424,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 *
 	 * @param i 行索引（0–2） / row index (0–2)
 	 * @param row 行向量；为 null 时忽略 / row vector; ignored if null
-	 * this matrix
-	 *
-	 * @return
+	 * @return 本矩阵（链式调用） / this matrix
 	 * @throws IllegalArgumentException 行索引非法时 / if row index is invalid
 	 */
 	public Matrix3f setRow(int i, Vector3f row) {
@@ -469,9 +465,9 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 *
 	 * @param i 行索引（0–2） / row index (0–2)
 	 * @param j 列索引（0–2） / column index (0–2)
-	 * new value
-	 * this matrix
-	 * if indices are out of range。
+	 * @param value 新值 / new value
+	 * @return 本矩阵（链式调用） / this matrix
+	 * @throws IllegalArgumentException 索引越界时 / if indices are out of range.
 	 */
 	public Matrix3f set(int i, int j, float value) {
 		switch (i) {
@@ -532,11 +528,8 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * 从 3×3 二维数组设置矩阵元素（行主序）。
 	 * Sets matrix elements from a 3×3 two-dimensional array (row-major).
 	 *
-	 * 3×3 array。
-	 * this matrix
-	 *
-	 * @param matrix
-	 *
+	 * @param matrix 3×3 数组 / 3×3 array
+	 * @return 本矩阵（链式调用） / this matrix
 	 * @throws IllegalArgumentException 尺寸不为 3×3 时 / if dimensions are not 3×3
 	 */
 	public Matrix3f set(float[][] matrix) {
@@ -559,9 +552,9 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * 由三个正交基轴构造旋转矩阵（列分别为 u、v、w）。
 	 * Builds a rotation matrix from three orthonormal axes (columns u, v, w).
 	 *
-	 * U axis
-	 * V axis
-	 * W axis
+	 * @param uAxis U 轴 / U axis
+	 * @param vAxis V 轴 / V axis
+	 * @param wAxis W 轴 / W axis
 	 */
 	public void fromAxes(Vector3f uAxis, Vector3f vAxis, Vector3f wAxis) {
 		this.m00 = uAxis.x;
@@ -580,7 +573,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * Sets this matrix from a length-9 array in row-major order.
 	 *
 	 * @param matrix 长度 9 的数组 / array of length 9
-	 * this matrix
+	 * @return 本矩阵（链式调用） / this matrix
 	 */
 	public Matrix3f set(float[] matrix) {
 		return this.set(matrix, true);
@@ -592,8 +585,8 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 *
 	 * @param matrix 长度 9 的数组 / array of length 9
 	 * @param rowMajor true 为行主序，false 为列主序 / true for row-major, false for column-major
-	 * this matrix
-	 * if array length is not 9。
+	 * @return 本矩阵（链式调用） / this matrix
+	 * @throws IllegalArgumentException 数组长度不为 9 时 / if array length is not 9.
 	 */
 	public Matrix3f set(float[] matrix, boolean rowMajor) {
 		if (matrix.length != 9) {
@@ -655,7 +648,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * Builds a rotation matrix from an angle and axis (axis is normalized first).
 	 *
 	 * @param angle 旋转角（弧度） / rotation angle in radians
-	 * rotation axis
+	 * @param axis 旋转轴 / rotation axis
 	 */
 	public void fromAngleAxis(float angle, Vector3f axis) {
 		Vector3f normAxis = axis.normalize();
@@ -698,7 +691,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * Right-multiplies this by mat and returns a new matrix (this is unchanged).
 	 *
 	 * @param mat 右乘矩阵 / matrix to multiply on the right
-	 * product matrix
+	 * @return 乘积矩阵 / product matrix
 	 */
 	public Matrix3f mult(Matrix3f mat) {
 		return this.mult(mat, null);
@@ -710,7 +703,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 *
 	 * @param mat 右乘矩阵 / matrix to multiply on the right
 	 * @param product 结果存储，可为 null / result storage, may be null
-	 * product matrix
+	 * @return 乘积矩阵 / product matrix
 	 */
 	public Matrix3f mult(Matrix3f mat, Matrix3f product) {
 		if (product == null) {
@@ -773,8 +766,8 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * 就地将本矩阵每个元素乘以标量。
 	 * Multiplies every element of this matrix by the scalar in place.
 	 *
-	 * scalar
-	 * this matrix
+	 * @param scale 标量 / scalar
+	 * @return 本矩阵（链式调用） / this matrix
 	 */
 	public Matrix3f multLocal(float scale) {
 		this.m00 *= scale;
@@ -813,7 +806,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * Right-multiplies this by mat in place (this = this * mat).
 	 *
 	 * @param mat 右乘矩阵 / matrix to multiply on the right
-	 * this matrix
+	 * @return 本矩阵（链式调用） / this matrix
 	 */
 	public Matrix3f multLocal(Matrix3f mat) {
 		return this.mult(mat, this);
@@ -823,7 +816,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * 就地转置本矩阵。
 	 * Transposes this matrix in place.
 	 *
-	 * this matrix
+	 * @return 本矩阵（链式调用） / this matrix
 	 */
 	public Matrix3f transposeLocal() {
 		float tmp = this.m01;
@@ -842,7 +835,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * 求逆矩阵，返回新矩阵（不修改自身）；奇异时返回零矩阵。
 	 * Returns the inverse as a new matrix (this unchanged); returns zero if singular.
 	 *
-	 * inverse matrix
+	 * @return 逆矩阵 / inverse matrix
 	 */
 	public Matrix3f invert() {
 		return this.invert(null);
@@ -853,7 +846,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * Inverts into store (allocates if null); zeros store if singular.
 	 *
 	 * @param store 结果存储，可为 null / result storage, may be null
-	 * inverse matrix
+	 * @return 逆矩阵 / inverse matrix
 	 */
 	public Matrix3f invert(Matrix3f store) {
 		float det;
@@ -880,7 +873,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * 就地求逆；奇异时置为零矩阵。
 	 * Inverts this matrix in place; zeros if singular.
 	 *
-	 * this matrix
+	 * @return 本矩阵（链式调用） / this matrix
 	 */
 	public Matrix3f invertLocal() {
 		float det = this.determinant();
@@ -913,7 +906,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * 求伴随矩阵，返回新矩阵。
 	 * Returns the adjugate (classical adjoint) as a new matrix.
 	 *
-	 * adjugate matrix
+	 * @return 伴随矩阵 / adjugate matrix
 	 */
 	public Matrix3f adjoint() {
 		return this.adjoint(null);
@@ -924,7 +917,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * Computes the adjugate into store (allocates if null).
 	 *
 	 * @param store 结果存储，可为 null / result storage, may be null
-	 * adjugate matrix
+	 * @return 伴随矩阵 / adjugate matrix
 	 */
 	public Matrix3f adjoint(Matrix3f store) {
 		if (store == null) {
@@ -946,7 +939,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * 计算行列式。
 	 * Computes the determinant.
 	 *
-	 * determinant value
+	 * @return 行列式值 / determinant value
 	 */
 	public float determinant() {
 		float fCo00 = this.m11 * this.m22 - this.m12 * this.m21;
@@ -960,7 +953,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * 将本矩阵所有元素置零。
 	 * Sets all elements of this matrix to zero.
 	 *
-	 * this matrix
+	 * @return 本矩阵（链式调用） / this matrix
 	 */
 	public Matrix3f zero() {
 		this.m22 = 0.0f;
@@ -999,7 +992,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * 转置本矩阵（就地，与 {@link #transposeLocal()} 相同）。
 	 * Transposes this matrix in place (same as {@link #transposeLocal()}).
 	 *
-	 * this matrix
+	 * @return 本矩阵（链式调用） / this matrix
 	 */
 	public Matrix3f transpose() {
 		return this.transposeLocal();
@@ -1009,7 +1002,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * 返回转置后的新矩阵（不修改自身）。
 	 * Returns a new transposed matrix (this is unchanged).
 	 *
-	 * transposed matrix
+	 * @return 转置矩阵 / transposed matrix
 	 */
 	public Matrix3f transposeNew() {
 		Matrix3f ret = new Matrix3f(this.m00, this.m10, this.m20, this.m01, this.m11, this.m21, this.m02, this.m12,
@@ -1053,7 +1046,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * 基于全部元素计算哈希码。
 	 * Computes a hash code from all elements.
 	 *
-	 * hash code
+	 * @return 哈希码 / hash code
 	 */
 	public int hashCode() {
 		int hash = 37;
@@ -1115,7 +1108,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * 返回运行时类型标签（本类或其子类）。
 	 * Returns the runtime class tag (this class or a subclass).
 	 *
-	 * class object
+	 * @return 类对象 / class object
 	 */
 	public Class<? extends Matrix3f> getClassTag() {
 		return this.getClass();
@@ -1253,7 +1246,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * 浅克隆本矩阵。
 	 * Returns a shallow clone of this matrix.
 	 *
-	 * cloned instance
+	 * @return 克隆实例 / cloned instance
 	 */
 	public Matrix3f clone() {
 		try {

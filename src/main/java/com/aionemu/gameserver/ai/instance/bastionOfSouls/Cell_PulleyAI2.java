@@ -21,7 +21,7 @@ public class Cell_PulleyAI2 extends NpcAI2
 {
 	@Override
     protected void handleDialogStart(Player player) {
-        if (player.getInventory().getFirstItemByItemId(185000311) != null) { //Black Oil.
+        if (player.getInventory().getFirstItemByItemId(185000311) != null) { // 黑油。 / Black Oil.
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
         } else {
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 27));

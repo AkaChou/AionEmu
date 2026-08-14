@@ -12,14 +12,14 @@ public class GenerealInstancePosition implements InstancePositionHandler {
 	protected int mapId;
 	protected int instanceId;
 
-	/** 初始化 / initsialize. */
+	/** 初始化。 / Initialize. */
 	@Override
 	public void initsialize(Integer mapId, int instanceId) {
 		this.mapId = mapId;
 		this.instanceId = instanceId;
 	}
 
-	/** 端口 / port. */
+	/** 传送。 / Port. */
 	@Override
 	public void port(Player player, int zone, int position) {
 		throw new UnsupportedOperationException("Not supported yet.");

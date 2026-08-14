@@ -32,7 +32,7 @@ public class Limb_RenderAI2 extends NpcAI2
         attackCount++;
         if (attackCount == 195) {
             attackCount = 0;
-			AI2Actions.useSkill(this, 20655); //Crystal Frgament.
+			AI2Actions.useSkill(this, 20655); // 水晶碎片 / Crystal Frgament.
 			// 肢体撕裂者已爆炸。 / A Limb Render has exploded.
             GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401463);
         }

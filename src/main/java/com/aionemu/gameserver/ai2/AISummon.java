@@ -19,7 +19,7 @@ public class AISummon extends AITemplate {
 	 * 获取召唤物所有者。
 	 * Returns the summon owner.
 	 *
-	 * summon
+	 * @return 召唤物 / summon
 	 */
 	@Override
 	public Summon getOwner() {
@@ -30,7 +30,7 @@ public class AISummon extends AITemplate {
 	 * 获取 NPC 模板。
 	 * Returns the NPC object template.
 	 *
-	 * NPC template
+	 * @return NPC 模板 / NPC template
 	 */
 	protected NpcTemplate getObjectTemplate() {
 		return getOwner().getObjectTemplate();
@@ -40,7 +40,7 @@ public class AISummon extends AITemplate {
 	 * 获取刷新模板。
 	 * Returns the spawn template.
 	 *
-	 * spawn template
+	 * @return 刷新模板 / spawn template
 	 */
 	protected SpawnTemplate getSpawnTemplate() {
 		return getOwner().getSpawn();
@@ -60,7 +60,7 @@ public class AISummon extends AITemplate {
 	 * 获取召唤物主人（玩家）。
 	 * Returns the summon's master player.
 	 *
-	 * master player
+	 * @return 召唤者玩家 / master player
 	 */
 	protected Player getMaster() {
 		return getOwner().getMaster();

@@ -15,6 +15,13 @@ public class SM_DISPUTE_LAND extends AionServerPacket {
 	boolean active;
 	List<Integer> worlds;
 
+	/**
+	 * 构造争议之地状态包。
+	 * Creates a dispute-land status packet.
+	 *
+	 * @param worlds 相关世界 ID 列表 / list of related world ids
+	 * @param active 是否处于活跃争议 / whether the dispute is active
+	 */
 	public SM_DISPUTE_LAND(List<Integer> worlds, boolean active) {
 		this.worlds = worlds;
 		this.active = active;

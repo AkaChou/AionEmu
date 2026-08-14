@@ -33,12 +33,12 @@ public class Minion extends VisibleObject {
 		this.moveController = new MinionMoveController();
 	}
 
-	/** 返回大师 / Returns the master*/
+	/** 返回主人 / Returns the master. */
 	public Player getMaster() {
 		return master;
 	}
 
-	/** 返回 minion id / Returns the minion id */
+	/** 返回守护灵 ID / Returns the minion id */
 	public int getMinionId() {
 		return objectTemplate.getTemplateId();
 	}
@@ -54,7 +54,7 @@ public class Minion extends VisibleObject {
 		return (MinionCommonData) objectTemplate;
 	}
 
-	/** 返回 move controller / Returns the move controller */
+	/** 返回移动控制器 / Returns the move controller */
 	public final MoveController getMoveController() {
 		return moveController;
 	}

@@ -40,7 +40,7 @@ public class HotspotTeleportService {
 	 * 获取 {@link HotspotTeleportService} 单例（优先 Spring 提供的实例）。
 	 * Returns the {@link HotspotTeleportService} singleton (prefers Spring-provided instance).
 	 *
-	 * Service instance
+	 * @return 服务实例 / service instance
 	 */
 	public static HotspotTeleportService getInstance() {
 		ObjectProvider<HotspotTeleportService> provider = instanceProvider;
@@ -73,7 +73,7 @@ public class HotspotTeleportService {
 	 * 执行热点传送：按配置读条后传送并扣费，期间受击/异常/DoT 可打断。
 	 * Performs hotspot teleport after the configured cast time, then travels and charges the fee; interruptible by attack/abnormal/DoT.
 	 *
-	 * 玩家 / Player
+	 * @param player 玩家 / Player
 	 * @param teleportId 热点传送点 ID / Hotspot teleport id
 	 * @param price 基纳费用 / Kinah price
 	 */
@@ -154,6 +154,8 @@ public class HotspotTeleportService {
 	/**
 	 * 关闭当前玩家的据点传送辅助读条。
 	 * Closes the current player's hotspot teleport helper cast bar.
+	 *
+	 * @param player 玩家 / Player
 	 */
 	public static void cancelCastBar(Player player) {
 		finishCastBar(player, 2);

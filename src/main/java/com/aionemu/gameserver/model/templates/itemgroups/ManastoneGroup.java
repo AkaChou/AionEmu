@@ -11,8 +11,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.rewards.IdReward;
 
 /**
- * 魔石奖励组模板（静态数据/XML）。
- * XML template.
+ * 魔石奖励组：魔石物品种族条目。
+ * Manastone reward group: manastone item race entries.
  *
  * @author Rolandas
  */

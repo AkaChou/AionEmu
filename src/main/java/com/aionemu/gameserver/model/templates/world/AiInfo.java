@@ -22,12 +22,12 @@ public class AiInfo {
 	@XmlAttribute(name = "chase_home")
 	private int chaseHome = 200;
 
-	/** 返回 chase target / Returns the chase target */
+	/** 返回追击目标距离 / Returns the chase target */
 	public final int getChaseTarget() {
 		return chaseTarget;
 	}
 
-	/** 返回 chase home / Returns the chase home */
+	/** 返回回归距离 / Returns the chase home */
 	public final int getChaseHome() {
 		return chaseHome;
 	}

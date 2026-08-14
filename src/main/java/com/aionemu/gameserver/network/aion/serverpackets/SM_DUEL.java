@@ -41,7 +41,7 @@ public class SM_DUEL extends AionServerPacket {
 	 * 决斗结果通知。
 	 * Duel-result notification.
 	 *
-	 * duel result
+	 * @param result 决斗结果 / duel result
 	 * @param playerName 相关玩家名 / related player name
 	 */
 	public static SM_DUEL SM_DUEL_RESULT(DuelResult result, String playerName) {

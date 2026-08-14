@@ -6,9 +6,9 @@ package com.aionemu.gameserver.model.gameobjects.player;
  */
 
 public enum ReviveType {
-	/** Bind Revive / Bind Revive */
+	/** 绑定点复活 / Bind Revive */
 	BIND_REVIVE(0), REBIRTH_REVIVE(1), ITEM_SELF_REVIVE(2), SKILL_REVIVE(3), KISK_REVIVE(4), INSTANCE_REVIVE(6),
-	/** Vortex Revive / Vortex Revive */
+	/** 旋涡复活 / Vortex Revive */
 	VORTEX_REVIVE(8), START_POINT_REVIVE(11);
 
 	private int typeId;

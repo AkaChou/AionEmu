@@ -11,7 +11,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 
 /**
  * 思考事件处理器，按 AI 状态在战斗 / 行走 / 空闲间调度决策，含非活跃区域逻辑。
- * walking / idle, including inactive-region logic.
+ * Schedules decisions among fight / walking / idle by AI state, including inactive-region logic.
  *
  * @author ATracer
  */
@@ -19,9 +19,9 @@ public class ThinkEventHandler {
 
 	/**
 	 * 主思考入口：加锁后按状态调度攻击、行走或空闲思考；非活跃区域走专用逻辑。
-	 * walking / idle think; uses inactive-region logic when needed.
+	 * Main think entry: under lock, schedules attack / walking / idle think by state; uses inactive-region logic when needed.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onThink(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
@@ -65,7 +65,7 @@ public class ThinkEventHandler {
 	 * 非活跃区域思考：战斗时继续攻击决策，否则若不在出生点则触发归家。
 	 * Thinks in inactive region: continues attack decisions in fight, otherwise fires return-home if off spawn.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	private static void thinkInInactiveRegion(NpcAI2 npcAI) {
 		if (!npcAI.canThink()) {
@@ -88,9 +88,9 @@ public class ThinkEventHandler {
 
 	/**
 	 * 战斗思考：锁定最高仇恨目标，或结束攻击并触发归家 / 不在家事件。
-	 * not-at-home events.
+	 * Fight think: locks on the most-hated target, or finishes attack and fires back-home / not-at-home events.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void thinkAttack(NpcAI2 npcAI) {
 		Npc npc = npcAI.getOwner();
@@ -113,7 +113,7 @@ public class ThinkEventHandler {
 	 * 行走思考：启动行走管理器。
 	 * Walking think: starts the walk manager.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void thinkWalking(NpcAI2 npcAI) {
 		WalkManager.startWalking(npcAI);
@@ -123,7 +123,7 @@ public class ThinkEventHandler {
 	 * 空闲思考：若应行走则启动行走，失败则保持空闲。
 	 * Idle think: starts walking when applicable, otherwise stays idle.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void thinkIdle(NpcAI2 npcAI) {
 		if (WalkManager.isWalking(npcAI)) {

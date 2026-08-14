@@ -33,7 +33,7 @@ public abstract class AbstractRestrictions implements Restrictions {
 	 * 按实现类哈希，避免同类重复激活。
 	 * Hashes by implementation class to avoid duplicate activation of the same type.
 	 *
-	 * class hash
+	 * @return 类哈希 / class hash
 	 */
 	@Override
 	public int hashCode() {
@@ -44,8 +44,8 @@ public abstract class AbstractRestrictions implements Restrictions {
 	 * 同类实例视为相等，避免多次激活同一限制类型。
 	 * Same implementation class is equal to avoid multi-activation.
 	 *
-	 * object
-	 * whether same class
+	 * @param obj 对象 / object
+	 * @return 是否同类 / whether same class
 	 */
 	@Override
 	public boolean equals(Object obj) {

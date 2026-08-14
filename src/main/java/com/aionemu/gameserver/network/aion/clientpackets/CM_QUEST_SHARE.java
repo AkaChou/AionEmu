@@ -53,7 +53,7 @@ public class CM_QUEST_SHARE extends AionClientPacket {
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1100000, member.getName()));
 					continue;
 				}
-				if ("FORCE".equals(metadata.targetType())) { // Alliance.
+				if ("FORCE".equals(metadata.targetType())) { // 同盟。 / Alliance.
 					PacketSendUtility.sendPacket(member, new SM_SYSTEM_MESSAGE(1100005, player.getName()));
 					continue;
 				}
@@ -80,7 +80,7 @@ public class CM_QUEST_SHARE extends AionClientPacket {
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1100000, member.getName()));
 					continue;
 				}
-				if ("UNION".equals(metadata.targetType())) { // League.
+				if ("UNION".equals(metadata.targetType())) { // 联盟。 / League.
 					PacketSendUtility.sendPacket(member, new SM_SYSTEM_MESSAGE(1100005, player.getName()));
 					continue;
 				}

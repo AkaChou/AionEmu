@@ -11,8 +11,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.rewards.IdReward;
 
 /**
- * 矿石奖励组模板（静态数据/XML）。
- * XML template.
+ * 矿石奖励组：矿石物品种族条目。
+ * Ore reward group: ore item race entries.
  *
  * @author Rolandas
  */

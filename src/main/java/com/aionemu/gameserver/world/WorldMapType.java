@@ -133,7 +133,7 @@ public enum WorldMapType {
 	 * 非个人地图构造。
 	 * Non-personal map constructor.
 	 *
-	 * map id
+	 * @param worldId 地图 ID / the map id
 	 */
 	WorldMapType(int worldId) {
 		this(worldId, false);
@@ -143,7 +143,7 @@ public enum WorldMapType {
 	 * 完整构造。
 	 * Full constructor.
 	 *
-	 * map id
+	 * @param worldId 地图 ID / the map id
 	 * @param personal 是否个人地图 / whether personal
 	 */
 	WorldMapType(int worldId, boolean personal) {
@@ -155,7 +155,7 @@ public enum WorldMapType {
 	 * 返回地图 ID。
 	 * Returns the map id.
 	 *
-	 * map id
+	 * @return 地图 ID / the map id
 	 */
 	public int getId() {
 		return worldId;

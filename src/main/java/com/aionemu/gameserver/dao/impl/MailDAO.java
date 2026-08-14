@@ -51,8 +51,8 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      * 加载玩家邮箱（含附件物品）。
      * Loads the player's mailbox including attached items.
      *
-     * 玩家 / player
-     * mailbox
+     * @param player 玩家 / player
+     * @return 信箱 / mailbox
      */
     @Override
     public Mailbox loadPlayerMailbox(Player player) {
@@ -113,7 +113,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      *
      * player id
      *
-     * @param playerId
+     * @param playerId 玩家 ID / player id
      * @return 是否有未读邮件 / whether unread mail exists
      */
     @Override
@@ -140,7 +140,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      *
      * player id
      *
-     * @param playerId
+     * @param playerId 玩家 ID / player id
      * @return 附件物品列表 / list of attachment items
      */
     private List<Item> loadMailboxItems(final int playerId) {
@@ -222,9 +222,9 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      * 按持久化状态插入或更新单封信件。
      * Inserts or updates a single letter according to its persistent state.
      *
-     * timestamp
-     * letter
-     * whether successful
+     * @param time 时间戳 / timestamp
+     * @param letter 邮件 / letter
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean storeLetter(Timestamp time, Letter letter) {
@@ -254,9 +254,9 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      * 插入新信件。
      * Inserts a new letter.
      *
-     * timestamp
-     * letter
-     * whether successful
+     * @param con 时间戳 / timestamp
+     * @param time 邮件 / letter
+     * @return 是否成功 / whether successful
      */
     private boolean saveLetter(Connection con, final Timestamp time, final Letter letter) throws SQLException {
         int attachedItemId = 0;
@@ -286,9 +286,9 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      * 更新已有信件。
      * Updates an existing letter.
      *
-     * timestamp
-     * letter
-     * whether successful
+     * @param con 时间戳 / timestamp
+     * @param time 邮件 / letter
+     * @return 是否成功 / whether successful
      */
     private boolean updateLetter(Connection con, final Timestamp time, final Letter letter) throws SQLException {
         int attachedItemId = 0;
@@ -325,8 +325,8 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      * 删除指定信件。
      * Deletes the letter with the given id.
      *
-     * letter id
-     * whether successful
+     * @param letterId 邮件 ID / letter id
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean deleteLetter(final int letterId) {
@@ -397,10 +397,10 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

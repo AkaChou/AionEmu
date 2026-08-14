@@ -143,8 +143,11 @@ public class VisibleObjectSpawner {
     private static final java.util.concurrent.ConcurrentHashMap<Integer, NpcStatsTemplate> ORIGINAL_STATS = new java.util.concurrent.ConcurrentHashMap<>();
 
     /**
-     * @param objId 按配置倍率缩放 NPC 属性（生命、物攻 / 魔攻、命中、物防/魔防、回避等）。
-     * @return Scale NPC attributes by config rates (HP, physical / magical attack, accuracy, defenses, evasion).
+     * 按配置倍率缩放 NPC 属性（生命、物攻 / 魔攻、命中、物防/魔防、回避等）。
+     * Scales NPC attributes by config rates (HP, physical/magical attack, accuracy, defenses, evasion).
+     *
+     * @param objId NPC 模板 ID / npc template id
+     * @return 缩放后的 NPC 模板，不存在时返回 null / scaled npc template, or null if absent
      */
     protected static NpcTemplate RatedTemplate(int objId) {
         NpcTemplate npcTemplate = DataManager.NPC_DATA.getNpcTemplate(objId);
@@ -234,7 +237,7 @@ public class VisibleObjectSpawner {
     private static NpcStatsTemplate cloneStats(NpcStatsTemplate original) {
         NpcStatsTemplate clone = new NpcStatsTemplate();
         
-        // HP
+        // 生命值 / HP
         clone.setMaxHp(original.getMaxHp());
         
         // 力量（魔法攻击） / Power (Magical Attack)
@@ -260,6 +263,7 @@ public class VisibleObjectSpawner {
 
     protected static VisibleObject spawnNpc(SpawnTemplate spawn, int instanceIndex) {
         int objectId = spawn.getNpcId();
+        // 按概率权重从替代 NPC ID 中随机选取实际生成对象。 / Pick the actual NPC id from alternates by weighted probability.
         if (spawn.getAlternateIds()!=null){
             int[] selectprobs = spawn.getSelectProbs();
             int[] alternateIds = spawn.getAlternateIds();

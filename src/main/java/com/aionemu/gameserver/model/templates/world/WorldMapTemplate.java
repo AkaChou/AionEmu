@@ -81,7 +81,7 @@ public class WorldMapTemplate {
 		return mapId;
 	}
 
-	/** 返回 twin count / Returns the twin count */
+	/** 返回双生副本数 / Returns the twin count */
 	public int getTwinCount() {
 		if (WorldConfig.WORLD_MAX_TWINS_USUAL == 0) {
 			return twinCount;
@@ -89,7 +89,7 @@ public class WorldMapTemplate {
 		return Math.min(WorldConfig.WORLD_MAX_TWINS_USUAL, twinCount);
 	}
 
-	/** 返回 beginner twin count / Returns the beginner twin count */
+	/** 返回新手双生副本数 / Returns the beginner twin count */
 	public int getBeginnerTwinCount() {
 		if (WorldConfig.WORLD_MAX_TWINS_BEGINNER == 0) {
 			return beginnerTwinCount;
@@ -99,29 +99,32 @@ public class WorldMapTemplate {
 		return Math.min(WorldConfig.WORLD_MAX_TWINS_BEGINNER, beginnerTwinCount);
 	}
 
-	/** 返回 max user / Returns the max user */
+	/** 返回最大玩家数 / Returns the max user */
 	public int getMaxUser() {
 		return maxUser;
 	}
 
 	/**
-	 * @return Whether prison
+	 * 是否监狱地图。
+	 * Whether this is a prison map.
+	 *
+	 * @return 是否监狱 / whether prison
 	 */
 	public boolean isPrison() {
 		return prison;
 	}
 
-	/** 是否副本。 / Whether Instance. */
+	/** 是否副本。 / Whether instance. */
 	public boolean isInstance() {
 		return instance;
 	}
 
-	/** 返回水等级 / Returns the water level*/
+	/** 返回水位 / Returns the water level. */
 	public int getWaterLevel() {
 		return waterlevel;
 	}
 
-	/** 返回 death level / Returns the death level */
+	/** 返回死亡高度 / Returns the death level */
 	public int getDeathLevel() {
 		return deathlevel;
 	}
@@ -131,7 +134,7 @@ public class WorldMapTemplate {
 		return worldType;
 	}
 
-	/** 返回世界大小 / Returns the world size*/
+	/** 返回世界大小 / Returns the world size. */
 	public int getWorldSize() {
 		return worldSize;
 	}
@@ -141,48 +144,66 @@ public class WorldMapTemplate {
 		return dropWorldType;
 	}
 
-	/** 是否飞行。 / Whether Fly. */
+	/** 是否飞行。 / Whether fly. */
 	public boolean isFly() {
 		return (flags & ZoneAttributes.FLY.getId()) != 0;
 	}
 
 	/**
-	 * @return 是否允许滑翔。 / Whether glide
+	 * 是否允许滑翔。
+	 * Whether gliding is allowed.
+	 *
+	 * @return 是否允许滑翔 / whether glide
 	  */
 	public boolean canGlide() {
 		return (flags & ZoneAttributes.GLIDE.getId()) != 0;
 	}
 
 	/**
-	 * @return 是否放入 kisk。 / Whether put kisk
+	 * 是否允许放置归还之石。
+	 * Whether a kisk can be placed.
+	 *
+	 * @return 是否允许放置归还之石 / whether put kisk
 	  */
 	public boolean canPutKisk() {
 		return (flags & ZoneAttributes.BIND.getId()) != 0;
 	}
 
 	/**
-	 * @return Whether recall
+	 * 是否允许召回。
+	 * Whether recall is allowed.
+	 *
+	 * @return 是否允许召回 / whether recall
 	 */
 	public boolean canRecall() {
 		return (flags & ZoneAttributes.RECALL.getId()) != 0;
 	}
 
 	/**
-	 * @return 是否允许骑乘。 / Whether ride
+	 * 是否允许骑乘。
+	 * Whether riding is allowed.
+	 *
+	 * @return 是否允许骑乘 / whether ride
 	  */
 	public boolean canRide() {
 		return (flags & ZoneAttributes.RIDE.getId()) != 0;
 	}
 
 	/**
-	 * @return Whether fly ride
+	 * 是否允许飞行骑乘。
+	 * Whether fly riding is allowed.
+	 *
+	 * @return 是否允许飞行骑乘 / whether fly ride
 	 */
 	public boolean canFlyRide() {
 		return (flags & ZoneAttributes.FLY_RIDE.getId()) != 0;
 	}
 
 	/**
-	 * @return Whether pvp allowed
+	 * 是否允许 PvP。
+	 * Whether PvP is allowed.
+	 *
+	 * @return 是否允许 PvP / whether pvp allowed
 	 */
 	public boolean isPvpAllowed() {
 		return (flags & ZoneAttributes.PVP_ENABLED.getId()) != 0;
@@ -198,7 +219,7 @@ public class WorldMapTemplate {
 		return (flags & ZoneAttributes.DUEL_OTHER_RACE_ENABLED.getId()) != 0;
 	}
 
-	/** 返回 flags / Returns the flags */
+	/** 返回区域标志 / Returns the flags */
 	public int getFlags() {
 		return flags;
 	}
@@ -212,7 +233,7 @@ public class WorldMapTemplate {
 		return exceptBuff;
 	}
 
-	/** 返回 ai info / Returns the ai info */
+	/** 返回 AI 信息 / Returns the ai info */
 	public AiInfo getAiInfo() {
 		return aiInfo;
 	}

@@ -59,7 +59,7 @@ public class LDF5_Fortress_ChiefAI2 extends AggressiveNpcAI2
     }
 	
 	/**
-	 * Msg Elyos
+	 * 天族系统消息 / Elyos system message
 	 */
 	private void announceLDF5FortressLiCenter() {
 		// 天族占领了英雄陨落防御点。 / The Elyos have captured the Hero's Fall Defense Point.
@@ -75,7 +75,7 @@ public class LDF5_Fortress_ChiefAI2 extends AggressiveNpcAI2
 	}
 	
 	/**
-	 * Msg Asmodians
+	 * 魔族系统消息 / Asmodian system message
 	 */
 	private void announceLDF5FortressDaCenter() {
 		// 魔族占领了英雄陨落防御点。 / The Asmodians have captured the Hero's Fall Defense Point.
@@ -91,7 +91,7 @@ public class LDF5_Fortress_ChiefAI2 extends AggressiveNpcAI2
 	}
 	
 	/**
-	 * Msg Balaur
+	 * 龙族系统消息 / Balaur system message
 	 */
 	private void announceLDF5FortressDrCenter() {
 		// 龙族占领了英雄陨落防御点。 / The Balaur have captured the Hero's Fall Defense Point.

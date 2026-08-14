@@ -14,7 +14,7 @@ public abstract class OldNamesDAO implements DAO {
 	 * 判断名称是否曾被使用过（旧名）。
 	 * Checks whether the name was previously used (old name).
 	 *
-	 * name
+	 * @param name 名称 / name
 	 * @return 是否为旧名 / true if it is an old name
 	 */
 	public abstract boolean isOldName(String name);
@@ -24,8 +24,8 @@ public abstract class OldNamesDAO implements DAO {
 	 * Inserts a rename history record.
 	 *
 	 * @param id 玩家 ID / player id
-	 * old name
-	 * new name
+	 * @param oldname 旧名称 / old name
+	 * @param newname 新名称 / new name
 	 */
 	public abstract void insertNames(int id, String oldname, String newname);
 
@@ -33,7 +33,7 @@ public abstract class OldNamesDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public final String getClassName() {

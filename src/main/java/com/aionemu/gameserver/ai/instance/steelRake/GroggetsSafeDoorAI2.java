@@ -17,11 +17,12 @@ public class GroggetsSafeDoorAI2 extends ActionItemNpcAI2
 {
 	@Override
 	protected void handleUseItemFinish(Player player) {
+		// 用保险箱钥匙传送到副本内部；3.0 舱内版无需钥匙。 / Teleport inside the instance with the safe key; the 3.0 cabin version needs no key.
 		switch (getNpcId()) {
-		    case 730199: //Groggets Safe Door.
+		    case 730199: // 格罗盖特保险箱门 / Groggets Safe Door.
 				switch (player.getWorldId()) {
-                    case 300100000: //Steel Rake.
-						if (player.getInventory().decreaseByItemId(185000046, 1)) { //Grogget's Safe Key.
+                    case 300100000: // 钢铁耙号 / Steel Rake.
+						if (player.getInventory().decreaseByItemId(185000046, 1)) { // 格罗盖特保险箱钥匙 / Grogget's Safe Key.
 						    PacketSendUtility.sendMessage(player, "you enter <Inside Steel Rake>");
 							TeleportService2.teleportTo(player, 300100000, 702.11993f, 500.80948f, 939.60675f, (byte) 0);
 						} else {
@@ -29,7 +30,7 @@ public class GroggetsSafeDoorAI2 extends ActionItemNpcAI2
 						}
 			        break;
 				} switch (player.getWorldId()) {
-                    case 300460000: //Steel Rake Cabin 3.0
+                    case 300460000: // 钢铁耙号舱室 3.0 / Steel Rake Cabin 3.0
 					    PacketSendUtility.sendMessage(player, "you enter <Inside Steel Rake Cabin>");
 						TeleportService2.teleportTo(player, 300460000, 702.11993f, 500.80948f, 939.60675f, (byte) 0);
 			        break;

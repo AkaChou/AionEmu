@@ -68,7 +68,7 @@ public class OptimisticLinkedQueue<E> extends AbstractQueue<E> implements Queue<
 		 * Construct with item and next link.
 		 *
 		 * @param x 元素 / Item
-		 * Next node
+		 * @param n 下一节点 / Next node
 		 */
 		Node(E x, Node<E> n) {
 			item = x;
@@ -80,7 +80,7 @@ public class OptimisticLinkedQueue<E> extends AbstractQueue<E> implements Queue<
 		 * 返回节点元素。
 		 * Return the node item.
 		 *
-		 * Item
+		 * @return 元素 / Item
 		 */
 		E getItem() {
 			return item;
@@ -90,7 +90,7 @@ public class OptimisticLinkedQueue<E> extends AbstractQueue<E> implements Queue<
 		 * 设置节点元素。
 		 * Set the node item.
 		 *
-		 * New value
+		 * @param val 新值 / New value
 		 */
 		@SuppressWarnings("unused")
 		void setItem(E val) {
@@ -101,7 +101,7 @@ public class OptimisticLinkedQueue<E> extends AbstractQueue<E> implements Queue<
 		 * 返回 next 指针。
 		 * Return the next pointer.
 		 *
-		 * Next node
+		 * @return 下一节点 / Next node
 		 */
 		Node<E> getNext() {
 			return next;
@@ -111,7 +111,7 @@ public class OptimisticLinkedQueue<E> extends AbstractQueue<E> implements Queue<
 		 * 设置 next 指针。
 		 * Set the next pointer.
 		 *
-		 * New next
+		 * @param val 新下一节点 / New next
 		 */
 		void setNext(Node<E> val) {
 			next = val;
@@ -121,7 +121,7 @@ public class OptimisticLinkedQueue<E> extends AbstractQueue<E> implements Queue<
 		 * 返回 prev 指针。
 		 * Return the previous pointer.
 		 *
-		 * Previous node
+		 * @return 上一节点 / Previous node
 		 */
 		Node<E> getPrev() {
 			return prev;
@@ -131,7 +131,7 @@ public class OptimisticLinkedQueue<E> extends AbstractQueue<E> implements Queue<
 		 * 设置 prev 指针。
 		 * Set the previous pointer.
 		 *
-		 * New previous
+		 * @param val 新上一节点 / New previous
 		 */
 		void setPrev(Node<E> val) {
 			prev = val;
@@ -158,8 +158,8 @@ public class OptimisticLinkedQueue<E> extends AbstractQueue<E> implements Queue<
 	 * CAS 更新 tail。
 	 * CAS update of the tail.
 	 *
-	 * Expected value
-	 * New value
+	 * @param cmp 期望值 / Expected value
+	 * @param val 新值 / New value
 	 *
 	 * @return 成功时为 {@code true} / {@code true} if successful
 	 */
@@ -171,8 +171,8 @@ public class OptimisticLinkedQueue<E> extends AbstractQueue<E> implements Queue<
 	 * CAS 更新 head。
 	 * CAS update of the head.
 	 *
-	 * Expected value
-	 * New value
+	 * @param cmp 期望值 / Expected value
+	 * @param val 新值 / New value
 	 *
 	 * @return 成功时为 {@code true} / {@code true} if successful
 	 */
@@ -210,8 +210,8 @@ public class OptimisticLinkedQueue<E> extends AbstractQueue<E> implements Queue<
 	 * Enqueue the specified element at the tail of this queue.
 	 *
 	 * @param e 元素，不可为 null / Element, must not be null
-	 * Always true
-	 * When element is null
+	 * @return 恒为 true / Always true
+	 * @throws NullPointerException 元素为 null 时 / When element is null
 	 */
 	public boolean offer(E e) {
 		if (e == null)
@@ -310,8 +310,7 @@ public class OptimisticLinkedQueue<E> extends AbstractQueue<E> implements Queue<
 	 * 不支持窥视。
 	 * Peek is not supported.
 	 *
-	 * Never returns
-	 * Always thrown
+	 * @throws UnsupportedOperationException 恒抛出 / Always thrown
 	 */
 	@Override
 	public E peek() {
@@ -322,8 +321,7 @@ public class OptimisticLinkedQueue<E> extends AbstractQueue<E> implements Queue<
 	 * 不支持迭代。
 	 * Iteration is not supported.
 	 *
-	 * Never returns
-	 * Always thrown
+	 * @throws UnsupportedOperationException 恒抛出 / Always thrown
 	 */
 	@Override
 	public Iterator<E> iterator() {
@@ -334,7 +332,7 @@ public class OptimisticLinkedQueue<E> extends AbstractQueue<E> implements Queue<
 	 * 返回近似元素个数。
 	 * Return the approximate element count.
 	 *
-	 * Count
+	 * @return 计数 / Count
 	 */
 	@Override
 	public int size() {

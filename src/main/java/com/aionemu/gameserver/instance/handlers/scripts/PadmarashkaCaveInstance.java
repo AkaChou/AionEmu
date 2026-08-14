@@ -36,11 +36,11 @@ import java.util.concurrent.Future;
 @InstanceID(320150000)
 public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 {
-	/** dramata egg55 / dramata egg55 */
+		/** dramata egg55 / dramata egg55 */
 		private int dramataEgg55;
-	/** dramata fi55ae / dramata fi55ae */
+		/** dramata fi55ae / dramata fi55ae */
 		private int dramataFi55Ae;
-	/** dramata 任务 / dramata task */
+		/** dramata 任务 / dramata task */
 		private Future<?> dramataTask;
 	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
@@ -93,7 +93,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -165,7 +165,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
      * 处理死亡事件。
      * Handle a death event.
      *
-     * npc
+     * @param npc NPC / npc
      */
     @Override
     public void onDie(Npc npc) {
@@ -298,9 +298,9 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
@@ -340,8 +340,8 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
 	 *
-	 * 玩家 / player
-	 * zone
+	 * @param player 玩家 / player
+	 * @param zone 区域 / zone
 	 */
 	@Override
     public void onEnterZone(Player player, ZoneInstance zone) {

@@ -21,7 +21,7 @@ public abstract class MailDAO implements IDFactoryAwareDAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public String getClassName() {
@@ -33,8 +33,8 @@ public abstract class MailDAO implements IDFactoryAwareDAO {
 	 * Persists a letter into the database with the given timestamp.
 	 *
 	 * @param time 发信时间 / letter time
-	 * letter object
-	 * 若 successful 则为 true / true if successful
+	 * @param letter 信件对象 / letter object
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean storeLetter(Timestamp time, Letter letter);
 
@@ -50,8 +50,8 @@ public abstract class MailDAO implements IDFactoryAwareDAO {
 	 * 加载玩家邮箱内容。
 	 * Loads the player's mailbox contents.
 	 *
-	 * 玩家 / player
-	 * mailbox
+	 * @param player 玩家 / player
+	 * @return 邮箱 / mailbox
 	 */
 	public abstract Mailbox loadPlayerMailbox(Player player);
 
@@ -59,7 +59,7 @@ public abstract class MailDAO implements IDFactoryAwareDAO {
 	 * 将玩家邮箱状态整体写回数据库。
 	 * Stores the player's mailbox state back to the database.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void storeMailbox(Player player);
 
@@ -67,8 +67,8 @@ public abstract class MailDAO implements IDFactoryAwareDAO {
 	 * 按信件 ID 删除信件。
 	 * Deletes a letter by its ID.
 	 *
-	 * letter id
-	 * 若 successful 则为 true / true if successful
+	 * @param letterId 信件 ID / letter id
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean deleteLetter(int letterId);
 
@@ -84,7 +84,7 @@ public abstract class MailDAO implements IDFactoryAwareDAO {
 	 * 判断玩家是否有未读邮件。
 	 * Checks whether the player has any unread mail.
 	 *
-	 * player id
+	 * @param playerId 玩家 ID / player id
 	 * @return 是否有未读 / true if there is unread mail
 	 */
 	public abstract boolean haveUnread(int playerId);

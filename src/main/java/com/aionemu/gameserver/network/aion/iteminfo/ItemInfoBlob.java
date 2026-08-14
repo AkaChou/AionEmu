@@ -37,7 +37,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	 * 为指定玩家与物品创建 Blob 容器。
 	 * Creates a blob container for the given player and item.
 	 *
-	 * 所属玩家 / owning player
+	 * @param player 所属玩家 / owning player
 	 * @param item 目标物品 / target item
 	 */
 	public ItemInfoBlob(Player player, Item item) {
@@ -61,7 +61,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	 * 按类型创建并添加一个 Blob 条目。
 	 * Creates and adds a blob entry of the given type.
 	 *
-	 * blob type
+	 * @param type blob 类型 / blob type
 	 */
 	public void addBlobEntry(ItemBlobType type) {
 		ItemBlobEntry ent = type.newBlobEntry();
@@ -73,7 +73,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	 * 添加一条属性加成 Blob 条目。
 	 * Adds a stat-bonus blob entry bound to the given modifier.
 	 *
-	 * stat modifier
+	 * @param modifier 属性修正 / stat modifier
 	 */
 	public void addBonusBlobEntry(IStatFunction modifier) {
 		ItemBlobEntry ent = ItemBlobType.STAT_BONUSES.newBlobEntry();
@@ -87,8 +87,8 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	 * Factory method that creates a single blob entry and binds ownership.
 	 * Does not support {@link ItemBlobType#STAT_BONUSES} (use {@link #addBonusBlobEntry}).
 	 *
-	 * blob type
-	 * 所属玩家 / owning player
+	 * @param type blob 类型 / blob type
+	 * @param player 所属玩家 / owning player
 	 * @param item 所属物品 / owning item
 	 * @return 已绑定的条目 / bound entry
 	 */
@@ -108,9 +108,9 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	 * Equipable items get slot, mana-stone, conditioning, plume/bracelet data, etc.;
 	 * non-equipable items may only include general info or a stigma-shard entry.
 	 *
-	 * 所属玩家 / owning player
+	 * @param player 所属玩家 / owning player
 	 * @param item 目标物品 / target item
-	 * full blob
+	 * @return 完整 blob / full blob
 	 */
 	public static ItemInfoBlob getFullBlob(Player player, Item item) {
 		ItemInfoBlob blob = new ItemInfoBlob(player, item);
@@ -173,7 +173,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	 * 返回当前已添加的 Blob 条目列表。
 	 * Returns the list of currently added blob entries.
 	 *
-	 * entry list
+	 * @return 条目列表 / entry list
 	 */
 	public List<ItemBlobEntry> getBlobEntries() {
 		return itemBlobEntries;
@@ -183,7 +183,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	 * 计算全部条目的总负载长度（每条目含 1 字节类型 ID）。
 	 * Computes the total payload size of all entries (each entry includes a 1-byte type id).
 	 *
-	 * total size in bytes
+	 * @return 总字节数 / total size in bytes
 	 */
 	public int size() {
 		int totalSize = 0;
@@ -254,7 +254,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 				return new StigmaShardInfoBlobEntry();
 			}
 		},
-		/** random options / random options */
+		/** 随机选项。 / Random options. */
 		PREMIUM_OPTION(0x10) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
@@ -268,7 +268,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 				return new IdianInfoBlobEntry();
 			}
 		},
-		/** 包装/拆封次数信息。Wrap/unwrap count info. */
+		/** 包装/拆封次数信息。 / Wrap/unwrap count info. */
 		WRAPP_INFO(0x12) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
@@ -310,7 +310,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 				return new WingInfoBlobEntry();
 			}
 		},
-		/** 合成/融合物品信息。Composite/fusioned item info. */
+		/** 合成/融合物品信息。 / Composite/fusioned item info. */
 		COMPOSITE_ITEM(0x0E) {
 			@Override
 			ItemBlobEntry newBlobEntry() {
@@ -332,7 +332,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 		 * 以客户端入口 ID 构造类型。
 		 * Constructs a type with the given client entry id.
 		 *
-		 * entry id
+		 * @param entryId 客户端入口 ID / entry id
 		 */
 		private ItemBlobType(int entryId) {
 			this.entryId = entryId;
@@ -342,7 +342,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 		 * 返回客户端入口 ID。
 		 * Returns the client entry id.
 		 *
-		 * entry id
+		 * @return 客户端入口 ID / entry id
 		 */
 		public int getEntryId() {
 			return entryId;
@@ -352,7 +352,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 		 * 创建对应的 Blob 条目实例。
 		 * Creates a new blob entry instance for this type.
 		 *
-		 * new entry
+		 * @return 新条目 / new entry
 		 */
 		abstract ItemBlobEntry newBlobEntry();
 	}

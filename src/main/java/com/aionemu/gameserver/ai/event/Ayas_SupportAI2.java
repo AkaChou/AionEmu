@@ -25,11 +25,11 @@ public class Ayas_SupportAI2 extends GeneralNpcAI2
 	protected void handleDialogStart(Player player) {
         switch (getNpcId()) {
             // 天族。 / Elyos.
-			case 833671: //Helpful Ayas.
-			case 833672: //Friendly Ayas.
+			case 833671: // 乐于助人的 Ayas / Helpful Ayas.
+			case 833672: // 友善的 Ayas / Friendly Ayas.
             // 魔族。 / Asmodians.
-            case 833673: //Helpful Ayas.
-			case 833674: { //Friendly Ayas.
+            case 833673: // 乐于助人的 Ayas / Helpful Ayas.
+			case 833674: { // 友善的 Ayas / Friendly Ayas.
 				super.handleDialogStart(player);
 				break;
 			} default: {
@@ -49,14 +49,14 @@ public class Ayas_SupportAI2 extends GeneralNpcAI2
 		} if (dialogId == 10000) {
 			int skillId = 0;
 			switch (getNpcId()) {
-			    case 833671: //Helpful Ayas E.
-				case 833673: //Helpful Ayas A.
-					skillId = 11047; //Helpful Ayas' Cheer.
+			    case 833671: // 乐于助人的 Ayas（天族） / Helpful Ayas E.
+				case 833673: // 乐于助人的 Ayas（魔族） / Helpful Ayas A.
+					skillId = 11047; // 乐于助人的 Ayas 的助威 / Helpful Ayas' Cheer.
 					effectController.removeEffect(11049);
 				break;
-			    case 833672: //Friendly Ayas E.
-				case 833674: //Friendly Ayas A.
-					skillId = 11049; //Friendly Ayas' Cheer.
+			    case 833672: // 友善的 Ayas（天族） / Friendly Ayas E.
+				case 833674: // 友善的 Ayas（魔族） / Friendly Ayas A.
+					skillId = 11049; // 友善的 Ayas 的助威 / Friendly Ayas' Cheer.
 					effectController.removeEffect(11047);
 				break;
 			}

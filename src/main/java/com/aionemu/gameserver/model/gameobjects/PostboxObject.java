@@ -29,7 +29,7 @@ public class PostboxObject extends HouseObject<HousingPostbox> {
 		super(owner, objId, templateId);
 	}
 
-	/** 使用时 / on Use. */
+	/** 使用时 / On use. */
 	@Override
 	public void onUse(final Player player) {
 		if (!usingPlayer.compareAndSet(null, player)) {
@@ -42,7 +42,7 @@ public class PostboxObject extends HouseObject<HousingPostbox> {
 
 		final ItemUseObserver observer = new ItemUseObserver() {
 
-			/** 中止 / abort. */
+			/** 中止 / Abort. */
 			@Override
 			public void abort() {
 				player.getObserveController().removeObserver(this);
@@ -56,7 +56,7 @@ public class PostboxObject extends HouseObject<HousingPostbox> {
 		player.getController().addTask(TaskId.HOUSE_OBJECT_USE,
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
-					/** 运行 / run. */
+					/** 运行 / Run. */
 					@Override
 					public void run() {
 						try {

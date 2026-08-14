@@ -28,7 +28,7 @@ public class Jotun_GruntAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameEngineServices.skillEngine().getSkill(getOwner(), 23014, 60, getOwner()).useNoAnimationSkill(); //Sacrificial Rite.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 23014, 60, getOwner()).useNoAnimationSkill(); // 牺牲仪式 / Sacrificial Rite.
 		startLifeTask();
 	}
 	

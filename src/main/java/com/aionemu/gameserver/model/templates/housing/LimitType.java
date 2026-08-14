@@ -15,7 +15,7 @@ public enum LimitType {
 	NONE(0, new int[] { 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0 }),
 	/** 所有者 Pot / Owner Pot */
 	OWNER_POT(1, new int[] { 8, 6, 4, 3, 8 }, new int[] { 0, 0, 0, 0, 4 }),
-	/** Visitor Pot / Visitor Pot */
+	/** 访客花盆 / Visitor Pot */
 	VISITOR_POT(2, new int[] { 9, 7, 5, 2, 8 }, new int[] { 0, 0, 0, 0, 4 }),
 	/** 仓库。 / Storage. */
 	STORAGE(3, new int[] { 7, 6, 5, 4, 8 }, new int[] { 0, 0, 0, 0, 4 }),
@@ -58,7 +58,7 @@ public enum LimitType {
 		return trialLimits[houseType.getLimitTypeIndex()];
 	}
 
-	/** 值 / From Value*/
+	/** 值 / From Value. */
 	public static LimitType fromValue(String value) {
 		return valueOf(value);
 	}

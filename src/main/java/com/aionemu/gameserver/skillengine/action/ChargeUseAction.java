@@ -9,6 +9,10 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
+/**
+ * 技能消耗动作：按装备的武器/护甲耐久度扣减充能值。
+ * Skill action that burns charge from equipped weapons/armor by durability cost.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ChargeUseAction")
 public class ChargeUseAction extends Action {

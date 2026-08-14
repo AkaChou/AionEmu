@@ -26,7 +26,7 @@ public class AggroInfo {
 	 * 以指定攻击者创建仇恨条目。
 	 * Creates an aggro entry for the given attacker.
 	 *
-	 * attacker
+	 * @param attacker 攻击者 / attacker
 	 */
 	AggroInfo(AionObject attacker) {
 		this.attacker = attacker;
@@ -36,7 +36,7 @@ public class AggroInfo {
 	 * 返回该条目对应的攻击者。
 	 * Returns the attacker associated with this entry.
 	 *
-	 * attacker
+	 * @return 攻击者 / attacker
 	 */
 	public AionObject getAttacker() {
 		return attacker;
@@ -72,7 +72,7 @@ public class AggroInfo {
 	 * 返回当前仇恨值。
 	 * Returns the current hate value.
 	 *
-	 * hate
+	 * @return 仇恨值 / hate
 	 */
 	public synchronized int getHate() {
 		return this.hate;
@@ -117,7 +117,7 @@ public class AggroInfo {
 	 * 返回累计伤害。
 	 * Returns the accumulated damage.
 	 *
-	 * damage
+	 * @return 累计伤害 / damage
 	 */
 	public synchronized int getDamage() {
 		return this.damage;

@@ -28,8 +28,6 @@ public class UnBan extends AdminCommand {
 	 * 按角色名查找账号并对账号/IP/全量解除封禁。
 	 * Resolves account by character name and unbans account/IP/full.
 	 *
-	 * 执行 GM / Admin player
-	 * &lt;player&gt; [account|ip|full]。
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -71,8 +69,6 @@ public class UnBan extends AdminCommand {
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
 	 *
-	 * 玩家 / Player
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

@@ -32,7 +32,7 @@ public enum ItemQuality {
 		this.qualityId = qualityId;
 	}
 
-	/** 返回 quality id / Returns the quality id */
+	/** 返回品质 ID / Returns the quality id */
 	public int getQualityId() {
 		return qualityId;
 	}

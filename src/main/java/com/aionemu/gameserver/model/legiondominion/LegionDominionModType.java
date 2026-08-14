@@ -7,5 +7,7 @@ package com.aionemu.gameserver.model.legiondominion;
 
 public enum LegionDominionModType {
 	/** 和平 / Peace. */
-	PEACE, DOMINION;
+	PEACE,
+	/** 领地 / Dominion. */
+	DOMINION;
 }

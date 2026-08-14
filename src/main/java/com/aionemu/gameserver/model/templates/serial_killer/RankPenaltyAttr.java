@@ -9,7 +9,7 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.change.Func;
 
 /**
- * 军阶 PenaltyAttr 模板（静态数据/XML）。
+ * 军阶惩罚属性模板（静态数据/XML）。
  * XML template.
  */
 
@@ -35,12 +35,12 @@ public class RankPenaltyAttr {
 		this.stat = value;
 	}
 
-	/** 返回 func / Returns the func */
+	/** 返回修正方式 / Returns the func */
 	public Func getFunc() {
 		return func;
 	}
 
-	/** 设置 func / Sets the func */
+	/** 设置修正方式 / Sets the func */
 	public void setFunc(Func value) {
 		this.func = value;
 	}

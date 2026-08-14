@@ -43,7 +43,7 @@ public abstract class Channel {
      * 创建频道并分配运行时 ID。
      * Creates a channel and assigns a runtime id.
      *
-     * channel type
+     * @param channelType 频道类型 / channel type
      * @param identifier 字符串标识 / string identifier
      */
     public Channel(ChannelType channelType, String identifier) {
@@ -57,7 +57,7 @@ public abstract class Channel {
      * 获取字符串形式的频道标识。
      * Returns the channel identifier as string.
      *
-     * channel identifier
+     * @return 频道字符串标识 / channel identifier
      */
     public String getStringIdentifier() {
         return identifier;

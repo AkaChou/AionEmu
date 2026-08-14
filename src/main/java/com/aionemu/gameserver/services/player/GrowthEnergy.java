@@ -139,7 +139,8 @@ public class GrowthEnergy {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 * result
+	 *
+	 * @return 服务单例 / service singleton
 	 */
 	public static GrowthEnergy getInstance() {
 		ObjectProvider<GrowthEnergy> provider = instanceProvider;
@@ -150,10 +151,10 @@ public class GrowthEnergy {
 	}
 
 	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
+	 * 设置实例提供者（Spring 注入）。
+	 * Sets the instance provider (Spring injection).
 	 *
-	 * provider
+	 * @param provider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<GrowthEnergy> provider) {
 		instanceProvider = provider;

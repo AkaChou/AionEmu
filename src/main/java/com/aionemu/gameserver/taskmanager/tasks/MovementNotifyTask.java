@@ -62,7 +62,7 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 	 * 获取单例：优先 Spring 提供者，否则静态 holder。
 	 * Get the singleton: prefer Spring provider, otherwise the static holder.
 	 *
-	 * Task instance
+	 * @return 任务实例 / Task instance
 	 */
 	public static MovementNotifyTask getInstance() {
 		ObjectProvider<MovementNotifyTask> provider = instanceProvider;
@@ -76,7 +76,7 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
 	 *
-	 * Provider
+	 * @param provider 实例提供者 / Provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<MovementNotifyTask> provider) {
 		instanceProvider = provider;
@@ -109,7 +109,7 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 			return;
 		}
 		int limit = creature.getWorldId() == 400010000 || // Reshanta.
-				creature.getWorldId() == 400020000 || // Belus.
+				creature.getWorldId() == 400020000 || // 贝洛斯 / Belus.
 				creature.getWorldId() == 400030000 || // Transidium Annex.
 				creature.getWorldId() == 400040000 || // Aspida.
 				creature.getWorldId() == 400050000 || // Atanatos.
@@ -151,7 +151,7 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 	 * 耗时统计方法名。
 	 * Method name for runtime stats.
 	 *
-	 * Method name
+	 * @return 方法名 / Method name
 	 */
 	@Override
 	protected String getCalledMethodName() {
@@ -162,8 +162,8 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 	 * 获取或创建指定地图的广播统计槽位。
 	 * Get or create the broadcast-stats slot for a map.
 	 *
-	 * World map id
-	 * Stats array
+	 * @param worldId 世界地图 ID / World map id
+	 * @return 统计数组 / Stats array
 	 */
 	private static int[] moveBroadcastCounts(int worldId) {
 		synchronized (moveBroadcastCounts) {
@@ -198,7 +198,7 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 		 * 访问一个 NPC：若仍存活则触发 {@link AIEventType#CREATURE_MOVED}。
 		 * Visit one NPC: if still alive, fire {@link AIEventType#CREATURE_MOVED}.
 		 *
-		 * Target NPC
+		 * @param object 目标 NPC / Target NPC
 		 * @param owner  移动源对象 / Moving owner object
 		 */
 		@Override

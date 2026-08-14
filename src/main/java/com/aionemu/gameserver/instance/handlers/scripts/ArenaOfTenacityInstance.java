@@ -41,17 +41,17 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
 	private Map<Integer, StaticDoor> doors;
 	/** 副本奖励对象 / instance reward object */
 	protected HallOfTenacityReward instanceReward;
-    /** 副本是否已开始 / whether the instance started */
+        /** 副本是否已开始 / whether the instance started */
         protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    /** hot 任务 / hot task */
+        /** hot 任务 / hot task */
         private final List<Future<?>> hotTask = new ArrayList<Future<?>>();
-/**
- * 返回玩家奖励记录。
- * Return the player's reward record.
- *
- * visible object
- * result
- */
+    /**
+     * 返回玩家奖励记录。
+     * Return the player's reward record.
+     * 
+     * @param object 可见对象 / visible object
+     * @return 结果 / result
+     */
 
     protected HallOfTenacityPlayerReward getPlayerReward(Integer object) {
 		instanceReward.regPlayerReward(object);
@@ -94,8 +94,8 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
      * 处理玩家复活事件。
      * Handle a player revive event.
      *
-     * 玩家 / player
-     * result
+     * @param player 玩家 / player
+     * @return 结果 / result
      */
     @Override
     public boolean onReviveEvent(Player player) {
@@ -110,9 +110,9 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
      * 处理死亡事件。
      * Handle a death event.
      *
-     * 玩家 / player
+     * @param player 玩家 / player
      * @param lastAttacker 最后攻击者 / last attacker
-     * result
+     * @return 结果 / result
      */
     @Override
     public boolean onDie(Player player, Creature lastAttacker) {
@@ -122,10 +122,10 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
 		ownerReward.applyBoostMoraleEffect(player);
         return true;
     }
-/**
- * 向副本内玩家发送数据包。
- * Send a packet to players in the instance.
- */
+    /**
+     * 向副本内玩家发送数据包。
+     * Send a packet to players in the instance.
+     */
 
     protected void sendPacket() {
 		instanceReward.sendPacket();
@@ -145,10 +145,10 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
 		}
 	}
 
-/**
- * 启动副本计时/任务。
- * Start instance timer/tasks.
- */
+    /**
+     * 启动副本计时/任务。
+     * Start instance timer/tasks.
+     */
 
     protected void startInstanceTask() {
 	instanceTime = System.currentTimeMillis();
@@ -184,10 +184,10 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
             }
         }, 300000));
     }
-/**
- * 停止副本并结算。
- * Stop the instance and settle.
- */
+    /**
+     * 停止副本并结算。
+     * Stop the instance and settle.
+     */
 
     protected void stopInstance() {
         stopInstanceTask();
@@ -195,10 +195,10 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
         instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
         reward();
     }
-/**
- * 处理 reward。
- * Handle reward.
- */
+    /**
+     * 处理 reward。
+     * Handle reward.
+     */
 
     protected void reward() {
 
@@ -211,21 +211,21 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
 			}
         }
     }
-/**
- * 处理 openDoors。
- * Handle openDoors.
- */
+    /**
+     * 处理 openDoors。
+     * Handle openDoors.
+     */
 
     protected void openDoors() {
         openDoor(157);
 		openDoor(7);
     }
-/**
- * 打开指定门。
- * Open the given door.
- *
- * doorId
- */
+    /**
+     * 打开指定门。
+     * Open the given door.
+     * 
+     * @param doorId 门 ID / doorId
+     */
 
     protected void openDoor(int doorId) {
         StaticDoor door = doors.get(doorId);
@@ -243,14 +243,14 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
         }
         return 0;
     }
-/**
- * 向副本内玩家发送消息。
- * Send a message to players in the instance.
- *
- * message
- * 阵营 / race
- * time
- */
+    /**
+     * 向副本内玩家发送消息。
+     * Send a message to players in the instance.
+     * 
+     * @param msg 消息 / message
+     * @param race 阵营 / race
+     * @param time 时间 / time
+     */
 
     protected void sendMsg(final int msg, final Race race, int time) {
 	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

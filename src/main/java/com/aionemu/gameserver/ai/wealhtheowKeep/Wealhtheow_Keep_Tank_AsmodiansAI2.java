@@ -26,8 +26,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @AIName("wealhtheow_keep_siege_asmodians")
 public class Wealhtheow_Keep_Tank_AsmodiansAI2 extends NpcAI2
 {
-	protected int startBarAnimation = 1;
-	protected int cancelBarAnimation = 2;
+	protected int startBarAnimation = 1; // 读条开始动画 ID / start cast bar animation ID
+	protected int cancelBarAnimation = 2; // 读条取消动画 ID / cancel cast bar animation ID
 	
 	@Override
 	protected void handleDialogStart(Player player) {
@@ -64,6 +64,7 @@ public class Wealhtheow_Keep_Tank_AsmodiansAI2 extends NpcAI2
 	}
 	
 	protected void handleUseItemFinish(Player player) {
+		// 登上武器，持续 1 小时后删除并安排重生。 / Board the weapon for 1h, then delete and schedule respawn.
 		GameEngineServices.skillEngine().applyEffectDirectly(21593, player, player, 3600000 * 1); //Board The Weapon.
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);

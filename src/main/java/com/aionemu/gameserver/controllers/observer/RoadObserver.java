@@ -37,8 +37,8 @@ public class RoadObserver extends ActionObserver {
 	}
 
 	/**
-	 * road
-	 * 玩家 / player
+	 * @param road 道路对象 / road object
+	 * @param player 被观察玩家 / observed player
 	 */
 	public RoadObserver(Road road, Player player) {
 		super(ObserverType.MOVE);

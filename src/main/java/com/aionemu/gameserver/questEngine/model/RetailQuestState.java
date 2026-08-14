@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.model;
 
-/** 真端 NPC AI 使用的玩家任务状态。 */
+/** 真端 NPC AI 使用的玩家任务状态。
+ * Retail quest states used by retail-style NPC AI. */
 public enum RetailQuestState {
 	QSTATEI_NONE,
 	QSTATEI_ACQUIRED,

@@ -25,10 +25,7 @@ public final class LogbackConfiguration {
 	 * 使用解析到的配置 URL 初始化 LoggerContext
 	 * Initialize the LoggerContext with the resolved configuration URL
 	 *
-	 * Logback LoggerContext
-	 *
-	 * @param context
-	 *
+	 * @param context Logback LoggerContext / Logback LoggerContext
 	 * @throws JoranException 配置解析失败时 / When configuration parsing fails
 	 */
 	public static void configure(LoggerContext context) throws JoranException {
@@ -42,9 +39,7 @@ public final class LogbackConfiguration {
 	 * 按优先级解析 logback 配置文件 URL
 	 * Resolve the logback configuration file URL by priority
 	 *
-	 * Configuration file URL
-	 *
-	 * @return
+	 * @return 配置文件 URL / Configuration file URL
 	 * @throws IllegalStateException 找不到配置文件时 / When no configuration file can be found
 	 */
 	public static URL resolveConfigUrl() {
@@ -80,7 +75,7 @@ public final class LogbackConfiguration {
 	 *
 	 * @param path 配置文件路径 / Configuration file path
 	 * @param missingMessage 文件不存在时的错误消息 / Error message when file is missing
-	 * File URL
+	 * @return 文件 URL / File URL
 	 */
 	private static URL existingFileUrl(Path path, String missingMessage) {
 		if (!Files.isRegularFile(path)) {
@@ -94,7 +89,7 @@ public final class LogbackConfiguration {
 	 * Convert a local path to a URL
 	 *
 	 * @param path 文件路径 / File path
-	 * File URL
+	 * @return 文件 URL / File URL
 	 */
 	private static URL fileUrl(Path path) {
 		try {

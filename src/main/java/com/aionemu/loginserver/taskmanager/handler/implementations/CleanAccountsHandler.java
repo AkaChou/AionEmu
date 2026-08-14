@@ -16,6 +16,7 @@ import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
 @Slf4j
 public class CleanAccountsHandler extends TaskFromDBHandler {
 
+    /** 不活跃天数配置。 / Days of inactivity. */
     private int daysOfInactivity;
 
     /**

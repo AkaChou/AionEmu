@@ -26,20 +26,20 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class ItemPacketService {
 
 	public static enum ItemUpdateType {
-		EQUIP_UNEQUIP(-1, false), // internal usage only
-		CHARGE(-2, false), // internal usage only
-		TUNING(76, true), STATS_CHANGE(0, true), // soul healer pay, manastone socketing, armor/weapons/arrows
+		EQUIP_UNEQUIP(-1, false), // 仅内部使用 / internal usage only
+		CHARGE(-2, false), // 仅内部使用 / internal usage only
+		TUNING(76, true), STATS_CHANGE(0, true), // 灵魂治愈师付费、魔石镶嵌、防具/武器/箭矢 / soul healer pay, manastone socketing, armor/weapons/arrows
 		INC_ITEM_MERGE(0x01, true), INC_KINAH_MERGE(0x05, true), DEC_ITEM_SPLIT(0x06, true),
-		DEC_ITEM_SPLIT_MOVE(0x0A, true), // move to other storage with split
+		DEC_ITEM_SPLIT_MOVE(0x0A, true), // 拆分后移入其他仓库 / move to other storage with split
 		DEC_ITEM_USE(0x16, true), INC_ITEM_COLLECT(0x19, true), INC_KINAH_COLLECT(0x1A, true),
 		DEC_KINAH_BUY(0x1D, true), INC_KINAH_SELL(0x20, true), INC_KINAH_QUEST(0x32, true), DEC_KINAH_LEARN(0x49, true), // craft
 																															// 技能 / skill
 																															// 学习 / learn
-		DEC_KINAH_FLY(0x4B, true), // teleport or fly
-		LUNA_UPDATE(0x49, true), // new 5.1
-		INC_CASH_ITEM(0x50, true), // event items, for exchange
-		INC_ITEM_REPURCHASE(0x51, true), DEC_KINAH_CUBE(0x5A, true), // expand cube
-		DEC_PET_FOOD(0x5E, true), INC_PASSPORT_ADD(0x8A, true), PUT(0x13, true); // from other storage
+		DEC_KINAH_FLY(0x4B, true), // 传送或飞行 / teleport or fly
+		LUNA_UPDATE(0x49, true), // 5.1 新增 / new 5.1
+		INC_CASH_ITEM(0x50, true), // 活动物品，用于兑换 / event items, for exchange
+		INC_ITEM_REPURCHASE(0x51, true), DEC_KINAH_CUBE(0x5A, true), // 扩展背包 / expand cube
+		DEC_PET_FOOD(0x5E, true), INC_PASSPORT_ADD(0x8A, true), PUT(0x13, true); // 来自其他仓库 / from other storage
 
 		private final int mask;
 		private final boolean sendable;
@@ -93,10 +93,10 @@ public class ItemPacketService {
 	}
 
 	public static enum ItemAddType {
-		PARTIAL_WITH_SLOT(0x07), // partial content of slot
-		ALL_SLOT(0x13), // all content of slot
-		BUY(0x1C), ITEM_COLLECT(0x19), // Item collect
-		QUEST_WORK_ITEM(0x35), LUNA_ADD(0x36), // new 5.1
+		PARTIAL_WITH_SLOT(0x07), // 槽位部分内容 / partial content of slot
+		ALL_SLOT(0x13), // 槽位全部内容 / all content of slot
+		BUY(0x1C), ITEM_COLLECT(0x19), // 物品拾取 / Item collect
+		QUEST_WORK_ITEM(0x35), LUNA_ADD(0x36), // 5.1 新增 / new 5.1
 		QUESTIONNAIRE(0x40), COALESCENCE(0xB0), AETHERFORGING(0xB2);
 
 		private final int mask;

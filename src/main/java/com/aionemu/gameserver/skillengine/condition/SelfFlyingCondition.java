@@ -27,7 +27,7 @@ public class SelfFlyingCondition extends Condition {
 	 * Validates whether the skill environment satisfies this condition.
 	 *
 	 * @param env 技能环境 / skill environment
-	 * whether valid
+	 * @return 是否有效 / whether valid
 	 */
 	@Override
 	public boolean validate(Skill env) {
@@ -47,8 +47,8 @@ public class SelfFlyingCondition extends Condition {
 	 * 校验效果环境是否满足本条件。
 	 * Validates whether the effect environment satisfies this condition.
 	 *
-	 * effect environment
-	 * whether valid
+	 * @param effect 效果环境 / effect environment
+	 * @return 是否有效 / whether valid
 	 */
 	@Override
 	public boolean validate(Effect effect) {

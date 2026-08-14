@@ -6,8 +6,24 @@ package com.aionemu.gameserver.model.siege;
  */
 
 public enum SiegeSpawnType {
-	/** 和平 / Peace. */
-	PEACE(0), GUARD(1), ARTIFACT(2), PROTECTOR(3), MINE(4), PORTAL(5), GENERATOR(6), SPRING(7), RACEPROTECTOR(8);
+	/** 和平。 / Peace. */
+	PEACE(0),
+	/** 守卫。 / Guard. */
+	GUARD(1),
+	/** 神器。 / Artifact. */
+	ARTIFACT(2),
+	/** 保护者。 / Protector. */
+	PROTECTOR(3),
+	/** 地雷。 / Mine. */
+	MINE(4),
+	/** 传送门。 / Portal. */
+	PORTAL(5),
+	/** 发电机。 / Generator. */
+	GENERATOR(6),
+	/** 复活泉。 / Spring. */
+	SPRING(7),
+	/** 种族保护者。 / Race Protector. */
+	RACEPROTECTOR(8);
 
 	private int id;
 
@@ -16,7 +32,7 @@ public enum SiegeSpawnType {
 	}
 
 	/**
-	 * @return the id
+	 * @return 枚举 ID / the id
 	 */
 	public int getId() {
 		return id;

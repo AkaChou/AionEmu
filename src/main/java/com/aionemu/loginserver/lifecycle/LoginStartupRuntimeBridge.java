@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 登录服启动运行时桥接，将各启动步骤转发到具体服务/静态入口。
- * static entry points.
+ * Login-server startup runtime bridge forwarding each startup step to concrete services/static entry points.
  */
 @Component
 @Lazy
@@ -86,7 +86,9 @@ public class LoginStartupRuntimeBridge {
     }
 
     /**
-     * Synchronize independent VIP data for accounts that do not have a row yet.
+     * 为尚无行的账号同步独立 VIP 数据。
+ * 为尚无行的账号同步独立 VIP 数据。
+ * Synchronize independent VIP data for accounts that do not have a row yet.
      */
     public void synchronizeVipAccounts() {
         new VipService().syncMissingAccounts();
@@ -120,7 +122,7 @@ public class LoginStartupRuntimeBridge {
      * 初始化密钥生成器。
      * Initialize the key generator.
      *
-     * thrown when initialization fails。
+     * @throws Exception 初始化失败时抛出 / thrown when initialization fails
      */
     public void initializeKeyGenerator() throws Exception {
         KeyGen.init();

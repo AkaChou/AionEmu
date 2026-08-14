@@ -8,7 +8,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
  */
 
 public class NpcActions extends CreatureActions {
-	/** Schedule respawn / Schedule respawn */
+	/** 安排重生 / Schedule respawn */
 	public static void scheduleRespawn(Npc npc) {
 		npc.getController().scheduleRespawn();
 	}

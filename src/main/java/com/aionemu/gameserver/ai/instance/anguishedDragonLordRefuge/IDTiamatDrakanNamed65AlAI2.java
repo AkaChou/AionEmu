@@ -44,6 +44,7 @@ public class IDTiamatDrakanNamed65AlAI2 extends AggressiveNpcAI2
 				// 我……是的。我们很感激。没有你的帮助不知该怎么办…… / I... yes. We are grateful. I don't know what we'd have done without your help...
 				sendMsg(1500617, getObjectId(), false, 27000);
 				GameEngineServices.skillEngine().getSkill(getOwner(), 20917, 1, getOwner()).useNoAnimationSkill(); //Charge Siel's Relics.
+				// 充能希埃尔的遗物。 / Charge Siel's Relics.
 			}
 		}, 1000);
 	}

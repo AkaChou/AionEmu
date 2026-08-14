@@ -9,5 +9,7 @@ package com.aionemu.gameserver.model.iu;
 
 public enum IuStateType {
 	/** 打开 / Open. */
-	OPEN, CLOSED;
+	OPEN,
+	/** 关闭 / Closed. */
+	CLOSED;
 }

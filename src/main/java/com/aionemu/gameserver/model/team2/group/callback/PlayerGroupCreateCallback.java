@@ -5,7 +5,7 @@ import com.aionemu.commons.callbacks.CallbackResult;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 /**
- * 玩家队伍 CreateCallback，用于团队2相关逻辑。
+ * 玩家队伍创建回调，用于团队 2 相关逻辑。
  * Player Group Create Callback for team 2 logic.
  *
  * @author ATracer
@@ -27,15 +27,15 @@ public abstract class PlayerGroupCreateCallback implements Callback {
 		return CallbackResult.newContinue();
 	}
 
-	/** 获取基础职业。 / Returns the base class. */
+	/** 获取回调基础类。 / Returns the base class. */
 	@Override
 	public Class<? extends Callback> getBaseClass() {
 		return PlayerGroupCreateCallback.class;
 	}
 
-	/** 在 group create 前 / On Before Group Create */
+	/** 队伍创建前 / On Before Group Create */
 	public abstract void onBeforeGroupCreate(Player player);
 
-	/** 在 group create 后 / On After Group Create */
+	/** 队伍创建后 / On After Group Create */
 	public abstract void onAfterGroupCreate(Player player);
 }

@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 守护灵技能模板（静态数据/XML）。
- * XML template.
+ * Minion skill template (static data/XML).
  *
  * @author Falke_34
  */

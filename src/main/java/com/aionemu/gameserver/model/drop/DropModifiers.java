@@ -14,12 +14,12 @@ public class DropModifiers {
 	private float boostDropRate;
 	private Float reductionDropRate;
 
-	/** Whether 掉落 npcchest / Whether drop npc chest */
+	/** 是否掉落 NPC 宝箱 / Whether to drop the NPC chest */
 	public boolean isDropNpcChest() {
 		return dropNpcChest;
 	}
 
-	/** 设置 drop npc chest / Sets the drop npc chest */
+	/** 设置是否掉落 NPC 宝箱 / Sets whether to drop the NPC chest */
 	public void setDropNpcChest(boolean dropNpcChest) {
 		this.dropNpcChest = dropNpcChest;
 	}
@@ -34,7 +34,7 @@ public class DropModifiers {
 		this.dropRace = dropRace;
 	}
 
-	/** 设置 boost drop rate / Sets the boost drop rate */
+	/** 设置掉落倍率加成 / Sets the boost drop rate */
 	public void setBoostDropRate(float boostDropRate) {
 		this.boostDropRate = boostDropRate;
 	}
@@ -44,12 +44,12 @@ public class DropModifiers {
 		return Float.isFinite(boostDropRate) ? Math.max(0f, boostDropRate) : 0f;
 	}
 
-	/** 设置 reduction drop rate / Sets the reduction drop rate */
+	/** 设置掉率衰减倍率 / Sets the reduction drop rate */
 	public void setReductionDropRate(Float reductionDropRate) {
 		this.reductionDropRate = reductionDropRate;
 	}
 
-	/** Calculate 掉落 chance / Calculate drop chance */
+	/** 计算掉落概率 / Calculate drop chance */
 	public float calculateDropChance(float chance, boolean allowReductionDropRate) {
 		if (allowReductionDropRate && reductionDropRate != null) {
 			chance *= reductionDropRate;

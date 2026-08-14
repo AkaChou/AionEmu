@@ -32,7 +32,7 @@ public class InstanceRiftSpawn {
 	@XmlElement(name = "instance_rift_type")
 	private List<InstanceRiftSpawn.InstanceRiftStateTemplate> InstanceRiftStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回要塞模式模板 / Returns the siege mod templates */
 	public List<InstanceRiftStateTemplate> getSiegeModTemplates() {
 		return InstanceRiftStateTemplate;
 	}

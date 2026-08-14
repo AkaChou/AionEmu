@@ -18,9 +18,7 @@ public class SeenCreatureList {
 	 * 添加生物到已看见列表。
 	 * Add a creature to the seen list.
 	 *
-	 * Creature
-	 *
-	 * @param creature
+	 * @param creature 生物 / Creature
 	 * @return 是否新加入 / Whether newly added
 	 */
 	public boolean add(Creature creature) {
@@ -34,9 +32,7 @@ public class SeenCreatureList {
 	 * 从已看见列表移除生物。
 	 * Remove a creature from the seen list.
 	 *
-	 * Creature
-	 *
-	 * @param creature
+	 * @param creature 生物 / Creature
 	 * @return 是否移除成功 / Whether removed
 	 */
 	public boolean remove(Creature creature) {
@@ -60,8 +56,8 @@ public class SeenCreatureList {
 	 * 是否包含指定生物。
 	 * Whether the list contains the given creature.
 	 *
-	 * Creature
-	 * Whether contained
+	 * @param creature 生物 / Creature
+	 * @return 是否包含 / Whether contained
 	 */
 	public boolean contains(Creature creature) {
 		if (seenCreatures == null) {

@@ -41,8 +41,8 @@ public class ChatServerSpringConfiguration {
      * 客户端封包处理器 Bean。
      * Client packet handler bean.
      *
-     * Broadcast service
-     * Chat service
+     * @param broadcastService 广播服务 / Broadcast service
+     * @param chatService 聊天服务 / Chat service
      * @return {@link ClientPacketHandler}
      */
     @Bean
@@ -92,7 +92,7 @@ public class ChatServerSpringConfiguration {
      * 聊天服务 Bean。
      * Chat service bean.
      *
-     * Broadcast service
+     * @param broadcastService 广播服务 / Broadcast service
      * @return {@link ChatService}
      */
     @Bean

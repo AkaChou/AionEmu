@@ -53,53 +53,53 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 {
 	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
-	/** 视频种族 / video race */
+		/** 视频种族 / video race */
 		private Race videoRace;
 	/** 开始时间 / start time */
 	private long startTime;
 	/** 副本时间戳 / instance timestamp */
 	private long instanceTime;
-	/** fake book2task / fake book2task */
+		/** fake book2task / fake book2task */
 		private Future<?> fakeBook2Task;
-	/** 副本计时器 / instance timer */
+		/** 副本计时器 / instance timer */
 		private Future<?> instanceTimer;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
-	/** protector of resurrection agaldima / protector of resurrection agaldima */
+		/** protector of resurrection agaldima / protector of resurrection agaldima */
 		private int protectorOfResurrectionAgaldima;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	// Boss 波次。 / Boss Wave.
-	/** trialseternity 任务 A1 / trials of eternity task a1 */
+		/** trialseternity 任务 A1 / trials of eternity task a1 */
 		private Future<?> trialsOfEternityTaskA1;
-	/** trialseternity 任务 A2 / trials of eternity task a2 */
+		/** trialseternity 任务 A2 / trials of eternity task a2 */
 		private Future<?> trialsOfEternityTaskA2;
-	/** trialseternity 任务 A3 / trials of eternity task a3 */
+		/** trialseternity 任务 A3 / trials of eternity task a3 */
 		private Future<?> trialsOfEternityTaskA3;
-	/** trialseternity 任务 A4 / trials of eternity task a4 */
+		/** trialseternity 任务 A4 / trials of eternity task a4 */
 		private Future<?> trialsOfEternityTaskA4;
-	/** trialseternity 任务 A5 / trials of eternity task a5 */
+		/** trialseternity 任务 A5 / trials of eternity task a5 */
 		private Future<?> trialsOfEternityTaskA5;
-	/** trialseternity 任务 A6 / trials of eternity task a6 */
+		/** trialseternity 任务 A6 / trials of eternity task a6 */
 		private Future<?> trialsOfEternityTaskA6;
-	/** trialseternity 任务 A7 / trials of eternity task a7 */
+		/** trialseternity 任务 A7 / trials of eternity task a7 */
 		private Future<?> trialsOfEternityTaskA7;
-	/** trialseternity 任务 A8 / trials of eternity task a8 */
+		/** trialseternity 任务 A8 / trials of eternity task a8 */
 		private Future<?> trialsOfEternityTaskA8;
 	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	/** scattered energy book / scattered energy book */
+		/** scattered energy book / scattered energy book */
 		private List<Npc> ScatteredEnergyBook = new ArrayList<Npc>();
-	/** trialseternity 任务 / trials of eternity task */
+		/** trialseternity 任务 / trials of eternity task */
 		private final List<Future<?>> trialsOfEternityTask = new ArrayList<Future<?>>();
-	/** trials shield / trials shield */
+		/** trials shield / trials shield */
 		private Map<Integer, VisibleObject> trialsShield = new LinkedHashMap<Integer, VisibleObject>();
 	
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -185,9 +185,9 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param flyingRing 飞行环标识 / flying-ring id
-	 * result
+	 * @return 结果 / result
 	 */
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {
@@ -351,7 +351,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -432,9 +432,9 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				spawn(835409, 222.53116f, 1019.2116f, 706.75494f, (byte) 105); //Treasure Chest B.
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Trials Of Eternity>");
 			break;
-		   /**
-	 * 击杀永恒试炼“波利亚之心”现获得 1200 GP（原 200）。 / You will now receive "1,200 GP" instead of "200 Gp" for killing "Heart Of Boliag" in the Trials of Eternity instance. http://aionpowerbook.com/powerbook/KR_-_Update_January_18th_2017
-	 */
+			/**
+			 * 击杀永恒试炼“波利亚之心”现获得 1200 GP（原 200）。 / You will now receive "1,200 GP" instead of "200 Gp" for killing "Heart Of Boliag" in the Trials of Eternity instance. http://aionpowerbook.com/powerbook/KR_-_Update_January_18th_2017
+			 */
 			case 246441: //Heart Of Boliag.
 			    AbyssPointsService.addGp(player, 1200);
 			break;
@@ -655,8 +655,8 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {

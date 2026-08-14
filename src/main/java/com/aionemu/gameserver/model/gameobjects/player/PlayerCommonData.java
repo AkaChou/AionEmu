@@ -105,7 +105,7 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	// 阿特雷亚护照创建日期 / Atreian Passport Creation Date
 	private Timestamp creationDate;
 	private int minionSkillPoints;
-	// ponytail: session setting; persist it only if auto-charge must survive relogging.
+	// ponytail: 会话设置；仅当自动充值须在重登后保留时才持久化。 / session setting; persist it only if auto-charge must survive relogging.
 	private boolean minionSkillPointsAutoCharge;
 	private Timestamp minionFunctionTime;
 
@@ -164,7 +164,8 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	}
 
 	/**
-	 * 计算损失经验，须在 setExp 之前调用。 / calculate the lost experience must be called before setexp.
+	 * 计算损失经验，须在 setExp 之前调用。
+	 * Calculate the lost experience, must be called before setexp.
 	 */
 	public void calculateExpLoss() {
 		long expLost = XPLossEnum.getExpLoss(this.level, this.getExpNeed());
@@ -380,7 +381,7 @@ public double getExpMultiplier() {
 			reposteCurrent = 0;
 			reposteMax = 0;
 		} else {
-			reposteMax = (long) (getExpNeed() * 0.25f); // Retail 99%
+			reposteMax = (long) (getExpNeed() * 0.25f); // 零售版 99% / Retail 99%
 		}
 	}
 
@@ -481,7 +482,7 @@ public double getExpMultiplier() {
 	}
 
 	/**
-	 * @return Race as from template
+	 * @return 模板中的种族 / Race as from template
 	 */
 	public final Race getRace() {
 		return race;
@@ -614,9 +615,10 @@ public double getExpMultiplier() {
 	}
 
 	/**
-	 * 获取 cooresponding 玩家用于此 commondata. 返回空若玩家为 not 在线。 / Gets the cooresponding Player for this common data. Returns null if the player is not online
+	 * 获取此公共数据对应的玩家，玩家不在线时返回 null。
+	 * Gets the corresponding Player for this common data. Returns null if the player is not online
 	 *
-	 * @return Player or null
+	 * @return 玩家或 null / Player or null
 	 */
 	public Player getPlayer() {
 		if (online && getPosition() != null) {
@@ -742,7 +744,7 @@ public double getExpMultiplier() {
 		salvationPoint += points;
 	}
 
-	/** Reset salvation points / Reset salvation points */
+	/** 重置救赎点数 / Reset salvation points */
 	public void resetSalvationPoints() {
 		salvationPoint = 0;
 	}
@@ -823,7 +825,7 @@ public double getExpMultiplier() {
 	}
 
 	/**
-	 * @return Whether arch daeva
+	 * @return 是否高阶守护者 / Whether arch daeva
 	 */
 	public boolean isArchDaeva() {
 		return isArchDaeva;
@@ -933,8 +935,8 @@ public double getExpMultiplier() {
 	}
 
 	/**
-	 * @return 是否已准备好获得成长光环。 / Whether ready for aura of growth
-	  */
+	 * @return 是否已准备好获得成长光环 / Whether ready for aura of growth
+	 */
 	public boolean isReadyForAuraOfGrowth() {
 		return (level >= 66) && (level < GSConfig.PLAYER_MAX_LEVEL + 1);
 	}
@@ -1068,6 +1070,7 @@ public double getExpMultiplier() {
 	}
 
 	/**
+	 * 伯丁之星成长系统（5.1 版本）。
 	 * Berdin's Star 5.1
 	 */
 	public boolean isReadyForBerdinStar() {
@@ -1105,6 +1108,7 @@ public double getExpMultiplier() {
 	}
 
 	/**
+	 * 检查伯丁之星百分比。
 	 * Check berdin star percent
 	 */
 	public void checkBerdinStarPercent() {
@@ -1125,6 +1129,7 @@ public double getExpMultiplier() {
 	}
 
 	/**
+	 * 欧比斯恩惠系统（5.3 版本）。
 	 * Abyss Favor 5.3
 	 */
 	public boolean isReadyForAbyssFavor() {
@@ -1162,6 +1167,7 @@ public double getExpMultiplier() {
 	}
 
 	/**
+	 * 检查欧比斯恩惠百分比。
 	 * Check abyss favor percent
 	 */
 	public void checkAbyssFavorPercent() {
@@ -1237,7 +1243,8 @@ public double getExpMultiplier() {
 	}
 
 	/**
-	 * @Minions
+	 * 守护灵相关。
+	 * Minions section
 	 */
 	public int getMinionSkillPoints() {
 		return minionSkillPoints;

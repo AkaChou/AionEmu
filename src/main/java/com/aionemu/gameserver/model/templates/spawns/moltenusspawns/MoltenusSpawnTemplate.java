@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 熔岩魔刷新点模板（静态数据/XML）。
- * XML template.
+ * Moltenus spawn template (static data/XML).
  *
  * @author Rinzler (Encom)
  */
@@ -46,15 +46,15 @@ public class MoltenusSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return 是否处于战斗状态。 / Whether fight
-	  */
+	 * @return 是否处于战斗状态。 / Whether it is in fight state.
+	 */
 	public final boolean isFight() {
 		return moltenusType.equals(MoltenusStateType.FIGHT);
 	}
 
 	/**
-	 * @return 是否处于和平状态。 / Whether peace
-	  */
+	 * @return 是否处于和平状态。 / Whether it is in peace state.
+	 */
 	public final boolean isPeace() {
 		return moltenusType.equals(MoltenusStateType.PEACE);
 	}

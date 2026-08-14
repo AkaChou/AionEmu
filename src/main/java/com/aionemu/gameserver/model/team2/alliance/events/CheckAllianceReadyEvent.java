@@ -9,8 +9,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 
 /**
- * Check 联盟 Ready 活动，用于团队2相关逻辑。
- * Check Alliance Ready Event for team 2 logic.
+ * 联盟就绪检查事件。
+ * Check Alliance Ready Event.
  *
  * @author ATracer
  */

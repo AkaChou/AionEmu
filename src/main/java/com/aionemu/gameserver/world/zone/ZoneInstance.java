@@ -38,7 +38,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * 创建区域实例。
 	 * Create a zone instance.
 	 *
-	 * map id
+	 * @param mapId 地图 ID / the map id
 	 * @param template 区域模板信息 / zone template info
 	 */
 	public ZoneInstance(int mapId, ZoneInfo template) {
@@ -50,7 +50,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * 返回区域几何面积模板。
 	 * Return the zone geometry area template.
 	 *
-	 * area template
+	 * @return 区域面积模板 / the area template
 	 */
 	public Area getAreaTemplate() {
 		return template.getArea();
@@ -60,7 +60,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * 返回区域数据模板。
 	 * Return the zone data template.
 	 *
-	 * zone template
+	 * @return 区域数据模板 / the zone template
 	 */
 	public ZoneTemplate getZoneTemplate() {
 		return template.getZoneTemplate();
@@ -70,8 +70,8 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * 重新校验生物是否仍在本区域内。
 	 * Revalidate whether the creature is still inside this zone.
 	 *
-	 * creature
-	 * whether inside
+	 * @param creature 生物 / the creature
+	 * @return 是否仍在区内 / whether inside
 	 */
 	public boolean revalidate(Creature creature) {
 		return (mapId == creature.getWorldId()
@@ -82,9 +82,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * 生物进入区域：登记并通知控制器与处理器。
 	 * Creature enters the zone: register and notify controller and handlers.
 	 *
-	 * creature
-	 *
-	 * @param creature
+	 * @param creature 生物 / the creature
 	 * @return 是否成功进入（已在区内则为 false） / whether enter succeeded (false if already inside)
 	 */
 	public synchronized boolean onEnter(Creature creature) {
@@ -105,9 +103,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * 生物离开区域：移除并通知控制器与处理器。
 	 * Creature leaves the zone: remove and notify controller and handlers.
 	 *
-	 * creature
-	 *
-	 * @param creature
+	 * @param creature 生物 / the creature
 	 * @return 是否成功离开（不在区内则为 false） / whether leave succeeded (false if not inside)
 	 */
 	public synchronized boolean onLeave(Creature creature) {
@@ -126,9 +122,8 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * 区内死亡事件：依次询问扩展处理器是否处理。
 	 * In-zone death event: ask advanced handlers in order whether they handle it.
 	 *
-	 * attacker
-	 * dead target
-	 *
+	 * @param attacker 攻击者 / the attacker
+	 * @param target 死亡目标 / the dead target
 	 * @return 是否已被处理 / whether handled
 	 */
 	public boolean onDie(Creature attacker, Creature target) {
@@ -150,8 +145,8 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * 生物是否登记在本区域内。
 	 * Whether the creature is registered inside this zone.
 	 *
-	 * creature
-	 * whether inside
+	 * @param creature 生物 / the creature
+	 * @return 是否在区内 / whether inside
 	 */
 	public boolean isInsideCreature(Creature creature) {
 		return creatures.containsKey(creature.getObjectId());
@@ -164,7 +159,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * @param x X 坐标 / X coordinate
 	 * @param y Y 坐标 / Y coordinate
 	 * @param z Z 坐标 / Z coordinate
-	 * whether inside
+	 * @return 是否在几何内 / whether inside
 	 */
 	public boolean isInsideCordinate(float x, float y, float z) {
 		return template.getArea().isInside3D(x, y, z);
@@ -175,7 +170,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * Compare zone instances by priority then name id.
 	 *
 	 * @param o 另一区域实例 / other zone instance
-	 * comparison result
+	 * @return 比较结果 / the comparison result
 	 */
 	@Override
 	public int compareTo(ZoneInstance o) {
@@ -190,7 +185,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * 添加区域事件处理器。
 	 * Add a zone event handler.
 	 *
-	 * handler
+	 * @param handler 区域事件处理器 / the zone handler
 	 */
 	public void addHandler(ZoneHandler handler) {
 		this.handlers.add(handler);
@@ -200,7 +195,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * 是否允许飞行（区域标志或地图覆盖）。
 	 * Whether flying is allowed (zone flags or map override).
 	 *
-	 * whether fly is allowed
+	 * @return 是否可飞行 / whether fly is allowed
 	 */
 	public boolean canFly() {
 		if (template.getZoneTemplate().getFlags() == -1 || template.getZoneTemplate().getFlags() == 0
@@ -284,7 +279,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * 是否允许 PvP。
 	 * Whether PvP is allowed.
 	 *
-	 * whether PvP is allowed
+	 * @return 是否允许 PvP / whether PvP is allowed
 	 */
 	public boolean isPvpAllowed() {
 		if (template.getZoneTemplate().getZoneType() != ZoneClassName.PVP) {
@@ -325,7 +320,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * 返回区域所属城镇 ID。
 	 * Return the town id associated with this zone.
 	 *
-	 * town id
+	 * @return 城镇 ID / the town id
 	 */
 	public int getTownId() {
 		return template.getZoneTemplate().getTownId();
@@ -335,7 +330,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 * 返回区内生物集合。
 	 * Return the map of creatures inside the zone.
 	 *
-	 * creature map
+	 * @return 区内生物集合 / the creature map
 	 */
 	public Map<Integer, Creature> getCreatures() {
 		return creatures;

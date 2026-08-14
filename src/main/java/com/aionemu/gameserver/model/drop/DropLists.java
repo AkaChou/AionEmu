@@ -38,7 +38,7 @@ public class DropLists {
 	private static List<Element> allnpcs = new ArrayList<Element>();
 	private static List<Integer> npcids = new ArrayList<Integer>();
 
-	/** XML 主入口 / Xmlmian. */
+	/** XML 导出主入口 / XML export main entry. */
 	public static void Xmlmian(int min, int max) {
 
 		try {

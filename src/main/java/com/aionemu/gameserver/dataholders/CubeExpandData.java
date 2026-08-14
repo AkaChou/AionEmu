@@ -40,7 +40,7 @@ public class CubeExpandData {
 	 * 返回已加载的扩展 NPC 数量。
 	 * Returns the number of loaded expander NPCs.
 	 *
-	 * template count
+	 * @return 已加载的扩展商人 NPC数量 / Returns the number of loaded expander NPCs.
 	 */
 	public int size() {
 		return npctlistData.size();
@@ -50,9 +50,7 @@ public class CubeExpandData {
 	 * 按 NPC ID 获取背包扩展模板。
 	 * Returns the cube expand template for the given NPC id.
 	 *
-	 * npc id
-	 *
-	 * @param id
+	 * @param id NPC ID / npc id
 	 * @return 模板，不存在则为 null / template or null
 	 */
 	public CubeExpandTemplate getCubeExpandListTemplate(int id) {

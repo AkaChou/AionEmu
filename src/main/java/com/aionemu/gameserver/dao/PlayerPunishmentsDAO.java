@@ -17,7 +17,7 @@ public abstract class PlayerPunishmentsDAO implements DAO {
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
 	 *
-	 * fully qualified class name
+	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -28,8 +28,8 @@ public abstract class PlayerPunishmentsDAO implements DAO {
 	 * 加载玩家指定类型的惩罚数据。
 	 * Loads punishments of the given type for the player.
 	 *
-	 * 玩家 / player
-	 * punishment type
+	 * @param player 玩家 / player
+	 * @param punishmentType 惩罚类型 / punishment type
 	 */
 	public abstract void loadPlayerPunishments(final Player player, final PunishmentType punishmentType);
 
@@ -37,8 +37,8 @@ public abstract class PlayerPunishmentsDAO implements DAO {
 	 * 保存玩家指定类型的惩罚数据。
 	 * Stores punishments of the given type for the player.
 	 *
-	 * 玩家 / player
-	 * punishment type
+	 * @param player 玩家 / player
+	 * @param punishmentType 惩罚类型 / punishment type
 	 */
 	public abstract void storePlayerPunishments(final Player player, final PunishmentType punishmentType);
 
@@ -46,10 +46,10 @@ public abstract class PlayerPunishmentsDAO implements DAO {
 	 * 按玩家 ID 施加惩罚。
 	 * Applies a punishment to the player by id.
 	 *
-	 * player object id
-	 * punishment type
+	 * @param playerId 玩家对象 ID / player object id
+	 * @param punishmentType 惩罚类型 / punishment type
 	 * @param expireTime 过期时间戳 / expiration timestamp
-	 * punishment reason
+	 * @param reason 惩罚原因 / punishment reason
 	 */
 	public abstract void punishPlayer(final int playerId, final PunishmentType punishmentType, final long expireTime,
 			final String reason);
@@ -58,9 +58,9 @@ public abstract class PlayerPunishmentsDAO implements DAO {
 	 * 对在线玩家施加惩罚。
 	 * Applies a punishment to the online player.
 	 *
-	 * 玩家 / player
-	 * punishment type
-	 * punishment reason
+	 * @param player 玩家 / player
+	 * @param punishmentType 惩罚类型 / punishment type
+	 * @param reason 惩罚原因 / punishment reason
 	 */
 	public abstract void punishPlayer(final Player player, final PunishmentType punishmentType, final String reason);
 
@@ -68,8 +68,8 @@ public abstract class PlayerPunishmentsDAO implements DAO {
 	 * 解除玩家指定类型的惩罚。
 	 * Removes a punishment of the given type from the player.
 	 *
-	 * player object id
-	 * punishment type
+	 * @param playerId 玩家对象 ID / player object id
+	 * @param punishmentType 惩罚类型 / punishment type
 	 */
 	public abstract void unpunishPlayer(final int playerId, final PunishmentType punishmentType);
 
@@ -77,7 +77,7 @@ public abstract class PlayerPunishmentsDAO implements DAO {
 	 * 查询角色封禁信息。
 	 * Returns character ban info for the player.
 	 *
-	 * player object id
+	 * @param playerId 玩家对象 ID / player object id
 	 * @return 角色封禁信息 / character ban info
 	 */
 	public abstract CharacterBanInfo getCharBanInfo(final int playerId);

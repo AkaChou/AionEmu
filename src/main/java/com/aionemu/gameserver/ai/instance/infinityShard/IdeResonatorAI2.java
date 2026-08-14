@@ -40,7 +40,7 @@ public class IdeResonatorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startIdeInvulnerable() {
-		final Npc IdeResonator = getPosition().getWorldMapInstance().getNpc(276519); //Ide Resonator.
+		final Npc IdeResonator = getPosition().getWorldMapInstance().getNpc(276519); // 伊德谐振器 / Ide Resonator
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
@@ -67,15 +67,15 @@ public class IdeResonatorAI2 extends AggressiveNpcAI2
 				}
 			}
 		});
-		despawnNpc(231073); //Hyperion.
-		spawn(730842, 124.669853f, 137.840668f, 113.942917f, (byte) 0); //Infinity Shard Exit.
+		despawnNpc(231073); // 希佩里安 / Hyperion
+		spawn(730842, 124.669853f, 137.840668f, 113.942917f, (byte) 0); // 希佩里安副本出口 / Infinity Shard Exit
 	}
 	
 	private void attackBoost() {
 		attackBoostTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				AI2Actions.targetCreature(IdeResonatorAI2.this, getPosition().getWorldMapInstance().getNpc(231073)); //Hyperion.
+				AI2Actions.targetCreature(IdeResonatorAI2.this, getPosition().getWorldMapInstance().getNpc(231073)); // 希佩里安 / Hyperion
 				AI2Actions.useSkill(IdeResonatorAI2.this, 21257);
 			}
 		}, 3000, 8000);
@@ -84,7 +84,7 @@ public class IdeResonatorAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
-			case 276519: //Ide Resonator.
+			case 276519: // 伊德谐振器 / Ide Resonator
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
@@ -92,7 +92,7 @@ public class IdeResonatorAI2 extends AggressiveNpcAI2
 					}
 				}, 300000);
 			break;
-			case 231093: //Ide Resonator.
+			case 231093: // 伊德谐振器 / Ide Resonator
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
@@ -100,7 +100,7 @@ public class IdeResonatorAI2 extends AggressiveNpcAI2
 					}
 				}, 300000);
 			break;
-			case 231094: //Ide Resonator.
+			case 231094: // 伊德谐振器 / Ide Resonator
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
@@ -108,7 +108,7 @@ public class IdeResonatorAI2 extends AggressiveNpcAI2
 					}
 				}, 300000);
 			break;
-			case 231095: //Ide Resonator.
+			case 231095: // 伊德谐振器 / Ide Resonator
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {

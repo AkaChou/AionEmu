@@ -50,6 +50,10 @@ public class GeoDataConfig {
 	@Property(key = "gameserver.geo.shields.enable", defaultValue = "false")
 	public static boolean GEO_SHIELDS_ENABLE;
 
+	/**
+	 * 是否启用地理寻路（PATH block 导航）。
+	 * Whether geodata pathfinding (PATH block navigation) is enabled.
+	 */
 	@Property(key = "gameserver.geo.path.enable", defaultValue = "false")
 	public static boolean GEO_PATH_ENABLE;
 
@@ -57,10 +61,14 @@ public class GeoDataConfig {
 	@Property(key = "gameserver.geo.path.distance.tiers.enable", defaultValue = "false")
 	public static boolean GEO_PATH_DISTANCE_TIERS_ENABLE;
 
+	/**
+	 * 是否启用寻路失败恢复（回退方案）。
+	 * Whether pathfinding recovery fallback is enabled.
+	 */
 	@Property(key = "gameserver.geo.path.recovery.enable", defaultValue = "true")
 	public static boolean GEO_PATH_RECOVERY_ENABLE;
 
-	/** 长距离地面路径使用 PATH block 分层走廊，并在失败时回退普通 A*。 */
+	/** 长距离地面路径使用 PATH block 分层走廊，并在失败时回退普通 A*。 / Long-distance ground paths use layered PATH-block corridors, falling back to plain A* on failure. */
 	@Property(key = "gameserver.geo.path.hierarchical.enable", defaultValue = "false")
 	public static boolean GEO_PATH_HIERARCHICAL_ENABLE;
 
@@ -72,12 +80,24 @@ public class GeoDataConfig {
 	@Property(key = "gameserver.geo.path.cache.size", defaultValue = "32")
 	public static int GEO_PATH_CACHE_SIZE;
 
+	/**
+	 * 单次寻路的最大节点数。
+	 * Maximum node count per pathfinding request.
+	 */
 	@Property(key = "gameserver.geo.path.max.nodes", defaultValue = "50000")
 	public static int GEO_PATH_MAX_NODES;
 
+	/**
+	 * 寻路超时时间（毫秒）。
+	 * Pathfinding timeout in milliseconds.
+	 */
 	@Property(key = "gameserver.geo.path.timeout.ms", defaultValue = "250")
 	public static int GEO_PATH_TIMEOUT_MS;
 
+	/**
+	 * 寻路空间步长。
+	 * Pathfinding spatial step.
+	 */
 	@Property(key = "gameserver.geo.path.spatial.step", defaultValue = "2")
 	public static float GEO_PATH_SPATIAL_STEP;
 

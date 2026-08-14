@@ -71,7 +71,7 @@ public class ActionObserver {
 	 * 受到攻击时回调。
 	 * Callback when attacked.
 	 *
-	 * attacker
+	 * @param creature 攻击者 / attacker
 	 */
 	public void attacked(Creature creature) {
 	};
@@ -88,7 +88,7 @@ public class ActionObserver {
 	 * 主动攻击时回调。
 	 * Callback when attacking.
 	 *
-	 * target
+	 * @param creature 攻击目标 / target
 	 */
 	public void attack(Creature creature) {
 	};
@@ -105,8 +105,8 @@ public class ActionObserver {
 	 * 装备物品时回调。
 	 * Callback when equipping an item.
 	 *
-	 * item
-	 * owner
+	 * @param item 物品 / item
+	 * @param owner 装备者 / owner
 	 */
 	public void equip(Item item, Player owner) {
 	};
@@ -115,8 +115,8 @@ public class ActionObserver {
 	 * 卸下物品时回调。
 	 * Callback when unequipping an item.
 	 *
-	 * item
-	 * owner
+	 * @param item 物品 / item
+	 * @param owner 卸下者 / owner
 	 */
 	public void unequip(Item item, Player owner) {
 	};
@@ -125,7 +125,7 @@ public class ActionObserver {
 	 * 使用技能时回调。
 	 * Callback when using a skill.
 	 *
-	 * skill
+	 * @param skill 使用的技能 / used skill
 	 */
 	public void skilluse(Skill skill) {
 	};
@@ -134,7 +134,7 @@ public class ActionObserver {
 	 * 死亡时回调。
 	 * Callback on death.
 	 *
-	 * dead creature
+	 * @param creature 已死亡的生物 / dead creature
 	 */
 	public void died(Creature creature) {
 	};
@@ -143,8 +143,8 @@ public class ActionObserver {
 	 * 受到持续伤害时回调。
 	 * Callback when hit by a DoT.
 	 *
-	 * source creature
-	 * DoT effect
+	 * @param creature 伤害来源生物 / source creature
+	 * @param dotEffect 持续伤害效果 / DoT effect
 	 */
 	public void dotattacked(Creature creature, Effect dotEffect) {
 	};
@@ -153,7 +153,7 @@ public class ActionObserver {
 	 * 使用物品时回调。
 	 * Callback when an item is used.
 	 *
-	 * item
+	 * @param item 使用的物品 / used item
 	 */
 	public void itemused(Item item) {
 	};

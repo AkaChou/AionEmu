@@ -19,7 +19,7 @@ public interface ReadStH {
      * Handle the result set from a database query
      *
      * @param resultSet 数据库查询返回的结果集 / The result set returned from the database query
- * If a SQL error occurs while handling the result set。
+     * @throws SQLException 处理结果集时发生 SQL 错误 / If a SQL error occurs while handling the result set
      */
     void handleRead(ResultSet resultSet) throws SQLException;
 }

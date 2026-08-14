@@ -173,7 +173,7 @@ public class StatCapUtil {
 		return value;
 	}
 
-	/** Limit Value For Pvp Or Pve Stat / Limit Value For Pvp Or Pve Stat */
+	/** PvP 或 PvE 属性的限制值 / Limit Value For Pvp Or Pve Stat */
 	public static int limitValueForPvpOrPveStat(CombatMode mode, RatioType type, int value) {
 		int min;
 		int max;
@@ -195,7 +195,7 @@ public class StatCapUtil {
 		}
 	}
 	
-		/** Dump Wrong Stats / Dump Wrong Stats */
+		/** 输出错误属性 / Dump Wrong Stats */
 		public static void dumpWrongStats(String ownerInfo, Stat2... stats) {
 		List<Stat2> wrongStats = null;
 		for (Stat2 stat : stats) {

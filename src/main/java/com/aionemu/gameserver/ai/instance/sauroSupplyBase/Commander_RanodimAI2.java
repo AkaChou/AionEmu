@@ -35,7 +35,7 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 	}
 	
 	private void beritraFavor() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
 	}
 	
 	@Override
@@ -67,7 +67,7 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 20702, 60, getOwner()).useNoAnimationSkill(); //Area Blood Sucking.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20702, 60, getOwner()).useNoAnimationSkill(); // 范围吸血 / Area Blood Sucking.
 			scheduleDelayStage1(delay);
 		}
 	}
@@ -77,7 +77,7 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 20703, 60, getOwner()).useNoAnimationSkill(); //Blood Sucking.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20703, 60, getOwner()).useNoAnimationSkill(); // 吸血 / Blood Sucking.
 			scheduleDelayStage2(delay);
 		}
 	}
@@ -87,7 +87,7 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 20704, 60, getOwner()).useNoAnimationSkill(); //Area Press.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20704, 60, getOwner()).useNoAnimationSkill(); // 范围压制 / Area Press.
 			scheduleDelayStage3(delay);
 		}
 	}

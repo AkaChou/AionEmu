@@ -14,7 +14,7 @@ public class BrokerPlayerClassFilter extends BrokerFilter {
 	private PlayerClass playerClass;
 
 	/**
-	 * @param playerClass
+	 * @param playerClass 限制的玩家职业 / restricted player class
 	 */
 	public BrokerPlayerClassFilter(PlayerClass playerClass) {
 		super();

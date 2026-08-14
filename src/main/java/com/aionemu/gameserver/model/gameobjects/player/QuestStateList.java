@@ -30,7 +30,8 @@ public class QuestStateList {
 	private final IntFunction<QuestMetadata> metadata;
 
 	/**
-	 * 创建空 quests 列表。 / Creates an empty quests list
+	 * 创建空任务列表。
+	 * Creates an empty quests list
 	 */
 	public QuestStateList() {
 		this(questId -> GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null));

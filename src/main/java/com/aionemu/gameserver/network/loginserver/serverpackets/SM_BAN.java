@@ -46,7 +46,7 @@ public class SM_BAN extends LsServerPacket {
 	 * Constructs a new ban/unban control packet.
 	 *
 	 * @param type 封禁类型 / ban type
-	 * 账号 ID / account id
+	 * @param accountId 账号 ID / account id
 	 * @param ip IP 或掩码 / IP or mask
 	 * @param time 时长（分钟）/ duration in minutes
 	 * @param adminObjId 管理员对象 ID / admin object id

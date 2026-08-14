@@ -22,7 +22,7 @@ public class WardrobeEntry {
 		this.reskin_count = reskin_count;
 	}
 
-	/** 返回 reskin count / Returns the reskin count */
+	/** 返回重塑次数。 / Returns the reskin count. */
 	public int getReskinCount() {
 		return reskin_count;
 	}

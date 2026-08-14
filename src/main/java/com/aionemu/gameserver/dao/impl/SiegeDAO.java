@@ -33,8 +33,8 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
      * 加载攻城据点数据。
      * Loads siege locations.
      *
-     * location map
-     * whether succeeded
+     * @param locations 地图位置 / location map
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean loadSiegeLocations(Map<Integer, SiegeLocation> locations) {
@@ -75,8 +75,8 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
      * 更新单个攻城据点。
      * Updates a single siege location.
      *
-     * siege location
-     * whether succeeded
+     * @param siegeLocation 攻城战据点 / siege location
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean updateSiegeLocation(SiegeLocation siegeLocation) {
@@ -100,8 +100,8 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
      * 插入攻城据点。
      * Inserts a siege location.
      *
-     * siege location
-     * whether succeeded
+     * @param siegeLocation 攻城战据点 / siege location
+     * @return 是否成功 / whether succeeded
      */
     private boolean insertSiegeLocation(SiegeLocation siegeLocation) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -124,8 +124,8 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
      * 批量更新攻城据点。
      * Batch updates siege locations.
      *
-     * location map
-     * whether succeeded
+     * @param locations 地图位置 / location map
+     * @return 是否成功 / whether succeeded
      */
     public boolean updateSiegeLocations(Map<Integer, SiegeLocation> locations) {
         try (Connection con = DatabaseFactory.getConnection()) {
@@ -160,8 +160,8 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
      * 按种族加载攻城据点。
      * Loads siege locations by race.
      *
-     * 阵营 / race
-     * location map
+     * @param race 阵营 / race
+     * @return 地图位置 / location map
      */
     public Map<Integer, SiegeLocation> loadSiegeLocationsByRace(SiegeRace race) {
         Map<Integer, SiegeLocation> locations = new ConcurrentHashMap<>();
@@ -192,10 +192,10 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

@@ -50,7 +50,7 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
 	 *
-	 * Provider
+	 * @param provider 实例提供者 / Provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<PacketBroadcaster> provider) {
 		instanceProvider = provider;
@@ -172,7 +172,7 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 		 * 返回该模式的掩码位。
 		 * Return this mode's mask bit.
 		 *
-		 * Mask
+		 * @return 掩码 / Mask
 		 */
 		public byte mask() {
 			return MASK;
@@ -182,7 +182,7 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 		 * 实际发送对应更新包。
 		 * Actually send the corresponding update packet.
 		 *
-		 * Target creature
+		 * @param creature 目标生物 / Target creature
 		 */
 		protected abstract void sendPacket(Creature creature);
 
@@ -190,7 +190,7 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 		 * 若掩码包含本模式则发送并清除该位。
 		 * If the mask includes this mode, send and clear the bit.
 		 *
-		 * Target creature
+		 * @param creature 目标生物 / Target creature
 		 * @param mask     当前广播掩码 / Current broadcast mask
 		 */
 		protected final void trySendPacket(final Creature creature, byte mask) {
@@ -216,7 +216,7 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 	 * 按生物当前掩码逐模式发送更新包直至掩码清零。
 	 * Send updates for each mode bit on the creature until the mask is cleared.
 	 *
-	 * Target creature
+	 * @param creature 目标生物 / Target creature
 	 */
 	@Override
 	protected void callTask(Creature creature) {
@@ -231,7 +231,7 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 	 * 耗时统计方法名。
 	 * Method name for runtime stats.
 	 *
-	 * Method name
+	 * @return 方法名 / Method name
 	 */
 	@Override
 	protected String getCalledMethodName() {

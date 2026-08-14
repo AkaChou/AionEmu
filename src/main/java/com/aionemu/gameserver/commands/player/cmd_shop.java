@@ -279,7 +279,7 @@ public class cmd_shop extends PlayerCommand {
 	 * Handles list/buy/reload and related sub-commands.
 	 *
 	 * @param player 执行命令的玩家 / invoking player
-	 * command parameters
+	 * @param params 命令参数 / command parameters
 	 */
 	@Override
 	public void execute(final Player player, String... params) {
@@ -320,7 +320,7 @@ public class cmd_shop extends PlayerCommand {
 	 * Shows usage when arguments are invalid.
 	 *
 	 * @param player 执行命令的玩家 / invoking player
-	 * failure message
+	 * @param message 失败提示消息 / failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

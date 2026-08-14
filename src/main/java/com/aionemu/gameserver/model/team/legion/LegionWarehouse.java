@@ -29,7 +29,7 @@ public class LegionWarehouse extends Storage {
 		return this.legion;
 	}
 
-	/** 设置所有者军团 / Sets the owner legion*/
+	/** 设置所有者军团。 / Sets the owner legion. */
 	public void setOwnerLegion(Legion legion) {
 		this.legion = legion;
 	}
@@ -46,7 +46,7 @@ public class LegionWarehouse extends Storage {
 		throw new UnsupportedOperationException("LWH should be used behind proxy");
 	}
 
-	/** Try 减少 Kinah / Try Decrease Kinah */
+	/** 尝试减少基纳。 / Tries to decrease kinah. */
 	@Override
 	public boolean tryDecreaseKinah(long amount) {
 		throw new UnsupportedOperationException("LWH should be used behind proxy");
@@ -112,13 +112,13 @@ public class LegionWarehouse extends Storage {
 		throw new UnsupportedOperationException("LWH should be used behind proxy");
 	}
 
-	/** 按物品 ID 减少 / Decrease by item id */
+	/** 按物品 ID 减少数量。 / Decreases by item id. */
 	@Override
 	public boolean decreaseByItemId(int itemId, long count) {
 		throw new UnsupportedOperationException("LWH should be used behind proxy");
 	}
 
-	/** 按对象 ID 减少 / Decrease by object id */
+	/** 按对象 ID 减少数量。 / Decreases by object id. */
 	@Override
 	public boolean decreaseByObjectId(int itemObjId, long count) {
 		throw new UnsupportedOperationException("LWH should be used behind proxy");
@@ -130,18 +130,18 @@ public class LegionWarehouse extends Storage {
 		throw new UnsupportedOperationException("LWH should be used behind proxy");
 	}
 
-	/** 设置所有者 / Sets the owner*/
+	/** 设置所有者。 / Sets the owner. */
 	@Override
 	public void setOwner(Player player) {
 		throw new UnsupportedOperationException("LWH doesnt have owner");
 	}
 
-	/** 设置 wh user / Sets the wh user */
+	/** 设置当前仓库使用者。 / Sets the current warehouse user. */
 	public void setWhUser(int curentWhUser) {
 		this.curentWhUser = curentWhUser;
 	}
 
-	/** 返回 wh user / Returns the wh user */
+	/** 返回当前仓库使用者。 / Returns the current warehouse user. */
 	public int getWhUser() {
 		return curentWhUser;
 	}

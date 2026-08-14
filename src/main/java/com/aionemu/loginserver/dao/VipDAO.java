@@ -4,6 +4,7 @@ import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.loginserver.model.Vip;
 
 /**
+ * 账号 VIP 状态数据访问抽象层。
  * Independent account VIP persistence.
  */
 public abstract class VipDAO implements DAO {

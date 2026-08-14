@@ -16,9 +16,12 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * 类型化任务动作使用的真实事务装备端口。
  * Real transactional equipment port used by typed quest actions.
  *
- * <p>Unequipping is deliberately applied before inventory removal. Both the
+ * <p>卸装有意在背包移除之前应用。装备槽与背包投影都会被快照，
+ * 以便后续 JDBC/状态失败时恢复事件前的归属关系。
+ * Unequipping is deliberately applied before inventory removal. Both the
  * equipment slots and the inventory projection are snapshotted so a later
  * JDBC/state failure restores the pre-event ownership.</p>
  */

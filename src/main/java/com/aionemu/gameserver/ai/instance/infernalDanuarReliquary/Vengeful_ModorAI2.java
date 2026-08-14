@@ -162,9 +162,9 @@ public class Vengeful_ModorAI2 extends AggressiveNpcAI2
 		    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				public void run() {
 					if (!isAlreadyDead()) {
-                        spawn(284380, 244.12497f, 276.17401f, 242.625f, (byte) 0); //Modor's Bodyguard.
-                        spawn(284381, 263.12497f, 276.17401f, 242.625f, (byte) 0); //Vengeful Reaper.
-						spawn(284382, 253.12497f, 277.17401f, 242.625f, (byte) 0); //Hoarfrost Acheron Drake.
+                        spawn(284380, 244.12497f, 276.17401f, 242.625f, (byte) 0); // 莫多尔的保镖 / Modor's Bodyguard.
+                        spawn(284381, 263.12497f, 276.17401f, 242.625f, (byte) 0); // 复仇死神 / Vengeful Reaper.
+						spawn(284382, 253.12497f, 277.17401f, 242.625f, (byte) 0); // 霜白阿克伦龙兽 / Hoarfrost Acheron Drake.
 						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 284.34036f, 262.9162f, 248.851f, (byte) 63);
 				        PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 					}
@@ -242,7 +242,7 @@ public class Vengeful_ModorAI2 extends AggressiveNpcAI2
         EmoteManager.emoteStopAttacking(getOwner());
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
-				despawnNpcs(234690); //Vengeful Modor.
+				despawnNpcs(234690); // 复仇的莫多尔 / Vengeful Modor.
 				spawn(855244, 255.12497f, 293.17401f, 257.625f, (byte) 22);
 				spawn(855244, 284.12497f, 262.17401f, 249.625f, (byte) 0);
 				spawn(855244, 271.12497f, 230.17401f, 251.625f, (byte) 0);

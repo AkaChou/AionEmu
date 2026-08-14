@@ -24,8 +24,6 @@ public class Drop extends AdminCommand {
 	 * 按分段编号导出对应 NPC ID 范围的掉落数据。
 	 * Exports drop data for the NPC id range of the given segment number.
 	 *
-	 * admin
-	 * segment number 1–5
 	 */
 	@Override
 	public void execute(Player player, String... params) {

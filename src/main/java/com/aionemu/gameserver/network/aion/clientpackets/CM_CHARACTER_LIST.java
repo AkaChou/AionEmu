@@ -37,7 +37,7 @@ public class CM_CHARACTER_LIST extends AionClientPacket {
 		sendPacket(new SM_ACCOUNT_PROPERTIES(isGM));
 		sendPacket(new SM_0x14F());
 		sendPacket(new SM_NP_AUTH_TOKEN());
-		// Char-select VIP stage: send the score first, then the active benefits.
+		// 角色选择 VIP 阶段：先发送分数，再发送生效中的福利 / Char-select VIP stage: send the score first, then the active benefits.
 		sendPacket(SM_CHAR_BM_PACK_LIST.vipForCharSelect(account.getVipLevel(), account.getVipExp()));
 		sendPacket(SM_CHAR_BM_PACK_LIST.vip(account.getVipLevel(), account.getVipRemainingSeconds()));
 		sendPacket(new SM_CHARACTER_LIST(0, playOk2));

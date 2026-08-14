@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Expand 模板（静态数据/XML）。
- * XML template.
+ * 扩展模板（静态数据/XML）。
+ * Expand template (static data / XML).
  *
  * @author Simple
  */
@@ -21,14 +21,14 @@ public class Expand {
 	protected int price;
 
 	/**
-	 * @return the level
+	 * @return 扩展等级 / The level
 	 */
 	public int getLevel() {
 		return level;
 	}
 
 	/**
-	 * @return the price
+	 * @return 扩展价格（基纳） / The price
 	 */
 	public int getPrice() {
 		return price;

@@ -47,11 +47,11 @@ public class SM_BAN_RESPONSE extends GsServerPacket {
      * Constructs a ban result response packet.
      *
      * @param type 封禁类型 / ban type
-     * 账号 ID / account id
+     * @param accountId 账号 ID / account id
      * @param ip 被封 IP / banned IP
      * @param time 封禁时长 / ban duration
      * @param adminObjId 管理员对象 ID / admin object id
-     * whether succeeded
+     * @param result 是否成功 / whether succeeded
      */
     public SM_BAN_RESPONSE(byte type, int accountId, String ip, int time, int adminObjId, boolean result) {
         this.type = type;

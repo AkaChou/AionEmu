@@ -15,7 +15,7 @@ public abstract class PlayerUpgradeArcadeDAO implements DAO {
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
 	 *
-	 * fully qualified class name
+	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
 	public String getClassName() {
@@ -26,7 +26,7 @@ public abstract class PlayerUpgradeArcadeDAO implements DAO {
 	 * 加载玩家升级街机数据。
 	 * Loads Upgrade Arcade data for the player.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void load(Player player);
 
@@ -34,9 +34,9 @@ public abstract class PlayerUpgradeArcadeDAO implements DAO {
 	 * 新增玩家升级街机记录。
 	 * Adds an Upgrade Arcade record for the player.
 	 *
-	 * player object id
+	 * @param playerId 玩家对象 ID / player object id
 	 * @param frenzy_meter 狂热仪表值 / frenzy meter value
-	 * upgrade level
+	 * @param upgrade_lvl 升级等级 / upgrade level
 	 * @return 是否添加成功 / true if added
 	 */
 	public abstract boolean addUpgradeArcade(final int playerId, final int frenzy_meter, final int upgrade_lvl);
@@ -45,9 +45,9 @@ public abstract class PlayerUpgradeArcadeDAO implements DAO {
 	 * 删除玩家升级街机记录。
 	 * Deletes an Upgrade Arcade record for the player.
 	 *
-	 * player object id
+	 * @param playerId 玩家对象 ID / player object id
 	 * @param frenzy_meter 狂热仪表值 / frenzy meter value
-	 * upgrade level
+	 * @param upgrade_lvl 升级等级 / upgrade level
 	 * @return 是否删除成功 / true if deleted
 	 */
 	public abstract boolean delUpgradeArcade(final int playerId, final int frenzy_meter, final int upgrade_lvl);
@@ -56,7 +56,7 @@ public abstract class PlayerUpgradeArcadeDAO implements DAO {
 	 * 保存玩家升级街机数据。
 	 * Stores Upgrade Arcade data for the player.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @return 是否保存成功 / true if stored
 	 */
 	public abstract boolean store(Player player);
@@ -76,7 +76,7 @@ public abstract class PlayerUpgradeArcadeDAO implements DAO {
 	 * Sets upgrade level by player object id.
 	 *
 	 * @param obj 玩家对象 ID / player object id
-	 * upgrade level
+	 * @param upgrade_lvl 升级等级 / upgrade level
 	 * @return 是否更新成功 / true if updated
 	 */
 	public abstract boolean setUpgradeLvlByObjId(final int obj, final int upgrade_lvl);
@@ -95,7 +95,7 @@ public abstract class PlayerUpgradeArcadeDAO implements DAO {
 	 * Returns upgrade level by player object id.
 	 *
 	 * @param obj 玩家对象 ID / player object id
-	 * upgrade level
+	 * @return 升级等级 / upgrade level
 	 */
 	public abstract int getUpgradeLvlByObjId(final int obj);
 }

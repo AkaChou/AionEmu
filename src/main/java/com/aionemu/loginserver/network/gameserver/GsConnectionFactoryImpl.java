@@ -18,12 +18,9 @@ public class GsConnectionFactoryImpl implements NettyConnectionFactory {
      * 基于传输层创建 GS 连接。
      * Create a GS connection for the given transport.
      *
-     * Connection transport
-     *
-     * @param transport
-     * @return 新建的 GS 连接 / New GS connection
-     * @return
-     * @throws IOException 创建失败时 / When creation fails
+     * @param transport 连接传输 / connection transport
+     * @return 新建的 GS 连接 / new GS connection
+     * @throws IOException 创建失败时 / when creation fails
      */
     @Override
     public AConnection create(ConnectionTransport transport) throws IOException {

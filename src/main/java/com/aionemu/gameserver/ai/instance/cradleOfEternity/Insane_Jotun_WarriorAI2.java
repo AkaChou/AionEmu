@@ -15,7 +15,7 @@ public class Insane_Jotun_WarriorAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(220492, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Furious Jotun Warrior.
+		spawn(220492, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 狂暴约腾战士 / Furious Jotun Warrior.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

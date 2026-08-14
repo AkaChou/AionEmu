@@ -23,7 +23,7 @@ public class WorldMap2DInstance extends WorldMapInstance {
 	 * Construct a 2D map instance.
 	 *
 	 * @param parent 父级世界地图 / parent world map
-	 * instance id
+	 * @param instanceId 实例 ID / instance id
 	 * @param ownerId 个人所有者 ID / personal owner id
 	 */
 	public WorldMap2DInstance(WorldMap parent, int instanceId, int ownerId) {
@@ -35,9 +35,7 @@ public class WorldMap2DInstance extends WorldMapInstance {
 	 * 按 2D 区域 ID 创建地图区域及关联 Zone。
 	 * Create a map region and related zones for a 2D region id.
 	 *
-	 * region id
-	 *
-	 * @param regionId
+	 * @param regionId 区域 ID / the region id
 	 * @return 新建的地图区域 / newly created map region
 	 */
 	@Override
@@ -92,7 +90,7 @@ public class WorldMap2DInstance extends WorldMapInstance {
 	 * @param x 坐标 X / X coordinate
 	 * @param y 坐标 Y / Y coordinate
 	 * @param z 坐标 Z（未使用） / Z coordinate (unused)
-	 * map region
+	 * @return 地图区域 / the map region
 	 */
 	@Override
 	public MapRegion getRegion(float x, float y, float z) {
@@ -104,7 +102,7 @@ public class WorldMap2DInstance extends WorldMapInstance {
 	 * 是否为个人实例。
 	 * Whether this is a personal instance.
 	 *
-	 * true when ownerId is non-zero
+	 * @return ownerId 非 0 时为 true / true when ownerId is non-zero
 	 */
 	@Override
 	public boolean isPersonal() {

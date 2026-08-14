@@ -50,7 +50,7 @@ public class TowerRewardData {
 	 * 返回已加载的奖励模板数量。
 	 * Returns the number of loaded reward templates.
 	 *
-	 * template count
+	 * @return 已加载的奖励模板数量 / Returns the number of loaded reward templates.
 	 */
 	public int size() {
 		return templates.size();
@@ -60,9 +60,7 @@ public class TowerRewardData {
 	 * 按楼层获取塔奖励模板。
 	 * Returns the tower reward template for the given floor id.
 	 *
-	 * floor id
-	 *
-	 * @param towerId
+	 * @param towerId 塔 ID / tower id
 	 * @return 奖励模板，不存在则为 null / reward template or null
 	 */
 	public TowerStageRewardTemplate getTowerReward(int towerId) {

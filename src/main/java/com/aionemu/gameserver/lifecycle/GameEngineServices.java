@@ -73,7 +73,7 @@ public final class GameEngineServices implements DisposableBean {
      * 解析任务引擎：优先 Spring 提供者，否则回退工厂。
      * Resolve the quest engine: prefer Spring provider, otherwise fallback factory.
      *
-     * Quest engine
+     * @return 任务引擎 / Quest engine
      */
     public static QuestEngine questEngine() {
         ObjectProvider<QuestEngine> provider = questEngineProvider;
@@ -87,7 +87,7 @@ public final class GameEngineServices implements DisposableBean {
      * 解析技能引擎：优先 Spring 提供者，否则回退工厂。
      * Resolve the skill engine: prefer Spring provider, otherwise fallback factory.
      *
-     * Skill engine
+     * @return 技能引擎 / Skill engine
      */
     public static SkillEngine skillEngine() {
         SkillEngine resolved = resolvedSkillEngine;
@@ -105,7 +105,7 @@ public final class GameEngineServices implements DisposableBean {
      * 解析副本引擎：优先 Spring 提供者，否则单例。
      * Resolve the instance engine: prefer Spring provider, otherwise singleton.
      *
-     * Instance engine
+     * @return 副本引擎 / Instance engine
      */
     public static InstanceEngine instanceEngine() {
         ObjectProvider<InstanceEngine> provider = instanceEngineProvider;
@@ -119,7 +119,7 @@ public final class GameEngineServices implements DisposableBean {
      * 解析 AI2 引擎：优先 Spring 提供者，否则单例。
      * Resolve the AI2 engine: prefer Spring provider, otherwise singleton.
      *
-     * AI2 engine
+     * @return AI2 引擎 / AI2 engine
      */
     public static AI2Engine ai2Engine() {
         ObjectProvider<AI2Engine> provider = ai2EngineProvider;

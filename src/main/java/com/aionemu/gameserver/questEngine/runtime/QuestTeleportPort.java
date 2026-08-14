@@ -2,7 +2,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.QuestInstanceTarget;
 
-/** Typed boundary for the after-commit teleport effect. */
+/** 提交后传送效果的类型化边界。 / Typed boundary for the after-commit teleport effect. */
 public interface QuestTeleportPort {
 	/**
 	 * Teleports the player to the given world coordinates after commit.

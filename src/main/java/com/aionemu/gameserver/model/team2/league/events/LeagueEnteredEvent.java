@@ -10,7 +10,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SHOW_BRAND;
 import com.google.common.base.Predicate;
 
 /**
- * 战团 Entered 活动，用于团队2相关逻辑。
+ * 战团加入事件，用于团队2相关逻辑。
  * League Entered Event for team 2 logic.
  */
 
@@ -24,7 +24,10 @@ public class LeagueEnteredEvent implements Predicate<LeagueMember>, TeamEvent {
 	}
 
 	/**
-	 * @return Check condition
+	 * 检查被邀请联盟是否已在战团中。
+	 * Checks whether the invited alliance is already a member of the league.
+	 *
+	 * @return 可加入则为 true / true if joinable
 	 */
 	@Override
 	public boolean checkCondition() {

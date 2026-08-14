@@ -11,7 +11,7 @@ import com.aionemu.gameserver.model.templates.landing_special.LandingSpecialTemp
 import com.aionemu.gameserver.services.abysslandingservice.landingspecialservice.SpecialLanding;
 
 /**
- * 登陆 Special 位置，用于登陆 special 相关逻辑。
+ * 特殊登陆点位置，用于特殊登陆系统相关逻辑。
  * Landing Special Location for landing special logic.
  */
 

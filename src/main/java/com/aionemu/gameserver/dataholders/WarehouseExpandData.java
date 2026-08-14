@@ -40,7 +40,7 @@ public class WarehouseExpandData {
 	 * 返回已加载的扩容模板数量。
 	 * Returns the number of loaded expand templates.
 	 *
-	 * template count
+	 * @return 已加载的扩展模板数量 / Returns the number of loaded expand templates.
 	 */
 	public int size() {
 		return npctlistData.size();
@@ -50,9 +50,7 @@ public class WarehouseExpandData {
 	 * 按 NPC ID 获取仓库扩容模板。
 	 * Returns the warehouse expand template for the given NPC id.
 	 *
-	 * NPC id
-	 *
-	 * @param id
+	 * @param id NPC ID / npc id
 	 * @return 扩容模板，不存在则为 null / expand template or null
 	 */
 	public WarehouseExpandTemplate getWarehouseExpandListTemplate(int id) {

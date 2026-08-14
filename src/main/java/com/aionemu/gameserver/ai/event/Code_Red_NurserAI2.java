@@ -27,14 +27,14 @@ public class Code_Red_NurserAI2 extends GeneralNpcAI2 {
   	@Override
 	protected void handleDialogStart(Player player) {
         switch (getNpcId()) {
-            case 831435: //Jorpine.
-            case 831436: //Yennu.
-            case 831437: //Dalloren.
-            case 831518: //Dalliea.
-            case 831441: //Hylian.
-            case 831442: //Rordah.
-            case 831443: //Mazka.
-            case 831524: { //Desha.
+            case 831435: // 乔尔派因 / Jorpine.
+            case 831436: // 延努 / Yennu.
+            case 831437: // 达洛伦 / Dalloren.
+            case 831518: // 达利娅 / Dalliea.
+            case 831441: // 海利安 / Hylian.
+            case 831442: // 罗尔达 / Rordah.
+            case 831443: // 玛兹卡 / Mazka.
+            case 831524: { // 德莎 / Desha.
 				super.handleDialogStart(player);
 				break;
 			} default: {
@@ -54,23 +54,23 @@ public class Code_Red_NurserAI2 extends GeneralNpcAI2 {
 		} if (dialogId == 10000) {
 			int skillId = 0;
 			switch (getNpcId()) {
-				case 831435: //Jorpine.
-				case 831441: //Hylian.
+				case 831435: // 乔尔派因 / Jorpine.
+				case 831441: // 海利安 / Hylian.
 					skillId = 21280;
 					effectController.removeEffect(21281);
 				break;
-				case 831436: //Yennu.
-				case 831442: //Rordah.
+				case 831436: // 延努 / Yennu.
+				case 831442: // 罗尔达 / Rordah.
 					skillId = 21281;
 					effectController.removeEffect(21280);
 				break;
-				case 831437: //Dalloren.
-				case 831524: //Desha.
+				case 831437: // 达洛伦 / Dalloren.
+				case 831524: // 德莎 / Desha.
 					skillId = 21309;
 					effectController.removeEffect(21283);
 				break;
-				case 831518: //Dalliea.
-				case 831443: //Mazka.
+				case 831518: // 达利娅 / Dalliea.
+				case 831443: // 玛兹卡 / Mazka.
 					skillId = 21283;
 					effectController.removeEffect(21309);
 				break;
@@ -85,13 +85,13 @@ public class Code_Red_NurserAI2 extends GeneralNpcAI2 {
 	@Override
 	protected void handleSpawned() {
 		ZonedDateTime now = ZonedDateTime.now();
-		int currentDay = now.getDayOfWeek().getValue(); // 1 (Monday) to 7 (Sunday)
-		
+		int currentDay = now.getDayOfWeek().getValue(); // 1（周一）至 7（周日） / 1 (Monday) to 7 (Sunday)
+
 		switch (getNpcId()) {
-			case 831435: //Jorpine.
-			case 831436: //Yennu.
-			case 831441: //Hylian.
-			case 831442: //Rordah.
+			case 831435: // 乔尔派因 / Jorpine.
+			case 831436: // 延努 / Yennu.
+			case 831441: // 海利安 / Hylian.
+			case 831442: // 罗尔达 / Rordah.
 				if (currentDay >= 1 && currentDay <= 4) {
 					super.handleSpawned();
 				} else {
@@ -100,10 +100,10 @@ public class Code_Red_NurserAI2 extends GeneralNpcAI2 {
 					}
 				}
 			break;
-			case 831437: //Dalloren.
-			case 831518: //Dalliea.
-			case 831443: //Mazka.
-			case 831524: //Deshna.
+			case 831437: // 达洛伦 / Dalloren.
+			case 831518: // 达利娅 / Dalliea.
+			case 831443: // 玛兹卡 / Mazka.
+			case 831524: // 德莎 / Deshna.
 				if (currentDay >= 5 && currentDay <= 7) {
 					super.handleSpawned();
 				} else {

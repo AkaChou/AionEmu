@@ -32,9 +32,9 @@ public class PathfindHelper {
 	 * 从源生物到目标点选择下一步可通行位置（扇形采样）。
 	 * Select the next walkable step from a creature toward a target via sector sampling.
 	 *
-	 * Source creature
-	 * Target point
-	 * @return 最近可通行采样点，若无则为 null / Closest walkable sample, or null
+	 * @param source 源生物 / source creature
+	 * @param target 目标点 / target point
+	 * @return 最近可通行采样点，若无则为 null / closest walkable sample, or null
 	 */
 	public static Vector3f selectStep(Creature source, Vector3f target) {
 		int mapId = source.getPosition().getMapId();
@@ -85,9 +85,9 @@ public class PathfindHelper {
 	 * 为跟随目标选择下一步位置；地图或实例不一致时返回 null。
 	 * Select the next follow step toward a visible target; returns null on map/instance mismatch.
 	 *
-	 * Source creature
-	 * Follow target
-	 * @return 下一步点，不可用为 null / Next step, or null if unavailable
+	 * @param source 源生物 / source creature
+	 * @param target 跟随目标 / follow target
+	 * @return 下一步点，不可用为 null / next step, or null if unavailable
 	 */
 	public static Vector3f selectFollowStep(Creature source, VisibleObject target) {
 		int mapId = source.getPosition().getMapId();

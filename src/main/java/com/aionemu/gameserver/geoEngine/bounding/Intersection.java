@@ -22,7 +22,7 @@ public class Intersection {
 	 * @param x0 第一分量 / first component
 	 * @param x1 第二分量 / second component
 	 * @param x2 第三分量 / third component
-	 * output vector
+	 * @param minMax 输出向量 / output vector
 	 */
 	private static final void findMinMax(float x0, float x1, float x2, Vector3f minMax) {
 		minMax.set(x0, x0, 0);

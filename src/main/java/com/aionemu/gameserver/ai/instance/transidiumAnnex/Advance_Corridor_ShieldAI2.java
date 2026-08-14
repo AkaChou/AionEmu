@@ -26,16 +26,16 @@ public class Advance_Corridor_ShieldAI2 extends NpcAI2
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
 			switch (getNpcId()) {
-				case 297306: //Belus Advance Corridor Shield.
+				case 297306: // 贝卢斯进阶走廊护盾 / Belus Advance Corridor Shield
 				    announceBelusAdvance();
 				break;
-				case 297307: //Aspida Advance Corridor Shield.
+				case 297307: // 阿斯皮达进阶走廊护盾 / Aspida Advance Corridor Shield
 				    announceAspidaAdvance();
 				break;
-				case 297308: //Atanatos Advance Corridor Shield.
+				case 297308: // 阿塔纳托斯进阶走廊护盾 / Atanatos Advance Corridor Shield
 					announceAtanatosAdvance();
 				break;
-				case 297309: //Disillon Advance Corridor Shield.
+				case 297309: // 迪西隆进阶走廊护盾 / Disillon Advance Corridor Shield
 					announceDisillonAdvance();
 				break;
 			}

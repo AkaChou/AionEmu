@@ -85,9 +85,7 @@ public enum ChatType {
 	 * Returns chat type by client integer representation.
 	 *
 	 * @param integerValue 客户端整型值 / client integer value
-	 * chat type
-	 *
-	 * @param integerValue
+	 * @return 匹配的聊天类型 / matching chat type
 	 * @throws IllegalArgumentException 无匹配类型时 / if no matching type
 	 */
 	public static ChatType getChatTypeByInt(int integerValue) throws IllegalArgumentException {

@@ -48,7 +48,7 @@ public class PremiumController {
      * Returns singleton (legacy entry, deprecated after boot migration).
      *
      * @return 控制器实例 / Controller instance
-     * Prefer injection
+     * @deprecated 优先使用注入 / prefer injection
      */
     @Deprecated(since = "boot-migration")
     public static PremiumController getController() {
@@ -68,10 +68,10 @@ public class PremiumController {
      * 处理游戏服发起的点数消费/增加请求。
      * Handles spend/credit request from a gameserver.
      *
-     * 账号 ID / Account id
-     * Request id
+     * @param accountId 账号 ID / Account id
+     * @param requestId 请求 ID / Request id
      * @param cost 消耗点数；负数表示增加 / Cost; negative means add
-     * GameServer id
+     * @param serverId 游戏服 ID / GameServer id
      */
     public void requestBuy(int accountId, int requestId, long cost, byte serverId) {
         long points = this.dao.getPoints(accountId);

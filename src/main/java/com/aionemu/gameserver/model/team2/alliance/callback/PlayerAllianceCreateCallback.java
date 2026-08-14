@@ -5,7 +5,7 @@ import com.aionemu.commons.callbacks.CallbackResult;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 /**
- * 玩家联盟 CreateCallback，用于团队2相关逻辑。
+ * 玩家联盟创建回调，用于团队2相关逻辑。
  * Player Alliance Create Callback for team 2 logic.
  */
 
@@ -25,15 +25,15 @@ public abstract class PlayerAllianceCreateCallback implements Callback {
 		return CallbackResult.newContinue();
 	}
 
-	/** 获取基础职业。 / Returns the base class. */
+	/** 返回基础回调类。 / Returns the base callback class. */
 	@Override
 	public Class<? extends Callback> getBaseClass() {
 		return PlayerAllianceCreateCallback.class;
 	}
 
-	/** 在 alliance create 前 / On Before Alliance Create */
+	/** 联盟创建前 / Before an alliance is created */
 	public abstract void onBeforeAllianceCreate(Player player);
 
-	/** 在 alliance create 后 / On After Alliance Create */
+	/** 联盟创建后 / After an alliance is created */
 	public abstract void onAfterAllianceCreate(Player player);
 }

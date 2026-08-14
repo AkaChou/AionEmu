@@ -35,7 +35,7 @@ public class ManualResetEvent {
 	 * 阻塞直到事件被触发。
 	 * Block until the event is signaled.
 	 *
-	 * If the wait is interrupted。
+	 * @throws InterruptedException 等待被中断时 / if the wait is interrupted
 	 */
 	public void waitOne() throws InterruptedException {
 		Object object = this.monitor;
@@ -53,7 +53,7 @@ public class ManualResetEvent {
 	 * 先复位再阻塞等待下一次触发。
 	 * Reset first, then block until the next signal.
 	 *
-	 * If the wait is interrupted。
+	 * @throws InterruptedException 等待被中断时 / if the wait is interrupted
 	 */
 	public void resetAndWaitOne() throws InterruptedException {
 		Object object = this.monitor;
@@ -72,9 +72,9 @@ public class ManualResetEvent {
 	 * 在超时内等待事件触发。
 	 * Wait for the event to be signaled within a timeout.
 	 *
-	 * @param milliseconds 超时毫秒数 / Timeout in milliseconds
+	 * @param milliseconds 超时毫秒数 / timeout in milliseconds
 	 * @return 触发成功为 true，超时为 false / {@code true} if signaled, {@code false} on timeout
-	 * If the wait is interrupted。
+	 * @throws InterruptedException 等待被中断时 / if the wait is interrupted
 	 */
 	public boolean waitOne(long milliseconds) throws InterruptedException {
 		Object object = this.monitor;

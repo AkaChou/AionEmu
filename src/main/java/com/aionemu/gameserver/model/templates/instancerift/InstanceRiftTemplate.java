@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 副本裂隙模板（静态数据/XML）。
- * XML template.
+ * Instance rift template (static data/XML).
  *
  * @author Rinzler (Encom)
  */

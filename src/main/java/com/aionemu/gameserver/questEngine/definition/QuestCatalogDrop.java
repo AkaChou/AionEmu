@@ -3,7 +3,10 @@ package com.aionemu.gameserver.questEngine.definition;
 import java.util.Objects;
 import java.util.Optional;
 
-/** Immutable runtime drop entry tied to the catalog snapshot that produced it. */
+/**
+ * 与产出它的目录快照绑定的不可变运行时掉落条目。
+ * Immutable runtime drop entry tied to the catalog snapshot that produced it.
+ */
 public record QuestCatalogDrop(int questId, int npcId, int itemId, int chance,
 		QuestDropScope scope, int collectingStep, int neededAmount, Optional<QuestMetadata> metadata) {
 	public QuestCatalogDrop {

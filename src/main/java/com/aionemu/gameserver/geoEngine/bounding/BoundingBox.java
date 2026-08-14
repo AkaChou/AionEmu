@@ -62,7 +62,7 @@ public class BoundingBox extends BoundingVolume {
 	 * 从另一包围盒拷贝构造。
 	 * Copy-constructor from another bounding box.
 	 *
-	 * source box
+	 * @param source 源包围盒 / source box
 	 */
 	public BoundingBox(BoundingBox source) {
 		this.center.set(source.center);
@@ -86,7 +86,7 @@ public class BoundingBox extends BoundingVolume {
 	 * 返回包围体类型（AABB）。
 	 * Returns the bounding-volume type (AABB).
 	 *
-	 * type enum
+	 * @return 类型枚举 / type enum
 	 */
 	@Override
 	public Type getType() {
@@ -146,7 +146,7 @@ public class BoundingBox extends BoundingVolume {
 	 * Computes the bounding box from mesh triangle indices over a range.
 	 *
 	 * @param indices 三角形索引数组 / triangle index array
-	 * mesh
+	 * @param mesh 网格 / mesh
 	 * @param start 起始下标（含） / start index (inclusive)
 	 * @param end 结束下标（不含） / end index (exclusive)
 	 */
@@ -269,8 +269,9 @@ public class BoundingBox extends BoundingVolume {
 	 * Transforms this bounding box by a 4x4 matrix into store (or a new box).
 	 *
 	 * @param trans 变换矩阵 / transform matrix
+	 * @param trans 变换矩阵 / transform matrix
 	 * @param store 结果存储；null 或类型不匹配时新建 / result store; created if null or wrong type
-	 * transformed AABB
+	 * @return 变换后的 AABB / transformed AABB
 	 */
 	@Override
 	public BoundingVolume transform(Matrix4f trans, BoundingVolume store) {
@@ -308,7 +309,7 @@ public class BoundingBox extends BoundingVolume {
 	 * Determines which side of the given plane (typically from a view frustum) this bound lies on.
 	 *
 	 * @param plane 待检测平面 / plane to check against
-	 * plane side
+	 * @return 平面侧 / plane side
 	 */
 	@Override
 	public Plane.Side whichSide(Plane plane) {
@@ -540,8 +541,8 @@ public class BoundingBox extends BoundingVolume {
 	 * 检测本包围盒是否与另一 AABB 在任意轴上相交。
 	 * Determines whether this box intersects another AABB in any way.
 	 *
-	 * other AABB
-	 * whether they intersect
+	 * @param bb 另一 AABB / other AABB
+	 * @return 是否相交 / whether they intersect
 	 */
 	@Override
 	public boolean intersectsBoundingBox(BoundingBox bb) {
@@ -569,8 +570,8 @@ public class BoundingBox extends BoundingVolume {
 	 * 检测本包围盒是否与射线相交。
 	 * Determines whether this bounding box intersects the given ray.
 	 *
-	 * ray
-	 * whether they intersect
+	 * @param ray 射线 / ray
+	 * @return 是否相交 / whether they intersect
 	 */
 	@Override
 	public boolean intersects(Ray ray) {
@@ -610,10 +611,9 @@ public class BoundingBox extends BoundingVolume {
 	 * 与射线求交并将碰撞结果写入 results。
 	 * Intersects this box with a ray and records collision results.
 	 *
-	 * ray
-	 *
+	 * @param ray 射线 / ray
 	 * @param results 碰撞结果收集器 / collision results collector
-	 * @param results number of collision points (0 / 1/2)
+	 * @return 碰撞点数量（0/1/2） / number of collision points (0/1/2)
 	 */
 	private int collideWithRay(Ray ray, CollisionResults results) {
 		Vector3f diff = Vector3f.newInstance().set(ray.origin).subtractLocal(center);
@@ -657,8 +657,8 @@ public class BoundingBox extends BoundingVolume {
 	 *
 	 * @param other 可碰撞对象 / collidable
 	 * @param results 碰撞结果收集器 / collision results collector
-	 * collision count
-	 * unsupported type。
+	 * @return 碰撞点数量 / collision count
+	 * @throws UnsupportedCollisionException 不支持的类型 / unsupported type
 	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) {
@@ -685,7 +685,7 @@ public class BoundingBox extends BoundingVolume {
 	 * @param v1 三角形顶点 1 / triangle vertex 1
 	 * @param v2 三角形顶点 2 / triangle vertex 2
 	 * @param v3 三角形顶点 3 / triangle vertex 3
-	 * whether they intersect
+	 * @return 是否相交 / whether they intersect
 	 */
 	public boolean intersects(Vector3f v1, Vector3f v2, Vector3f v3) {
 		return Intersection.intersect(this, v1, v2, v3);
@@ -695,9 +695,7 @@ public class BoundingBox extends BoundingVolume {
 	 * 判断点是否严格位于盒内（不含边界）。
 	 * Returns whether the point lies strictly inside the box (boundary excluded).
 	 *
-	 * point to test
-	 *
-	 * @param point
+	 * @param point 待检测点 / point to test
 	 * @return 是否在内部 / whether inside
 	 */
 	@Override
@@ -710,8 +708,8 @@ public class BoundingBox extends BoundingVolume {
 	 * 判断点是否与盒子相交（含边界）。
 	 * Returns whether the point intersects the box (boundary included).
 	 *
-	 * point to test
-	 * whether they intersect
+	 * @param point 待检测点 / point to test
+	 * @return 是否相交 / whether they intersect
 	 */
 	@Override
 	public boolean intersects(Vector3f point) {
@@ -723,9 +721,7 @@ public class BoundingBox extends BoundingVolume {
 	 * 计算点到盒子表面的最短距离；点在内部时为 0。
 	 * Distance from the point to the box surface; zero when the point is inside.
 	 *
-	 * point to test
-	 *
-	 * @param point
+	 * @param point 待检测点 / point to test
 	 * @return 到边缘的距离 / distance to edge
 	 */
 	@Override
@@ -809,7 +805,7 @@ public class BoundingBox extends BoundingVolume {
 	 * Queries the extent vector (x/y/z half-lengths).
 	 *
 	 * @param store 结果存储；null 时新建 / store for extents; created if null
-	 * extent vector
+	 * @return 半长向量 / extent vector
 	 */
 	public Vector3f getExtent(Vector3f store) {
 		if (store == null) {
@@ -823,7 +819,7 @@ public class BoundingBox extends BoundingVolume {
 	 * 获取 X 轴半长。
 	 * Returns the X-axis half-extent.
 	 *
-	 * X extent
+	 * @return X 半长 / X extent
 	 */
 	public float getXExtent() {
 		return xExtent;
@@ -833,7 +829,7 @@ public class BoundingBox extends BoundingVolume {
 	 * 获取 Y 轴半长。
 	 * Returns the Y-axis half-extent.
 	 *
-	 * Y extent
+	 * @return Y 半长 / Y extent
 	 */
 	public float getYExtent() {
 		return yExtent;
@@ -843,7 +839,7 @@ public class BoundingBox extends BoundingVolume {
 	 * 获取 Z 轴半长。
 	 * Returns the Z-axis half-extent.
 	 *
-	 * Z extent
+	 * @return Z 半长 / Z extent
 	 */
 	public float getZExtent() {
 		return zExtent;
@@ -853,8 +849,8 @@ public class BoundingBox extends BoundingVolume {
 	 * 设置 X 轴半长（不可为负）。
 	 * Sets the X-axis half-extent (must be non-negative).
 	 *
-	 * X extent
-	 * if negative
+	 * @param xExtent X 半长 / X extent
+	 * @throws IllegalArgumentException 为负时 / if negative
 	 */
 	public void setXExtent(float xExtent) {
 		if (xExtent < 0) {
@@ -868,8 +864,8 @@ public class BoundingBox extends BoundingVolume {
 	 * 设置 Y 轴半长（不可为负）。
 	 * Sets the Y-axis half-extent (must be non-negative).
 	 *
-	 * Y extent
-	 * if negative
+	 * @param yExtent Y 半长 / Y extent
+	 * @throws IllegalArgumentException 为负时 / if negative
 	 */
 	public void setYExtent(float yExtent) {
 		if (yExtent < 0) {
@@ -883,8 +879,8 @@ public class BoundingBox extends BoundingVolume {
 	 * 设置 Z 轴半长（不可为负）。
 	 * Sets the Z-axis half-extent (must be non-negative).
 	 *
-	 * Z extent
-	 * if negative
+	 * @param zExtent Z 半长 / Z extent
+	 * @throws IllegalArgumentException 为负时 / if negative
 	 */
 	public void setZExtent(float zExtent) {
 		if (zExtent < 0) {
@@ -899,7 +895,7 @@ public class BoundingBox extends BoundingVolume {
 	 * Returns the minimum corner (center minus extents).
 	 *
 	 * @param store 结果存储；null 时新建 / store for the result; created if null
-	 * minimum corner
+	 * @return 最小角点 / minimum corner
 	 */
 	public Vector3f getMin(Vector3f store) {
 		if (store == null) {
@@ -914,7 +910,7 @@ public class BoundingBox extends BoundingVolume {
 	 * Returns the maximum corner (center plus extents).
 	 *
 	 * @param store 结果存储；null 时新建 / store for the result; created if null
-	 * maximum corner
+	 * @return 最大角点 / maximum corner
 	 */
 	public Vector3f getMax(Vector3f store) {
 		if (store == null) {
@@ -942,7 +938,7 @@ public class BoundingBox extends BoundingVolume {
 	 * 返回包围盒体积（8 × xExtent × yExtent × zExtent）。
 	 * Returns the box volume (8 × xExtent × yExtent × zExtent).
 	 *
-	 * volume
+	 * @return 体积 / volume
 	 */
 	@Override
 	public float getVolume() {

@@ -17,7 +17,7 @@ public class WorldPosition {
 	 * 以指定地图 ID 构造位置。
 	 * Construct a position for the given map id.
 	 *
-	 * map id
+	 * @param mapId 地图 ID / the map id
 	 */
 	public WorldPosition(int mapId) {
 		this.mapId = mapId;
@@ -42,7 +42,7 @@ public class WorldPosition {
 	 * 返回世界地图 ID。
 	 * Return the world map id.
 	 *
-	 * map id
+	 * @return 地图 ID / the map id
 	 */
 	public int getMapId() {
 		if (mapId == 0)
@@ -54,7 +54,7 @@ public class WorldPosition {
 	 * 设置地图 ID。
 	 * Set the map id.
 	 *
-	 * map id
+	 * @param mapId 地图 ID / the map id
 	 */
 	public void setMapId(int mapId) {
 		this.mapId = mapId;
@@ -104,7 +104,7 @@ public class WorldPosition {
 	 * 返回实例 ID。
 	 * Return the instance id.
 	 *
-	 * instance id
+	 * @return 实例 ID / the instance id
 	 */
 	public int getInstanceId() {
 		return mapRegion.getParent().getInstanceId();
@@ -114,7 +114,7 @@ public class WorldPosition {
 	 * 返回父地图的实例数量。
 	 * Return the parent map's instance count.
 	 *
-	 * instance count
+	 * @return 实例数量 / the instance count
 	 */
 	public int getInstanceCount() {
 		return mapRegion.getParent().getParent().getInstanceCount();
@@ -144,7 +144,7 @@ public class WorldPosition {
 	 * 返回朝向。
 	 * Return heading.
 	 *
-	 * 朝向 / heading
+	 * @return 朝向 / the heading
 	 */
 	public byte getHeading() {
 		return heading;
@@ -154,7 +154,7 @@ public class WorldPosition {
 	 * 返回所属 {@link World}。
 	 * Return the owning {@link World}.
 	 *
-	 * world
+	 * @return 所属世界 / the owning world
 	 */
 	public World getWorld() {
 		return mapRegion.getWorld();
@@ -164,7 +164,7 @@ public class WorldPosition {
 	 * 返回所属地图实例。
 	 * Return the owning world-map instance.
 	 *
-	 * world map instance
+	 * @return 所属地图实例 / the world map instance
 	 */
 	public WorldMapInstance getWorldMapInstance() {
 		return mapRegion.getParent();
@@ -204,9 +204,9 @@ public class WorldPosition {
 	 * 设置世界坐标与朝向（null 参数表示保持原值）。
 	 * Set world coordinates and heading (null args keep previous values).
 	 *
-	 * new X, or null
-	 * new Y, or null
-	 * new Z, or null
+	 * @param newX 新 X，可为 null / new X, or null
+	 * @param newY 新 Y，可为 null / new Y, or null
+	 * @param newZ 新 Z，可为 null / new Z, or null
 	 * @param newHeading 新朝向，可为 null；取值 0–120 / new heading, or null; 0–120
 	 */
 	public void setXYZH(Float newX, Float newY, Float newZ, Byte newHeading) {
@@ -254,7 +254,7 @@ public class WorldPosition {
 	 * 浅克隆当前位置（共享 mapRegion 引用）。
 	 * Shallow-clone this position (shares the mapRegion reference).
 	 *
-	 * clone
+	 * @return 浅克隆副本 / the clone
 	 */
 	@Override
 	public WorldPosition clone() {

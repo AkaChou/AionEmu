@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/** Shared transaction boundary for required quest mutations and durable rewards. */
+/** 必需任务变更与耐久奖励的共享事务边界。 / Shared transaction boundary for required quest mutations and durable rewards. */
 public final class QuestUnitOfWork implements AutoCloseable {
 	private final Connection connection;
 	private final List<Runnable> afterCommit = new ArrayList<>();
@@ -41,11 +41,15 @@ public final class QuestUnitOfWork implements AutoCloseable {
 		connection.commit();
 		committed = true;
 		completed = true;
-		// afterCommit 由 runAfterCommit() 显式执行,使调用方能在提交成功后、
+		// afterCommit 由 runAfterCommit() 显式执行，使调用方能在提交成功后、
 		// 协议包发出之前先发布内存状态。
+		// afterCommit runs explicitly via runAfterCommit(), letting the caller publish
+		// in-memory state after a successful commit but before protocol packets are sent.
 	}
 
 	/**
+	 * best-effort 运行已注册的提交后动作。只能在成功 {@link #commit()} 后调用；
+	 * 失败被收集而不抛出，已提交的变更绝不会回滚。
 	 * Runs the registered after-commit actions best-effort. Must be called only
 	 * after a successful {@link #commit()}; failures are collected without
 	 * throwing so the committed mutation is never rolled back.

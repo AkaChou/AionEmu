@@ -11,6 +11,12 @@ public class SM_DELETE_HOUSE_OBJECT extends AionServerPacket {
 
 	private int itemObjectId;
 
+	/**
+	 * 按物件对象 ID 构造删除包。
+	 * Creates a house-object deletion packet for the given object id.
+	 *
+	 * @param itemObjectId 物件对象 ID / object id of the house item
+	 */
 	public SM_DELETE_HOUSE_OBJECT(int itemObjectId) {
 		this.itemObjectId = itemObjectId;
 	}

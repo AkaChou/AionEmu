@@ -29,9 +29,7 @@ public class WorldWalkerFormations {
 	 * 获取指定实例的巡逻编队；不存在时自动创建。
 	 * Returns formations for the instance, creating if absent.
 	 *
-	 * instance id
-	 *
-	 * @param instanceId
+	 * @param instanceId 实例 ID / instance id
 	 * @return 实例巡逻编队 / instance walker formations
 	 */
 	protected InstanceWalkerFormations getInstanceFormations(int instanceId) {

@@ -27,7 +27,7 @@ public class SubEffect {
 	 * 获取子效果技能 ID。
 	 * Returns the sub-effect skill id.
 	 *
-	 * skill id
+	 * @return 技能 ID / skill id
 	 */
 	public int getSkillId() {
 		return skillId;
@@ -37,7 +37,7 @@ public class SubEffect {
 	 * 获取触发概率（0–100）。
 	 * Returns the trigger chance (0–100).
 	 *
-	 * chance
+	 * @return 触发概率 / chance
 	 */
 	public int getChance() {
 		return chance;

@@ -34,7 +34,7 @@ public class Live_Party_Concert_HallAI2 extends NpcAI2
 				public void acceptRequest(Creature requester, Player responder) {
 					if (!decisionTaken) {
 						switch (getNpcId()) {
-							case 831592: //Live Party Concert Hall 4.3
+							case 831592: // 现场派对音乐厅 4.3 / Live Party Concert Hall 4.3
 								WorldMapInstance newInstance = InstanceService.getNextAvailableInstance(600080000);
 								InstanceService.registerPlayerWithInstance(newInstance, responder);
 								TeleportService2.teleportTo(responder, 600080000, newInstance.getInstanceId(), 1507.4276f, 1484.457f, 565.8799f, (byte) 16, TeleportAnimation.BEAM_ANIMATION);

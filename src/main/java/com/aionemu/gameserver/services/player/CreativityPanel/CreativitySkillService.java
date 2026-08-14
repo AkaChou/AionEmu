@@ -22,7 +22,7 @@ public class CreativitySkillService {
 	 *
 	 * 玩家 / player
 	 * @param id ID / id
-	 * point
+	 * @param point 点数 / point
 	 */
 	public void enchantSkill(Player player, int id, int point) {
 		PanelCp pcp = DataManager.PANEL_CP_DATA.getPanelCpId(id);
@@ -47,7 +47,7 @@ public class CreativitySkillService {
 	 *
 	 * 玩家 / player
 	 * @param id ID / id
-	 * point
+	 * @param point 点数 / point
 	 */
 	public void learnSkill(Player player, int id, int point) {
 		PanelCp pcp = DataManager.PANEL_CP_DATA.getPanelCpId(id);
@@ -67,7 +67,7 @@ public class CreativitySkillService {
 	 *
 	 * 玩家 / player
 	 * @param id ID / id
-	 * point
+	 * @param point 点数 / point
 	 */
 	public void loginDaevaSkill(Player player, int id, int point) {
 		PanelCp pcp = DataManager.PANEL_CP_DATA.getPanelCpId(id);
@@ -84,7 +84,7 @@ public class CreativitySkillService {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 * result
+	 * @return 服务实例 / service instance
 	 */
 	public static CreativitySkillService getInstance() {
 		ObjectProvider<CreativitySkillService> provider = instanceProvider;
@@ -98,7 +98,7 @@ public class CreativitySkillService {
 	 * setInstanceProvider 方法。
 	 * setInstanceProvider method.
 	 *
-	 * provider
+	 * @param provider 提供者 / provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<CreativitySkillService> provider) {
 		instanceProvider = provider;

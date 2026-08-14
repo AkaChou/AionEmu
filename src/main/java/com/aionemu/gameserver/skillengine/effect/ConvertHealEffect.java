@@ -38,7 +38,7 @@ public class ConvertHealEffect extends ShieldEffect {
 	 * 返回护盾类型标识。
 	 * Returns the shield type id.
 	 *
-	 * type id
+	 * @return 类型标识 / type id
 	 */
 	public int getType() {
 		return 0;

@@ -21,7 +21,7 @@ public class SM_REQUEST_KICK_ACCOUNT extends GsServerPacket {
      * 构造踢号请求包。
      * Constructs a kick-account request packet.
      *
-     * 账号 ID / account id
+     * @param accountId 账号 ID / account id
      */
     public SM_REQUEST_KICK_ACCOUNT(int accountId) {
         this.accountId = accountId;

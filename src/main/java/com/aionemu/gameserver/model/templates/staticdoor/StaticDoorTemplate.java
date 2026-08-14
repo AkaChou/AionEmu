@@ -13,7 +13,7 @@ import com.aionemu.gameserver.geoEngine.bounding.BoundingBox;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 
 /**
- * 静态 Door 模板（静态数据/XML）。
+ * 静态门模板（静态数据/XML）。
  * XML template.
  *
  * @author Wakizashi
@@ -44,30 +44,36 @@ public class StaticDoorTemplate extends VisibleObjectTemplate {
 	@XmlTransient
 	EnumSet<StaticDoorState> states = EnumSet.noneOf(StaticDoorState.class);
 
-	/** 返回 x / Returns the x */
+	/** 返回 X 坐标 / Returns the x */
 	public Float getX() {
 		return x;
 	}
 
-	/** 返回 y / Returns the y */
+	/** 返回 Y 坐标 / Returns the y */
 	public Float getY() {
 		return y;
 	}
 
-	/** 返回 z / Returns the z */
+	/** 返回 Z 坐标 / Returns the z */
 	public Float getZ() {
 		return z;
 	}
 
 	/**
-	 * @return the doorId
+	 * 返回门 ID。
+	 * Returns the door id.
+	 *
+	 * @return 门 ID / the door id
 	 */
 	public int getDoorId() {
 		return doorId;
 	}
 
 	/**
-	 * @return the keyItem
+	 * 返回钥匙物品 ID。
+	 * Returns the key item id.
+	 *
+	 * @return 钥匙物品 ID / the key item id
 	 */
 	public int getKeyId() {
 		return keyId;
@@ -91,7 +97,7 @@ public class StaticDoorTemplate extends VisibleObjectTemplate {
 		return 0;
 	}
 
-	/** 返回 initial states / Returns the initial states */
+	/** 返回初始状态 / Returns the initial states */
 	public EnumSet<StaticDoorState> getInitialStates() {
 		if (statesHex != null) {
 			int radix = 16;
@@ -109,12 +115,12 @@ public class StaticDoorTemplate extends VisibleObjectTemplate {
 		return states;
 	}
 
-	/** 返回 mesh file / Returns the mesh file */
+	/** 返回网格文件 / Returns the mesh file */
 	public String getMeshFile() {
 		return meshFile;
 	}
 
-	/** 返回 bounding box / Returns the bounding box */
+	/** 返回包围盒 / Returns the bounding box */
 	public BoundingBox getBoundingBox() {
 		if (box == null) {
 			return null;

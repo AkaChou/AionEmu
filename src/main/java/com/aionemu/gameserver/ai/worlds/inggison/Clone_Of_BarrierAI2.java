@@ -19,8 +19,8 @@ public class Clone_Of_BarrierAI2 extends AggressiveNpcAI2
 		for (VisibleObject object: getKnownList().getKnownObjectsSnapshot()) {
 			if (object instanceof Npc) {
 				Npc npc = (Npc) object;
-				if (npc.getNpcId() == 216516) { //Omega.
-					npc.getEffectController().removeEffect(18671); //Magic Ward.
+				if (npc.getNpcId() == 216516) { // Boss：Omega / Omega.
+					npc.getEffectController().removeEffect(18671); // 魔法护盾 / Magic Ward.
 					break;
 				}
 			}

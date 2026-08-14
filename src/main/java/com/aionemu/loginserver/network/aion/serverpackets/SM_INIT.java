@@ -43,8 +43,8 @@ public final class SM_INIT extends AionServerPacket {
      * 从连接与 Blowfish 密钥构造 SM_INIT。
      * Constructs SM_INIT from the login connection and Blowfish key.
      *
-     * login connection
-     * Blowfish secret key
+     * @param client 登录连接 / login connection
+     * @param blowfishKey Blowfish 密钥 / Blowfish secret key
      */
     public SM_INIT(LoginConnection client, SecretKey blowfishKey) {
         this(client.getEncryptedModulus(), blowfishKey.getEncoded(), client.getSessionId());
@@ -54,9 +54,9 @@ public final class SM_INIT extends AionServerPacket {
      * 创建 SM_INIT 包。
      * Creates a new SM_INIT packet.
      *
-     * public RSA key
-     * Blowfish key
-     * session identifier
+     * @param publicRsaKey RSA 公钥 / public RSA key
+     * @param blowfishKey Blowfish 密钥 / Blowfish key
+     * @param sessionId 会话标识 / session identifier
      */
     private SM_INIT(byte[] publicRsaKey, byte[] blowfishKey, int sessionId) {
         super(0x00);
@@ -70,12 +70,12 @@ public final class SM_INIT extends AionServerPacket {
      */
     @Override
     protected void writeImpl(LoginConnection con) {
-        writeD(sessionId); // session id
-        writeD(0x0000c621); // protocol revision
-        writeB(publicRsaKey); // RSA Public Key
+        writeD(sessionId); // 会话 ID / session id
+        writeD(0x0000c621); // 协议版本 / protocol revision
+        writeB(publicRsaKey); // RSA 公钥 / RSA Public Key
         // 未知 / unk
         writeB(new byte[16]);
-        writeB(blowfishKey); // BlowFish key
+        writeB(blowfishKey); // Blowfish 密钥 / BlowFish key
         writeD(197635); // 未知 / unk
         writeD(2097152); // 未知 / unk
     }

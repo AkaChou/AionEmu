@@ -34,7 +34,7 @@ public class TruncateToZipFileAppender extends FileAppender<Object> {
      * Open a new log file, compress and backup if file already exists
      *
      * @param fname 日志文件名 / Log filename
-     * File operation exception。
+     * @throws IOException 文件操作异常 / File operation exception
      */
     public void openFile(String fname) throws IOException {
         File file = new File(fname);
@@ -58,8 +58,8 @@ public class TruncateToZipFileAppender extends FileAppender<Object> {
         } else {
             String date = "";
 
-            // 读取日志文件第一行获取日期
-            // 读取日志文件第一行以获取日期 / Read first line of log file to get date
+            // 读取日志文件第一行以获取日期
+            // Read first line of log file to get date
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 date = reader.readLine().split("\f")[1];
             } catch (IOException e) {
@@ -68,20 +68,20 @@ public class TruncateToZipFileAppender extends FileAppender<Object> {
 
             File zipFile = new File(backupRoot, file.getName() + "." + date + ".zip");
             
- // 使用 try-with-resources 确保资源正确关闭
-            // 使用 try-with-resources 确保正确关闭资源 / Use try-with-resources to ensure proper resource closure
+            // 使用 try-with-resources 确保资源正确关闭
+            // Use try-with-resources to ensure proper resource closure
             try (FileInputStream fis = FileUtils.openInputStream(file);
                  ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile))) {
                 
- // 创建 zip 文件条目
-                // 创建 zip 文件条目 / Create zip file entry
+                // 创建 zip 文件条目
+                // Create zip file entry
                 ZipEntry entry = new ZipEntry(file.getName());
                 entry.setMethod(ZipEntry.DEFLATED); // 使用压缩方式 / Use compression method
                 entry.setCrc(FileUtils.checksumCRC32(file));
                 zos.putNextEntry(entry);
 
- // 写入数据到 zip 文件
-                // 将数据写入 zip 文件 / Write data to zip file
+                // 将数据写入 zip 文件
+                // Write data to zip file
                 byte[] buffer = new byte[1024];
                 int bytesRead;
                 while ((bytesRead = fis.read(buffer)) != -1) {

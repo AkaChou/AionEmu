@@ -27,8 +27,6 @@ public class Notice extends AdminCommand {
 	 * 拼接参数为消息并向所有在线玩家发送居中通知。
 	 * Join parameters into a message and send a center notice to every online player.
 	 *
-	 * 执行 GM / Admin player
-	 * Notice text
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -55,8 +53,6 @@ public class Notice extends AdminCommand {
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
 	 *
-	 * 玩家 / Player
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

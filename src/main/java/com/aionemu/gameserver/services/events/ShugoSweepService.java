@@ -35,7 +35,7 @@ public class ShugoSweepService {
 	/** Spring 实例提供者 / Spring instance provider */
 	private static volatile ObjectProvider<ShugoSweepService> instanceProvider;
 
-	/** Current board id / Current board id */
+	/** 当前棋盘 ID / Current board id */
 	private final int boardId = EventsConfig.EVENT_SHUGOSWEEP_BOARD;
 
 	/**

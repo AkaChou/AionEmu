@@ -16,7 +16,9 @@ public class SM_FRIEND_UPDATE extends AionServerPacket {
 
 	private int friendObjId;
 
-
+	/**
+	 * @param friendObjId 好友 objectId / friend's object ID
+	 */
 	public SM_FRIEND_UPDATE(int friendObjId) {
 		this.friendObjId = friendObjId;
 	}
@@ -31,9 +33,9 @@ public class SM_FRIEND_UPDATE extends AionServerPacket {
 			writeS(f.getName());
 			writeD(f.getLevel());
 			writeD(f.getPlayerClass().getClassId());
-			writeC(f.isOnline() ? 1 : 0); // Online status - No idea why this and f.getStatus are used
+			writeC(f.isOnline() ? 1 : 0); // 在线状态——不清楚为何与 f.getStatus 并用 / Online status - No idea why this and f.getStatus are used
 			writeD(f.getMapId());
-			writeD(f.getLastOnlineTime()); // Date friend was last online as a Unix timestamp.
+			writeD(f.getLastOnlineTime()); // 好友上次在线时间（Unix 时间戳）/ Date friend was last online as a Unix timestamp
 			writeS(f.getNote());
 			writeC(f.getStatus().getId());
 		}

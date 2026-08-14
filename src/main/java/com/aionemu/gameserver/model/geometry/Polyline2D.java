@@ -34,12 +34,14 @@ class Polyline2D implements Shape, Cloneable, Serializable {
 	public float[] xpoints;
 
 	/**
-	 * x 坐标数组。 / The array of <i>x</i> coordinates. The value of {@link #npoints npoints} is equal to the number of points in this <code>Polyline2D</code>
+	 * y 坐标数组。
+	 * The array of <i>y</i> coordinates. The value of {@link #npoints npoints} is equal to the number of points in this <code>Polyline2D</code>.
 	 */
 	public float[] ypoints;
 
 	/**
-	 * Bounds of the Polyline2D. @see #getBounds()。
+	 * Polyline2D 的包围盒。
+	 * Bounds of the Polyline2D. @see #getBounds().
 	 */
 	protected Rectangle2D bounds;
 
@@ -47,7 +49,8 @@ class Polyline2D implements Shape, Cloneable, Serializable {
 	private GeneralPath closedPath;
 
 	/**
-	 * Creates an empty Polyline2D
+	 * 创建一个空的 Polyline2D。
+	 * Creates an empty Polyline2D.
 	 */
 	public Polyline2D() {
 		xpoints = new float[4];

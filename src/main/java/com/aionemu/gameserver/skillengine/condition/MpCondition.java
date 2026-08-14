@@ -30,11 +30,11 @@ public class MpCondition extends Condition {
 	 * Validates whether the skill environment satisfies this condition.
 	 *
 	 * @param skill 技能环境 / skill environment
-	 * whether valid
+	 * @return 是否有效 / whether valid
 	 */
 	@Override
 	public boolean validate(Skill skill) {
-		// NPC MP is not modeled as a casting resource, so NPC skill costs must not block casts.
+		// NPC 的 MP 不作为施法资源建模，因此 NPC 技能消耗不得阻断施放。 / NPC MP is not modeled as a casting resource, so NPC skill costs must not block casts.
 		if (skill.getEffector() instanceof Npc) {
 			return true;
 		}

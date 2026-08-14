@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 阿诺哈模板（静态数据/XML）。
- * XML template.
+ * Anoha template (static data/XML).
  *
  * @author Rinzler (Encom)
  */

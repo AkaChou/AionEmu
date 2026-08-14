@@ -26,10 +26,10 @@ public class TowerLiftAI2 extends NpcAI2
 		int instanceId = getPosition().getInstanceId();
 		if (dialogId == 10000) {
 			switch (player.getWorldId()) {
-				case 300200000: //Haramel 2.0
+				case 300200000: //哈拉梅尔 2.0 / Haramel 2.0
 					TeleportService2.teleportTo(player, 300200000, instanceId, 220.0f, 213.0f, 126.68472f, (byte) 0);
 			    break;
-				case 302330000: //Kumuki Cave 5.3
+				case 302330000: //库穆基洞穴 5.3 / Kumuki Cave 5.3
 					TeleportService2.teleportTo(player, 302330000, instanceId, 220.0f, 213.0f, 126.68472f, (byte) 0);
 			    break;
 		    }

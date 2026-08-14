@@ -2,7 +2,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import java.util.Objects;
 
-/** Best-effort failure after the database commit; it is auditable but must never trigger mutation replay. */
+/** 数据库提交后的 best-effort 失败；可审计但绝不能触发变更重放。 / Best-effort failure after the database commit; it is auditable but must never trigger mutation replay. */
 public final class QuestPostCommitFailure extends RuntimeException {
 	private final QuestFailureStage stage;
 

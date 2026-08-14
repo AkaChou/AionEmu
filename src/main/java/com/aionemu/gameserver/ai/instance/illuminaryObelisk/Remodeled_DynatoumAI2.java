@@ -46,10 +46,7 @@ public class Remodeled_DynatoumAI2 extends AggressiveNpcAI2
 		if (isAggred.compareAndSet(false, true)) {
 			switch (getNpcId()) {
 				case 234686: //Remodeled Dynatoum.
-					/**
-					 * 约有 6 分钟击杀首领，启动封印前全队须就绪。
-	 * You have about 6 minutes to finish the boss, so all party members must be ready before activating the seal.
-					 */
+					// 约有 6 分钟击杀首领，启动封印前全队须就绪。 / You have about 6 minutes to finish the boss, so all party members must be ready before activating the seal.
 					// 改造的迪纳图姆炸弹已开始倒计时。 / The Remodeled Dynatoum bomb has begun counting down.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402425, 0);
 					// 改造的迪纳图姆将在 5 分钟后爆炸。 / The Remodeled Dynatoum will explode in 5 minutes.

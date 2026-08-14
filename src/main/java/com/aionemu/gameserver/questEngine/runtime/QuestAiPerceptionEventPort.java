@@ -4,7 +4,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 
-/** Boundary for the authoritative NPC aggro-list callback. */
+/** 权威 NPC 仇恨列表回调的边界。 / Boundary for the authoritative NPC aggro-list callback. */
 public interface QuestAiPerceptionEventPort {
 	QuestEvent.AddAggroList addAggroList(QuestEnv env, int expectedNpcId);
 

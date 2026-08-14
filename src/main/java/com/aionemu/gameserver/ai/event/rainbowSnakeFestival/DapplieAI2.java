@@ -22,11 +22,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @AIName("dapplie")
 public class DapplieAI2 extends GeneralNpcAI2
 {
+	/**
+	 * 对话框开启入口：活动 NPC 直接开启对话框，其余 NPC 发送关闭窗口。
+	 * Dialog start entry: opens the dialog for event NPCs, sends a close window otherwise.
+	 */
   	@Override
 	protected void handleDialogStart(Player player) {
         switch (getNpcId()) {
-            case 832964: //Dapplie E.
-			case 832975: { //Dapplie A.
+            case 832964: // 活动 NPC：Dapplie E. / event NPC: Dapplie E.
+			case 832975: { // 活动 NPC：Dapplie A. / event NPC: Dapplie A.
 				super.handleDialogStart(player);
 				break;
 			} default: {
@@ -35,7 +39,17 @@ public class DapplieAI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
+	/**
+	 * 处理对话框选择：先转发任务引擎，再按随机结果施加对应增益效果。
+	 * Handles dialog selection: forwards to the quest engine, then applies the matching buff by random pick.
+	 *
+	 * @param player 对话玩家 / dialog player
+	 * @param dialogId 对话框选项 ID / dialog option ID
+	 * @param questId 任务 ID / quest ID
+	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
+	 * @return 始终为 true / always true
+	 */
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);

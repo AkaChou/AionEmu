@@ -19,7 +19,7 @@ public final class StorageObject extends HouseObject<HousingStorage> {
 		super(owner, objId, templateId);
 	}
 
-	/** 使用时 / on Use. */
+	/** 使用时 / On use. */
 	@Override
 	public void onUse(Player player) {
 		if (player.getObjectId() != getOwnerHouse().getOwnerId()) {

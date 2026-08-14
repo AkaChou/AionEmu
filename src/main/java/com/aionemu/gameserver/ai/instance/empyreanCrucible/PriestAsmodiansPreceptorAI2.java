@@ -73,13 +73,13 @@ public class PriestAsmodiansPreceptorAI2 extends AggressiveNpcAI2 {
 						WorldPosition p = getPosition();
 						switch (Rnd.get(1, 3)) {
 							case 1:
-								applySoulSickness((Npc) spawn(282369, p.getX(), p.getY(), p.getZ(), p.getHeading())); //Traufnir.
+								applySoulSickness((Npc) spawn(282369, p.getX(), p.getY(), p.getZ(), p.getHeading())); // 特拉乌普尼尔 / Traufnir
 							break;
 							case 2:
-								applySoulSickness((Npc) spawn(282370, p.getX(), p.getY(), p.getZ(), p.getHeading())); //Sigyn.
+								applySoulSickness((Npc) spawn(282370, p.getX(), p.getY(), p.getZ(), p.getHeading())); // 锡金 / Sigyn
 							break;
 							case 3:
-								applySoulSickness((Npc) spawn(282371, p.getX(), p.getY(), p.getZ(), p.getHeading())); //Sif.
+								applySoulSickness((Npc) spawn(282371, p.getX(), p.getY(), p.getZ(), p.getHeading())); // 锡普 / Sif
 							break;
 						}
 					}
@@ -121,9 +121,9 @@ public class PriestAsmodiansPreceptorAI2 extends AggressiveNpcAI2 {
 	}
 	
 	private void despawnNpcs() {
-		despawnNpc(getPosition().getWorldMapInstance().getNpc(282369)); //Traufnir.
-		despawnNpc(getPosition().getWorldMapInstance().getNpc(282370)); //Sigyn.
-		despawnNpc(getPosition().getWorldMapInstance().getNpc(282371)); //Sif.
+		despawnNpc(getPosition().getWorldMapInstance().getNpc(282369)); // 特拉乌普尼尔 / Traufnir
+		despawnNpc(getPosition().getWorldMapInstance().getNpc(282370)); // 锡金 / Sigyn
+		despawnNpc(getPosition().getWorldMapInstance().getNpc(282371)); // 锡普 / Sif
 	}
 		
     @Override

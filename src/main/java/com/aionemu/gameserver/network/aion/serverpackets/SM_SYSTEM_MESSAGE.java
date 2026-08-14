@@ -12414,12 +12414,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_TP_EE2_TP0_L_TOINSTANT_DUN = new SM_SYSTEM_MESSAGE(1300732);
 
 	/**
-	 * 正在前往艾特南 / Moving to Eltnen
+	 * 正在前往埃尔特内 / Moving to Eltnen
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_TP_LF1A_TP0_L_TOLF2 = new SM_SYSTEM_MESSAGE(1300733);
 
 	/**
-	 * 正在前往贝特隆 / Moving to Verteron
+	 * 正在前往贝尔特伦 / Moving to Verteron
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_TP_LF2_TP0_L_TOLF1A = new SM_SYSTEM_MESSAGE(1300734);
 
@@ -18321,7 +18321,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 因格森与吉尔克马罗斯的所有要塞已变为可占领状态。 / All fortresses in Inggison and Gelkmaros have changed to the Capturable State
+	 * 英吉斯温与格尔克马洛斯的所有要塞已变为可占领状态。 / All fortresses in Inggison and Gelkmaros have changed to the Capturable State
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FIELDABYSS_PVP_ON = new SM_SYSTEM_MESSAGE(1400292);
 
@@ -18547,22 +18547,22 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 西伦特拉西门（因格森通往西伦特拉峡谷）已开启。 / Silentera Westgate, the entrance from Inggison to Silentera Canyon, has opened
+	 * 西伦特拉西门（英吉斯温通往西伦特拉峡谷）已开启。 / Silentera Westgate, the entrance from Inggison to Silentera Canyon, has opened
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FIELDABYSS_LIGHTUNDERPASS_SPAWN = new SM_SYSTEM_MESSAGE(1400328);
 
 	/**
-	 * 西伦特拉东门（吉尔克马罗斯通往西伦特拉峡谷）已开启。 / Silentera Eastgate, the entrance from Gelkmaros to Silentera Canyon, has opened
+	 * 西伦特拉东门（格尔克马洛斯通往西伦特拉峡谷）已开启。 / Silentera Eastgate, the entrance from Gelkmaros to Silentera Canyon, has opened
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FIELDABYSS_DARKUNDERPASS_SPAWN = new SM_SYSTEM_MESSAGE(1400329);
 
 	/**
-	 * 西伦特拉西门（因格森通往西伦特拉峡谷）已关闭。 / Silentera Westgate, the entrance from Inggison to Silentera Canyon, has closed
+	 * 西伦特拉西门（英吉斯温通往西伦特拉峡谷）已关闭。 / Silentera Westgate, the entrance from Inggison to Silentera Canyon, has closed
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FIELDABYSS_LIGHTUNDERPASS_DESPAWN = new SM_SYSTEM_MESSAGE(1400330);
 
 	/**
-	 * 西伦特拉东门（吉尔克马罗斯通往西伦特拉峡谷）已关闭。 / Silentera Eastgate, the entrance from Gelkmaros to Silentera Canyon, has closed
+	 * 西伦特拉东门（格尔克马洛斯通往西伦特拉峡谷）已关闭。 / Silentera Eastgate, the entrance from Gelkmaros to Silentera Canyon, has closed
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FIELDABYSS_DARKUNDERPASS_DESPAWN = new SM_SYSTEM_MESSAGE(1400331);
 
@@ -23973,7 +23973,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDRuneWP_Charger4_Completed = new SM_SYSTEM_MESSAGE(1401794);
 
 	/**
-	 * [西奥波莫斯实验室] 4.9 / [Theobomos Lab] 4.9
+	 * [泰奥勃莫斯实验室] 4.9 / [Theobomos Lab] 4.9
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_Teo_T_TimeAttack_01 = new SM_SYSTEM_MESSAGE(1403033);
 	public static final SM_SYSTEM_MESSAGE STR_MSG_Teo_T_Boss_Skill_01 = new SM_SYSTEM_MESSAGE(1403027);
@@ -24651,7 +24651,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * 伊卢玛/诺斯沃尔德神器 5.8 / Iluma/Norsvold Artifact 5.8
+	 * 伊卢玛/诺斯珀德神器 5.8 / Iluma/Norsvold Artifact 5.8
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF6_Occupy_All_Start_MSG = new SM_SYSTEM_MESSAGE(1404553);
 	public static final SM_SYSTEM_MESSAGE STR_MSG_LF6_Occupy_All_End_MSG = new SM_SYSTEM_MESSAGE(1404554);

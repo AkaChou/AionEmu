@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 动态裂隙模板（静态数据/XML）。
- * XML template.
+ * Dynamic rift template (static data/XML).
  *
  * @author Rinzler (Encom)
  */
@@ -18,7 +18,7 @@ public class DynamicRiftTemplate {
 	@XmlAttribute(name = "id")
 	protected int id;
 
-	/** 返回 ID / Returns the id */
+	/** 返回 ID。 / Returns the id. */
 	public int getId() {
 		return this.id;
 	}

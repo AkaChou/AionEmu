@@ -17,22 +17,22 @@ public class LegionTerritory {
 	public LegionTerritory() {
 	}
 
-	/** 返回 ID / Returns the id */
+	/** 返回 ID。 / Returns the id. */
 	public int getId() {
 		return territoryId;
 	}
 
-	/** 设置 territory id / Sets the territory id */
+	/** 设置领地 ID。 / Sets the territory id. */
 	public void setTerritoryId(int terretoryId) {
 		this.territoryId = terretoryId;
 	}
 
-	/** 返回军团 ID / Returns the legion id */
+	/** 返回军团 ID。 / Returns the legion id. */
 	public int getLegionId() {
 		return legionId;
 	}
 
-	/** 设置军团 ID / Sets the legion id */
+	/** 设置军团 ID。 / Sets the legion id. */
 	public void setLegionId(int legionId) {
 		this.legionId = legionId;
 	}

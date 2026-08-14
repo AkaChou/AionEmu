@@ -28,17 +28,17 @@ public class KuharaBombAI2 extends AggressiveNpcAI2
 	protected void handleSpawned() {
 		super.handleSpawned();
 		this.setStateIfNot(AIState.FOLLOWING);
-		kuharaTheVolatile1 = getPosition().getWorldMapInstance().getNpc(217311); //Kuhara The Volatile.
-		kuharaTheVolatile2 = getPosition().getWorldMapInstance().getNpc(236298); //Kuhara The Volatile.
+		kuharaTheVolatile1 = getPosition().getWorldMapInstance().getNpc(217311); // 狂暴的库哈拉 / Kuhara The Volatile.
+		kuharaTheVolatile2 = getPosition().getWorldMapInstance().getNpc(236298); // 狂暴的库哈拉 / Kuhara The Volatile.
 	}
 	
 	@Override
 	protected void handleMoveArrived() {
 		if (isDestroyed.compareAndSet(false, true)) {
 			if (kuharaTheVolatile1 != null && !NpcActions.isAlreadyDead(kuharaTheVolatile1)) {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19659, 60, kuharaTheVolatile1).useNoAnimationSkill();  //Bomb Explosion.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19659, 60, kuharaTheVolatile1).useNoAnimationSkill();  // 炸弹爆炸 / Bomb Explosion.
 			} else if (kuharaTheVolatile2 != null && !NpcActions.isAlreadyDead(kuharaTheVolatile2)) {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19659, 60, kuharaTheVolatile2).useNoAnimationSkill();  //Bomb Explosion.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19659, 60, kuharaTheVolatile2).useNoAnimationSkill();  // 炸弹爆炸 / Bomb Explosion.
 			}
 		}
 	}

@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * 伊迪安模板（静态数据/XML）。
- * XML template.
+ * 伊迪安模板：攻击/防御燃烧加成。
+ * Idian template: burn attack/defend bonuses.
  *
  * @author Rolandas
  */

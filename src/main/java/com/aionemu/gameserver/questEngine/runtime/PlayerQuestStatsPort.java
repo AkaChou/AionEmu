@@ -6,7 +6,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.Objects;
 
-/** Production player-stat protocol refresh after a committed quest reward. */
+/** 已提交任务奖励后的生产玩家属性协议刷新。 / Production player-stat protocol refresh after a committed quest reward. */
 public final class PlayerQuestStatsPort implements QuestStatsPort {
 	private final QuestPlayerPort players;
 

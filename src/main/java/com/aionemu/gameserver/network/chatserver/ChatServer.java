@@ -63,7 +63,7 @@ public class ChatServer {
 	 * 获取 ChatServer 单例：优先 Spring 提供者，否则回退到内部 holder。
 	 * Returns the ChatServer singleton: prefer Spring provider, else internal holder.
 	 *
-	 * ChatServer instance
+	 * @return ChatServer 实例 / ChatServer instance
 	 */
 	public static final ChatServer getInstance() {
 		ObjectProvider<ChatServer> provider = instanceProvider;
@@ -77,7 +77,7 @@ public class ChatServer {
 	 * 设置 Spring 单例提供者。
 	 * Sets the Spring singleton provider.
 	 *
-	 * provider
+	 * @param instanceProvider 提供者 / provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<ChatServer> instanceProvider) {
 		ChatServer.instanceProvider = instanceProvider;
@@ -246,7 +246,7 @@ public class ChatServer {
 	 * 通知聊天服玩家上线并请求认证令牌。
 	 * Notifies the chat server of a player login and requests an auth token.
 	 *
-	 * logging-in player
+	 * @param player 登录中的玩家 / logging-in player
 	 */
 	public void sendPlayerLoginRequst(Player player) {
 		if (chatServer != null) {
@@ -259,7 +259,7 @@ public class ChatServer {
 	 * 通知聊天服玩家下线。
 	 * Notifies the chat server of a player logout.
 	 *
-	 * logging-out player
+	 * @param player 登出中的玩家 / logging-out player
 	 */
 	public void sendPlayerLogout(Player player) {
 		if (chatServer != null) {

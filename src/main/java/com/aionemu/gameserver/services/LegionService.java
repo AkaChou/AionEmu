@@ -2258,7 +2258,7 @@ public class LegionService {
 		public boolean canStoreLegionEmblem(Player activePlayer, int legionId, int emblemId) {
 			Legion legion = activePlayer.getLegion();
 			if (emblemId < MIN_EMBLEM_ID || emblemId > MAX_EMBLEM_ID) {
-				// Not a valid emblemId
+				// 非有效徽章 ID / Not a valid emblemId
 				return false;
 			} else if (legionId != legion.getLegionId()) {
 				// 军团 ID 不相等 / legion id not equal

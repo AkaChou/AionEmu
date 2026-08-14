@@ -40,7 +40,7 @@ public class Building {
 	@XmlAttribute(required = true)
 	protected int id;
 
-	/** 是否默认 / Whether default*/
+	/** 是否默认 / Whether default. */
 	public boolean isDefault() {
 		return isDefault;
 	}
@@ -86,7 +86,7 @@ public class Building {
 		return partsMatch;
 	}
 
-	/** 返回大小 / Returns the size*/
+	/** 返回大小 / Returns the size. */
 	public String getSize() {
 		if (StringUtils.isEmpty(size)) {
 			return DataManager.HOUSE_BUILDING_DATA.getBuilding(id).getSize();

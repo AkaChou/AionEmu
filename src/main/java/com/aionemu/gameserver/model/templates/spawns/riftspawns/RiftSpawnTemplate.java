@@ -6,7 +6,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 裂隙刷新点模板（静态数据/XML）。
- * XML template.
+ * Rift spawn template (static data / XML).
  *
  * @author Source
  */
@@ -28,7 +28,7 @@ public class RiftSpawnTemplate extends SpawnTemplate {
 		return id;
 	}
 
-	/** 设置 id / Sets the id */
+	/** 设置 ID / Sets the id */
 	public void setId(int id) {
 		this.id = id;
 	}

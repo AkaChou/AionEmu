@@ -8,7 +8,9 @@ package com.aionemu.gameserver.model.team.legion;
  */
 public enum LegionEmblemType {
 	/** 默认 / Default. */
-	DEFAULT(0x00), CUSTOM(0x80);
+	DEFAULT(0x00),
+	/** 自定义 / Custom. */
+	CUSTOM(0x80);
 
 	private byte value;
 

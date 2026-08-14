@@ -22,13 +22,13 @@ public class DoubleTransformer implements PropertyTransformer<Double> {
     public static final DoubleTransformer SHARED_INSTANCE = new DoubleTransformer();
 
     /**
- * 将字符串值转换为 Double 对象
+     * 将字符串值转换为 Double 对象
      * Transforms string value into Double object
      *
-     * @param value 要转换的字符串值 String value to transform
-     * @param field 字段对象 Field that will be transformed
- * @return 转换后的 Double 对象 Transformed Double object
-     * @throws TransformationException 如果转换失败 if transformation fails
+     * @param value 要转换的字符串值 / String value to transform
+     * @param field 字段对象 / Field that will be transformed
+     * @return 转换后的 Double 对象 / Transformed Double object
+     * @throws TransformationException 如果转换失败 / if transformation fails
      */
     public Double transform(String value, Field field) throws TransformationException {
         try {

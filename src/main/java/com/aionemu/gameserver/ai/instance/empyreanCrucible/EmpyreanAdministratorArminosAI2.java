@@ -23,12 +23,12 @@ public class EmpyreanAdministratorArminosAI2 extends NpcAI2
 	
 	private void startEvent() {
 		switch (getNpcId()) {
-			case 217744: //Administrator Arminos. [3th Floor]
+			case 217744: // 管理员 Arminos。[第 3 层] / Administrator Arminos. [3th Floor]
 				sendMsg(1500247, getObjectId(), false, 8000);
 				sendMsg(1500250, getObjectId(), false, 20000);
 				sendMsg(1500251, getObjectId(), false, 60000);
 			break;
-			case 217749: //Administrator Arminos. [4th Floor]
+			case 217749: // 管理员 Arminos。[第 4 层] / Administrator Arminos. [4th Floor]
 				sendMsg(1500252, getObjectId(), false, 8000);
 				sendMsg(1500253, getObjectId(), false, 16000);
 				sendMsg(1400982, 0, false, 25000);

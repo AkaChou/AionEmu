@@ -30,7 +30,7 @@ public class HpCondition extends Condition {
 	 * Validates whether the skill environment satisfies this condition.
 	 *
 	 * @param skill 技能环境 / skill environment
-	 * whether valid
+	 * @return 是否有效 / whether valid
 	 */
 	@Override
 	public boolean validate(Skill skill) {
@@ -49,7 +49,7 @@ public class HpCondition extends Condition {
 	 * 获取模板中配置的 HP 阈值基值。
 	 * Gets the base HP threshold configured in the template.
 	 *
-	 * HP base value
+	 * @return HP 阈值基值 / HP base value
 	 */
 	public int getHpValue() {
 		return value;

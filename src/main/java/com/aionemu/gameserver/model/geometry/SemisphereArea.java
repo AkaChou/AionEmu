@@ -16,7 +16,8 @@ public class SemisphereArea extends SphereArea {
 	}
 
 	/**
-	 * @param point Whether inside 3 d
+	 * @param point 要检查的点 / point to check
+	 * @return 是否在半球区域内（点须位于球心上方） / Whether inside 3D (point must be above the sphere center)
 	 */
 	@Override
 	public boolean isInside3D(Point3D point) {
@@ -24,7 +25,7 @@ public class SemisphereArea extends SphereArea {
 	}
 
 	/**
-	 * @return Whether inside 3 d
+	 * @return 是否在半球区域内（点须位于球心上方） / Whether inside 3D (point must be above the sphere center)
 	 */
 	@Override
 	public boolean isInside3D(float x, float y, float z) {
@@ -32,7 +33,8 @@ public class SemisphereArea extends SphereArea {
 	}
 
 	/**
-	 * @param point Whether inside z
+	 * @param point 要检查的点 / point to check
+	 * @return Z 坐标是否在半球范围内 / Whether inside z
 	 */
 	@Override
 	public boolean isInsideZ(Point3D point) {

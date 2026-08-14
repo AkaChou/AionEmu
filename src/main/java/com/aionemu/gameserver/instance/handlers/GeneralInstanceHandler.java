@@ -125,11 +125,11 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	 * 在当前副本刷出一次性 NPC。
 	 * Spawn a one-shot NPC in the current instance.
 	 *
-	 * NPC 模板 ID / NPC template id
+	 * @param npcId NPC 模板 ID / NPC template id
 	 * @param x X 坐标 / X coordinate
 	 * @param y Y 坐标 / Y coordinate
 	 * @param z Z 坐标 / Z coordinate
-	 * 朝向 / heading
+	 * @param heading 朝向 / heading
 	 * @return 生成的可见对象 / spawned visible object
 	 */
 	protected VisibleObject spawn(int npcId, float x, float y, float z, byte heading) {
@@ -150,12 +150,12 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	 * 在当前副本刷出绑定实体 ID 的一次性 NPC。
 	 * Spawn a one-shot NPC bound to an entity id in the current instance.
 	 *
-	 * NPC 模板 ID / NPC template id
+	 * @param npcId NPC 模板 ID / NPC template id
 	 * @param x X 坐标 / X coordinate
 	 * @param y Y 坐标 / Y coordinate
 	 * @param z Z 坐标 / Z coordinate
-	 * 朝向 / heading
-	 * entity id
+	 * @param heading 朝向 / heading
+	 * @param entityId 实体 ID / entity id
 	 * @return 生成的可见对象 / spawned visible object
 	 */
 	protected VisibleObject spawn(int npcId, float x, float y, float z, byte heading, int entityId) {
@@ -168,9 +168,7 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	 * 按 NPC 模板 ID 从当前实例查找 NPC。
 	 * Look up an NPC by template id in the current instance.
 	 *
-	 * NPC 模板 ID / NPC template id
-	 *
-	 * @param npcId
+	 * @param npcId NPC 模板 ID / NPC template id
 	 * @return NPC；不存在则为 {@code null} / NPC, or {@code null}
 	 */
 	protected Npc getNpc(final int npcId) {
@@ -181,10 +179,10 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	 * 向副本内发送喊话/系统消息（立即）。
 	 * Send a shout/system message inside the instance (immediately).
 	 *
-	 * message id
+	 * @param msg 消息 ID / message id
 	 * @param Obj 关联对象 ID / related object id
-	 * whether shout
-	 * color
+	 * @param isShout 是否喊话 / whether shout
+	 * @param color 颜色 / color
 	 */
 	protected void sendMsg(int msg, int Obj, boolean isShout, int color) {
 		sendMsg(msg, Obj, isShout, color, 0);
@@ -194,10 +192,10 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	 * 向副本内发送喊话/系统消息（可延迟）。
 	 * Send a shout/system message inside the instance (optionally delayed).
 	 *
-	 * message id
+	 * @param msg 消息 ID / message id
 	 * @param Obj 关联对象 ID / related object id
-	 * whether shout
-	 * color
+	 * @param isShout 是否喊话 / whether shout
+	 * @param color 颜色 / color
 	 * @param time 延迟毫秒 / delay in ms
 	 */
 	protected void sendMsg(int msg, int Obj, boolean isShout, int color, int time) {

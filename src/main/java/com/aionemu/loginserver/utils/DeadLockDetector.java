@@ -67,7 +67,7 @@ public class DeadLockDetector extends Thread {
      *
      * @param sleepTime 检测间隔（秒） / check interval in seconds
      * @param doWhenDL 死锁处理策略 / action on deadlock
-     * exit callback
+     * @param exitHandler 退出回调 / exit callback
      */
     public DeadLockDetector(int sleepTime, byte doWhenDL, IntConsumer exitHandler) {
         super("DeadLockDetector");

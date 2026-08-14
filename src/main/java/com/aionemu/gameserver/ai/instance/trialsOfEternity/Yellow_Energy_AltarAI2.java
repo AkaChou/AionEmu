@@ -66,6 +66,10 @@ public class Yellow_Energy_AltarAI2 extends NpcAI2
 		}
 	}
 	
+	/**
+	 * 消耗黄色典籍完成祭坛使用：在永恒试炼副本内封锁黄色祭坛并移除相关 NPC。
+	 * Consumes a Yellow Tome to finish using the altar: blocks the yellow altar and removes related NPCs in the Trials Of Eternity instance.
+	 */
 	protected void handleUseItemFinish(Player player) {
 		if (!player.getInventory().decreaseByItemId(185000300, 1)) {
 			// 需要黄色典籍阻断黄色祭坛的能量。 / You need a Yellow Tome to block the energy from the yellow altar.

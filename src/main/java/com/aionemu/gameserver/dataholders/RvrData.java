@@ -43,7 +43,7 @@ public class RvrData {
 	 * 返回已加载的 RVR 据点数量。
 	 * Returns the number of loaded RVR locations.
 	 *
-	 * location count
+	 * @return 已加载的RVR 地点数量 / Returns the number of loaded RVR locations.
 	 */
 	public int size() {
 		return rvr.size();

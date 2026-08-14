@@ -33,7 +33,7 @@ public class cmd_faction extends PlayerCommand {
 	 * Sends a message to same-faction players after cooldown/fee checks.
 	 *
 	 * @param player 执行命令的玩家 / invoking player
-	 * command parameters
+	 * @param params 命令参数 / command parameters
 	 */
 	@Override
 	public void execute(Player player, String... params) {

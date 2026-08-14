@@ -16,7 +16,7 @@ import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-/** 全服共享限量任务名额服务。 */
+/** 全服共享限量任务名额服务。 / Shared limited quest-slot service across the server. */
 @Slf4j
 public final class LimitedQuestService {
 

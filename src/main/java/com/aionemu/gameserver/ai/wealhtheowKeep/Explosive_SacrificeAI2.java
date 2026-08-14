@@ -26,10 +26,15 @@ public class Explosive_SacrificeAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
+		// 施加爆炸技能并启动 5 秒自毁计时。 / Applies the explosion skill and starts the 5s self-destruct timer.
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21760, 46, getOwner()).useNoAnimationSkill(); //Explosion.
 		startLifeTask();
 	}
-	
+
+	/**
+	 * 5 秒后删除自身（爆炸自毁）。
+	 * Deletes itself after 5 seconds (explosive self-destruct).
+	 */
 	private void startLifeTask() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override

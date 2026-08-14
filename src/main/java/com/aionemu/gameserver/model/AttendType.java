@@ -12,7 +12,11 @@ import jakarta.xml.bind.annotation.XmlEnum;
 public enum AttendType {
 
 	/** 无 / None. */
-	NONE(0), BASIC(1), ANNIVERSARY(2);
+	NONE(0),
+	/** 基础签到 / Basic */
+	BASIC(1),
+	/** 周年签到 / Anniversary */
+	ANNIVERSARY(2);
 
 	private int id;
 

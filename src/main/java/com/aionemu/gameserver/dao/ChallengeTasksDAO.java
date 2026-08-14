@@ -15,7 +15,7 @@ public abstract class ChallengeTasksDAO implements DAO {
 	 * 加载指定所有者与类型的挑战任务。
 	 * Loads challenge tasks for the given owner and type.
 	 *
-	 * owner ID
+	 * @param ownerId 所有者 ID / owner ID
 	 * @param type 挑战类型 / challenge type
 	 * @return 任务 ID 到任务的映射 / map of task ID to challenge task
 	 */
@@ -33,7 +33,7 @@ public abstract class ChallengeTasksDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
 	 *
-	 * class name
+	 * @return 类名 / class name
 	 */
 	@Override
 	public String getClassName() {

@@ -88,6 +88,7 @@ public class IDTiamatT1GravityKeyNamed65AlAI2 extends AggressiveNpcAI2
 					cancelPhaseTask();
 				} else {
 					GameEngineServices.skillEngine().getSkill(getOwner(), 20155, 60, getOwner()).useNoAnimationSkill(); //Gravitational Collapse.
+					// 引力坍缩。 / Gravitational Collapse.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -120,6 +121,7 @@ public class IDTiamatT1GravityKeyNamed65AlAI2 extends AggressiveNpcAI2
 				public void run() {
 					if (!isAlreadyDead()) {
 						spawn(282729, x, y, z, (byte) 0); //Thunderbolt Whirlpool.
+						// 雷霆漩涡。 / Thunderbolt Whirlpool.
 					}
 				}
 			}, 3000);
@@ -155,6 +157,7 @@ public class IDTiamatT1GravityKeyNamed65AlAI2 extends AggressiveNpcAI2
 		final WorldPosition p = getPosition();
 		if (p != null) {
 			deleteNpcs(p.getWorldMapInstance().getNpcs(282729)); //Thunderbolt Whirlpool.
+			// 雷霆漩涡。 / Thunderbolt Whirlpool.
 		}
 		cancelPhaseTask();
 		sendMsg(1401141);

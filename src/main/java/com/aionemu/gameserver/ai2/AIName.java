@@ -19,7 +19,7 @@ public @interface AIName {
 	 * AI 注册名称。
 	 * Registered AI name.
 	 *
-	 * AI name
+	 * @return AI 注册名称 / registered AI name
 	 */
 	String value();
 }

@@ -53,7 +53,7 @@ public class PetMerchandData {
 	 * 返回已加载的商人条目数量。
 	 * Returns the number of loaded merchant entries.
 	 *
-	 * entry count
+	 * @return 已加载的商人条目数量 / Returns the number of loaded merchant entries.
 	 */
 	public int size() {
 		return merchandsById.size();

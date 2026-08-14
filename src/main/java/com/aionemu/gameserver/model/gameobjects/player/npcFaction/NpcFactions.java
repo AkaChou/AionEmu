@@ -127,7 +127,7 @@ public class NpcFactions {
 		}
 	}
 
-	/** 进入公会 / enter Guild. */
+	/** 进入势力 / Enter guild. */
 	public void enterGuild(Npc npc) {
 		int targetObjectId = npc.getObjectId();
 		NpcFactionTemplate npcFactionTemplate = DataManager.NPC_FACTIONS_DATA.getNpcFactionByNpcId(npc.getNpcId());
@@ -214,7 +214,7 @@ public class NpcFactions {
 		startQuest(questTemplate.getNpcFactionId());
 	}
 
-	/** Canonical metadata lifecycle entry point after QuestTemplate retirement. */
+	/** QuestTemplate 退役后的规范元数据生命周期入口。 / Canonical metadata lifecycle entry point after QuestTemplate retirement. */
 	public void startQuest(int npcFactionId) {
 		NpcFaction npcFaction = factions.get(npcFactionId);
 		if (npcFaction == null || !npcFaction.isActive()) {
@@ -231,7 +231,7 @@ public class NpcFactions {
 		abortQuest(questTemplate.getNpcFactionId());
 	}
 
-	/** Canonical metadata lifecycle entry point after QuestTemplate retirement. */
+	/** QuestTemplate 退役后的规范元数据生命周期入口。 / Canonical metadata lifecycle entry point after QuestTemplate retirement. */
 	public void abortQuest(int npcFactionId) {
 		NpcFaction npcFaction = getNpcFactionById(npcFactionId);
 		if (npcFaction == null || !npcFaction.isActive()) {
@@ -246,7 +246,7 @@ public class NpcFactions {
 		completeQuest(questTemplate.getNpcFactionId(), questTemplate.getMentorType() == QuestMentorType.MENTOR);
 	}
 
-	/** Canonical metadata lifecycle entry point after QuestTemplate retirement. */
+	/** QuestTemplate 退役后的规范元数据生命周期入口。 / Canonical metadata lifecycle entry point after QuestTemplate retirement. */
 	public void completeQuest(int npcFactionId, boolean mentor) {
 		NpcFaction npcFaction = getNpcFactionById(npcFactionId);
 		if (npcFaction == null || !npcFaction.isActive()) {
@@ -371,7 +371,7 @@ public class NpcFactions {
 		return canStartQuest(template.isMentor());
 	}
 
-	/** Canonical metadata entry point used after legacy QuestTemplate retirement. */
+	/** 旧版 QuestTemplate 退役后使用的规范元数据入口。 / Canonical metadata entry point used after legacy QuestTemplate retirement. */
 	public boolean canStartQuest(boolean mentor) {
 		int type = mentor ? 1 : 0;
 		NpcFaction faction = activeNpcFaction[type];

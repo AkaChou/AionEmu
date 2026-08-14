@@ -25,7 +25,7 @@ public enum AiNames {
 	 * 获取 AI 注册名称字符串。
 	 * Returns the AI registration name string.
 	 *
-	 * name
+	 * @return 名称 / name
 	 */
 	public String getName() {
 		return name;

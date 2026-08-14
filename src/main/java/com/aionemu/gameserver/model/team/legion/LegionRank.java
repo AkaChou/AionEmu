@@ -7,8 +7,16 @@ package com.aionemu.gameserver.model.team.legion;
  * @author Simple
  */
 public enum LegionRank {
-	/** All Legion Ranks  / All Legion Ranks * */
-	BRIGADE_GENERAL(0), DEPUTY(1), CENTURION(2), LEGIONARY(3), VOLUNTEER(4);
+	/** 军团长 / Brigade general. */
+	BRIGADE_GENERAL(0),
+	/** 副官 / Deputy. */
+	DEPUTY(1),
+	/** 百夫长 / Centurion. */
+	CENTURION(2),
+	/** 军团兵 / Legionary. */
+	LEGIONARY(3),
+	/** 志愿兵 / Volunteer. */
+	VOLUNTEER(4);
 
 	private byte rank;
 
@@ -17,9 +25,10 @@ public enum LegionRank {
 	}
 
 	/**
-	 * 返回 client - sideid 用于此。 / Returns client-side id for this
+	 * 返回客户端使用的军阶 ID。
+	 * Returns client-side id for this.
 	 *
-	 * @return byte
+	 * @return 军阶 ID / rank id
 	 */
 	public byte getRankId() {
 		return this.rank;

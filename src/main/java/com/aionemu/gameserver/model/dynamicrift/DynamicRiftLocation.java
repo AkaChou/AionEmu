@@ -38,13 +38,13 @@ public class DynamicRiftLocation {
 		return isActive;
 	}
 
-	/** 设置 active dynamic rift / Sets the active dynamic rift */
+	/** 设置激活的动态裂隙 / Sets the active dynamic rift */
 	public void setActiveDynamicRift(DynamicRift<DynamicRiftLocation> dynamicRift) {
 		isActive = dynamicRift != null;
 		this.activeDynamicRift = dynamicRift;
 	}
 
-	/** 返回 active dynamic rift / Returns the active dynamic rift */
+	/** 返回激活的动态裂隙 / Returns the active dynamic rift */
 	public DynamicRift<DynamicRiftLocation> getActiveDynamicRift() {
 		return activeDynamicRift;
 	}

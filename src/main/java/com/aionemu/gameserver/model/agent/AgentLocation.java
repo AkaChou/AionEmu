@@ -38,13 +38,13 @@ public class AgentLocation {
 		return isActive;
 	}
 
-	/** 设置 active agent / Sets the active agent */
+	/** 设置当前战斗 / Sets the active fight */
 	public void setActiveAgent(AgentFight<AgentLocation> agent) {
 		isActive = agent != null;
 		this.activeAgent = agent;
 	}
 
-	/** 返回 active agent / Returns the active agent */
+	/** 返回当前战斗 / Returns the active fight */
 	public AgentFight<AgentLocation> getActiveAgent() {
 		return activeAgent;
 	}
@@ -59,7 +59,7 @@ public class AgentLocation {
 		return id;
 	}
 
-	/** 返回是否已刷新 / Returns the spawned */
+	/** 返回已刷新的对象列表 / Returns the spawned objects */
 	public List<VisibleObject> getSpawned() {
 		return spawned;
 	}

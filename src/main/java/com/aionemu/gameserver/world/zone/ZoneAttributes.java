@@ -52,7 +52,7 @@ public enum ZoneAttributes {
 	 * 返回该属性的位标志值。
 	 * Return the bit-flag value of this attribute.
 	 *
-	 * bit-flag value
+	 * @return 位标志值 / the bit-flag value
 	 */
 	public int getId() {
 		return id;
@@ -62,9 +62,7 @@ public enum ZoneAttributes {
 	 * 将属性列表合并为整数位掩码。
 	 * Merge a list of attributes into an integer bit-mask.
 	 *
-	 * attribute list
-	 *
-	 * @param flagValues
+	 * @param flagValues 属性列表 / the attribute list
 	 * @return 合并后的位掩码 / combined bit-mask
 	 */
 	public static Integer fromList(List<ZoneAttributes> flagValues) {

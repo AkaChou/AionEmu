@@ -59,9 +59,7 @@ public class MotionData {
 	 * 按动作名获取动作时间。
 	 * Returns the motion time for the given name.
 	 *
-	 * motion name
-	 *
-	 * @param name
+	 * @param name 套装名 / set name
 	 * @return 动作时间或 null / motion time or null
 	 */
 	public MotionTime getMotionTime(String name) {

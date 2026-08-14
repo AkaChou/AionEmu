@@ -66,7 +66,7 @@ public class Artifact_Of_ProtectionAI2 extends NpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				// 出现了神器守护者！ / An Artifact Protector has appeared!
+				// 实体守护者登场了！ / An Artifact Protector has appeared!
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdD_Wakeup);
 			}
 		});
@@ -75,7 +75,7 @@ public class Artifact_Of_ProtectionAI2 extends NpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				// 出现了凶猛的神器守护者！ / A Ferocious Artifact Protector has appeared!
+				// 狂暴的实体守护者登场！ / A Ferocious Artifact Protector has appeared!
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdDH_Wakeup);
 			}
 		});

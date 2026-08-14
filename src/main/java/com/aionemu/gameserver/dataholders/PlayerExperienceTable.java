@@ -23,9 +23,9 @@ public class PlayerExperienceTable {
 	 * 返回玩家在指定等级起始时拥有的经验值（例如 1 级为 0）。
 	 * Returns the experience a player has at the start of the given level (e.g. 0 at level 1).
 	 *
-	 * level
-	 * @return 起始经验；若 level 超过最大等级则抛出 IllegalArgumentException
-	 *         start experience; throws IllegalArgumentException if level exceeds max
+	 * @param level 等级 / level
+	 * @return 玩家在指定等级开始时的经验值（如 1 级为 0） / start experience at the given level (e.g. 0 at level 1)
+	 * @throws IllegalArgumentException 等级超过最大上限 / if level exceeds max
 	 */
 	public long getStartExpForLevel(int level) {
 		if (level > experience.length) {
@@ -38,8 +38,8 @@ public class PlayerExperienceTable {
 	 * 根据经验值计算对应等级。
 	 * Calculates the level for the given experience value.
 	 *
-	 * experience value
-	 * level
+	 * @param expValue 经验值 / experience value
+	 * @return 对应等级 / corresponding level
 	 */
 	public int getLevelForExp(long expValue) {
 		int level = 0;
@@ -59,7 +59,7 @@ public class PlayerExperienceTable {
 	 * 返回玩家可达到的最大等级。
 	 * Returns the maximum level a player can obtain.
 	 *
-	 * max level
+	 * @return 玩家可达到的最高等级 / Returns the maximum level a player can obtain.
 	 */
 	public int getMaxLevel() {
 		return experience == null ? 0 : experience.length;

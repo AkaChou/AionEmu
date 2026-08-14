@@ -55,7 +55,7 @@ public class SlimAI2 extends GeneralNpcAI2 {
 	@Override
 	protected void handleSpawned() {
 		ZonedDateTime now = ZonedDateTime.now();
-		int currentDay = now.getDayOfWeek().getValue(); // 1 (Monday) to 7 (Sunday)
+		int currentDay = now.getDayOfWeek().getValue(); // 1（周一）至 7（周日） / 1 (Monday) to 7 (Sunday)
 		
 		switch (getNpcId()) {
 			case 831815:

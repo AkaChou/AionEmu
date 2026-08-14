@@ -93,7 +93,7 @@ public class GameServerNetworkGateway {
      * 当前是否为 boot 嵌入式运行模式。
      * Whether the process is running in boot-embedded mode.
      *
-     * true when boot-embedded
+     * @return 处于 boot-embedded 模式为 {@code true} / {@code true} when boot-embedded
      */
     public boolean isBootEmbedded() {
         return AionRuntimeMode.isBootEmbedded();
@@ -103,7 +103,7 @@ public class GameServerNetworkGateway {
      * 是否启用聊天服务器连接。
      * Whether chat-server connectivity is enabled.
      *
-     * true when chat server is enabled
+     * @return 启用为 {@code true} / {@code true} when chat server is enabled
      */
     public boolean isChatServerEnabled() {
         return GSConfig.ENABLE_CHAT_SERVER;
@@ -174,7 +174,7 @@ public class GameServerNetworkGateway {
      * 解析登录服连接实例。
      * Resolve the login-server instance.
      *
-     * Login server
+     * @return 登录服连接 / Login server
      */
     private LoginServer loginServerInstance() {
         if (loginServerProvider == null) {
@@ -187,7 +187,7 @@ public class GameServerNetworkGateway {
      * 解析聊天服连接实例。
      * Resolve the chat-server instance.
      *
-     * Chat server
+     * @return 聊天服连接 / Chat server
      */
     private ChatServer chatServerInstance() {
         if (chatServerProvider == null) {

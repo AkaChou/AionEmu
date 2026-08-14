@@ -80,7 +80,7 @@ public enum DialogPage {
 	 * 返回页面 ID。
 	 * Returns the page id.
 	 *
-	 * page id
+	 * @return 页面 ID / page id
 	 */
 	public int id() {
 		return id;
@@ -90,7 +90,7 @@ public enum DialogPage {
 	 * 返回对话动作 ID。
 	 * Returns the dialog action id.
 	 *
-	 * action id
+	 * @return 对话动作 ID / action id
 	 */
 	public int actionId() {
 		return action.id();
@@ -100,8 +100,8 @@ public enum DialogPage {
 	 * 按对话动作 ID 查找页面；找不到返回 {@link #NULL}。
 	 * Finds page by dialog action id; returns {@link #NULL} if absent.
 	 *
-	 * dialog action id
-	 * dialog page
+	 * @param dialogId 对话动作 ID / dialog action id
+	 * @return 对话页面 / dialog page
 	 */
 	public static DialogPage getPageByAction(int dialogId) {
 		for (DialogPage page : values()) {

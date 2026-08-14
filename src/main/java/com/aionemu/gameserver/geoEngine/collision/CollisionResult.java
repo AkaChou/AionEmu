@@ -25,8 +25,8 @@ public class CollisionResult implements Comparable<CollisionResult> {
 	 * 以接触点与距离构造结果。
 	 * Constructs a result with contact point and distance.
 	 *
-	 * contact point
-	 * distance
+	 * @param contactPoint 接触点 / contact point
+	 * @param distance 距离 / distance
 	 */
 	public CollisionResult(Vector3f contactPoint, float distance) {
 		this.contactPoint = contactPoint;
@@ -44,7 +44,7 @@ public class CollisionResult implements Comparable<CollisionResult> {
 	 * 设置接触点。
 	 * Sets the contact point.
 	 *
-	 * contact point
+	 * @param point 接触点 / contact point
 	 */
 	public void setContactPoint(Vector3f point) {
 		this.contactPoint = point;
@@ -54,7 +54,7 @@ public class CollisionResult implements Comparable<CollisionResult> {
 	 * 设置距离。
 	 * Sets the distance.
 	 *
-	 * distance
+	 * @param dist 距离 / distance
 	 */
 	public void setDistance(float dist) {
 		this.distance = dist;
@@ -82,7 +82,7 @@ public class CollisionResult implements Comparable<CollisionResult> {
 	 * 设置接触法线。
 	 * Sets the contact normal.
 	 *
-	 * normal
+	 * @param norm 法线 / normal
 	 */
 	public void setContactNormal(Vector3f norm) {
 		this.contactNormal = norm;
@@ -102,7 +102,7 @@ public class CollisionResult implements Comparable<CollisionResult> {
 	 * 返回接触法线。
 	 * Returns the contact normal.
 	 *
-	 * normal
+	 * @return 接触法线 / normal
 	 */
 	public Vector3f getContactNormal() {
 		return contactNormal;
@@ -112,7 +112,7 @@ public class CollisionResult implements Comparable<CollisionResult> {
 	 * 返回接触点。
 	 * Returns the contact point.
 	 *
-	 * contact point
+	 * @return 接触点 / contact point
 	 */
 	public Vector3f getContactPoint() {
 		return contactPoint;
@@ -122,7 +122,7 @@ public class CollisionResult implements Comparable<CollisionResult> {
 	 * 返回命中几何体。
 	 * Returns the hit geometry.
 	 *
-	 * spatial
+	 * @return 命中空间对象 / spatial
 	 */
 	public Spatial getGeometry() {
 		return geometry;
@@ -132,7 +132,7 @@ public class CollisionResult implements Comparable<CollisionResult> {
 	 * 返回距离。
 	 * Returns the distance.
 	 *
-	 * distance
+	 * @return 距离 / distance
 	 */
 	public float getDistance() {
 		return distance;

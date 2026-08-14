@@ -125,7 +125,7 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	}
 
 	/**
-	 * @return Whether feeding time
+	 * @return 是否处于喂食时间 / Whether feeding time
 	 */
 	public boolean isFeedingTime() {
 		return feedingTime;
@@ -229,7 +229,7 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 		lastSentPoints = points;
 	}
 
-	/** Increase shuggle counter / Increase shuggle counter */
+	/** 增加亲密度计数 / Increase shuggle counter */
 	public final boolean increaseShuggleCounter() {
 		if (getMoodRemainingTime() > 0) {
 			return false;
@@ -303,6 +303,7 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	}
 
 	/**
+	 * 保存宠物心情数据。
 	 * Save pet mood data
 	 */
 	public void savePetMoodData() {
@@ -320,7 +321,7 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	}
 
 	/**
-	 * @return Whether looting
+	 * @return 是否正在拾取 / Whether looting
 	 */
 	public boolean isLooting() {
 		return this.isLooting;
@@ -337,7 +338,7 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	}
 
 	/**
-	 * @return Whether buffing
+	 * @return 是否正在施放增益 / Whether buffing
 	 */
 	public boolean isBuffing() {
 		return this.isBuffing;

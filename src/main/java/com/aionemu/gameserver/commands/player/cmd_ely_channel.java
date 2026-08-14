@@ -26,7 +26,7 @@ public class cmd_ely_channel extends PlayerCommand {
 	 * Broadcasts a channel message to same-race online players and charges a fee.
 	 *
 	 * @param player 执行命令的玩家 / invoking player
-	 * command parameters
+	 * @param params 命令参数 / command parameters
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -103,7 +103,7 @@ public class cmd_ely_channel extends PlayerCommand {
 	 * Shows usage when arguments are invalid.
 	 *
 	 * @param player 执行命令的玩家 / invoking player
-	 * failure message
+	 * @param message 失败提示消息 / failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

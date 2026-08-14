@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Ride 边界模板（静态数据/XML）。
- * XML template.
+ * 骑乘边界模板（静态数据/XML）。
+ * Ride bound template (static data / XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -77,7 +77,7 @@ public class CaptainXastaAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19729, 60, getOwner()).useNoAnimationSkill(); //Mana Treatment V.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19729, 60, getOwner()).useNoAnimationSkill(); // 魔力治疗 V / Mana Treatment V.
 					sendMsg(1500392);
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
@@ -110,7 +110,7 @@ public class CaptainXastaAI2 extends AggressiveNpcAI2
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
-						spawn(282604, x, y, z, (byte) 0); //Inhibitor Sikar.
+						spawn(282604, x, y, z, (byte) 0); // 抑制者西卡尔 / Inhibitor Sikar.
 					}
 				}
 			}, 3000);
@@ -141,7 +141,7 @@ public class CaptainXastaAI2 extends AggressiveNpcAI2
 	private void deleteHelpers() {
 		WorldMapInstance instance = getPosition().getWorldMapInstance();
 		if (instance != null) {
-			deleteNpcs(instance.getNpcs(282604)); //Inhibitor Sikar.
+			deleteNpcs(instance.getNpcs(282604)); // 抑制者西卡尔 / Inhibitor Sikar.
 		}
 	}
 	

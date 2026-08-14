@@ -9,7 +9,9 @@ import java.util.NoSuchElementException;
 
 public enum SellLimit {
 	/** Limit 1 65 / Limit 1 65 */
-	LIMIT_1_65(1, 65, 292000047L), LIMIT_66_83(66, 83, 392000047L);
+	LIMIT_1_65(1, 65, 292000047L),
+	/** Limit 66 83 / Limit 66 83 */
+	LIMIT_66_83(66, 83, 392000047L);
 
 	private int playerMinLevel;
 	private int playerMaxLevel;

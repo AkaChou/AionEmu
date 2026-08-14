@@ -21,7 +21,7 @@ final class GameWorldServiceFallbacks {
      * 回退 GeoService。
      * Fallback GeoService.
      *
-     * GeoService singleton
+     * @return GeoService 单例 / GeoService singleton
      */
     static GeoService geoService() {
         return GeoServiceFallback.INSTANCE;
@@ -31,7 +31,7 @@ final class GameWorldServiceFallbacks {
      * 回退 PathService。
      * Fallback PathService.
      *
-     * PathService singleton
+     * @return PathService 单例 / PathService singleton
      */
     static PathService pathService() {
         return PathService.getInstance();
@@ -41,7 +41,7 @@ final class GameWorldServiceFallbacks {
      * 回退 DropRegistrationService。
      * Fallback DropRegistrationService.
      *
-     * DropRegistrationService singleton
+     * @return DropRegistrationService 单例 / DropRegistrationService singleton
      */
     static DropRegistrationService dropRegistrationService() {
         return DropRegistrationServiceFallback.INSTANCE;

@@ -26,7 +26,7 @@ public class Sleep_FlowerAI2 extends NpcAI2
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
         if (dialogId == 1012) {
             switch (getNpcId()) {
-                case 730325: //Sleep Flower.
+                case 730325: // 睡眠花 / Sleep Flower.
                 if (player.getInventory().getItemCountByItemId(164000142) < 1) {
                     PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1012));
                     PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400701));

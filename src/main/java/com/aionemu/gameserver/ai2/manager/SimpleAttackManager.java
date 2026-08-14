@@ -25,7 +25,7 @@ public class SimpleAttackManager {
 	 * 执行 NPC 普通攻击：防重复调度、校验射程后延迟或立即出手。
 	 * Performs an NPC simple attack: guards against re-scheduling, validates range, then delays or attacks immediately.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param delay 攻击延迟（毫秒） / attack delay in milliseconds
 	 */
 	public static void performAttack(NpcAI2 npcAI, int delay) {
@@ -34,11 +34,13 @@ public class SimpleAttackManager {
 		}
 
 		// 检查是否已经调度了攻击，防止重复调度导致一次攻击多次伤害
+		// Check whether an attack is already scheduled to avoid multi-hit from one attack
 		if (npcAI.getOwner().getGameStats().isNextAttackScheduled()) {
 			if (npcAI.isLogging()) {
 				AI2Logger.info(npcAI, "Attack already scheduled, scheduling checked attack");
 			}
 			// 如果已经调度了攻击，则安排带检查的攻击动作
+			// If an attack is already scheduled, schedule a checked attack action
 			scheduleCheckedAttackAction(npcAI, delay);
 			return;
 		}
@@ -52,12 +54,15 @@ public class SimpleAttackManager {
 		}
 
 		// 设置下次攻击时间，标记攻击已调度
+		// Set the next attack time, marking the attack as scheduled
 		npcAI.getOwner().getGameStats().setNextAttackTime(System.currentTimeMillis() + delay);
 		if (delay > 0) {
 			// 延迟执行攻击
+			// Execute the attack after a delay
 			GameThreadPoolServices.threadPoolManager().schedule(new SimpleAttackAction(npcAI), delay);
 		} else {
 			// 立即执行攻击
+			// Execute the attack immediately
 			attackAction(npcAI);
 		}
 	}
@@ -66,7 +71,7 @@ public class SimpleAttackManager {
 	 * 安排带检查的攻击动作（已有调度时使用）。
 	 * Schedules a checked attack action when an attack is already scheduled.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param delay 攻击延迟（毫秒） / attack delay in milliseconds
 	 */
 	private static void scheduleCheckedAttackAction(NpcAI2 npcAI, int delay) {
@@ -74,18 +79,19 @@ public class SimpleAttackManager {
 			AI2Logger.info(npcAI, "Scheduling checked attack " + delay);
 		}
 		// 安排带检查的攻击动作，在执行前会再次检查攻击是否已调度
+		// Schedule a checked attack action that re-verifies scheduling before execution
 		GameThreadPoolServices.threadPoolManager().schedule(new SimpleCheckedAttackAction(npcAI), delay);
 	}
 
-	/**
-	 * 判断目标是否在攻击射程内（含存活、可见与几何范围）。
-	 * Returns whether the target is in attack range (alive, visible, and within geometric range).
-	 *
-	 * attacking NPC
-	 *
-	 * @param npc
-	 * @return 在射程内为 {@code true} / {@code true} if in attack range
-	 */
+    /**
+     * 判断目标是否在攻击射程内（含存活、可见与几何范围）。
+     * Returns whether the target is in attack range (alive, visible, and within geometric range).
+     * 
+     * @return 攻击 NPC / attacking NPC
+     * 
+     * @param npc
+     * @return 在射程内为 {@code true} / {@code true} if in attack range
+     */
     public static boolean isTargetInAttackRange(Npc npc) {
     if (npc == null) {
         return false;
@@ -134,12 +140,12 @@ public class SimpleAttackManager {
         }
     }
 
-	/**
-	 * 执行实际的攻击动作；目标无效或过远时触发相应 AI 事件。
-	 * Performs the actual attack action; fires AI events if the target is invalid or too far.
-	 *
-	 * NPC AI instance
-	 */
+    /**
+     * 执行实际的攻击动作；目标无效或过远时触发相应 AI 事件。
+     * Performs the actual attack action; fires AI events if the target is invalid or too far.
+     * 
+     * @param npcAI NPC AI 实例 / NPC AI instance
+     */
     protected static void attackAction(final NpcAI2 npcAI) {
     if (!npcAI.isInState(AIState.FIGHT)) {
         return;
@@ -214,6 +220,7 @@ public class SimpleAttackManager {
 		@Override
 		public void run() {
 			// 执行前再次检查攻击是否已调度，防止重复攻击
+			// Re-check scheduling before execution to prevent duplicate attacks
 			if (!npcAI.getOwner().getGameStats().isNextAttackScheduled()) {
 				attackAction(npcAI);
 			} else {

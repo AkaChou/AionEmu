@@ -7,9 +7,9 @@ package com.aionemu.gameserver.utils.stats.enums;
 public enum MAXMP {
 	WARRIOR(100), GLADIATOR(100), TEMPLAR(100), SCOUT(100), ASSASSIN(100), RANGER(100), MAGE(100), SORCERER(100),
 	SPIRIT_MASTER(100), PRIEST(100), CLERIC(100), CHANTER(100),
-	// 资讯类 4.3 / News Class 4.3
+	// 新职业 4.3 / New Class 4.3
 	TECHNIST(100), GUNSLINGER(100), MUSE(100), SONGWEAVER(100),
-	// 资讯类 4.5 / News Class 4.5
+	// 新职业 4.5 / New Class 4.5
 	AETHERTECH(100);
 
 	/**
@@ -26,7 +26,7 @@ public enum MAXMP {
 	 * 获取该职业的基础属性值。
 	 * Returns the baseline attribute value for this class.
 	 *
-	 * Attribute value
+	 * @return 基础属性值 / baseline attribute value
 	 */
 	public int getValue() {
 		return value;

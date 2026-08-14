@@ -36,9 +36,9 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 	 * 新增玩家宏。
 	 * Adds a player macro.
 	 *
-	 * player id
-	 * 宏槽位 / macro slot
-	 * macro text
+	 * @param playerId 玩家 ID / player id
+	 * @param macroPosition 宏槽位 / macro slot
+	 * @param macro 宏文本 / macro text
 	 */
 	@Override
 	public void addMacro(final int playerId, final int macroPosition, final String macro) {
@@ -59,9 +59,9 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 	 * 更新玩家宏。
 	 * Updates a player macro.
 	 *
-	 * player id
-	 * 宏槽位 / macro slot
-	 * macro text
+	 * @param playerId 玩家 ID / player id
+	 * @param macroPosition 宏槽位 / macro slot
+	 * @param macro 宏文本 / macro text
 	 */
 	@Override
 	public void updateMacro(final int playerId, final int macroPosition, final String macro) {
@@ -82,8 +82,8 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 	 * 删除玩家宏。
 	 * Deletes a player macro.
 	 *
-	 * player id
-	 * 宏槽位 / macro slot
+	 * @param playerId 玩家 ID / player id
+	 * @param macroPosition 宏槽位 / macro slot
 	 */
 	@Override
 	public void deleteMacro(final int playerId, final int macroPosition) {
@@ -103,8 +103,8 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 	 * 恢复玩家全部宏。
 	 * Restores all macros for a player.
 	 *
-	 * player id
-	 * macro list
+	 * @param playerId 玩家 ID / player id
+	 * @return 宏列表 / macro list
 	 */
 	@Override
 	public MacroList restoreMacrosses(final int playerId) {
@@ -133,10 +133,10 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
 	 *
-	 * database name
-	 * major version
-	 * minor version
-	 * whether supported
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
 	 */
 	@Override
 	public boolean supports(String databaseName, int majorVersion, int minorVersion) {

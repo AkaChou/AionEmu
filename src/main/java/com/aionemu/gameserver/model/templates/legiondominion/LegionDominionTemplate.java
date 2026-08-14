@@ -7,11 +7,10 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 军团领地模板（静态数据/XML）。
- * XML template.
+ * Legion dominion template (static data/XML).
  *
  * @author Rinzler
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "dominion_locations")
 public class LegionDominionTemplate {

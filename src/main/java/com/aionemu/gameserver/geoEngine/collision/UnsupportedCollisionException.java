@@ -13,7 +13,7 @@ public class UnsupportedCollisionException extends UnsupportedOperationException
 	 * 以原因构造。
 	 * Constructs with a cause.
 	 *
-	 * cause
+	 * @param arg0 原因 / cause
 	 */
 	public UnsupportedCollisionException(Throwable arg0) {
 		super(arg0);
@@ -23,8 +23,8 @@ public class UnsupportedCollisionException extends UnsupportedOperationException
 	 * 以消息与原因构造。
 	 * Constructs with a message and cause.
 	 *
-	 * message
-	 * cause
+	 * @param arg0 消息 / message
+	 * @param arg1 原因 / cause
 	 */
 	public UnsupportedCollisionException(String arg0, Throwable arg1) {
 		super(arg0, arg1);
@@ -34,7 +34,7 @@ public class UnsupportedCollisionException extends UnsupportedOperationException
 	 * 以消息构造。
 	 * Constructs with a message.
 	 *
-	 * message
+	 * @param arg0 消息 / message
 	 */
 	public UnsupportedCollisionException(String arg0) {
 		super(arg0);

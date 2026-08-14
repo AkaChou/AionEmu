@@ -1,11 +1,13 @@
 package com.aionemu.gameserver.model.templates.itemgroups;
 
 /**
- * 物品队伍 Index 枚举。
- * Item Group Index enumeration.
+ * 物品组索引：无或垃圾分类。
+ * Item group index: none or junk.
  */
 
 public enum ItemGroupIndex {
-	/** 无 / None. */
-	NONE, JUNK;
+	/** 无 / None */
+	NONE,
+	/** 垃圾 / Junk */
+	JUNK;
 }

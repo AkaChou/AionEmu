@@ -36,10 +36,10 @@ public class SM_PREMIUM_RESPONSE extends GsServerPacket {
      * 构造高级操作结果响应包。
      * Constructs a premium operation result response packet.
      *
-     * request id
-     * result code
-     * points
-     * luna
+     * @param requestId 请求 ID / request id
+     * @param result 结果代码 / result code
+     * @param points 分数 / points
+     * @param luna 露娜 / luna
      */
     public SM_PREMIUM_RESPONSE(int requestId, int result, long points, long luna) {
         this.requestId = requestId;

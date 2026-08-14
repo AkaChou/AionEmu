@@ -14,8 +14,8 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
 
 /**
- * 物品 Enchant 模板（静态数据/XML）。
- * XML template.
+ * 物品强化模板：按类型与等级组织强化加成。
+ * Item enchant template: organizes enchant bonuses by type and level.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,7 +41,7 @@ public class ItemEnchantTemplate {
 		return null;
 	}
 
-	/** 返回物品强化 / Returns the item enchant*/
+	/** 返回物品强化列表 / Returns the item enchant list */
 	public List<ItemEnchantBonus> getItemEnchant() {
 		return this.item_enchant;
 	}
@@ -51,7 +51,7 @@ public class ItemEnchantTemplate {
 		return this.id;
 	}
 
-	/** 返回强化类型 / Returns the enchant type*/
+	/** 返回强化类型 / Returns the enchant type */
 	public EnchantType getEnchantType() {
 		return this.type;
 	}

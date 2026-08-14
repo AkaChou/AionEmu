@@ -99,8 +99,6 @@ public class Weather extends AdminCommand
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
 	 *
-	 * 玩家 / Player
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

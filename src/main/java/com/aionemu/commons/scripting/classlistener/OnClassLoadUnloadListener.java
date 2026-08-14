@@ -10,8 +10,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 /**
- * 类加载/卸载注解处理监听器
- * Class load/unload annotation processing listener
+ * 类加载/卸载注解处理监听器。
+ * Class load/unload annotation processing listener.
  *
  * 该类负责处理类的加载和卸载事件，通过反射机制调用带有特定注解的静态方法：
  * This class handles class loading and unloading events by invoking annotated static methods through reflection:

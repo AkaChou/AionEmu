@@ -48,9 +48,7 @@ public class PetFeedData {
 	 * 按口味 ID 获取宠物喂食口味。
 	 * Returns the pet feed flavour for the given flavour id.
 	 *
-	 * flavour id
-	 *
-	 * @param flavourId
+	 * @param flavourId 口味 ID / flavour id
 	 * @return 口味模板，不存在则为 null / flavour template or null
 	 */
 	public PetFlavour getFlavourById(int flavourId) {
@@ -61,7 +59,7 @@ public class PetFeedData {
 	 * 返回已加载的口味数量。
 	 * Returns the number of loaded flavours.
 	 *
-	 * flavour count
+	 * @return 已加载的口味数量 / Returns the number of loaded flavours.
 	 */
 	public int size() {
 		return petFlavoursById.size();
@@ -71,7 +69,7 @@ public class PetFeedData {
 	 * 返回全部宠物口味数组。
 	 * Returns all pet flavours as an array.
 	 *
-	 * flavour array
+	 * @return 全部宠物口味数组 / Returns all pet flavours as an array.
 	 */
 	public PetFlavour[] getPetFlavours() {
 		return petFlavoursById.values().toArray(new PetFlavour[0]);

@@ -27,8 +27,6 @@ public class Channel extends AdminCommand {
 	 * 开关 {@code FACTION_CMD_CHANNEL} 配置。
 	 * Toggles the {@code FACTION_CMD_CHANNEL} config flag.
 	 *
-	 * admin
-	 * on|off。
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -55,8 +53,6 @@ public class Channel extends AdminCommand {
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
 	 *
-	 * admin
-	 * error message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

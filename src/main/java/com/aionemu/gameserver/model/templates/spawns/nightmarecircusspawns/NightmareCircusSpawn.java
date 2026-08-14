@@ -32,7 +32,7 @@ public class NightmareCircusSpawn {
 	@XmlElement(name = "nightmare_circus_type")
 	private List<NightmareCircusSpawn.NightmareCircusStateTemplate> NightmareCircusStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回要塞模式模板 / Returns the siege mod templates */
 	public List<NightmareCircusStateTemplate> getSiegeModTemplates() {
 		return NightmareCircusStateTemplate;
 	}

@@ -35,7 +35,7 @@ public class GameServerError extends Error {
 	 * Constructs a new error with the specified detail message. The cause is not initialized
 	 * and may subsequently be initialized by a call to {@link #initCause}.
 	 *
-	 * 详情消息 / the detail message
+	 * @param message 详情消息 / the detail message
 	 */
 	public GameServerError(String message) {
 		super(message);
@@ -47,7 +47,7 @@ public class GameServerError extends Error {
 	 * Note that the detail message associated with {@code cause} is <i>not</i>
 	 * automatically incorporated in this error's detail message.
 	 *
-	 * 详情消息 / the detail message
+	 * @param message 详情消息 / the detail message
 	 * @param cause 原因，可为 null / the cause (may be {@code null})
 	 */
 	public GameServerError(String message, Throwable cause) {

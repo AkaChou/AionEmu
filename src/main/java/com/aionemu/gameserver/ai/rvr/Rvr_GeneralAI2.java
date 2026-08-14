@@ -72,8 +72,9 @@ public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 		});
 	}
 	
-   /**
-	 * 防守方天族 / Defender Elyos
+	/**
+	 * 防守方天族。
+	 * Defender Elyos
 	 */
 	private void announceGeneralMiltarDie() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
@@ -103,8 +104,9 @@ public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 		});
 	}
 	
-   /**
-	 * 防守方魔族 / Defender Asmodians
+	/**
+	 * 防守方魔族。
+	 * Defender Asmodians
 	 */
 	private void announceGeneralMagkenDie() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {

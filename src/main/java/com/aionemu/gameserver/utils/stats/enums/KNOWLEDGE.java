@@ -7,9 +7,9 @@ package com.aionemu.gameserver.utils.stats.enums;
 public enum KNOWLEDGE {
 	WARRIOR(90), GLADIATOR(90), TEMPLAR(90), SCOUT(90), ASSASSIN(90), RANGER(120), MAGE(115), SORCERER(120),
 	SPIRIT_MASTER(115), PRIEST(100), CLERIC(105), CHANTER(105),
-	// 资讯类 4.3 / News Class 4.3
+	// 新职业 4.3 / New Class 4.3
 	TECHNIST(100), GUNSLINGER(100), MUSE(115), SONGWEAVER(110),
-	// 资讯类 4.5 / News Class 4.5
+	// 新职业 4.5 / New Class 4.5
 	AETHERTECH(90);
 
 	/**
@@ -26,7 +26,7 @@ public enum KNOWLEDGE {
 	 * 获取该职业的基础属性值。
 	 * Returns the baseline attribute value for this class.
 	 *
-	 * Attribute value
+	 * @return 基础属性值 / baseline attribute value
 	 */
 	public int getValue() {
 		return value;

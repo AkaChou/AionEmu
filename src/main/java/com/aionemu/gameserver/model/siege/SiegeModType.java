@@ -7,6 +7,12 @@ package com.aionemu.gameserver.model.siege;
  * @author xTz
  */
 public enum SiegeModType {
-	/** 和平 / Peace. */
-	PEACE, SIEGE, LANDING, ASSAULT;
+	/** 和平。 / Peace. */
+	PEACE,
+	/** 攻城。 / Siege. */
+	SIEGE,
+	/** 登陆。 / Landing. */
+	LANDING,
+	/** 突袭。 / Assault. */
+	ASSAULT;
 }

@@ -20,7 +20,7 @@ public class GsConnectionFactoryImpl implements NettyConnectionFactory {
      *
      * @param transport 底层连接传输 / underlying connection transport
      * @return 新建的连接实例 / newly created connection
-     * thrown when creation fails。
+     * @throws IOException 连接创建失败时抛出 / thrown when connection creation fails
      */
     @Override
     public AConnection create(ConnectionTransport transport) throws IOException {

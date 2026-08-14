@@ -30,7 +30,7 @@ public enum StateEvents {
 	 * Returns whether the given event is allowed for this state set.
 	 *
 	 * @param event 事件类型 / event type
-	 * whether contained
+	 * @return 是否包含 / whether contained
 	 */
 	public boolean hasEvent(AIEventType event) {
 		return events.contains(event);

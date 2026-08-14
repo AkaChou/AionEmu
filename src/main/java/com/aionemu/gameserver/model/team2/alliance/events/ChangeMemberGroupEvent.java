@@ -11,8 +11,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 
 /**
- * ChangeMember 队伍活动，用于团队2相关逻辑。
- * Change Member Group Event for team 2 logic.
+ * 成员分组变更事件。
+ * Change Member Group Event.
  *
  * @author ATracer
  */

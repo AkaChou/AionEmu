@@ -6,6 +6,12 @@ package com.aionemu.gameserver.model.house;
  */
 
 public enum HouseStatus {
-	/** 激活 / Active. */
-	ACTIVE, INACTIVE, SELL_WAIT, NOSALE;
+	/** 激活 / Active */
+	ACTIVE,
+	/** 未激活 / Inactive */
+	INACTIVE,
+	/** 等待出售 / Waiting for sale */
+	SELL_WAIT,
+	/** 不销售 / Not for sale */
+	NOSALE;
 }

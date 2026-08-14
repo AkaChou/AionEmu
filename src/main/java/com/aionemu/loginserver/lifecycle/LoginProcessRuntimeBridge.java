@@ -54,7 +54,7 @@ public class LoginProcessRuntimeBridge {
      * 触发登录服优雅关机（可选重启）。
      * Trigger a graceful login-server shutdown (optionally with restart).
      *
-     * whether to restart
+     * @param restart 是否重启 / whether to restart
      */
     public void shutdown(boolean restart) {
         shutdown().shutdown(restart);
@@ -80,7 +80,7 @@ public class LoginProcessRuntimeBridge {
      * 以指定状态码退出进程。
      * Exit the process with the given status code.
      *
-     * exit status
+     * @param status 退出状态码 / exit status
      */
     public void exit(int status) {
         AionProcessExit.exit(status);

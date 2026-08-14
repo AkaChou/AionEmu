@@ -29,21 +29,30 @@ public class TalkInfo {
 	private String subDialogType;
 
 	/**
-	 * @return the talkDistance
+	 * 返回对话距离。
+	 * Returns the talk distance.
+	 *
+	 * @return 对话距离 / the talk distance
 	 */
 	public int getDistance() {
 		return talkDistance;
 	}
 
 	/**
-	 * @return the talk_delay
+	 * 返回对话延迟。
+	 * Returns the talk delay.
+	 *
+	 * @return 对话延迟 / the talk delay
 	 */
 	public int getDelay() {
 		return talkDelay;
 	}
 
 	/**
-	 * @return the hasDialog
+	 * 是否为对话型 NPC。
+	 * Whether this is a dialog NPC.
+	 *
+	 * @return 是否有对话 / the hasDialog flag
 	 */
 	public boolean isDialogNpc() {
 		return hasDialog;

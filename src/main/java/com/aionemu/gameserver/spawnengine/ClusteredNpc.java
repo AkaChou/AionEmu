@@ -59,9 +59,9 @@ public class ClusteredNpc {
 	 * 以 NPC、实例与巡逻模板构造集群数据。
 	 * Builds clustered data from an NPC, instance and walker template.
 	 *
-	 * npc
-	 * instance id
-	 * walker template
+	 * @param npc 关联 NPC / the associated NPC
+	 * @param instance 实例 ID / the instance id
+	 * @param walkTemplate 巡逻路径模板 / the walker route template
 	 */
 	public ClusteredNpc(Npc npc, int instance, WalkerTemplate walkTemplate) {
 		this.npc = npc;
@@ -86,7 +86,7 @@ public class ClusteredNpc {
 	 * 重生时替换底层 NPC，并迁移巡逻偏移与坐标。
 	 * Replaces the underlying NPC on respawn and migrates walker shift and coordinates.
 	 *
-	 * new npc
+	 * @param npc 新 NPC / the new NPC
 	 */
 	public void setNpc(Npc npc) {
 		npc.setWalkerGroupShift(this.npc.getWalkerGroupShift());
@@ -115,7 +115,7 @@ public class ClusteredNpc {
 	 * 基于 X/Y 的位置哈希，用于编队分组。
 	 * Position hash from X/Y used when grouping for formation.
 	 *
-	 * position hash
+	 * @return 位置哈希 / the position hash
 	 */
 	public int getPositionHash() {
 		final int prime = 31;
@@ -129,7 +129,7 @@ public class ClusteredNpc {
 	 * 相对路径第一步的 X 偏移。
 	 * X delta relative to the first route step.
 	 *
-	 * X delta
+	 * @return X 偏移 / the X delta
 	 */
 	public float getXDelta() {
 		return walkTemplate.getRouteStep(1).getX() - x;
@@ -150,7 +150,7 @@ public class ClusteredNpc {
 	 * 相对路径第一步的 Y 偏移。
 	 * Y delta relative to the first route step.
 	 *
-	 * Y delta
+	 * @return Y 偏移 / the Y delta
 	 */
 	public float getYDelta() {
 		return walkTemplate.getRouteStep(1).getY() - y;
@@ -171,7 +171,7 @@ public class ClusteredNpc {
 	 * 巡逻成员序号。
 	 * Walker member index.
 	 *
-	 * walker index
+	 * @return 巡逻成员序号 / the walker index
 	 */
 	public int getWalkerIndex() {
 		return walkerIdx;

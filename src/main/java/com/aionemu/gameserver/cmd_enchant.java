@@ -76,9 +76,7 @@ public class cmd_enchant extends PlayerCommand {
 	 * 判断物品是否可强化（武器/护甲槽位，非禁强化/非 stigma，未达上限）。
 	 * Whether the item is upgradeable (weapon/armor slots, not no-enchant/stigma, below max level).
 	 *
-	 * item
-	 *
-	 * @param item
+	 * @param item 物品 / item
 	 * @return 可强化返回 true / {@code true} if upgradeable
 	 */
 	public static boolean isUpgradeble(Item item) {
@@ -96,11 +94,11 @@ public class cmd_enchant extends PlayerCommand {
 		}
 		if (item.getItemTemplate().isArmor()) {
 			int at = item.getItemTemplate().getItemSlot();
-			if (at == 1 || /* Main Hand */at == 2 || /* Sub Hand */at == 8 || /* Jacket */at == 16 || /* Gloves */at == 32 || /* Boots */at == 2048 || /* Shoulder */at == 4096 || /* Pants */at == 131072
+			if (at == 1 || /* 主手 / Main Hand */at == 2 || /* 副手 / Sub Hand */at == 8 || /* 上衣 / Jacket */at == 16 || /* 手套 / Gloves */at == 32 || /* 靴子 / Boots */at == 2048 || /* 肩甲 / Shoulder */at == 4096 || /* 裤子 / Pants */at == 131072
 				|| /*
-					 * Main Off Hand
+					 * 主手（副手武器槽位） / Main Off Hand
 					 */at == 262144) /*
-									 * Sub Off Hand
+									 * 副手 / Sub Off Hand
 									 */ {
 				return true;
 			}

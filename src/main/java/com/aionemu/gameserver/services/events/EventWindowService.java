@@ -42,6 +42,7 @@ public class EventWindowService {
 	private ConcurrentMap<Integer, EventsWindow> activeEvents = new ConcurrentHashMap<Integer, EventsWindow>();
 
 	/**
+	 * 初始化所有活动。
 	 * initialize all events
 	 */
 	public void initialize() {
@@ -76,6 +77,7 @@ public class EventWindowService {
 	}
 
 	/**
+	 * 登录时激活活动窗口。
 	 * activate events window on login
 	 */
 	public void onLogin(final Player player) {
@@ -99,7 +101,7 @@ public class EventWindowService {
 			if (!playerEventsWindowDAO.getEventsWindow(accountId).contains(eventsWindow.getId())) {
 				playerEventsWindowDAO.insert(accountId, eventsWindow.getId(), new Timestamp(System.currentTimeMillis()));
 			} else {
-				playerEventsWindowDAO.store(accountId, eventsWindow.getId(), new Timestamp(System.currentTimeMillis()), elapsed); // Temp for updating TiemStamp
+				playerEventsWindowDAO.store(accountId, eventsWindow.getId(), new Timestamp(System.currentTimeMillis()), elapsed); // 临时用于更新时间戳 / temp for updating Timestamp
 			}
 			log.info(I18n.get("log.e1c6fecfcb1f", eventsWindow.getId(), eventsWindow.getRemainingTime()));
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -115,7 +117,7 @@ public class EventWindowService {
 							sendActiveEventsForPlayer.remove(eventsWindow.getId());
 							return;
 						}
-						playerEventsWindowDAO.setRewardRecivedCount(accountId, eventsWindow.getId(),(recivedCount + 1)); // It also Set elapsed to 0 and updates TimeStamp
+						playerEventsWindowDAO.setRewardRecivedCount(accountId, eventsWindow.getId(),(recivedCount + 1)); // 同时将 elapsed 置 0 并更新时间戳 / it also sets elapsed to 0 and updates the timestamp
 						ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(eventsWindow.getItemId());
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_HCOIN_07(itemTemplate.getNameId()));
 						ItemService.addItem(player, eventsWindow.getItemId(), eventsWindow.getCount());
@@ -176,6 +178,7 @@ public class EventWindowService {
 	}
 
 	/**
+	 * 登出时停用活动窗口。
 	 * deactivate events window on logout
 	 */
 	public void onLogout(Player player) {

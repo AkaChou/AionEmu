@@ -36,9 +36,9 @@ public class NettyClient implements ServerTransport {
      * 使用默认断开连接执行器构造客户端。
      * Construct client with default disconnection executor.
      *
-     * Remote address
-     * Connection name
-     * Connection factory
+     * @param address 远端地址 / Remote address
+     * @param connectionName 连接名称 / Connection name
+     * @param connectionFactory 连接工厂 / Connection factory
      */
     public NettyClient(InetSocketAddress address, String connectionName, NettyConnectionFactory connectionFactory) {
         this(address, connectionName, connectionFactory, null);
@@ -48,9 +48,9 @@ public class NettyClient implements ServerTransport {
      * 构造客户端（可指定断开连接执行器）。
      * Construct client with optional disconnection executor.
      *
-     * Remote address
-     * Connection name
-     * Connection factory
+     * @param address 远端地址 / Remote address
+     * @param connectionName 连接名称 / Connection name
+     * @param connectionFactory 连接工厂 / Connection factory
      * @param disconnectionExecutor 断开连接执行器，null 时用默认线程池 / Disconnection executor, null uses default pool
      */
     NettyClient(InetSocketAddress address, String connectionName, NettyConnectionFactory connectionFactory, Executor disconnectionExecutor) {

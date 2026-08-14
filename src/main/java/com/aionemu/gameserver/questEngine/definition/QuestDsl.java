@@ -13,7 +13,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-/** Typed Java DSL that lowers through the same compiler as XML. */
+/**
+ * 类型化 Java DSL，经与 XML 相同的编译器降级。
+ * Typed Java DSL that lowers through the same compiler as XML.
+ */
 public final class QuestDsl {
 	private QuestDsl() {
 	}
@@ -53,7 +56,10 @@ public final class QuestDsl {
 		return new QuestEvent.KillNpc(npcId);
 	}
 
-	/** 任一列出的 npc 击杀都满足该事件。Any listed npc kill satisfies the event. */
+	/**
+	 * 任一列出的 npc 击杀都满足该事件。
+	 * Any listed npc kill satisfies the event.
+	 */
 	public static QuestEvent killNpcIds(int... npcIds) {
 		return new QuestEvent.KillNpcSet(java.util.Arrays.stream(npcIds).boxed().collect(java.util.stream.Collectors.toSet()));
 	}
@@ -330,7 +336,10 @@ public final class QuestDsl {
 		return new QuestCondition.DpAtMax();
 	}
 
-	/** 已完成次数等于给定值 (如第 9 次完成解锁额外奖励)。 */
+	/**
+	 * 已完成次数等于给定值（如第 9 次完成解锁额外奖励）。
+	 * Matches when the completion count equals the given value (e.g. the 9th completion unlocks an extra reward).
+	 */
 	public static QuestCondition completeCountIs(int value) {
 		return new QuestCondition.CompleteCountIs(value);
 	}
@@ -339,7 +348,10 @@ public final class QuestDsl {
 		return new QuestCondition.CompleteCountIs(value, expected);
 	}
 
-	/** 当前活动包含本任务 (EventService.checkQuestIsActive)。 */
+	/**
+	 * 当前活动包含本任务（EventService.checkQuestIsActive）。
+	 * Matches when the current event still contains this quest (EventService.checkQuestIsActive).
+	 */
 	public static QuestCondition eventActive() {
 		return new QuestCondition.EventActive();
 	}
@@ -348,7 +360,10 @@ public final class QuestDsl {
 		return new QuestCondition.EventActive(expected);
 	}
 
-	/** 指定任务属于当前活动。 */
+	/**
+	 * 指定任务属于当前活动。
+	 * Matches when the given quest belongs to the current event.
+	 */
 	public static QuestCondition eventActive(int questId) {
 		return new QuestCondition.EventActive(questId);
 	}
@@ -401,7 +416,10 @@ public final class QuestDsl {
 		return new QuestAction.UnequipItem(itemId);
 	}
 
-	/** Unequips the item and removes up to {@code count} copies returned to inventory. */
+	/**
+	 * 卸下物品，并移除归还背包的最多 {@code count} 个副本。
+	 * Unequips the item and removes up to {@code count} copies returned to inventory.
+	 */
 	public static QuestAction unequipItemAndRemoveReturned(int itemId, int count) {
 		return new QuestAction.UnequipItem(itemId, count);
 	}
@@ -438,12 +456,18 @@ public final class QuestDsl {
 		return new QuestAction.DecreaseCurrency(kind, amount);
 	}
 
-	/** Sets a supported currency to an exact non-negative balance in the same transaction. */
+	/**
+	 * 在同一事务中将受支持货币设置为精确的非负余额。
+	 * Sets a supported currency to an exact non-negative balance in the same transaction.
+	 */
 	public static QuestAction setCurrency(QuestRewardKind kind, long amount) {
 		return new QuestAction.SetCurrency(kind, amount);
 	}
 
-	/** Resets a supported currency to zero in the same transaction. */
+	/**
+	 * 在同一事务中将受支持货币重置为零。
+	 * Resets a supported currency to zero in the same transaction.
+	 */
 	public static QuestAction resetCurrency(QuestRewardKind kind) {
 		return new QuestAction.SetCurrency(kind, 0);
 	}
@@ -464,7 +488,11 @@ public final class QuestDsl {
 		return new QuestAction.GrantCraftSkill(skillId, targetLevel, autoLearnRecipes);
 	}
 
-	/** 服务端强制放弃任务 (QuestService.abandonQuest 完整清理语义);要求目标节点为 NONE 投影。 */
+	/**
+	 * 服务端强制放弃任务（QuestService.abandonQuest 完整清理语义）；要求目标节点为 NONE 投影。
+	 * Server-forced quest abandon (full QuestService.abandonQuest cleanup semantics);
+	 * requires the target node to project to NONE.
+	 */
 	public static QuestAction abandonQuest() {
 		return new QuestAction.AbandonQuest();
 	}
@@ -485,7 +513,10 @@ public final class QuestDsl {
 		return new AfterCommitAction.ShowQuestDialog(dialogId);
 	}
 
-	/** Sends a raw SM_DIALOG_WINDOW without attaching the quest id. */
+	/**
+	 * 发送不附带任务 id 的原始 SM_DIALOG_WINDOW。
+	 * Sends a raw SM_DIALOG_WINDOW without attaching the quest id.
+	 */
 	public static AfterCommitAction showDialogWindow(int dialogId) {
 		return new AfterCommitAction.ShowDialogWindow(dialogId);
 	}
@@ -511,7 +542,10 @@ public final class QuestDsl {
 		return new AfterCommitAction.PlayMovie(movieId, type);
 	}
 
-	/** 从多个影片中等概率随机播放一个。 */
+	/**
+	 * 从多个影片中等概率随机播放一个。
+	 * Plays one of several movies chosen uniformly at random.
+	 */
 	public static AfterCommitAction playMovieRandom(int... movieIds) {
 		return new AfterCommitAction.PlayMovieRandom(
 			java.util.Arrays.stream(movieIds).boxed().collect(java.util.stream.Collectors.toList()));
@@ -655,7 +689,10 @@ public final class QuestDsl {
 		return new AfterCommitAction.CancelQuestTimer(identity);
 	}
 
-	/** 对若干目标任务广播 zone-mission-end 事件, 触发其启动/推进。 */
+	/**
+	 * 对若干目标任务广播 zone-mission-end 事件，触发其启动/推进。
+	 * Broadcasts a zone-mission-end event to the given quests, triggering their start/progress.
+	 */
 	public static AfterCommitAction broadcastZoneMissionEnd(int... questIds) {
 		return new AfterCommitAction.BroadcastZoneMissionEnd(questIds);
 	}

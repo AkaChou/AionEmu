@@ -63,7 +63,7 @@ public class ZoneHandlerClassListener implements ClassListener {
 	 * Whether the class is a valid zone handler (public, non-abstract, non-interface).
 	 *
 	 * @param clazz 待检查的类 / class to check
-	 * whether valid
+	 * @return 是否有效 / whether valid
 	 */
 	public boolean isValidClass(Class<?> clazz) {
 		final int modifiers = clazz.getModifiers();

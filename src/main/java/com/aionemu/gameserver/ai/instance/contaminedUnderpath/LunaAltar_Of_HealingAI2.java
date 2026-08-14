@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.handler.CreatureEventHandler;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.SkillEngine;
-/** Rework: MATTY (ADev Team)
 
 /**
  * Contamined Underpath 副本 NPC AI：Luna Altar Of Healing（@AIName "LunaAltar_Of_Healing"），继承 AggressiveNpcAI2。
@@ -25,8 +24,8 @@ public class LunaAltar_Of_HealingAI2 extends AggressiveNpcAI2
         CreatureEventHandler.onCreatureSee(this, creature);
 	if (creature instanceof Player) {
 			final Player player = (Player) creature;
-		if (!creature.getEffectController().hasAbnormalEffect(17560)) { // Использование скилла Bless of Guardian Spring
-		    GameEngineServices.skillEngine().getSkill(getOwner(), 17560, 1, (Player) creature).useNoAnimationSkill(); // Использование скилла Bless of Guardian Spring
+		if (!creature.getEffectController().hasAbnormalEffect(17560)) { // 对玩家使用技能 Bless of Guardian Spring / Use skill Bless of Guardian Spring on the player
+		    GameEngineServices.skillEngine().getSkill(getOwner(), 17560, 1, (Player) creature).useNoAnimationSkill(); // 使用技能 Bless of Guardian Spring / Use skill Bless of Guardian Spring
 			}
 	}
     }

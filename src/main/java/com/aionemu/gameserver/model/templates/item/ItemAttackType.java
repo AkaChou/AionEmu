@@ -12,11 +12,15 @@ import com.aionemu.gameserver.model.SkillElement;
  */
 @XmlEnum
 public enum ItemAttackType {
-	/** 物理 / Physical. */
-	PHYSICAL(false, SkillElement.NONE), MAGICAL_EARTH(true, SkillElement.EARTH),
-	/** 魔法水 / Magical Water*/
-	MAGICAL_WATER(true, SkillElement.WATER), MAGICAL_WIND(true, SkillElement.WIND),
-	/** 魔法火 / Magical Fire*/
+	/** 物理 / Physical */
+	PHYSICAL(false, SkillElement.NONE),
+	/** 魔法地 / Magical Earth */
+	MAGICAL_EARTH(true, SkillElement.EARTH),
+	/** 魔法水 / Magical Water */
+	MAGICAL_WATER(true, SkillElement.WATER),
+	/** 魔法风 / Magical Wind */
+	MAGICAL_WIND(true, SkillElement.WIND),
+	/** 魔法火 / Magical Fire */
 	MAGICAL_FIRE(true, SkillElement.FIRE);
 
 	private boolean magic;
@@ -28,13 +32,16 @@ public enum ItemAttackType {
 	}
 
 	/**
-	 * @return Whether magical
+	 * 是否为魔法攻击。
+	 * Whether this attack type is magical.
+	 *
+	 * @return 是否魔法 / Whether magical
 	 */
 	public boolean isMagical() {
 		return magic;
 	}
 
-	/** 返回 magical element / Returns the magical element */
+	/** 返回魔法元素 / Returns the magical element */
 	public SkillElement getMagicalElement() {
 		return elem;
 	}

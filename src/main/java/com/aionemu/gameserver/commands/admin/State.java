@@ -42,8 +42,6 @@ public class State extends AdminCommand {
 	 * 显示或设置/清除目标生物状态位（1–16）。
 	 * Shows or sets/unsets target creature state bits (1–16).
 	 *
-	 * 执行 GM / Admin player
-	 * show | set|unset &lt;bit&gt;。
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -127,8 +125,6 @@ public class State extends AdminCommand {
 	 * 参数错误时的回调（当前无操作）。
 	 * Failure callback (no-op).
 	 *
-	 * 玩家 / Player
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {
@@ -139,7 +135,6 @@ public class State extends AdminCommand {
 	 * Formats a state bitmask into a readable description.
 	 *
 	 * @param state 状态掩码 / State mask
-	 * Description text
 	 */
 	String getStateDescription(short state) {
 		StringBuilder binsb = new StringBuilder(Integer.toBinaryString(state));

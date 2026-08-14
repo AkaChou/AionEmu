@@ -48,8 +48,8 @@ public class ListSplitter<T> {
 	 * 用集合与切分大小构造。
 	 * Construct from a collection and split size.
 	 *
-	 * Source collection
-	 * Chunk size
+	 * @param collection 源集合 / Source collection
+	 * @param splitCount 分块大小 / Chunk size
 	 */
 	@SuppressWarnings("unchecked")
 	public ListSplitter(Collection<T> collection, int splitCount) {
@@ -93,7 +93,7 @@ public class ListSplitter<T> {
 	 * 源集合总长度。
 	 * Total length of the source collection.
 	 *
-	 * Length
+	 * @return 长度 / Length
 	 */
 	public int size() {
 		return length;

@@ -29,8 +29,8 @@ import java.util.List;
 public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
 
 
-    private static final int TREASURE_CHEST_ID = 701481; // ID chest
-    private static final int NUMBER_OF_CHESTS = 6; // Number of chests
+    private static final int TREASURE_CHEST_ID = 701481; // 宝箱 ID / Chest ID
+    private static final int NUMBER_OF_CHESTS = 6; // 宝箱数量 / Number of chests
     private static final Set<Integer> SPAWN_CHEST_IDS;
 
     static {
@@ -111,7 +111,7 @@ public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
 				DropList.add(new DropChance(186000065, 1, 15));   // Ancient Icon (15%)
 				DropList.add(new DropChance(186000061, 1, 15));   // Ancient Seal (15%)
 				DropList.add(new DropChance(152014016, 1, 15));    // Firm Balaur Horn (15%)
-				DropList.add(new DropChance(152014017, 1, 15));    // Firm Balaur Scale 157%)
+				DropList.add(new DropChance(152014017, 1, 15));    // Firm Balaur Scale (15%)
 				DropList.add(new DropChance(152014018, 1, 15));    // Firm Balaur Skin (15%)
 				DropList.add(new DropChance(186000052, 1, 15));   // Greater Ancient Crown (15%)
 				DropList.add(new DropChance(186000056, 1, 15));   // Greater Ancient Goblet (15%)

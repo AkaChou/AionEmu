@@ -137,7 +137,7 @@ public class NettyServer implements ServerTransport {
      * Resolve bind address from configuration.
      *
      * @param cfg 服务端配置 / Server configuration
-     * Bind address
+     * @return 监听地址 / Bind address
      */
     private InetSocketAddress address(NettyServerCfg cfg) {
         if ("*".equals(cfg.hostName())) {

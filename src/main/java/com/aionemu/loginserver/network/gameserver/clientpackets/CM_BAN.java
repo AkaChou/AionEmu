@@ -101,7 +101,7 @@ public class CM_BAN extends GsClientPacket {
 
         // 封禁 IP / Ban IP
         if (type == 2 || type == 3) {
-            if (accountId != 0) // If we got account ID, then ban last IP
+            if (accountId != 0) // 有账号 ID 则封禁其最后 IP / If we got account ID, then ban last IP
             {
                 String newip = DAOManager.getDAO(AccountDAO.class).getLastIp(accountId);
                 if (!newip.isEmpty()) {
@@ -114,7 +114,7 @@ public class CM_BAN extends GsClientPacket {
                     // 解封请求的结果集 / Result set for unban request
                     result = LoginProtectionServices.bannedIpService().unbanIp(ip);
                 }
-                if (time >= 0) // Ban
+                if (time >= 0) // 执行封禁 / Ban
                 {
                     Timestamp newTime = time != 0 ? new Timestamp(System.currentTimeMillis() + time * 60000) : null;
                     result = LoginProtectionServices.bannedIpService().banIp(ip, newTime);

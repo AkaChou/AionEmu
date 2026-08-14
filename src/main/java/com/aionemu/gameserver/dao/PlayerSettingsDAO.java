@@ -15,7 +15,7 @@ public abstract class PlayerSettingsDAO implements DAO {
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
 	 *
-	 * fully qualified class name
+	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -26,7 +26,7 @@ public abstract class PlayerSettingsDAO implements DAO {
 	 * 保存玩家设置。
 	 * Saves player settings.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void saveSettings(final Player player);
 
@@ -34,7 +34,7 @@ public abstract class PlayerSettingsDAO implements DAO {
 	 * 加载玩家设置。
 	 * Loads player settings.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void loadSettings(final Player player);
 }

@@ -33,12 +33,12 @@ public class Homing extends SummonedObject<Creature> {
 		setLifeStats(new NpcLifeStats(this));
 	}
 
-	/** 设置攻击数量 / Sets the attack count*/
+	/** 设置攻击数量 / Sets the attack count. */
 	public void setAttackCount(int attackCount) {
 		this.attackCount = attackCount;
 	}
 
-	/** 返回攻击数量 / Returns the attack count*/
+	/** 返回攻击数量 / Returns the attack count. */
 	public int getAttackCount() {
 		return attackCount;
 	}
@@ -50,26 +50,30 @@ public class Homing extends SummonedObject<Creature> {
 	}
 
 	/**
-	 * @param player 是否为敌对目标。 / Whether enemy from
+	 * 判断玩家是否为敌对目标。
+	 * Whether the player is an enemy.
+	 *
+	 * @param player 玩家 / player
+	 * @return 是否敌对 / whether enemy
 	  */
 	@Override
 	public boolean isEnemyFrom(Player player) {
 		return getCreator() != null ? getCreator().isEnemyFrom(player) : false;
 	}
 
-	/** 返回 npc object type / Returns the npc object type */
+	/** 返回 NPC 对象类型 / Returns the npc object type */
 	@Override
 	public NpcObjectType getNpcObjectType() {
 		return NpcObjectType.HOMING;
 	}
 
-	/** 返回大师名称 / Returns the master name */
+	/** 返回主人名称 / Returns the master name */
 	@Override
 	public String getMasterName() {
 		return StringUtils.EMPTY;
 	}
 
-	/** 返回攻击类型 / Returns the attack type*/
+	/** 返回攻击类型 / Returns the attack type. */
 	@Override
 	public ItemAttackType getAttackType() {
 		if ((getName().contains("wind")) || (getName().contains("cyclone"))) {

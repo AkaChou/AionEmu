@@ -15,7 +15,7 @@ public class Plateau_Gihla_ChameleonAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(243063, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Plateau Gihlos Runt.
+		spawn(243063, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 年幼 Plateau Gihlos / Plateau Gihlos Runt.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

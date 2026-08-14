@@ -49,7 +49,7 @@ public class TaskFromDBManager {
      * 获取 TaskFromDBDAO 快捷方法。
      * Shortcut to obtain {@link TaskFromDBDAO}.
      *
-     * DAO instance
+     * @return DAO 实例 / DAO instance
      */
     private static TaskFromDBDAO getDAO() {
         return DAOManager.getDAO(TaskFromDBDAO.class);
@@ -59,7 +59,7 @@ public class TaskFromDBManager {
      * 获取单例实例（已弃用，请走 boot 注入）。
      * Returns the singleton instance (deprecated; prefer boot injection).
      *
-     * singleton instance
+     * @return 单例实例 / singleton instance
      */
     @Deprecated(since = "boot-migration")
     public static TaskFromDBManager getInstance() {

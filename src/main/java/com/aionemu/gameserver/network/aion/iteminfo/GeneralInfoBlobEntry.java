@@ -35,9 +35,9 @@ public class GeneralInfoBlobEntry extends ItemBlobEntry {
 		Item item = ownerItem;
 		writeH(buf, item.getItemMask(owner));
 		writeQ(buf, item.getItemCount());
-		writeS(buf, item.getItemCreator());// Creator name
+		writeS(buf, item.getItemCreator());// 制作者名称 / Creator name
 		writeC(buf, 0);
-		writeD(buf, item.getExpireTimeRemaining()); // Disappears time
+		writeD(buf, item.getExpireTimeRemaining()); // 消失时间 / Disappears time
 		writeD(buf, 0);
 		writeD(buf, item.getTemporaryExchangeTimeRemaining());
 		writeH(buf, item.getUnSeal());

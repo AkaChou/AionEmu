@@ -6,7 +6,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import java.util.List;
 
-/** Frozen required mutations and post-commit protocol actions. */
+/** 冻结的必需变更与提交后协议动作。 / Frozen required mutations and post-commit protocol actions. */
 public record QuestMutationPlan(int questId, QuestStatus nextStatus, int nextPackedVariables,
 		List<QuestAction> requiredActions, List<AfterCommitAction> afterCommit) {
 	public QuestMutationPlan {

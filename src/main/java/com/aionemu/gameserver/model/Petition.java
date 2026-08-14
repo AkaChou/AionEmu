@@ -24,6 +24,12 @@ public class Petition {
 	@Getter
 	private final PetitionStatus status;
 
+	/**
+	 * 仅含请愿 ID 的构造（其余字段置空/默认）。
+	 * Constructor with petition id only (other fields empty/default).
+	 *
+	 * @param petitionId 请愿 ID / petition id
+	 */
 	public Petition(int petitionId) {
 		this.petitionId = petitionId;
 		this.playerObjId = 0;
@@ -34,6 +40,18 @@ public class Petition {
 		this.status = PetitionStatus.PENDING;
 	}
 
+	/**
+	 * 完整构造：将客户端类型/状态 ID 映射为对应枚举。
+	 * Full constructor: maps client type/status ids to the matching enums.
+	 *
+	 * @param petitionId 请愿 ID / petition id
+	 * @param playerObjId 玩家对象 ID / player object id
+	 * @param petitionTypeId 客户端类型 ID / client type id
+	 * @param title 标题 / title
+	 * @param contentText 内容 / content text
+	 * @param additionalData 附加数据 / additional data
+	 * @param petitionStatus 客户端状态 ID / client status id
+	 */
 	public Petition(int petitionId, int playerObjId, int petitionTypeId, String title, String contentText,
 			String additionalData, int petitionStatus) {
 		this.petitionId = petitionId;

@@ -88,7 +88,7 @@ public class ShugoImperialTombSpawnManager {
 	 * 在配置时长后删除裂隙对象。
 	 * Schedules deletion of the rift object after the configured duration.
 	 *
-	 * visible object
+	 * @param visObj 裂隙可见对象 / the visible rift object
 	 */
 	private static void scheduleDelete(final VisibleObject visObj) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -140,8 +140,8 @@ public class ShugoImperialTombSpawnManager {
 	 * 按 NPC 模板 ID 发送系统公告。
 	 * Sends a system message based on the NPC template id.
 	 *
-	 * 玩家 / player
-	 * NPC 模板 ID / npc template id
+	 * @param player 玩家 / the player
+	 * @param npc_id NPC 模板 ID / the npc template id
 	 */
 	public static void sendMessage(Player player, int npc_id) {
 		switch (npc_id) {
@@ -158,15 +158,15 @@ public class ShugoImperialTombSpawnManager {
 	public enum RiftEnum {
 		/** 因迪亚鲁纳克（圣所） / Indiarunark Sanctum */
 		Indiarunark_Sanctum(831117, 110010000, 1454.038f, 1520.621f, 573.0719f, (byte) 60),
-		/** 因迪亚鲁纳克（英吉森） / Indiarunark Inggison */
+		/** 因迪亚鲁纳克（英吉斯温） / Indiarunark Inggison */
 		Indiarunark_Inggison(831117, 210130000, 1358.8662f, 299.00287f, 588.7499f, (byte) 0),
-		/** 因迪亚鲁纳克（希格尼娅） / Indiarunark Cygnea */
+		/** 因迪亚鲁纳克（希哥尼亚） / Indiarunark Cygnea */
 		Indiarunark_Cygnea(831117, 210070000, 2930.079f, 825.9626f, 569.5f, (byte) 71),
-		/** 阿尔贝托（潘德蒙） / Alberto Pandaemonium */
+		/** 阿尔贝托（伏魔殿） / Alberto Pandaemonium */
 		Alberto_Pandaemonium(831131, 120010000, 1584.4727f, 1405.4204f, 193.09547f, (byte) 0),
-		/** 阿尔贝托（格尔克玛洛斯） / Alberto Gelkmaros */
+		/** 阿尔贝托（格尔克马洛斯） / Alberto Gelkmaros */
 		Alberto_Gelkmaros(831131, 220140000, 1794.8785f, 2914.2793f, 554.80853f, (byte) 0),
-		/** 阿尔贝托（恩沙尔） / Alberto Enshar */
+		/** 阿尔贝托（厄夏勒） / Alberto Enshar */
 		Alberto_Enshar(831131, 220080000, 471.96454f, 2319.1738f, 216.45724f, (byte) 23);
 
 		/**
@@ -209,12 +209,12 @@ public class ShugoImperialTombSpawnManager {
 		 * 构造裂隙刷怪点。
 		 * Builds a rift spawn point.
 		 *
-		 * NPC 模板 ID / npc template id
-		 * 世界 ID / world id
+		 * @param npc_id NPC 模板 ID / npc template id
+		 * @param worldId 世界 ID / world id
 		 * @param x X 坐标 / X
 		 * @param y Y 坐标 / Y
 		 * @param z Z 坐标 / Z
-		 * 朝向 / heading
+		 * @param heading 朝向 / heading
 		 */
 		private RiftEnum(int npc_id, int worldId, float x, float y, float z, byte heading) {
 			this.npc_id = npc_id;
@@ -284,7 +284,7 @@ public class ShugoImperialTombSpawnManager {
 	 * 获取管理器实例（优先 Spring 提供，否则默认单例）。
 	 * Returns the manager instance (Spring provider if set, else default singleton).
 	 *
-	 * manager
+	 * @return 管理器实例 / the manager instance
 	 */
 	public static ShugoImperialTombSpawnManager getInstance() {
 		ObjectProvider<ShugoImperialTombSpawnManager> provider = instanceProvider;

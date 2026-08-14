@@ -45,7 +45,7 @@ public class Sky_Island_Rift_ElyosAI2 extends NpcAI2 {
 			public void run() {
 				AI2Actions.deleteOwner(Sky_Island_Rift_ElyosAI2.this);
 			}
-		}, 3600000); //1Hrs.
+		}, 3600000); // 1 小时后消失 / 1Hrs.
 	}
 	
 	@Override

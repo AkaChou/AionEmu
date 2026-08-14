@@ -18,6 +18,10 @@ import com.aionemu.gameserver.dataholders.NpcSkillData;
 import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplate;
 import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplates;
 
+/**
+ * 从 XML 加载 NPC 技能组定义及其对 NPC 的分配关系。
+ * Loads NPC skill group definitions and their assignments to NPCs from XML.
+ */
 @Slf4j
 final class NpcSkillDefinitionLoader {
 

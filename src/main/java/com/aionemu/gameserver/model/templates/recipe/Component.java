@@ -20,7 +20,7 @@ public class Component {
 	@XmlElement(name = "component")
 	protected ArrayList<ComponentElement> component;
 
-	/** 返回 components / Returns the components */
+	/** 返回组件列表 / Returns the components */
 	public Collection<ComponentElement> getComponents() {
 		return component != null ? component : Collections.<ComponentElement>emptyList();
 	}

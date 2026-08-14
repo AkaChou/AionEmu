@@ -140,7 +140,7 @@ public enum BrokerItemMask {
 	SKILL_RELATED_SKILL_MANUAL_SORCERER(6024, new BrokerPlayerClassExtraFilter(1695, PlayerClass.SORCERER),
 			BrokerItemMask.SKILL_RELATED_SKILL_MANUAL, false),
 	/**
-	 * 技能 RELATED 技能 MANUALSPIRITMASTER。
+	 * 技能相关技能手册（精灵星）。
 	 * Skill Related Skill Manual Spiritmaster.
 	 */
 	SKILL_RELATED_SKILL_MANUAL_SPIRITMASTER(6025, new BrokerPlayerClassExtraFilter(1695, PlayerClass.SPIRIT_MASTER),
@@ -165,24 +165,24 @@ public enum BrokerItemMask {
 	 * 房屋 + 子分类 / Housing + Sub Categories
 	 */
 	HOME_DECOR(9070, new BrokerContainsFilter(1710, 1711), null, true),
-	/** Home Decor Out Door / Home Decor Out Door */
+	/** 室外装饰 / Home Decor Out Door */
 	HOME_DECOR_OUT_DOOR(1710, new BrokerContainsFilter(1710), BrokerItemMask.HOME_DECOR, false),
-	/** Home Decor In Door / Home Decor In Door */
+	/** 室内装饰 / Home Decor In Door */
 	HOME_DECOR_IN_DOOR(1711, new BrokerContainsFilter(1711), BrokerItemMask.HOME_DECOR, false),
 
 	/** 家具 / Furniture. */
 	FURNITURE(9080, new BrokerContainsFilter(1700, 1701, 1702, 1703, 1704), null, true),
-	/** Furniture Out Door / Furniture Out Door */
+	/** 室外家具 / Furniture Out Door */
 	FURNITURE_OUT_DOOR(1703, new BrokerContainsFilter(1703), BrokerItemMask.FURNITURE, false),
-	/** Furniture In Door / Furniture In Door */
+	/** 室内家具 / Furniture In Door */
 	FURNITURE_IN_DOOR(8070, new BrokerContainsFilter(1700, 1701, 1702), BrokerItemMask.FURNITURE, true),
-	/** Furniture In Door Wall Mounted / Furniture In Door Wall Mounted */
+	/** 壁挂式室内家具 / Furniture In Door Wall Mounted */
 	FURNITURE_IN_DOOR_WALL_MOUNTED(1700, new BrokerContainsFilter(1700), BrokerItemMask.FURNITURE_IN_DOOR, false),
-	/** Furniture In Door Free Standing / Furniture In Door Free Standing */
+	/** 独立式室内家具 / Furniture In Door Free Standing */
 	FURNITURE_IN_DOOR_FREE_STANDING(1701, new BrokerContainsFilter(1701), BrokerItemMask.FURNITURE_IN_DOOR, false),
-	/** Furniture In Door Rugs / Furniture In Door Rugs */
+	/** 地毯类室内家具 / Furniture In Door Rugs */
 	FURNITURE_IN_DOOR_RUGS(1702, new BrokerContainsFilter(1702), BrokerItemMask.FURNITURE_IN_DOOR, false),
-	/** Furniture In Door Out Door / Furniture In Door Out Door */
+	/** 内外通用家具 / Furniture In Door Out Door */
 	FURNITURE_IN_DOOR_OUT_DOOR(1704, new BrokerContainsFilter(1704), BrokerItemMask.FURNITURE, false),
 
 	/**
@@ -191,27 +191,27 @@ public enum BrokerItemMask {
 	CRAFT(9050, new BrokerContainsFilter(1520, 1522), null, true),
 	/** 制作材料。 / Craft Materials. */
 	CRAFT_MATERIALS(1520, new BrokerContainsFilter(1520), BrokerItemMask.CRAFT, true),
-	/** Craft Materials Collection / Craft Materials Collection */
+	/** 采集类制作材料 / Craft Materials Collection */
 	CRAFT_MATERIALS_COLLECTION(6030, new BrokerContainsExtraFilter(15200), BrokerItemMask.CRAFT_MATERIALS, false),
-	/** Craft Materials Gain / Craft Materials Gain */
+	/** 获取类制作材料 / Craft Materials Gain */
 	CRAFT_MATERIALS_GAIN(6031, new BrokerContainsExtraFilter(15201), BrokerItemMask.CRAFT_MATERIALS, false),
-	/** Craft Materials Parts / Craft Materials Parts */
+	/** 部件类制作材料 / Craft Materials Parts */
 	CRAFT_MATERIALS_PARTS(6032, new BrokerContainsExtraFilter(15202), BrokerItemMask.CRAFT_MATERIALS, false),
-	/** Craft Design / Craft Design */
+	/** 制作图纸 / Craft Design */
 	CRAFT_DESIGN(1522, new BrokerContainsFilter(1522), BrokerItemMask.CRAFT, true),
-	/** Craft Design Weaponsmithing / Craft Design Weaponsmithing */
+	/** 武器锻造图纸 / Craft Design Weaponsmithing */
 	CRAFT_DESIGN_WEAPONSMITHING(6040, new BrokerRecipeFilter(40002, 1522), BrokerItemMask.CRAFT_DESIGN, false),
-	/** Craft Design Armorsmithing / Craft Design Armorsmithing */
+	/** 防具锻造图纸 / Craft Design Armorsmithing */
 	CRAFT_DESIGN_ARMORSMITHING(6041, new BrokerRecipeFilter(40003, 1522), BrokerItemMask.CRAFT_DESIGN, false),
-	/** Craft Design Tailoring / Craft Design Tailoring */
+	/** 裁缝图纸 / Craft Design Tailoring */
 	CRAFT_DESIGN_TAILORING(6042, new BrokerRecipeFilter(40004, 1522), BrokerItemMask.CRAFT_DESIGN, false),
-	/** Craft Design Handicrafting / Craft Design Handicrafting */
+	/** 手工制作图纸 / Craft Design Handicrafting */
 	CRAFT_DESIGN_HANDICRAFTING(6043, new BrokerRecipeFilter(40008, 1522), BrokerItemMask.CRAFT_DESIGN, false),
-	/** Craft Design Alchemy / Craft Design Alchemy */
+	/** 炼金图纸 / Craft Design Alchemy */
 	CRAFT_DESIGN_ALCHEMY(6044, new BrokerRecipeFilter(40007, 1522), BrokerItemMask.CRAFT_DESIGN, false),
-	/** Craft Design Cooking / Craft Design Cooking */
+	/** 烹饪图纸 / Craft Design Cooking */
 	CRAFT_DESIGN_COOKING(6045, new BrokerRecipeFilter(40001, 1522), BrokerItemMask.CRAFT_DESIGN, false),
-	/** Craft Design Construction / Craft Design Construction */
+	/** 建造图纸 / Craft Design Construction */
 	CRAFT_DESIGN_CONSTRUCTION(6046, new BrokerRecipeFilter(40010, 1522), BrokerItemMask.CRAFT_DESIGN, false),
 
 	/**
@@ -221,47 +221,48 @@ public enum BrokerItemMask {
 			new BrokerContainsFilter(1410, 1600, 1620, 1640, 1650, 1660, 16603, 1661, 1665, 1670, 1680, 1690, 16912,
 					1692, 1693, 1694, 1696, 1873, 1900),
 			null, true),
-	/** Consumables Food / Consumables Food */
+	/** 消耗品·食物 / Consumables Food */
 	CONSUMABLES_FOOD(1600, new BrokerContainsFilter(1600), BrokerItemMask.CONSUMABLES, false),
-	/** Consumables Potion / Consumables Potion */
+	/** 消耗品·药水 / Consumables Potion */
 	CONSUMABLES_POTION(1620, new BrokerContainsFilter(1620), BrokerItemMask.CONSUMABLES, false),
-	/** Consumables Scroll / Consumables Scroll */
+	/** 消耗品·卷轴 / Consumables Scroll */
 	CONSUMABLES_SCROLL(7060, new BrokerContainsFilter(1640), BrokerItemMask.CONSUMABLES, false),
-	/** Consumables Modify / Consumables Modify */
+	/** 消耗品·强化类 / Consumables Modify */
 	CONSUMABLES_MODIFY(8060, new BrokerContainsFilter(1650, 1660, 1665, 1670, 16603, 1680, 1692, 16912, 1873),
 			BrokerItemMask.CONSUMABLES, true),
 	/**
-	 * 消耗品·修改强化石。 / CONSUMABLESMODIFYENCHANTMENTSTONE。 Consumables Modify Enchantment Stone
+	 * 消耗品·强化石。 / Consumables Modify Enchantment Stone
 	 */
 	CONSUMABLES_MODIFY_ENCHANTMENT_STONE(1660, new BrokerContainsFilter(1660), BrokerItemMask.CONSUMABLES_MODIFY,
 			false),
-	/** Consumables Modify Manastone / Consumables Modify Manastone */
+	/** 消耗品·魔石 / Consumables Modify Manastone */
 	CONSUMABLES_MODIFY_MANASTONE(1670, new BrokerContainsFilter(1670), BrokerItemMask.CONSUMABLES_MODIFY, false),
-	/** Consumables Modify Tempering / Consumables Modify Tempering */
+	/** 消耗品·提炼石 / Consumables Modify Tempering */
 	CONSUMABLES_MODIFY_TEMPERING(7064, new BrokerContainsExtraFilter(16603), BrokerItemMask.CONSUMABLES_MODIFY, false),
-	/** Consumables Modify Godstone / Consumables Modify Godstone */
+	/** 消耗品·神石 / Consumables Modify Godstone */
 	CONSUMABLES_MODIFY_GODSTONE(1680, new BrokerContainsFilter(1680), BrokerItemMask.CONSUMABLES_MODIFY, false),
-	/** Consumables Modify Dye / Consumables Modify Dye */
+	/** 消耗品·染色剂 / Consumables Modify Dye */
 	CONSUMABLES_MODIFY_DYE(7061, new BrokerContainsFilter(1692), BrokerItemMask.CONSUMABLES_MODIFY, false),
-	/** Consumables Modify Paint / Consumables Modify Paint */
+	/** 消耗品·涂装 / Consumables Modify Paint */
 	CONSUMABLES_MODIFY_PAINT(7065, new BrokerContainsExtraFilter(16912), BrokerItemMask.CONSUMABLES_MODIFY, false),
 	/**
-	 * 消耗品·修改增幅石。 / CONSUMABLESMODIFYAMPLIFICATIONSTONE。 Consumables Modify Amplification Stone
+	 * 消耗品·增幅石。 / Consumables Modify Amplification Stone
 	 */
 	CONSUMABLES_MODIFY_AMPLIFICATION_STONE(7066, new BrokerContainsFilter(1665), BrokerItemMask.CONSUMABLES_MODIFY,
 			false),
-	/** Consumables Modify Reduction Stone / Consumables Modify Reduction Stone */
+	/** 消耗品·还原石 / Consumables Modify Reduction Stone */
 	CONSUMABLES_MODIFY_REDUCTION_STONE(1650, new BrokerContainsFilter(1650), BrokerItemMask.CONSUMABLES_MODIFY, false),
-	/** Consumables Modify Essence Core / Consumables Modify Essence Core */
+	/** 消耗品·精髓核心 / Consumables Modify Essence Core */
 	CONSUMABLES_MODIFY_ESSENCE_CORE(1873, new BrokerContainsFilter(1873), BrokerItemMask.CONSUMABLES_MODIFY, false),
-	/** Consumables Modify Other / Consumables Modify Other */
+	/** 消耗品·其他强化 / Consumables Modify Other */
 	CONSUMABLES_MODIFY_OTHER(7063, new BrokerContainsFilter(1661), BrokerItemMask.CONSUMABLES_MODIFY, false),
-	/** Consumables Other / Consumables Other */
+	/** 消耗品·其他 / Consumables Other */
 	CONSUMABLES_OTHER(7062, new BrokerContainsFilter(1410, 1690, 1693, 1694, 1696, 1900), BrokerItemMask.CONSUMABLES,
 			false),
 
 	/**
-	 * Other Section
+	 * 其他分区。
+	 * Other Section.
 	 */
 	OTHER(7070, new BrokerContainsFilter(1850, 1860, 1880, 1881, 1887), null, false),
 	/** 未知 / Unknown. */
@@ -285,14 +286,22 @@ public enum BrokerItemMask {
 	}
 
 	/**
-	 * @param item Whether matches
+	 * 判断物品是否匹配该掩码过滤器。
+	 * Whether the item matches this mask filter.
+	 *
+	 * @param item 待匹配物品 / item
+	 * @return 是否匹配 / whether matches
 	 */
 	public boolean isMatches(Item item) {
 		return filter.accept(item.getItemTemplate());
 	}
 
 	/**
-	 * @param maskId Whether children mask
+	 * 判断掩码 ID 是否为当前掩码的父级掩码。
+	 * Whether the mask id is an ancestor of this mask.
+	 *
+	 * @param maskId 掩码 ID / mask id
+	 * @return 是否为父级掩码 / whether children mask
 	 */
 	public boolean isChildrenMask(int maskId) {
 		for (BrokerItemMask p = parent; p != null; p = p.parent) {
@@ -314,7 +323,10 @@ public enum BrokerItemMask {
 	}
 
 	/**
-	 * @return Whether children
+	 * 判断是否存在子分类。
+	 * Whether this mask has children.
+	 *
+	 * @return 是否有子分类 / whether children
 	 */
 	public boolean hasChildren() {
 		return childrenExist;

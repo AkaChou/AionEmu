@@ -32,7 +32,7 @@ public class ZorshivDredgionSpawn {
 	@XmlElement(name = "zorshiv_dredgion_type")
 	private List<ZorshivDredgionSpawn.ZorshivDredgionStateTemplate> ZorshivDredgionStateTemplate;
 
-	/** 返回 siege mod templates / Returns the siege mod templates */
+	/** 返回要塞模式模板 / Returns the siege mod templates */
 	public List<ZorshivDredgionStateTemplate> getSiegeModTemplates() {
 		return ZorshivDredgionStateTemplate;
 	}

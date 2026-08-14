@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-/** Immutable recipe and crafting-skill facts used by pure quest condition evaluation. */
+/** 用于纯任务条件求值的不可变配方与制作技能事实。 / Immutable recipe and crafting-skill facts used by pure quest condition evaluation. */
 public record QuestCraftSnapshot(Set<Integer> knownRecipes, Map<Integer, Integer> craftingSkillLevels,
 		int maxRecipes, int maxExpertSkills, int maxMasterSkills) {
 	private static final Set<Integer> PROMOTION_SLOT_SKILLS = Set.of(
@@ -29,6 +29,7 @@ public record QuestCraftSnapshot(Set<Integer> knownRecipes, Map<Integer, Integer
 	}
 
 	/**
+	 * 镜像当前的专家/大师槽位规则。重放已收敛的授予总是可满足的。
 	 * Mirrors the current expert/master slot rules. Replaying a grant that already converged is always eligible.
 	 */
 	public boolean canGrantCraftSkill(int skillId, int targetLevel) {

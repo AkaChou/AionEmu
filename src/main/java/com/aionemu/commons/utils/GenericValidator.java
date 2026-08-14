@@ -16,7 +16,7 @@ public class GenericValidator {
      * Whether the string is null or empty.
      *
      * @param s 待检查字符串 / String to check
-     * @return 若 blank or null 则为 true / True if blank or null
+     * @return 若为空或 null 则为 true / True if blank or null
      */
     public boolean isBlankOrNull(String s) {
         return s == null || s.isEmpty();
@@ -27,7 +27,7 @@ public class GenericValidator {
      * Whether the collection is null or empty.
      *
      * @param c 待检查集合 / Collection to check
-     * @return 若 blank or null 则为 true / True if blank or null
+     * @return 若为空或 null 则为 true / True if blank or null
      */
     public boolean isBlankOrNull(Collection<?> c) {
         return c == null || c.isEmpty();
@@ -37,9 +37,8 @@ public class GenericValidator {
      * 判断 Map 是否为 null 或空。
      * Whether the map is null or empty.
      *
-     * Map to check
-     *
-     * @param m 若 blank or null 则为 true / True if blank or null
+     * @param m 待检查 Map / Map to check
+     * @return 若为空或 null 则为 true / True if blank or null
      */
     public boolean isBlankOrNull(Map<?, ?> m) {
         return m == null || m.isEmpty();
@@ -61,7 +60,7 @@ public class GenericValidator {
      * Whether the array is null or empty.
      *
      * @param a 待检查数组 / Array to check
-     * @return 若 blank or null 则为 true / True if blank or null
+     * @return 若为空或 null 则为 true / True if blank or null
      */
     public boolean isBlankOrNull(Object[] a) {
         return a == null || a.length == 0;

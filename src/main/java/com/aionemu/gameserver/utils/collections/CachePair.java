@@ -15,8 +15,8 @@ public class CachePair<K extends Comparable, V> implements Comparable<CachePair>
 	 * 使用键值构造。
 	 * Construct with key and value.
 	 *
-	 * Key
-	 * Value
+	 * @param key 键 / Key
+	 * @param value 值 / Value
 	 */
 	public CachePair(K key, V value) {
 		this.key = key;
@@ -55,7 +55,7 @@ public class CachePair<K extends Comparable, V> implements Comparable<CachePair>
 	 * Compare by key first; if equal and value is comparable, compare values.
 	 *
 	 * @param p 另一对 / Other pair
-	 * Comparison result
+	 * @return 比较结果 / Comparison result
 	 */
 	public int compareTo(CachePair p) {
 		int v = key.compareTo(p.key);
@@ -68,7 +68,7 @@ public class CachePair<K extends Comparable, V> implements Comparable<CachePair>
 	 * 基于键值的哈希码。
 	 * Hash code based on key and value.
 	 *
-	 * Hash code
+	 * @return 哈希码 / Hash code
 	 */
 	@Override
 	public int hashCode() {

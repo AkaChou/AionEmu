@@ -36,7 +36,7 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc 掉落 NPC / dropper NPC
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -277,7 +277,7 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc 死亡的 NPC / dying NPC
 	 */
 	@Override
 	public void onDie(Npc npc)  {
@@ -307,7 +307,7 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 				spawn(730202, 657.111f, 509.11f, 872.948f, (byte) 0, 10); //Drana Generator Chamber Access Door.
 			break;
 			case 215079: //Golden Eye Mantutu.
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Steel Rake>");
+				// 成功逃脱提示（原调试输出已注释）。 / Success-escape notice (debug output commented out).
 				spawn(700554, 736.64728f, 493.73834f, 941.4781f, (byte) 45); //Pirate Ship Treasure Box.
 				spawn(700554, 720.41028f, 511.63718f, 939.7604f, (byte) 90); //Pirate Ship Treasure Box.
 		        spawn(700554, 739.51251f, 506.14313f, 941.4781f, (byte) 77); //Pirate Ship Treasure Box.
@@ -315,7 +315,7 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 				spawn(730766, 734.18994f, 484.61578f, 941.70868f, (byte) 0, 61); //Hidden Passage.
 			break;
 			case 215081: //Brass-Eye Grogget.
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Steel Rake>");
+				// 成功逃脱提示（原调试输出已注释）。 / Success-escape notice (debug output commented out).
 				spawn(700509, 403.25793f, 510.25354f, 1071.736f, (byte) 1); //Shining Box.
 				spawn(700555, 426.47424f, 509.34625f, 1075.3801f, (byte) 0); //Captain Treasure Box.
 				spawn(730766, 428.06598f, 486.64233f, 1075.4449f, (byte) 0, 87); //Escape Anchor.
@@ -362,20 +362,16 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 		});
 	}
 	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
+	 * 延迟后向指定阵营广播系统消息。
+	 * Broadcast a system message to the given race after a delay.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 系统消息 ID / system message id
+	 * @param race 目标阵营 / target race
+	 * @param time 延迟毫秒数 / delay in milliseconds
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

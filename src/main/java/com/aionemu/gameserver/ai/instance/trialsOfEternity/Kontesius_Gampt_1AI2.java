@@ -33,6 +33,10 @@ public class Kontesius_Gampt_1AI2 extends AggressiveNpcAI2
 		return canThink;
 	}
 	
+	/**
+	 * 玩家靠近 10 米内时触发一次散步表演：沿巡逻路径行走并在 10 秒后消失。
+	 * When a player comes within 10 meters, triggers a one-time walking show: walks the patrol path and despawns after 10 seconds.
+	 */
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		if (creature instanceof Player) {

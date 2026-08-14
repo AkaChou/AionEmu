@@ -6,7 +6,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * F2p 账号游戏对象。
- * F 2 p Account game object.
+ * F2p Account game object.
  */
 
 public class F2pAccount implements IExpirable {

@@ -18,7 +18,7 @@ public class TheCryptsEntranceAI2 extends NpcAI2
 {
 	@Override
     protected void handleDialogStart(Player player) {
-        if (player.getInventory().getFirstItemByItemId(185000182) != null) { //The Crypts Key.
+        if (player.getInventory().getFirstItemByItemId(185000182) != null) { // 墓穴钥匙。 / The Crypts Key.
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
         } else {
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 27));
@@ -29,16 +29,16 @@ public class TheCryptsEntranceAI2 extends NpcAI2
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		int instanceId = getPosition().getInstanceId();
 		switch (getNpcId()) {
-		    case 701872: //The Crypts Entrance.
+		    case 701872: // 墓穴入口。 / The Crypts Entrance.
 		        switch (player.getWorldId()) {
-		            case 301140000: //Seized Danuar Sanctuary 4.8
-				        if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000182, 1)) { //The Crypts Key.
+		            case 301140000: // 被占领的达努阿尔圣所 4.8 / Seized Danuar Sanctuary 4.8
+				        if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000182, 1)) { // 墓穴钥匙。 / The Crypts Key.
 			                TeleportService2.teleportTo(player, 301140000, instanceId, 823.4411f, 956.04785f, 304.96292f, (byte) 93);
 					    }
 				    break;
 			    } switch (player.getWorldId()) {
-				    case 301380000: //Danuar Sanctuary 4.8
-					    if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000182, 1)) { //The Crypts Key.
+				    case 301380000: // 达努阿尔圣所 4.8 / Danuar Sanctuary 4.8
+					    if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000182, 1)) { // 墓穴钥匙。 / The Crypts Key.
 					        TeleportService2.teleportTo(player, 301380000, instanceId, 823.4411f, 956.04785f, 304.96292f, (byte) 93);
 						}
 					break;

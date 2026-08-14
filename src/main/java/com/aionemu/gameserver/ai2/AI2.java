@@ -21,78 +21,124 @@ public interface AI2 {
 	 * Handles a creature-related AI event.
 	 *
 	 * @param event 事件类型 / event type
-	 * related creature
+	 * @param creature 相关生物 / related creature
 	 */
 	void onCreatureEvent(AIEventType event, Creature creature);
 
-	/** 处理带真实命中状态的受击事件。 */
+	/**
+	 * 处理带真实命中状态的受击事件。
+	 * Handles an attack event with real hit status.
+	 */
 	default void onAttacked(Creature attacker, AttackStatus status) {
 		onCreatureEvent(AIEventType.ATTACK, attacker);
 	}
 
 	/**
 	 * 处理技能成功作用事件。
+	 * Handles a successfully cast spell event.
 	 *
-	 * @param caster 施法者
-	 * @param skillId 技能 ID
-	 * @param skillLevel 技能等级
+	 * @param caster 施法者 / caster
+	 * @param skillId 技能 ID / skill id
+	 * @param skillLevel 技能等级 / skill level
 	 */
 	default void onSpelled(Creature caster, int skillId, int skillLevel) {
 	}
 
-	/** 处理玩家实际治疗 NPC 事件。 */
+	/**
+	 * 处理玩家实际治疗 NPC 事件。
+	 * Handles a player actually healing the NPC.
+	 */
 	default void onHealedByUser(Player player) {
 	}
 
-	/** 处理实际伤害事件。 */
+	/**
+	 * 处理实际伤害事件。
+	 * Handles an actual damage event.
+	 */
 	default void onDamaged(Creature attacker, int skillId) {
 	}
 
-	/** 处理看见附近生物参与攻击事件。 */
+	/**
+	 * 处理看见附近生物参与攻击事件。
+	 * Handles seeing a nearby creature join an attack.
+	 */
 	default void onSeeAttack(Creature attacker, Creature attacked) {
 	}
 
-	/** 处理看见附近生物开始施法事件。 */
+	/**
+	 * 处理看见附近生物开始施法事件。
+	 * Handles seeing a nearby creature start casting a skill.
+	 */
 	default void onSeeSkill(Creature caster, Creature target, int skillId, int skillLevel) {
 	}
 
-	/** 处理附近友军被技能命中事件。 */
+	/**
+	 * 处理附近友军被技能命中事件。
+	 * Handles a nearby ally being hit by a skill.
+	 */
 	default void onFriendSpelled(Creature caster, Creature friend, int skillId, int skillLevel) {
 	}
 
-	/** 处理附近友军被玩家击杀事件。 */
+	/**
+	 * 处理附近友军被玩家击杀事件。
+	 * Handles a nearby ally being killed by a player.
+	 */
 	default void onFriendKilledByUser(Creature friend, Player killer) {
 	}
 
-	/** 处理附近友军首次进入攻击状态事件。 */
+	/**
+	 * 处理附近友军首次进入攻击状态事件。
+	 * Handles a nearby ally first entering attack state.
+	 */
 	default void onFriendEnterAttackState(Creature friend, Creature target) {
 	}
 
-	/** 处理技能成功施放到自身事件。 */
+	/**
+	 * 处理技能成功施放到自身事件。
+	 * Handles a skill successfully cast on self.
+	 */
 	default void onCasted(Creature caster, int skillId, int skillLevel) {
 	}
 
-	/** 处理看见附近技能完成事件。 */
+	/**
+	 * 处理看见附近技能完成事件。
+	 * Handles seeing a nearby skill cast complete.
+	 */
 	default void onSeeSpell(Creature caster, Creature target, int skillId, int skillLevel) {
 	}
 
-	/** 处理玩家结束过场动画事件。 */
+	/**
+	 * 处理玩家结束过场动画事件。
+	 * Handles a player finishing a cutscene.
+	 */
 	default void onQuitCutscene(Player player, int cutsceneId) {
 	}
 
-	/** 处理玩家在该 NPC 处完成并领取任务奖励事件。 */
+	/**
+	 * 处理玩家在该 NPC 处完成并领取任务奖励事件。
+	 * Handles a player finishing and collecting a quest reward at this NPC.
+	 */
 	default void onQuestFinished(Player player, int questId) {
 	}
 
-	/** 处理最高仇恨对象变化事件。 */
+	/**
+	 * 处理最高仇恨对象变化事件。
+	 * Handles the most-hated target changing.
+	 */
 	default void onMostHatingUpdated(Creature creature) {
 	}
 
-	/** 处理进入异常状态事件。 */
+	/**
+	 * 处理进入异常状态事件。
+	 * Handles entering an abnormal state.
+	 */
 	default void onEnterAbnormalState(Creature caster, int abnormalState) {
 	}
 
-	/** 处理离开异常状态事件。 */
+	/**
+	 * 处理离开异常状态事件。
+	 * Handles leaving an abnormal state.
+	 */
 	default void onLeaveAbnormalState(Creature caster, int abnormalState) {
 	}
 
@@ -117,9 +163,9 @@ public interface AI2 {
 	 * 处理玩家对话框选择；若已处理返回 true。
 	 * Handles player dialog selection; returns true if already handled.
 	 *
-	 * 玩家 / player
-	 * dialog id
-	 * quest id
+	 * @param player 玩家 / player
+	 * @param dialogId 对话框 ID / dialog id
+	 * @param questId 任务 ID / quest id
 	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
 	 * @return 是否已处理 / whether the dialog was handled
 	 */
@@ -143,7 +189,7 @@ public interface AI2 {
 	 * 获取当前主状态。
 	 * Returns the current main AI state.
 	 *
-	 * AI main state
+	 * @return AI 主状态 / AI main state
 	 */
 	AIState getState();
 
@@ -151,7 +197,7 @@ public interface AI2 {
 	 * 获取当前子状态。
 	 * Returns the current AI sub-state.
 	 *
-	 * AI sub-state
+	 * @return AI 子状态 / AI sub-state
 	 */
 	AISubState getSubState();
 
@@ -159,7 +205,7 @@ public interface AI2 {
 	 * 获取 AI 名称（通常来自 {@link AIName} 注解）。
 	 * Returns the AI name (usually from the {@link AIName} annotation).
 	 *
-	 * AI name
+	 * @return AI 名称 / AI name
 	 */
 	String getName();
 
@@ -167,8 +213,8 @@ public interface AI2 {
 	 * 对指定问题进行投票式查询，返回是否肯定。
 	 * Polls the given question and returns whether the answer is positive.
 	 *
-	 * AI question
-	 * whether the answer is positive
+	 * @param question 问题 / question
+	 * @return 答案是否肯定 / whether the answer is positive
 	 */
 	boolean poll(AIQuestion question);
 
@@ -176,8 +222,8 @@ public interface AI2 {
 	 * 询问指定问题并返回完整答案对象。
 	 * Asks the given question and returns a full answer object.
 	 *
-	 * AI question
-	 * AI answer
+	 * @param question 问题 / question
+	 * @return 答案对象 / answer object
 	 */
 	AIAnswer ask(AIQuestion question);
 
@@ -193,7 +239,7 @@ public interface AI2 {
 	 * 获取剩余时间（例如限时 AI 行为）。
 	 * Returns remaining time (e.g. for timed AI behaviors).
 	 *
-	 * remaining time
+	 * @return 剩余时间 / remaining time
 	 */
 	long getRemainigTime();
 
@@ -201,7 +247,7 @@ public interface AI2 {
 	 * 修改对自身造成的伤害值。
 	 * Modifies incoming damage dealt to this AI's owner.
 	 *
-	 * original damage
+	 * @param damage 原始伤害 / original damage
 	 * @return 修正后伤害 / modified damage
 	 */
 	int modifyDamage(int damage);
@@ -210,7 +256,7 @@ public interface AI2 {
 	 * 修改所有者造成的伤害值。
 	 * Modifies outgoing damage dealt by this AI's owner.
 	 *
-	 * original damage
+	 * @param damage 原始伤害 / original damage
 	 * @return 修正后伤害 / modified damage
 	 */
 	int modifyOwnerDamage(int damage);
@@ -236,8 +282,8 @@ public interface AI2 {
 	 * 修改命中/精准相关数值。
 	 * Modifies a maccuracy (hit/accuracy) related value.
 	 *
-	 * original value
-	 * modified value
+	 * @param value 原始值 / original value
+	 * @return 修正后值 / modified value
 	 */
 	int modifyMaccuracy(int value);
 

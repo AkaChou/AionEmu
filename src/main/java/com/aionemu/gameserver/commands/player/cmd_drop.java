@@ -32,7 +32,7 @@ public class cmd_drop extends PlayerCommand {
 	 * Prints drop groups and item chances for an NPC id or target NPC.
 	 *
 	 * @param player 执行命令的玩家 / invoking player
-	 * optional NPC id
+	 * @param params 可选 NPC ID / optional NPC id
 	 */
 	@Override
 	public void execute(Player player, String... params) {

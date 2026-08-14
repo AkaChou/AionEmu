@@ -56,17 +56,17 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	private long instanceTime;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-	/** 种族 killedcommander / race killed commander */
+		/** 种族 killedcommander / race killed commander */
 		private Race RaceKilledCommander = null;
-	/** 败方倍率 / losing-group multiplier */
+		/** 败方倍率 / losing-group multiplier */
 		private float loosingGroupMultiplier = 1;
-	/** evergale canyon reward / evergale canyon reward */
+		/** evergale canyon reward / evergale canyon reward */
 		protected EvergaleCanyonReward evergaleCanyonReward;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed = false;
 	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	/** evergalecanyon 任务 / evergale canyon task */
+		/** evergalecanyon 任务 / evergale canyon task */
 		private final List<Future<?>> evergaleCanyonTask = new ArrayList<Future<?>>();
 	
 	protected EvergaleCanyonPlayerReward getPlayerReward(Player player) {
@@ -82,7 +82,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -207,7 +207,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
              * 处理 visit。
              * Handle visit.
              *
-             * opponent
+             * @param opponent 对手 / opponent
              */
             @Override
             public void visit(Player opponent) {
@@ -382,8 +382,8 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
      * 处理玩家复活事件。
      * Handle a player revive event.
      *
-     * 玩家 / player
-     * result
+     * @param player 玩家 / player
+     * @return 结果 / result
      */
     @Override
     public boolean onReviveEvent(Player player) {
@@ -398,9 +398,9 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param lastAttacker 最后攻击者 / last attacker
-	 * result
+	 * @return 结果 / result
 	 */
 	@Override
     public boolean onDie(Player player, Creature lastAttacker) {
@@ -499,7 +499,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -632,16 +632,16 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void handleUseItemFinish(Player player, Npc npc) {
 		int point = 0;
 		switch (npc.getNpcId()) {
-		   /**
-	 * Pure Neutral
-	 */
+			/**
+			 * Pure Neutral
+			 */
 			case 835210: //Artifact Core Fragment.
 				despawnNpc(npc);
 				switch (player.getRace()) {
@@ -781,9 +781,9 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					break;
 				}
 			break;
-		   /**
-	 * Pure Light
-	 */
+			/**
+			 * Pure Light
+			 */
 			case 835304: //Artifact Core Fragment.
 				despawnNpc(npc);
 				switch (player.getRace()) {
@@ -933,9 +933,9 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					break;
 				}
 			break;
-		   /**
-	 * Pure Dark
-	 */
+			/**
+			 * Pure Dark
+			 */
 			case 835309: //Artifact Core Fragment.
 				despawnNpc(npc);
 				switch (player.getRace()) {
@@ -1221,7 +1221,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
 	 *
-	 * result
+	 * @return 结果 / result
 	 */
 	@Override
     public InstanceReward<?> getInstanceReward() {

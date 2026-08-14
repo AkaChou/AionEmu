@@ -49,52 +49,52 @@ import java.util.concurrent.Future;
 @InstanceID(302340000)
 public class BastionOfSoulsInstance extends GeneralInstanceHandler
 {
-	/** prison ice / prison ice */
+		/** prison ice / prison ice */
 		private int prisonIce;
-	/** boss witch / boss witch */
+		/** boss witch / boss witch */
 		private int bossWitch;
-	/** prison core / prison core */
+		/** prison core / prison core */
 		private int prisonCore;
 	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
-	/** 视频种族 / video race */
+		/** 视频种族 / video race */
 		private Race videoRace;
 	/** 开始时间 / start time */
 	private long startTime;
-	/** idab1ere wave / idab1ere wave */
+		/** idab1ere wave / idab1ere wave */
 		private int IDAb1EreWave;
 	/** 副本时间戳 / instance timestamp */
 	private long instanceTime;
-	/** start drakan high / start drakan high */
+		/** start drakan high / start drakan high */
 		private int startDrakanHigh;
-	/** bridge drakan high / bridge drakan high */
+		/** bridge drakan high / bridge drakan high */
 		private int bridgeDrakanHigh;
-	/** 副本计时器 / instance timer */
+		/** 副本计时器 / instance timer */
 		private Future<?> instanceTimer;
 	// Boss 波次。 / Boss Wave.
-	/** 灵魂堡垒任务 A1 / bastion task a1 */
+		/** 灵魂堡垒任务 A1 / bastion task a1 */
 		private Future<?> bastionTaskA1;
-	/** 灵魂堡垒任务 A2 / bastion task a2 */
+		/** 灵魂堡垒任务 A2 / bastion task a2 */
 		private Future<?> bastionTaskA2;
-	/** 灵魂堡垒任务 A3 / bastion task a3 */
+		/** 灵魂堡垒任务 A3 / bastion task a3 */
 		private Future<?> bastionTaskA3;
-	/** 灵魂堡垒任务 A4 / bastion task a4 */
+		/** 灵魂堡垒任务 A4 / bastion task a4 */
 		private Future<?> bastionTaskA4;
-	/** 灵魂堡垒任务 A5 / bastion task a5 */
+		/** 灵魂堡垒任务 A5 / bastion task a5 */
 		private Future<?> bastionTaskA5;
-	/** 灵魂堡垒任务 A6 / bastion task a6 */
+		/** 灵魂堡垒任务 A6 / bastion task a6 */
 		private Future<?> bastionTaskA6;
-	/** 灵魂堡垒任务 A7 / bastion task a7 */
+		/** 灵魂堡垒任务 A7 / bastion task a7 */
 		private Future<?> bastionTaskA7;
-	/** 灵魂堡垒任务 A8 / bastion task a8 */
+		/** 灵魂堡垒任务 A8 / bastion task a8 */
 		private Future<?> bastionTaskA8;
-	/** 灵魂堡垒任务 A9 / bastion task a9 */
+		/** 灵魂堡垒任务 A9 / bastion task a9 */
 		private Future<?> bastionTaskA9;
-	/** 灵魂堡垒任务 A10 / bastion task a10 */
+		/** 灵魂堡垒任务 A10 / bastion task a10 */
 		private Future<?> bastionTaskA10;
-	/** 灵魂堡垒任务 a11 / bastion task a11 */
+		/** 灵魂堡垒任务 a11 / bastion task a11 */
 		private Future<?> bastionTaskA11;
-	/** 灵魂堡垒任务 a12 / bastion task a12 */
+		/** 灵魂堡垒任务 a12 / bastion task a12 */
 		private Future<?> bastionTaskA12;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
@@ -102,14 +102,14 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	/** 灵魂堡垒任务 / bastion task */
+		/** 灵魂堡垒任务 / bastion task */
 		private final List<Future<?>> bastionTask = new ArrayList<Future<?>>();
 	
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -331,9 +331,9 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param flyingRing 飞行环标识 / flying-ring id
-	 * result
+	 * @return 结果 / result
 	 */
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {
@@ -405,7 +405,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -649,8 +649,8 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {

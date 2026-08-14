@@ -251,6 +251,7 @@ public class GameStartupSequenceLifecycle {
      */
     public void start(Boolean chatServerEnabledOverride) {
         XmlDataLoader.preloadContextAsync(); // 尽早异步预热 StaticData JAXBContext，与后续启动步骤并行（借鉴 aion-server GameServer:93）
+        // Warm up the StaticData JAXBContext asynchronously as early as possible, in parallel with later startup steps (based on aion-server GameServer:93).
         systemPropertiesLifecycle.start();
         long start = startupLogLifecycle.start();
 
@@ -295,6 +296,7 @@ public class GameStartupSequenceLifecycle {
     }
 
     // ponytail: 每个 lifecycle 已在自身记录 loadTimeMillis，这里反射汇总打印一次；新增 lifecycle 自动纳入，无需维护列表
+    // ponytail: each lifecycle records its own loadTimeMillis; reflectively aggregate them here once, new lifecycles are picked up automatically without a maintenance list
     /**
      * 反射读取各 lifecycle 字段的 {@code getLoadTimeMillis()}，按耗时降序打印阶段计时。
      * Reflectively read each lifecycle field's {@code getLoadTimeMillis()} and log timings descending.
@@ -311,6 +313,7 @@ public class GameStartupSequenceLifecycle {
                 }
             } catch (ReflectiveOperationException ignored) {
                 // 非 lifecycle 字段或无计时方法，跳过
+                // Skip non-lifecycle fields or those without a timing method.
             }
         }
         timings.sort(Map.Entry.<String, Long>comparingByValue().reversed());

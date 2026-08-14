@@ -31,7 +31,8 @@ public class PlayerDisconnectedEvent implements TeamEvent, Predicate<PlayerAllia
 	}
 
 	/**
-	 * Player should be in alliance before disconnection
+	 * 玩家在下线前应在联盟中。
+	 * Player should be in the alliance before disconnection.
 	 */
 	@Override
 	public boolean checkCondition() {

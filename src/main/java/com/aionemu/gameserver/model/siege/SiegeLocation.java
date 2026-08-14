@@ -108,31 +108,31 @@ public class SiegeLocation implements ZoneHandler {
 		this.legionId = legionId;
 	}
 
-	/** 返回 next state / Returns the next state */
+	/** 返回下一个状态 / Returns the next state */
 	public int getNextState() {
 		return nextState;
 	}
 
-	/** 设置 next state / Sets the next state */
+	/** 设置下一个状态 / Sets the next state */
 	public void setNextState(int nextState) {
 		this.nextState = nextState;
 	}
 
 	/**
-	 * @return Whether vulnerable
+	 * @return 是否可攻击 / Whether vulnerable
 	 */
 	public boolean isVulnerable() {
 		return this.vulnerable;
 	}
 
 	/**
-	 * @return Whether under shield
+	 * @return 是否处于护盾下 / Whether under shield
 	 */
 	public boolean isUnderShield() {
 		return this.isUnderShield;
 	}
 
-	/** 设置 under shield / Sets the under shield */
+	/** 设置护盾状态 / Sets the under shield */
 	public void setUnderShield(boolean value) {
 		this.isUnderShield = value;
 		if (shields != null) {
@@ -142,7 +142,7 @@ public class SiegeLocation implements ZoneHandler {
 		}
 	}
 
-	/** 设置 shields / Sets the shields */
+	/** 设置护盾列表 / Sets the shields */
 	public void setShields(List<SiegeShield> shields) {
 		this.shields = shields;
 		log.debug("Attached shields for locId: " + locationId);
@@ -152,18 +152,22 @@ public class SiegeLocation implements ZoneHandler {
 	}
 
 	/**
-	 * @param player 是否可传送。 / Whether can teleport
-	  */
+	 * 判断玩家是否可传送。
+	 * Checks whether the player can teleport.
+	 *
+	 * @param player 待判断的玩家 / player to check
+	 * @return 是否可传送 / Whether can teleport
+	 */
 	public boolean isCanTeleport(Player player) {
 		return canTeleport;
 	}
 
-	/** 设置 can teleport / Sets the can teleport */
+	/** 设置传送权限 / Sets the can teleport */
 	public void setCanTeleport(boolean canTeleport) {
 		this.canTeleport = canTeleport;
 	}
 
-	/** 设置 vulnerable / Sets the vulnerable */
+	/** 设置可攻击状态 / Sets the vulnerable */
 	public void setVulnerable(boolean value) {
 		this.vulnerable = value;
 	}
@@ -185,7 +189,11 @@ public class SiegeLocation implements ZoneHandler {
 	}
 
 	/**
-	 * @param creature Whether inside location
+	 * 判断生物是否位于据点区域内。
+	 * Checks whether the creature is inside the location zone.
+	 *
+	 * @param creature 待判断的生物 / creature to check
+	 * @return 是否在区域内 / Whether inside location
 	 */
 	public boolean isInsideLocation(Creature creature) {
 		if (zone.isEmpty()) {
@@ -211,7 +219,7 @@ public class SiegeLocation implements ZoneHandler {
 	public void clearLocation() {
 	}
 
-	/** 在 EnterZone / On Enter Zone */
+	/** 进入区域时 / On Enter Zone */
 	@Override
 	public synchronized void onEnterZone(Creature creature, ZoneInstance zone) {
 		if (!creatures.containsKey(creature.getObjectId())) {
@@ -222,7 +230,7 @@ public class SiegeLocation implements ZoneHandler {
 		}
 	}
 
-	/** 在 LeaveZone / On Leave Zone */
+	/** 离开区域时 / On Leave Zone */
 	@Override
 	public synchronized void onLeaveZone(Creature creature, ZoneInstance zone) {
 		if (!this.isInsideLocation(creature)) {
@@ -231,7 +239,7 @@ public class SiegeLocation implements ZoneHandler {
 		}
 	}
 
-	/** 对所有玩家执行 / do On All Players. */
+	/** 对所有玩家执行 / Performs on all players. */
 	public void doOnAllPlayers(Visitor<Player> visitor) {
 		try {
 			for (Player player : playersSnapshot()) {
@@ -244,12 +252,12 @@ public class SiegeLocation implements ZoneHandler {
 		}
 	}
 
-	/** 返回 creatures / Returns the creatures */
+	/** 返回生物集合 / Returns the creatures */
 	public Map<Integer, Creature> getCreatures() {
 		return creatures;
 	}
 
-	/** 返回 creatures snapshot / Returns the creatures snapshot */
+	/** 返回生物集合快照 / Returns the creatures snapshot */
 	public List<Creature> getCreaturesSnapshot() {
 		synchronized (creatures) {
 			return new ArrayList<Creature>(creatures.values());
@@ -272,17 +280,17 @@ public class SiegeLocation implements ZoneHandler {
 		return buffId = template.getBuffId();
 	}
 
-	/** 返回增益 ID / Returns the buff id a */
+	/** 返回魔族增益 ID / Returns the buff id a */
 	public int getBuffIdA() {
 		return buffIdA = template.getBuffIdA();
 	}
 
-	/** 返回增益 IDe / Returns the buff id e */
+	/** 返回天族增益 ID / Returns the buff id e */
 	public int getBuffIdE() {
 		return buffIdE = template.getBuffIdE();
 	}
 
-	/** 返回 outpost id / Returns the outpost id */
+	/** 返回前哨站 ID / Returns the outpost id */
 	public int getOutpostId() {
 		return outpostId = template.getOutpostId();
 	}

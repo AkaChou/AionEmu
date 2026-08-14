@@ -7,10 +7,10 @@ package com.aionemu.gameserver.model.gameobjects.state;
  * @author Sweetkr
  */
 public enum CreatureSeeState {
-	NORMAL(0), // Normal
-	SEARCH1(1), // See-Through: Hide I
-	SEARCH2(2), // See-Through: Hide II
-	SEARCH5(5), // no idea :)
+	NORMAL(0), // 正常 / Normal
+	SEARCH1(1), // 透视：隐藏 I / See-Through: Hide I
+	SEARCH2(2), // 透视：隐藏 II / See-Through: Hide II
+	SEARCH5(5), // 未知效果 / no idea :)
 	SEARCH10(10);
 
 	private int id;

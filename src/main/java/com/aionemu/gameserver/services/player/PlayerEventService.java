@@ -20,10 +20,10 @@ import java.util.concurrent.TimeUnit;
 public class PlayerEventService {
     /**
      * -- SETTER --
-     *  setInstanceProvider 方法。
-     *  setInstanceProvider method.
+     * 设置实例提供者（Spring 注入）。
+     *  Sets the instance provider (Spring injection).
      *
-     * provider
+     *  @param instanceProvider 实例提供者 / instance provider
      */
     @Setter
     private static volatile ObjectProvider<PlayerEventService> instanceProvider;
@@ -115,7 +115,8 @@ public class PlayerEventService {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 * result
+	 *
+	 * @return 服务单例 / service singleton
 	 */
 	public static PlayerEventService getInstance() {
 		ObjectProvider<PlayerEventService> provider = instanceProvider;

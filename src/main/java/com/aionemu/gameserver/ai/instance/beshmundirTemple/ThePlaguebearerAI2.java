@@ -39,10 +39,10 @@ public class ThePlaguebearerAI2 extends AggressiveNpcAI2
 				int nrNpc = Rnd.get(1, 2);
 				switch (nrNpc) {
 				    case 1:
-					    nrNpc = 281808; //Plaguebearer Fragment.
+					    nrNpc = 281808; // 瘟疫使者残片 / Plaguebearer Fragment.
 					break;
 				    case 2:
-					    nrNpc = 281809; //Plaguebearer Fragment.
+					    nrNpc = 281809; // 瘟疫使者残片 / Plaguebearer Fragment.
 					break;
 				}
 				rndSpawnInRange(nrNpc, distance);

@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 阿诺哈刷新点模板（静态数据/XML）。
- * XML template.
+ * Anoha spawn template (static data/XML).
  *
  * @author Rinzler (Encom)
  */

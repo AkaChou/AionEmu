@@ -53,9 +53,9 @@ public class CM_GROUP_LOOT extends AionClientPacket {
 		unk3 = readC(); // 3.0
 		unk4 = readC(); // 3.5
 		npcId = readD();
-		distributionId = readC();// 2: Roll 3: Bid
-		roll = readD();// 0: Never Rolled 1: Rolled
-		bid = readQ();// 0: No Bid else bid amount
+		distributionId = readC();// 2：掷骰 3：竞价 / 2: Roll 3: Bid
+		roll = readD();// 0：未掷骰 1：已掷骰 / 0: Never Rolled 1: Rolled
+		bid = readQ();// 0：无竞价，否则为竞价金额 / 0: No Bid else bid amount
 	}
 
 	/**

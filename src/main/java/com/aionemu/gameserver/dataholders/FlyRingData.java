@@ -28,7 +28,7 @@ public class FlyRingData {
 	 * 返回飞行环模板数量；若列表尚未初始化则初始化为空列表并返回 0。
 	 * Returns the number of fly ring templates; initializes an empty list and returns 0 if null.
 	 *
-	 * template count
+	 * @return fly ring templates; initializes an empty list and returns 0 if null数量 / Returns the number of fly ring templates; initializes an empty list and returns 0 if null.
 	 */
 	public int size() {
 		if (flyRingTemplates == null) {

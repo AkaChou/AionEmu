@@ -22,7 +22,7 @@ public class SphereKnownList extends PlayerAwareKnownList {
 	 * Creates a sphere-radius known list.
 	 *
 	 * @param owner 列表所有者 / list owner
-	 * sphere radius
+	 * @param radius 球体判定半径 / sphere radius
 	 */
 	public SphereKnownList(VisibleObject owner, float radius) {
 		super(owner);

@@ -48,7 +48,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * 以前哨位置模板构造运行时实例。
 	 * Constructs a runtime instance from an outpost location template.
 	 *
-	 * Outpost location
+	 * @param outpostLocation 前哨位置 / outpost location
 	 */
 	public Outpost(OL outpostLocation) {
 		list.add(Race.ASMODIANS);
@@ -140,7 +140,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * 清理指定前哨的全部本地 NPC。
 	 * Despawns all local NPCs of the given outpost.
 	 *
-	 * Outpost location id
+	 * @param outpostLocationId 前哨位置 ID / outpost location id
 	 */
 	protected void despawn(int outpostLocationId) {
 		setFlag(null);
@@ -238,7 +238,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * 获取旗帜 NPC。
 	 * Returns the flag NPC.
 	 *
-	 * Flag NPC
+	 * @return 旗帜 NPC / flag NPC
 	 */
 	public Npc getFlag() {
 		return flag;
@@ -248,7 +248,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * 设置旗帜 NPC。
 	 * Sets the flag NPC.
 	 *
-	 * Flag NPC
+	 * @param flag 旗帜 NPC / flag NPC
 	 */
 	public void setFlag(Npc flag) {
 		this.flag = flag;
@@ -258,7 +258,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * 获取 BOSS NPC。
 	 * Returns the boss NPC.
 	 *
-	 * Boss NPC
+	 * @return BOSS NPC / boss NPC
 	 */
 	public Npc getBoss() {
 		return boss;
@@ -268,7 +268,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * 设置 BOSS NPC。
 	 * Sets the boss NPC.
 	 *
-	 * Boss NPC
+	 * @param boss BOSS NPC / boss NPC
 	 */
 	public void setBoss(Npc boss) {
 		this.boss = boss;
@@ -278,7 +278,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * 获取 BOSS 死亡监听器。
 	 * Returns the boss death listener.
 	 *
-	 * Death listener
+	 * @return 死亡监听器 / death listener
 	 */
 	public OutpostBossDeathListener getOutpostBossDeathListener() {
 		return baseBossDeathListener;
@@ -288,7 +288,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * 前哨是否已结束。
 	 * Whether the outpost is finished.
 	 *
-	 * @return {@code true} if finished。
+	 * @return 前哨已结束则为 true / true if finished
 	 */
 	public boolean isFinished() {
 		return finished.get();
@@ -298,7 +298,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * 获取前哨位置模板。
 	 * Returns the outpost location template.
 	 *
-	 * Location template
+	 * @return 位置模板 / location template
 	 */
 	public OL getOutpostLocation() {
 		return outpostLocation;
@@ -308,7 +308,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * 获取前哨 ID。
 	 * Returns the outpost id.
 	 *
-	 * Outpost id
+	 * @return 前哨 ID / outpost id
 	 */
 	public int getId() {
 		return outpostLocation.getId();
@@ -338,7 +338,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * 获取袭击单位列表。
 	 * Returns the attacker list.
 	 *
-	 * Attackers
+	 * @return 袭击单位列表 / attackers
 	 */
 	public List<Npc> getAttackers() {
 		return attackers;

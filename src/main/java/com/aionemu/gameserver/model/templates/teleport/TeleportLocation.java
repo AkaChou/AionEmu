@@ -50,12 +50,12 @@ public class TeleportLocation {
 		return price;
 	}
 
-	/** 返回 price pvp / Returns the price pvp */
+	/** 返回 PvP 价格 / Returns the pvp price */
 	public int getPricePvp() {
 		return pricePvp;
 	}
 
-	/** 返回 required quest / Returns the required quest */
+	/** 返回所需任务 / Returns the required quest */
 	public int getRequiredQuest() {
 		return requiredQuest;
 	}

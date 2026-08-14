@@ -38,13 +38,13 @@ public class IdianDepthsLocation {
 		return isActive;
 	}
 
-	/** 设置 active idian depths / Sets the active idian depths */
+	/** 设置当前的伊迪安深渊 / Sets the active idian depths */
 	public void setActiveIdianDepths(IdianDepths<IdianDepthsLocation> idianDepths) {
 		isActive = idianDepths != null;
 		this.activeIdianDepths = idianDepths;
 	}
 
-	/** 返回当前 idiandepths / Returns the active idian depths */
+	/** 返回当前伊迪安深渊 / Returns the active idian depths */
 	public IdianDepths<IdianDepthsLocation> getActiveIdianDepths() {
 		return activeIdianDepths;
 	}

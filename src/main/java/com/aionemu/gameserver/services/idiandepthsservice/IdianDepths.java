@@ -38,7 +38,7 @@ public abstract class IdianDepths<IL extends IdianDepthsLocation> {
 	 * 绑定伊迪安深渊地点。
 	 * Binds the Idian Depths location.
 	 *
-	 * location
+	 * @param idianDepthsLocation 伊迪安深渊地点 / Idian Depths location
 	 */
 	public IdianDepths(IL idianDepthsLocation) {
 		this.idianDepthsLocation = idianDepthsLocation;
@@ -105,7 +105,7 @@ public abstract class IdianDepths<IL extends IdianDepthsLocation> {
 	 * 获取绑定地点。
 	 * Returns the bound location.
 	 *
-	 * location
+	 * @return 绑定地点 / bound location
 	 */
 	public IL getIdianDepthsLocation() {
 		return idianDepthsLocation;
@@ -115,7 +115,7 @@ public abstract class IdianDepths<IL extends IdianDepthsLocation> {
 	 * 获取地点 ID。
 	 * Returns the location id.
 	 *
-	 * location id
+	 * @return 地点 ID / location id
 	 */
 	public int getIdianDepthsLocationId() {
 		return idianDepthsLocation.getId();

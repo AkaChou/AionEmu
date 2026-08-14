@@ -20,8 +20,6 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	 * 构造武器类型包装；双手持有时归一为单手剑双持键。
 	 * Builds wrapper; dual-wield both hands normalize to dual 1H sword key.
 	 *
-	 * main hand
-	 * off hand
 	 */
 	public WeaponTypeWrapper(WeaponType mainHand, WeaponType offHand) {
 		if (mainHand != null && offHand != null) {
@@ -37,8 +35,6 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	 * 相等比较（主/副手与外层服务）。
 	 * Equality by main/off-hand and outer service.
 	 *
-	 * object
-	 * whether equal
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -68,7 +64,6 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	 * 字符串表示。
 	 * String representation.
 	 *
-	 * description
 	 */
 	@Override
 	public String toString() {
@@ -80,7 +75,6 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	 * 哈希码。
 	 * Hash code.
 	 *
-	 * hash
 	 */
 	@Override
 	public int hashCode() {
@@ -97,7 +91,6 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	 * Compares weapon wrappers (for sort/lookup).
 	 *
 	 * @param o 另一个包装 / other wrapper
-	 * compare result
 	 */
 	@Override
 	public int compareTo(WeaponTypeWrapper o) {
@@ -117,7 +110,6 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	 * 获取主手武器类型。
 	 * Gets main-hand weapon type.
 	 *
-	 * main hand
 	 */
 	public WeaponType getMainHand() {
 		return this.mainHand;
@@ -127,7 +119,6 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	 * 获取副手武器类型。
 	 * Gets off-hand weapon type.
 	 *
-	 * off hand
 	 */
 	public WeaponType getOffHand() {
 		return this.offHand;

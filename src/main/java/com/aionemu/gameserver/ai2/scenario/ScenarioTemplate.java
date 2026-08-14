@@ -18,7 +18,7 @@ public class ScenarioTemplate implements AI2Scenario {
 	 *
 	 * @param ai 当前 AI 实例 / Current AI instance
 	 * @param event 事件类型 / Event type
-	 * Related creature
+	 * @param creature 相关生物 / related creature
 	 */
 	@Override
 	public void onCreatureEvent(AbstractAI ai, AIEventType event, Creature creature) {

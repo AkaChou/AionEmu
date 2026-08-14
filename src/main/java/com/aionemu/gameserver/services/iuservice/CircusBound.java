@@ -4,8 +4,8 @@ import com.aionemu.gameserver.model.iu.IuLocation;
 import com.aionemu.gameserver.model.iu.IuStateType;
 
 /**
- * IU 演唱会默认实现：切入 OPEN / 回到 CLOSED。
- * back to CLOSED.
+ * IU 演唱会默认实现：启动时切入 OPEN 状态，停止时回到 CLOSED 状态。
+ * Default IU concert implementation: switches to OPEN on start, back to CLOSED on stop.
  *
  * @author Rinzler (Encom)
  */

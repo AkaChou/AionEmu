@@ -18,7 +18,7 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 public class CM_ATTACK extends AionClientPacket {
 
 	/**
-	 * 客户端要对话的目标对象 ID，0 表示取消选择 / Target object id that client wants to TALK WITH or 0 if wants to unselect
+	 * 客户端要攻击的目标对象 ID，0 表示取消选择 / Target object id the client wants to attack, 0 to unselect
 	 */
 	private int targetObjectId;
 	private int time;

@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 全局掉落区域模板（静态数据/XML）。
- * XML template.
+ * Global drop zone template (static data/XML).
  *
  * @author Wnkrz
  */

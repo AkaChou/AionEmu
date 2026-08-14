@@ -86,7 +86,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
      *
      * player id
      *
-     * @param playerId
+     * @param playerId 玩家 ID / player id
      * @return 欧比斯军阶 / abyss rank
      */
     @Override
@@ -180,9 +180,9 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
      * 插入新的欧比斯军阶记录。
      * Inserts a new abyss rank row.
      *
-     * player object id
+     * @param con 玩家对象 ID / player object id
      * @param rank 欧比斯军阶 / abyss rank
-     * true on success
+     * @return 成功时为 true / true on success
      */
     private boolean addRank(Connection con, final int objectId, final AbyssRank rank) throws SQLException {
         try (PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
@@ -212,9 +212,9 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
      * 更新已有欧比斯军阶记录。
      * Updates an existing abyss rank row.
      *
-     * player object id
+     * @param con 玩家对象 ID / player object id
      * @param rank 欧比斯军阶 / abyss rank
-     * true on success
+     * @return 成功时为 true / true on success
      */
     private boolean updateRank(Connection con, final int objectId, final AbyssRank rank) throws SQLException {
         try (PreparedStatement stmt = con.prepareStatement(UPDATE_QUERY)) {
@@ -332,8 +332,8 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
      * 统计军团成员数量。
      * Counts members of the given legion.
      *
-     * legion id
-     * member count
+     * @param legionId 军团 ID / legion id
+     * @return 成员数 / member count
      */
     private int getLegionMembersCount(final int legionId) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -357,7 +357,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
      * 加载指定阵营玩家的 AP 映射；可限制活跃天数。
      * Loads player AP map for the race; optionally filters by offline days.
      *
-     * 阵营 / race
+     * @param race 阵营 / race
      * lower AP limit
      * @param maxOfflineDays 最大离线天数，0 表示不过滤 / max offline days, 0 means no filter
      * @return 玩家 ID 到 AP 的映射 / map of player id to AP
@@ -395,7 +395,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
      * 加载指定阵营玩家的 GP 映射；可限制活跃天数。
      * Loads player GP map for the race; optionally filters by offline days.
      *
-     * 阵营 / race
+     * @param race 阵营 / race
      * lower GP limit
      * @param maxOfflineDays 最大离线天数，0 表示不过滤 / max offline days, 0 means no filter
      * @return 玩家 ID 到 GP 的映射 / map of player id to GP
@@ -433,8 +433,8 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
      * 更新玩家欧比斯军阶枚举与名额。
      * Updates the player's abyss rank enum and top-ranking quota.
      *
-     * player id
-     * abyss rank enum
+     * @param playerId 玩家 ID / player id
+     * @param rankEnum 欧比斯等级枚举 / abyss rank enum
      */
     @Override
     public void updateAbyssRank(int playerId, AbyssRankEnum rankEnum) {
@@ -539,11 +539,11 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
      * 是否支持该数据库。
      * Whether the database is supported.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
      *
-     * @return 若 supported 则为 true / true if supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

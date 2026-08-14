@@ -77,7 +77,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 			        }
 				});
 			}
-		}, 1800000); //30 Minutes.
+		}, 1800000); // 30 分钟 / 30 Minutes.
 	}
 	
 	@Override
@@ -113,10 +113,10 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 								if (!isAlreadyDead()) {
 									GameEngineServices.skillEngine().getSkill(getOwner(), 21767, 60, getOwner()).useNoAnimationSkill();
 									startThinkTask();
-									int total = explosiveSacrifice(855262); //Explosive Sacrifice.
+									int total = explosiveSacrifice(855262); // 爆炸性牺牲 / Explosive Sacrifice.
 									if (total == 0 || (6 - total) != 0) {
 										for (int i = 0; i < (6 - total); i++) {
-											rndSpawn(855262); //Explosive Sacrifice.
+											rndSpawn(855262); // 爆炸性牺牲 / Explosive Sacrifice.
 										}
 									}
 								}
@@ -185,11 +185,11 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {
-					deleteNpcs(282746); //Lava.
-                    int total = explosiveSacrifice(282746); //Lava.
+					deleteNpcs(282746); // 熔岩 / Lava.
+                    int total = explosiveSacrifice(282746); // 熔岩 / Lava.
                     if (total == 0 || (8 - total) != 0) {
 					    for (int i = 0; i < (8 - total); i++) {
-					    	rndSpawn(282746); //Lava.
+					    	rndSpawn(282746); // 熔岩 / Lava.
 					    }
                     }
 					startSpecialSkillTask();
@@ -226,9 +226,9 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 																@Override
 																public void run() {
 																	if (!isAlreadyDead()) {
-																		deleteNpcs(282747); //Lava.
-																		rndSpawn(282747); //Lava.
-																		rndSpawn(282747); //Lava.
+																		deleteNpcs(282747); // 熔岩 / Lava.
+																		rndSpawn(282747); // 熔岩 / Lava.
+																		rndSpawn(282747); // 熔岩 / Lava.
 																	}
 																}
 															}, 2000);
@@ -324,9 +324,9 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 		cancelPhaseTask();
 		cancelSpecialSkillTask();
 		percents.clear();
-		deleteNpcs(282746); //Lava.
-		deleteNpcs(282747); //Lava.
-		deleteNpcs(855262); //Explosive Sacrifice.
+		deleteNpcs(282746); // 熔岩 / Lava.
+		deleteNpcs(282747); // 熔岩 / Lava.
+		deleteNpcs(855262); // 爆炸性牺牲 / Explosive Sacrifice.
 		final WorldPosition p = getPosition();
 		if (p != null) {
 			sendBerserkAnohaGuide();
@@ -361,9 +361,9 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 		cancelSpecialSkillTask();
 		addPercent();
 		curentPercent = 100;
-		deleteNpcs(282746); //Lava.
-		deleteNpcs(282747); //Lava.
-		deleteNpcs(855262); //Explosive Sacrifice.
+		deleteNpcs(282746); // 熔岩 / Lava.
+		deleteNpcs(282747); // 熔岩 / Lava.
+		deleteNpcs(855262); // 爆炸性牺牲 / Explosive Sacrifice.
 		isAggred.set(false);
 		super.handleBackHome();
 	}

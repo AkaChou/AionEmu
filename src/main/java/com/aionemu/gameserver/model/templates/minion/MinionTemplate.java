@@ -14,7 +14,7 @@ import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 
 /**
  * 守护灵模板（静态数据/XML）。
- * XML template.
+ * Minion template (static data/XML).
  *
  * @author Falke_34
  */

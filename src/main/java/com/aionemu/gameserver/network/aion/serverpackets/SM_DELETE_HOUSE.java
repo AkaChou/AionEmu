@@ -11,6 +11,12 @@ public class SM_DELETE_HOUSE extends AionServerPacket {
 
 	private int address;
 
+	/**
+	 * 按房屋地址构造删除包。
+	 * Creates a house deletion packet for the given address.
+	 *
+	 * @param address 房屋地址 / house address
+	 */
 	public SM_DELETE_HOUSE(int address) {
 		this.address = address;
 	}

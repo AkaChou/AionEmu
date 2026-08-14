@@ -61,8 +61,8 @@ public class RecipeData {
 	 * 返回指定阵营、技能与技能等级上限下可自动学习的配方。
 	 * Returns auto-learn recipes for the given race, skill and max skill level.
 	 *
-	 * 阵营 / race
-	 * skill id
+	 * @param race 阵营 / race
+	 * @param skillId 技能 ID / skill id
 	 * @param maxLevel 技能等级上限 / max skill level
 	 * @return 可自动学习配方列表 / auto-learn recipe list
 	 */
@@ -115,7 +115,7 @@ public class RecipeData {
 	 * 返回已加载的配方数量。
 	 * Returns the number of loaded recipes.
 	 *
-	 * recipe count
+	 * @return 已加载的制作配方数量 / Returns the number of loaded recipes.
 	 */
 	public int size() {
 		return recipeData.size();

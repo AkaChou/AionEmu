@@ -9,7 +9,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 
 /**
- * Change 队伍 Leader 活动，用于团队2相关逻辑。
+ * 变更队伍队长事件（团队2）。
  * Change Group Leader Event for team 2 logic.
  *
  * @author ATracer
@@ -24,7 +24,7 @@ public class ChangeGroupLeaderEvent extends ChangeLeaderEvent<PlayerGroup> {
 		super(team, null);
 	}
 
-	/** 处理活动。 / Handle event. */
+	/** 处理事件。 / Handle event. */
 	@Override
 	public void handleEvent() {
 		Player oldLeader = team.getLeaderObject();

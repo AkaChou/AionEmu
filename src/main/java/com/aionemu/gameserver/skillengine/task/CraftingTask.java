@@ -79,9 +79,9 @@ public class CraftingTask extends AbstractCraftTask {
 	 * 构造单次制作任务。
 	 * Creates a single-craft task.
 	 *
-	 * requesting player
+	 * @param requestor 发起制作的玩家 / requesting player
 	 * @param responder 制作台等静态对象 / craft station static object
-	 * recipe template
+	 * @param recipeTemplate 配方模板 / recipe template
 	 * @param skillLvlDiff 技能等级差 / skill level difference
 	 * @param bonus 制作加成 / craft bonus
 	 */
@@ -93,12 +93,12 @@ public class CraftingTask extends AbstractCraftTask {
 	 * 构造可批量制作的任务。
 	 * Creates a craft task with optional multi-craft count.
 	 *
-	 * requesting player
+	 * @param requestor 发起制作的玩家 / requesting player
 	 * @param responder 制作台等静态对象 / craft station static object
-	 * recipe template
+	 * @param recipeTemplate 配方模板 / recipe template
 	 * @param skillLvlDiff 技能等级差 / skill level difference
 	 * @param bonus 制作加成 / craft bonus
-	 * craft attempt count
+	 * @param craftCount 制作次数 / craft attempt count
 	 */
 	public CraftingTask(Player requestor, StaticObject responder, RecipeTemplate recipeTemplate, int skillLvlDiff, int bonus, int craftCount) {
 		super(requestor, responder, skillLvlDiff);

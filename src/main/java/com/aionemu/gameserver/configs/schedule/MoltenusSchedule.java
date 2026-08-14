@@ -68,8 +68,8 @@ public class MoltenusSchedule {
 	@XmlRootElement(name = "moltenus")
 	public static class Moltenus {
 		/**
-	 * 莫尔泰努斯 ID / Moltenus ID
-	 */
+		 * 莫尔泰努斯 ID / Moltenus ID
+		 */
 		@XmlAttribute(required = true)
 		private int id;
 

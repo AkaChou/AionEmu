@@ -98,6 +98,9 @@ public class AtreianBestiaryTemplate {
 	@XmlType(name = "BookType")
 	@XmlEnum
 	public enum BookType {
-		NORMAL(), HERO();
+		/** 普通图鉴 / Normal book */
+		NORMAL(),
+		/** 英雄图鉴 / Hero book */
+		HERO();
 	}
 }

@@ -30,14 +30,16 @@ public class FriendList implements Iterable<Friend> {
 	private Player player;
 
 	/**
-	 * 为指定玩家构造空好友列表。 / Constructs an empty friend list for the given player.
+	 * 为指定玩家构造空好友列表。
+	 * Constructs an empty friend list for the given player.
 	 */
 	public FriendList(Player player) {
 		this(player, new ConcurrentLinkedQueue<Friend>());
 	}
 
 	/**
-	 * 为指定玩家构造含初始好友的好友列表。 / Constructs a friend list for the given player, with the given friends.
+	 * 为指定玩家构造含初始好友的好友列表。
+	 * Constructs a friend list for the given player, with the given friends.
 	 */
 	public FriendList(Player owner, Collection<Friend> newFriends) {
 		this.friends = new ConcurrentLinkedQueue<Friend>(newFriends);
@@ -45,9 +47,10 @@ public class FriendList implements Iterable<Friend> {
 	}
 
 	/**
-	 * 获取 friend 带此 objId<br/> 返回空若其为 not 我们的 friend。 / Gets the friend with this objId<br /> Returns null if it is not our friend
+	 * 按对象 ID 获取好友，非本玩家好友则返回 null。
+	 * Gets the friend with this objId<br /> Returns null if it is not our friend
 	 *
-	 * @param objId objId of friend
+	 * @param objId 好友对象 ID / objId of friend
 	 * @return Friend
 	 */
 	public Friend getFriend(int objId) {
@@ -60,16 +63,18 @@ public class FriendList implements Iterable<Friend> {
 	}
 
 	/**
-	 * 返回编号的 friends 在列表。 / Returns number of friends in list
+	 * 返回列表中的好友数量。
+	 * Returns number of friends in list
 	 *
-	 * @return Num Friends in list
+	 * @return 列表中的好友数量 / Num Friends in list
 	 */
 	public int getSize() {
 		return friends.size();
 	}
 
 	/**
-	 * 添加给定 friend 到列表 <br/> 到添加 friend 在数据库, see<tt>PlayerService</tt>。 / Adds the given friend to the list<br /> To add a friend in the database, see <tt>PlayerService</tt>
+	 * 将给定好友添加到列表；数据库持久化见 {@code PlayerService}。
+	 * Adds the given friend to the list<br /> To add a friend in the database, see <tt>PlayerService</tt>
 	 *
 	 * @param friend
 	 */
@@ -78,10 +83,11 @@ public class FriendList implements Iterable<Friend> {
 	}
 
 	/**
-	 * 获取 Friend 按此名称。 / Gets the Friend by this name
+	 * 按名称获取好友。
+	 * Gets the Friend by this name
 	 *
-	 * @param name Name of friend
-	 * @return Friend matching name
+	 * @param name 好友名称 / Name of friend
+	 * @return 匹配名称的好友 / Friend matching name
 	 */
 	public Friend getFriend(String name) {
 		for (Friend friend : friends) {
@@ -93,7 +99,8 @@ public class FriendList implements Iterable<Friend> {
 	}
 
 	/**
-	 * 从好友列表删除指定好友（仅影响本玩家）。 / Deletes given friend from this friends list<br /> <ul> <li>Note: This will only affect this player, not the friend.</li> <li>Note: Sends the packet to update the client automatically</li> <li>Note: You should use requestDel to delete from both lists</li> </ul>.
+	 * 从本玩家好友列表删除指定好友（仅影响本玩家，不影响对方）。
+	 * Deletes given friend from this friends list<br /> <ul> <li>Note: This will only affect this player, not the friend.</li> <li>Note: Sends the packet to update the client automatically</li> <li>Note: You should use requestDel to delete from both lists</li> </ul>
 	 */
 	public void delFriend(int friendOid) {
 		Iterator<Friend> it = iterator();
@@ -123,7 +130,8 @@ public class FriendList implements Iterable<Friend> {
 	}
 
 	/**
-	 * 设置 status 的玩家 <br/><ul><li>Note : Doesnot 更新 friends</li></ul>。 / Sets the status of the player<br /> <ul> <li>Note: Does not update friends</li> </ul>
+	 * 设置玩家状态，注意不会同步给好友。
+	 * Sets the status of the player<br /> <ul> <li>Note: Does not update friends</li> </ul>
 	 *
 	 * @param status
 	 */
@@ -131,9 +139,11 @@ public class FriendList implements Iterable<Friend> {
 		Status previousStatus = this.status;
 		this.status = status;
 
-		for (Friend friend : friends) // For all my friends
+		// 遍历所有好友。 / For all my friends
+		for (Friend friend : friends)
 		{
-			if (friend.isOnline()) // If the player is online
+			// 若该玩家在线。 / If the player is online
+			if (friend.isOnline())
 			{
 				Player friendPlayer = friend.getPlayer();
 				if (friendPlayer == null) {
@@ -179,16 +189,19 @@ public class FriendList implements Iterable<Friend> {
 
 	public enum Status {
 		/**
-	 * User is offline or invisible
-	 */
+		 * 用户离线或隐身。
+		 * User is offline or invisible
+		 */
 		OFFLINE((byte) 0),
 		/**
-	 * User is online
-	 */
+		 * 用户在线。
+		 * User is online
+		 */
 		ONLINE((byte) 1),
 		/**
-	 * User is away or busy
-	 */
+		 * 用户离开或忙碌。
+		 * User is away or busy
+		 */
 		AWAY((byte) 3);
 
 		byte value;
@@ -203,9 +216,10 @@ public class FriendList implements Iterable<Friend> {
 		}
 
 		/**
-	 * 获取 Status 从其 intvalue<br/> 返回空若 out 的 range。 / Gets the Status from its int value<br /> Returns null if out of range
+	 * 按整数值获取状态，超出范围返回 null。
+	 * Gets the Status from its int value<br /> Returns null if out of range
 	 *
-	 * @param value range 0-3
+	 * @param value 状态值，范围 0-3 / range 0-3
 	 * @return Status
 	 */
 		public static Status getByValue(byte value) {

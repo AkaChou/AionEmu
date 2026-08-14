@@ -38,7 +38,7 @@ public abstract class AgentFight<AL extends AgentLocation> {
 	 * 绑定代理地点。
 	 * Binds the agent location.
 	 *
-	 * location
+	 * @param agentLocation 位置 / location
 	 */
 	public AgentFight(AL agentLocation) {
 		this.agentLocation = agentLocation;
@@ -105,7 +105,7 @@ public abstract class AgentFight<AL extends AgentLocation> {
 	 * 获取绑定地点。
 	 * Returns the bound location.
 	 *
-	 * location
+	 * @return 位置 / location
 	 */
 	public AL getAgentLocation() {
 		return agentLocation;
@@ -115,7 +115,7 @@ public abstract class AgentFight<AL extends AgentLocation> {
 	 * 获取地点 ID。
 	 * Returns the location id.
 	 *
-	 * location id
+	 * @return 位置 ID / location id
 	 */
 	public int getAgentLocationId() {
 		return agentLocation.getId();

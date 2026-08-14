@@ -15,7 +15,7 @@ public class Boss extends MoltenusFight<MoltenusLocation> {
 	 * 绑定熔岩领主地点。
 	 * Binds the Moltenus location.
 	 *
-	 * location
+	 * @param moltenus 熔岩领主地点 / Moltenus location
 	 */
 	public Boss(MoltenusLocation moltenus) {
 		super(moltenus);

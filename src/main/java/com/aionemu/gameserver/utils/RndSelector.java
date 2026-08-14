@@ -29,8 +29,8 @@ public class RndSelector<E> {
 		 * 创建带权重节点。
 		 * Creates a weighted node.
 		 *
-		 * Node value
-		 * Weight
+		 * @param value 节点值 / Node value
+		 * @param weight 权重 / Weight
 		 */
 		public RndNode(T value, int weight) {
 			this.value = value;
@@ -42,7 +42,7 @@ public class RndSelector<E> {
 		 * Compares nodes by weight.
 		 *
 		 * @param o 另一个节点 / Other node
-		 * Weight difference
+		 * @return 权重差 / Weight difference
 		 */
 		@Override
 		public int compareTo(RndNode<T> o) {
@@ -67,7 +67,7 @@ public class RndSelector<E> {
 	 * 使用指定初始容量创建选择器。
 	 * Creates a selector with the given initial capacity.
 	 *
-	 * Initial capacity
+	 * @param initialCapacity 初始容量 / Initial capacity
 	 */
 	public RndSelector(int initialCapacity) {
 		nodes = new ArrayList<RndNode<E>>(initialCapacity);
@@ -77,8 +77,8 @@ public class RndSelector<E> {
 	 * 添加带权重的元素；值为 null 或权重不大于 0 时忽略。
 	 * Adds a weighted value; ignored when value is null or weight is not positive.
 	 *
-	 * Element value
-	 * Weight
+	 * @param value 元素值 / Element value
+	 * @param weight 权重 / Weight
 	 */
 	public void add(E value, int weight) {
 		if (value == null || weight <= 0) {

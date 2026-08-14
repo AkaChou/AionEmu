@@ -52,9 +52,8 @@ public class SkillSkin implements IExpirable {
 	/** 过期消息。 / Expire Message. */
 	@Override
 	public void expireMessage(Player player, int time) {
-		PacketSendUtility.sendBrightYellowMessageOnCenter(player, "Skill Animation Expired"); // For testing should be
-																								// 若全部则稍后移除 / removed later if all
-																								// 100% 有效 / works 100%
+		PacketSendUtility.sendBrightYellowMessageOnCenter(player, "Skill Animation Expired"); // 仅用于测试，全部生效后稍后移除 / For testing
+																								// should be removed later if all works 100%
 	}
 
 	/** 是否立即过期 / Whether expire now */

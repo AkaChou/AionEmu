@@ -31,7 +31,7 @@ public class Ab1_1011_Sim_Weak_Seller_LiAI2 extends NpcAI2
 				case 273425:
 				case 273427:
 		        case 273429:
-				    //to do...
+				    // 待办 / To do...
 				break;
 			}
 		} else if (dialogId == 1012) {

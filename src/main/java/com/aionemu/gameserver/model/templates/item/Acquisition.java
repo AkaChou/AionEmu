@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Acquisition 模板（静态数据/XML）。
- * XML template.
+ * 物品获取模板：按类型（欧比斯/奖励/兑换券）与数量定义获取条件。
+ * Item acquisition template: defines acquisition by type (AP/reward/coupon) and quantity.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,7 +41,7 @@ public class Acquisition {
 		return itemCount;
 	}
 
-	/** 返回 required ap / Returns the required ap */
+	/** 返回所需欧比斯点数 / Returns the required AP */
 	public int getRequiredAp() {
 		return ap;
 	}

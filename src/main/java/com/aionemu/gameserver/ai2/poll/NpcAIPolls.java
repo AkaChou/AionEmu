@@ -14,8 +14,8 @@ public class NpcAIPolls {
 	 * 判断 NPC 死亡后是否应当腐朽消失；默认返回肯定。
 	 * Decide whether the NPC should decay after death; defaults to positive.
 	 *
-	 * NPC AI instance
-	 * Positive answer
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 * @return 肯定回答 / Positive answer
 	 */
 	public static AIAnswer shouldDecay(NpcAI2 npcAI) {
 		return AIAnswers.POSITIVE;
@@ -25,8 +25,8 @@ public class NpcAIPolls {
 	 * 判断 NPC 是否应当重生；默认返回肯定。
 	 * Decide whether the NPC should respawn; defaults to positive.
 	 *
-	 * NPC AI instance
-	 * Positive answer
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 * @return 肯定回答 / Positive answer
 	 */
 	public static AIAnswer shouldRespawn(NpcAI2 npcAI) {
 		return AIAnswers.POSITIVE;

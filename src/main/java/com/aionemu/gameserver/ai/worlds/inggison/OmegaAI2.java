@@ -67,7 +67,7 @@ public class OmegaAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 18671, 60, getOwner()).useNoAnimationSkill(); //Magic Ward.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18671, 60, getOwner()).useNoAnimationSkill(); // 魔法护盾 / Magic Ward.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -103,27 +103,27 @@ public class OmegaAI2 extends AggressiveNpcAI2
 						    case 1:
 							    // 欧米伽召唤生物。 / Omega summons a creature.
 								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400606, 0);
-								spawn(281945, x, y, z, (byte) 0); //Clone Of Power.
+								spawn(281945, x, y, z, (byte) 0); // 力量分身 / Clone Of Power.
 							break;
 							case 2:
 							    // 欧米伽召唤强大生物。 / Omega summons a powerful creature.
 								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400607, 0);
-							    spawn(281946, x, y, z, (byte) 0); //Clone Of Explosion.
+							    spawn(281946, x, y, z, (byte) 0); // 爆炸分身 / Clone Of Explosion.
 							break;
 							case 3:
 							    // 欧米伽召唤治疗生物。 / Omega summons a healing creature.
 								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400608, 0);
-							    spawn(281947, x, y, z, (byte) 0); //Clone Of Healing.
+							    spawn(281947, x, y, z, (byte) 0); // 治疗分身 / Clone Of Healing.
 							break;
 							case 4:
 							    // 欧米伽召唤制造屏障的生物。 / Omega summons a creature that creates barriers.
 								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400609, 0);
-							    spawn(281948, x, y, z, (byte) 0); //Clone Of Physical Barrier.
+							    spawn(281948, x, y, z, (byte) 0); // 物理屏障分身 / Clone Of Physical Barrier.
 							break;
 							case 5:
 							    // 欧米伽召唤制造屏障的生物。 / Omega summons a creature that creates barriers.
 								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400609, 0);
-							    spawn(281949, x, y, z, (byte) 0); //Clone Of Magical Barrier.
+							    spawn(281949, x, y, z, (byte) 0); // 魔法屏障分身 / Clone Of Magical Barrier.
 							break;
 						}
 					}
@@ -166,11 +166,11 @@ public class OmegaAI2 extends AggressiveNpcAI2
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
 		if (p != null) {
-			deleteNpcs(p.getWorldMapInstance().getNpcs(281945)); //Clone Of Power.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(281946)); //Clone Of Explosion.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(281947)); //Clone Of Healing.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(281948)); //Clone Of Physical Barrier.
-			deleteNpcs(p.getWorldMapInstance().getNpcs(281949)); //Clone Of Magical Barrier.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(281945)); // 力量分身 / Clone Of Power.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(281946)); // 爆炸分身 / Clone Of Explosion.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(281947)); // 治疗分身 / Clone Of Healing.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(281948)); // 物理屏障分身 / Clone Of Physical Barrier.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(281949)); // 魔法屏障分身 / Clone Of Magical Barrier.
 		}
 		cancelPhaseTask();
 		super.handleDied();

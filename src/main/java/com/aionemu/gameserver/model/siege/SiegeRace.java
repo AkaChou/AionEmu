@@ -10,8 +10,12 @@ import com.aionemu.gameserver.model.Race;
  * @author Sarynth
  */
 public enum SiegeRace {
-	/** 天族 / Elyos. */
-	ELYOS(0, 1800481), ASMODIANS(1, 1800483), BALAUR(2, 1800485);
+	/** 天族。 / Elyos. */
+	ELYOS(0, 1800481),
+	/** 魔族。 / Asmodians. */
+	ASMODIANS(1, 1800483),
+	/** 龙族。 / Balaur. */
+	BALAUR(2, 1800485);
 
 	private int raceId;
 	private DescriptionId descriptionId;
@@ -26,7 +30,7 @@ public enum SiegeRace {
 		return this.raceId;
 	}
 
-	/** 返回种族 / Returns the by race*/
+	/** 按通用种族映射为要塞种族 / Returns the siege race for a race */
 	public static SiegeRace getByRace(Race race) {
 		switch (race) {
 		case ASMODIANS:
@@ -39,7 +43,7 @@ public enum SiegeRace {
 	}
 
 	/**
-	 * @return the descriptionId
+	 * @return 描述 ID / the descriptionId
 	 */
 	public DescriptionId getDescriptionId() {
 		return descriptionId;

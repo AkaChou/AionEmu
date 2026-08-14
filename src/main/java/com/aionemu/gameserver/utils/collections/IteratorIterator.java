@@ -81,9 +81,7 @@ public class IteratorIterator<V> implements Iterator<V> {
 	 * 返回下一个元素；无更多元素时抛出 {@link NoSuchElementException}。
 	 * Return the next element; throws {@link NoSuchElementException} when exhausted.
 	 *
-	 * Next element
-	 *
-	 * @return
+	 * @return 下一个元素 / Next element
 	 * @throws NoSuchElementException 无更多元素时 / When exhausted
 	 */
 	@Override
@@ -98,7 +96,7 @@ public class IteratorIterator<V> implements Iterator<V> {
 	 * 不支持移除。
 	 * Remove is not supported.
 	 *
-	 * Always thrown
+	 * @throws UnsupportedOperationException 始终抛出 / Always thrown
 	 */
 	@Override
 	public void remove() {

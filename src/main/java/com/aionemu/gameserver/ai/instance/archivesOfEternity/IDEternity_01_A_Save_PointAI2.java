@@ -85,7 +85,7 @@ public class IDEternity_01_A_Save_PointAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//? ? ??  ?.
+					// 主神档案室移动装置已激活。 / The Eternity archive teleport device has been activated.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_Teleport_MSG_01);
 				}
 			}
@@ -96,7 +96,7 @@ public class IDEternity_01_A_Save_PointAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//？？？ III / ?? ? III
+					// 人类档案室移动装置已激活。 / The human archive teleport device has been activated.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_Teleport_MSG_02);
 				}
 			}
@@ -107,7 +107,7 @@ public class IDEternity_01_A_Save_PointAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//？？？ III / ?? ? III
+					// 亚特雷亚档案室移动装置已激活。 / The Atreia archive teleport device has been activated.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_Teleport_MSG_03);
 				}
 			}
@@ -118,7 +118,7 @@ public class IDEternity_01_A_Save_PointAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//？？？ III / ?? ? III
+					// 根源档案室移动装置已激活。 / The origin archive teleport device has been activated.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_Teleport_MSG_04);
 				}
 			}

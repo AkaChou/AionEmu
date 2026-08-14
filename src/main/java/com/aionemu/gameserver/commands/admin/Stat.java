@@ -34,8 +34,6 @@ public class Stat extends AdminCommand {
 	 * 列出目标生物某属性的修饰函数，可选 details 输出技能来源。
 	 * Lists modifiers for a stat on the target creature; optional details dump skill source.
 	 *
-	 * 执行 GM / Admin player
-	 * StatEnum name, optional details
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -71,7 +69,6 @@ public class Stat extends AdminCommand {
 	 * Collects detail text for a stat function (proxy, skill owner, etc.).
 	 *
 	 * @param stat 属性修饰函数 / Stat function
-	 * Detail text
 	 */
 	private String collectDetails(IStatFunction stat) {
 		StringBuffer sb = new StringBuffer();

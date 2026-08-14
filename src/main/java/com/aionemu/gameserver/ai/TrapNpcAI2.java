@@ -31,7 +31,7 @@ public class TrapNpcAI2 extends NpcAI2
 	 * 处理看见生物事件。
 	 * Handle seeing a creature.
 	 *
-	 * creature
+	 * @param creature 生物 / creature
 	 */
 	@Override
 	protected void handleCreatureSee(Creature creature) {
@@ -43,7 +43,7 @@ public class TrapNpcAI2 extends NpcAI2
 	 * 处理生物移动事件。
 	 * Handle creature-moved.
 	 *
-	 * creature
+	 * @param creature 移动的生物 / moved creature
 	 */
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
@@ -68,7 +68,7 @@ public class TrapNpcAI2 extends NpcAI2
 	 * 处理自定义事件。
 	 * Handle custom event.
 	 *
-	 * event id
+	 * @param eventId 事件 ID / event id
 	 * @param args 附加参数 / extra args
 	 */
 	@Override

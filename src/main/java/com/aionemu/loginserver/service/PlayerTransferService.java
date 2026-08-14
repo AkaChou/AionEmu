@@ -36,11 +36,10 @@ public class PlayerTransferService {
 
     /**
      * 兼容旧入口的单例访问（已弃用，请走 Spring / {@link LoginTransferServices}）。
-     * {@link LoginTransferServices}).
+     * Legacy singleton access (deprecated; prefer Spring / {@link LoginTransferServices}).
      *
-     * service instance
-     *
-     * @return @deprecated 启动迁移后改用服务定位器 / use the service locator after boot migration
+     * @return 单例实例 / service instance
+     * @deprecated 启动迁移后改用服务定位器 / use the service locator after boot migration
      */
     @Deprecated(since = "boot-migration")
     public static PlayerTransferService getInstance() {
@@ -118,8 +117,8 @@ public class PlayerTransferService {
      * 源服上报角色数据后，构造转移请求并转发到目标服。
      * After the source server reports character data, build a transfer request and forward it to the target server.
      *
-     * task id
-     * character name
+     * @param taskId 任务 ID / task id
+     * @param name 角色名 / character name
      * @param db 角色二进制数据 / character binary payload
      */
     public void requestTransfer(int taskId, String name, byte[] db) {
@@ -182,8 +181,8 @@ public class PlayerTransferService {
      * 源服拒绝执行转移时，标记任务为错误并写回数据库。
      * When the source server refuses the transfer, mark the task as error and persist it.
      *
-     * task id
-     * refusal reason
+     * @param taskId 任务 ID / task id
+     * @param reason 拒绝原因 / refusal reason
      */
     public void onTaskStop(int taskId, String reason) {
         PlayerTransferTask task = this.tasks.remove(taskId);
@@ -196,8 +195,8 @@ public class PlayerTransferService {
      * 目标服克隆失败时回滚账号激活状态并通知错误。
      * On target-server clone failure, restore account activation and report the error.
      *
-     * task id
-     * error reason
+     * @param taskId 任务 ID / task id
+     * @param reason 错误原因 / error reason
      */
     public void onError(int taskId, String reason) {
         PlayerTransferRequest request = this.transfers.get(taskId);
@@ -235,8 +234,8 @@ public class PlayerTransferService {
      * 目标服克隆成功后恢复账号并通知源服完成。
      * After successful clone on the target server, restore accounts and notify the source server of completion.
      *
-     * task id
-     * new player id
+     * @param taskId 任务 ID / task id
+     * @param playerId 新角色 ID / new player id
      */
     public void onOk(int taskId, int playerId) {
         PlayerTransferRequest request = this.transfers.get(taskId);
@@ -271,6 +270,14 @@ public class PlayerTransferService {
         sourceServer.getConnection().sendPacket(new SM_PTRANSFER_RESPONSE(PlayerTransferResultStatus.OK, request));
     }
 
+	/**
+	 * 在单事务中持久化任务与账号变更；失败时回滚。
+	 * Persists the task and account changes in one transaction; rolls back on failure.
+	 *
+	 * @param task 任务，可为 null / task, may be null
+	 * @param accounts 需更新的账号 / accounts to update
+	 * @return 是否成功 / whether the write succeeded
+	 */
 	private boolean persist(PlayerTransferTask task, Account... accounts) {
 		AccountDAO accountDAO = DAOManager.getDAO(AccountDAO.class);
 		try (Connection con = DatabaseFactory.getConnection()) {

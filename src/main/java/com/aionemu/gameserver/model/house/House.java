@@ -119,7 +119,7 @@ public class House extends VisibleObject {
 		}
 	}
 
-	/** 返回着陆 / Returns the land */
+	/** 返回土地。 / Returns the land. */
 	public HousingLand getLand() {
 		if (land == null) {
 			for (HousingLand housingland : DataManager.HOUSE_DATA.getLands()) {
@@ -350,7 +350,7 @@ public class House extends VisibleObject {
 	}
 
 	/**
-	 * @return Whether fee paid
+	 * @return 是否已缴纳维护费 / whether fee paid
 	 */
 	public boolean isFeePaid() {
 		return feePaid;
@@ -533,8 +533,12 @@ public class House extends VisibleObject {
 	}
 
 	/**
-	 * @param status 是否处于指定房屋状态。 / Whether in housing status
-	  */
+	 * 判断是否处于指定房屋状态。
+	 * Returns whether the house is in the given owner-info flag state.
+	 *
+	 * @param status 房屋所有者标志 / house owner flags
+	 * @return 是否处于该状态 / whether in the given state
+	 */
 	public boolean isInHousingStatus(PlayerHouseOwnerFlags status) {
 		return (houseOwnerInfoFlags & status.getId()) != 0;
 	}

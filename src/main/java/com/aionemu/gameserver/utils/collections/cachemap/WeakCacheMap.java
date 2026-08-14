@@ -38,8 +38,8 @@ class WeakCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 		 * 使用键、引用对象与队列构造。
 		 * Construct with key, referent and queue.
 		 *
-		 * Key
-		 * Referent
+	 * @param key 键 / Key
+	 * @param referent 引用对象 / Referent
 		 * @param q 引用队列 / Reference queue
 		 */
 		Entry(K key, V referent, ReferenceQueue<? super V> q) {
@@ -51,7 +51,7 @@ class WeakCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 		 * 返回关联键。
 		 * Return the associated key.
 		 *
-		 * Key
+		 * @return 键 / Key
 		 */
 		K getKey() {
 			return key;
@@ -62,8 +62,8 @@ class WeakCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 	 * 使用缓存名与值名构造。
 	 * Construct with cache name and value name.
 	 *
-	 * Cache name
-	 * Value name
+	 * @param cacheName 缓存名称 / Cache name
+	 * @param valueName 值名称 / Value name
 	 */
 	WeakCacheMap(String cacheName, String valueName) {
 		super(cacheName, valueName);
@@ -90,10 +90,10 @@ class WeakCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 	 * 创建带键的弱引用。
 	 * Create a weak reference holding the key.
 	 *
-	 * Key
-	 * Value
-	 * Reference queue
-	 * Weak reference
+	 * @param key 键 / Key
+	 * @param value 值 / Value
+	 * @param vReferenceQueue 引用队列 / Reference queue
+	 * @return 弱引用 / Weak reference
 	 */
 	@Override
 	protected Reference<V> newReference(K key, V value, ReferenceQueue<V> vReferenceQueue) {

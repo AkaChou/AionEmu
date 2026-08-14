@@ -39,7 +39,7 @@ public class CM_CS_AUTH_RESPONSE extends CsClientPacket {
 	 * 使用指定操作码构造应答包。
 	 * Constructs the response packet with the given opcode.
 	 *
-	 * packet opcode
+	 * @param opcode 数据包操作码 / packet opcode
 	 */
 	public CM_CS_AUTH_RESPONSE(int opcode) {
 		super(opcode);

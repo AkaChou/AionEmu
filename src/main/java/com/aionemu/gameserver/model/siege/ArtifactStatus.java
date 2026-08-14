@@ -7,8 +7,14 @@ package com.aionemu.gameserver.model.siege;
  * @author MrPoke
  */
 public enum ArtifactStatus {
-	/** 空闲 / Idle. */
-	IDLE(0), ACTIVATION(1), CASTING(2), ACTIVATED(3);
+	/** 空闲。 / Idle. */
+	IDLE(0),
+	/** 激活中。 / Activation. */
+	ACTIVATION(1),
+	/** 施法中。 / Casting. */
+	CASTING(2),
+	/** 已激活。 / Activated. */
+	ACTIVATED(3);
 
 	private int id;
 

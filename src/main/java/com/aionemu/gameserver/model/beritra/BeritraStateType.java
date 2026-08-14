@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.model.beritra;
 
 /**
- * 贝里特拉状态类型枚举。
+ * 布里特拉状态类型枚举。
  * Beritra State Type enumeration.
  *
  * @author Rinzler (Encom)
@@ -9,5 +9,7 @@ package com.aionemu.gameserver.model.beritra;
 
 public enum BeritraStateType {
 	/** 入侵 / Invasion. */
-	INVASION, PEACE;
+	INVASION,
+	/** 和平 / Peace. */
+	PEACE;
 }

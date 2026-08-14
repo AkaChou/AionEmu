@@ -5,8 +5,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Random;
 
 /**
- * Disassemble 物品模板（静态数据/XML）。
- * XML template.
+ * 分解产出物品模板：物品 ID 与数量（支持 min-max 范围随机）。
+ * Disassemble output template: item id and count (range-random supported).
  *
  * @author BeckUp.Media
  */
@@ -50,11 +50,12 @@ public class DisassembleItem {
 
 
     /**
-	 * 返回 random 编号在 specifiedrange ( inclusive )。 / Returns a random number in the specified range (inclusive)
+	 * 返回指定范围（含端点）内的随机数。
+	 * Returns a random number in the specified range (inclusive).
 	 *
-	 * @param min minimum value
-	 * @param max maximum value
-	 * @return random number in the range [min, max]
+	 * @param min 最小值 / minimum value
+	 * @param max 最大值 / maximum value
+	 * @return [min, max] 范围内的随机数 / random number in the range [min, max]
 	 */
     private int getRandomInRange(int min, int max) {
         if (min > max) {
@@ -66,7 +67,10 @@ public class DisassembleItem {
     }
 
 	/**
-	 * @return Whether disuse
+	 * 是否已停用（不再产出）。
+	 * Whether this entry is deprecated.
+	 *
+	 * @return 是否停用 / Whether disuse
 	 */
 	public boolean isDisuse() {
 		return disuse;

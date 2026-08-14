@@ -13,9 +13,11 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Rift")
 public class RiftTemplate {
+	/** 裂隙 ID / Rift id */
 	@XmlAttribute(name = "id")
 	protected int id;
 
+	/** 世界 ID / World id */
 	@XmlAttribute(name = "world")
 	protected int world;
 

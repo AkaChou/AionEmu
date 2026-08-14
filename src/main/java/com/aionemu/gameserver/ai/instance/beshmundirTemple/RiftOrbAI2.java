@@ -41,7 +41,7 @@ public class RiftOrbAI2 extends NpcAI2 {
 				    }
 				}
 			});
-			spawn(730276, 1604.6683f, 1606.5886f, 306.8665f, (byte) 90); //Prison Of Ice Entrance.
+			spawn(730276, 1604.6683f, 1606.5886f, 306.8665f, (byte) 90); // 冰之监狱入口 / Prison Of Ice Entrance.
 		  	forQuest(player);
 			AI2Actions.deleteOwner(this);
         }

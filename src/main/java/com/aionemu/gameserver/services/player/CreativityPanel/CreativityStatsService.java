@@ -26,10 +26,10 @@ public class CreativityStatsService {
 	 * Applies essence stats.
 	 *
 	 * 玩家 / player
-	 * type
-	 * size
+	 * @param type 类型 / type
+	 * @param size 槽位大小 / size
 	 * @param id ID / id
-	 * point
+	 * @param point 点数 / point
 	 */
 	public void onEssenceApply(Player player, int type, int size, int id, int point) {
 		if (player.isArchDaeva()) {
@@ -67,7 +67,7 @@ public class CreativityStatsService {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 * result
+	 * @return 服务实例 / service instance
 	 */
 	public static CreativityStatsService getInstance() {
 		ObjectProvider<CreativityStatsService> provider = instanceProvider;
@@ -81,7 +81,7 @@ public class CreativityStatsService {
 	 * setInstanceProvider 方法。
 	 * setInstanceProvider method.
 	 *
-	 * provider
+	 * @param provider 提供者 / provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<CreativityStatsService> provider) {
 		instanceProvider = provider;

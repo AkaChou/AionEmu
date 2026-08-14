@@ -15,7 +15,7 @@ public class LfgChannel extends RaceChannel {
      * 创建组队招募频道。
      * Creates a looking-for-group channel.
      *
-     * 阵营 / race
+     * @param race 阵营 / race
      * @param identifier 字符串标识 / string identifier
      */
     public LfgChannel(Race race, String identifier) {

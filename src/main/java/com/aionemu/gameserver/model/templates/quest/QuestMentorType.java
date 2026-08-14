@@ -3,7 +3,7 @@ package com.aionemu.gameserver.model.templates.quest;
 import jakarta.xml.bind.annotation.XmlEnum;
 
 /**
- * 任务 Mentor 类型枚举。
+ * 任务导师类型枚举。
  * Quest Mentor Type enumeration.
  *
  * @author MrPoke

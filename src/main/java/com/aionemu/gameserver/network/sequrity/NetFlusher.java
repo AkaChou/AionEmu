@@ -20,8 +20,8 @@ public final class NetFlusher {
 	 * 以固定间隔调度任务（守护 Timer）。
 	 * Schedules a task at a fixed interval (daemon timer).
 	 *
-	 * task
-	 * interval in ms
+	 * @param runnable 待调度的任务 / task to schedule
+	 * @param interval 调度间隔（毫秒）/ interval in ms
 	 */
 	public static void add(final Runnable runnable, long interval) {
 		_timer.scheduleAtFixedRate(new TimerTask() {

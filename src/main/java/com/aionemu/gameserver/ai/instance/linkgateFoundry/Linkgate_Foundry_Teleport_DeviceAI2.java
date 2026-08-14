@@ -22,13 +22,23 @@ public class Linkgate_Foundry_Teleport_DeviceAI2 extends NpcAI2
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getOwner().getObjectId(), 1011));
 	}
 	
+	/**
+	 * 处理对话选择：将玩家传送至秘密实验室的三个不同传送点。
+	 * Handles dialog selection: teleports the player to one of three secret-lab waypoints.
+	 *
+	 * @param player 对话玩家 / dialog player
+	 * @param dialogId 对话框选项 ID / dialog option ID
+	 * @param questId 任务 ID / quest ID
+	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
+	 * @return 始终为 true / always true
+	 */
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		int instanceId = getPosition().getInstanceId();
 		switch (getNpcId()) {
-		    case 702591: //Linkgate Foundry Teleport Device.
+		    case 702591: // 传送装置 / Linkgate Foundry Teleport Device.
 		        switch (player.getWorldId()) {
-		            case 301270000: //Linkgate Foundry 4.7
+		            case 301270000: // Linkgate Foundry 副本（4.7）/ Linkgate Foundry instance (4.7)
 				        if (dialogId == 10000) {
 							// 秘密实验室位置已暴露三次。实验室空无一物，研究人员已逃离。 / The Secret Lab's location was revealed three times. Nothing remains in the lab and the reserachers have fled.
 							PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDLDF4_Re_01_secret_room_03, 0);

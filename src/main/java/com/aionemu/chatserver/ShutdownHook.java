@@ -43,7 +43,7 @@ public class ShutdownHook extends Thread {
      * Bind process bridge and concrete service instances.
      *
      * @param processBridge 进程运行时桥 / Process runtime bridge
-     * Restart service
+     * @param restartService 重启服务 / Restart service
      * @param gameServerService 游戏服服务 / Game-server service
      */
     public ShutdownHook(ChatProcessRuntimeBridge processBridge, RestartService restartService, GameServerService gameServerService) {
@@ -99,11 +99,9 @@ public class ShutdownHook extends Thread {
      * Configure the singleton with process bridge and restart service, then return it.
      *
      * @param processBridge 进程运行时桥 / Process runtime bridge
-     * Restart service
-     *
-     * @param processBridge
+     * @param restartService 重启服务 / Restart service
      * @return 关停钩子单例 / Singleton shutdown hook
-     * @param restartService @deprecated boot 迁移后请使用 Spring Bean / Prefer the Spring bean after boot migration
+     * @deprecated boot 迁移后请使用 Spring Bean / Prefer the Spring bean after boot migration
      */
     @Deprecated(since = "boot-migration")
     public static ShutdownHook getInstance(ChatProcessRuntimeBridge processBridge, RestartService restartService) {
@@ -115,12 +113,10 @@ public class ShutdownHook extends Thread {
      * Configure the singleton with process bridge and all services, then return it.
      *
      * @param processBridge 进程运行时桥 / Process runtime bridge
-     * Restart service
-     *
+     * @param restartService 重启服务 / Restart service
      * @param gameServerService 游戏服服务 / Game-server service
-     * @param restartService
      * @return 关停钩子单例 / Singleton shutdown hook
-     * @param gameServerService @deprecated boot 迁移后请使用 Spring Bean / Prefer the Spring bean after boot migration
+     * @deprecated boot 迁移后请使用 Spring Bean / Prefer the Spring bean after boot migration
      */
     @Deprecated(since = "boot-migration")
     public static ShutdownHook getInstance(ChatProcessRuntimeBridge processBridge, RestartService restartService, GameServerService gameServerService) {
@@ -133,7 +129,7 @@ public class ShutdownHook extends Thread {
      * Configure process bridge and direct service references.
      *
      * @param processBridge 进程运行时桥 / Process runtime bridge
-     * Restart service
+     * @param restartService 重启服务 / Restart service
      * @param gameServerService 游戏服服务 / Game-server service
      */
     void configure(ChatProcessRuntimeBridge processBridge, RestartService restartService, GameServerService gameServerService) {
@@ -158,7 +154,7 @@ public class ShutdownHook extends Thread {
      * 设置直接注入的重启服务。
      * Set directly injected restart service.
      *
-     * Restart service
+     * @param restartService 重启服务 / Restart service
      */
     private void setRestartService(RestartService restartService) {
         this.restartService = restartService;
@@ -217,7 +213,7 @@ public class ShutdownHook extends Thread {
      * 执行一次关停（幂等）：停重启服务、Netty、标记 GS 离线、关线程池，可选 halt。
      * Perform one-shot shutdown (idempotent): stop restart service, Netty, mark GS offline, shut thread pool, optionally halt.
      *
-     * Whether to halt the JVM
+     * @param haltJvm 是否 halt JVM / Whether to halt the JVM
      */
     public void shutdown(boolean haltJvm) {
         if (!shutdownStarted.compareAndSet(false, true)) {
@@ -244,7 +240,7 @@ public class ShutdownHook extends Thread {
      * 解析重启服务：直接引用 → Provider → 遗留静态定位。
      * Resolve restart service: direct ref → provider → legacy static locator.
      *
-     * Restart service
+     * @return 重启服务 / Restart service
      */
     private RestartService restartService() {
         RestartService configuredRestartService = restartService;

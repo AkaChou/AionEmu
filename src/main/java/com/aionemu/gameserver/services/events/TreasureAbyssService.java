@@ -37,13 +37,13 @@ public class TreasureAbyssService {
 	/** 随机刷怪坐标池。 / Spawn coordinate pool. */
 	private static List<float[]> floatArray = new ArrayList<float[]>();
 
-	/** Cached event cron expression / Cached event cron expression */
+	/** 缓存的活动 cron 表达式 / Cached event cron expression */
 	private static final String ABYSS_EVENT_SCHEDULE = EventsConfig.ABYSS_EVENT_SCHEDULE;
 
-	/** Abyss world id / Abyss world id */
+	/** 欧比斯世界 ID / Abyss world id */
 	private static int WORLD_ID = 400010000;
 
-	/** Treasure chest NPC template id / Treasure chest NPC template id */
+	/** 宝藏箱 NPC 模板 ID / Treasure chest NPC template id */
 	private static int NPC_ID = 210596;
 
 	/**
@@ -69,11 +69,11 @@ public class TreasureAbyssService {
 			returnArray[i] = Integer.parseInt(list[i]);
 
 		}
-		// return the int array
+		// 返回 int 数组 / return the int array
 		return returnArray;
 	}
 
-	/** Current event main NPC / Current event main NPC */
+	/** 当前活动主 NPC / Current event main NPC */
 	private static Npc mainN;
 
 	/**

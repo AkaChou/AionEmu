@@ -10,7 +10,11 @@ import com.aionemu.gameserver.model.Race;
 
 public enum LegionDominionRace {
 	/** 天族 / Elyos. */
-	ELYOS(0, 1800481), ASMODIANS(1, 1800483), BALAUR(2, 1800485);
+	ELYOS(0, 1800481),
+	/** 魔族 / Asmodians. */
+	ASMODIANS(1, 1800483),
+	/** 龙族 / Balaur. */
+	BALAUR(2, 1800485);
 
 	private int raceId;
 	private DescriptionId descriptionId;
@@ -25,7 +29,7 @@ public enum LegionDominionRace {
 		return this.raceId;
 	}
 
-	/** 返回种族 / Returns the by race*/
+	/** 返回对应种族 / Returns the matching race */
 	public static LegionDominionRace getByRace(Race race) {
 		switch (race) {
 		case ASMODIANS:

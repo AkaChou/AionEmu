@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * 守护灵 Evolved 模板（静态数据/XML）。
- * XML template.
+ * 守护灵进化模板（静态数据/XML）。
+ * Minion evolution template (static data/XML).
  *
  * @author Falke_34
  */

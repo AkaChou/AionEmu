@@ -15,7 +15,7 @@ public class Valley_Torr_CrumblerAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(242603, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Tiny Valley Torr.
+		spawn(242603, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 迷你 Valley Torr / Tiny Valley Torr.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

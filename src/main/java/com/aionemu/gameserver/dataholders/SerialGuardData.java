@@ -57,7 +57,7 @@ public class SerialGuardData {
 	 * 返回等级与类型限制的合计数量。
 	 * Returns the total count of rank and type restrictions.
 	 *
-	 * total restriction count
+	 * @return 限制总数 / total restriction count
 	 */
 	public int size() {
 		return templates.size() + templatesType.size();

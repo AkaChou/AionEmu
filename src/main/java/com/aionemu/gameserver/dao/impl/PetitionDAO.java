@@ -49,7 +49,7 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
      *
      * petition id
      *
-     * @param petitionId
+     * @param petitionId 申诉 ID / petition id
      * @return 请愿工单，未找到时返回 null / petition, or null if not found
      */
     @Override
@@ -122,7 +122,7 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
      * 删除玩家当前待处理/处理中的请愿工单。
      * Deletes the player's pending or in-progress petitions.
      *
-     * player object id
+     * @param playerObjId 玩家对象 ID / player object id
      */
     @Override
     public void deletePetition(int playerObjId) {
@@ -142,7 +142,7 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
      * 插入新的请愿工单。
      * Inserts a new petition.
      *
-     * petition
+     * @param petition 申诉 / petition
      */
     @Override
     public void insertPetition(Petition petition) {
@@ -169,7 +169,7 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
      * 将请愿工单标记为已回复。
      * Marks a petition as replied.
      *
-     * petition id
+     * @param petitionId 申诉 ID / petition id
      */
     @Override
     public void setReplied(int petitionId) {
@@ -190,7 +190,7 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
      * Parses a status string into a PetitionStatus enum value.
      *
      * @param statusValue 状态字符串 / status string
-     * petition status
+     * @return 申诉状态 / petition status
      */
     private PetitionStatus getPetitionStatus(String statusValue) {
         if ("PENDING".equals(statusValue)) {
@@ -206,10 +206,10 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

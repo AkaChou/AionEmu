@@ -41,9 +41,7 @@ public class InstanceWalkerFormations {
 	 * 按路径 ID 获取已组建的巡逻队。
 	 * Returns the formed walker group for the route id.
 	 *
-	 * walker route id
-	 *
-	 * @param walkerId
+	 * @param walkerId 巡逻路径 ID / walker route id
 	 * @return 巡逻队，可能为 null / walker group or null
 	 */
 	public WalkerGroup getSpawnWalkerGroup(String walkerId) {
@@ -54,9 +52,7 @@ public class InstanceWalkerFormations {
 	 * 缓存一个待编队的集群巡逻 NPC 候选。
 	 * Caches a clustered walker NPC candidate for later formation.
 	 *
-	 * clustered npc
-	 *
-	 * @param npcWalker
+	 * @param npcWalker 集群巡逻 NPC / clustered npc
 	 * @return 是否加入成功 / whether added
 	 */
 	protected synchronized boolean cacheWalkerCandidate(ClusteredNpc npcWalker) {
@@ -111,9 +107,7 @@ public class InstanceWalkerFormations {
 	 * 按坐标哈希将候选 NPC 分组。
 	 * Groups candidate NPCs by position hash.
 	 *
-	 * candidate list
-	 *
-	 * @param candidates
+	 * @param candidates 候选列表 / candidate list
 	 * @return 位置哈希 → 成员列表 / position hash to members
 	 */
 	private Map<Integer, List<ClusteredNpc>> groupByPositionHash(List<ClusteredNpc> candidates) {

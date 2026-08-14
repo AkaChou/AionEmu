@@ -32,7 +32,6 @@ public class Repairkit extends AdminCommand {
      * Executes this admin command.
      *
      * @param admin 执行指令的管理员 / admin executing the command
-     * command arguments
      */
     public void execute(Player admin, String...params){
         if(params.length == 0){

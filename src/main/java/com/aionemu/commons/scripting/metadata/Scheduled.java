@@ -19,13 +19,13 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface Scheduled {
     /**
- * 定时任务的 Cron 表达式数组
+     * 定时任务的 Cron 表达式数组
      * Array of Cron expressions for the scheduled task
      */
     String[] value();
 
     /**
- * 是否为每个 Cron 表达式创建单独的实例
+     * 是否为每个 Cron 表达式创建单独的实例
      * Whether to create separate instances for each Cron expression
      */
     boolean instancePerCronExpression() default false;

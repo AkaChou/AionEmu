@@ -20,7 +20,7 @@ public interface GeoData {
 	 * 按世界 ID 获取地理地图。
 	 * Returns the geo map for the given world id.
 	 *
-	 * 世界 ID / world id
+	 * @param worldId 世界 ID / world id
 	 * @return 对应的地理地图 / the matching geo map
 	 */
 	GeoMap getMap(int worldId);

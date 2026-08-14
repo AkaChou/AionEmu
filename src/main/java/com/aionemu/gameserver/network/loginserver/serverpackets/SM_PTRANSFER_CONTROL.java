@@ -58,7 +58,7 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 	 * Constructs a transfer-control packet with task id only.
 	 *
 	 * @param type 控制类型 / control type
-	 * task id
+	 * @param taskId 任务 ID / task id
 	 */
 	public SM_PTRANSFER_CONTROL(byte type, int taskId) {
 		super(14);
@@ -86,7 +86,7 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 	 *
 	 * @param type 控制类型 / control type
 	 * @param tp 可转移玩家 / transferable player
-	 * result text
+	 * @param result 结果文本 / result text
 	 */
 	public SM_PTRANSFER_CONTROL(byte type, TransferablePlayer tp, String result) {
 		super(14);
@@ -99,8 +99,8 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 	 * Constructs a transfer-control packet with task id and result text.
 	 *
 	 * @param type 控制类型 / control type
-	 * task id
-	 * result text
+	 * @param taskId 任务 ID / task id
+	 * @param result 结果文本 / result text
 	 */
 	public SM_PTRANSFER_CONTROL(byte type, int taskId, String result) {
 		super(14);
@@ -181,7 +181,7 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 			writeC(playerAppearance.getNeckLength());
 			writeC(playerAppearance.getShoulderSize());
 			writeC(playerAppearance.getTorso());
-			writeC(playerAppearance.getChest()); // only woman
+			writeC(playerAppearance.getChest()); // 仅女性 / only woman
 			writeC(playerAppearance.getWaist());
 			writeC(playerAppearance.getHips());
 			writeC(playerAppearance.getArmThickness());

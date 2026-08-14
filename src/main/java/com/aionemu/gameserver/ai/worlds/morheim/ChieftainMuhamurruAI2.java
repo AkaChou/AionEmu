@@ -44,6 +44,10 @@ public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 		}
 	}
 	
+	/**
+	 * 周期性隐藏任务：每隔 14 秒施放隐藏技能并依次触发三次攻击事件。
+	 * Periodic hide task: casts the hide skill every 14 seconds and triggers three attack events in sequence.
+	 */
 	private void startHideTask() {
 		hideTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override

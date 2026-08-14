@@ -32,18 +32,18 @@ import java.util.Set;
 @InstanceID(300030000)
 public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 {
-/**
+	/**
 	@Override
     public void onEnterInstance(Player player) {
 		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/nochsanaTrainingCamp.xhtml"));
     }
-**/
+	 * */
 
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
-	 * npc
+	 * 
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -82,8 +82,8 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {

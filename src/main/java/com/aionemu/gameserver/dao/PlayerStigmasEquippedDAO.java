@@ -17,7 +17,7 @@ public abstract class PlayerStigmasEquippedDAO implements DAO {
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
 	 *
-	 * fully qualified class name
+	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -28,7 +28,7 @@ public abstract class PlayerStigmasEquippedDAO implements DAO {
 	 * 加载玩家已装备刺针列表。
 	 * Loads the equipped stigma item list for the player.
 	 *
-	 * player object id
+	 * @param playerId 玩家对象 ID / player object id
 	 * @return 已装备刺针列表 / equipped stigma list
 	 */
 	public abstract PlayerEquippedStigmaList loadItemsList(int playerId);
@@ -37,7 +37,7 @@ public abstract class PlayerStigmasEquippedDAO implements DAO {
 	 * 保存玩家已装备刺针。
 	 * Stores equipped stigma items for the player.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @return 是否保存成功 / true if stored
 	 */
 	public abstract boolean storeItems(Player player);

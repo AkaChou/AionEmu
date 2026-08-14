@@ -64,9 +64,9 @@ public class GlobalCallbackHelper {
      * Execute callbacks before method call
      *
      * @param obj 目标对象 / Target object
-     * Callback class type
+     * @param callbackClass 回调类类型 / callback class type
      * @param args 方法参数 / Method arguments
-     * Callback result
+     * @return 回调结果，无回调时返回继续 / callback result, continue if no callbacks
      */
     public static CallbackResult<?> beforeCall(Object obj, Class callbackClass, Object... args) {
         CallbackResult<?> cr = null;
@@ -94,10 +94,10 @@ public class GlobalCallbackHelper {
      * Execute callbacks after method call
      *
      * @param obj 目标对象 / Target object
-     * Callback class type
+     * @param callbackClass 回调类类型 / callback class type
      * @param args 方法参数 / Method arguments
      * @param result 方法执行结果 / Method execution result
-     * Callback result
+     * @return 回调结果，无回调时返回继续 / callback result, continue if no callbacks
      */
     public static CallbackResult<?> afterCall(Object obj, Class callbackClass, Object[] args, Object result) {
         CallbackResult<?> cr = null;

@@ -62,7 +62,7 @@ public class Acid_CanisterAI2 extends NpcAI2
 	}
 	
 	protected void handleUseItemFinish(Player player) {
-		spawn(216620, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Crimsonbark.
+		spawn(216620, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 深红树皮 / Crimsonbark.
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);
 	}

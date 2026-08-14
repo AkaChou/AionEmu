@@ -24,7 +24,7 @@ public class AttackEventHandler {
 	 * 处理受到攻击：中断返回/行走，进入战斗并开始攻击目标。
 	 * Handles being attacked: aborts returning/walking, enters fight, and starts attacking the target.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param creature 攻击者生物 / attacking creature
 	 */
 	public static void onAttack(NpcAI2 npcAI, Creature creature) {
@@ -63,7 +63,7 @@ public class AttackEventHandler {
 	 * 对当前目标强制发起攻击（复用 {@link #onAttack}）。
 	 * Forces an attack against the current target (delegates to {@link #onAttack}).
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onForcedAttack(NpcAI2 npcAI) {
 		onAttack(npcAI, (Creature) npcAI.getOwner().getTarget());
@@ -73,7 +73,7 @@ public class AttackEventHandler {
 	 * 单次攻击动作完成：刷新攻击时间并调度下一次攻击。
 	 * Completes a single attack action: renews attack time and schedules the next attack.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onAttackComplete(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
@@ -87,7 +87,7 @@ public class AttackEventHandler {
 	 * 结束攻击流程：停止攻击表情、开始休息、清理仇恨与目标。
 	 * Finishes the attack sequence: stops attack emotes, starts resting, and clears aggro/target.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onFinishAttack(NpcAI2 npcAI) {
 		if (!npcAI.canThink()) {

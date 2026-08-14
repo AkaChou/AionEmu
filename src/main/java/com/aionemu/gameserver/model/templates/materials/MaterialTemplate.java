@@ -19,12 +19,15 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "MaterialTemplate", propOrder = { "skills" })
 public class MaterialTemplate {
 
+	/** 技能列表。 / Skill list. */
 	@XmlElement(name = "skill", required = true)
 	protected List<MaterialSkill> skills;
 
+	/** 技能障碍。 / Skill obstacle. */
 	@XmlAttribute(name = "skill_obstacle")
 	protected Integer skillObstacle;
 
+	/** 模板 ID。 / Template id. */
 	@XmlAttribute(required = true)
 	protected int id;
 
@@ -33,7 +36,7 @@ public class MaterialTemplate {
 		return skills;
 	}
 
-	/** 返回 skill obstacle / Returns the skill obstacle */
+	/** 返回技能障碍 / Returns the skill obstacle */
 	public Integer getSkillObstacle() {
 		return skillObstacle;
 	}

@@ -39,20 +39,20 @@ import java.util.concurrent.Future;
 @InstanceID(301620000)
 public class DrakenseerLairInstance extends GeneralInstanceHandler
 {
-	/** abyss gate enhancer killed / abyss gate enhancer killed */
+		/** abyss gate enhancer killed / abyss gate enhancer killed */
 		private int abyssGateEnhancerKilled;
-	/** 是否启动计时器 / is start timer */
+		/** 是否启动计时器 / is start timer */
 		private boolean isStartTimer = false;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
-	/** drakenseerlair 任务 / drakenseer lair task */
+		/** drakenseerlair 任务 / drakenseer lair task */
 		private final List<Future<?>> drakenseerLairTask = new ArrayList<Future<?>>();
 	
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -115,9 +115,9 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param flyingRing 飞行环标识 / flying-ring id
-	 * result
+	 * @return 结果 / result
 	 */
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {
@@ -192,7 +192,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDie(Npc npc) {
@@ -274,9 +274,9 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

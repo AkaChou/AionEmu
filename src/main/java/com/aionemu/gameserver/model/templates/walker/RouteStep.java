@@ -17,21 +17,27 @@ import jakarta.xml.bind.annotation.XmlTransient;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RouteStep {
 
+	/** 休息时间（毫秒）/ Rest time in milliseconds */
 	@XmlAttribute(name = "rest_time", required = true)
 	private Integer time = 0;
 
+	/** Z 坐标 / Z coordinate */
 	@XmlAttribute(name = "z", required = true)
 	private float locZ;
 
+	/** Y 坐标 / Y coordinate */
 	@XmlAttribute(name = "y", required = true)
 	private float locY;
 
+	/** X 坐标 / X coordinate */
 	@XmlAttribute(name = "x", required = true)
 	private float locX;
 
+	/** 路线步序号 / Route step index */
 	@XmlAttribute(name = "step", required = true)
 	private int routeStep;
 
+	/** 下一步 / Next step */
 	@XmlTransient
 	private RouteStep nextStep;
 
@@ -57,47 +63,47 @@ public class RouteStep {
 		time = restTime;
 	}
 
-	/** 返回 x / Returns the x */
+	/** 返回 X 坐标 / Returns the x */
 	public float getX() {
 		return locX;
 	}
 
-	/** 返回 y / Returns the y */
+	/** 返回 Y 坐标 / Returns the y */
 	public float getY() {
 		return locY;
 	}
 
-	/** 返回 z / Returns the z */
+	/** 返回 Z 坐标 / Returns the z */
 	public float getZ() {
 		return locZ;
 	}
 
-	/** 设置 z / Sets the z */
+	/** 设置 Z 坐标 / Sets the z */
 	public void setZ(float z) {
 		locZ = z;
 	}
 
-	/** 返回 rest time / Returns the rest time */
+	/** 返回休息时间 / Returns the rest time */
 	public int getRestTime() {
 		return time;
 	}
 
-	/** 返回 next step / Returns the next step */
+	/** 返回下一步 / Returns the next step */
 	public RouteStep getNextStep() {
 		return nextStep;
 	}
 
-	/** 设置 next step / Sets the next step */
+	/** 设置下一步 / Sets the next step */
 	public void setNextStep(RouteStep nextStep) {
 		this.nextStep = nextStep;
 	}
 
-	/** 返回 route step / Returns the route step */
+	/** 返回路线步序号 / Returns the route step */
 	public int getRouteStep() {
 		return routeStep;
 	}
 
-	/** 设置 route step / Sets the route step */
+	/** 设置路线步序号 / Sets the route step */
 	public void setRouteStep(int routeStep) {
 		this.routeStep = routeStep;
 	}

@@ -15,7 +15,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  * 玩家创造点列表，用于创造点相关逻辑。
  * Player CP List for cp logic.
  */
-
 public final class PlayerCPList implements CPList<Player> {
 
 	private final Map<Integer, PlayerCPEntry> entry;

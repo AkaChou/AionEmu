@@ -358,11 +358,15 @@ public class TradeService {
 	 * 执行以物易物（Trade-in）购买。
 	 * Performs a trade-in purchase.
 	 *
-	 * 玩家 / player
-	 * npc object id
-	 * target item id
-	 * count
-	 * whether successful
+	 * @param player 玩家 / player
+	 * @param npcObjectId NPC 对象 ID / npc object id
+	 * @param itemId 目标物品 ID / target item id
+	 * @param count 数量 / count
+	 * @param TradeinListCount 换购列表数量 / trade-in list count
+	 * @param TradeinItemObjectId1 换购物品对象 ID 1 / trade-in item object id 1
+	 * @param TradeinItemObjectId2 换购物品对象 ID 2 / trade-in item object id 2
+	 * @param TradeinItemObjectId3 换购物品对象 ID 3 / trade-in item object id 3
+	 * @return 是否成功 / whether successful
 	 */
 	public static boolean performBuyFromTradeInTrade(Player player, int npcObjectId, int itemId, int count,
 			int TradeinListCount, int TradeinItemObjectId1, int TradeinItemObjectId2, int TradeinItemObjectId3) {

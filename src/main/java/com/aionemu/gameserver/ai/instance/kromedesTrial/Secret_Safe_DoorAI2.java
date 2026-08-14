@@ -18,7 +18,7 @@ public class Secret_Safe_DoorAI2 extends NpcAI2
 {
 	@Override
     protected void handleDialogStart(Player player) {
-        if (player.getInventory().getFirstItemByItemId(185000101) != null) { //Secret Safe Key.
+        if (player.getInventory().getFirstItemByItemId(185000101) != null) { // 密室钥匙 / Secret Safe Key.
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1352));
         } else {
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
@@ -28,9 +28,9 @@ public class Secret_Safe_DoorAI2 extends NpcAI2
 	@Override
 	public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		int instanceId = getPosition().getInstanceId();
-		if (dialogId == 10001) { //Secret Safe Key.
+		if (dialogId == 10001) { // 密室钥匙 / Secret Safe Key.
 		    switch (getNpcId()) {
-			    case 700924: //Secret Safe Door.
+			    case 700924: // 密室之门 / Secret Safe Door.
 				    TeleportService2.teleportTo(player, 300230000, instanceId, 593.46f, 774.000f, 215.58f, (byte) 0);
 				break;
 			}

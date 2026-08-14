@@ -42,7 +42,7 @@ public class OutpostData {
 	 * 返回已加载的前哨据点数量。
 	 * Returns the number of loaded outpost locations.
 	 *
-	 * location count
+	 * @return 已加载的前哨基地地点数量 / Returns the number of loaded outpost locations.
 	 */
 	public int size() {
 		return out.size();

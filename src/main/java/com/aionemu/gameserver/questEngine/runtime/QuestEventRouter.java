@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-/** Applies a caller's routing contract and isolates one owner from the others. */
+/** 应用调用方的路由契约，并将一个 owner 与其他 owner 隔离。 / Applies a caller's routing contract and isolates one owner from the others. */
 public final class QuestEventRouter {
 	private final QuestEventIndex index;
 	private final QuestAuditSink auditSink;
@@ -42,6 +42,8 @@ public final class QuestEventRouter {
 				for (QuestEventIndex.Route route : routes) {
 					OwnerResult result = invoke(event, contract, route, handler);
 					results.add(result);
+					// 布尔旧调用方在 false 时继续；UNKNOWN 也是非结论性路由结果。
+					// 任何结论性结果独占该事件并阻止对话回退。
 					// Boolean legacy callers continue on false; UNKNOWN is also a
 					// non-conclusive route result. Any conclusion owns the
 					// exclusive event and prevents dialog fallback.
@@ -161,12 +163,12 @@ public final class QuestEventRouter {
 			return owners.stream().anyMatch(owner -> owner.result() == QuestRouteResult.FAILED);
 		}
 
-		/** A handled or failed owner conclusively claims the event, so no legacy fallback may run. */
+		/** 已处理或失败的 owner 结论性认领事件，因此任何旧版回退都不得运行。 / A handled or failed owner conclusively claims the event, so no legacy fallback may run. */
 		public boolean claimed() {
 			return owners.stream().anyMatch(owner -> QuestEventRouter.isConclusive(owner.result()));
 		}
 
-		/** Returns only the owners whose own route conclusively claimed the event. */
+		/** 仅返回自身路由结论性认领事件的 owner。 / Returns only the owners whose own route conclusively claimed the event. */
 		public Set<Integer> claimedOwners() {
 			return Set.copyOf(owners.stream()
 				.filter(owner -> QuestEventRouter.isConclusive(owner.result()))
@@ -174,7 +176,7 @@ public final class QuestEventRouter {
 				.toList());
 		}
 
-		/** Returns owners that completed successfully; failed and explicitly blocked routes are excluded. */
+		/** 返回成功完成的 owner；失败与显式阻止的路由被排除。 / Returns owners that completed successfully; failed and explicitly blocked routes are excluded. */
 		public Set<Integer> handledOwners() {
 			return Set.copyOf(owners.stream()
 				.filter(owner -> owner.result() == QuestRouteResult.HANDLED)

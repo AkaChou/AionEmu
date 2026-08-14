@@ -20,7 +20,7 @@ public class GameServerService {
      * 获取单例（已废弃，迁移至 Boot 后请使用注入）。
      * Return the singleton (deprecated; prefer injection after Boot migration).
      *
-     * Singleton instance
+     * @return 单例实例 / singleton instance
      * @deprecated boot-migration
      */
     @Deprecated(since = "boot-migration")
@@ -35,10 +35,10 @@ public class GameServerService {
      * 注册游戏服；已在线则拒绝重复注册。
      * Register a game server; reject when one is already online.
      *
-     * Game server id
-     * @param defaultAddress 默认地址字节 / Default address bytes
-     * Access password
-     * Auth response
+     * @param gameServerId 游戏服 ID / game server id
+     * @param defaultAddress 默认地址字节 / default address bytes
+     * @param password 接入口令 / access password
+     * @return 认证响应 / auth response
      */
     public GsAuthResponse registerGameServer(byte gameServerId, byte[] defaultAddress, String password) {
         GAMESERVER_ID = gameServerId;
@@ -53,8 +53,8 @@ public class GameServerService {
      * 按配置口令校验并标记在线。
      * Authenticate against the configured password and mark online.
      *
-     * Access password
-     * Auth response
+     * @param password 接入口令 / access password
+     * @return 认证响应 / auth response
      */
     private GsAuthResponse passwordConfigAuth(String password) {
         if (password.equals(Config.GAME_SERVER_PASSWORD)) {

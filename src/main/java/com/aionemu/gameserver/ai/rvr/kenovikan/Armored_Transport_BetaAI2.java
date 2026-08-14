@@ -38,10 +38,18 @@ public class Armored_Transport_BetaAI2 extends GeneralNpcAI2
 		return canThink;
 	}
 
+	/**
+	 * 移除 17774 号技能效果（F6 奖励传送）。
+	 * Removes skill effect 17774 (F6 reward transport).
+	 */
 	private void removeF6RewardTrans() {
 		getOwner().getEffectController().removeEffect(17774);
 	}
 
+	/**
+	 * 对自身施加 17774 号技能效果（F6 奖励传送）。
+	 * Applies skill effect 17774 (F6 reward transport) to itself.
+	 */
 	private void F6RewardTrans() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 17774, 1, getOwner()).useNoAnimationSkill();
 	}
@@ -51,6 +59,8 @@ public class Armored_Transport_BetaAI2 extends GeneralNpcAI2
 		if (creature instanceof Player) {
 			final Player player = (Player) creature;
 			if (MathUtil.getDistance(getOwner(), player) <= 100) {
+				// 玩家进入 100 米范围时仅触发一次：停止思考、沿行走路线移动并播放表情动画。
+				// Triggers once when a player gets within 100m: stops thinking, walks the route and plays an emote.
 				if (startedEvent.compareAndSet(false, true)) {
 					canThink = false;
 					getSpawnTemplate().setWalkerId("220110002");

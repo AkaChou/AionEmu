@@ -42,34 +42,34 @@ import java.util.concurrent.Future;
 @InstanceID(301510000)
 public class SealedArgentManorInstance extends GeneralInstanceHandler
 {
-	/** 军阶 / rank */
+		/** 军阶 / rank */
 		private int rank;
 	/** 开始时间 / start time */
 	private long startTime;
-	/** 准备计时器 / timer prepare */
+		/** 准备计时器 / timer prepare */
 		private Future<?> timerPrepare;
-	/** 副本计时器 / timer instance */
+		/** 副本计时器 / timer instance */
 		private Future<?> timerInstance;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	// 准备时间。 / Preparation Time.
-	/** 准备计时秒数 / prepare timer seconds */
+		/** 准备计时秒数 / prepare timer seconds */
 		private int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
 	// 副本持续计时。 / Duration Instance Time.
-	/** 副本计时秒数 / instance timer seconds */
+		/** 副本计时秒数 / instance timer seconds */
 		private int instanceTimerSeconds = 900000; //...15Min
 	/** 副本奖励对象 / instance reward object */
 	private SealedArgentManorReward instanceReward;
-	/** sealed 任务 / sealed task */
+		/** sealed 任务 / sealed task */
 		private final List<Future<?>> sealedTask = new ArrayList<Future<?>>();
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
 	 *
-	 * visible object
-	 * result
+	 * @param object 可见对象 / visible object
+	 * @return 结果 / result
 	 */
 	
 	protected SealedArgentManorPlayerReward getPlayerReward(Integer object) {
@@ -95,7 +95,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
 	 *
-	 * result
+	 * @return 结果 / result
 	 */
 	@Override
 	public InstanceReward<?> getInstanceReward() {
@@ -105,7 +105,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	
 	public void onDropRegistered(Npc npc) {
@@ -115,9 +115,9 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 			case 237190: //Manor Usher.
 			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000242, 1)); //Rechargeable Electric Fuel.
 			break;
-		   /**
-	 * 除军阶奖励外，银白庄园宝箱中还有多种额外物品。 / Apart from the rank rewards there are many additional items awaiting in the "Argent Manor Treasure Box"
-	 */
+			/**
+			 * 除军阶奖励外，银白庄园宝箱中还有多种额外物品。 / Apart from the rank rewards there are many additional items awaiting in the "Argent Manor Treasure Box"
+			 */
 			case 702816: //Argent Manor Treasure Box.
 			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054117, 1)); //Argent Manor Composite Manastone Bundle.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054118, 1)); //Argent Manor Ancient Coin Bundle.
@@ -155,8 +155,8 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void handleUseItemFinish(Player player, Npc npc) {
@@ -193,7 +193,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -252,7 +252,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 		}
 	}
 	
-   /**
+	/**
 	 * @return 你：have up to 15min to finish the instance。 / You have up to 15min to finish the instance
 	 */
 	private int getTime() {
@@ -327,8 +327,8 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	 * 玩家打开门时处理。
 	 * Handle a player opening a door.
 	 *
-	 * 玩家 / player
-	 * doorId
+	 * @param player 玩家 / player
+	 * @param doorId 门 ID / doorId
 	 */
 	@Override
 	public void onOpenDoor(Player player, int doorId) {
@@ -490,9 +490,9 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

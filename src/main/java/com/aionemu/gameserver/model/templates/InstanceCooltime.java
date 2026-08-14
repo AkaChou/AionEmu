@@ -12,7 +12,7 @@ import com.aionemu.gameserver.model.instance.InstanceType;
 
 /**
  * 副本冷却时间模板（静态数据/XML）。
- * XML template.
+ * Instance cooldown template (static data / XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -60,7 +60,7 @@ public class InstanceCooltime {
 	@XmlElement(name = "max_count")
 	protected Integer max_count;
 
-	// 4.9
+	// 4.9 版本新增 / Added in 4.9
 	@XmlElement(name = "count_build_up")
 	protected Integer countBuildUp;
 
@@ -68,7 +68,9 @@ public class InstanceCooltime {
 	protected Integer countBuildUpLevel;
 
 	/**
-	*/
+	 * 副本 ID。
+	 * Instance ID.
+	 */
 	@XmlAttribute(required = true)
 	protected int id;
 

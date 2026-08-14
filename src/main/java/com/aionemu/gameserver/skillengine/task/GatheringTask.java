@@ -36,9 +36,9 @@ public class GatheringTask extends AbstractCraftTask {
 	 * 构造采集任务。
 	 * Creates a gathering task.
 	 *
-	 * gathering player
-	 * gatherable object
-	 * target material
+	 * @param requestor 采集玩家 / gathering player
+	 * @param gatherable 可采集物对象 / gatherable object
+	 * @param material 目标材料 / target material
 	 * @param skillLvlDiff 技能等级差 / skill level difference
 	 */
 	public GatheringTask(Player requestor, Gatherable gatherable, Material material, int skillLvlDiff) {

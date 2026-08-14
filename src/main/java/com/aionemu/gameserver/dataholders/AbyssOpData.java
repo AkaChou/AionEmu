@@ -48,7 +48,7 @@ public class AbyssOpData {
 	 * 返回已加载的欧比斯行动数量。
 	 * Returns the number of loaded abyss operations.
 	 *
-	 * template count
+	 * @return 已加载的欧比斯行动数量 / Returns the number of loaded abyss operations.
 	 */
 	public int size() {
 		return opData.size();

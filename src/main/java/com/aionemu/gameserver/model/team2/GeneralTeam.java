@@ -34,7 +34,7 @@ public abstract class GeneralTeam<M extends AionObject, TM extends TeamMember<M>
 		super(objId);
 	}
 
-	/** 事件 / On Event*/
+	/** 处理团队事件。 / Handles team events. */
 	@Override
 	public void onEvent(TeamEvent event) {
 		lock();
@@ -49,19 +49,19 @@ public abstract class GeneralTeam<M extends AionObject, TM extends TeamMember<M>
 		}
 	}
 
-	/** 返回 member / Returns the member */
+	/** 返回成员 / Returns the member */
 	@Override
 	public TM getMember(Integer objectId) {
 		return members.get(objectId);
 	}
 
-	/** Whether 成员 / Whether member */
+	/** 是否包含成员 / Whether member */
 	@Override
 	public boolean hasMember(Integer objectId) {
 		return members.get(objectId) != null;
 	}
 
-	/** 添加 member / Adds member */
+	/** 添加成员 / Adds member */
 	@Override
 	public void addMember(TM member) {
 		Preconditions.checkNotNull(member, "Team member should be not null");
@@ -69,7 +69,7 @@ public abstract class GeneralTeam<M extends AionObject, TM extends TeamMember<M>
 		members.put(member.getObjectId(), member);
 	}
 
-	/** 移除 member / Removes member */
+	/** 移除成员 / Removes member */
 	@Override
 	public void removeMember(TM member) {
 		Preconditions.checkNotNull(member, "Team member should be not null");
@@ -77,7 +77,7 @@ public abstract class GeneralTeam<M extends AionObject, TM extends TeamMember<M>
 		members.remove(member.getObjectId());
 	}
 
-	/** 移除 member / Removes member */
+	/** 移除成员 / Removes member */
 	@Override
 	public final void removeMember(Integer objectId) {
 		removeMember(members.get(objectId));
@@ -121,25 +121,25 @@ public abstract class GeneralTeam<M extends AionObject, TM extends TeamMember<M>
 		return Collections2.filter(members.values(), predicate);
 	}
 
-	/** Filter members / Filter members */
+	/** 过滤成员对象。 / Filters member objects. */
 	@Override
 	public Collection<M> filterMembers(Predicate<M> predicate) {
 		return Collections2.filter(Collections2.transform(members.values(), TRANSFORM_FUNCTION), predicate);
 	}
 
-	/** 返回成员数 / Returns the members */
+	/** 返回成员对象集合 / Returns the members */
 	@Override
 	public Collection<M> getMembers() {
 		return filterMembers(Predicates.<M>alwaysTrue());
 	}
 
-	/** 大小 / size. */
+	/** 返回队伍人数 / size. */
 	@Override
 	public int size() {
 		return members.size();
 	}
 
-	/** 返回 team id / Returns the team id */
+	/** 返回团队 ID / Returns the team id */
 	@Override
 	public final Integer getTeamId() {
 		return getObjectId();
@@ -156,17 +156,17 @@ public abstract class GeneralTeam<M extends AionObject, TM extends TeamMember<M>
 		return leader;
 	}
 
-	/** 返回 leader object / Returns the leader object */
+	/** 返回队长对象 / Returns the leader object */
 	public final M getLeaderObject() {
 		return leader.getObject();
 	}
 
-	/** 是否队长。 / Whether Leader. */
+	/** 判断是否队长。 / Whether Leader. */
 	public final boolean isLeader(M member) {
 		return leader.getObject().getObjectId().equals(member.getObjectId());
 	}
 
-	/** 更换队长 / change Leader. */
+	/** 更换队长。 / Changes the leader. */
 	public final void changeLeader(TM member) {
 		Preconditions.checkNotNull(leader, "Leader should already be set");
 		Preconditions.checkNotNull(member, "New leader should not be null");

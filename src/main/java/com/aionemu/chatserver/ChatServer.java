@@ -91,7 +91,7 @@ public class ChatServer {
      * Start the chat-server startup sequence with the given dependencies.
      *
      * @param args 启动参数 / Startup arguments
-     * Startup dependencies
+     * @param dependencies 启动依赖 / Startup dependencies
      */
     static void start(String[] args, ChatServerDependencies dependencies) {
         ChatServerStartupSequence.start(dependencies);

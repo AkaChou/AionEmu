@@ -27,7 +27,7 @@ public class ClassUtils {
      *
      * @param a 待检查类 / Class to check
      * @param b 目标父类或接口 / Target superclass or interface
-     * @return 若 subclass or implementor 则为 true / True if subclass or implementor
+     * @return 若是子类或实现类则为 true / True if subclass or implementor
      */
     public boolean isSubclass(Class<?> a, Class<?> b) {
         if (a == b) {
@@ -55,8 +55,8 @@ public class ClassUtils {
      * 判断类是否属于指定包。
      * Whether the class belongs to the given package.
      *
-     * @param clazz       待检查类 / Class to check
-     * Package name
+     * @param clazz 待检查类 / Class to check
+     * @param packageName 包名 / Package name
      *
      * @return 若 package member 则为 true / True if package member
      */
@@ -68,8 +68,8 @@ public class ClassUtils {
      * 判断类名是否属于指定包。
      * Whether the class name belongs to the given package.
      *
-     * Class name
-     * Package name
+     * @param className 类名 / Class name
+     * @param packageName 包名 / Package name
      *
      * @return 若 package member 则为 true / True if package member
      */
@@ -86,10 +86,8 @@ public class ClassUtils {
      * 从目录扫描全部类名。
      * Collect all class names under a directory.
      *
-     * Directory
-     * Set of class names
-     *
-     * @param directory
+     * @param directory 目录 / Directory
+     * @return 类名集合 / Set of class names
      * @throws IllegalArgumentException 目录无效时 / When directory is invalid
      */
     public Set<String> getClassNamesFromDirectory(File directory) throws IllegalArgumentException {
@@ -104,10 +102,10 @@ public class ClassUtils {
      * 从包目录扫描类名。
      * Collect class names from a package directory.
      *
-     * Directory
-     * Package name
-     * @param recursive   是否递归子目录 / Whether to recurse
-     * Set of class names
+     * @param directory 目录 / Directory
+     * @param packageName 包名 / Package name
+     * @param recursive 是否递归子目录 / Whether to recurse
+     * @return 类名集合 / Set of class names
      */
     public Set<String> getClassNamesFromPackage(File directory, String packageName, boolean recursive) {
         Set<String> classes = new HashSet<String>();
@@ -140,9 +138,9 @@ public class ClassUtils {
      * 从 JAR（含嵌套 JAR 路径）读取类名。
      * Collect class names from a JAR (including nested JAR paths).
      *
-     * JAR file
-     * Set of class names
-     * On read failure
+     * @param file JAR 文件 / JAR file
+     * @return 类名集合 / Set of class names
+     * @throws IOException 读取失败时 / On read failure
      */
     public Set<String> getClassNamesFromJarFile(File file) throws IOException {
         if (!file.exists() || file.isDirectory()) {
@@ -185,7 +183,7 @@ public class ClassUtils {
      *
      * @param file 嵌套路径文件对象 / Nested path file object
      * @return 类名集合；无法解析时返回 null / Class names, or null if unresolvable
-     * On read failure
+     * @throws IOException 读取失败时 / On read failure
      */
     private Set<String> getClassNamesFromNestedJarFile(File file) throws IOException {
         String path = file.getPath().replace('\\', '/');

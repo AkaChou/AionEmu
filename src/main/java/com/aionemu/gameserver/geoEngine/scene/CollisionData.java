@@ -21,7 +21,7 @@ public interface CollisionData {
 	 * @param worldMatrix 世界变换矩阵 / world transform matrix
 	 * @param worldBound 世界空间包围体 / world-space bounding volume
 	 * @param results 碰撞结果收集器 / collision results collector
-	 * number of collisions found
+	 * @return 碰撞数量 / number of collisions found
 	 */
 	public int collideWith(Collidable other, Matrix4f worldMatrix, BoundingVolume worldBound, CollisionResults results);
 }

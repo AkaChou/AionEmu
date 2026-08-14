@@ -83,10 +83,10 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
 	 *
-	 * 玩家 / player
-	 * result
+	 * @param player 玩家 / player
+	 * @return 玩家奖励记录 / player reward record
 	 */
-	
+
 	protected DredgionPlayerReward getPlayerReward(Player player) {
 		Integer object = player.getObjectId();
 		if (dredgionReward.getPlayerReward(object) == null) {
@@ -95,13 +95,13 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		return (DredgionPlayerReward) dredgionReward.getPlayerReward(object);
 	}
 	/**
-	 * 处理 captureRoom。
-	 * Handle captureRoom.
+	 * 使指定房间被给定阵营占领。
+	 * Have the given room captured by the given race.
 	 *
-	 * 阵营 / race
-	 * roomId
+	 * @param race 占领阵营 / capturing race
+	 * @param roomId 房间 ID / room id
 	 */
-	
+
 	protected void captureRoom(Race race, int roomId) {
 		dredgionReward.getDredgionRoomById(roomId).captureRoom(race);
 	}
@@ -117,9 +117,9 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc 掉落 NPC / dropper NPC
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -203,10 +203,6 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
 		terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
 			@Override
 			public void run() {
 				openFirstDoors();
@@ -237,10 +233,6 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	 * 特拉斯战舰内有多处传送装置。 / Terath Dredgion Teleportation Devices: There are numerous teleportation devices located inside the Terath Dredgion. These teleportation devices allow players to teleport to different areas of the Dredgion with ease. Central Teleporter: This teleporter activates 10 minutes after the Instanced Dungeon has begun
 	 */
 		terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
 			@Override
 			public void run() {
 				// 紧急出口传送装置已激活。 / A teleport device has been activated in the Emergency Exit.
@@ -253,10 +245,6 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	 * 执行者乌达拉：位置重力控制室；经过 15 分钟；勇气 1000 点。 / Enforcer Udara: Location: Gravity Control Time Elapsed: 15 Minutes Valor: 1,000 Points
 	 */
 		terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
 			@Override
 			public void run() {
 				// 执行者乌达拉已出现在重力控制室。 / Enforcer Udara has appeared in the Gravity Control Room.
@@ -265,10 +253,6 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 			}
 		}, 900000));
 		terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
 			@Override
 			public void run() {
 				if (!dredgionReward.isRewarded()) {
@@ -283,7 +267,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc 死亡的 NPC / dying NPC
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -386,13 +370,13 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 				despawnNpc(npc);
 				// 左舷防御护盾已在准备室 1 生成。 / The Portside Defense Shield has been generated in Ready Room 1.
 				sendMsgByRace(1400226, Race.PC_ALL, 0);
-				spawn(730566, 448.39151f, 493.64182f, 394.13174f, (byte) 0, 12);  // spawn barier
+				spawn(730566, 448.39151f, 493.64182f, 394.13174f, (byte) 0, 12);  // 生成屏障 / spawn barrier
 			break;
 			case 730573: //Starboard Defense Shield Generator.
 				despawnNpc(npc);
 				// 右舷防御护盾已在准备室 2 生成。 / The Starboard Defense Shield has been generated in Ready Room 2.
 				sendMsgByRace(1400227, Race.PC_ALL, 0);
-				spawn(730567, 520.87555f, 493.40115f, 394.43292f, (byte) 0, 133);  // spawn barier
+				spawn(730567, 520.87555f, 493.40115f, 394.43292f, (byte) 0, 133);  // 生成屏障 / spawn barrier
 			break;
 		   /**
 	 * 舱壁：特拉斯哨兵开战时激活护盾，阻挡入口。 / The Bulkhead: These shields are activated by the Terath Sentinel when first encountered at the beginning of the battle. These shields block the entrance from the Armories to Gravity Control, and can be demolished with attacks, but also have a significant amount of health. Groups often opt to move around the shields instead of demolishing them. It’s worth noting that after a certain amount of time has passed, Enforcer Udara spawns in the Gravity Control room, and gives 1,000 points when defeated. There is also a chance that Bosun Kuchuran, a Hero grade Named Monster, will spawn. Bosun Kuchuran has a chance to drop Fabled and Heroic accessories
@@ -436,10 +420,6 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 			case 219264: //Captain Anusa.
 				point = 1000;
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    /**
-				     * 处理 run。
-				     * Handle run.
-				     */
 				    @Override
 					public void run() {
 						if (!dredgionReward.isRewarded()) {
@@ -459,10 +439,10 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		}
 	}
 	/**
-	 * 处理 openFirstDoors。
-	 * Handle openFirstDoors.
+	 * 打开副本初始阶段的舱门。
+	 * Open the doors for the initial phase of the instance.
 	 */
-	
+
 	protected void openFirstDoors() {
 		openDoor(4);
 		openDoor(173);
@@ -532,10 +512,6 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 			npc.getController().onDelete();
 		}
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -565,8 +541,8 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
 	 *
-	 * 玩家 / player
-	 * result
+	 * @param player 玩家 / player
+	 * @return 是否接受复活 / whether the revive is accepted
 	 */
 	@Override
     public boolean onReviveEvent(Player player) {
@@ -582,9 +558,9 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param lastAttacker 最后攻击者 / last attacker
-	 * result
+	 * @return 是否接受死亡 / whether the death is accepted
 	 */
 	@Override
 	public boolean onDie(Player player, Creature lastAttacker) {
@@ -626,15 +602,15 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		getPlayerReward(player).addMonsterKillToPlayer();
 	}
 	/**
-	 * 处理 updateScore。
-	 * Handle updateScore.
+	 * 按击杀或死亡更新阵营与玩家分数，并让同组玩家共享分数。
+	 * Update race and player scores on kill or death, sharing points within the group.
 	 *
-	 * 玩家 / player
-	 * target
-	 * points
-	 * pvpKill
+	 * @param player 得分玩家 / scoring player
+	 * @param target 被击杀目标 / slain target
+	 * @param points 分数 / points
+	 * @param pvpKill 是否为 PvP 击杀 / whether this is a PvP kill
 	 */
-	
+
 	protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
 		if (points == 0) {
 			return;
@@ -692,9 +668,9 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	 * 打开指定门。
 	 * Open the given door.
 	 *
-	 * doorId
+	 * @param doorId 门 ID / door id
 	 */
-	
+
 	protected void openDoor(int doorId) {
 		StaticDoor door = doors.get(doorId);
 		if (door != null) {
@@ -717,58 +693,54 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		});
 	}
 	/**
-	 * 处理 sp。
-	 * Handle sp.
+	 * 延迟生成 NPC。
+	 * Spawn an NPC after a delay.
 	 *
-	 * NPC
+	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * time
+	 * @param time 延迟毫秒数 / delay in milliseconds
 	 */
-	
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
 	/**
-	 * 处理 sp。
-	 * Handle sp.
+	 * 延迟生成 NPC 并广播系统消息。
+	 * Spawn an NPC after a delay and broadcast a system message.
 	 *
-	 * NPC
+	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * time
-	 * message
-	 * 阵营 / race
+	 * @param time 延迟毫秒数 / delay in milliseconds
+	 * @param msg 生成后广播的系统消息 / system message broadcast after spawn
+	 * @param race 消息目标阵营 / message target race
 	 */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
 	/**
-	 * 处理 sp。
-	 * Handle sp.
+	 * 延迟生成带实体 ID 的 NPC 并广播系统消息。
+	 * Spawn an NPC with an entity id after a delay and broadcast a system message.
 	 *
-	 * NPC
+	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * entity id
-	 * time
-	 * message
-	 * 阵营 / race
+	 * @param entityId 实体 ID / entity id
+	 * @param time 延迟毫秒数 / delay in milliseconds
+	 * @param msg 生成后广播的系统消息 / system message broadcast after spawn
+	 * @param race 消息目标阵营 / message target race
 	 */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -781,24 +753,20 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
         }, time));
     }
 	/**
-	 * 处理 sp。
-	 * Handle sp.
+	 * 延迟生成沿指定巡行路线行走的 NPC。
+	 * Spawn an NPC after a delay that walks along the given route.
 	 *
-	 * NPC
+	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * time
-	 * walkerId
+	 * @param time 延迟毫秒数 / delay in milliseconds
+	 * @param walkerId 巡行路线 ID / walker route id
 	 */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -810,20 +778,16 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
         }, time));
     }
 	/**
-	 * 处理 sendMsgByRace。
-	 * Handle sendMsgByRace.
+	 * 延迟后向指定阵营广播系统消息。
+	 * Broadcast a system message to the given race after a delay.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 系统消息 ID / system message id
+	 * @param race 目标阵营 / target race
+	 * @param time 延迟毫秒数 / delay in milliseconds
 	 */
-	
+
     protected void sendMsgByRace(final int msg, final Race race, int time) {
         terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
@@ -871,7 +835,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
 	 *
-	 * result
+	 * @return 副本奖励 / instance reward
 	 */
 	@Override
 	public InstanceReward<?> getInstanceReward() {

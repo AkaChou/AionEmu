@@ -27,9 +27,10 @@ public abstract class Assault<siege extends Siege<?>> {
 	}
 
 	/**
-	 * getWorldId 方法。
-	 * getWorldId method.
-	 * result
+	 * 返回本次突击所在世界 ID。
+	 * Returns the world id of this assault.
+	 *
+	 * @return 世界 ID / world id
 	 */
 	public int getWorldId() {
 		return worldId;
@@ -49,7 +50,7 @@ public abstract class Assault<siege extends Siege<?>> {
 	 * 结束突击。
 	 * Finishes the assault.
 	 *
-	 * captured
+	 * @param captured 是否占领成功 / whether captured
 	 */
 	public void finishAssault(boolean captured) {
 		if (dredgionTask != null && !dredgionTask.isDone()) {

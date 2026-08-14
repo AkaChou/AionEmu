@@ -19,14 +19,20 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 public enum MaterialTarget {
 
 	/** 全部 / All. */
-	ALL, NPC, PLAYER, PLAYER_WITH_PET;
+	ALL,
+	/** NPC。 / NPC. */
+	NPC,
+	/** 玩家。 / Player. */
+	PLAYER,
+	/** 玩家及其宠物。 / Player with pet. */
+	PLAYER_WITH_PET;
 
 	/** 值。 / Value. */
 	public String value() {
 		return name();
 	}
 
-	/** 值 / From Value*/
+	/** 从值转换 / From value */
 	public static MaterialTarget fromValue(String value) {
 		return valueOf(value);
 	}

@@ -46,14 +46,14 @@ public class NightmareCircusSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether circus open
+	 * @return 马戏团是否开启 / whether circus is open
 	 */
 	public final boolean isCircusOpen() {
 		return nightmareCircusType.equals(NightmareCircusStateType.OPEN);
 	}
 
 	/**
-	 * @return Whether circus closed
+	 * @return 马戏团是否关闭 / whether circus is closed
 	 */
 	public final boolean isCircusClosed() {
 		return nightmareCircusType.equals(NightmareCircusStateType.CLOSED);

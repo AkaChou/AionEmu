@@ -74,7 +74,7 @@ public abstract class FIFOSimpleExecutableQueue<T> extends FIFOExecutableQueue {
 	 * 移除并返回队首元素。
 	 * Remove and return the first element.
 	 *
-	 * First element
+	 * @return 队首元素 / the first element
 	 */
 	protected final T removeFirst() {
 		synchronized (queue) {

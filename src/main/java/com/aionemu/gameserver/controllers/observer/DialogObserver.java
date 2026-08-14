@@ -20,9 +20,9 @@ public abstract class DialogObserver extends ActionObserver {
 	private int maxDistance;
 
 	/**
-	 * requester
-	 * responder player
-	 * max distance
+	 * @param requester 对话请求方（NPC 等） / dialog requester (NPC, etc.)
+	 * @param responder 对话响应玩家 / responder player
+	 * @param maxDistance 最大允许距离 / max allowed distance
 	 */
 	public DialogObserver(Creature requester, Player responder, int maxDistance) {
 		super(ObserverType.MOVE);
@@ -42,8 +42,8 @@ public abstract class DialogObserver extends ActionObserver {
 	 * 玩家距离对话对象过远时调用。
 	 * Called when the player is too far from the dialog-serving object.
 	 *
-	 * requester
-	 * responder player
+	 * @param requester 对话请求方 / dialog requester
+	 * @param responder 对话响应玩家 / responder player
 	 */
 	public abstract void tooFar(Creature requester, Player responder);
 }

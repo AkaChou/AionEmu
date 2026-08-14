@@ -66,7 +66,7 @@ public final class LoginProtectionServices implements DisposableBean {
      * 获取 IP 封禁服务。
      * Resolve the banned IP service.
      *
-     * banned IP service
+     * @return IP 封禁服务 / banned IP service
      */
     public static LoginBannedIpService bannedIpService() {
         ObjectProvider<LoginBannedIpService> provider = bannedIpServiceProvider;
@@ -102,7 +102,7 @@ public final class LoginProtectionServices implements DisposableBean {
      * 获取洪水防护器。
      * Resolve the flood protector.
      *
-     * flood protector
+     * @return 洪水防护 / flood protector
      */
     public static FloodProtector floodProtector() {
         ObjectProvider<FloodProtector> provider = floodProtectorProvider;
@@ -132,7 +132,7 @@ public final class LoginProtectionServices implements DisposableBean {
      * 回退 MAC 封禁管理器。
      * Fallback banned MAC manager.
      *
-     * fallback instance
+     * @return 回退实例 / fallback instance
      */
     private static BannedMacManager fallbackBannedMacManager() {
         return Fallbacks.BANNED_MAC_MANAGER;
@@ -142,7 +142,7 @@ public final class LoginProtectionServices implements DisposableBean {
      * 回退暴力破解防护。
      * Fallback brute-force protector.
      *
-     * fallback instance
+     * @return 回退实例 / fallback instance
      */
     private static BruteForceProtector fallbackBruteForceProtector() {
         return Fallbacks.BRUTE_FORCE_PROTECTOR;
@@ -152,7 +152,7 @@ public final class LoginProtectionServices implements DisposableBean {
      * 回退洪水防护。
      * Fallback flood protector.
      *
-     * fallback instance
+     * @return 回退实例 / fallback instance
      */
     private static FloodProtector fallbackFloodProtector() {
         return Fallbacks.FLOOD_PROTECTOR;
@@ -162,8 +162,8 @@ public final class LoginProtectionServices implements DisposableBean {
      * 缓存 MAC 封禁管理器。
      * Remember the banned MAC manager.
      *
-     * manager
-     * same instance
+     * @param bannedMacManager 管理器 / manager
+     * @return 同一实例 / same instance
      */
     private static BannedMacManager rememberBannedMacManager(BannedMacManager bannedMacManager) {
         resolvedBannedMacManager = bannedMacManager;
@@ -174,8 +174,8 @@ public final class LoginProtectionServices implements DisposableBean {
      * 缓存 IP 封禁服务。
      * Remember the banned IP service.
      *
-     * service
-     * same instance
+     * @param bannedIpService 服务 / service
+     * @return 同一实例 / same instance
      */
     private static LoginBannedIpService rememberBannedIpService(LoginBannedIpService bannedIpService) {
         resolvedBannedIpService = bannedIpService;
@@ -186,8 +186,8 @@ public final class LoginProtectionServices implements DisposableBean {
      * 缓存暴力破解防护。
      * Remember the brute-force protector.
      *
-     * protector
-     * same instance
+     * @param bruteForceProtector 防护器 / protector
+     * @return 同一实例 / same instance
      */
     private static BruteForceProtector rememberBruteForceProtector(BruteForceProtector bruteForceProtector) {
         resolvedBruteForceProtector = bruteForceProtector;
@@ -198,8 +198,8 @@ public final class LoginProtectionServices implements DisposableBean {
      * 缓存洪水防护。
      * Remember the flood protector.
      *
-     * protector
-     * same instance
+     * @param floodProtector 防护器 / protector
+     * @return 同一实例 / same instance
      */
     private static FloodProtector rememberFloodProtector(FloodProtector floodProtector) {
         resolvedFloodProtector = floodProtector;

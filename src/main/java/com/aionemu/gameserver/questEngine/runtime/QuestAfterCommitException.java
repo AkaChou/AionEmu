@@ -4,7 +4,7 @@ import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 
 import java.util.Objects;
 
-/** Auditable failure of one typed effect after the quest transaction committed. */
+/** 任务事务提交后某个类型化效果失败的审计异常。 / Auditable failure of one typed effect after the quest transaction committed. */
 public final class QuestAfterCommitException extends IllegalStateException {
 	private final int playerId;
 	private final int questId;

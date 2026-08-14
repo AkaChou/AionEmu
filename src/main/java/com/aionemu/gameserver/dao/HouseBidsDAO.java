@@ -18,7 +18,7 @@ public abstract class HouseBidsDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
 	 *
-	 * class name
+	 * @return 类名 / class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -29,7 +29,7 @@ public abstract class HouseBidsDAO implements DAO {
 	 * 加载全部房屋竞拍。
 	 * Loads all house bids.
 	 *
-	 * bid set
+	 * @return 竞标集合 / bid set
 	 */
 	public abstract Set<PlayerHouseBid> loadBids();
 
@@ -37,11 +37,11 @@ public abstract class HouseBidsDAO implements DAO {
 	 * 添加一条房屋竞拍。
 	 * Adds a house bid.
 	 *
-	 * player ID
-	 * house ID
-	 * bid offer
+	 * @param playerId 玩家 ID / player ID
+	 * @param houseId 房屋 ID / house ID
+	 * @param bidOffer 竞标出价 / bid offer
 	 * @param time 出价时间 / bid time
-	 * whether successful
+	 * @return 是否成功 / whether successful
 	 */
 	public abstract boolean addBid(int playerId, int houseId, long bidOffer, Timestamp time);
 
@@ -49,9 +49,9 @@ public abstract class HouseBidsDAO implements DAO {
 	 * 修改竞拍出价。
 	 * Changes a bid offer.
 	 *
-	 * player ID
-	 * house ID
-	 * new bid offer
+	 * @param playerId 玩家 ID / player ID
+	 * @param houseId 房屋 ID / house ID
+	 * @param newBidOffer 新竞标出价 / new bid offer
 	 * @param time 出价时间 / bid time
 	 */
 	public abstract void changeBid(int playerId, int houseId, long newBidOffer, Timestamp time);
@@ -60,7 +60,7 @@ public abstract class HouseBidsDAO implements DAO {
 	 * 删除指定房屋的全部竞拍。
 	 * Deletes all bids for a house.
 	 *
-	 * house ID
+	 * @param houseId 房屋 ID / house ID
 	 */
 	public abstract void deleteHouseBids(int houseId);
 

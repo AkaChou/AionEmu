@@ -21,7 +21,7 @@ public class SM_AUTH_GG extends AionServerPacket {
      * 构造 SM_AUTH_GG 包。
      * Constructs a new SM_AUTH_GG packet.
      *
-     * session id
+     * @param sessionId 会话 ID / session id
      */
     public SM_AUTH_GG(int sessionId) {
         super(0x0b);

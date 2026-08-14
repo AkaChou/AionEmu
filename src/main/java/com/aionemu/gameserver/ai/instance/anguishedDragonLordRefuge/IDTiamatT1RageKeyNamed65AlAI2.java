@@ -120,6 +120,7 @@ public class IDTiamatT1RageKeyNamed65AlAI2 extends AggressiveNpcAI2
 				public void run() {
 					if (!isAlreadyDead()) {
 						spawn(282733, x, y, z, (byte) 0); //Sphere Of Peace.
+						// 和平之球。 / Sphere Of Peace.
 					}
 				}
 			}, 3000);
@@ -155,6 +156,7 @@ public class IDTiamatT1RageKeyNamed65AlAI2 extends AggressiveNpcAI2
 		final WorldPosition p = getPosition();
 		if (p != null) {
 			deleteNpcs(p.getWorldMapInstance().getNpcs(282733)); //Sphere Of Peace.
+			// 和平之球。 / Sphere Of Peace.
 		}
 		cancelPhaseTask();
 		sendMsg(1401141);

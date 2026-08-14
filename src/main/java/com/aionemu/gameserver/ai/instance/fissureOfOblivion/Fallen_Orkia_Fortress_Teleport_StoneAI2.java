@@ -29,6 +29,10 @@ public class Fallen_Orkia_Fortress_Teleport_StoneAI2 extends NpcAI2
         checkDistance(this, creature);
     }
 	
+	/**
+	 * 玩家进入 10 米范围内时激活传送石：删除自身并生成目标传送点。
+	 * Activates the teleport stone when a player comes within 10m: deletes itself and spawns the destination teleport points.
+	 */
 	private void checkDistance(NpcAI2 ai, Creature creature) {
         if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
         	if (MathUtil.isIn3dRange(getOwner(), creature, 10)) {

@@ -1,6 +1,9 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-/** Immutable ownership and location facts for one house-object interaction. */
+/**
+ * 一次房屋物件交互的不可变归属与位置事实。
+ * Immutable ownership and location facts for one house-object interaction.
+ */
 public record QuestHousingFacts(int playerId, int houseObjectId, int houseOwnerId,
 		int houseAddressId, int houseWorldId, int houseInstanceId, int itemTemplateId, int itemObjectId,
 		boolean ownerMatch, boolean houseLoaded) {

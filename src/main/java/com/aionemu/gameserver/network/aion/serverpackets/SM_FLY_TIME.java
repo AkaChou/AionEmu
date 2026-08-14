@@ -14,6 +14,13 @@ public class SM_FLY_TIME extends AionServerPacket {
 	private int currentFp;
 	private int maxFp;
 
+	/**
+	 * 构造飞行时间同步包。
+	 * Creates a fly time sync packet.
+	 *
+	 * @param currentFp 当前飞行点数 / current fly points
+	 * @param maxFp 最大飞行点数 / max fly points
+	 */
 	public SM_FLY_TIME(int currentFp, int maxFp) {
 		this.currentFp = currentFp;
 		this.maxFp = maxFp;

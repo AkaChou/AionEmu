@@ -94,7 +94,7 @@ public enum PlayerClass {
      * 构造职业枚举。
      * Constructs a player class enum value.
      *
-     * class id
+     * @param classId 职业 ID / class id
      */
     private PlayerClass(int classId) {
         this.classId = (byte) classId;

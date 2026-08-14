@@ -26,16 +26,23 @@ public class Central_Lab_EntranceAI2 extends NpcAI2
         }
     }
 	
-   /**
-	 * 进入中央实验室所需钥匙数量相关补丁说明。 / http://na.aiononline.com/media/uploads/images/front-page-banners/AION_Patch_Notes_021716.pdf - The number of keys required to move to the central lab has been reduced from 1/5/7 to 1/3/5
+	/**
+	 * 处理对话选择：按消耗的钥匙数量（1/3/5 把）开启对应难度的 Belsagos 领域并传送玩家。
+	 * Handles dialog selection: consumes keys (1/3/5) to open the matching Belsagos realm and teleports the player.
+	 *
+	 * @param player 对话玩家 / dialog player
+	 * @param dialogId 对话框选项 ID / dialog option ID
+	 * @param questId 任务 ID / quest ID
+	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
+	 * @return 始终为 true / always true
 	 */
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		int instanceId = getPosition().getInstanceId();
 		switch (getNpcId()) {
-		    case 702339: //Central Lab Entrance.
+		    case 702339: // 中央实验室入口 / Central Lab Entrance.
 		        switch (player.getWorldId()) {
-		            case 301270000: //Linkgate Foundry 4.7
+		            case 301270000: // Linkgate Foundry 副本（4.7）/ Linkgate Foundry instance (4.7)
 				        if (dialogId == 20007 && player.getInventory().decreaseByItemId(185000196, 1)) {
 			                startWoundedBelsagos();
 							// 中央实验室已开启。可进入暴怒的贝尔萨戈斯领域。 / The Central Laboratory has been opened. You can now enter Wounded Belsagos' Realm.
@@ -60,14 +67,14 @@ public class Central_Lab_EntranceAI2 extends NpcAI2
 	}
 	
 	private void startWoundedBelsagos() {
-		spawn(234990, 244.57622f, 259.80493f, 312.3084f, (byte) 75); //Wounded Belsagos.
+		spawn(234990, 244.57622f, 259.80493f, 312.3084f, (byte) 75); // 生成受伤形态的 Belsagos / spawn Wounded Belsagos
 	}
-	
+
 	private void startVolatileBelsagos() {
-		spawn(233898, 244.57622f, 259.80493f, 312.3084f, (byte) 75); //Volatile Belsagos.
+		spawn(233898, 244.57622f, 259.80493f, 312.3084f, (byte) 75); // 生成暴躁形态的 Belsagos / spawn Volatile Belsagos
 	}
-	
+
 	private void startFuriousBelsagos() {
-		spawn(234991, 244.57622f, 259.80493f, 312.3084f, (byte) 75); //Furious Belsagos.
+		spawn(234991, 244.57622f, 259.80493f, 312.3084f, (byte) 75); // 生成狂暴形态的 Belsagos / spawn Furious Belsagos
 	}
 }

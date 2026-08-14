@@ -91,7 +91,7 @@ public abstract class GLObject implements Cloneable {
 	 * 返回对象 ID。多数情况下用户代码不应依赖此值。
 	 * Returns the object ID. Should not be used by user code in most cases.
 	 *
-	 * object ID
+	 * @return 对象 ID / object ID
 	 */
 	public int getId() {
 		return id;

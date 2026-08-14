@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 全局掉落 Races 模板（静态数据/XML）。
- * XML template.
+ * Global drop races template (static data/XML).
  *
  * @author Wnkrz
  */
@@ -20,7 +20,7 @@ public class GlobalDropRaces {
 	@XmlElement(name = "gd_race")
 	protected List<GlobalDropRace> gdRaces;
 
-	/** 返回全局掉落种族 / Returns the global drop races*/
+	/** 返回全局掉落种族。 / Returns the global drop races. */
 	public List<GlobalDropRace> getGlobalDropRaces() {
 		if (gdRaces == null) {
 			gdRaces = new ArrayList<GlobalDropRace>();

@@ -39,7 +39,7 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
      * 加载全部房屋竞拍出价。
      * Loads all house auction bids.
      *
-     * set of bids
+     * @return 出价集合 / set of bids
      */
     @Override
     public Set<PlayerHouseBid> loadBids() {
@@ -70,11 +70,11 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
      * 新增一条房屋竞拍出价。
      * Adds a new house auction bid.
      *
-     * player id
-     * house id
-     * bid amount
+     * @param playerId 玩家 ID / player id
+     * @param houseId 房屋 ID / house id
+     * @param bidOffer 出价金额 / bid amount
      * @param time 出价时间 / bid time
-     * whether successful
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean addBid(int playerId, int houseId, long bidOffer, Timestamp time) {
@@ -99,8 +99,8 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
      * 变更玩家对房屋的出价；若不存在则插入。
      * Changes a player's bid for a house; inserts if none exists.
      *
-     * player id
-     * house id
+     * @param playerId 玩家 ID / player id
+     * @param houseId 房屋 ID / house id
      * @param newBidOffer 新出价金额 / new bid amount
      * @param time 出价时间 / bid time
      */
@@ -129,7 +129,7 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
      * 删除指定房屋的全部出价。
      * Deletes all bids for the given house.
      *
-     * house id
+     * @param houseId 房屋 ID / house id
      */
     @Override
     public void deleteHouseBids(int houseId) {
@@ -148,8 +148,8 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
      * 删除玩家对指定房屋的出价。
      * Deletes a player's bid for the given house.
      *
-     * player id
-     * house id
+     * @param playerId 玩家 ID / player id
+     * @param houseId 房屋 ID / house id
      */
     public void deletePlayerBid(int playerId, int houseId) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -170,7 +170,7 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
      *
      * house id
      *
-     * @param houseId
+     * @param houseId 房屋 ID / house id
      * @return 最高出价；无记录时为 0 / highest bid, or 0 if none
      */
     public long getHighestBid(int houseId) {
@@ -196,8 +196,8 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
      * 获取玩家对指定房屋的出价。
      * Returns the player's bid for the given house.
      *
-     * player id
-     * house id
+     * @param playerId 玩家 ID / player id
+     * @param houseId 房屋 ID / house id
      *
      * @return 出价记录；不存在返回 null / bid record, or null if none
      */
@@ -227,7 +227,7 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
      * 批量删除多套房屋的出价。
      * Batch-deletes bids for multiple houses.
      *
-     * set of house ids
+     * @param houseIds 房屋 ID 集合 / set of house ids
      */
     public void deleteHouseBids(Set<Integer> houseIds) {
         if (houseIds == null || houseIds.isEmpty()) {
@@ -256,10 +256,10 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

@@ -58,7 +58,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
 	 * Resolve the parser state for a character.
 	 *
 	 * @param c 输入字符 / Input character
-	 * Matching state
+	 * @return 匹配状态 / Matching state
 	 */
 	static State getState(char c) {
 		State out;
@@ -98,7 +98,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
 	 * Parse a human-readable time string into a {@link HumanTime}.
 	 *
 	 * @param s 时间字符串，如 {@code "1y 2d 3h"} / Time string, e.g. {@code "1y 2d 3h"}
-	 * Parsed instance
+	 * @return 解析的实例 / Parsed instance
 	 */
 	public static HumanTime eval(final CharSequence s) {
 		HumanTime out = new HumanTime(0L);
@@ -238,7 +238,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
 	 * Compute the upper ceiling used for approximate rounding.
 	 *
 	 * @param x 单位毫秒数 / Unit size in milliseconds
-	 * Upper ceiling
+	 * @return 上限 / Upper ceiling
 	 */
 	private long upperCeiling(long x) {
 		return (x / 100) * (100 - CEILING_PERCENTAGE);
@@ -249,7 +249,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
 	 * Compute the lower ceiling used for approximate flooring.
 	 *
 	 * @param x 单位毫秒数 / Unit size in milliseconds
-	 * Lower ceiling
+	 * @return 下限 / Lower ceiling
 	 */
 	private long lowerCeiling(long x) {
 		return (x / 100) * CEILING_PERCENTAGE;
@@ -425,9 +425,9 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
 	 * 将精确描述追加到给定 {@link Appendable}。
 	 * Append the exact description to the given {@link Appendable}.
 	 *
-	 * Target appendable
-	 * Appendable type
-	 * The same appendable
+	 * @param a 目标 appendable / Target appendable
+	 * @param <T> Appendable 类型 / Appendable type
+	 * @return 相同的 appendable / The same appendable
 	 */
 	public <T extends Appendable> T getExactly(T a) {
 		try {
@@ -508,9 +508,9 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
 	 * 将近似描述追加到给定 {@link Appendable}。
 	 * Append the approximate description to the given {@link Appendable}.
 	 *
-	 * Target appendable
-	 * Appendable type
-	 * The same appendable
+	 * @param a 目标 appendable / Target appendable
+	 * @param <T> Appendable 类型 / Appendable type
+	 * @return 相同的 appendable / The same appendable
 	 */
 	public <T extends Appendable> T getApproximately(T a) {
 		try {
@@ -656,7 +656,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
 	 * 获取内部毫秒增量。
 	 * Get the internal millisecond delta.
 	 *
-	 * Delta in milliseconds
+	 * @return 毫秒差值 / Delta in milliseconds
 	 */
 	public long getDelta() {
 		return delta;
@@ -682,7 +682,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
 	 * 默认字符串表示，等同于精确描述。
 	 * Default string form, same as the exact description.
 	 *
-	 * Exact description
+	 * @return 精确描述 / Exact description
 	 */
 	@Override
 	public String toString() {
@@ -693,8 +693,8 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
 	 * 按毫秒增量比较。
 	 * Compare by millisecond delta.
 	 *
-	 * Other HumanTime
-	 * Comparison result
+	 * @param t 另一个 HumanTime / Other HumanTime
+	 * @return 比较结果 / Comparison result
 	 */
 	public int compareTo(HumanTime t) {
 		return delta == t.delta ? 0 : (delta < t.delta ? -1 : 1);
@@ -710,7 +710,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
 	 * Read delta from external input.
 	 *
 	 * @param in 输入流 / Input stream
-	 * I/O exception
+	 * @throws IOException I/O 异常 / I/O exception
 	 */
 	public void readExternal(ObjectInput in) throws IOException {
 		delta = in.readLong();
@@ -720,9 +720,8 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
 	 * 将 delta 写出到外部输出。
 	 * Write delta to external output.
 	 *
-	 * Output stream
-	 *
-	 * @param out I / O exception
+	 * @param out 输出流 / Output stream
+	 * @throws IOException I/O 异常 / I/O exception
 	 */
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeLong(delta);

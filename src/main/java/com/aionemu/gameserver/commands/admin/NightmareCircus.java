@@ -31,8 +31,6 @@ public class NightmareCircus extends AdminCommand
 	 * 执行启停：无参数时显示帮助；{@code start|stop <Id>} 时切换对应马戏团活动。
 	 * Execute start/stop: show help with no args; toggle the circus event for {@code start|stop <Id>}.
 	 *
-	 * 执行 GM / Admin player
-	 * Command parameters
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -87,8 +85,6 @@ public class NightmareCircus extends AdminCommand
 	 * 校验马戏团地点 ID 是否已注册。
 	 * Validate whether the Nightmare Circus location id is registered.
 	 *
-	 * 执行 GM / Admin player
-	 * Location id
 	 *
 	 * @return 若 valid 则为 true / True if valid
 	 */

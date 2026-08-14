@@ -32,7 +32,7 @@ public class Gatherable extends VisibleObject {
 		return (GatherableTemplate) objectTemplate;
 	}
 
-	/** 返回 controller / Returns the controller */
+	/** 返回控制器 / Returns the controller */
 	@Override
 	public GatherableController getController() {
 		return (GatherableController) super.getController();

@@ -6,7 +6,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.Objects;
 
-/** Real {@link QuestDialogPort}: closes the player's quest dialog window after commit. */
+/** 真实 {@link QuestDialogPort}：提交后关闭玩家的任务对话窗口。 / Real {@link QuestDialogPort}: closes the player's quest dialog window after commit. */
 public final class PlayerQuestDialogPort implements QuestDialogPort {
 	private final QuestPlayerPort players;
 
@@ -20,7 +20,7 @@ public final class PlayerQuestDialogPort implements QuestDialogPort {
 		Objects.requireNonNull(plan, "plan");
 		Player player = players.find(snapshot.playerId());
 		if (player == null) {
-			// 提交已成功但玩家已登出:无可发送对象,best-effort 关闭。
+			// 提交已成功但玩家已登出：无可发送对象，best-effort 关闭。 / Commit succeeded but player logged out: nothing to send to, best-effort close.
 			return false;
 		}
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 0));
@@ -36,12 +36,14 @@ public final class PlayerQuestDialogPort implements QuestDialogPort {
 		}
 		Player player = players.find(snapshot.playerId());
 		if (player == null) {
-			// 提交已成功但玩家已登出:无可发送对象,best-effort 跳过。
+			// 提交已成功但玩家已登出：无可发送对象，best-effort 跳过。 / Commit succeeded but player logged out: nothing to send to, best-effort skip.
 			return false;
 		}
 		int objectId = snapshot.targetlessDialog() ? 0 : snapshot.interactionObjectId();
 		if (objectId == 0 && !snapshot.targetlessDialog()) {
-			// 缺少权威交互 objectId 时必须 fail closed, 禁止用 NPC templateId 或玩家 target 猜测。
+			// 缺少权威交互 objectId 时必须 fail closed，禁止用 NPC templateId 或玩家 target 猜测。
+			// Missing an authoritative interaction objectId must fail closed; never guess
+			// from the NPC templateId or the player's current target.
 			throw new IllegalStateException("showDialog requires an authoritative interaction objectId "
 				+ "from the execution context for quest " + snapshot.questId());
 		}

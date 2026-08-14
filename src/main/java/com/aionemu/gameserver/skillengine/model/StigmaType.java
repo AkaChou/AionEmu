@@ -30,7 +30,6 @@ public enum StigmaType {
 	 * 获取协议 ID。
 	 * Gets protocol id.
 	 *
-	 * stigma type id
 	 */
 	public int getId() {
 		return id;

@@ -28,7 +28,7 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
      * Loads game/login/chat legacy configs and registers them as a low-precedence PropertySource.
      *
      * @param environment 可配置环境 / configurable environment
-     * Spring application instance
+     * @param application Spring 应用实例 / Spring application instance
      */
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
@@ -45,7 +45,7 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
      * 返回本处理器顺序：略高于最低优先级，确保在大部分默认源之后生效。
      * Returns this processor's order: slightly above lowest precedence so it applies after most defaults.
      *
-     * order value
+     * @return 处理器顺序值 / order value
      */
     @Override
     public int getOrder() {
@@ -56,7 +56,7 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
      * 从游戏配置目录加载遗留属性。
      * Loads legacy properties from the game config directory.
      *
-     * environment
+     * @param environment 环境 / environment
      * @param target 目标属性映射 / target property map
      */
     private void loadGameProperties(ConfigurableEnvironment environment, Map<String, Object> target) {
@@ -72,7 +72,7 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
      * 从登录配置目录加载遗留属性。
      * Loads legacy properties from the login config directory.
      *
-     * environment
+     * @param environment 环境 / environment
      * @param target 目标属性映射 / target property map
      */
     private void loadLoginProperties(ConfigurableEnvironment environment, Map<String, Object> target) {
@@ -87,7 +87,7 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
      * 从聊天配置目录加载遗留属性。
      * Loads legacy properties from the chat config directory.
      *
-     * environment
+     * @param environment 环境 / environment
      * @param target 目标属性映射 / target property map
      */
     private void loadChatProperties(ConfigurableEnvironment environment, Map<String, Object> target) {
@@ -106,7 +106,7 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
      * 解析统一配置根目录。
      * Resolves the shared configuration root directory.
      *
-     * environment
+     * @param environment 环境 / environment
      * @return 配置目录路径 / config directory path
      */
     private Path configDir(ConfigurableEnvironment environment) {
@@ -128,8 +128,8 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
      * Loads all {@code .properties} files under a directory in filename order.
      *
      * @param target 目标属性映射 / target property map
-     * directory path
-     * legacy key prefix
+     * @param directory 目录路径 / directory path
+     * @param legacyPrefix 遗留键前缀 / legacy key prefix
      */
     private void loadDirectory(Map<String, Object> target, Path directory, String legacyPrefix) {
         if (!Files.isDirectory(directory)) {
@@ -152,7 +152,7 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
      *
      * @param target 目标属性映射 / target property map
      * @param file 文件路径 / file path
-     * legacy key prefix
+     * @param legacyPrefix 遗留键前缀 / legacy key prefix
      */
     private void loadFile(Map<String, Object> target, Path file, String legacyPrefix) {
         loadFile(target, file, legacyPrefix, true);

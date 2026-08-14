@@ -228,7 +228,7 @@ public final class GameFeatureServices implements DisposableBean {
      * 解析 NPC 喊话服务。
      * Resolve the NPC-shouts service.
      *
-     * NPC-shouts service
+     * @return NPC 喊话服务 / NPC-shouts service
      */
     public static NpcShoutsService npcShoutsService() {
         ObjectProvider<NpcShoutsService> provider = npcShoutsServiceProvider;
@@ -272,7 +272,7 @@ public final class GameFeatureServices implements DisposableBean {
      * 解析护盾服务。
      * Resolve the shield service.
      *
-     * Shield service
+     * @return 护盾服务 / Shield service
      */
     public static ShieldService shieldService() {
         return getIfAvailable(shieldServiceProvider, ShieldService::getInstance);
@@ -282,7 +282,7 @@ public final class GameFeatureServices implements DisposableBean {
      * 解析奖励服务。
      * Resolve the reward service.
      *
-     * Reward service
+     * @return 奖励服务 / Reward service
      */
     public static RewardService rewardService() {
         return getIfAvailable(rewardServiceProvider, RewardService::getInstance);
@@ -302,7 +302,7 @@ public final class GameFeatureServices implements DisposableBean {
      * 解析 FFA 服务。
      * Resolve the FFA service.
      *
-     * FFA service
+     * @return FFA 服务 / FFA service
      */
     public static FFAService ffaService() {
         ObjectProvider<FFAService> provider = ffaServiceProvider;
@@ -316,7 +316,7 @@ public final class GameFeatureServices implements DisposableBean {
      * 解析天梯服务。
      * Resolve the ladder service.
      *
-     * Ladder service
+     * @return 天梯服务 / Ladder service
      */
     public static LadderService ladderService() {
         ObjectProvider<LadderService> provider = ladderServiceProvider;
@@ -330,7 +330,7 @@ public final class GameFeatureServices implements DisposableBean {
      * 解析攻城服务。
      * Resolve the siege service.
      *
-     * Siege service
+     * @return 攻城服务 / Siege service
      */
     public static SiegeService siegeService() {
         SiegeService resolved = resolvedSiegeService;
@@ -347,7 +347,7 @@ public final class GameFeatureServices implements DisposableBean {
      * 解析基地服务。
      * Resolve the base service.
      *
-     * Base service
+     * @return 基地服务 / Base service
      */
     public static BaseService baseService() {
         ObjectProvider<BaseService> provider = baseServiceProvider;
@@ -361,7 +361,7 @@ public final class GameFeatureServices implements DisposableBean {
      * 解析 A 站服务。
      * Resolve the A-Station service.
      *
-     * A-Station service
+     * @return A 站服务 / A-Station service
      */
     public static AStationService aStationService() {
         return getIfAvailable(aStationServiceProvider, AStationService::getInstance);
@@ -371,7 +371,7 @@ public final class GameFeatureServices implements DisposableBean {
      * 解析 F2P 服务。
      * Resolve the F2P service.
      *
-     * F2P service
+     * @return F2P 服务 / F2P service
      */
     public static F2pService f2pService() {
         return getIfAvailable(f2pServiceProvider, F2pService::getInstance);
@@ -415,7 +415,7 @@ public final class GameFeatureServices implements DisposableBean {
      * 解析回购服务。
      * Resolve the repurchase service.
      *
-     * Repurchase service
+     * @return 回购服务 / Repurchase service
      */
     public static RepurchaseService repurchaseService() {
         return getIfAvailable(repurchaseServiceProvider, RepurchaseService::getInstance);
@@ -435,7 +435,7 @@ public final class GameFeatureServices implements DisposableBean {
      * 解析土匪服务。
      * Resolve the bandit service.
      *
-     * Bandit service
+     * @return 土匪服务 / Bandit service
      */
     public static BanditService banditService() {
         return getIfAvailable(banditServiceProvider, BanditService::getInstance);
@@ -469,7 +469,7 @@ public final class GameFeatureServices implements DisposableBean {
      * 解析加成服务。
      * Resolve the bonus service.
      *
-     * Bonus service
+     * @return 加成服务 / Bonus service
      */
     public static BonusService bonusService() {
         return getIfAvailable(bonusServiceProvider, BonusService::getInstance);
@@ -479,7 +479,7 @@ public final class GameFeatureServices implements DisposableBean {
      * 解析宠物服务。
      * Resolve the pet service.
      *
-     * Pet service
+     * @return 宠物服务 / Pet service
      */
     public static PetService petService() {
         ObjectProvider<PetService> provider = petServiceProvider;
@@ -513,7 +513,7 @@ public final class GameFeatureServices implements DisposableBean {
      * 解析融合服务。
      * Resolve the coalescence service.
      *
-     * Coalescence service
+     * @return 融合服务 / Coalescence service
      */
     public static CoalescenceService coalescenceService() {
         return getIfAvailable(coalescenceServiceProvider, CoalescenceService::getInstance);
@@ -523,7 +523,7 @@ public final class GameFeatureServices implements DisposableBean {
      * 解析成长能量。
      * Resolve growth energy.
      *
-     * Growth energy
+     * @return 成长能量 / Growth energy
      */
     public static GrowthEnergy growthEnergy() {
         return getIfAvailable(growthEnergyProvider, GrowthEnergy::getInstance);
@@ -533,10 +533,10 @@ public final class GameFeatureServices implements DisposableBean {
      * 优先从 Spring 提供者取实例，否则使用回退供应器。
      * Prefer the Spring provider instance, otherwise use the fallback supplier.
      *
-     * Spring provider
+     * @param provider Spring 提供者 / Spring provider
      * @param fallback 回退供应器 / Fallback supplier
      * @param <T> 服务类型 / Service type
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private static <T> T getIfAvailable(ObjectProvider<T> provider, Supplier<T> fallback) {
         if (provider == null) {

@@ -7,8 +7,8 @@ import com.aionemu.gameserver.model.team2.common.events.PlayerLeavedEvent.LeaveR
 import com.google.common.base.Predicate;
 
 /**
- * 联盟 Disband 活动，用于团队2相关逻辑。
- * Alliance Disband Event for team 2 logic.
+ * 联盟解散事件。
+ * Alliance Disband Event.
  */
 
 public class AllianceDisbandEvent extends AlwaysTrueTeamEvent implements Predicate<Player> {

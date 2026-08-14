@@ -11,7 +11,7 @@ import com.aionemu.gameserver.model.templates.beritra.BeritraTemplate;
 import com.aionemu.gameserver.services.beritraservice.BeritraInvasion;
 
 /**
- * 贝里特拉位置模型。
+ * 布里特拉位置模型。
  * Beritra Location model.
  *
  * @author Rinzler (Encom)

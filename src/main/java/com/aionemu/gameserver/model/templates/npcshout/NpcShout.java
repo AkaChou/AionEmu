@@ -38,46 +38,46 @@ public class NpcShout {
 	@XmlAttribute(name = "poll_delay")
 	protected Integer pollDelay;
 
-	 /**
-	  * 获取 stringId 属性值。
-	  * Gets the value of the stringId property
-	  */
+	/**
+	 * 获取 stringId 属性值。
+	 * Gets the value of the stringId property
+	 */
 	public int getStringId() {
 		return stringId;
 	}
 
-	 /**
-	  * 获取 when 属性值。
-	  * Gets the value of the when property
-	  * @return possible object is {@link ShoutEventType }
-	  */
+	/**
+	 * 获取 when 属性值。
+	 * Gets the value of the when property
+	 * @return 可能的对象类型 / possible object is {@link ShoutEventType }
+	 */
 	public ShoutEventType getWhen() {
 		return when;
 	}
 
-	 /**
-	  * 获取 pattern 属性值。
-	  * Gets the value of the pattern property
-	  * @return possible object is {@link String }
-	  */
+	/**
+	 * 获取 pattern 属性值。
+	 * Gets the value of the pattern property
+	 * @return 可能的对象类型 / possible object is {@link String }
+	 */
 	public String getPattern() {
 		return pattern;
 	}
 
-	 /**
-	  * 获取 param 属性值。
-	  * Gets the value of the param property
-	  * @return possible object is {@link String }
-	  */
+	/**
+	 * 获取 param 属性值。
+	 * Gets the value of the param property
+	 * @return 可能的对象类型 / possible object is {@link String }
+	 */
 	public String getParam() {
 		return param;
 	}
 
-	 /**
-	  * 获取 type 属性值。
-	  * Gets the value of the type property
-	  * @return possible object is {@link ShoutType }
-	  */
+	/**
+	 * 获取 type 属性值。
+	 * Gets the value of the type property
+	 * @return 可能的对象类型 / possible object is {@link ShoutType }
+	 */
 	public ShoutType getShoutType() {
 		if (type == null) {
 			return ShoutType.BROADCAST;
@@ -85,11 +85,11 @@ public class NpcShout {
 		return type;
 	}
 
-	 /**
-	  * 获取 skillNo 属性值。
-	  * Gets the value of the skillNo property
-	  * @return possible object is {@link Integer }
-	  */
+	/**
+	 * 获取 skillNo 属性值。
+	 * Gets the value of the skillNo property
+	 * @return 可能的对象类型 / possible object is {@link Integer }
+	 */
 	public int getSkillNo() {
 		if (skillNo == null) {
 			return 0;

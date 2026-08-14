@@ -24,9 +24,9 @@ public class AbyssPointsService {
 	 * 带全局回调的 AP 增加入口（按击杀对象触发）。
 	 * AP-add entry with global callback (keyed by killed object).
 	 *
-	 * 玩家 / Player
-	 * @param obj    关联可见对象 / Related visible object
-	 * AP delta
+	 * @param player 玩家 / Player
+	 * @param obj 关联可见对象 / related visible object
+	 * @param value AP 变化量 / AP delta
 	 */
 	@GlobalCallback(AddAPGlobalCallback.class)
 	public static void addAp(Player player, VisibleObject obj, int value) {
@@ -37,9 +37,9 @@ public class AbyssPointsService {
 	 * 带全局回调的 GP 增加入口（按击杀对象触发）。
 	 * GP-add entry with global callback (keyed by killed object).
 	 *
-	 * 玩家 / Player
-	 * @param obj    关联可见对象 / Related visible object
-	 * GP delta
+	 * @param player 玩家 / Player
+	 * @param obj 关联可见对象 / related visible object
+	 * @param value GP 变化量 / GP delta
 	 */
 	@GlobalCallback(AddGPGlobalCallback.class)
 	public static void addGp(Player player, VisibleObject obj, int value) {
@@ -50,8 +50,8 @@ public class AbyssPointsService {
 	 * 增减 AP，提示玩家并同步军团贡献。
 	 * Add or subtract AP, notify the player, and sync legion contribution.
 	 *
-	 * 玩家 / Player
-	 * AP delta
+	 * @param player 玩家 / Player
+	 * @param value AP 变化量 / AP delta
 	 */
 	public static void addAp(Player player, int value) {
 		if (player == null) {
@@ -73,8 +73,8 @@ public class AbyssPointsService {
 	 * 增减 GP 并提示玩家。
 	 * Add or subtract GP and notify the player.
 	 *
-	 * 玩家 / Player
-	 * GP delta
+	 * @param player 玩家 / Player
+	 * @param value GP 变化量 / GP delta
 	 */
 	public static void addGp(Player player, int value) {
 		if (player == null) {
@@ -122,8 +122,8 @@ public class AbyssPointsService {
 	 * 将 AP 变化应用到军阶并在变更时广播。
 	 * Apply AP delta to the rank and broadcast on rank change.
 	 *
-	 * 玩家 / Player
-	 * AP delta
+	 * @param player 玩家 / Player
+	 * @param value AP 变化量 / AP delta
 	 */
 	public static void setAp(Player player, int value) {
 		if (player == null) {
@@ -141,8 +141,8 @@ public class AbyssPointsService {
 	 * 将 GP 变化应用到军阶并下发军阶包。
 	 * Apply GP delta to the rank and send the abyss-rank packet.
 	 *
-	 * 玩家 / Player
-	 * GP delta
+	 * @param player 玩家 / Player
+	 * @param value GP 变化量 / GP delta
 	 */
 	public static void setGp(Player player, int value) {
 		if (player == null) {
@@ -157,9 +157,9 @@ public class AbyssPointsService {
 	 * 军阶变化时广播外观、刷新军阶包并校验军阶限装。
 	 * On rank change: broadcast appearance, refresh rank packet, check rank-limited gear.
 	 *
-	 * 玩家 / Player
-	 * Old rank
-	 * New rank
+	 * @param player 玩家 / Player
+	 * @param oldAbyssRank 旧军阶 / old rank
+	 * @param newAbyssRank 新军阶 / new rank
 	 */
 	public static void checkRankChanged(Player player, AbyssRankEnum oldAbyssRank, AbyssRankEnum newAbyssRank) {
 		if (oldAbyssRank == newAbyssRank) {
@@ -259,8 +259,8 @@ public class AbyssPointsService {
 		 * AP 已增加后的扩展钩子。
 		 * Extension hook after AP was added.
 		 *
-		 * 玩家 / Player
-		 * AP amount
+		 * @param player 玩家 / Player
+		 * @param abyssPoints AP 数量 / AP amount
 		 */
 		public abstract void onAbyssPointsAdded(Player player, int abyssPoints);
 	}
@@ -298,8 +298,8 @@ public class AbyssPointsService {
 		 * GP 已增加后的扩展钩子。
 		 * Extension hook after GP was added.
 		 *
-		 * 玩家 / Player
-		 * GP amount
+		 * @param player 玩家 / Player
+		 * @param gloryPoints GP 数量 / GP amount
 		 */
 		public abstract void onGloryPointsAdded(Player player, int gloryPoints);
 	}

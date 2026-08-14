@@ -520,18 +520,12 @@ public class ChatChannels {
     }
 
     /**
-	 * 按频道 ID 获取频道。
-	 * Returns channel by channel id.
-	 *
-	 * channel id
-	 * channel
-	 */
-    /**
-     * 按频道 ID 查找频道。
-     * Finds a channel by id.
+     * 按频道 ID 获取频道，未找到时抛异常。
+     * Returns the channel by id, throws if none registered.
      *
-     * channel id
-     * channel or null
+     * @param channelId 频道 ID / channel id
+     * @return 匹配的频道 / matching channel
+     * @throws IllegalArgumentException 未注册该 ID 的频道 / no channel registered for the id
      */
     public static Channel getChannelById(int channelId) {
         for (Channel channel : channels) {
@@ -546,12 +540,12 @@ public class ChatChannels {
     }
 
     /**
-	 * 按标识符获取频道。
-	 * Returns channel by identifier.
-	 *
-	 * identifier
-	 * channel
-	 */
+     * 按标识符获取频道，未找到时返回 {@code null}。
+     * Returns the channel by identifier, {@code null} if none registered.
+     *
+     * @param identifier 标识字节 / identifier bytes
+     * @return 匹配的频道，未找到为 null / matching channel, null if not found
+     */
     public static Channel getChannelByIdentifier(byte[] identifier) {
         for (Channel channel : channels) {
             if (Arrays.equals(channel.getIdentifierBytes(), identifier)) {
@@ -569,7 +563,7 @@ public class ChatChannels {
      * 添加 LFG 组队频道。
      * Adds an LFG party-find channel.
      *
-     * channel name
+     * @param channelName 频道名 / channel name
      */
     private static void addGroupChannel(String channelName) {
         addChannel(new LfgChannel(Race.ELYOS, "@\u0001" + channelName + "\u0001" + GameServerService.GAMESERVER_ID + ".0.AION.KOR"));
@@ -580,7 +574,7 @@ public class ChatChannels {
      * 添加交易频道。
      * Adds a trade channel.
      *
-     * channel name
+     * @param channelName 频道名 / channel name
      */
     private static void addTradeChannel(String channelName) {
         addChannel(new TradeChannel(Race.ELYOS, "@\u0001" + channelName + "\u0001" + GameServerService.GAMESERVER_ID + ".0.AION.KOR"));
@@ -591,8 +585,8 @@ public class ChatChannels {
      * 添加地区频道。
      * Adds a region channel.
      *
-     * map id
-     * channel name
+     * @param mapId 地图 ID / map id
+     * @param channelName 频道名 / channel name
      */
     private static void addRegionChannel(int mapId, String channelName) {
         addChannel(new RegionChannel(mapId, Race.ELYOS, "@\u0001" + channelName + "\u0001" + GameServerService.GAMESERVER_ID + ".0.AION.KOR"));

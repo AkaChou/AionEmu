@@ -13,6 +13,8 @@ public interface GameEngine {
 	/**
 	 * 为引擎加载资源。
 	 * Load resources for engine
+	 *
+	 * @param progressLatch 进度门闩 / progress latch
 	 */
 	void load(CountDownLatch progressLatch);
 

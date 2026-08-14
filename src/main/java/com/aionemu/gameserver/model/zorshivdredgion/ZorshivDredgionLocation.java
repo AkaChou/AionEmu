@@ -38,13 +38,13 @@ public class ZorshivDredgionLocation {
 		return isActive;
 	}
 
-	/** 设置 active zorshiv dredgion / Sets the active zorshiv dredgion */
+	/** 设置激活的无畏舰 / Sets the active zorshiv dredgion */
 	public void setActiveZorshivDredgion(ZorshivDredgion<ZorshivDredgionLocation> zorshivDredgion) {
 		isActive = zorshivDredgion != null;
 		this.activeZorshivDredgion = zorshivDredgion;
 	}
 
-	/** 返回当前佐西夫无畏舰 / Returns the active zorshiv dredgion */
+	/** 返回当前佐希夫无畏舰 / Returns the active zorshiv dredgion */
 	public ZorshivDredgion<ZorshivDredgionLocation> getActiveZorshivDredgion() {
 		return activeZorshivDredgion;
 	}
@@ -64,7 +64,7 @@ public class ZorshivDredgionLocation {
 		return template.getName();
 	}
 
-	/** 返回是否已刷新 / Returns the spawned */
+	/** 返回已生成对象列表 / Returns the spawned */
 	public List<VisibleObject> getSpawned() {
 		return spawned;
 	}

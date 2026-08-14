@@ -11,6 +11,6 @@ import jakarta.xml.bind.annotation.XmlEnum;
 
 @XmlEnum
 public enum PanelCpType {
-	/** Stat Up / Stat Up */
+	/** 属性提升 / Stat up */
 	STAT_UP, LEARN_SKILL, ENCHANT_SKILL;
 }

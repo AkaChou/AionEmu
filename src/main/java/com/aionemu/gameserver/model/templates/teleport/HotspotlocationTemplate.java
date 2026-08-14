@@ -8,8 +8,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.Race;
 
 /**
- * Hotspotlocation 模板（静态数据/XML）。
- * XML template.
+ * 热点地点模板（静态数据/XML）。
+ * Hotspot location template (static data/XML).
  *
  * @author Rinzler (Encom)
  */

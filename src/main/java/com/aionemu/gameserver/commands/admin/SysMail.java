@@ -73,8 +73,6 @@ public class SysMail extends AdminCommand {
 	 * 向指定玩家或种族批量发送系统邮件。
 	 * Sends system mail to a player or race groups.
 	 *
-	 * 执行 GM / Admin player
-	 * Send parameters
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -196,7 +194,6 @@ public class SysMail extends AdminCommand {
 	 * 从 |...| 包裹的词列表中提取标题或正文。
 	 * Extracts title or message text enclosed in pipe chars from word tokens.
 	 *
-	 * Word tokens
 	 *
 	 * @param outText 输出缓冲区（长度 1） / Output buffer of length 1
 	 * @param outText
@@ -240,13 +237,6 @@ public class SysMail extends AdminCommand {
 	 * 校验收件人、物品、数量与基纳附件是否合法。
 	 * Validates recipient, item, count, and kinah attachment rules.
 	 *
-	 * 执行 GM / Admin player
-	 * Item id
-	 * Count
-	 * Kinah
-	 * Recipient name
-	 * Recipient type
-	 * Letter type
 	 *
 	 * @return 是否快递 / 在线相关标志；非法时返回 null / Express/online flag, or null if invalid
 	 */
@@ -327,8 +317,6 @@ public class SysMail extends AdminCommand {
 	 * 参数错误时的详细用法提示。
 	 * Detailed usage hint on invalid parameters.
 	 *
-	 * 玩家 / Player
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

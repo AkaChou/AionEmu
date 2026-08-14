@@ -28,7 +28,6 @@ public class MotionTime {
 	 * 获取动作名称。
 	 * Gets motion name.
 	 *
-	 * name
 	 */
 	public String getName() {
 		return name;
@@ -38,7 +37,6 @@ public class MotionTime {
 	 * 获取阿斯摩男性时间表。
 	 * Gets Asmodian male times.
 	 *
-	 * times
 	 */
 	public Times getAm() {
 		return am;
@@ -58,7 +56,6 @@ public class MotionTime {
 	 * 获取阿斯摩女性时间表。
 	 * Gets Asmodian female times.
 	 *
-	 * times
 	 */
 	public Times getAf() {
 		return af;
@@ -78,7 +75,6 @@ public class MotionTime {
 	 * 获取天族男性时间表。
 	 * Gets Elyos male times.
 	 *
-	 * times
 	 */
 	public Times getEm() {
 		return em;
@@ -98,7 +94,6 @@ public class MotionTime {
 	 * 获取天族女性时间表。
 	 * Gets Elyos female times.
 	 *
-	 * times
 	 */
 	public Times getEf() {
 		return ef;
@@ -118,7 +113,6 @@ public class MotionTime {
 	 * 设置动作名称。
 	 * Sets motion name.
 	 *
-	 * name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -129,7 +123,6 @@ public class MotionTime {
 	 * Gets times by race and gender.
 	 *
 	 * 阵营 / race
-	 * gender
 	 * @return 时间表，未知则 null / times or null
 	 */
 	public Times getTimes(Race race, Gender gender) {
@@ -156,8 +149,6 @@ public class MotionTime {
 	 * Gets motion time for race, gender and weapon.
 	 *
 	 * 阵营 / race
-	 * gender
-	 * weapon wrapper
 	 * @return 时间，未知则 0 / time or 0
 	 */
 	public int getTimeForWeapon(Race race, Gender gender, WeaponTypeWrapper weapon) {

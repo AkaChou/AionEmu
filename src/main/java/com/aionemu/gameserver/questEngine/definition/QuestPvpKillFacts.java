@@ -4,7 +4,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/** Immutable server facts attached only to an authoritative runtime PvP kill event. */
+/**
+ * 仅附着于权威运行时 PvP 击杀事件的不可变服务器事实。
+ * Immutable server facts attached only to an authoritative runtime PvP kill event.
+ */
 public record QuestPvpKillFacts(int killerId, int recipientId, int victimId,
 		int recipientLevel, int victimLevel, int victimRankId, int worldId,
 		QuestPvpCreditSource creditSource, Set<String> recipientZones) {
@@ -30,6 +33,10 @@ public record QuestPvpKillFacts(int killerId, int recipientId, int victimId,
 			.collect(Collectors.toSet()));
 	}
 
+	/**
+	 * 击杀双方等级差是否落在给定区间内。
+	 * Whether the level delta between killer and victim is within the given range.
+	 */
 	public boolean victimLevelDeltaBetween(int minimumRecipientDelta, int maximumRecipientDelta) {
 		int delta = recipientLevel - victimLevel;
 		return delta >= minimumRecipientDelta && delta <= maximumRecipientDelta;

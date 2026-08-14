@@ -31,9 +31,9 @@ public class JobChannel extends RaceChannel {
      * 创建职业频道。
      * Creates a job channel.
      *
-     * gender
-     * player class
-     * 阵营 / race
+     * @param gender 性别 / gender
+     * @param playerClass 职业 / player class
+     * @param race 阵营 / race
      * @param identifier 字符串标识 / string identifier
      */
     public JobChannel(Gender gender, PlayerClass playerClass, Race race, String identifier) {

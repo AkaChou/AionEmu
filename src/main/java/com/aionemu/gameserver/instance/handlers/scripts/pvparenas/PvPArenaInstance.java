@@ -662,18 +662,20 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 				player.getLifeStats().increaseHp(SM_ATTACK_STATUS.TYPE.HP, 10000);
 				player.getLifeStats().increaseMp(SM_ATTACK_STATUS.TYPE.MP, 10000);
 			break;
-		   /**
-	 * Treasure Box [Arena Of Chaos/Chaos Training Grounds]
-	 */
+			/**
+			 * 宝箱 [混沌竞技场/混沌修炼场]
+			 * Treasure Box [Arena Of Chaos/Chaos Training Grounds]
+			 */
 			case 218784:
 			case 218785:
 			case 218786:
 			case 218787:
 			case 218788:
 			case 218789:
-		   /**
-	 * Treasure Box [Arena Of Discipline/Discipline Training Grounds]
-	 */
+			/**
+			 * 宝箱 [孤独竞技场/孤独修炼场]
+			 * Treasure Box [Arena Of Discipline/Discipline Training Grounds]
+			 */
 			case 218791:
 			case 218792:
 			case 218793:

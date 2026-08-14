@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 熔岩魔模板（静态数据/XML）。
- * XML template.
+ * Moltenus XML template.
  *
  * @author Rinzler (Encom)
  */

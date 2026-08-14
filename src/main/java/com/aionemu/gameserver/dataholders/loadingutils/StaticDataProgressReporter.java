@@ -10,7 +10,7 @@ interface StaticDataProgressReporter {
 	 * 开始整体加载。
 	 * Starts overall loading.
 	 *
-	 * total section count
+	 * @param totalSections 分段总数 / total section count
 	 */
 	void start(int totalSections);
 
@@ -19,8 +19,8 @@ interface StaticDataProgressReporter {
 	 * Notifies that a section has started loading.
 	 *
 	 * @param sectionIndex 当前分段序号 / current section index
-	 * total section count
-	 * section name
+	 * @param totalSections 分段总数 / total section count
+	 * @param sectionName 分段名称 / section name
 	 * @param totalEntries 分段条目总数 / total entries in the section
 	 */
 	void sectionStarted(int sectionIndex, int totalSections, String sectionName, int totalEntries);
@@ -30,8 +30,8 @@ interface StaticDataProgressReporter {
 	 * Reports progress within a section.
 	 *
 	 * @param sectionIndex 当前分段序号 / current section index
-	 * total section count
-	 * section name
+	 * @param totalSections 分段总数 / total section count
+	 * @param sectionName 分段名称 / section name
 	 * @param currentEntries 已处理条目数 / entries processed so far
 	 * @param totalEntries 分段条目总数 / total entries in the section
 	 */
@@ -42,8 +42,8 @@ interface StaticDataProgressReporter {
 	 * Notifies that a section has finished loading.
 	 *
 	 * @param sectionIndex 当前分段序号 / current section index
-	 * total section count
-	 * section name
+	 * @param totalSections 分段总数 / total section count
+	 * @param sectionName 分段名称 / section name
 	 * @param totalEntries 分段条目总数 / total entries in the section
 	 */
 	void sectionFinished(int sectionIndex, int totalSections, String sectionName, int totalEntries);
@@ -52,7 +52,7 @@ interface StaticDataProgressReporter {
 	 * 全部加载完成。
 	 * Notifies that overall loading has finished.
 	 *
-	 * total section count
+	 * @param totalSections 分段总数 / total section count
 	 * @param elapsedMillis 耗时毫秒数 / elapsed milliseconds
 	 */
 	void finish(int totalSections, long elapsedMillis);

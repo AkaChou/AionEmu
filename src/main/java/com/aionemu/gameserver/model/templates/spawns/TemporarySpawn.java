@@ -27,32 +27,32 @@ public class TemporarySpawn {
 		return spawnTime;
 	}
 
-	/** Ge Spawn Hour / Ge Spawn Hour */
+	/** 获取刷新小时 / Gets the spawn hour */
 	public Integer geSpawnHour() {
 		return getTime(spawnTime, 0);
 	}
 
-	/** Ge Spawn Day / Ge Spawn Day */
+	/** 获取刷新日 / Gets the spawn day */
 	public Integer geSpawnDay() {
 		return getTime(spawnTime, 1);
 	}
 
-	/** 返回 spawn month / Returns the spawn month */
+	/** 返回刷新月 / Returns the spawn month */
 	public Integer getSpawnMonth() {
 		return getTime(spawnTime, 2);
 	}
 
-	/** 消失小时 / ge Despawn Hour. */
+	/** 获取消失小时 / Gets the despawn hour. */
 	public Integer geDespawnHour() {
 		return getTime(despawnTime, 0);
 	}
 
-	/** 消失日 / ge Despawn Day. */
+	/** 获取消失日 / Gets the despawn day. */
 	public Integer geDespawnDay() {
 		return getTime(despawnTime, 1);
 	}
 
-	/** 返回 despawn month / Returns the despawn month */
+	/** 返回消失月 / Returns the despawn month */
 	public Integer getDespawnMonth() {
 		return getTime(despawnTime, 2);
 	}

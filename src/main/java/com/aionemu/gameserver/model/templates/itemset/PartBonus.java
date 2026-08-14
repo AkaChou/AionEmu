@@ -12,8 +12,8 @@ import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 
 /**
- * Part 加成模板（静态数据/XML）。
- * XML template.
+ * 套装部件加成模板（静态数据/XML）。
+ * Set part bonus template (static data/XML).
  *
  * @author ATracer
  */

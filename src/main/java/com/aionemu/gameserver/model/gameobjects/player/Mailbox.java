@@ -85,8 +85,8 @@ public class Mailbox {
 	 * 获取 systemletterswhichsendersstartstringspecifiedwerereceivedsincelast 玩家 login。
 	 * Get system letters which senders start with the string specified and were received since the last player login
 	 *
-	 * @param substring must start with special characters: % or $$
-	 * @return new list of letters
+	 * @param substring 必须以特殊字符开头：% 或 $$ / must start with special characters: % or $$
+	 * @return 新信件列表 / new list of letters
 	 */
 	public List<Letter> getNewSystemLetters(String substring) {
 		List<Letter> letters = new ArrayList<Letter>();
@@ -118,7 +118,8 @@ public class Mailbox {
 	}
 
 	/**
-	 * 检查邮箱是否包含空邮件。 / Check whether the mailbox contains empty letters.
+	 * 检查邮箱是否包含空邮件。
+	 * Check whether the mailbox contains empty letters.
 	 *
 	 * @return
 	 */

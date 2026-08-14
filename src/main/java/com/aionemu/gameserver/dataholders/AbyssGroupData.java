@@ -46,7 +46,7 @@ public class AbyssGroupData {
 	 * 返回已加载的模板数量。
 	 * Returns the number of loaded templates.
 	 *
-	 * template count
+	 * @return 已加载的模板数量 / Returns the number of loaded templates.
 	 */
 	public int size() {
 		return templates.size();
@@ -56,9 +56,7 @@ public class AbyssGroupData {
 	 * 按 buff ID 获取欧比斯组属性模板。
 	 * Returns the abyss group attribute template for the given buff id.
 	 *
-	 * buff id
-	 *
-	 * @param buffId
+	 * @param buffId 增益 ID / buff id
 	 * @return 组属性模板，不存在则为 null / group attribute template or null
 	 */
 	public AbyssGroupAttr getInstanceBonusattr(int buffId) {

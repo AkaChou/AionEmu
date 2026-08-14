@@ -19,6 +19,10 @@ import com.aionemu.gameserver.skillengine.model.ExclusiveAttribute;
 
 import jakarta.xml.bind.Unmarshaller;
 
+/**
+ * 从拆分包中的分卷 XML 加载技能定义，并展开技能组与字段引用。
+ * Loads skill definitions from the split XML parts, expanding skill groups and field references.
+ */
 final class SkillDefinitionLoader {
 
 	static SkillData load(File directory) {

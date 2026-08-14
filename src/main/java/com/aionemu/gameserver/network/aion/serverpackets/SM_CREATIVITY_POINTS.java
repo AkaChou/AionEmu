@@ -31,15 +31,37 @@ public class SM_CREATIVITY_POINTS extends AionServerPacket {
 	private int size;
 	private boolean onLogin;
 
+	/**
+	 * 构造 CP 同步包（总点数与技能点数档位）。
+	 * Creates a CP sync packet (total points and dot step).
+	 *
+	 * @param totalPoint 已分配创造点数总数 / total allocated creativity points
+	 * @param dotStep 技能点数档位 / skill dot step
+	 */
 	public SM_CREATIVITY_POINTS(int totalPoint, int dotStep) {
 		this.totalPoint = totalPoint;
 		this.dotStep = dotStep;
 	}
 
+	/**
+	 * 构造仅含技能点数档位的 CP 同步包。
+	 * Creates a CP sync packet carrying only the dot step.
+	 *
+	 * @param dotStep 技能点数档位 / skill dot step
+	 */
 	public SM_CREATIVITY_POINTS(int dotStep) {
 		this.dotStep = dotStep;
 	}
 
+	/**
+	 * 构造完整 CP 同步包，可指定槽位数并在登录时应用属性变更。
+	 * Creates a full CP sync packet, optionally applying stat changes on login.
+	 *
+	 * @param totalPoint 已分配创造点数总数 / total allocated creativity points
+	 * @param dotStep 技能点数档位 / skill dot step
+	 * @param size 已分配槽位数 / number of allocated slots
+	 * @param onLogin 是否为登录同步（登录时应用属性变更）/ whether this is the login sync (applies stat changes)
+	 */
 	public SM_CREATIVITY_POINTS(int totalPoint, int dotStep, int size, boolean onLogin) {
 		this.totalPoint = totalPoint;
 		this.dotStep = dotStep;

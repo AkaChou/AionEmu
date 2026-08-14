@@ -44,7 +44,7 @@ public final class GameCraftServices implements DisposableBean {
      * 获取制作技能更新服务。
      * Obtain the craft-skill update service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static CraftSkillUpdateService craftSkillUpdateService() {
         ObjectProvider<CraftSkillUpdateService> provider = craftSkillUpdateServiceProvider;
@@ -58,7 +58,7 @@ public final class GameCraftServices implements DisposableBean {
      * 获取放弃制作状态服务。
      * Obtain the relinquish-craft-status service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static RelinquishCraftStatus relinquishCraftStatus() {
         ObjectProvider<RelinquishCraftStatus> provider = relinquishCraftStatusProvider;

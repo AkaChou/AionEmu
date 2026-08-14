@@ -68,8 +68,8 @@ public class InstanceSchedule {
 	@XmlRootElement(name = "instance")
 	public static class Instance {
 		/**
-	 * 副本 ID / Instance ID。 Instance ID
-	 */
+		 * 副本 ID / Instance ID
+		 */
 		@XmlAttribute(required = true)
 		private int id;
 

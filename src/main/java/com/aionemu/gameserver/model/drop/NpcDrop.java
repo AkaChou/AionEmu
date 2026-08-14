@@ -41,7 +41,7 @@ public class NpcDrop implements DropCalculator {
 		return this.dropGroup;
 	}
 
-	/** 返回 common drop group names / Returns the common drop group names */
+	/** 返回公共掉落组名称列表 / Returns the common drop group names */
 	public List<String> getCommonDropGroupNames() {
 		if (commonDropGroup == null) {
 			return Collections.emptyList();
@@ -51,12 +51,12 @@ public class NpcDrop implements DropCalculator {
 			.toList();
 	}
 
-	/** 返回带 NPC 专属倍率的公共掉落组引用。 */
+	/** 返回公共掉落组引用。 / Returns the common drop groups. */
 	public List<CommonDropGroup> getCommonDropGroups() {
 		return commonDropGroup == null ? Collections.emptyList() : commonDropGroup;
 	}
 
-	/** Adds 掉落组 / Adds drop groups */
+	/** 添加掉落组 / Adds drop groups */
 	public void addDropGroups(List<DropGroup> groups) {
 		if (groups.isEmpty()) {
 			return;
@@ -75,7 +75,16 @@ public class NpcDrop implements DropCalculator {
 		return npcId;
 	}
 
-	/** 掉落 Calculator / Drop Calculator */
+	/**
+	 * 掉落计算器：按种族筛选掉落组后依次执行各组计算。
+	 * Drop calculator: filters drop groups by race, then runs each matching group.
+	 *
+	 * @param result 掉落物结果集 / drop-item result set
+	 * @param index 当前索引 / current index
+	 * @param dropModifiers 掉落修正器 / drop modifiers
+	 * @param groupMembers 队伍成员（用于每人一份的掉落）/ group members (for each-member drops)
+	 * @return 下一个可用索引 / the next available index
+	 */
 	@Override
 	public int dropCalculator(Set<DropItem> result, int index, DropModifiers dropModifiers,
 			Collection<Player> groupMembers) {
@@ -102,7 +111,7 @@ public class NpcDrop implements DropCalculator {
 			return name;
 		}
 
-		/** 返回真端公共掉落倍率，100 表示 1 倍。 */
+		/** 返回公共掉落倍率，100 表示 1 倍。 / Returns the common drop adjustment, 100 means 1x. */
 		public int getCommonDropAdjustment() {
 			return commonDropAdjustment;
 		}

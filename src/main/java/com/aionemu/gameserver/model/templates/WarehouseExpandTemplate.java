@@ -12,8 +12,8 @@ import com.aionemu.gameserver.model.templates.expand.Expand;
 import com.aionemu.gameserver.utils.Util;
 
 /**
- * 仓库 Expand 模板（静态数据/XML）。
- * XML template.
+ * 仓库扩展模板（静态数据/XML）。
+ * Warehouse expand template (static data / XML).
  *
  * @author Simple
  */
@@ -25,13 +25,15 @@ public class WarehouseExpandTemplate {
 	protected List<Expand> warehouseExpands;
 
 	/**
-	 * NPC ID
+	 * 仓库 NPC 的 ID。
+	 * NPC ID of the warehouse NPC.
 	 */
 	@XmlAttribute(name = "id", required = true)
 	protected int id;
 
 	/**
-	 * NPC name
+	 * NPC 名称。
+	 * NPC name.
 	 */
 	@XmlAttribute(name = "name", required = true)
 	protected String name = "";
@@ -41,27 +43,30 @@ public class WarehouseExpandTemplate {
 		return id;
 	}
 
-	 /**
-	  * 获取 material 属性值。
-	  * Gets the value of the material property
-	  */
+	/**
+	 * 获取仓库扩展列表。
+	 * Gets the warehouse expand list.
+	 */
 	public List<Expand> getWarehouseExpand() {
 		return this.warehouseExpands;
 	}
 
 	/**
-	 * 获取 value 的名称 property。 / Gets the value of the name property
+	 * 获取 NPC 名称。
+	 * Gets the value of the name property
 	 *
-	 * @return possible object is {@link String }
+	 * @return NPC 名称字符串 / Possible object is {@link String }
 	 */
 	public String getName() {
 		return Util.convertName(name);
 	}
 
 	/**
-	 * 返回若为真则列表 containslevel。 / Returns true if list contains level
+	 * 判断扩展列表是否包含指定等级。
+	 * Returns true if list contains level
 	 *
-	 * @return true or false
+	 * @param level 要检查的等级 / Level to check
+	 * @return 包含则为 true / True or false
 	 */
 	public boolean contains(int level) {
 		for (Expand expand : warehouseExpands) {
@@ -73,9 +78,11 @@ public class WarehouseExpandTemplate {
 	}
 
 	/**
-	 * 返回若为真则列表 containslevel。 / Returns true if list contains level
+	 * 按等级获取扩展项。
+	 * Returns the expand for the given level
 	 *
-	 * @return expand
+	 * @param level 要查找的等级 / Level to look up
+	 * @return 扩展项 / Expand
 	 */
 	public Expand get(int level) {
 		for (Expand expand : warehouseExpands) {

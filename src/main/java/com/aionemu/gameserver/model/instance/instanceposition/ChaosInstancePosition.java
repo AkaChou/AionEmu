@@ -8,7 +8,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  */
 
 public class ChaosInstancePosition extends GenerealInstancePosition {
-	/** 端口 / port. */
+	/** 传送。 / Port. */
 	@Override
 	public void port(Player player, int zone, int position) {
 		switch (position) {

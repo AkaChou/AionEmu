@@ -38,7 +38,7 @@ public abstract class MoltenusFight<ML extends MoltenusLocation> {
 	 * 绑定熔岩领主地点。
 	 * Binds the Moltenus location.
 	 *
-	 * location
+	 * @param moltenusLocation 熔岩领主地点 / Moltenus location
 	 */
 	public MoltenusFight(ML moltenusLocation) {
 		this.moltenusLocation = moltenusLocation;
@@ -105,7 +105,7 @@ public abstract class MoltenusFight<ML extends MoltenusLocation> {
 	 * 获取绑定地点。
 	 * Returns the bound location.
 	 *
-	 * location
+	 * @return 绑定地点 / bound location
 	 */
 	public ML getMoltenusLocation() {
 		return moltenusLocation;
@@ -115,7 +115,7 @@ public abstract class MoltenusFight<ML extends MoltenusLocation> {
 	 * 获取地点 ID。
 	 * Returns the location id.
 	 *
-	 * location id
+	 * @return 地点 ID / location id
 	 */
 	public int getMoltenusLocationId() {
 		return moltenusLocation.getId();

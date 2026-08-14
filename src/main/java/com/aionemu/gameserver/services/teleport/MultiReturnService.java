@@ -18,9 +18,9 @@ public class MultiReturnService {
 	 * 按传送点 ID 将玩家传送到目标世界。
 	 * Teleports the player to a target world by portal location id.
 	 *
-	 * 玩家 / Player
-	 * Portal location id
-	 * Target world id
+	 * @param player 玩家 / Player
+	 * @param LocId 传送点 ID / Portal location id
+	 * @param worldId 目标世界 ID / Target world id
 	 */
 	public static void Teleport(Player player, int LocId, int worldId) {
 		InstanceService.onLeaveInstance(player);
@@ -33,10 +33,8 @@ public class MultiReturnService {
 	 * 将世界地图 ID 映射为多重回城用的传送点/区域 ID。
 	 * Maps a world map id to the multi-return teleport/zone id.
 	 *
-	 * World map id
-	 *
+	 * @param worldId 世界地图 ID / World map id
 	 * @param race 玩家种族（部分地图按种族区分） / Player race (some maps are race-split)
-	 * @param race
 	 * @return 映射后的 ID；未知地图返回 0 / Mapped id; 0 when unknown
 	 */
 	public static int getTeleportWorldId(int worldId, Race race) {

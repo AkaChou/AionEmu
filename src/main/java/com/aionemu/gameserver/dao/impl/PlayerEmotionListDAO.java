@@ -73,8 +73,8 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
      * 插入或更新单个玩家表情。
      * Inserts or updates a single player emotion.
      *
-     * 玩家 / player
-     * emotion
+     * @param player 玩家 / player
+     * @param emotion 表情 / emotion
      */
     @Override
     public void insertEmotion(Player player, Emotion emotion) {
@@ -95,8 +95,8 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
      * 删除玩家的指定表情。
      * Deletes a specific emotion for the player.
      *
-     * player id
-     * emotion id
+     * @param playerId 玩家 ID / player id
+     * @param emotionId 表情 ID / emotion id
      */
     @Override
     public void deleteEmotion(int playerId, int emotionId) {
@@ -116,7 +116,7 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
      * 删除玩家的全部表情。
      * Deletes all emotions of the player.
      *
-     * player id
+     * @param playerId 玩家 ID / player id
      */
     public void deleteAllEmotions(int playerId) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -154,8 +154,8 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
      * 批量插入或更新玩家表情列表。
      * Batch-inserts or updates the player's emotion list.
      *
-     * 玩家 / player
-     * emotion list
+     * @param player 玩家 / player
+     * @param emotions 表情列表 / emotion list
      */
     public void insertEmotions(Player player, EmotionList emotions) {
         if (emotions == null || emotions.getEmotions().isEmpty()) {
@@ -196,10 +196,10 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

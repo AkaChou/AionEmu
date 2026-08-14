@@ -24,36 +24,47 @@ import com.aionemu.gameserver.spawnengine.WalkerGroupType;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class WalkerTemplate {
 
+	/** 是否反转路线 / Whether the route is reversed */
 	@XmlAttribute(name = "reversed")
 	private Boolean isReversed = false;
 
+	/** 巡逻池人数 / Walker pool size */
 	@XmlAttribute(name = "pool", required = true)
 	private int pool = 1;
 
+	/** 路线 ID / Route id */
 	@XmlAttribute(name = "route_id", required = true)
 	private String routeId;
 
+	/** 队形 / Formation */
 	@XmlAttribute(name = "formation")
 	private WalkerGroupType formation = WalkerGroupType.POINT;
 
+	/** 行配置字符串（逗号分隔）/ Row values as comma-separated string */
 	@XmlAttribute(name = "rows")
 	private String rowValues;
 
+	/** X 偏移量字符串（逗号分隔）/ X offsets as comma-separated string */
 	@XmlAttribute(name = "offsetsx")
 	private String offsetsxValues;
-	
+
+	/** Y 偏移量字符串（逗号分隔）/ Y offsets as comma-separated string */
 	@XmlAttribute(name = "offsetsy")
 	private String offsetsyValues;
 
+	/** 路线步骤列表 / Route step list */
 	@XmlElement(name = "routestep")
 	private List<RouteStep> routeStepList;
 
+	/** 解析后的行配置 / Parsed row values */
 	@XmlTransient
 	private int[] rows;
-	
+
+	/** 解析后的 X 偏移量 / Parsed X offsets */
 	@XmlTransient
 	private int[] offsetsx;
-	
+
+	/** 解析后的 Y 偏移量 / Parsed Y offsets */
 	@XmlTransient
 	private int[] offsetsy;
 
@@ -83,8 +94,11 @@ public class WalkerTemplate {
 	}
 
 	/**
-	 * @param u
-	 * @param parent
+	 * 反序列化后处理：反转路线、链接步骤、解析队形与偏移配置。
+	 * Post-unmarshal handling: reverse the route, link steps, and parse formation and offset config.
+	 *
+	 * @param u JAXB 反序列化器 / JAXB unmarshaller
+	 * @param parent 父对象 / Parent object
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		if (isReversed) {
@@ -128,66 +142,72 @@ public class WalkerTemplate {
 		rowValues = null;
 	}
 
-	/** 返回 route steps / Returns the route steps */
+	/** 返回路线步骤列表 / Returns the route steps */
 	public List<RouteStep> getRouteSteps() {
 		return routeStepList;
 	}
 
-	/** 返回 route step / Returns the route step */
+	/** 返回指定序号的路线步 / Returns the route step */
 	public RouteStep getRouteStep(int value) {
 		return routeStepList.get(value - 1);
 	}
 
-	/** 返回 route id / Returns the route id */
+	/** 返回路线 ID / Returns the route id */
 	public String getRouteId() {
 		return routeId;
 	}
 
-	/** 返回 pool / Returns the pool */
+	/** 返回巡逻池人数 / Returns the pool */
 	public int getPool() {
 		return pool;
 	}
 
-	/** 设置 pool / Sets the pool */
+	/** 设置巡逻池人数 / Sets the pool */
 	public void setPool(int pool) {
 		this.pool = pool;
 	}
 
-	/** 设置 route steps / Sets the route steps */
+	/** 设置路线步骤列表 / Sets the route steps */
 	public void setRouteSteps(ArrayList<RouteStep> newSteps) {
 		routeStepList = newSteps;
 	}
 
 	/**
-	 * @return Whether reversed
+	 * 是否反转路线。
+	 * Whether the route is reversed.
+	 *
+	 * @return 反转时为 {@code true} / {@code true} if reversed
 	 */
 	public boolean isReversed() {
 		return isReversed;
 	}
 
-	/** 设置 is reversed / Sets the is reversed */
+	/** 设置是否反转 / Sets whether reversed */
 	public void setIsReversed(boolean value) {
 		isReversed = value;
 	}
 
-	/** 获取类型。 / Returns the type. */
+	/** 获取队形类型 / Returns the formation type. */
 	public WalkerGroupType getType() {
 		return formation;
 	}
 
 	/**
-	 * @return the rows
+	 * 返回解析后的行配置。
+	 * Returns the parsed row values.
+	 *
+	 * @return 行配置 / the rows
 	 */
 	public int[] getRows() {
 		return rows;
 	}
-	
-	/** getoffsets X / getoffsets X */
+
+	/** 获取 X 偏移量 / Gets the X offsets */
 	public int[] getoffsetsX() {
 		return offsetsx;
 	}
-	
-	/** getoffsets Y / getoffsets Y */
+
+	/** 获取 Y 偏移量 / Gets the Y offsets */
 	public int[] getoffsetsY() {
 		return offsetsy;
 	}	

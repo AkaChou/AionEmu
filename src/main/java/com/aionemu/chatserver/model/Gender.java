@@ -30,7 +30,7 @@ public enum Gender {
      * 构造性别枚举。
      * Constructs a gender enum value.
      *
-     * gender id
+     * @param genderId 性别 ID / gender id
      */
     private Gender(int genderId) {
         this.genderId = genderId;

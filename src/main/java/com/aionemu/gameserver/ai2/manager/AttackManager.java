@@ -29,7 +29,7 @@ public class AttackManager {
 	 * 开始攻击目标：记录开战时间、播放攻击表情并调度下一次攻击。
 	 * Starts attacking the target: records fight start time, plays attack emote, and schedules the next attack.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void startAttacking(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
@@ -45,7 +45,7 @@ public class AttackManager {
 	 * 安排下一次攻击；含重复调度检查，避免一次攻击多次伤害。
 	 * Schedules the next attack; includes a duplicate-schedule guard to avoid multi-hit from one attack.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void scheduleNextAttack(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
@@ -56,6 +56,7 @@ public class AttackManager {
 		}
 
 		// 检查是否已经调度了攻击，防止重复调度
+		// Check whether an attack is already scheduled to prevent duplicate scheduling
 		if (npcAI.getOwner().getGameStats().isNextAttackScheduled()) {
 			if (npcAI.isLogging()) {
 				AI2Logger.info(npcAI, "Attack already scheduled, skipping");
@@ -78,7 +79,7 @@ public class AttackManager {
 	 * 按攻击意图选择普通攻击、技能攻击或结束攻击。
 	 * Chooses simple attack, skill attack, or finish-attack based on attack intention.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param delay 攻击延迟（毫秒） / attack delay in milliseconds
 	 */
 	protected static void chooseAttack(NpcAI2 npcAI, int delay) {
@@ -92,14 +93,17 @@ public class AttackManager {
 		switch (attackIntention) {
 			case SIMPLE_ATTACK:
 				// 普通攻击
+				// Simple attack
 				SimpleAttackManager.performAttack(npcAI, delay);
 				break;
 			case SKILL_ATTACK:
 				// 技能攻击
+				// Skill attack
 				SkillAttackManager.performAttack(npcAI, delay);
 				break;
 			case FINISH_ATTACK:
 				// 结束攻击，进入思考状态
+				// Finish attacking and enter think state
 				npcAI.think();
 				break;
 			default:
@@ -111,7 +115,7 @@ public class AttackManager {
 	 * 目标过远时的处理：切换仇恨目标、丢失视野、放弃目标或追击移动。
 	 * Handles target-too-far: switch to most hated, vision loss, give up, or chase-move.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void targetTooFar(NpcAI2 npcAI) {
 		Npc npc = npcAI.getOwner();
@@ -120,6 +124,7 @@ public class AttackManager {
 		}
 
 		// 如果有更仇恨的目标，切换到那个目标
+		// Switch to the target with higher aggro if present
 		if (npc.getGameStats().getLastChangeTargetTimeDelta() > 5) {
 			Creature mostHated = npc.getAggroList().getMostHated();
 			if (mostHated != null && !mostHated.getLifeStats().isAlreadyDead()
@@ -132,14 +137,17 @@ public class AttackManager {
 			}
 		}
 		// 保留丢失目标，继续追踪；连续寻路失败由真端 react_to_pathfind_fail 处理。
+		// Keep the lost target and continue tracking; repeated pathfinding failures are handled by retail react_to_pathfind_fail.
 		if (!npc.canSee((Creature) npc.getTarget())) {
 			npcAI.setSubStateIfNot(AISubState.TARGET_LOST);
 		}
 		// 检查是否应该放弃目标
+		// Check whether the target should be given up
 		if (stopRetailChase(npcAI)) {
 			return;
 		}
 		// 尝试移动到目标
+		// Try to move toward the target
 		if (npcAI.isMoveSupported()) {
 			npc.getMoveController().moveToTargetObject();
 			return;
@@ -181,7 +189,7 @@ public class AttackManager {
 	 * 按真端 NPC 数据检查是否停止追击。
 	 * Checks whether chase should stop according to retail NPC data.
 	 *
-	 * NPC AI instance
+	 * @return NPC AI 实例 / NPC AI instance
 	 *
 	 * @param npcAI
 	 * @return 应放弃目标时为 {@code true} / {@code true} if the target should be given up

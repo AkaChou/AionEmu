@@ -68,7 +68,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 		}
 	}
 
-	/** 使用时 / on Use. */
+	/** 使用时 / On use. */
 	@Override
 	public void onUse(final Player player) {
 		if (!usingPlayer.compareAndSet(null, player)) {
@@ -146,7 +146,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 		final int ownerId = getOwnerHouse().getOwnerId();
 		final int usedCount = useCount == null ? 0 : currentUseCount + 1;
 		final ItemUseObserver observer = new ItemUseObserver() {
-			/** 中止 / abort. */
+			/** 中止 / Abort. */
 			@Override
 			public void abort() {
 				PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), 0, 9));
@@ -154,7 +154,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 				warnAndRelease(player, null);
 			}
 
-			/** 物品已使用 / itemused. */
+			/** 物品已使用 / Item used. */
 			@Override
 			public void itemused(Item item) {
 				abort();
@@ -165,7 +165,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 		PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), delay, 8));
 		player.getController().addTask(TaskId.HOUSE_OBJECT_USE,
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					/** 运行 / run. */
+					/** 运行 / Run. */
 					@Override
 					public void run() {
 						try {
@@ -254,12 +254,12 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 		super.expireEnd(player);
 	}
 
-	/** 设置 must give last reward / Sets the must give last reward */
+	/** 设置是否必须发放最终奖励 / Sets whether the final reward must be given */
 	public void setMustGiveLastReward(boolean mustGiveLastReward) {
 		this.mustGiveLastReward = mustGiveLastReward;
 	}
 
-	/** 到期结束 / Expire End */
+	/** 到期结束 / Expire end. */
 	@Override
 	public void expireEnd(Player player) {
 		final int descId = getObjectTemplate().getNameId();
@@ -282,7 +282,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 		return usingPlayer.get() == null;
 	}
 
-	/** Write usage data / Write usage data */
+	/** 写入使用数据 / Writes usage data. */
 	public void writeUsageData(ByteBuffer buffer) {
 		entryWriter.writeMe(buffer);
 	}

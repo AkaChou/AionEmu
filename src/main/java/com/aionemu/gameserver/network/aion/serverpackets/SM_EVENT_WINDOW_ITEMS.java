@@ -23,6 +23,12 @@ public class SM_EVENT_WINDOW_ITEMS extends AionServerPacket {
 
 	private Collection<EventsWindow> active_events_packet;
 
+	/**
+	 * 按活跃活动集合构造条目列表包（拷贝副本保持顺序）。
+	 * Creates an event-window items packet from the active events (copies the collection).
+	 *
+	 * @param active_events_packet 活跃活动集合 / collection of active events
+	 */
 	public SM_EVENT_WINDOW_ITEMS(Collection<EventsWindow> active_events_packet) {
 		this.active_events_packet = new ArrayList<EventsWindow>(active_events_packet);
 	}

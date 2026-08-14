@@ -42,7 +42,7 @@ public final class ZoneName {
 	 * 返回区域名称字符串。
 	 * Return the zone name string.
 	 *
-	 * name
+	 * @return 区域名称字符串 / the name
 	 */
 	public String name() {
 		return _name;
@@ -52,7 +52,7 @@ public final class ZoneName {
 	 * 返回名称哈希作为 ID。
 	 * Return the name hash as the id.
 	 *
-	 * name hash
+	 * @return 名称哈希 / the name hash
 	 */
 	public int id() {
 		return _name.hashCode();
@@ -74,7 +74,7 @@ public final class ZoneName {
 	 * Return the id for the name; unknown names fall back to NONE.
 	 *
 	 * @param name 区域名称 / zone name
-	 * zone id
+	 * @return 区域 ID / the zone id
 	 */
 	public static final int getId(String name) {
 		ZoneName zoneName = zoneNames.get(name.toUpperCase());

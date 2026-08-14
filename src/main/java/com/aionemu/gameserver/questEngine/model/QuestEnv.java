@@ -33,9 +33,9 @@ public class QuestEnv {
 	 * Constructs a quest event environment.
 	 *
 	 * @param visibleObject 事件目标对象 / Event target object
-	 * 玩家 / Player
-	 * Quest id
-	 * Dialog id
+	 * @param player 玩家 / Player
+	 * @param questId 任务 ID / Quest id
+	 * @param dialogId 对话框 ID / Dialog id
 	 */
 	public QuestEnv(VisibleObject visibleObject, Player player, Integer questId, Integer dialogId) {
 		super();
@@ -49,7 +49,7 @@ public class QuestEnv {
 	 * 返回事件目标可见对象。
 	 * Returns the event target visible object.
 	 *
-	 * Visible object
+	 * @return 可见对象 / Visible object
 	 */
 	public VisibleObject getVisibleObject() {
 		return visibleObject;
@@ -59,7 +59,7 @@ public class QuestEnv {
 	 * 设置事件目标可见对象。
 	 * Sets the event target visible object.
 	 *
-	 * Visible object
+	 * @param visibleObject 可见对象 / Visible object
 	 */
 	public void setVisibleObject(VisibleObject visibleObject) {
 		this.visibleObject = visibleObject;
@@ -89,7 +89,7 @@ public class QuestEnv {
 	 * 返回任务 ID。
 	 * Returns the quest id.
 	 *
-	 * Quest id
+	 * @return 任务 ID / Quest id
 	 */
 	public Integer getQuestId() {
 		return questId;
@@ -99,7 +99,7 @@ public class QuestEnv {
 	 * 设置任务 ID。
 	 * Sets the quest id.
 	 *
-	 * Quest id
+	 * @param questId 任务 ID / Quest id
 	 */
 	public void setQuestId(Integer questId) {
 		this.questId = questId;
@@ -109,7 +109,7 @@ public class QuestEnv {
 	 * 返回对话框 ID。
 	 * Returns the dialog id.
 	 *
-	 * Dialog id
+	 * @return 对话框 ID / Dialog id
 	 */
 	public Integer getDialogId() {
 		return dialogId;
@@ -133,7 +133,7 @@ public class QuestEnv {
 	 * 设置对话框 ID。
 	 * Sets the dialog id.
 	 *
-	 * Dialog id
+	 * @param dialogId 对话框 ID / Dialog id
 	 */
 	public void setDialogId(Integer dialogId) {
 		this.dialogId = dialogId;
@@ -143,7 +143,7 @@ public class QuestEnv {
 	 * 根据目标类型返回模板/NPC ID；无目标时返回 0。
 	 * Returns the template/NPC id based on target type; 0 when there is no target.
 	 *
-	 * Target template id
+	 * @return 目标模板 ID / Target template id
 	 */
 	public int getTargetId() {
 		if (visibleObject == null) {
@@ -172,7 +172,7 @@ public class QuestEnv {
 	 * 返回扩展奖励索引。
 	 * Returns the extended reward index.
 	 *
-	 * Reward index
+	 * @return 奖励索引 / Reward index
 	 */
 	public int getExtendedRewardIndex() {
 		return this.extendedRewardIndex;

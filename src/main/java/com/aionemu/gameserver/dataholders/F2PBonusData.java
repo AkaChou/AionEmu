@@ -47,7 +47,7 @@ public class F2PBonusData {
 	 * 返回 F2P 加成模板数量。
 	 * Returns the number of F2P bonus templates.
 	 *
-	 * template count
+	 * @return F2P 加成模板数量 / Returns the number of F2P bonus templates.
 	 */
 	public int size() {
 		return templates.size();
@@ -57,9 +57,7 @@ public class F2PBonusData {
 	 * 按 buffId 获取 F2P 加成属性模板。
 	 * Returns the F2P bonus attribute template for the given buff id.
 	 *
-	 * bonus buff id
-	 *
-	 * @param buffId
+	 * @param buffId 加成增益 ID / bonus buff id
 	 * @return 加成属性模板，不存在则为 null / bonus attribute template, or null if absent
 	 */
 	public F2pBonusAttr getInstanceBonusattr(int buffId) {

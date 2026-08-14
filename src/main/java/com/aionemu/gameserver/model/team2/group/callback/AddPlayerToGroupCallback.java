@@ -6,7 +6,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 
 /**
- * Add 玩家 To 队伍 Callback，用于团队2相关逻辑。
+ * 将玩家加入队伍的回调，用于团队 2 相关逻辑。
  * Add Player To Group Callback for team 2 logic.
  *
  * @author ATracer
@@ -28,7 +28,7 @@ public abstract class AddPlayerToGroupCallback implements Callback {
 		return CallbackResult.newContinue();
 	}
 
-	/** 获取基础职业。 / Returns the base class. */
+	/** 获取回调基础类。 / Returns the base class. */
 	@Override
 	public Class<? extends Callback> getBaseClass() {
 		return AddPlayerToGroupCallback.class;

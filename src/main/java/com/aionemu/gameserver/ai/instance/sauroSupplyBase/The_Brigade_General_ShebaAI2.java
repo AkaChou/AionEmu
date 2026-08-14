@@ -42,7 +42,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void beritraFavor() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
 	}
 	
 	@Override
@@ -78,7 +78,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 			return;
 		} else {
 		   	sendMsg(1500775);
-			GameEngineServices.skillEngine().getSkill(getOwner(), 21188, 60, getOwner()).useNoAnimationSkill(); //Lingering Doom.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 21188, 60, getOwner()).useNoAnimationSkill(); // 挥之不去的厄运 / Lingering Doom.
 			scheduleDelayStage1(delay);
 		}
 	}
@@ -89,10 +89,10 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 			return;
 		} else {
 		   	sendMsg(1500774);
-			GameEngineServices.skillEngine().getSkill(getOwner(), 21189, 0, getOwner()).useNoAnimationSkill(); //Danuar Henchman.
-			spawn(284435, 900.12497f, 879.17401f, 411.625f, (byte) 0); //Corrupted Danuar.
-			spawn(284435, 887.1312f, 889.20688f, 411.875f, (byte) 0); //Corrupted Danuar.
-			spawn(284435, 900.1312f, 901.20688f, 411.875f, (byte) 0); //Corrupted Danuar.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 21189, 0, getOwner()).useNoAnimationSkill(); // Danuar 打手 / Danuar Henchman.
+			spawn(284435, 900.12497f, 879.17401f, 411.625f, (byte) 0); // 堕落的 Danuar / Corrupted Danuar.
+			spawn(284435, 887.1312f, 889.20688f, 411.875f, (byte) 0); // 堕落的 Danuar / Corrupted Danuar.
+			spawn(284435, 900.1312f, 901.20688f, 411.875f, (byte) 0); // 堕落的 Danuar / Corrupted Danuar.
 		}
 	}
 	
@@ -102,7 +102,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 			return;
 		} else {
 		   	sendMsg(1500777);
-			GameEngineServices.skillEngine().getSkill(getOwner(), 21183, 60, getOwner()).useNoAnimationSkill(); //Out Of Body.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 21183, 60, getOwner()).useNoAnimationSkill(); // 灵魂出窍 / Out Of Body.
 			scheduleDelayStage3(delay);
 		}
 	}
@@ -113,21 +113,21 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 			return;
 		} else {
 		   	sendMsg(1500776);
-			GameEngineServices.skillEngine().getSkill(getOwner(), 21184, 0, getOwner()).useNoAnimationSkill(); //Danuar Channeling.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 21184, 0, getOwner()).useNoAnimationSkill(); // Danuar 引导 / Danuar Channeling.
 			switch (Rnd.get(1, 2)) {
 				case 1:
-					despawnNpcs(284436); //Enslaved Danuar.
+					despawnNpcs(284436); // 被奴役的 Danuar / Enslaved Danuar.
 					spawn(284436, 900.12497f, 889.17401f, 412.1f, (byte) 0);
 				break;
 				case 2:
 					despawnNpcs(284436);
-					spawn(284436, 913.12497f, 876.17401f, 412.1f, (byte) 45); //Enslaved Danuar.
-					spawn(284436, 900.12497f, 870.17401f, 412.1f, (byte) 30); //Enslaved Danuar.
-					spawn(284436, 886.12497f, 876.17401f, 412.1f, (byte) 16); //Enslaved Danuar.
-					spawn(284436, 881.12497f, 889.17401f, 412.1f, (byte) 0); //Enslaved Danuar.
-					spawn(284436, 899.12497f, 909.17401f, 412.1f, (byte) 90); //Enslaved Danuar.
-					spawn(284436, 913.12497f, 902.17401f, 412.1f, (byte) 78); //Enslaved Danuar.
-					spawn(284436, 918.12497f, 890.17401f, 412.1f, (byte) 61); //Enslaved Danuar.
+					spawn(284436, 913.12497f, 876.17401f, 412.1f, (byte) 45); // 被奴役的 Danuar / Enslaved Danuar.
+					spawn(284436, 900.12497f, 870.17401f, 412.1f, (byte) 30); // 被奴役的 Danuar / Enslaved Danuar.
+					spawn(284436, 886.12497f, 876.17401f, 412.1f, (byte) 16); // 被奴役的 Danuar / Enslaved Danuar.
+					spawn(284436, 881.12497f, 889.17401f, 412.1f, (byte) 0); // 被奴役的 Danuar / Enslaved Danuar.
+					spawn(284436, 899.12497f, 909.17401f, 412.1f, (byte) 90); // 被奴役的 Danuar / Enslaved Danuar.
+					spawn(284436, 913.12497f, 902.17401f, 412.1f, (byte) 78); // 被奴役的 Danuar / Enslaved Danuar.
+					spawn(284436, 918.12497f, 890.17401f, 412.1f, (byte) 61); // 被奴役的 Danuar / Enslaved Danuar.
 				break;
 			}
 			scheduleDelayStage4(delay);
@@ -188,17 +188,17 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 	
 	@Override
 	protected void handleBackHome() {
-	    despawnNpcs(284435); //Corrupted Danuar.
-	    despawnNpcs(284436); //Enslaved Danuar.
+	    despawnNpcs(284435); // 堕落的 Danuar / Corrupted Danuar.
+	    despawnNpcs(284436); // 被奴役的 Danuar / Enslaved Danuar.
 		super.handleBackHome();
 		isStart = false;
 		stage = 0;
 	}
-	
+
 	@Override
 	protected void handleDied() {
-	    despawnNpcs(284435); //Corrupted Danuar.
-	    despawnNpcs(284436); //Enslaved Danuar.
+	    despawnNpcs(284435); // 堕落的 Danuar / Corrupted Danuar.
+	    despawnNpcs(284436); // 被奴役的 Danuar / Enslaved Danuar.
 		super.handleDied();
 		isStart = false;
 		stage = 0;

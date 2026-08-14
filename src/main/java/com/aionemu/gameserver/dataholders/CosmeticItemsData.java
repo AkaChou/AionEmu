@@ -42,7 +42,7 @@ public class CosmeticItemsData {
 	 * 返回已加载的外观物品数量。
 	 * Returns the number of loaded cosmetic items.
 	 *
-	 * template count
+	 * @return 已加载的外观物品数量 / Returns the number of loaded cosmetic items.
 	 */
 	public int size() {
 		return cosmeticItemTemplates.size();

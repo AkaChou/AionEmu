@@ -36,9 +36,9 @@ public final class GameStaticDataServices implements DisposableBean {
      * 构造并注册各静态数据组件的实例提供者。
      * Construct and register instance providers for static-data components.
      *
-     * DataManager provider
-     * HTMLCache provider
-     * XmlDataLoader provider
+     * @param dataManagerProvider DataManager 提供者 / DataManager provider
+     * @param htmlCacheProvider HTMLCache 提供者 / HTMLCache provider
+     * @param xmlDataLoaderProvider XmlDataLoader 提供者 / XmlDataLoader provider
      */
     public GameStaticDataServices(ObjectProvider<DataManager> dataManagerProvider,
             ObjectProvider<HTMLCache> htmlCacheProvider,
@@ -55,7 +55,7 @@ public final class GameStaticDataServices implements DisposableBean {
      * 解析 DataManager：优先 Spring，否则回退。
      * Resolve DataManager: prefer Spring, otherwise fallback.
      *
-     * DataManager instance
+     * @return DataManager 实例 / DataManager instance
      */
     public static DataManager dataManager() {
         ObjectProvider<DataManager> provider = dataManagerProvider;
@@ -69,7 +69,7 @@ public final class GameStaticDataServices implements DisposableBean {
      * 解析 HTMLCache：优先 Spring，否则回退。
      * Resolve HTMLCache: prefer Spring, otherwise fallback.
      *
-     * HTMLCache instance
+     * @return HTMLCache 实例 / HTMLCache instance
      */
     public static HTMLCache htmlCache() {
         ObjectProvider<HTMLCache> provider = htmlCacheProvider;
@@ -83,7 +83,7 @@ public final class GameStaticDataServices implements DisposableBean {
      * 解析 XmlDataLoader：优先 Spring，否则回退。
      * Resolve XmlDataLoader: prefer Spring, otherwise fallback.
      *
-     * XmlDataLoader instance
+     * @return XmlDataLoader 实例 / XmlDataLoader instance
      */
     public static XmlDataLoader xmlDataLoader() {
         ObjectProvider<XmlDataLoader> provider = xmlDataLoaderProvider;

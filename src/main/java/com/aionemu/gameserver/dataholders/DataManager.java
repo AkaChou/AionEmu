@@ -168,7 +168,7 @@ public final class DataManager {
      * 获取 DataManager 单例（优先 Spring 提供的实例，否则懒加载内部单例）。
      * Returns the DataManager singleton (Spring-provided if available, otherwise the internal holder).
      *
-     * DataManager instance
+     * @return  DataManager 单例（可用时由 Spring 提供，否则为内部持有者） / Returns the DataManager singleton (Spring-provided if available, otherwise the internal holder).
      */
     public static final DataManager getInstance() {
         ObjectProvider<DataManager> provider = instanceProvider;
@@ -363,9 +363,7 @@ public final class DataManager {
      * 阻塞等待静态字段赋值任务完成。
      * Blocks until the async static-field assignment completes.
      *
-     * assignment future
-     *
-     * @param future
+     * @param future 静态字段赋值异步任务 / static-field assignment future
      * @throws IllegalStateException 中断或执行失败 / if interrupted or the future fails
      */
     static void awaitStaticDataAssignment(CompletableFuture<Void> future) {
@@ -385,9 +383,7 @@ public final class DataManager {
      * 并行加载主静态数据、物品数据与技能数据。
      * Loads main static data, item data, and skill data in parallel.
      *
-     * XML data loader
-     *
-     * @param loader
+     * @param loader XML 数据加载器 / XML data loader
      * @return 已加载的静态数据与物品数据 / loaded static data and item data
      */
     static LoadedStaticData loadStaticData(XmlDataLoader loader) {

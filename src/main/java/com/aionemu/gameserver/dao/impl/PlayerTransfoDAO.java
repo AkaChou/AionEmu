@@ -61,10 +61,10 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
      * 保存玩家变身数据。
      * Stores player transform data.
      *
-     * player id
-     * panel id
-     * item id
-     * whether successful
+     * @param playerId 玩家 ID / player id
+     * @param panelId 面板 ID / panel id
+     * @param itemId 物品 ID / item id
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean storePlTransfo(int playerId, int panelId, int itemId) {
@@ -88,8 +88,8 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
      * 删除玩家变身数据。
      * Deletes player transform data.
      *
-     * player id
-     * whether successful
+     * @param playerId 玩家 ID / player id
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean deletePlTransfo(int playerId) {
@@ -111,10 +111,10 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
      * 更新玩家变身数据；若无记录则插入。
      * Updates player transform data; inserts if no row exists.
      *
-     * player id
-     * panel id
-     * item id
-     * whether successful
+     * @param playerId 玩家 ID / player id
+     * @param panelId 面板 ID / panel id
+     * @param itemId 物品 ID / item id
+     * @return 是否成功 / whether successful
      */
     public boolean updatePlTransfo(int playerId, int panelId, int itemId) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -142,8 +142,8 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
      * 保存玩家当前变身模型状态。
      * Saves the player's current transform model state.
      *
-     * 玩家 / player
-     * whether successful
+     * @param player 玩家 / player
+     * @return 是否成功 / whether successful
      */
     public boolean savePlTransfo(Player player) {
         int panelId = player.getTransformModel().getPanelId();
@@ -160,10 +160,10 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

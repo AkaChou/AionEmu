@@ -38,11 +38,11 @@ public class AtreianBestiaryService {
 	}
 
 	/**
-	 * 击杀时处理。
-	 * Handles a kill event.
+	 * 击杀时处理：更新图鉴击杀计数并检查成就奖励。
+	 * Handles a kill event: updates the bestiary kill count and checks achievement rewards.
 	 *
-	 * 玩家 / player
-	 * npcId
+	 * @param player 玩家 / player
+	 * @param npcId 被击杀 NPC ID / killed NPC id
 	 */
 	public void onKill(Player player, int npcId) {
 		AtreianBestiaryTemplate template = DataManager.ATREIAN_BESTIARY.getAtreianBestiaryTemplateByNpcId(npcId);
@@ -103,7 +103,8 @@ public class AtreianBestiaryService {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 * result
+	 *
+	 * @return 服务单例 / service singleton
 	 */
 	public static AtreianBestiaryService getInstance() {
 		ObjectProvider<AtreianBestiaryService> provider = instanceProvider;
@@ -114,10 +115,10 @@ public class AtreianBestiaryService {
 	}
 
 	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
+	 * 设置实例提供者（Spring 注入）。
+	 * Sets the instance provider (Spring injection).
 	 *
-	 * provider
+	 * @param provider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<AtreianBestiaryService> provider) {
 		instanceProvider = provider;

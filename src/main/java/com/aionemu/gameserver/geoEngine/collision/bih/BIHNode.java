@@ -53,7 +53,7 @@ public final class BIHNode {
 	 * 构造内节点，指定分割轴。
 	 * Constructs an inner node with the given split axis.
 	 *
-	 * split axis 0/1/2
+	 * @param axis 分割轴 0/1/2 / split axis 0/1/2
 	 */
 	public BIHNode(int axis) {
 		this.axis = axis;
@@ -70,7 +70,7 @@ public final class BIHNode {
 	 * 返回左子节点。
 	 * Returns the left child.
 	 *
-	 * left child
+	 * @return 左子节点 / left child
 	 */
 	public BIHNode getLeftChild() {
 		return left;
@@ -90,7 +90,7 @@ public final class BIHNode {
 	 * 返回左分割平面。
 	 * Returns the left split plane.
 	 *
-	 * left plane
+	 * @return 左分割平面 / left plane
 	 */
 	public float getLeftPlane() {
 		return leftPlane;
@@ -100,7 +100,7 @@ public final class BIHNode {
 	 * 设置左分割平面。
 	 * Sets the left split plane.
 	 *
-	 * left plane
+	 * @param leftPlane 左分割平面 / left plane
 	 */
 	public void setLeftPlane(float leftPlane) {
 		this.leftPlane = leftPlane;
@@ -110,7 +110,7 @@ public final class BIHNode {
 	 * 返回右子节点。
 	 * Returns the right child.
 	 *
-	 * right child
+	 * @return 右子节点 / right child
 	 */
 	public BIHNode getRightChild() {
 		return right;
@@ -130,7 +130,7 @@ public final class BIHNode {
 	 * 返回右分割平面。
 	 * Returns the right split plane.
 	 *
-	 * right plane
+	 * @return 右分割平面 / right plane
 	 */
 	public float getRightPlane() {
 		return rightPlane;
@@ -140,7 +140,7 @@ public final class BIHNode {
 	 * 设置右分割平面。
 	 * Sets the right split plane.
 	 *
-	 * right plane
+	 * @param rightPlane 右分割平面 / right plane
 	 */
 	public void setRightPlane(float rightPlane) {
 		this.rightPlane = rightPlane;
@@ -161,9 +161,9 @@ public final class BIHNode {
 		 * 构造栈数据。
 		 * Constructs stack data.
 		 *
-		 * node
-		 * min t
-		 * max t
+		 * @param node 待遍历节点 / node
+		 * @param min 最小 t / min t
+		 * @param max 最大 t / max t
 		 */
 		BIHStackData(BIHNode node, float min, float max) {
 			this.node = node;
@@ -178,11 +178,11 @@ public final class BIHNode {
 	 * (leaf hits are currently not accumulated).
 	 *
 	 * @param col 可碰撞对象 / collidable
-	 * bounding box
+	 * @param box 包围盒 / bounding box
 	 * @param worldMatrix 世界变换矩阵 / world matrix
-	 * owning BIH tree
+	 * @param tree 所属 BIH 树 / owning BIH tree
 	 * @param results 结果收集器 / collision results
-	 * hit count
+	 * @return 命中数 / hit count
 	 */
 	public final int intersectWhere(Collidable col, BoundingBox box, Matrix4f worldMatrix, BIHTree tree,
 			CollisionResults results) {
@@ -250,11 +250,11 @@ public final class BIHNode {
 	 *
 	 * @param r 射线 / ray
 	 * @param worldMatrix 世界变换矩阵 / world matrix
-	 * owning BIH tree
-	 * scene min t
-	 * scene max t
+	 * @param tree 所属 BIH 树 / owning BIH tree
+	 * @param sceneMin 场景最小 t / scene min t
+	 * @param sceneMax 场景最大 t / scene max t
 	 * @param results 结果收集器 / collision results
-	 * hit count
+	 * @return 命中数 / hit count
 	 */
 	public final int intersectBrute(Ray r, Matrix4f worldMatrix, BIHTree tree, float sceneMin, float sceneMax,
 			CollisionResults results) {
@@ -311,11 +311,11 @@ public final class BIHNode {
 	 *
 	 * @param r 射线（结束后会恢复原 origin/direction） / ray (origin/direction restored after)
 	 * @param worldMatrix 世界变换矩阵 / world matrix
-	 * owning BIH tree
-	 * scene min t
-	 * scene max t
+	 * @param tree 所属 BIH 树 / owning BIH tree
+	 * @param sceneMin 场景最小 t / scene min t
+	 * @param sceneMax 场景最大 t / scene max t
 	 * @param results 结果收集器 / collision results
-	 * hit count
+	 * @return 命中数 / hit count
 	 */
 	public final int intersectWhere(Ray r, Matrix4f worldMatrix, BIHTree tree, float sceneMin, float sceneMax,
 			CollisionResults results) {

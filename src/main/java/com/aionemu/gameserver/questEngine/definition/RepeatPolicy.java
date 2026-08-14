@@ -1,6 +1,9 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-/** Repeat metadata kept separate from execution transitions. */
+/**
+ * 与执行转换分离保存的重复元数据。
+ * Repeat metadata kept separate from execution transitions.
+ */
 public record RepeatPolicy(int maxRepeatCount, int rewardRepeatCount, long cooldownSeconds,
 		boolean daily, boolean weekly) {
 	public RepeatPolicy(int maxRepeatCount, long cooldownSeconds, boolean daily, boolean weekly) {

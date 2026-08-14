@@ -12,8 +12,11 @@ import com.aionemu.loginserver.taskmanager.handler.implementations.ShutdownHandl
  */
 public enum TaskFromDBHandlerHolder {
 
+        /** 关闭 / Shutdown. */
     SHUTDOWN(ShutdownHandler.class),
+        /** 重启 / Restart. */
     RESTART(RestartHandler.class),
+        /** 清理账号 / Clean accounts. */
     CLEAN_ACCOUNTS(CleanAccountsHandler.class);
     private Class<? extends TaskFromDBHandler> taskClass;
 
@@ -25,7 +28,7 @@ public enum TaskFromDBHandlerHolder {
      * 获取对应的处理器实现类。
      * Returns the associated handler implementation class.
      *
-     * handler class
+     * @return 处理器实现类 / handler class
      */
     public Class<? extends TaskFromDBHandler> getTaskClass() {
         return taskClass;

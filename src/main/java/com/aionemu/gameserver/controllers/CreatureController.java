@@ -197,10 +197,10 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 * 受到攻击时的完整处理（含技能与日志类型）。
 	 * Full on-attack handling including skill and log type.
 	 *
-	 * attacker
-	 * skill id
+	 * @param attacker 攻击者 / attacker
+	 * @param skillId 技能 ID / skill id
 	 * @param type 伤害类型 / damage type
-	 * damage
+	 * @param damage 伤害值 / damage
 	 * @param notifyAttack 是否通知攻击 / whether to notify attack
 	 * @param log 日志类型 / log type
 	 */
@@ -390,7 +390,8 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	public void attackTarget(final Creature target, int time) {
 		boolean addAttackObservers = true;
 	/**
-	 * 检查全部前置条件。 / Check all prerequisites
+	 * 检查全部前置条件。
+	 * Check all prerequisites
 	 */
 		if (target == null || !getOwner().canAttack() || getOwner().getLifeStats().isAlreadyDead()
 				|| !getOwner().isSpawned()) {
@@ -398,7 +399,8 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		}
 
 	/**
-	 * 计算并应用伤害 / Calculate and apply damage
+	 * 计算并应用伤害。
+	 * Calculate and apply damage
 	 */
 		int attackType = 0;
 		List<AttackResult> attackResult;
@@ -600,7 +602,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 * skill id
 	 * skill level
 	 *
-	 * @return whether successful / true if successful usage
+	 * @return 是否成功 / whether successful, true if usage succeeded
 	 */
 	public boolean useSkill(int skillId, int skillLevel) {
 		try {

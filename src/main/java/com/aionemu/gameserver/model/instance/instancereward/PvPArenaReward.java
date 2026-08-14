@@ -20,8 +20,8 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
- * PvPArena 奖励，用于副本相关逻辑。
- * Pv P Arena Reward for instance logic.
+ * PvP 竞技场奖励，用于副本相关逻辑。
+ * PvP Arena Reward for instance logic.
  */
 
 public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
@@ -164,7 +164,7 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	}
 
 	/**
-	 * @param rewardedPlayer Whether reward opportunity token
+	 * @param rewardedPlayer 待判定的玩家奖励 / rewarded player to check
 	 */
 	public boolean canRewardOpportunityToken(PvPArenaPlayerReward rewardedPlayer) {
 		if (rewardedPlayer != null) {
@@ -186,7 +186,7 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	}
 
 	/**
-	 * @return Whether cap points
+	 * @return 是否达到上限分 / Whether cap points reached
 	 */
 	public boolean hasCapPoints() {
 		if (isSoloArena()
@@ -201,7 +201,7 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	}
 
 	/**
-	 * @return Whether rewarded
+	 * @return 是否可结算 / Whether rewarded
 	 */
 	public boolean canRewarded() {
 		return mapId == 300350000 || mapId == 300360000 || mapId == 300420000 || mapId == 300430000

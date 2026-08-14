@@ -29,7 +29,7 @@ public final class ChatRestartServices implements DisposableBean {
      * 获取重启服务实例。
      * Obtain the restart service instance.
      *
-     * Restart service
+     * @return 重启服务实例 / restart service instance
      */
     public static RestartService restartService() {
         ObjectProvider<RestartService> provider = restartServiceProvider;
@@ -52,7 +52,7 @@ public final class ChatRestartServices implements DisposableBean {
      * 回退到本地重启服务。
      * Fall back to the local restart service.
      *
-     * Fallback instance
+     * @return 回退实例 / fallback instance
      */
     private static RestartService fallbackRestartService() {
         return Fallbacks.RESTART_SERVICE;

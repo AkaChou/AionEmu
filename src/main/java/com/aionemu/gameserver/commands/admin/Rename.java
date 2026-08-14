@@ -37,7 +37,6 @@ public class Rename extends AdminCommand {
 	 * Executes this admin command.
 	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
-	 * command arguments
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -127,8 +126,6 @@ public class Rename extends AdminCommand {
 	 *
 	 * @param admin 执行改名的管理员 / admin who performed the rename
 	 * @param player 被改名的玩家 / renamed player
-	 * new name
-	 * original name
 	 */
 	public void sendPacket(Player admin, Player player, String rename, String recipient) {
 		Iterator<Friend> knownFriends = player.getFriendList().iterator();
@@ -152,7 +149,6 @@ public class Rename extends AdminCommand {
 	 * Prints usage when arguments are invalid.
 	 *
 	 * @param player 接收提示的玩家 / player receiving the message
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

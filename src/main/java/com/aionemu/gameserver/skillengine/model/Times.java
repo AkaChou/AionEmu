@@ -49,8 +49,6 @@ public class Times {
 	 * 按武器包装获取动作时间。
 	 * Gets motion time for a weapon wrapper.
 	 *
-	 * weapon wrapper
-	 * time
 	 */
 	public int getTimeForWeapon(WeaponTypeWrapper weapon) {
 		return timeForWeaponType.get(weapon);
@@ -60,8 +58,6 @@ public class Times {
 	 * 反序列化后解析各武器类型时间。
 	 * Parses per-weapon times after unmarshalling.
 	 *
-	 * unmarshaller
-	 * parent
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		String[] tokens = times.split(",");
@@ -76,11 +72,11 @@ public class Times {
 		timeForWeaponType.put(new WeaponTypeWrapper(WeaponType.SWORD_2H, null), Integer.parseInt(tokens[8]));
 		timeForWeaponType.put(new WeaponTypeWrapper(WeaponType.SWORD_1H, WeaponType.SWORD_1H),
 				Integer.parseInt(tokens[9]));
-		// 4.3
+		// 4.3 版新增武器 / version 4.3
 		timeForWeaponType.put(new WeaponTypeWrapper(WeaponType.GUN_1H, null), Integer.parseInt(tokens[10]));
 		timeForWeaponType.put(new WeaponTypeWrapper(WeaponType.CANNON_2H, null), Integer.parseInt(tokens[11]));
 		timeForWeaponType.put(new WeaponTypeWrapper(WeaponType.HARP_2H, null), Integer.parseInt(tokens[12]));
-		// 4.5
+		// 4.5 版新增武器 / version 4.5
 		timeForWeaponType.put(new WeaponTypeWrapper(WeaponType.KEYBLADE_2H, null), Integer.parseInt(tokens[13]));
 	}
 }

@@ -15,7 +15,7 @@ public class WorldMap3DInstance extends WorldMapInstance {
 	 * Construct a 3D map instance.
 	 *
 	 * @param parent 父级世界地图 / parent world map
-	 * instance id
+	 * @param instanceId 实例 ID / instance id
 	 */
 	public WorldMap3DInstance(WorldMap parent, int instanceId) {
 		super(parent, instanceId);
@@ -28,7 +28,7 @@ public class WorldMap3DInstance extends WorldMapInstance {
 	 * @param x 坐标 X / X coordinate
 	 * @param y 坐标 Y / Y coordinate
 	 * @param z 坐标 Z / Z coordinate
-	 * map region
+	 * @return 地图区域 / the map region
 	 */
 	@Override
 	public MapRegion getRegion(float x, float y, float z) {
@@ -83,9 +83,7 @@ public class WorldMap3DInstance extends WorldMapInstance {
 	 * 按 3D 区域 ID 创建地图区域及关联 Zone。
 	 * Create a map region and related zones for a 3D region id.
 	 *
-	 * region id
-	 *
-	 * @param regionId
+	 * @param regionId 区域 ID / the region id
 	 * @return 新建的地图区域 / newly created map region
 	 */
 	@Override
@@ -101,7 +99,7 @@ public class WorldMap3DInstance extends WorldMapInstance {
 	 * 3D 实例不为个人实例。
 	 * 3D instances are never personal.
 	 *
-	 * always false
+	 * @return 恒为 false / always false
 	 */
 	@Override
 	public boolean isPersonal() {
@@ -112,7 +110,7 @@ public class WorldMap3DInstance extends WorldMapInstance {
 	 * 3D 实例无个人所有者。
 	 * 3D instances have no personal owner.
 	 *
-	 * always 0
+	 * @return 恒为 0 / always 0
 	 */
 	@Override
 	public int getOwnerId() {

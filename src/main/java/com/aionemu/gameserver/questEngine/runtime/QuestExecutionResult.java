@@ -2,7 +2,10 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import java.util.List;
 
-/** Result of one serialized player event execution. */
+/**
+ * 一次串行化玩家事件执行的结果。
+ * Result of one serialized player event execution.
+ */
 public record QuestExecutionResult(QuestExecutionStatus status, QuestMutationPlan plan,
 		List<RuntimeException> afterCommitFailures) {
 	public QuestExecutionResult {

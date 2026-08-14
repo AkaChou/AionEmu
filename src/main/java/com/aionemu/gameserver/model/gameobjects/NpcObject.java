@@ -19,7 +19,7 @@ public class NpcObject extends HouseObject<HousingNpc> {
 		super(owner, objId, templateId);
 	}
 
-	/** 使用时 / on Use. */
+	/** 使用时 / On use. */
 	@Override
 	public void onUse(Player player) {
 	}
@@ -35,7 +35,7 @@ public class NpcObject extends HouseObject<HousingNpc> {
 		}
 	}
 
-	/** 消失时 / on Despawn. */
+	/** 消失时 / On despawn. */
 	@Override
 	public synchronized void onDespawn() {
 		super.onDespawn();
@@ -54,7 +54,7 @@ public class NpcObject extends HouseObject<HousingNpc> {
 		return npc.getTarget() == null;
 	}
 
-	/** 返回 npc object id / Returns the npc object id */
+	/** 返回 NPC 对象 ID / Returns the npc object id */
 	public int getNpcObjectId() {
 		return npc == null ? 0 : npc.getObjectId();
 	}

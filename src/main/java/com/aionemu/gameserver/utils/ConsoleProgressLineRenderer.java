@@ -21,8 +21,8 @@ public final class ConsoleProgressLineRenderer {
 	 * 创建进度行渲染器。
 	 * Creates a progress line renderer.
 	 *
-	 * Output stream
-	 * Whether enabled
+	 * @param out 输出流 / Output stream
+	 * @param enabled 是否启用 / Whether enabled
 	 */
 	public ConsoleProgressLineRenderer(PrintStream out, boolean enabled) {
 		this.out = out;
@@ -34,8 +34,8 @@ public final class ConsoleProgressLineRenderer {
 	 * Renders the current progress.
 	 *
 	 * @param name 进度名称 / Progress name
-	 * Current value
-	 * Total value
+	 * @param current 当前值 / Current value
+	 * @param total 总值 / Total value
 	 */
 	public synchronized void progress(String name, int current, int total) {
 		if (!enabled) {
@@ -49,7 +49,7 @@ public final class ConsoleProgressLineRenderer {
 	 * Renders the finished state and advances to the next line.
 	 *
 	 * @param name 进度名称 / Progress name
-	 * Total value
+	 * @param total 总值 / Total value
 	 */
 	public synchronized void finished(String name, int total) {
 		if (!enabled) {
@@ -96,8 +96,8 @@ public final class ConsoleProgressLineRenderer {
 	 * Builds the progress line text.
 	 *
 	 * @param name 进度名称 / Progress name
-	 * Current value
-	 * Total value
+	 * @param current 当前值 / Current value
+	 * @param total 总值 / Total value
 	 * @return 进度行文本 / Progress line text
 	 */
 	private String line(String name, int current, int total) {
@@ -108,8 +108,8 @@ public final class ConsoleProgressLineRenderer {
 	 * 生成固定宽度的进度条字符串。
 	 * Builds a fixed-width progress bar string.
 	 *
-	 * Current value
-	 * Total value
+	 * @param current 当前值 / Current value
+	 * @param total 总值 / Total value
 	 * @return 进度条字符串 / Progress bar string
 	 */
 	private String progressBar(int current, int total) {

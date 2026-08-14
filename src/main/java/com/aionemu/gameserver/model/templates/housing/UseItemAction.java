@@ -37,12 +37,12 @@ public class UseItemAction {
 		return rewardId;
 	}
 
-	/** 返回移除数量 / Returns the remove count*/
+	/** 返回移除数量 / Returns the remove count. */
 	public Integer getRemoveCount() {
 		return removeCount;
 	}
 
-	/** 返回检查类型 / Returns the check type*/
+	/** 返回检查类型 / Returns the check type. */
 	public Integer getCheckType() {
 		return checkType;
 	}

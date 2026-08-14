@@ -26,9 +26,7 @@ public class RiftInformer {
 	 * 获取指定世界已生成的裂隙 NPC 列表。
 	 * Returns spawned rift NPCs for the given world.
 	 *
-	 * World map id
-	 *
-	 * @param worldId
+	 * @param worldId 世界地图 ID / World map id
 	 * @return 该世界的裂隙 NPC / Rift NPCs in that world
 	 */
 	public static List<Npc> getSpawned(int worldId) {
@@ -46,7 +44,7 @@ public class RiftInformer {
 	 * 向指定世界（及其双子地图）广播完整裂隙信息。
 	 * Broadcast full rift info to the world and its twin map.
 	 *
-	 * World map id
+	 * @param worldId 世界地图 ID / World map id
 	 */
 	public static void sendRiftsInfo(int worldId) {
 		syncRiftsState(worldId, getPackets(worldId));
@@ -60,7 +58,7 @@ public class RiftInformer {
 	 * 向指定玩家（及其世界双子地图）发送裂隙信息。
 	 * Send rift info to a player and the twin map of their world.
 	 *
-	 * Target player
+	 * @param player 目标玩家 / Target player
 	 */
 	public static void sendRiftsInfo(Player player) {
 		syncRiftsState(player, getPackets(player.getWorldId()));
@@ -74,7 +72,7 @@ public class RiftInformer {
 	 * 向多个世界同步裂隙详情（不含公告汇总）。
 	 * Sync rift details (without announce summary) to multiple worlds.
 	 *
-	 * World id array
+	 * @param worlds 世界 ID 数组 / World id array
 	 */
 	public static void sendRiftInfo(int[] worlds) {
 		for (int worldId : worlds) {
@@ -86,7 +84,7 @@ public class RiftInformer {
 	 * 向世界广播单个裂隙消失通知。
 	 * Broadcast a single rift despawn notice to a world.
 	 *
-	 * World map id
+	 * @param worldId 世界地图 ID / World map id
 	 * @param objId 裂隙对象 ID / Rift object id
 	 */
 	public static void sendRiftDespawn(int worldId, int objId) {

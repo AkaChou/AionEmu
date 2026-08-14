@@ -29,9 +29,9 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	 * 以意图、仅首命中与实例 id 构造（无忽略属性）。
 	 * Constructs with intentions, first-only flag and instance id (no ignore properties).
 	 *
-	 * intention mask
+	 * @param intentions 意图掩码 / intention mask
 	 * @param searchFirst 是否仅搜索首个命中 / search first hit only
-	 * instance id
+	 * @param instanceId 实例 id / instance id
 	 */
 	public CollisionResults(byte intentions, boolean searchFirst, int instanceId) {
 		this(intentions, searchFirst, instanceId, null);
@@ -41,10 +41,10 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	 * 以意图、仅首命中、实例 id 与忽略属性构造。
 	 * Constructs with intentions, first-only flag, instance id and ignore properties.
 	 *
-	 * intention mask
+	 * @param intentions 意图掩码 / intention mask
 	 * @param searchFirst 是否仅搜索首个命中 / search first hit only
-	 * instance id
-	 * ignore properties
+	 * @param instanceId 实例 id / instance id
+	 * @param ignoreProperties 忽略属性 / ignore properties
 	 */
 	public CollisionResults(byte intentions, boolean searchFirst, int instanceId, IgnoreProperties ignoreProperties) {
 		this.intentions = intentions;
@@ -57,9 +57,9 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	 * 以意图、实例 id 与忽略属性构造（收集全部命中）。
 	 * Constructs with intentions, instance id and ignore properties (collects all hits).
 	 *
-	 * intention mask
-	 * instance id
-	 * ignore properties
+	 * @param intentions 意图掩码 / intention mask
+	 * @param instanceId 实例 id / instance id
+	 * @param ignoreProperties 忽略属性 / ignore properties
 	 */
 	public CollisionResults(byte intentions, int instanceId, IgnoreProperties ignoreProperties) {
 		this(intentions, false, instanceId, ignoreProperties);
@@ -69,8 +69,8 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	 * 以意图与实例 id 构造（收集全部命中，无忽略属性）。
 	 * Constructs with intentions and instance id (collects all hits, no ignore properties).
 	 *
-	 * intention mask
-	 * instance id
+	 * @param intentions 意图掩码 / intention mask
+	 * @param instanceId 实例 id / instance id
 	 */
 	public CollisionResults(byte intentions, int instanceId) {
 		this(intentions, false, instanceId, null);
@@ -104,7 +104,7 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	 * 追加一次命中；距离为 NaN 时忽略。非仅首命中模式下标记为未排序。
 	 * Appends a hit; ignores NaN distance. Marks unsorted when not first-only mode.
 	 *
-	 * collision result
+	 * @param result 碰撞结果 / collision result
 	 */
 	public void addCollision(CollisionResult result) {
 		if (Float.isNaN(result.getDistance())) {
@@ -120,7 +120,7 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	 * 返回命中数量。
 	 * Returns the number of hits.
 	 *
-	 * hit count
+	 * @return 命中数量 / hit count
 	 */
 	public int size() {
 		return results.size();
@@ -130,7 +130,7 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	 * 返回最近的命中；无结果时返回 {@code null}。
 	 * Returns the closest hit, or {@code null} if empty.
 	 *
-	 * closest hit
+	 * @return 最近命中 / closest hit
 	 */
 	public CollisionResult getClosestCollision() {
 		if (size() == 0) {
@@ -149,7 +149,7 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	 * 返回最远的命中；无结果时返回 {@code null}。
 	 * Returns the farthest hit, or {@code null} if empty.
 	 *
-	 * farthest hit
+	 * @return 最远命中 / farthest hit
 	 */
 	public CollisionResult getFarthestCollision() {
 		if (size() == 0) {
@@ -168,8 +168,8 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	 * 按排序后下标取命中。
 	 * Returns the hit at the given sorted index.
 	 *
-	 * index
-	 * collision result
+	 * @param index 下标 / index
+	 * @return 命中结果 / collision result
 	 */
 	public CollisionResult getCollision(int index) {
 		if (!sorted) {
@@ -183,8 +183,8 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	 * 不排序直接按下标取命中（仅内部使用）。
 	 * Returns the hit at the given index without sorting (internal use only).
 	 *
-	 * index
-	 * collision result
+	 * @param index 下标 / index
+	 * @return 命中结果 / collision result
 	 */
 	public CollisionResult getCollisionDirect(int index) {
 		return results.get(index);
@@ -215,7 +215,7 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	 * 是否仅取第一个命中。
 	 * Whether only the first hit is required.
 	 *
-	 * first-only flag
+	 * @return 仅首命中标志 / first-only flag
 	 */
 	public boolean isOnlyFirst() {
 		return onlyFirst;
@@ -225,7 +225,7 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	 * 返回碰撞意图位掩码。
 	 * Returns the collision intention bitmask.
 	 *
-	 * intention mask
+	 * @return 意图掩码 / intention mask
 	 */
 	public byte getIntentions() {
 		return intentions;
@@ -235,7 +235,7 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	 * 返回地图实例 id。
 	 * Returns the map instance id.
 	 *
-	 * instance id
+	 * @return 实例 id / instance id
 	 */
 	public int getInstanceId() {
 		return instanceId;
@@ -245,7 +245,7 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	 * 返回忽略属性。
 	 * Returns the ignore properties.
 	 *
-	 * ignore properties
+	 * @return 忽略属性 / ignore properties
 	 */
 	public IgnoreProperties getIgnoreProperties() {
 		return ignoreProperties;
@@ -275,7 +275,7 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	 * 设置地图实例 id。
 	 * Sets the map instance id.
 	 *
-	 * instance id
+	 * @param instanceId 实例 id / instance id
 	 */
 	public void setInstanceId(int instanceId) {
 		this.instanceId = instanceId;

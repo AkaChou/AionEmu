@@ -38,7 +38,7 @@ public class PlayerAlliance extends TemporaryPlayerTeam<PlayerAllianceMember> {
 		}
 	}
 
-	/** 添加 member / Adds member */
+	/** 添加成员 / Adds member */
 	@Override
 	public void addMember(PlayerAllianceMember member) {
 		super.addMember(member);
@@ -46,7 +46,7 @@ public class PlayerAlliance extends TemporaryPlayerTeam<PlayerAllianceMember> {
 		openAllianceGroup.addMember(member);
 	}
 
-	/** 移除 member / Removes member */
+	/** 移除成员 / Removes member */
 	@Override
 	public void removeMember(PlayerAllianceMember member) {
 		super.removeMember(member);
@@ -79,7 +79,7 @@ public class PlayerAlliance extends TemporaryPlayerTeam<PlayerAllianceMember> {
 		return maxLevel;
 	}
 
-	/** 返回 open alliance group / Returns the open alliance group */
+	/** 返回未满的联盟队伍 / Returns the open alliance group */
 	public PlayerAllianceGroup getOpenAllianceGroup() {
 		lock();
 		try {
@@ -102,31 +102,39 @@ public class PlayerAlliance extends TemporaryPlayerTeam<PlayerAllianceMember> {
 		return allianceGroup;
 	}
 
-	/** 返回 vice captain ids / Returns the vice captain ids */
+	/** 返回副队长 ID 列表 / Returns the vice captain ids */
 	public final List<Integer> getViceCaptainIds() {
 		return viceCaptainIds;
 	}
 
 	/**
-	 * @param player Whether vice captain
+	 * 判断玩家是否为副队长。
+	 * Checks whether the player is a vice captain.
+	 *
+	 * @param player 玩家 / player
+	 * @return 是副队长时为 {@code true} / {@code true} if vice captain
 	 */
 	public final boolean isViceCaptain(Player player) {
 		return viceCaptainIds.contains(player.getObjectId());
 	}
 
 	/**
-	 * @param player Whether some captain
+	 * 判断玩家是否为队长或副队长。
+	 * Checks whether the player is the leader or a vice captain.
+	 *
+	 * @param player 玩家 / player
+	 * @return 是队长或副队长时为 {@code true} / {@code true} if leader or vice captain
 	 */
 	public final boolean isSomeCaptain(Player player) {
 		return isLeader(player) || isViceCaptain(player);
 	}
 
-	/** 返回 alliance ready status / Returns the alliance ready status */
+	/** 返回联盟就绪状态 / Returns the alliance ready status */
 	public int getAllianceReadyStatus() {
 		return allianceReadyStatus;
 	}
 
-	/** 设置 alliance ready status / Sets the alliance ready status */
+	/** 设置联盟就绪状态 / Sets the alliance ready status */
 	public void setAllianceReadyStatus(int allianceReadyStatus) {
 		this.allianceReadyStatus = allianceReadyStatus;
 	}
@@ -142,8 +150,12 @@ public class PlayerAlliance extends TemporaryPlayerTeam<PlayerAllianceMember> {
 	}
 
 	/**
-	 * @return 是否在联合部队中。 / Whether in league
-	  */
+	/**
+	 * 是否已加入联合部队。
+	 * Whether the alliance is in a league.
+	 *
+	 * @return 已加入联合部队时为 {@code true} / {@code true} if in league
+	 */
 	public final boolean isInLeague() {
 		return this.league != null;
 	}
@@ -163,22 +175,22 @@ public class PlayerAlliance extends TemporaryPlayerTeam<PlayerAllianceMember> {
 		return type;
 	}
 
-	/** 设置 kill count / Sets the kill count */
+	/** 设置击杀数 / Sets the kill count */
 	public void setKillCount(int killCount) {
 		this.killCount = killCount;
 	}
 
-	/** 返回 kill count / Returns the kill count */
+	/** 返回击杀数 / Returns the kill count */
 	public int getKillCount() {
 		return killCount;
 	}
 
-	/** 设置 bg index / Sets the bg index */
+	/** 设置战场索引 / Sets the bg index */
 	public void setBgIndex(int bgIndex) {
 		this.bgIndex = bgIndex;
 	}
 
-	/** 返回 bg index / Returns the bg index */
+	/** 返回战场索引 / Returns the bg index */
 	public int getBgIndex() {
 		return bgIndex;
 	}

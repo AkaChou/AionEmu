@@ -24,7 +24,6 @@ public class MailReward extends AdminCommand
      * Send a reward mail to the admin by template id.
      *
      * @param admin 执行命令的管理员 / Admin executing the command
-     * Mail template id
      */
     @Override
     public void execute(Player admin, String... params) {
@@ -46,7 +45,6 @@ public class MailReward extends AdminCommand
      * Failure callback (no extra syntax for this command).
      *
      * @param player 接收提示的玩家 / Player receiving the hint
-     * Failure message
      */
     @Override
     public void onFail(Player player, String message) {

@@ -42,7 +42,7 @@ public abstract class PlayerLeavedEvent<TM extends TeamMember<Player>, T extends
 	}
 
 	/**
-	 * @return Check condition
+	 * @return 检查条件是否满足 / Check condition
 	 */
 	@Override
 	public boolean checkCondition() {

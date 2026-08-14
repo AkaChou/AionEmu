@@ -29,18 +29,18 @@ public class Poisonous_BubblegutAI2 extends AggressiveNpcAI2
 	}
 
 	private void protectionFluid() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 16447, 1, getOwner()).useNoAnimationSkill(); //Spout Sticky Protection Fluid.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 16447, 1, getOwner()).useNoAnimationSkill(); // 吐出粘稠的保护液。 / Spout Sticky Protection Fluid.
 	}
 
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
-		    case 210318: //Poisonous Bubblegut.
-			    spawn(203195, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Kato.
+		    case 210318: // 剧毒泡泡怪。 / Poisonous Bubblegut.
+			    spawn(203195, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 卡托。 / Kato.
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
-				        despawnNpc(203195); //Kato.
+				        despawnNpc(203195); // 卡托。 / Kato.
 				    }
 			    }, 60000);
 			break;

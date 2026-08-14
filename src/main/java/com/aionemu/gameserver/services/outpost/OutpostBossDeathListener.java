@@ -25,7 +25,7 @@ public class OutpostBossDeathListener extends OnDieEventCallback {
 	 * 绑定目标前哨实例。
 	 * Binds the target outpost instance.
 	 *
-	 * Outpost
+	 * @param outpost 目标前哨 / target outpost
 	 */
 	public OutpostBossDeathListener(Outpost outpost) {
 		this.outpost = outpost;
@@ -35,7 +35,7 @@ public class OutpostBossDeathListener extends OnDieEventCallback {
 	 * BOSS 死亡前根据仇恨列表结算归属并触发占领。
 	 * Before boss death, resolves ownership from aggro list and triggers capture.
 	 *
-	 * Dying AI
+	 * @param obj 死亡的 AI / dying AI
 	 */
 	@Override
 	public void onBeforeDie(AbstractAI obj) {
@@ -60,7 +60,7 @@ public class OutpostBossDeathListener extends OnDieEventCallback {
 	 * BOSS 死亡后回调（当前无额外逻辑）。
 	 * After-death callback (no-op currently).
 	 *
-	 * Dying AI
+	 * @param obj 死亡的 AI / dying AI
 	 */
 	@Override
 	public void onAfterDie(AbstractAI obj) {
@@ -70,7 +70,7 @@ public class OutpostBossDeathListener extends OnDieEventCallback {
 	 * 获取前哨 DAO。
 	 * Returns the outpost DAO.
 	 *
-	 * Outpost DAO
+	 * @return 前哨 DAO / outpost DAO
 	 */
 	private OutpostDAO getDAO() {
 		return DAOManager.getDAO(OutpostDAO.class);

@@ -14,15 +14,15 @@ package com.aionemu.commons.database.dao;
 public interface DAO {
 
     /**
- * 获取当前 DAO 实现类的类名
+     * 获取当前 DAO 实现类的类名
      * Gets the class name of current DAO implementation
      *
- * @return 当前 DAO 实现类的完全限定名 / Fully qualified name of current DAO implementation
+     * @return 当前 DAO 实现类的完全限定名 / Fully qualified name of current DAO implementation
      */
     String getClassName();
 
     /**
- * 检查当前 DAO 实现是否支持指定的数据库版本
+     * 检查当前 DAO 实现是否支持指定的数据库版本
      * Checks if current DAO implementation supports specified database version
      *
      * @param database 数据库名称 / Database name

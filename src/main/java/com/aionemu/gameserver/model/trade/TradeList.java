@@ -112,7 +112,7 @@ public class TradeList {
 						Math.multiplyExact((long) aquisition.getRequiredAp(), tradeItem.getCount()));
 
 				int abysItemId = aquisition.getItemId();
-				if (abysItemId == 0) {// no abyss required item (medals, etc))
+				if (abysItemId == 0) {// 无欧比斯必需物品（勋章等）/ no abyss required item (medals, etc))
 					continue;
 				}
 				requiredItems.merge(abysItemId,

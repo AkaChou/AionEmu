@@ -38,7 +38,7 @@ public class ConquestLocation {
 		return isActive;
 	}
 
-	/** 设置 active conquest / Sets the active conquest */
+	/** 设置当前激活的征服 / Sets the active conquest */
 	public void setActiveConquest(ConquestOffering<ConquestLocation> conquest) {
 		isActive = conquest != null;
 		this.activeConquest = conquest;

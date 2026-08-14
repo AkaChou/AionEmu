@@ -53,7 +53,7 @@ public class Influence {
 		calculateInfluence();
 	}
 
-	/** 获取副本。 / Returns the instance. */
+	/** 获取实例。 / Returns the instance. */
 	public static Influence getInstance() {
 		ObjectProvider<Influence> provider = instanceProvider;
 		if (provider == null) {
@@ -71,7 +71,7 @@ public class Influence {
 		protected static final Influence instance = new Influence();
 	}
 
-	/** 重算影响力 / recalculate Influence. */
+	/** 重算影响力。 / Recalculates influence. */
 	public void recalculateInfluence() {
 		calculateInfluence();
 	}
@@ -151,17 +151,17 @@ public class Influence {
 
 	// =======[全局]========= / =======[GLOBAL]=========
 	// ========================
-	/** 返回 global elyos influence / Returns the global elyos influence */
+	/** 返回天族全局影响力 / Returns the global elyos influence */
 	public float getGlobalElyosInfluence() {
 		return global_e;
 	}
 
-	/** 返回 global asmodians influence / Returns the global asmodians influence */
+	/** 返回魔族全局影响力 / Returns the global asmodians influence */
 	public float getGlobalAsmodiansInfluence() {
 		return global_a;
 	}
 
-	/** 返回 global balaurs influence / Returns the global balaurs influence */
+	/** 返回龙族全局影响力 / Returns the global balaurs influence */
 	public float getGlobalBalaursInfluence() {
 		return global_b;
 	}
@@ -178,97 +178,97 @@ public class Influence {
 		return abyss_a;
 	}
 
-	/** 返回 abyss balaurs influence / Returns the abyss balaurs influence */
+	/** 返回欧比斯龙族影响力 / Returns the abyss balaurs influence */
 	public float getAbyssBalaursInfluence() {
 		return abyss_b;
 	}
 
 	// =======[卡尔多]======== / =======[KALDOR]========
 	// =======================
-	/** 返回 kaldor elyos influence / Returns the kaldor elyos influence */
+	/** 返回卡尔多天族影响力 / Returns the kaldor elyos influence */
 	public float getKaldorElyosInfluence() {
 		return kaldor_e;
 	}
 
-	/** 返回 kaldor asmodians influence / Returns the kaldor asmodians influence */
+	/** 返回卡尔多魔族影响力 / Returns the kaldor asmodians influence */
 	public float getKaldorAsmodiansInfluence() {
 		return kaldor_a;
 	}
 
-	/** 返回 kaldor balaurs influence / Returns the kaldor balaurs influence */
+	/** 返回卡尔多龙族影响力 / Returns the kaldor balaurs influence */
 	public float getKaldorBalaursInfluence() {
 		return kaldor_b;
 	}
 
 	// ======[帕内斯特拉]===== / ======[PANESTERRA]=====
 	// =======================
-	/** 返回 belus elyos influence / Returns the belus elyos influence */
+	/** 返回贝卢斯天族影响力 / Returns the belus elyos influence */
 	public float getBelusElyosInfluence() {
 		return belus_e;
 	}
 
-	/** 返回 belus asmodians influence / Returns the belus asmodians influence */
+	/** 返回贝卢斯魔族影响力 / Returns the belus asmodians influence */
 	public float getBelusAsmodiansInfluence() {
 		return belus_a;
 	}
 
-	/** 返回 belus balaurs influence / Returns the belus balaurs influence */
+	/** 返回贝卢斯龙族影响力 / Returns the belus balaurs influence */
 	public float getBelusBalaursInfluence() {
 		return belus_b;
 	}
 
-	/** 返回 aspida elyos influence / Returns the aspida elyos influence */
+	/** 返回阿斯皮达天族影响力 / Returns the aspida elyos influence */
 	public float getAspidaElyosInfluence() {
 		return aspida_e;
 	}
 
-	/** 返回 aspida asmodians influence / Returns the aspida asmodians influence */
+	/** 返回阿斯皮达魔族影响力 / Returns the aspida asmodians influence */
 	public float getAspidaAsmodiansInfluence() {
 		return aspida_a;
 	}
 
-	/** 返回 aspida balaurs influence / Returns the aspida balaurs influence */
+	/** 返回阿斯皮达龙族影响力 / Returns the aspida balaurs influence */
 	public float getAspidaBalaursInfluence() {
 		return aspida_b;
 	}
 
-	/** 返回 atanatos elyos influence / Returns the atanatos elyos influence */
+	/** 返回阿塔纳托斯天族影响力 / Returns the atanatos elyos influence */
 	public float getAtanatosElyosInfluence() {
 		return atanatos_e;
 	}
 
 	/**
-	 * 获取 AtanatosAsmodiansInfluence。
+	 * 返回阿塔纳托斯魔族影响力。
 	 * Returns the atanatos asmodians influence.
 	 */
 	public float getAtanatosAsmodiansInfluence() {
 		return atanatos_a;
 	}
 
-	/** 返回 atanatos balaurs influence / Returns the atanatos balaurs influence */
+	/** 返回阿塔纳托斯龙族影响力 / Returns the atanatos balaurs influence */
 	public float getAtanatosBalaursInfluence() {
 		return atanatos_b;
 	}
 
-	/** 返回 disillon elyos influence / Returns the disillon elyos influence */
+	/** 返回迪西隆天族影响力 / Returns the disillon elyos influence */
 	public float getDisillonElyosInfluence() {
 		return disillon_e;
 	}
 
 	/**
-	 * 获取 DisillonAsmodiansInfluence。
+	 * 返回迪西隆魔族影响力。
 	 * Returns the disillon asmodians influence.
 	 */
 	public float getDisillonAsmodiansInfluence() {
 		return disillon_a;
 	}
 
-	/** 返回 disillon balaurs influence / Returns the disillon balaurs influence */
+	/** 返回迪西隆龙族影响力 / Returns the disillon balaurs influence */
 	public float getDisillonBalaursInfluence() {
 		return disillon_b;
 	}
 
-	/** 返回 pvp race bonus / Returns the pvp race bonus */
+	/** 返回 PVP 种族加成 / Returns the pvp race bonus */
 	public float getPvpRaceBonus(Race attRace) {
 		float bonus = 1;
 		float elyos = getGlobalElyosInfluence();

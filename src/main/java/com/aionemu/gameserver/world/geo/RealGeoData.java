@@ -174,9 +174,7 @@ public class RealGeoData implements GeoData {
 	 * 按世界 ID 获取地理地图；缺失时回退到哑地图。
 	 * Returns the geo map for the world id, falling back to the dummy map when missing.
 	 *
-	 * 世界 ID / world id
-	 *
-	 * @param worldId
+	 * @param worldId 世界 ID / world id
 	 * @return 地理地图或哑地图 / geo map or dummy map
 	 */
 	@Override

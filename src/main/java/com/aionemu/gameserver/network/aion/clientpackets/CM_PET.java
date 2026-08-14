@@ -109,16 +109,16 @@ public class CM_PET extends AionClientPacket {
 				activateLoot = readD();
 			} else if (actionType == 2) {
 				dopingAction = readD();
-				if (dopingAction == 0) { // add item
+				if (dopingAction == 0) { // 添加物品 / add item
 					dopingItemId = readD();
 					dopingSlot1 = readD();
-				} else if (dopingAction == 1) { // remove item
+				} else if (dopingAction == 1) { // 移除物品 / remove item
 					dopingSlot1 = readD();
 					dopingItemId = readD();
-				} else if (dopingAction == 2) { // move item
+				} else if (dopingAction == 2) { // 移动物品 / move item
 					dopingSlot1 = readD();
 					dopingSlot2 = readD();
-				} else if (dopingAction == 3) { // use doping
+				} else if (dopingAction == 3) { // 使用宠物药 / use doping
 					dopingItemId = readD();
 					dopingSlot1 = readD();
 				}

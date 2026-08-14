@@ -23,7 +23,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
 
-/****/
 /**
  * 大竞技场训练营报名服务，管理开启窗口与冷却。
  * Grand Arena Training Camp registration service managing open windows and cooldowns.
@@ -39,8 +38,8 @@ public class GrandArenaTrainingCampService {
 	public static final int maskId = 127;
 
 	/**
-	 * initGrandArenaTrainingCamp 方法。
-	 * initGrandArenaTrainingCamp method.
+	 * 初始化大竞技场训练营报名：按配置调度开启报名。
+	 * Initializes Grand Arena Training Camp registration by scheduling open windows per config.
 	 */
 	public void initGrandArenaTrainingCamp() {
 		if (AutoGroupConfig.GRAND_ARENA_TRAINING_CAMP_ENABLED) {
@@ -104,20 +103,20 @@ public class GrandArenaTrainingCampService {
 	}
 
 	/**
-	 * isGrandArenaTrainingCampAvailable 方法。
-	 * isGrandArenaTrainingCampAvailable method.
-	 * result
+	 * 报名是否可用。
+	 * Whether registration is available.
+	 * @return 结果 / result
 	 */
 	public boolean isGrandArenaTrainingCampAvailable() {
 		return this.registerAvailable;
 	}
 
 	/**
-	 * getInstanceMaskId 方法。
-	 * getInstanceMaskId method.
+	 * 获取玩家的报名掩码 ID；等级不符时返回 0。
+	 * Returns the registration mask id for the player, or 0 if level mismatch.
 	 *
 	 * 玩家 / player
-	 * result
+	 * @return 结果 / result
 	 */
 	public byte getInstanceMaskId(Player player) {
 		int level = player.getLevel();
@@ -142,7 +141,7 @@ public class GrandArenaTrainingCampService {
 	 * Whether cooldown is active.
 	 *
 	 * 玩家 / player
-	 * result
+	 * @return 结果 / result
 	 */
 	public boolean hasCoolDown(Player player) {
 		return this.playersWithCooldown.contains(player.getObjectId());
@@ -152,8 +151,8 @@ public class GrandArenaTrainingCampService {
 	 * 显示报名窗口。
 	 * Shows the registration window.
 	 *
-	 * 玩家 / player
-	 * instanceMaskId
+	 * @param player 玩家 / player
+	 * @param instanceMaskId 副本掩码 ID / instance mask id
 	 */
 	public void showWindow(Player player, byte instanceMaskId) {
 		if (getInstanceMaskId(player) != instanceMaskId) {
@@ -171,7 +170,7 @@ public class GrandArenaTrainingCampService {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 * result
+	 * @return 结果 / result
 	 */
 	public static GrandArenaTrainingCampService getInstance() {
 		ObjectProvider<GrandArenaTrainingCampService> provider = instanceProvider;
@@ -182,10 +181,10 @@ public class GrandArenaTrainingCampService {
 	}
 
 	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
+	 * 设置服务提供者。
+	 * Sets the service provider.
 	 *
-	 * provider
+	 * @return 服务提供者 / provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<GrandArenaTrainingCampService> provider) {
 		instanceProvider = provider;

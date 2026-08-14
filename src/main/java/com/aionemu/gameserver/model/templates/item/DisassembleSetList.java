@@ -5,8 +5,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**
- * DisassembleSet 列表模板（静态数据/XML）。
- * XML template.
+ * 分解套装列表根模板：容纳多个分解物品组。
+ * Root template for a disassemble set list: holds multiple item groups.
  *
  * @author BeckUp.Media
  */

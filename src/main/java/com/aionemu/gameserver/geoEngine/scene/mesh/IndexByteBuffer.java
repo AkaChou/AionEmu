@@ -18,7 +18,7 @@ public class IndexByteBuffer extends IndexBuffer {
 	 * 使用给定字节缓冲构造索引缓冲。
 	 * Constructs an index buffer over the given byte buffer.
 	 *
-	 * byte buffer
+	 * @param buffer 字节缓冲 / byte buffer
 	 */
 	public IndexByteBuffer(ByteBuffer buffer) {
 		this.buf = buffer;
@@ -41,7 +41,7 @@ public class IndexByteBuffer extends IndexBuffer {
 	 * Writes a byte index value.
 	 *
 	 * @param i 索引位置 / index position
-	 * index value
+	 * @param value 索引值 / index value
 	 */
 	@Override
 	public void put(int i, int value) {
@@ -52,7 +52,7 @@ public class IndexByteBuffer extends IndexBuffer {
 	 * 返回缓冲 limit（元素个数）。
 	 * Returns the buffer limit (element count).
 	 *
-	 * element count
+	 * @return 元素个数 / element count
 	 */
 	@Override
 	public int size() {
@@ -63,7 +63,7 @@ public class IndexByteBuffer extends IndexBuffer {
 	 * 返回底层字节缓冲。
 	 * Returns the underlying byte buffer.
 	 *
-	 * byte buffer
+	 * @return 底层字节缓冲 / byte buffer
 	 */
 	@Override
 	public Buffer getBuffer() {

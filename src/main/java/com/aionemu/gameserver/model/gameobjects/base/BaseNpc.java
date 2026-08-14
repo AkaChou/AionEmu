@@ -33,8 +33,9 @@ public class BaseNpc extends Npc {
 	}
 
 	/**
-	 * @param creature 是否为敌对目标。 / Whether enemy from
-	  */
+	 * @param creature 要检查的目标生物 / creature to check
+	 * @return 是否视其为敌对目标 / Whether the creature is considered an enemy
+	 */
 	@Override
 	public boolean isEnemyFrom(Creature creature) {
 		if (creature instanceof BaseNpc) {

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.IntFunction;
 
-/** Production object graph for typed quest required and after-commit capabilities. */
+/** 类型化任务必需与提交后能力的生产对象图。 / Production object graph for typed quest required and after-commit capabilities. */
 public final class QuestRuntimeComposition {
 	private final QuestAfterCommitPort afterCommitPort;
 	private final QuestEventPort eventPort;
@@ -60,7 +60,7 @@ public final class QuestRuntimeComposition {
 			.questCatalog().findMetadata(questId).orElse(null));
 	}
 
-	/** Builds a production graph whose metadata reads are pinned to one immutable catalog snapshot. */
+	/** 构建元数据读取钉在一个不可变目录快照上的生产对象图。 / Builds a production graph whose metadata reads are pinned to one immutable catalog snapshot. */
 	public static QuestRuntimeComposition production(QuestCatalog catalog) {
 		Objects.requireNonNull(catalog, "catalog");
 		return production(questId -> catalog.findMetadata(questId).orElse(null));
@@ -91,7 +91,7 @@ public final class QuestRuntimeComposition {
 		return afterCommitPort;
 	}
 
-	/** 注入跨任务广播 port(生产侧在 dispatcher 构造后调用, 打破循环依赖)。 */
+	/** 注入跨任务广播 port（生产侧在 dispatcher 构造后调用，打破循环依赖）。 / Injects the cross-quest broadcast port (called after dispatcher construction to break the composition cycle). */
 	public void installBroadcastPort(QuestBroadcastPort broadcastPort) {
 		if (afterCommitPort instanceof TypedQuestAfterCommitPort typed) {
 			typed.withBroadcastPort(broadcastPort);
@@ -146,7 +146,7 @@ public final class QuestRuntimeComposition {
 		QuestRuntimeResources.cleanupAll();
 	}
 
-	/** DAOManager is initialized by bootstrap after QuestEngine can be constructed in focused tests. */
+	/** DAOManager 由 bootstrap 初始化，之后 QuestEngine 才能在聚焦测试中构造。 / DAOManager is initialized by bootstrap after QuestEngine can be constructed in focused tests. */
 	private static final class LazyProductionActionPort implements QuestActionPort {
 		private final QuestPlayerPort players;
 		private volatile QuestActionPort delegate;

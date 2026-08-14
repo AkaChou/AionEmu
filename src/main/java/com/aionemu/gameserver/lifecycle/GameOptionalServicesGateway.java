@@ -105,7 +105,7 @@ public class GameOptionalServicesGateway {
      * 解析玩家限制服务：优先 Spring，否则经运行时桥回退。
      * Resolve player-limit service: prefer Spring, otherwise fall back via runtime bridge.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private PlayerLimitService playerLimitService() {
         if (playerLimitServiceProvider == null) {
@@ -118,7 +118,7 @@ public class GameOptionalServicesGateway {
      * 解析 NPC 喊话服务：优先 Spring，否则经运行时桥回退。
      * Resolve NPC-shouts service: prefer Spring, otherwise fall back via runtime bridge.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private NpcShoutsService npcShoutsService() {
         if (npcShoutsServiceProvider == null) {
@@ -131,7 +131,7 @@ public class GameOptionalServicesGateway {
      * 解析护盾服务：优先 Spring，否则经运行时桥回退。
      * Resolve shield service: prefer Spring, otherwise fall back via runtime bridge.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private ShieldService shieldService() {
         if (shieldServiceProvider == null) {

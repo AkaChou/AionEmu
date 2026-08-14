@@ -56,7 +56,7 @@ public class DeadLockDetector extends Thread {
      * Create deadlock detector with default exit handler.
      *
      * @param sleepTime 检查间隔（秒） / Check interval in seconds
-     * Handling strategy
+     * @param doWhenDL 死锁处理策略 / Deadlock handling strategy
      */
     public DeadLockDetector(final int sleepTime, final byte doWhenDL) {
         this(sleepTime, doWhenDL, AionProcessExit::exit);
@@ -67,7 +67,7 @@ public class DeadLockDetector extends Thread {
      * Create deadlock detector.
      *
      * @param sleepTime 检查间隔（秒） / Check interval in seconds
-     * Handling strategy
+     * @param doWhenDL 死锁处理策略 / Deadlock handling strategy
      * @param exitHandler 退出处理器 / Exit handler
      */
     public DeadLockDetector(final int sleepTime, final byte doWhenDL, IntConsumer exitHandler) {
@@ -141,9 +141,7 @@ public class DeadLockDetector extends Thread {
      * 创建简短锁等待描述。
      * Create short lock-wait description.
      *
-     * Thread information
-     *
-     * @param threadInfo
+     * @param threadInfo 线程信息 / Thread information
      * @return 格式化锁信息 / Formatted lock information
      */
     private String createShortLockInfo(ThreadInfo threadInfo) {
@@ -165,9 +163,7 @@ public class DeadLockDetector extends Thread {
      * 打印完整线程转储片段。
      * Print full thread dump fragment.
      *
-     * Thread information
-     *
-     * @param threadInfo
+     * @param threadInfo 线程信息 / Thread information
      * @return 格式化线程信息 / Formatted thread information
      */
     private String printDumpedThreadInfo(ThreadInfo threadInfo) {

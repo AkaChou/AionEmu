@@ -28,8 +28,8 @@ public class SiegeCounter {
 	 * 累计伤害。
 	 * Adds damage.
 	 *
-	 * creature
-	 * damage
+	 * @param creature 造成伤害的生物 / damaging creature
+	 * @param damage 伤害量 / damage
 	 */
 	public void addDamage(Creature creature, int damage) {
 		SiegeRace siegeRace;
@@ -56,11 +56,11 @@ public class SiegeCounter {
 	}
 
 	/**
-	 * getRaceCounter 方法。
-	 * getRaceCounter method.
+	 * 返回指定阵营的种族计数器。
+	 * Returns the race counter for the given race.
 	 *
-	 * 阵营 / race
-	 * result
+	 * @param race 阵营 / race
+	 * @return 种族计数器 / race counter
 	 */
 	public SiegeRaceCounter getRaceCounter(SiegeRace race) {
 		return siegeRaceCounters.get(race);
@@ -70,17 +70,18 @@ public class SiegeCounter {
 	 * 累计种族伤害。
 	 * Adds race damage.
 	 *
-	 * 阵营 / race
-	 * damage
+	 * @param race 阵营 / race
+	 * @param damage 伤害量 / damage
 	 */
 	public void addRaceDamage(SiegeRace race, int damage) {
 		getRaceCounter(race).addTotalDamage(damage);
 	}
 
 	/**
-	 * getWinnerRaceCounter 方法。
-	 * getWinnerRaceCounter method.
-	 * result
+	 * 返回伤害最高的种族计数器。
+	 * Returns the race counter with the most damage.
+	 *
+	 * @return 胜方种族计数器 / winning race counter
 	 */
 	public SiegeRaceCounter getWinnerRaceCounter() {
 		List<SiegeRaceCounter> list = Lists.newArrayList(siegeRaceCounters.values());

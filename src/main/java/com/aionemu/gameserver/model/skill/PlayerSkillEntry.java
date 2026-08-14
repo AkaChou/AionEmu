@@ -22,6 +22,7 @@ public class PlayerSkillEntry extends SkillEntry {
 	private boolean isLinked;
 
 	/**
+	 * 制作技能的经验值。
 	 * for crafting skills
 	 */
 	private int currentXp;
@@ -37,14 +38,14 @@ public class PlayerSkillEntry extends SkillEntry {
 	}
 
 	/**
-	 * @return isStigma
+	 * @return 是否为烙印之石技能 / Whether stigma skill
 	 */
 	public boolean isStigma() {
 		return this.isStigma;
 	}
 
 	/**
-	 * @return Whether linked
+	 * @return 是否为关联技能 / Whether linked
 	 */
 	public boolean isLinked() {
 		return this.isLinked;
@@ -73,7 +74,7 @@ public class PlayerSkillEntry extends SkillEntry {
 	}
 
 	/**
-	 * @return The skill extra lvl
+	 * @return 技能附加等级 / The skill extra lvl
 	 */
 	public int getExtraLvl() {
 		switch (skillId) {
@@ -101,22 +102,26 @@ public class PlayerSkillEntry extends SkillEntry {
 	}
 
 	/**
-	 * @return the currentXp
+	 * @return 当前经验 / Current XP
 	 */
 	public int getCurrentXp() {
 		return currentXp;
 	}
 
 	/**
-	 * @param currentXp the currentXp to set
+	 * @param currentXp 设置的经验 / Current XP to set
 	 */
 	public void setCurrentXp(int currentXp) {
 		this.currentXp = currentXp;
 	}
 
 	/**
-	 * @param player
-	 * @param xp
+	 * 为制作技能添加经验，达到阈值时升级。
+	 * Add XP to a craft skill and level it up when the threshold is reached.
+	 *
+	 * @param player 玩家 / Player
+	 * @param xp 获得的经验 / XP gained
+	 * @return 是否升级 / Whether the skill leveled up
 	 */
 	public boolean addSkillXp(Player player, int xp) {
 		this.currentXp += xp;
@@ -174,14 +179,14 @@ public class PlayerSkillEntry extends SkillEntry {
 	}
 
 	/**
-	 * @return the pState
+	 * @return 持久化状态 / Persistent state
 	 */
 	public PersistentState getPersistentState() {
 		return persistentState;
 	}
 
 	/**
-	 * @param persistentState the pState to set
+	 * @param persistentState 设置的持久化状态 / Persistent state to set
 	 */
 	public void setPersistentState(PersistentState persistentState) {
 		switch (persistentState) {

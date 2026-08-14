@@ -23,7 +23,7 @@ public class Master_At_Arms_RaniganAI2 extends AggressiveNpcAI2
 	
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 50) {
-			spawn(218558, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Master-At-Arms Ranigan.
+			spawn(218558, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 武器教官拉尼甘 / Master-At-Arms Ranigan.
 			AI2Actions.deleteOwner(this);
 		}
 	}

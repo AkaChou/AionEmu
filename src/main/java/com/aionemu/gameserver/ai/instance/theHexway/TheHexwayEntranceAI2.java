@@ -18,6 +18,10 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 @AIName("hexway_portal")
 public class TheHexwayEntranceAI2 extends NpcAI2
 {
+	/**
+	 * 打开对话窗口：55 级以上玩家可进入六角道，否则提示等级不足。
+	 * Opens the dialog window: players level 55+ may enter The Hexway, otherwise a level requirement message.
+	 */
 	@Override
 	protected void handleDialogStart(Player player) {
 		if (player.getLevel() >= 55) {

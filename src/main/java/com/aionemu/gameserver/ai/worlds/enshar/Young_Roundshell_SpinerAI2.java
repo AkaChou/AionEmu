@@ -15,7 +15,7 @@ public class Young_Roundshell_SpinerAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(219787, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Frenzied Darksea Spiner.
+		spawn(219787, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 生成狂暴的暗海刺虫 / Frenzied Darksea Spiner.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);

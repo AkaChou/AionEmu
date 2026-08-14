@@ -4,7 +4,7 @@ import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.templates.housing.HousingPassiveItem;
 
 /**
- * Passive 对象。
+ * 被动装饰对象。
  * Passive Object game object.
  */
 

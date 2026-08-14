@@ -20,8 +20,8 @@ public class AbyssPointsListener extends AbyssPointsService.AddAPGlobalCallback 
 	 * 欧比斯点数增加回调。
 	 * Callback when abyss points are added.
 	 *
-	 * 玩家 / player
-	 * abyssPoints
+	 * @param player 玩家 / player
+	 * @param abyssPoints 欧比斯点数 / abyss points
 	 */
 	public void onAbyssPointsAdded(Player player, int abyssPoints) {
 		SiegeLocation fortress = siege.getSiegeLocation();

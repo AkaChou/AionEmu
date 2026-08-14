@@ -255,7 +255,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * 获取漩涡服务。
      * Obtain the vortex service.
      *
-     * Vortex service
+     * @return 漩涡服务 / Vortex service
      */
     public static VortexService vortexService() {
         return getIfAvailable(vortexServiceProvider, VortexService::getInstance);
@@ -295,7 +295,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * 获取 SvS 服务。
      * Obtain the SvS service.
      *
-     * SvS service
+     * @return SvS 服务 / SvS service
      */
     public static SvsService svsService() {
         return getIfAvailable(svsServiceProvider, SvsService::getInstance);
@@ -305,7 +305,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * 获取 RvR 服务。
      * Obtain the RvR service.
      *
-     * RvR service
+     * @return RvR 服务 / RvR service
      */
     public static RvrService rvrService() {
         return getIfAvailable(rvrServiceProvider, RvrService::getInstance);
@@ -315,7 +315,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * 获取 IU 演唱会服务。
      * Obtain the IU concert service.
      *
-     * IU service
+     * @return IU 服务 / IU service
      */
     public static IuService iuService() {
         return getIfAvailable(iuServiceProvider, IuService::getInstance);
@@ -355,7 +355,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * 获取前哨服务。
      * Obtain the outpost service.
      *
-     * Outpost service
+     * @return 前哨服务 / Outpost service
      */
     public static OutpostService outpostService() {
         return getIfAvailable(outpostServiceProvider, OutpostService::getInstance);
@@ -385,7 +385,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * 获取裂隙服务。
      * Obtain the Rift service.
      *
-     * Rift service
+     * @return 裂隙服务 / Rift service
      */
     public static RiftService riftService() {
         return getIfAvailable(riftServiceProvider, RiftService::getInstance);
@@ -395,7 +395,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * 获取征服服务。
      * Obtain the Conquest service.
      *
-     * Conquest service
+     * @return 征服服务 / Conquest service
      */
     public static ConquestService conquestService() {
         return getIfAvailable(conquestServiceProvider, ConquestService::getInstance);
@@ -448,7 +448,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @param provider 可选提供者 / Optional provider
      * @param fallback 单例回退供应器 / Singleton fallback supplier
      * @param <T> 服务类型 / Service type
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private static <T> T getIfAvailable(ObjectProvider<T> provider, Supplier<T> fallback) {
         if (provider == null) {

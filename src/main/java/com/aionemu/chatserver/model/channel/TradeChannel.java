@@ -15,7 +15,7 @@ public class TradeChannel extends RaceChannel {
      * 创建交易频道。
      * Creates a trade channel.
      *
-     * 阵营 / race
+     * @param race 阵营 / race
      * @param identifier 字符串标识 / string identifier
      */
     public TradeChannel(Race race, String identifier) {

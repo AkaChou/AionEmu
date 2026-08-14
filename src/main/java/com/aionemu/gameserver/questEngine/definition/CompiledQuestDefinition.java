@@ -7,7 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-/** Validated immutable IR produced identically by XML and Java DSL inputs. */
+/**
+ * 经校验的不可变中间表示，XML 与 Java DSL 输入生成结果一致。
+ * Validated immutable IR produced identically by XML and Java DSL inputs.
+ */
 public final class CompiledQuestDefinition {
 	private final QuestDefinition definition;
 	private final Map<String, List<QuestTransition>> transitionsByType;

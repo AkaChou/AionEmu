@@ -3,7 +3,10 @@ package com.aionemu.gameserver.questEngine.definition;
 import java.util.Objects;
 import java.util.Set;
 
-/** Closed set of event facts accepted by the quest engine. */
+/**
+ * 任务引擎接受的封闭事件事实集合。
+ * Closed set of event facts accepted by the quest engine.
+ */
 public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.KillNpc,
 		QuestEvent.KillNpcSet, QuestEvent.AttackNpc, QuestEvent.UseItem, QuestEvent.CollectItem,
 		QuestEvent.ItemPlay, QuestEvent.HouseItemUse, QuestEvent.GetItem, QuestEvent.LevelUp,
@@ -20,6 +23,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		QuestEvent.Abandon {
 	String type();
 
+	/**
+	 * 与 NPC 对话事件（可指定对话 id 与交互物件）。
+	 * Talk-to-NPC event (optionally keyed by dialog id and interaction object).
+	 */
 	record TalkToNpc(int npcId, Integer dialogId, int interactionObjectId) implements QuestEvent {
 		public TalkToNpc(int npcId) {
 			this(npcId, null, 0);
@@ -42,6 +49,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 击杀指定 NPC 事件。
+	 * Kill-NPC event.
+	 */
 	record KillNpc(int npcId) implements QuestEvent {
 		public KillNpc {
 			checkId(npcId, "npcId");
@@ -53,7 +64,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
-	/** Kills of any listed npc satisfy the event (one transition covering a mob family). */
+	/**
+	 * 击杀任意列出的 NPC 即满足事件（一条转换覆盖整个怪物族群）。
+	 * Kills of any listed npc satisfy the event (one transition covering a mob family).
+	 */
 	record KillNpcSet(Set<Integer> npcIds) implements QuestEvent {
 		public KillNpcSet {
 			if (npcIds == null || npcIds.isEmpty()) {
@@ -71,6 +85,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 攻击指定 NPC 事件（携带权威战斗事实）。
+	 * Attack-NPC event (carries authoritative combat facts).
+	 */
 	record AttackNpc(int npcId, QuestNpcAttackFacts facts) implements QuestEvent {
 		public AttackNpc(int npcId) {
 			this(npcId, null);
@@ -89,6 +107,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 使用物品事件。
+	 * Use-item event.
+	 */
 	record UseItem(int itemId, int itemObjectId) implements QuestEvent {
 		public UseItem(int itemId) {
 			this(itemId, 0);
@@ -107,6 +129,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 收集物品事件。
+	 * Collect-item event.
+	 */
 	record CollectItem(int itemId, int count) implements QuestEvent {
 		public CollectItem {
 			checkId(itemId, "itemId");
@@ -121,6 +147,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 物品动画播放事件。
+	 * Item animation-play event.
+	 */
 	record ItemPlay(int itemId, int animationMillis) implements QuestEvent {
 		public ItemPlay {
 			checkId(itemId, "itemId");
@@ -135,6 +165,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 房屋物件使用事件。
+	 * House-object use event.
+	 */
 	record HouseItemUse(int itemId, QuestHousingFacts facts) implements QuestEvent {
 		public HouseItemUse(int itemId) { this(itemId, null); }
 		public HouseItemUse {
@@ -148,6 +182,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 获得物品事件。
+	 * Get-item event.
+	 */
 	record GetItem(int itemId) implements QuestEvent {
 		public GetItem {
 			checkId(itemId, "itemId");
@@ -159,6 +197,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 玩家升级事件。
+	 * Player level-up event.
+	 */
 	record LevelUp() implements QuestEvent {
 		@Override
 		public String type() {
@@ -166,6 +208,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 区域任务结束事件。
+	 * Zone-mission-end event.
+	 */
 	record ZoneMissionEnd() implements QuestEvent {
 		@Override
 		public String type() {
@@ -173,7 +219,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
-	/** Internal event used by delayed, typed cross-owner event-quest refreshes. */
+	/**
+	 * 延迟的、类型化的跨所有者事件任务刷新使用的内部事件。
+	 * Internal event used by delayed, typed cross-owner event-quest refreshes.
+	 */
 	record EventQuestRefresh() implements QuestEvent {
 		@Override
 		public String type() {
@@ -181,6 +230,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 玩家死亡事件。
+	 * Player death event.
+	 */
 	record Die() implements QuestEvent {
 		@Override
 		public String type() {
@@ -188,6 +241,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 玩家登出事件（携带恢复事实）。
+	 * Player logout event (carries recovery facts).
+	 */
 	record LogOut(QuestRecoveryFacts facts) implements QuestEvent {
 		public LogOut() { this(null); }
 		@Override
@@ -196,7 +253,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
-	/** Authoritative player request to abandon this quest. */
+	/**
+	 * 玩家请求放弃此任务的权威事件。
+	 * Authoritative player request to abandon this quest.
+	 */
 	record Abandon() implements QuestEvent {
 		@Override
 		public String type() {
@@ -204,6 +264,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 玩家进入世界事件。
+	 * Enter-world event.
+	 */
 	record EnterWorld() implements QuestEvent {
 		@Override
 		public String type() {
@@ -211,6 +275,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 玩家进入区域事件。
+	 * Enter-zone event.
+	 */
 	record EnterZone(String zone) implements QuestEvent {
 		public EnterZone {
 			zone = checkText(zone, "zone");
@@ -222,6 +290,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 玩家离开区域事件。
+	 * Leave-zone event.
+	 */
 	record LeaveZone(String zone) implements QuestEvent {
 		public LeaveZone {
 			zone = checkText(zone, "zone");
@@ -233,6 +305,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 穿过飞行环事件（携带移动事实）。
+	 * Pass-flying-ring event (carries movement facts).
+	 */
 	record PassFlyingRing(String ring, QuestMovementFacts facts) implements QuestEvent {
 		public PassFlyingRing(String ring) { this(ring, null); }
 		public PassFlyingRing {
@@ -246,6 +322,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 影片结束事件。
+	 * Movie-end event.
+	 */
 	record MovieEnd(int movieId) implements QuestEvent {
 		public MovieEnd {
 			checkId(movieId, "movieId");
@@ -257,6 +337,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 任务可见定时器结束事件。
+	 * Quest visible-timer-end event.
+	 */
 	record QuestTimerEnd() implements QuestEvent {
 		@Override
 		public String type() {
@@ -264,6 +348,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 任务隐形定时器结束事件。
+	 * Quest invisible-timer-end event.
+	 */
 	record InvisibleTimerEnd() implements QuestEvent {
 		@Override
 		public String type() {
@@ -271,7 +359,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
-	/** Definition rankId is a minimum threshold; runtime facts are server-only. */
+	/**
+	 * 定义中的 rankId 是最低阈值；运行时事实仅存于服务端。
+	 * Definition rankId is a minimum threshold; runtime facts are server-only.
+	 */
 	record KillRanked(int rankId, QuestPvpKillFacts facts) implements QuestEvent {
 		public KillRanked(int rankId) {
 			this(rankId, null);
@@ -293,12 +384,18 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 指定世界中的击杀事件（官方通配 world-id 0）。
+	 * Kill-in-world event (retail wildcard world-id 0).
+	 */
 	record KillInWorld(int worldId, QuestPvpKillFacts facts) implements QuestEvent {
 		public KillInWorld(int worldId) {
 			this(worldId, null);
 		}
 
 		public KillInWorld {
+			// world-id 0 是官方数据驱动 PVP 任务使用的类型化定义通配符。
+			// 运行时事实仍携带具体正数世界 id，并由 QuestPvpKillFacts 校验。
 			// world-id 0 is the typed-definition wildcard used by retail
 			// data-driven PVP quests. Runtime facts still carry a concrete
 			// positive world id and are validated by QuestPvpKillFacts.
@@ -316,6 +413,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 使用技能事件（携带技能事实）。
+	 * Use-skill event (carries skill facts).
+	 */
 	record UseSkill(int skillId, QuestSkillFacts facts) implements QuestEvent {
 		public UseSkill(int skillId) { this(skillId, null); }
 		public UseSkill {
@@ -329,6 +430,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 制作失败事件。
+	 * Craft-fail event.
+	 */
 	record FailCraft(int itemId) implements QuestEvent {
 		public FailCraft {
 			checkId(itemId, "itemId");
@@ -340,6 +445,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 装备物品事件。
+	 * Equip-item event.
+	 */
 	record EquipItem(int itemId) implements QuestEvent {
 		public EquipItem {
 			checkId(itemId, "itemId");
@@ -351,6 +460,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 可交互动作事件。
+	 * Can-act event.
+	 */
 	record CanAct(int templateId, String actionType) implements QuestEvent {
 		public CanAct {
 			checkId(templateId, "templateId");
@@ -363,6 +476,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 德雷得奇安副本结算事件。
+	 * Dredgion instance settlement event.
+	 */
 	record DredgionReward(QuestPvpInstanceFacts facts) implements QuestEvent {
 		public DredgionReward() { this(null); }
 		@Override
@@ -371,6 +488,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 卡马尔副本结算事件。
+	 * Kamar instance settlement event.
+	 */
 	record KamarReward(QuestPvpInstanceFacts facts) implements QuestEvent {
 		public KamarReward() { this(null); }
 		@Override
@@ -379,6 +500,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 奥菲达副本结算事件。
+	 * Ophidan instance settlement event.
+	 */
 	record OphidanReward(QuestPvpInstanceFacts facts) implements QuestEvent {
 		public OphidanReward() { this(null); }
 		@Override
@@ -387,6 +512,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 堡垒副本结算事件。
+	 * Bastion instance settlement event.
+	 */
 	record BastionReward(QuestPvpInstanceFacts facts) implements QuestEvent {
 		public BastionReward() { this(null); }
 		@Override
@@ -395,6 +524,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 奖励附加事件。
+	 * Bonus-apply event.
+	 */
 	record BonusApply(String bonusType) implements QuestEvent {
 		public BonusApply {
 			bonusType = checkText(bonusType, "bonusType");
@@ -406,6 +539,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * NPC 仇恨列表新增玩家事件（携带 AI 感知事实）。
+	 * NPC aggro-list addition event (carries AI perception facts).
+	 */
 	record AddAggroList(int npcId, QuestAiPerceptionFacts facts) implements QuestEvent {
 		public AddAggroList(int npcId) { this(npcId, null); }
 		public AddAggroList {
@@ -419,6 +556,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 玩家与 NPC 距离进入范围事件（携带邻近事实）。
+	 * At-distance-to-NPC event (carries proximity facts).
+	 */
 	record AtDistance(int npcId, QuestProximityFacts facts) implements QuestEvent {
 		public AtDistance(int npcId) {
 			this(npcId, null);
@@ -437,6 +578,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 护送保护结束事件。
+	 * Protect-end event.
+	 */
 	record ProtectEnd() implements QuestEvent {
 		@Override
 		public String type() {
@@ -444,6 +589,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 护送保护失败事件。
+	 * Protect-fail event.
+	 */
 	record ProtectFail() implements QuestEvent {
 		@Override
 		public String type() {
@@ -451,6 +600,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 进入气流事件（携带移动事实）。
+	 * Wind-stream entry event (carries movement facts).
+	 */
 	record EnterWindStream(int teleportId, QuestMovementFacts facts) implements QuestEvent {
 		public EnterWindStream(int teleportId) { this(teleportId, null); }
 		public EnterWindStream {
@@ -464,6 +617,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 骑乘动作事件。
+	 * Ride-action event.
+	 */
 	record RideAction(int itemId) implements QuestEvent {
 		public RideAction {
 			checkId(itemId, "itemId");
@@ -475,6 +632,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * 创造力点数事件。
+	 * Creativity-point event.
+	 */
 	record CreativityPoint() implements QuestEvent {
 		@Override
 		public String type() {
@@ -482,6 +643,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * NPC 到达目标事件。
+	 * NPC reached target event.
+	 */
 	record NpcReachTarget() implements QuestEvent {
 		@Override
 		public String type() {
@@ -489,6 +654,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
+	/**
+	 * NPC 失去目标事件。
+	 * NPC lost target event.
+	 */
 	record NpcLostTarget() implements QuestEvent {
 		@Override
 		public String type() {
@@ -514,7 +683,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		}
 	}
 
-	/** Returns the event key used by the route index. Dialog is matched after routing. */
+	/**
+	 * 返回路由索引使用的事件键；对话在路由之后匹配。
+	 * Returns the event key used by the route index. Dialog is matched after routing.
+	 */
 	static QuestEvent routeKey(QuestEvent event) {
 		Objects.requireNonNull(event, "event");
 		if (event instanceof TalkToNpc talk) {
@@ -527,6 +699,7 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 			return new UseItem(useItem.itemId());
 		}
 		if (event instanceof CollectItem collectItem) {
+			// 收集路由以物品为键；执行路由时按权威背包快照校验数量。
 			// Collection routes are keyed by item; the count is checked against the
 			// authoritative inventory snapshot when the route is executed.
 			return new CollectItem(collectItem.itemId(), 1);
@@ -576,7 +749,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		return event;
 	}
 
-	/** Matches a definition event against one authoritative runtime event. */
+	/**
+	 * 将定义事件与一个权威运行时事件进行匹配。
+	 * Matches a definition event against one authoritative runtime event.
+	 */
 	static boolean matches(QuestEvent definition, QuestEvent actual) {
 		Objects.requireNonNull(definition, "definition");
 		Objects.requireNonNull(actual, "actual");
@@ -637,7 +813,10 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 		return definition.equals(actual);
 	}
 
-	/** True when two definition events can consume the same runtime event. */
+	/**
+	 * 两个定义事件能否消费同一运行时事件。
+	 * True when two definition events can consume the same runtime event.
+	 */
 	static boolean overlaps(QuestEvent left, QuestEvent right) {
 		Objects.requireNonNull(left, "left");
 		Objects.requireNonNull(right, "right");
@@ -679,6 +858,8 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 	}
 
 	/**
+	 * 返回运行时路由索引能否在无转换优先级的情况下为两个重叠事件排序。
+	 * 同所有者的精确世界击杀先于官方通配世界路由。
 	 * Returns whether the runtime route index can order two overlapping events
 	 * without a transition priority. Exact world kills precede the retail
 	 * wildcard world route for the same owner.

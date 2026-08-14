@@ -3,7 +3,7 @@ package com.aionemu.gameserver.model.gameobjects.player.ranking;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 
 /**
- * 高塔 Of 挑战军阶游戏对象。
+ * 挑战之塔军阶游戏对象。
  * Tower Of Challenge Rank game object.
  */
 

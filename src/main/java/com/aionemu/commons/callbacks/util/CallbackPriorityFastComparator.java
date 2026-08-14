@@ -35,7 +35,7 @@ public class CallbackPriorityFastComparator implements Comparator<Callback<?>> {
      *
      * @param o1 第一个回调对象 / First callback object
      * @param o2 第二个回调对象 / Second callback object
- * @return 如果两个对象优先级相等则返回 true，否则返回 false
+     * @return 如果两个对象优先级相等则返回 true，否则返回 false
      *         Returns true if the priorities are equal, false otherwise
      */
     public boolean areEqual(Callback<?> o1, Callback<?> o2) {

@@ -52,7 +52,7 @@ public abstract class DamageEffect extends EffectTemplate {
 	 * Calculates skill damage result by damage type.
 	 *
 	 * @param effect 运行时效果 / runtime effect
-	 * damage type
+	 * @param damageType 伤害类型 / damage type
 	 *
 	 * @return 是否命中成功 / whether the hit succeeded
 	 */
@@ -117,7 +117,7 @@ public abstract class DamageEffect extends EffectTemplate {
 	 * 返回伤害结算模式（加值/百分比等）。
 	 * Returns the damage resolution mode (add/percent/etc.).
 	 *
-	 * resolution mode
+	 * @return 结算模式 / resolution mode
 	 */
 	public Func getMode() {
 		return mode;

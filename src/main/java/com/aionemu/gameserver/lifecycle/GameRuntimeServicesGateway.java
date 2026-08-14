@@ -495,7 +495,7 @@ public class GameRuntimeServicesGateway {
      * 解析管理服务。
      * Resolve the admin service.
      *
-     * Admin service
+     * @return 管理服务 / Admin service
      */
     private AdminService adminService() {
         if (adminServiceProvider == null) {
@@ -521,7 +521,7 @@ public class GameRuntimeServicesGateway {
      * 解析领地服务。
      * Resolve the territory service.
      *
-     * Territory service
+     * @return 领地服务 / Territory service
      */
     private TerritoryService territoryService() {
         if (territoryServiceProvider == null) {
@@ -547,7 +547,7 @@ public class GameRuntimeServicesGateway {
      * 解析公告服务。
      * Resolve the announcement service.
      *
-     * Announcement service
+     * @return 公告服务 / Announcement service
      */
     private AnnouncementService announcementService() {
         if (announcementServiceProvider == null) {
@@ -560,7 +560,7 @@ public class GameRuntimeServicesGateway {
      * 解析调试服务。
      * Resolve the debug service.
      *
-     * Debug service
+     * @return 调试服务 / Debug service
      */
     private DebugService debugService() {
         if (debugServiceProvider == null) {
@@ -573,7 +573,7 @@ public class GameRuntimeServicesGateway {
      * 解析天气服务。
      * Resolve the weather service.
      *
-     * Weather service
+     * @return 天气服务 / Weather service
      */
     private WeatherService weatherService() {
         if (weatherServiceProvider == null) {
@@ -586,7 +586,7 @@ public class GameRuntimeServicesGateway {
      * 解析寄售服务。
      * Resolve the broker service.
      *
-     * Broker service
+     * @return 寄售服务 / Broker service
      */
     private BrokerService brokerService() {
         if (brokerServiceProvider == null) {
@@ -599,7 +599,7 @@ public class GameRuntimeServicesGateway {
      * 解析军团服务。
      * Resolve the legion service.
      *
-     * Legion service
+     * @return 军团服务 / Legion service
      */
     private LegionService legionService() {
         if (legionServiceProvider == null) {
@@ -612,7 +612,7 @@ public class GameRuntimeServicesGateway {
      * 解析影响力。
      * Resolve influence.
      *
-     * Influence
+     * @return 影响力 / Influence
      */
     private Influence influence() {
         if (influenceProvider == null) {
@@ -625,7 +625,7 @@ public class GameRuntimeServicesGateway {
      * 解析交易服务。
      * Resolve the exchange service.
      *
-     * Exchange service
+     * @return 交易服务 / Exchange service
      */
     private ExchangeService exchangeService() {
         if (exchangeServiceProvider == null) {
@@ -638,7 +638,7 @@ public class GameRuntimeServicesGateway {
      * 解析请愿服务。
      * Resolve the petition service.
      *
-     * Petition service
+     * @return 请愿服务 / Petition service
      */
     private PetitionService petitionService() {
         if (petitionServiceProvider == null) {
@@ -729,7 +729,7 @@ public class GameRuntimeServicesGateway {
      * 解析 Web 商城服务。
      * Resolve the webshop service.
      *
-     * Webshop service
+     * @return Web 商城服务 / Webshop service
      */
     private WebshopService webshopService() {
         if (webshopServiceProvider == null) {
@@ -742,7 +742,7 @@ public class GameRuntimeServicesGateway {
      * 解析问卷服务。
      * Resolve the survey service.
      *
-     * Survey service
+     * @return 问卷服务 / Survey service
      */
     private SurveyService surveyService() {
         if (surveyServiceProvider == null) {
@@ -768,7 +768,7 @@ public class GameRuntimeServicesGateway {
      * 解析商城服务。
      * Resolve the in-game shop.
      *
-     * In-game shop
+     * @return 商城服务 / In-game shop
      */
     private InGameShopEn inGameShopEn() {
         if (inGameShopEnProvider == null) {

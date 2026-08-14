@@ -32,7 +32,7 @@ public class OldNamesDAO extends com.aionemu.gameserver.dao.OldNamesDAO {
 	 *
 	 * character name
 	 *
-	 * @param name
+	 * @param name 角色名 / character name
 	 * @return 是否为旧名 / whether it is an old name
 	 */
 	@Override
@@ -56,8 +56,8 @@ public class OldNamesDAO extends com.aionemu.gameserver.dao.OldNamesDAO {
 	 * Records a character rename history entry.
 	 *
 	 * @param id 玩家 ID / player id
-	 * old name
-	 * new name
+	 * @param oldname 旧名 / old name
+	 * @param newname 新名 / new name
 	 */
 	@Override
 	public void insertNames(final int id, final String oldname, final String newname) {
@@ -77,10 +77,10 @@ public class OldNamesDAO extends com.aionemu.gameserver.dao.OldNamesDAO {
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
 	 *
-	 * @param s 数据库名 / database name
-	 * @param i 主版本 / major version
-	 * @param i1 次版本 / minor version
-	 * whether supported
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
 	 */
 	@Override
 	public boolean supports(String s, int i, int i1) {

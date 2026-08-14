@@ -33,8 +33,8 @@ public class MovementProcessor extends AGameProcessor {
 	 * 为生物替换移动电机：停止旧电机并启动新电机。
 	 * Replace a creature's movement motor: stop the old motor and start the new one.
 	 *
-	 * Target creature
-	 * New motor
+	 * @param creature 目标生物 / target creature
+	 * @param newMotor 新移动电机 / new movement motor
 	 * @return 始终为 true（应用成功） / Always {@code true} on success
 	 */
 	private boolean applyMotor(Creature creature, AMovementMotor newMotor) {
@@ -53,11 +53,9 @@ public class MovementProcessor extends AGameProcessor {
 	 * 为 NPC 应用回归电机，使其移向指定地点。
 	 * Apply a return motor so the NPC moves toward the given spot.
 	 *
-	 * Target NPC
-	 *
-	 * @param spot 回归目标点 / Return destination
-	 * @param spot
-	 * @return 已应用的回归电机，失败为 null / Applied return motor, or null on failure
+	 * @param creature 目标 NPC / target NPC
+	 * @param spot 回归目标点 / return destination
+	 * @return 已应用的回归电机，失败为 null / applied return motor, or null on failure
 	 */
 	public AMovementMotor applyReturn(Npc creature, Vector3f spot) {
 		ReturnMotor returnMotor = new ReturnMotor(creature, spot, this);

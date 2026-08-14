@@ -17,7 +17,7 @@ public abstract class PetitionDAO implements DAO {
 	 * 获取下一个可用的请愿 ID。
 	 * Returns the next available petition ID.
 	 *
-	 * next available id
+	 * @return 下一个可用 ID / next available id
 	 */
 	public abstract int getNextAvailableId();
 
@@ -33,7 +33,7 @@ public abstract class PetitionDAO implements DAO {
 	 * 按玩家对象 ID 删除请愿。
 	 * Deletes petitions by player object ID.
 	 *
-	 * player object id
+	 * @param playerObjId 玩家对象 ID / player object id
 	 */
 	public abstract void deletePetition(int playerObjId);
 
@@ -41,7 +41,7 @@ public abstract class PetitionDAO implements DAO {
 	 * 获取全部请愿集合。
 	 * Returns the set of all petitions.
 	 *
-	 * set of petitions
+	 * @return 申诉集合 / set of petitions
 	 */
 	public abstract Set<Petition> getPetitions();
 
@@ -49,8 +49,8 @@ public abstract class PetitionDAO implements DAO {
 	 * 按请愿 ID 获取请愿。
 	 * Returns a petition by its ID.
 	 *
-	 * petition id
-	 * petition
+	 * @param petitionId 申诉 ID / petition id
+	 * @return 申诉 / petition
 	 */
 	public abstract Petition getPetitionById(int petitionId);
 
@@ -58,7 +58,7 @@ public abstract class PetitionDAO implements DAO {
 	 * 将请愿标记为已回复。
 	 * Marks the petition as replied.
 	 *
-	 * petition id
+	 * @param petitionId 申诉 ID / petition id
 	 */
 	public abstract void setReplied(int petitionId);
 
@@ -66,7 +66,7 @@ public abstract class PetitionDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public final String getClassName() {

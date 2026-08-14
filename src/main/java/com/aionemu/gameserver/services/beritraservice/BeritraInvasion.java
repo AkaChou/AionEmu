@@ -38,7 +38,7 @@ public abstract class BeritraInvasion<BL extends BeritraLocation> {
 	 * 绑定入侵地点。
 	 * Binds the invasion location.
 	 *
-	 * invasion location
+	 * @param beritraLocation 入侵地点 / invasion location
 	 */
 	public BeritraInvasion(BL beritraLocation) {
 		this.beritraLocation = beritraLocation;
@@ -105,7 +105,7 @@ public abstract class BeritraInvasion<BL extends BeritraLocation> {
 	 * 获取绑定的入侵地点。
 	 * Returns the bound invasion location.
 	 *
-	 * location
+	 * @return 绑定的入侵地点 / invasion location
 	 */
 	public BL getBeritraLocation() {
 		return beritraLocation;
@@ -115,7 +115,7 @@ public abstract class BeritraInvasion<BL extends BeritraLocation> {
 	 * 获取地点 ID。
 	 * Returns the location id.
 	 *
-	 * location id
+	 * @return 地点 ID / location id
 	 */
 	public int getBeritraLocationId() {
 		return beritraLocation.getId();

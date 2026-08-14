@@ -44,7 +44,7 @@ public class LunaDiceData {
 	 * 返回已加载的骰子表数量。
 	 * Returns the number of loaded dice tables.
 	 *
-	 * table count
+	 * @return 已加载的骰子表数量 / Returns the number of loaded dice tables.
 	 */
 	public int size() {
 		return diceItemList.size();

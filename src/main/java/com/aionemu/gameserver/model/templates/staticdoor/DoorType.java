@@ -13,5 +13,9 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum DoorType {
 	/** 门 / Door. */
-	DOOR, ABYSS, HOUSE
+	DOOR,
+	/** 欧比斯 / Abyss. */
+	ABYSS,
+	/** 房屋 / House. */
+	HOUSE
 }

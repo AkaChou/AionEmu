@@ -70,7 +70,7 @@ public class Vile_TyphonAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 23024, 60, getOwner()).useNoAnimationSkill(); //Inferno Fiend.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 23024, 60, getOwner()).useNoAnimationSkill(); // 炼狱恶魔 / Inferno Fiend.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();

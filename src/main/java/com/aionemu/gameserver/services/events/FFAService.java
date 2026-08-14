@@ -301,7 +301,7 @@ public class FFAService {
 						});
 					}
 				}
-				if ((incrementCounter % 600) == 0) { // Change map every 10 Min.
+				if ((incrementCounter % 600) == 0) { // 每 10 分钟更换地图 / change map every 10 minutes
 					pickArenaMap();
 				}
 				if ((incrementCounter % 3600) == 0) {

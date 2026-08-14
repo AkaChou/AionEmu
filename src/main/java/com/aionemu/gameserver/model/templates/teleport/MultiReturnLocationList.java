@@ -4,8 +4,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * MultiReturn 位置列表模板（静态数据/XML）。
- * XML template.
+ * 多重返回位置列表模板（静态数据/XML）。
+ * Multi Return location list template (static data/XML).
  */
 
 @XmlType(name = "MultiReturnLocationList")
@@ -21,7 +21,7 @@ public class MultiReturnLocationList {
 		return worldId;
 	}
 
-	/** 返回 desc / Returns the desc */
+	/** 返回描述 / Returns the description */
 	public final String getDesc() {
 		return desc;
 	}

@@ -9,7 +9,7 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import java.util.Objects;
 import java.util.function.Function;
 
-/** Captures the active-house ownership boundary for a house item event. */
+/** 为房屋物品事件捕获活跃房屋的所有权边界。 / Captures the active-house ownership boundary for a house item event. */
 public final class PlayerQuestHousingEventPort implements QuestHousingEventPort {
 	private final Function<Player, House> activeHouse;
 

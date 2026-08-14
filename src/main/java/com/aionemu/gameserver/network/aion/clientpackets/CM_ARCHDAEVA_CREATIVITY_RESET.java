@@ -7,7 +7,7 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 
 /**
- * 请求重置大天使创造力（Archdaeva Creativity）的客户端包。
+ * 请求重置高阶守护者创造力（Archdaeva Creativity）的客户端包。
  * Client packet requesting an Archdaeva creativity reset.
  *
  * @author Ranastic (Encom)

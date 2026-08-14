@@ -22,7 +22,7 @@ public class SM_PLAY_FAIL extends AionServerPacket {
      * 构造 SM_PLAY_FAIL 包。
      * Constructs a new SM_PLAY_FAIL packet.
      *
-     * auth response
+     * @param response 认证响应 / auth response
      */
     public SM_PLAY_FAIL(AionAuthResponse response) {
         super(0x06);

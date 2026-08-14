@@ -42,22 +42,22 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	private Race spawnRace;
 	/** 开始时间 / start time */
 	private long startTime;
-	/** covetous fallen / covetous fallen */
+		/** covetous fallen / covetous fallen */
 		private int covetousFallen;
-	/** 副本计时器 / instance timer */
+		/** 副本计时器 / instance timer */
 		private Future<?> instanceTimer;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
-	/** 对象 / objects */
+		/** 对象 / objects */
 		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -160,7 +160,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -236,8 +236,8 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
@@ -301,8 +301,8 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
 	 *
-	 * 玩家 / player
-	 * zone
+	 * @param player 玩家 / player
+	 * @param zone 区域 / zone
 	 */
 	@Override
     public void onEnterZone(Player player, ZoneInstance zone) {
@@ -455,9 +455,9 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

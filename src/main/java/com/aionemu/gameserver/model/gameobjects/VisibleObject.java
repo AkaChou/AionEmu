@@ -74,7 +74,10 @@ public abstract class VisibleObject extends AionObject {
 	private SpawnTemplate spawn;
 
 	/**
-	 * @return 返回当前 WorldRegionAionObject 为在。 / Returns current WorldRegion AionObject is in
+	 * 返回当前对象所在的 WorldRegion。
+	 * Returns the current WorldRegion the AionObject is in.
+	 *
+	 * @return 当前区域 / current WorldRegion
 	 */
 	public MapRegion getActiveRegion() {
 		return position.getMapRegion();
@@ -86,7 +89,10 @@ public abstract class VisibleObject extends AionObject {
 	}
 
 	/**
-	 * @return 返回 World 映射 ID。 / Return World map id
+	 * 返回世界地图 ID。
+	 * Returns the world map id.
+	 *
+	 * @return 地图 ID / world map id
 	 */
 	public int getWorldId() {
 		return position.getMapId();
@@ -100,58 +106,75 @@ public abstract class VisibleObject extends AionObject {
 	}
 
 	/**
-	 * @return 返回 World 位置 x。 / Return World position x
+	 * 返回世界 X 坐标。
+	 * Returns the world x position.
+	 *
+	 * @return X 坐标 / x position
 	 */
 	public float getX() {
 		return position.getX();
 	}
 
 	/**
-	 * @return 返回 World 位置 y。 / Return World position y
+	 * 返回世界 Y 坐标。
+	 * Returns the world y position.
+	 *
+	 * @return Y 坐标 / y position
 	 */
 	public float getY() {
 		return position.getY();
 	}
 
 	/**
-	 * @return 返回 World 位置 z。 / Return World position z
+	 * 返回世界 Z 坐标。
+	 * Returns the world z position.
+	 *
+	 * @return Z 坐标 / z position
 	 */
 	public float getZ() {
 		return position.getZ();
 	}
 
-	/** 设置 xyzh / Sets the xyzh */
+	/** 设置坐标与朝向 / Sets the xyzh */
 	public void setXYZH(Float x, Float y, Float z, Byte h) {
 		position.setXYZH(x, y, z, h);
 	}
 
 	/**
-	 * @return 对象朝向，取值 [0,120)。 / Heading of the object. Values from <0,120)
+	 * 返回对象朝向。
+	 * Returns the object heading.
+	 *
+	 * @return 对象朝向，取值 [0,120) / heading of the object, values from [0,120)
 	 */
 	public byte getHeading() {
 		return position.getHeading();
 	}
 
 	/**
-	 * 返回对象位置。 / Return object position
+	 * 返回对象位置。
+	 * Return object position.
 	 *
-	 * @return position.
+	 * @return 世界位置 / position
 	 */
 	public WorldPosition getPosition() {
 		return position;
 	}
 
 	/**
-	 * 检查对象是否已生成。 / Check whether the object is spawned.
+	 * 检查对象是否已生成。
+	 * Checks whether the object is spawned.
 	 *
-	 * @return true if object is spawned.
+	 * @return 是否已生成 / true if spawned
 	 */
 	public boolean isSpawned() {
 		return position.isSpawned();
 	}
 
 	/**
-	 * @return
+	 * 对象是否已在世界中。
+	 * Whether the object is in the world.
+	 *
+	 * @return 是否在世界中 / whether in the world
 	 */
 	public boolean isInWorld() {
 		return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(getObjectId()) != null;
@@ -166,18 +189,22 @@ public abstract class VisibleObject extends AionObject {
 		return position.isInstanceMap();
 	}
 
-	/** 清除 knownlist / Clear knownlist */
+	/** 清除已知列表 / Clears the known list */
 	public void clearKnownlist() {
 		getKnownList().clear();
 	}
 
-	/** 更新 knownlist / Update knownlist */
+	/** 更新已知列表 / Updates the known list */
 	public void updateKnownlist() {
 		getKnownList().doUpdate();
 	}
 
 	/**
-	 * @param creature 是否可见。 / Whether see
+	 * 判断能否看见指定生物。
+	 * Whether this object can see the given creature.
+	 *
+	 * @param creature 目标生物 / target creature
+	 * @return 是否可见 / whether visible
 	  */
 	public boolean canSee(Creature creature) {
 		return creature != null;
@@ -194,32 +221,40 @@ public abstract class VisibleObject extends AionObject {
 	}
 
 	 /**
-	  * 返回此 VisibleObject 的 KnownList。
-	  * Returns KnownList of this VisibleObject
-	  * @return knownList.
+	  * 返回此对象的 KnownList。
+	  * Returns the KnownList of this VisibleObject.
+	  *
+	  * @return 已知列表 / known list
 	  */
 	public KnownList getKnownList() {
 		return knownlist;
 	}
 
 	 /**
-	  * 返回此 VisibleObject 的控制器。
-	  * Return VisibleObjectController of this VisibleObject
-	  * @return VisibleObjectController.
+	  * 返回此对象的控制器。
+	  * Returns the controller of this VisibleObject.
+	  *
+	  * @return 控制器 / VisibleObjectController
 	  */
 	public VisibleObjectController<? extends VisibleObject> getController() {
 		return controller;
 	}
 
 	/**
-	 * @return VisibleObject
+	 * 返回当前目标。
+	 * Returns the current target.
+	 *
+	 * @return 目标对象 / target VisibleObject
 	 */
 	public final VisibleObject getTarget() {
 		return target;
 	}
 
 	/**
-	 * @return distance to target or 0 if no target
+	 * 返回到目标的距离，无目标时为 0。
+	 * Returns the distance to the target, or 0 if no target.
+	 *
+	 * @return 到目标的距离 / distance to target
 	 */
 	public float getDistanceToTarget() {
 		VisibleObject currTarget = target;
@@ -232,24 +267,31 @@ public abstract class VisibleObject extends AionObject {
 	}
 
 	/**
-	 * @param creature
+	 * 设置目标对象。
+	 * Sets the target object.
+	 *
+	 * @param creature 目标对象 / target object
 	 */
 	public void setTarget(VisibleObject creature) {
 		target = creature;
 	}
 
 	/**
-	 * @param objectId
-	 * @return target is object with id equal to objectId
+	 * 目标是否为指定对象 ID。
+	 * Whether the target has the given object id.
+	 *
+	 * @param objectId 对象 ID / object id
+	 * @return 是否为目标 / whether the target matches
 	 */
 	public boolean isTargeting(int objectId) {
 		return target != null && target.getObjectId() == objectId;
 	}
 
 	/**
-	 * Return spawn template of this VisibleObject
+	 * 返回该对象的生成模板。
+	 * Returns the spawn template of this VisibleObject.
 	 *
-	 * @return SpawnTemplate
+	 * @return 生成模板 / SpawnTemplate
 	 */
 	public SpawnTemplate getSpawn() {
 		return spawn;
@@ -261,27 +303,36 @@ public abstract class VisibleObject extends AionObject {
 	}
 
 	/**
-	 * @return the objectTemplate
+	 * 返回对象模板。
+	 * Returns the object template.
+	 *
+	 * @return 对象模板 / the objectTemplate
 	 */
 	public VisibleObjectTemplate getObjectTemplate() {
 		return objectTemplate;
 	}
 
 	/**
-	 * @param objectTemplate the objectTemplate to set
+	 * 设置对象模板。
+	 * Sets the object template.
+	 *
+	 * @param objectTemplate 要设置的对象模板 / the objectTemplate to set
 	 */
 	public void setObjectTemplate(VisibleObjectTemplate objectTemplate) {
 		this.objectTemplate = objectTemplate;
 	}
 
 	/**
-	 * @param position
+	 * 设置世界位置。
+	 * Sets the world position.
+	 *
+	 * @param position 世界位置 / world position
 	 */
 	public void setPosition(WorldPosition position) {
 		this.position = position;
 	}
 
-	/** 返回 visibility distance / Returns the visibility distance */
+	/** 返回可见距离 / Returns the visibility distance */
 	public float getVisibilityDistance() {
 		if (this instanceof Npc) {
 			NpcTemplate npcTemplate = (NpcTemplate) this.getObjectTemplate();
@@ -294,7 +345,7 @@ public abstract class VisibleObject extends AionObject {
 		return VisibilityDistance;
 	}
 
-	/** 返回 max z visible distance / Returns the max z visible distance */
+	/** 返回最大 Z 可见距离 / Returns the max z visible distance */
 	public float getMaxZVisibleDistance() {
 		if (this instanceof Npc) {
 			NpcTemplate npcTemplate = (NpcTemplate) this.getObjectTemplate();

@@ -64,7 +64,7 @@ public class SiegeLocationData {
 	 * 返回统一攻城据点数量。
 	 * Returns the number of unified siege locations.
 	 *
-	 * location count
+	 * @return 统一攻城地点数量 / Returns the number of unified siege locations.
 	 */
 	public int size() {
 		return siegeLocations.size();

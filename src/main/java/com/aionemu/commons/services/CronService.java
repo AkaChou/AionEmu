@@ -54,7 +54,7 @@ public final class CronService {
     /** 单例实例 Singleton instances */
     private static final Map<String, CronService> instances = new ConcurrentHashMap<String, CronService>();
     
- /** Quartz 调度器 Quartz scheduler */
+    /** Quartz 调度器 / Quartz scheduler */
     private Scheduler scheduler;
     
     /** 可运行任务执行器类 Runnable task executor class */
@@ -62,10 +62,10 @@ public final class CronService {
     private String context;
 
     /**
- * 获取 CronService 实例
+     * 获取 CronService 实例
      * Get CronService instance
      *
- * @return CronService 单例实例 CronService singleton instance
+     * @return CronService 单例实例 / CronService singleton instance
      */
     public static CronService getInstance() {
         return instances.get(ServiceContext.current());
@@ -75,9 +75,7 @@ public final class CronService {
      * 获取当前上下文已初始化的 CronService，未初始化则抛异常
      * Get the initialized CronService for the current context, or throw if missing
      *
-     * Current CronService instance
-     *
-     * @return
+     * @return 当前 CronService 实例 / current CronService instance
      * @throws CronServiceException 服务未初始化时 / When the service is not initialized
      */
     public static CronService requireCurrent() {
@@ -114,10 +112,10 @@ public final class CronService {
    }
 
     /**
- * 初始化 CronService 单例
+     * 初始化 CronService 单例
      * Initialize CronService singleton
      *
-     * @param runableRunner 任务执行器类 Task executor class
+     * @param runableRunner 任务执行器类 / Task executor class
      *
      * @throws CronServiceException 如果服务已初始化 if service is already initialized
      */
@@ -201,8 +199,8 @@ public final class CronService {
      * 调度一个定时任务
      * Schedule a timed task
      *
-     * @param r 要执行的任务 Task to execute
- * @param cronExpression cron 表达式 Cron expression
+     * @param r 要执行的任务 / Task to execute
+     * @param cronExpression cron 表达式 / Cron expression
      */
     public void schedule(Runnable r, String cronExpression) {
       this.schedule(r, cronExpression, false);
@@ -212,9 +210,9 @@ public final class CronService {
      * 调度一个定时任务，可指定是否为长时任务
      * Schedule a timed task with long-running option
      *
-     * @param r 要执行的任务 Task to execute
- * @param cronExpression cron 表达式 Cron expression
-     * @param longRunning 是否为长时任务 Whether it's a long-running task
+     * @param r 要执行的任务 / Task to execute
+     * @param cronExpression cron 表达式 / Cron expression
+     * @param longRunning 是否为长时任务 / Whether it's a long-running task
      *
      * @throws CronServiceException 调度失败时 when scheduling fails
      */

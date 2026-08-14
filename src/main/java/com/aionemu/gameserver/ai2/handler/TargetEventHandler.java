@@ -31,7 +31,7 @@ public class TargetEventHandler {
 	 * 到达目标位置：按当前 AI 状态调度攻击、归家、行走或停止移动。
 	 * On target reached: schedules attack, return-home, walking, or aborts move based on AI state.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onTargetReached(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
@@ -73,7 +73,7 @@ public class TargetEventHandler {
 	 * 目标过远：战斗时由攻击管理器处理，跟随时由跟随管理器处理。
 	 * Target too far: attack manager for fight, follow manager for following.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onTargetTooFar(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
@@ -100,7 +100,7 @@ public class TargetEventHandler {
 	 * 放弃目标：停止仇恨、中止移动并重新思考。
 	 * Gives up the target: stops hating, aborts move, and re-thinks.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onTargetGiveup(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
@@ -126,7 +126,10 @@ public class TargetEventHandler {
 		}
 	}
 
-	/** 按真端 NPC 数据处理连续寻路失败。 */
+	/**
+	 * 按真端 NPC 数据处理连续寻路失败。
+	 * Handles consecutive path-find failures per retail NPC data.
+	 */
 	public static void onPathFindFailed(NpcAI2 npcAI) {
 		if (!npcAI.isInState(AIState.FIGHT)) {
 			return;
@@ -199,8 +202,8 @@ public class TargetEventHandler {
 	 * 战斗中切换目标并调度下一次攻击。
 	 * Changes target during fight and schedules the next attack.
 	 *
-	 * NPC AI instance
-	 * new target
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 * @param creature 新目标 / new target
 	 */
 	public static void onTargetChange(NpcAI2 npcAI, Creature creature) {
 		if (npcAI.isLogging()) {
@@ -227,7 +230,7 @@ public class TargetEventHandler {
 	 * 行走到达后，对已知列表中的生物重新检查仇恨。
 	 * After walking arrival, re-checks aggro against known creatures.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	private static void checkAggro(NpcAI2 npcAI) {
 		for (VisibleObject obj : npcAI.getOwner().getKnownList().getKnownObjectsSnapshot()) {

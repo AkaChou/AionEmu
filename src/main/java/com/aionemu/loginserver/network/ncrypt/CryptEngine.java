@@ -43,8 +43,8 @@ public class CryptEngine {
      * Decrypt data and verify checksum.
      *
      * @param data 待解密字节数组 / bytes to decrypt
-     * offset
-     * length
+     * @param offset 起始偏移 / offset
+     * @param length 解密长度 / length
      *
      * @return 校验和合法返回 true / true if checksum is valid
      */
@@ -59,15 +59,14 @@ public class CryptEngine {
      * Encrypt data: first packet uses XOR+initial key, later packets use checksum+session key.
      *
      * @param data 待加密字节数组 / bytes to encrypt
-     * offset
-     * length
+     * @param offset 起始偏移 / offset
+     * @param length 加密长度 / length
      * @return 加密后长度 / encrypted length
      */
     public int encrypt(byte[] data, int offset, int length) {
         length += 4;
 
-        // 密钥未更新，因此第一个包应用……加密 / the key is not updated, so the first packet should be encrypted with
-        // 初始密钥 / initial key
+        // 密钥未更新，因此第一个包应用初始密钥加密 / the key is not updated, so the first packet should be encrypted with the initial key
         if (!updatedKey) {
             length += 4;
             length += 8 - length % 8;
@@ -129,8 +128,8 @@ public class CryptEngine {
      * Append checksum to the end of the packet.
      *
      * @param raw 待写校验和的包 / packet buffer
-     * offset
-     * length
+     * @param offset 起始偏移 / offset
+     * @param length 数据长度 / length
      */
     private void appendChecksum(byte[] raw, int offset, int length) {
         long chksum = 0;
@@ -161,8 +160,8 @@ public class CryptEngine {
      * First-packet XOR pass with a 4-byte integer key.
      *
      * @param data 待加密数据 / data to encrypt
-     * offset
-     * length
+     * @param offset 起始偏移 / offset
+     * @param length 加密长度 / length
      * @param key 整型密钥 / integer key
      */
     private void encXORPass(byte[] data, int offset, int length, int key) {

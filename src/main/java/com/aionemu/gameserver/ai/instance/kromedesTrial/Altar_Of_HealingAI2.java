@@ -24,8 +24,8 @@ public class Altar_Of_HealingAI2 extends AggressiveNpcAI2
         CreatureEventHandler.onCreatureSee(this, creature);
 	if (creature instanceof Player) {
 			final Player player = (Player) creature;
-		if (!creature.getEffectController().hasAbnormalEffect(17560)) { //Bless Of Guardian Spring.
-		    GameEngineServices.skillEngine().getSkill(getOwner(), 17560, 1, (Player) creature).useNoAnimationSkill(); //Bless Of Guardian Spring.
+		if (!creature.getEffectController().hasAbnormalEffect(17560)) { // 守护之泉的祝福 / Bless Of Guardian Spring.
+		    GameEngineServices.skillEngine().getSkill(getOwner(), 17560, 1, (Player) creature).useNoAnimationSkill(); // 守护之泉的祝福 / Bless Of Guardian Spring.
 			}
 	}
     }

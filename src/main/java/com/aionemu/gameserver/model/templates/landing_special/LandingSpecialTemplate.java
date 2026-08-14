@@ -8,8 +8,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.Race;
 
 /**
- * 登陆 Special 模板（静态数据/XML）。
- * XML template.
+ * 登陆特别活动模板（静态数据/XML）。
+ * Landing Special template (static data/XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

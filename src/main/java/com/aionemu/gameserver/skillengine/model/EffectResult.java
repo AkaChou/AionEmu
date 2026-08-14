@@ -25,7 +25,6 @@ public enum EffectResult {
 	 * 获取协议 ID。
 	 * Gets protocol id.
 	 *
-	 * result id
 	 */
 	public int getId() {
 		return id;

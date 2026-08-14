@@ -45,8 +45,8 @@ public final class ChatNettyServers implements DisposableBean {
      * 登记当前运行中的 Netty 服务端实例。
      * Register the currently running Netty server instance.
      *
-     * @param nettyServer 服务端实例 / Server instance
-     * The same instance
+     * @param nettyServer 服务端实例 / server instance
+     * @return 同一实例 / the same instance
      */
     public static NettyServer register(NettyServer nettyServer) {
         currentNettyServer = nettyServer;
@@ -80,7 +80,7 @@ public final class ChatNettyServers implements DisposableBean {
      * 回退并登记本地 Netty 服务端。
      * Fall back to and register a local Netty server.
      *
-     * Fallback instance
+     * @return 回退实例 / fallback instance
      */
     private static NettyServer fallbackNettyServer() {
         return register(Fallbacks.NETTY_SERVER);

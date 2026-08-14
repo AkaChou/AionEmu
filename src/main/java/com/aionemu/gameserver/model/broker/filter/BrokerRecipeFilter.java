@@ -18,6 +18,10 @@ public class BrokerRecipeFilter extends BrokerFilter {
 	private int craftSkillId;
 	private int[] masks;
 
+	/**
+	 * @param craftSkillId 生活技能 ID / craft skill id
+	 * @param masks 类别掩码 / category masks
+	 */
 	public BrokerRecipeFilter(int craftSkillId, int... masks) {
 		this.craftSkillId = craftSkillId;
 		this.masks = masks;

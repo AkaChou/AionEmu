@@ -12,8 +12,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
 
 /**
- * 物品 Set 模板（静态数据/XML）。
- * XML template.
+ * 套装模板（静态数据/XML）。
+ * Item set template (static data/XML).
  *
  * @author ATracer, modified by Antivirus
  */

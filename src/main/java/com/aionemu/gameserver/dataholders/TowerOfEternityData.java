@@ -44,7 +44,7 @@ public class TowerOfEternityData {
 	 * 返回已加载的塔点位数量。
 	 * Returns the number of loaded tower locations.
 	 *
-	 * location count
+	 * @return 已加载的塔地点数量 / Returns the number of loaded tower locations.
 	 */
 	public int size() {
 		return towerOfEternity.size();
@@ -54,7 +54,7 @@ public class TowerOfEternityData {
 	 * 返回全部永恒之塔点位映射。
 	 * Returns the full map of Tower of Eternity locations.
 	 *
-	 * location map
+	 * @return 完整的永恒之塔地点映射 / Returns the full map of Tower of Eternity locations.
 	 */
 	public Map<Integer, TowerOfEternityLocation> getTowerOfEternityLocations() {
 		return towerOfEternity;

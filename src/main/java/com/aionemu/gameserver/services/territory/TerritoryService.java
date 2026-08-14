@@ -61,8 +61,8 @@ public class TerritoryService {
 	 * 通过领地 NPC 将玩家传送到对应领地坐标。
 	 * Teleports a player via territory NPC to the mapped position.
 	 *
-	 * 玩家 / Player
-	 * Teleporter NPC id
+	 * @param player 玩家 / Player
+	 * @param npcid 传送 NPC ID / Teleporter NPC id
 	 */
 	public void onTeleport(Player player, int npcid) {
 		if (player.getLegion() == null || player.getLegion().getTerritory().getId() == 0) {
@@ -153,7 +153,7 @@ public class TerritoryService {
 	 * 军团征服指定领地并广播结果。
 	 * Assigns a territory to a legion and broadcasts the result.
 	 *
-	 * Legion
+	 * @param legion 军团 / Legion
 	 * @param id 领地 ID / Territory id
 	 */
 	public void onConquerTerritory(Legion legion, int id) {
@@ -174,7 +174,7 @@ public class TerritoryService {
 	 * 向军团成员广播领地/石矛信息。
 	 * Broadcasts territory/Stonespear info to legion members.
 	 *
-	 * Legion
+	 * @param legion 军团 / Legion
 	 */
 	private void broadcastToLegion(Legion legion) {
 		PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_INFO(legion));
@@ -185,7 +185,7 @@ public class TerritoryService {
 	 * 军团失去领地并广播空置状态。
 	 * Clears a legion's territory and broadcasts the vacant state.
 	 *
-	 * Legion
+	 * @param legion 军团 / Legion
 	 */
 	public void onLooseTerritory(Legion legion) {
 		int oldTerritoryId = legion.getTerritory().getId();
@@ -221,7 +221,7 @@ public class TerritoryService {
 	 * 获取全部领地集合。
 	 * Returns all territories.
 	 *
-	 * Territory collection
+	 * @return 领地集合 / territory collection
 	 */
 	public Collection<LegionTerritory> getTerritories() {
 		return territories.values();
@@ -231,7 +231,7 @@ public class TerritoryService {
 	 * 获取服务单例（支持 Spring 注入回退）。
 	 * Returns the service singleton (Spring provider with fallback).
 	 *
-	 * Service instance
+	 * @return 服务实例 / service instance
 	 */
 	public static TerritoryService getInstance() {
 		ObjectProvider<TerritoryService> provider = instanceProvider;

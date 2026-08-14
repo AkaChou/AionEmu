@@ -27,7 +27,7 @@ public class SeasonRankingService {
 	 * Load and dispatch the player's season ranking data by table ID.
 	 *
 	 * 玩家 / Player
-	 * Ranking table ID
+	 * @param tableid 排行表 ID / Ranking table ID
 	 */
 	public void loadPacketPlayer(Player player, int tableid) {
 		if (tableid == 1) {
@@ -133,7 +133,7 @@ public class SeasonRankingService {
 	 * 获取服务单例（优先 Spring ObjectProvider，否则回退本地单例）。
 	 * Get the service singleton (prefer Spring ObjectProvider, otherwise local holder).
 	 *
-	 * Service instance
+	 * @return 服务实例 / Service instance
 	 */
 	public static final SeasonRankingService getInstance() {
 		ObjectProvider<SeasonRankingService> provider = instanceProvider;

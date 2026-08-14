@@ -8,7 +8,7 @@ import com.aionemu.gameserver.model.beritra.BeritraLocation;
 
 /**
  * 贝尔特拉/埃雷什基伽尔入侵启动定时任务。
- * Ereshkigal invasion events.
+ * Beritra/Ereshkigal invasion start timer task.
  *
  * <p>按时间轴依次刷出入口、激光、黑天与正式入侵。
  * Stages portal, laser, black-sky and the actual invasion along a timed timeline.</p>
@@ -52,8 +52,7 @@ public class BeritraStartRunnable implements Runnable {
 				GameLocationBootstrapServices.beritraService().adventDirectingEreshSP(id);
 				// 恶魔部队已通过入侵走廊渗透。 / The Devil Unit has infiltrated through the Invasion Corridor.
 				GameLocationBootstrapServices.beritraService().devilUnitThroughMsg(id);
-				// 埃雷什基伽尔军团的魔法武器已通过入侵 / The Ereshkigal Legion's Magic weapon has infiltrated through the Invasion
-				// 走廊。 / Corridor.
+				// 埃雷什基伽尔军团的魔法武器已通过入侵走廊。 / The Ereshkigal Legion's magic weapon has infiltrated through the invasion corridor.
 				GameLocationBootstrapServices.beritraService().ereshkigalLegionThroughMsg(id);
 			}
 		}, 180000);

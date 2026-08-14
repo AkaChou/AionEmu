@@ -23,6 +23,7 @@ public class Defense_CannonAI2 extends NpcAI2
 	@Override
     protected void handleDialogStart(Player player) {
         if (player.getInventory().getFirstItemByItemId(185000136) != null) { //Aetheric Power Crystal.
+        // 奥德能量水晶。 / Aetheric Power Crystal.
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 10));
         } else {
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 27));
@@ -33,6 +34,7 @@ public class Defense_CannonAI2 extends NpcAI2
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000136, 1)) { //Aetheric Power Crystal.
+		// 奥德能量水晶。 / Aetheric Power Crystal.
 		    switch (getNpcId()) {
 				// 防御加农 天族。 / Defense Cannon Elyos.
 				case 701596:

@@ -16,7 +16,7 @@ import java.util.Objects;
  * coordinates come from the compiled definition; no target/NPC guess is made.
  */
 public final class PlayerQuestTeleportPort implements QuestTeleportPort {
-	/** 固定签名的 teleport 委托 (生产 = TeleportService2, 测试 = 记录器)。 */
+	/** 固定签名的 teleport 委托（生产 = TeleportService2，测试 = 记录器）。 / Fixed-signature teleport delegate (production = TeleportService2, tests = recorder). */
 	@FunctionalInterface
 	public interface TeleportCall {
 		boolean teleport(Player player, int worldId, int instanceId, float x, float y, float z, byte heading);
@@ -61,14 +61,15 @@ public final class PlayerQuestTeleportPort implements QuestTeleportPort {
 		}
 		Player player = players.find(snapshot.playerId());
 		if (player == null) {
-			// 提交已成功但玩家已登出:无可传送对象,best-effort 跳过。
+			// 提交已成功但玩家已登出：无可传送对象，best-effort 跳过。 / Commit succeeded but player logged out: no one to teleport, best-effort skip.
 			return false;
 		}
 		int instanceId;
 		if (instanceTarget instanceof QuestInstanceTarget.Fixed fixed) {
 			instanceId = fixed.instanceId();
 		} else if (instanceTarget instanceof QuestInstanceTarget.NextAvailable next) {
-			// 优先复用玩家已注册的实例;否则分配下一个可用实例并把玩家注册进去。
+			// 优先复用玩家已注册的实例；否则分配下一个可用实例并把玩家注册进去。
+			// Reuse the player's registered instance first; otherwise allocate the next available one and register the player.
 			WorldMapInstance registered = InstanceService.getRegisteredInstance(next.worldId(), player.getObjectId());
 			WorldMapInstance instance = registered != null
 				? registered

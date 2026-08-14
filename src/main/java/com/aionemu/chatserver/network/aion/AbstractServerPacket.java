@@ -16,7 +16,7 @@ public abstract class AbstractServerPacket extends BaseServerPacket {
      * 构造服务端数据包。
      * Constructs a server packet.
      *
-     * operation code
+     * @param opCode 操作码 / operation code
      */
     public AbstractServerPacket(int opCode) {
         super(opCode);

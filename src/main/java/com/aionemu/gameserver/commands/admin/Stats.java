@@ -24,7 +24,7 @@ import java.util.List;
  * //stats dev &lt;level&gt; — 设置已装备羽饰强化等级（需高权限） / Set equipped plume authorize level (high access)
  * </p>
  *
- * Created by Kill3r
+ * @author Kill3r
  */
 public class Stats extends AdminCommand implements StatOwner {
 
@@ -41,7 +41,7 @@ public class Stats extends AdminCommand implements StatOwner {
 	 * Overrides HP or sets plume authorize level by subcommand.
 	 *
 	 * @param player 执行 GM / Admin player
-	 * @param Stringparams hp|dev and value。
+	 * @param params hp|dev 与数值 / hp|dev and value
 	 */
 	public void execute(Player player, String...params){
 		int value = 1;

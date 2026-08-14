@@ -38,7 +38,7 @@ public class QuestDrop {
 		return itemId;
 	}
 
-	/** 返回概率 / Returns the chance*/
+	/** 返回概率 / Returns the chance. */
 	public int getChance() {
 		if (chance == null) {
 			return 100;
@@ -46,12 +46,12 @@ public class QuestDrop {
 		return chance;
 	}
 
-	/** Whether 掉落 each 成员小队 / Whether drop each member group */
+	/** 是否每人一份（小队） / Whether to drop for each member (group) */
 	public boolean isDropEachMemberGroup() {
 		return dropEachMember == 1;
 	}
 
-	/** Whether 掉落 each 成员联盟 / Whether drop each member alliance */
+	/** 是否每人一份（联盟） / Whether to drop for each member (alliance) */
 	public boolean isDropEachMemberAlliance() {
 		return dropEachMember == 2;
 	}
@@ -61,7 +61,7 @@ public class QuestDrop {
 		return questId;
 	}
 
-	/** 返回 collecting step / Returns the collecting step */
+	/** 返回收集步骤 / Returns the collecting step */
 	public int getCollectingStep() {
 		return collecting_step;
 	}

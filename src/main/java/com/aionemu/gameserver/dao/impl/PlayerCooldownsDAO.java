@@ -173,7 +173,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
      * 删除全局已过期的冷却记录。
      * Deletes globally expired cooldown records.
      *
-     * deleted row count
+     * @return 删除行数 / deleted row count
      */
     public int deleteExpiredCooldowns() {
         try (Connection con = DatabaseFactory.getConnection();
@@ -200,7 +200,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
      *
      * player id
      *
-     * @param playerId
+     * @param playerId 玩家 ID / player id
      * @return 有效冷却数量 / active cooldown count
      */
     public int getActiveCooldownsCount(int playerId) {
@@ -227,8 +227,8 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
      * 删除玩家的指定冷却条目。
      * Deletes a specific cooldown entry for a player.
      *
-     * player id
-     * cooldown id
+     * @param playerId 玩家 ID / player id
+     * @param cooldownId 冷却 ID / cooldown id
      *
      * @return 是否删除成功 / whether deleted
      */
@@ -254,9 +254,9 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
      * 判断玩家是否仍持有指定冷却。
      * Checks whether the player still has the specified active cooldown.
      *
-     * player id
-     * cooldown id
-     * whether present
+     * @param playerId 玩家 ID / player id
+     * @param cooldownId 冷却 ID / cooldown id
+     * @return 是否存在 / whether present
      */
     public boolean hasCooldown(int playerId, int cooldownId) {
         String checkQuery = "SELECT COUNT(*) FROM `player_cooldowns` WHERE `player_id` = ? AND `cooldown_id` = ? AND `reuse_delay` > ?";
@@ -350,10 +350,10 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

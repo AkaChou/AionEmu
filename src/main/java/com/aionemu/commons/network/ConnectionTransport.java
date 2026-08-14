@@ -10,7 +10,7 @@ public interface ConnectionTransport {
      * 获取对端 IP。
      * Get remote IP.
      *
-     * IP address
+     * @return IP 地址 / IP address
      */
     String getIP();
 

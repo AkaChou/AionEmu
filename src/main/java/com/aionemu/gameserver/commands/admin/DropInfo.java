@@ -31,8 +31,6 @@ public class DropInfo extends AdminCommand {
 	 * 按 NPC ID 或当前目标列出掉落组与掉落率。
 	 * Lists drop groups and chances by NPC id or current target.
 	 *
-	 * admin
-	 * optional NPC id
 	 */
 	@Override
 	public void execute(Player player, String... params) {

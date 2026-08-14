@@ -39,7 +39,7 @@ public class BruteForceProtector {
         }
 
         /**
-         * the count
+         * @return 失败次数 / the count
          */
         public int getCount() {
             return count;
@@ -57,7 +57,7 @@ public class BruteForceProtector {
      * 获取单例实例（已弃用，请走 boot 注入）。
      * Returns the singleton instance (deprecated; prefer boot injection).
      *
-     * singleton instance
+     * @return 单例实例 / singleton instance
      */
     @Deprecated(since = "boot-migration")
     public static final BruteForceProtector getInstance() {

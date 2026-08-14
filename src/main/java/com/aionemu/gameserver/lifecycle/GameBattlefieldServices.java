@@ -121,7 +121,7 @@ public final class GameBattlefieldServices implements DisposableBean {
      * 获取卡玛战场服务。
      * Obtain the Kamar battlefield service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static KamarBattlefieldService kamarBattlefieldService() {
         ObjectProvider<KamarBattlefieldService> provider = kamarBattlefieldServiceProvider;
@@ -135,7 +135,7 @@ public final class GameBattlefieldServices implements DisposableBean {
      * 获取吞噬的奥菲丹桥服务。
      * Obtain the Engulfed Ophidan Bridge service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static EngulfedOphidanBridgeService engulfedOphidanBridgeService() {
         ObjectProvider<EngulfedOphidanBridgeService> provider = engulfedOphidanBridgeServiceProvider;
@@ -149,7 +149,7 @@ public final class GameBattlefieldServices implements DisposableBean {
      * 获取可疑的奥菲丹桥服务。
      * Obtain the Suspicious Ophidan Bridge service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static SuspiciousOphidanBridgeService suspiciousOphidanBridgeService() {
         ObjectProvider<SuspiciousOphidanBridgeService> provider = suspiciousOphidanBridgeServiceProvider;
@@ -163,7 +163,7 @@ public final class GameBattlefieldServices implements DisposableBean {
      * 获取铁壁前线服务。
      * Obtain the Iron Wall Warfront service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static IronWallWarfrontService ironWallWarfrontService() {
         ObjectProvider<IronWallWarfrontService> provider = ironWallWarfrontServiceProvider;
@@ -177,7 +177,7 @@ public final class GameBattlefieldServices implements DisposableBean {
      * 获取伊迪尔穹顶服务。
      * Obtain the Idgel Dome service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static IdgelDomeService idgelDomeService() {
         ObjectProvider<IdgelDomeService> provider = idgelDomeServiceProvider;
@@ -191,7 +191,7 @@ public final class GameBattlefieldServices implements DisposableBean {
      * 获取伊迪尔穹顶地标服务。
      * Obtain the Idgel Dome Landmark service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static IdgelDomeLandmarkService idgelDomeLandmarkService() {
         ObjectProvider<IdgelDomeLandmarkService> provider = idgelDomeLandmarkServiceProvider;
@@ -205,7 +205,7 @@ public final class GameBattlefieldServices implements DisposableBean {
      * 获取坚韧殿堂服务。
      * Obtain the Hall of Tenacity service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static HallOfTenacityService hallOfTenacityService() {
         ObjectProvider<HallOfTenacityService> provider = hallOfTenacityServiceProvider;
@@ -219,7 +219,7 @@ public final class GameBattlefieldServices implements DisposableBean {
      * 获取大竞技场训练营服务。
      * Obtain the Grand Arena Training Camp service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static GrandArenaTrainingCampService grandArenaTrainingCampService() {
         ObjectProvider<GrandArenaTrainingCampService> provider = grandArenaTrainingCampServiceProvider;
@@ -233,7 +233,7 @@ public final class GameBattlefieldServices implements DisposableBean {
      * 获取 IDRun 服务。
      * Obtain the IDRun service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     public static IDRunService idRunService() {
         ObjectProvider<IDRunService> provider = idRunServiceProvider;

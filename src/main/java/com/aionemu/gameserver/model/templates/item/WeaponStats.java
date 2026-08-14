@@ -3,8 +3,8 @@ package com.aionemu.gameserver.model.templates.item;
 import jakarta.xml.bind.annotation.XmlAttribute;
 
 /**
- * Weapon 属性模板（静态数据/XML）。
- * XML template.
+ * 武器属性模板：伤害、攻速、命中与暴击等。
+ * Weapon stats template: damage, attack speed, accuracy and critical.
  *
  * @author ATracer
  */
@@ -33,62 +33,62 @@ public class WeaponStats {
 	@XmlAttribute(name = "reduce_max")
 	protected int reduceMax;
 
-	/** 返回最小伤害 / Returns the min damage*/
+	/** 返回最小伤害 / Returns the min damage */
 	public final int getMinDamage() {
 		return minDamage;
 	}
 
-	/** 返回最大伤害 / Returns the max damage*/
+	/** 返回最大伤害 / Returns the max damage */
 	public final int getMaxDamage() {
 		return maxDamage;
 	}
 
-	/** 返回 mean damage / Returns the mean damage */
+	/** 返回平均伤害 / Returns the mean damage */
 	public final int getMeanDamage() {
 		return (minDamage + maxDamage) / 2;
 	}
 
-	/** 返回 attack speed / Returns the attack speed */
+	/** 返回攻击速度 / Returns the attack speed */
 	public final int getAttackSpeed() {
 		return attackSpeed;
 	}
 
-	/** 返回 physical critical / Returns the physical critical */
+	/** 返回物理暴击 / Returns the physical critical */
 	public final int getPhysicalCritical() {
 		return physicalCritical;
 	}
 
-	/** 返回 physical accuracy / Returns the physical accuracy */
+	/** 返回物理命中 / Returns the physical accuracy */
 	public final int getPhysicalAccuracy() {
 		return physicalAccuracy;
 	}
 
-	/** 返回 parry / Returns the parry */
+	/** 返回格挡 / Returns the parry */
 	public final int getParry() {
 		return parry;
 	}
 
-	/** 返回 magical accuracy / Returns the magical accuracy */
+	/** 返回魔法命中 / Returns the magical accuracy */
 	public final int getMagicalAccuracy() {
 		return magicalAccuracy;
 	}
 
-	/** 返回加速魔法技能 / Returns the boost magical skill*/
+	/** 返回魔法技能增幅 / Returns the boost magical skill */
 	public final int getBoostMagicalSkill() {
 		return boostMagicalSkill;
 	}
 
-	/** 返回攻击范围 / Returns the attack range*/
+	/** 返回攻击范围 / Returns the attack range */
 	public final int getAttackRange() {
 		return attackRange;
 	}
 
-	/** 返回 hit count / Returns the hit count */
+	/** 返回命中次数 / Returns the hit count */
 	public final int getHitCount() {
 		return hitCount;
 	}
 
-	/** 返回 reduce max / Returns the reduce max */
+	/** 返回最大减少 / Returns the reduce max */
 	public final int getReduceMax() {
 		return reduceMax;
 	}

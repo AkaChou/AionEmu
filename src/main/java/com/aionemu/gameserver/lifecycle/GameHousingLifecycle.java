@@ -59,7 +59,7 @@ public class GameHousingLifecycle {
      * 是否已成功加载。
      * Whether loading has completed successfully.
      *
-     * @return {@code true} if loaded。
+     * @return 已加载为 {@code true} / {@code true} if loaded
      */
     public synchronized boolean isLoaded() {
         return loaded;

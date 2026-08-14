@@ -10,8 +10,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Feed 物品队伍模板（静态数据/XML）。
- * XML template.
+ * 宠物喂食物品组：喂食物品条目与索引。
+ * Pet feed item group: feed entries and group index.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

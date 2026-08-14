@@ -25,8 +25,6 @@ public class ChangeRace extends AdminCommand {
 	 * 在天族与魔族之间切换管理员种族并刷新外观。
 	 * Toggles the admin race between Elyos and Asmodians and refreshes appearance.
 	 *
-	 * admin
-	 * unused
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

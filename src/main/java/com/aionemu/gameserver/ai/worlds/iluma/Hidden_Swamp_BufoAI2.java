@@ -15,7 +15,7 @@ public class Hidden_Swamp_BufoAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(242683, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Baby Swamp Bufo.
+		spawn(242683, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 幼年沼泽 Bufo / Baby Swamp Bufo.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

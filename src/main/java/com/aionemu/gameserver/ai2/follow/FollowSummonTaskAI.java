@@ -40,7 +40,7 @@ public class FollowSummonTaskAI implements Runnable {
 	 * Creates a summon follow task bound to target, summon, and master, and records leading coordinates.
 	 *
 	 * @param target 跟随/攻击目标 / follow/attack target
-	 * summon
+	 * @param summon 跟随召唤物 / Following summon
 	 */
 	public FollowSummonTaskAI(Creature target, Summon summon) {
 		this.target = target;
@@ -103,7 +103,7 @@ public class FollowSummonTaskAI implements Runnable {
 	 * 计算目标射程：攻城武器按技能第一目标距离，其它使用默认值。
 	 * Computes target range: siege weapons use skill first-target range, others use the default.
 	 *
-	 * target range
+	 * @return 目标射程 / target range
 	 */
 	private float targetRange() {
 		if (summon.getController() instanceof SiegeWeaponController controller) {
@@ -117,9 +117,9 @@ public class FollowSummonTaskAI implements Runnable {
 	 * Computes range based on whether attacking a target and the NPC skill templates.
 	 *
 	 * @param attackTarget 是否攻击目标（非跟随主人） / whether attacking a target (not following master)
-	 * NPC skill templates
+	 * @param npcSkillTemplates NPC 技能模板 / NPC skill templates
 	 * @param skillRangeProvider 技能射程提供者 / skill-range provider
-	 * target range
+	 * @return 目标射程 / target range
 	 */
 	static float targetRangeFor(boolean attackTarget, NpcSkillTemplates npcSkillTemplates, IntUnaryOperator skillRangeProvider) {
 		if (!attackTarget) {
@@ -132,9 +132,9 @@ public class FollowSummonTaskAI implements Runnable {
 	 * 攻城武器目标射程：取首个技能的第一目标距离并加边距。
 	 * Siege-weapon target range: first skill's first-target range plus padding.
 	 *
-	 * NPC skill templates
+	 * @param npcSkillTemplates NPC 技能模板 / NPC skill templates
 	 * @param skillRangeProvider 技能射程提供者 / skill-range provider
-	 * target range
+	 * @return 目标射程 / target range
 	 */
 	static float siegeWeaponTargetRange(NpcSkillTemplates npcSkillTemplates, IntUnaryOperator skillRangeProvider) {
 		if (npcSkillTemplates == null || npcSkillTemplates.getNpcSkills() == null || npcSkillTemplates.getNpcSkills().isEmpty()) {
@@ -155,9 +155,7 @@ public class FollowSummonTaskAI implements Runnable {
 	 * 从技能数据读取第一目标射程。
 	 * Reads first-target range from skill data.
 	 *
-	 * skill id
-	 *
-	 * @param skillId
+	 * @param skillId 技能 ID / skill id
 	 * @return 第一目标射程，失败为 0 / first-target range, or 0 on failure
 	 */
 	private static int skillFirstTargetRange(int skillId) {

@@ -38,7 +38,7 @@ public abstract class Rvrlf3df3<RL extends RvrLocation> {
 	 * 绑定 RVR 地点。
 	 * Binds the RVR location.
 	 *
-	 * location
+	 * @param rvrLocation 地点 / location
 	 */
 	public Rvrlf3df3(RL rvrLocation) {
 		this.rvrLocation = rvrLocation;
@@ -105,7 +105,7 @@ public abstract class Rvrlf3df3<RL extends RvrLocation> {
 	 * 获取绑定地点。
 	 * Returns the bound location.
 	 *
-	 * location
+	 * @return 绑定地点 / the bound location
 	 */
 	public RL getRvrLocation() {
 		return rvrLocation;
@@ -115,7 +115,7 @@ public abstract class Rvrlf3df3<RL extends RvrLocation> {
 	 * 获取地点 ID。
 	 * Returns the location id.
 	 *
-	 * location id
+	 * @return 地点 ID / location id
 	 */
 	public int getRvrLocationId() {
 		return rvrLocation.getId();

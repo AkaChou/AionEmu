@@ -17,12 +17,12 @@ public class PlayerAllianceMember extends PlayerTeamMember {
 		super(player);
 	}
 
-	/** 返回 alliance id / Returns the alliance id */
+	/** 返回联盟 ID / Returns the alliance id */
 	public int getAllianceId() {
 		return allianceId;
 	}
 
-	/** 设置 alliance id / Sets the alliance id */
+	/** 设置联盟 ID / Sets the alliance id */
 	public void setAllianceId(int allianceId) {
 		this.allianceId = allianceId;
 	}

@@ -23,13 +23,13 @@ public class IntegerTransformer implements PropertyTransformer<Integer> {
     public static final IntegerTransformer SHARED_INSTANCE = new IntegerTransformer();
 
     /**
- * 将字符串值转换为 Integer 对象
+     * 将字符串值转换为 Integer 对象
      * Transforms string value into Integer object
      *
-     * @param value 要转换的字符串值 String value to transform
-     * @param field 字段对象 Field that will be transformed
- * @return 转换后的 Integer 对象 Transformed Integer object
-     * @throws TransformationException 如果转换失败 if transformation fails
+     * @param value 要转换的字符串值 / String value to transform
+     * @param field 字段对象 / Field that will be transformed
+     * @return 转换后的 Integer 对象 / Transformed Integer object
+     * @throws TransformationException 如果转换失败 / if transformation fails
      */
     public Integer transform(String value, Field field) throws TransformationException {
         try {

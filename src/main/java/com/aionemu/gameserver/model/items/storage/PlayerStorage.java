@@ -22,13 +22,13 @@ public class PlayerStorage extends Storage {
 		super(storageType);
 	}
 
-	/** 设置所有者 / Sets the owner*/
+	/** 设置所有者。 / Sets the owner. */
 	@Override
 	public final void setOwner(Player actor) {
 		this.actor = actor;
 	}
 
-	/** 在 LoadHandler / On Load Handler */
+	/** 加载回调。 / On load handler. */
 	public void onLoadHandler(Item item) {
 		if (item.isEquipped()) {
 			actor.getEquipment().onLoadHandler(item);
@@ -49,7 +49,7 @@ public class PlayerStorage extends Storage {
 		increaseKinah(amount, updateType, actor);
 	}
 
-	/** Try 减少 Kinah / Try Decrease Kinah */
+	/** 尝试减少基纳。 / Try to decrease kinah. */
 	@Override
 	public boolean tryDecreaseKinah(long amount) {
 		return tryDecreaseKinah(amount, actor);

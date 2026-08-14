@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 世界服务定位器：向 Geo / Path / Drop 相关组件注入 Spring 提供者。
- * Geo / Path / Drop related components.
+ * World-service locator: injects Spring providers into Geo / Path / Drop related components.
  */
 @Component
 public final class GameWorldServices implements DisposableBean {
@@ -40,9 +40,9 @@ public final class GameWorldServices implements DisposableBean {
      * 构造并注册各世界服务组件的实例提供者。
      * Construct and register instance providers for world-service components.
      *
-     * GeoService provider
-     * PathService provider
-     * DropRegistrationService provider
+     * @param geoServiceProvider GeoService 提供者 / GeoService provider
+     * @param pathServiceProvider PathService 提供者 / PathService provider
+     * @param dropRegistrationServiceProvider DropRegistrationService 提供者 / DropRegistrationService provider
      */
     public GameWorldServices(ObjectProvider<GeoService> geoServiceProvider, ObjectProvider<PathService> pathServiceProvider,
             ObjectProvider<DropRegistrationService> dropRegistrationServiceProvider) {
@@ -61,7 +61,7 @@ public final class GameWorldServices implements DisposableBean {
      * 解析 GeoService：优先 Spring，否则回退。
      * Resolve GeoService: prefer Spring, otherwise fallback.
      *
-     * GeoService instance
+     * @return GeoService 实例 / GeoService instance
      */
     public static GeoService geoService() {
         GeoService resolved = resolvedGeoService;
@@ -79,7 +79,7 @@ public final class GameWorldServices implements DisposableBean {
      * 解析 DropRegistrationService：优先 Spring，否则回退。
      * Resolve DropRegistrationService: prefer Spring, otherwise fallback.
      *
-     * DropRegistrationService instance
+     * @return DropRegistrationService 实例 / DropRegistrationService instance
      */
     public static DropRegistrationService dropRegistrationService() {
         DropRegistrationService resolved = resolvedDropRegistrationService;
@@ -97,7 +97,7 @@ public final class GameWorldServices implements DisposableBean {
      * 解析 PathService：优先 Spring，否则回退。
      * Resolve PathService: prefer Spring, otherwise fallback.
      *
-     * PathService instance
+     * @return PathService 实例 / PathService instance
      */
     public static PathService pathService() {
         PathService resolved = resolvedPathService;

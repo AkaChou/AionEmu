@@ -92,8 +92,8 @@ public class Castle_GateAI2 extends NpcAI2
 	private void moveToAcross(Player responder) {
 		int worldId = responder.getWorldId();
 		double radian = Math.toRadians(MathUtil.convertHeadingToDegree(responder.getHeading()));
-		float x = (float) (Math.cos(radian) * 10.0D); //Forward 10M.
-		float y = (float) (Math.sin(radian) * 10.0D); //Forward 10M.
+		float x = (float) (Math.cos(radian) * 10.0D); // 前进 10 米 / Forward 10M.
+		float y = (float) (Math.sin(radian) * 10.0D); // 前进 10 米 / Forward 10M.
 		responder.getEffectController().updatePlayerEffectIcons();
         PacketSendUtility.sendPacket(responder, new SM_TARGET_UPDATE(responder));
 		PacketSendUtility.broadcastPacketAndReceive(responder, new SM_TRANSFORM(responder, true));

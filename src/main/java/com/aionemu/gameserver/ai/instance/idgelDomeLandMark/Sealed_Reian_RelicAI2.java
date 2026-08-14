@@ -23,7 +23,7 @@ import java.util.List;
 @AIName("Sealed_Reian_Relic")
 public class Sealed_Reian_RelicAI2 extends ActionItemNpcAI2
 {
-    private boolean isRewarded;
+    private boolean isRewarded; // 是否已发放过奖励 / whether the reward was already granted
 	
     @Override
     protected void handleDialogStart(Player player) {
@@ -36,6 +36,8 @@ public class Sealed_Reian_RelicAI2 extends ActionItemNpcAI2
 	
     @Override
     protected void handleUseItemFinish(Player player) {
+        // 仅首次使用生效：发放奖励并替换为本阵营的堡垒战争阶段 NPC。
+        // Applies only on first use: grants the reward and swaps in the faction's fortress war stage NPCs.
         if (!isRewarded) {
             isRewarded = true;
 			AI2Actions.handleUseItemFinish(this, player);
@@ -65,6 +67,8 @@ public class Sealed_Reian_RelicAI2 extends ActionItemNpcAI2
     }
 	
 	private void IDFortressWarElyos() {
+		// 天族路径：清除魔族阵营的旗帜与周期装置，部署天族阵营的对应装置。
+		// Elyos path: removes Asmodian flags and cycle devices, deploys the Elyos counterparts.
 		despawnNpc(806277); //IDFortressWar_v01_Flag_D.
 		despawnNpc(806278); //IDFortressWar_v01_Flag_Dr.
 		despawnNpc(806280); //IDLDF5_Fortress_War_Step_D01.
@@ -106,6 +110,8 @@ public class Sealed_Reian_RelicAI2 extends ActionItemNpcAI2
 	}
 	
 	private void IDFortressWarAsmodians() {
+		// 魔族路径：清除天族阵营的旗帜与周期装置，部署魔族阵营的对应装置。
+		// Asmodian path: removes Elyos flags and cycle devices, deploys the Asmodian counterparts.
 		despawnNpc(806276); //IDFortressWar_v01_Flag_L.
 		despawnNpc(806278); //IDFortressWar_v01_Flag_Dr.
 		despawnNpc(806279); //IDLDF5_Fortress_War_Step_L01.
@@ -147,6 +153,8 @@ public class Sealed_Reian_RelicAI2 extends ActionItemNpcAI2
 	}
 	
 	private void despawnNpc(int npcId) {
+		// 按 ID 移除副本内所有同 ID 的 NPC。
+		// Removes all NPCs with the given ID from the instance.
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
 			for (Npc npc: npcs) {

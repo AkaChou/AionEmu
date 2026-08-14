@@ -7,7 +7,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import java.util.Objects;
 import java.util.function.IntFunction;
 
-/** Startup gate for typed ACTION_ITEM_USE routes and quest interaction-object drops. */
+/** 类型化 ACTION_ITEM_USE 路由与任务交互对象掉落的启动门禁。 / Startup gate for typed ACTION_ITEM_USE routes and quest interaction-object drops. */
 public final class QuestInteractionObjectValidator {
 	private QuestInteractionObjectValidator() {
 	}

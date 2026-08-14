@@ -28,7 +28,7 @@ public class AionPacketHandlerFactory {
      * Reads one client packet from the given ByteBuffer.
      *
      * @param data 原始包数据 / raw packet data
-     * login connection
+     * @param client 登录连接 / login connection
      * @return 解析出的 AionClientPacket，未知包返回 null
      *         Parsed AionClientPacket, or null for unknown packets
      */
@@ -84,7 +84,7 @@ public class AionPacketHandlerFactory {
      * Logs an unknown client packet.
      *
      * @param state 当前连接状态 / current connection state
-     * packet opcode
+     * @param id 包 opcode / packet opcode
      */
     private static void unknownPacket(State state, int id) {
         log.warn(I18n.get("log.1d0c01d73a77", String.format("%02X", id), state));

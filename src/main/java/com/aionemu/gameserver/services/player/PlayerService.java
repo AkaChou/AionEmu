@@ -105,22 +105,22 @@ public class PlayerService {
 	private static final CacheMap<Integer, Player> playerCache = CacheMapFactory.createSoftCacheMap("Player", "player");
 
 	/**
-	 * isFreeName 方法。
-	 * isFreeName method.
+	 * 检查角色名是否未被占用。
+	 * Checks whether the player name is unused.
 	 *
-	 * name
-	 * result
+	 * @param name 角色名 / player name
+	 * @return 是否可用 / whether free
 	 */
 	public static boolean isFreeName(String name) {
 		return !DAOManager.getDAO(PlayerDAO.class).isNameUsed(name);
 	}
 
 	/**
-	 * isOldName 方法。
-	 * isOldName method.
+	 * 检查角色名是否与旧名一致。
+	 * Checks whether the name matches the previous one.
 	 *
-	 * name
-	 * result
+	 * @param name 角色名 / player name
+	 * @return 是否一致 / whether equal
 	 */
 	public static boolean isOldName(String name) {
 		return DAOManager.getDAO(OldNamesDAO.class).isOldName(name);
@@ -130,10 +130,10 @@ public class PlayerService {
 	 * 持久化新建角色。
 	 * Persists a newly created player.
 	 *
-	 * 玩家 / player
-	 * accountName
-	 * accountId
-	 * result
+	 * @param player 玩家 / player
+	 * @param accountName 账号名 / account name
+	 * @param accountId 账号 ID / account id
+	 * @return 是否成功 / whether successful
 	 */
 	public static boolean storeNewPlayer(Player player, String accountName, int accountId) {
 		return DAOManager.getDAO(PlayerDAO.class).saveNewPlayer(player.getCommonData(), accountId, accountName)
@@ -177,12 +177,12 @@ public class PlayerService {
 	}
 
 	/**
-	 * getPlayer 方法。
-	 * getPlayer method.
+	 * 获取玩家对象。
+	 * Gets the player object.
 	 *
-	 * playerObjId
-	 * 账号 / account
-	 * result
+	 * @param playerObjId 角色对象 ID / player object id
+	 * @param account 账号 / account
+	 * @return 玩家对象 / player object
 	 */
 	public static Player getPlayer(int playerObjId, Account account) {
 		Player player = playerCache.get(playerObjId);
@@ -231,7 +231,8 @@ public class PlayerService {
 		player.setSkillSkinList(DAOManager.getDAO(PlayerSkillSkinListDAO.class).loadSkillSkinList(playerObjId));
 
 		/**
-	 * Account warehouse should be already loaded in account
+	 * 账号仓库此时应已在账号中加载。
+	 * The account warehouse should already be loaded in the account.
 	 */
 		Storage accWarehouse = account.getAccountWarehouse();
 		player.setStorage(accWarehouse, StorageType.ACCOUNT_WAREHOUSE);
@@ -309,10 +310,10 @@ public class PlayerService {
 	 * 创建新角色对象。
 	 * Creates a new player object.
 	 *
-	 * @param playerCommonData 玩家公共数据 / playerCommonData
-	 * playerAppearance
-	 * 账号 / account
-	 * result
+	 * @param playerCommonData 玩家公共数据 / player common data
+	 * @param playerAppearance 角色外观 / player appearance
+	 * @param account 账号 / account
+	 * @return 新玩家对象 / new player object
 	 */
 	public static Player newPlayer(PlayerCommonData playerCommonData, PlayerAppearance playerAppearance,
 			Account account) {
@@ -374,10 +375,10 @@ public class PlayerService {
 
 	/**
 	 * 取消角色删除。
-	 * Cancels scheduled player deletion.
+	 * Cancels the scheduled player deletion.
 	 *
-	 * accData
-	 * result
+	 * @param accData 玩家账号数据 / player account data
+	 * @return 是否已取消 / whether canceled
 	 */
 	public static boolean cancelPlayerDeletion(PlayerAccountData accData) {
 		if (accData.getDeletionDate() == null) {
@@ -395,7 +396,7 @@ public class PlayerService {
 	 * 删除角色。
 	 * Deletes a player character.
 	 *
-	 * accData
+	 * @param accData 玩家账号数据 / player account data
 	 */
 	public static void deletePlayer(PlayerAccountData accData) {
 		if (accData.getDeletionDate() != null) {
@@ -413,7 +414,7 @@ public class PlayerService {
 	 * 从数据库删除角色。
 	 * Deletes a player from the database.
 	 *
-	 * playerId
+	 * @param playerId 角色 ID / player id
 	 */
 	public static void deletePlayerFromDB(int playerId) {
 		DAOManager.getDAO(InventoryDAO.class).deletePlayerItems(playerId);
@@ -424,8 +425,8 @@ public class PlayerService {
 	 * 删除账号下全部角色。
 	 * Deletes all account characters from DB.
 	 *
-	 * accountId
-	 * result
+	 * @param accountId 账号 ID / account id
+	 * @return 删除的角色数 / number of deleted characters
 	 */
 	public static int deleteAccountsCharsFromDB(int accountId) {
 		List<Integer> charIds = DAOManager.getDAO(PlayerDAO.class).getPlayerOidsOnAccount(accountId);

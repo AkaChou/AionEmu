@@ -18,8 +18,8 @@ import com.aionemu.gameserver.skillengine.model.HealType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 生物 Life 属性，用于属性相关逻辑。
- * Creature Life Stats for stats logic.
+ * 生物（NPC/玩家/召唤物）的生命值与魔法值统计及恢复逻辑。
+ * Creature (NPC/player/summon) HP and MP stats and restore logic.
  */
 @Slf4j
 

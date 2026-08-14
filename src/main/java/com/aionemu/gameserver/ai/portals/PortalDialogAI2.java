@@ -54,18 +54,18 @@ public class PortalDialogAI2 extends PortalAI2 {
 	protected void handleSpawned() {
 		super.handleSpawned();
 		switch (getNpcId()) {
-			case 730399: //Rentus Base.
-			case 731549: //[Seized] Danuar Sanctuary.
-			case 731570: //Danuar Sanctuary.
-			case 832991: //Occupied Rentus Base [Elyos].
-			case 832992: //Occupied Rentus Base [Asmodians].
-			case 832995: //Tiamat Stronghold [Elyos].
-			case 832996: //Tiamat Stronghold [Asmodians].
-			case 832997: //[Anguished] Dragon Lord Refuge.
-			case 832998: //Dragon Lord Refuge.
+			case 730399: // 伦图斯基地。 / Rentus Base.
+			case 731549: // [被占领的] 符文安息处。 / [Seized] Danuar Sanctuary.
+			case 731570: // 符文安息处。 / Danuar Sanctuary.
+			case 832991: // 被占领的伦图斯基地 [天族]。 / Occupied Rentus Base [Elyos].
+			case 832992: // 被占领的伦图斯基地 [魔族]。 / Occupied Rentus Base [Asmodians].
+			case 832995: // 提亚马特要塞 [天族]。 / Tiamat Stronghold [Elyos].
+			case 832996: // 提亚马特要塞 [魔族]。 / Tiamat Stronghold [Asmodians].
+			case 832997: // [痛苦] 龙主避难所。 / [Anguished] Dragon Lord Refuge.
+			case 832998: // 龙主避难所。 / Dragon Lord Refuge.
 /* 				startLifeTask(); */
 			break;
-			case 730883: //[Infernal] Illuminary Obelisk.
+			case 730883: // [炼狱] 光明方尖碑。 / [Infernal] Illuminary Obelisk.
 			    announceIlluminaryObeliskOpen();
 			break;
         }
@@ -150,57 +150,57 @@ public class PortalDialogAI2 extends PortalAI2 {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), startingDialogId));
 		} else {
         	switch (npcId) {
-				case 730883: //Illuminary Obelisk.
-				case 804619: //Lucky Danuar Reliquary Gatekeeper.
-				case 804620: //Lucky Ophidan Bridge Gatekeeper.
-				case 804621: //Danuar Reliquary.
-				case 832991: //Occupied Rentus Base [Elyos]
-				case 832992: //Occupied Rentus Base [Asmodians]
-				case 730721: //Sealed Danuar Mysticarium - Argent Manor [Elyos]
-				case 730722: //Sealed Danuar Mysticarium - Argent Manor [Asmodians]
-				case 833024: //Stonespear Reach [Elyos]
-				case 833025: //Stonespear Reach [Asmodians]
-				case 833043: //Stonespear Reach [Elyos]
-				case 833044: //Stonespear Reach [Asmodians]
-				case 833045: //Stonespear Reach [Elyos]
-				case 833046: //Stonespear Reach [Asmodians]
+				case 730883: // 光明方尖碑。 / Illuminary Obelisk.
+				case 804619: // 幸运达努阿尔遗迹守卫。 / Lucky Danuar Reliquary Gatekeeper.
+				case 804620: // 幸运奥菲丹桥守卫。 / Lucky Ophidan Bridge Gatekeeper.
+				case 804621: // 达努阿尔遗迹。 / Danuar Reliquary.
+				case 832991: // 被占领的伦图斯基地 [天族]。
+				case 832992: // 被占领的伦图斯基地 [魔族]。
+				case 730721: // 封印的达努阿尔秘境 - 银色庄园 [天族]。
+				case 730722: // 封印的达努阿尔秘境 - 银色庄园 [魔族]。
+				case 833024: // 石矛地域 [天族]。
+				case 833025: // 石矛地域 [魔族]。
+				case 833043: // 石矛地域 [天族]。
+				case 833044: // 石矛地域 [魔族]。
+				case 833045: // 石矛地域 [天族]。
+				case 833046: // 石矛地域 [魔族]。
 				case 835609: //IDTransform_NPC_Entrance_PC
 				case 835610: //IDStation_NPC_Entrance_PC
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 10, 0));
 				break;
-				case 731549: //Seized Danuar Sanctuary.
+				case 731549: // 被占领的符文安息处。
 				    switch (player.getWorldId()) {
 						case 210070000: //Cygnea.
-						    // 进入被占领的达努阿尔圣所。 / Enter Seized Danuar Sanctuary.
+						    // 进入被占领的符文安息处。 / Enter Seized Danuar Sanctuary.
 							if (player.getCommonData().getRace() == Race.ASMODIANS) {
 								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011, 0));
 							}
 						break;
 						case 220080000: //Enshar.
-						    // 进入被占领的达努阿尔圣所。 / Enter Seized Danuar Sanctuary.
+						    // 进入被占领的符文安息处。 / Enter Seized Danuar Sanctuary.
 							if (player.getCommonData().getRace() == Race.ELYOS) {
 								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011, 0));
 							}
 						break;
 					}
 				break;
-				case 731570: //Danuar Sanctuary.
+				case 731570: // 符文安息处。
 				    switch (player.getWorldId()) {
 						case 210070000: //Cygnea.
-						    // 进入达努阿尔圣所。 / Enter Danuar Sanctuary.
+						    // 进入符文安息处。 / Enter Danuar Sanctuary.
 							if (player.getCommonData().getRace() == Race.ELYOS) {
 								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011, 0));
 							}
 						break;
 						case 220080000: //Enshar.
-						    // 进入达努阿尔圣所。 / Enter Danuar Sanctuary.
+						    // 进入符文安息处。 / Enter Danuar Sanctuary.
 							if (player.getCommonData().getRace() == Race.ASMODIANS) {
 								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011, 0));
 							}
 						break;
 					}
 				break;
-				case 832995: //Tiamat Stronghold [Elyos]
+				case 832995: // 提亚马特要塞 [天族]。
 				    switch (player.getWorldId()) {
 						case 210070000: //Cygnea.
 						    // 进入提亚马特要塞。 / Enter Tiamat Stronghold.
@@ -210,7 +210,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 						break;
 					}
 				break;
-				case 832996: //Tiamat Stronghold [Asmodian]
+				case 832996: // 提亚马特要塞 [魔族]。
 				    switch (player.getWorldId()) {
 						case 220080000: //Enshar.
 						    // 进入提亚马特要塞。 / Enter Tiamat Stronghold.
@@ -220,7 +220,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 						break;
 					}
 				break;
-				case 832997: //[Anguished] Dragon Lord Refuge.
+				case 832997: // [痛苦] 龙主避难所。
 				    switch (player.getWorldId()) {
 					    case 210070000: //Cygnea.
 						    // 进入痛苦龙主避难所。 / Enter the Anguished Dragon Lord's Refuge.
@@ -236,7 +236,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 						break;
 					}
 				break;
-				case 832998: //Dragon Lord Refuge.
+				case 832998: // 龙主避难所。
 					switch (player.getWorldId()) {
 					    case 210070000: //Cygnea.
 						    // 进入龙主避难所。 / Enter Dragon Lord's Refuge.

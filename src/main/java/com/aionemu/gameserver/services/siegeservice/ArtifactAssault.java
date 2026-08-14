@@ -23,7 +23,7 @@ public class ArtifactAssault extends Assault<ArtifactSiege> {
 	 * 突击结束回调。
 	 * Callback when assault finishes.
 	 *
-	 * captured
+	 * @param captured 是否占领成功 / whether captured
 	 */
 	public void onAssaultFinish(boolean captured) {
 	}

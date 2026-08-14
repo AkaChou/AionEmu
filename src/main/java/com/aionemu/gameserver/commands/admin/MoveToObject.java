@@ -27,8 +27,6 @@ public class MoveToObject extends AdminCommand {
 	 * 按 object id 查找可见对象并传送到其刷怪坐标。
 	 * Find a visible object by object id and teleport to its spawn coordinates.
 	 *
-	 * 执行 GM / Admin player
-	 * Object id
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -63,8 +61,6 @@ public class MoveToObject extends AdminCommand {
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
 	 *
-	 * 玩家 / Player
-	 * Failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

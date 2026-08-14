@@ -49,7 +49,7 @@ public class EventsWindowData {
 	 * 返回事件窗口数量。
 	 * Returns the number of event windows.
 	 *
-	 * event window count
+	 * @return 事件窗口数量 / event window count
 	 */
 	public int size() {
 		return eventData.size();

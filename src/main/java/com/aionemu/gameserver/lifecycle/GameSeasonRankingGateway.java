@@ -61,7 +61,7 @@ public class GameSeasonRankingGateway {
      * 解析赛季排名更新服务。
      * Resolve the season ranking update service.
      *
-     * Update service
+     * @return 更新服务 / Update service
      */
     private SeasonRankingUpdateService seasonRankingUpdateService() {
         if (seasonRankingUpdateServiceProvider == null) {

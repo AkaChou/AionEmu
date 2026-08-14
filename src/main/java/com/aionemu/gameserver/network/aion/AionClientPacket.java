@@ -26,7 +26,7 @@ public abstract class AionClientPacket extends BaseClientPacket<AionConnection> 
 	 * 构造客户端包原型；缓冲区与连接需稍后手动设置。
 	 * Constructs a client packet prototype; buffer and connection are set later manually.
 	 *
-	 * packet id
+	 * @param opcode 包 ID / packet id
 	 * @param state 合法连接状态 / valid connection state
 	 * @param restStates 其余合法状态（可选） / additional valid states (optional)
 	 */
@@ -43,7 +43,6 @@ public abstract class AionClientPacket extends BaseClientPacket<AionConnection> 
 	public final void run() {
 
 		try {
-			// 仅当包仍合法时运行（连接状态未变）
 			// 仅在数据包仍有效时运行（连接状态未变） / run only if packet is still valid (connection state didn't change)
 			if (isValid()) {
 				runImpl();

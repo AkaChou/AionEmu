@@ -45,7 +45,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
      *
      * ranking table id
      *
-     * @param tableId
+     * @param tableId 排名表 ID / ranking table id
      * @return 排行结果列表 / ranking result list
      */
     @Override
@@ -94,8 +94,8 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
      * 加载玩家黄金竞技场排行数据；无记录时返回 NEW 状态的空对象。
      * Loads the player's Gold Arena rank; returns a NEW empty rank when none exists.
      *
-     * player object id
-     * ranking table id
+     * @param playerId 玩家对象 ID / player object id
+     * @param tableId 排名表 ID / ranking table id
      * @return 黄金竞技场排行 / Gold Arena rank
      */
     @Override
@@ -444,8 +444,8 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
      * 加载玩家孤独竞技场排行数据；无记录时返回 NEW 状态的空对象。
      * Loads the player's Arena of Tenacity rank; returns a NEW empty rank when none exists.
      *
-     * player object id
-     * ranking table id
+     * @param playerId 玩家对象 ID / player object id
+     * @param tableId 排名表 ID / ranking table id
      * @return 孤独竞技场排行 / Arena of Tenacity rank
      */
     @Override
@@ -486,8 +486,8 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
      * 加载玩家挑战之塔排行数据；无记录时返回 NEW 状态的空对象。
      * Loads the player's Tower of Challenge rank; returns a NEW empty rank when none exists.
      *
-     * player object id
-     * ranking table id
+     * @param playerId 玩家对象 ID / player object id
+     * @param tableId 排名表 ID / ranking table id
      * @return 挑战之塔排行 / Tower of Challenge rank
      */
     @Override
@@ -527,8 +527,8 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
      * 加载玩家 6v6 竞技场排行数据；无记录时返回 NEW 状态的空对象。
      * Loads the player's 6v6 Arena rank; returns a NEW empty rank when none exists.
      *
-     * player object id
-     * ranking table id
+     * @param playerId 玩家对象 ID / player object id
+     * @param tableId 排名表 ID / ranking table id
      * @return 6v6 竞技场排行 / 6v6 Arena rank
      */
     @Override
@@ -569,10 +569,10 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
      * 判断当前数据库是否受本 DAO 支持（MySQL 8）。
      * Checks whether the given database is supported by this DAO (MySQL 8).
      *
-     * @param databaseName 数据库产品名 / database product name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

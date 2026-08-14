@@ -46,6 +46,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * 从零售客户端数据加载 AI 模式、区域、传送门等定义（含条件刷新与分组控制）。
+ * Loads retail AI patterns, areas, portals and related definitions (condition spawns, group control) from client data.
+ */
 final class RetailAiDefinitionLoader {
 
 	static RetailAiData load(File patternsDirectory, File mappingsFile, File stringsFile, File areasFile) {

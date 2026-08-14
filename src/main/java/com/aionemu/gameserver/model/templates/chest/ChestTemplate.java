@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 宝箱模板（静态数据/XML）。
- * XML template.
+ * Chest template (static data / XML).
  *
  * @author Wakizashi
  */
@@ -26,21 +26,21 @@ public class ChestTemplate {
 	protected List<KeyItem> keyItem;
 
 	/**
-	 * @return the npcId
+	 * @return NPC ID / the npcId
 	 */
 	public int getNpcId() {
 		return npcId;
 	}
 
 	/**
-	 * @return the name
+	 * @return 名称 / the name
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * @return the keyItem
+	 * @return 钥匙物品列表 / the keyItem
 	 */
 	public List<KeyItem> getKeyItem() {
 		return keyItem;

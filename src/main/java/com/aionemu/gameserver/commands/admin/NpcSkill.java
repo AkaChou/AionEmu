@@ -30,8 +30,6 @@ public class NpcSkill extends AdminCommand {
 	 * 读取目标 NPC 的技能列表并分批发送给管理员。
 	 * Read the targeted NPC's skill list and send it to the admin in batches.
 	 *
-	 * 执行 GM / Admin player
-	 * Unused
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

@@ -108,7 +108,7 @@ public class RM1337AI2 extends AggressiveNpcAI2
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
-						spawn(282373, x, y, z, (byte) 0); //Sparks.
+						spawn(282373, x, y, z, (byte) 0); // 火花 / Sparks
 					}
 				}
 			}, 3000);

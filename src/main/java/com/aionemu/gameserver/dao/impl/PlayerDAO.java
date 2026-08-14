@@ -112,7 +112,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      *
      * character name
      *
-     * @param name
+     * @param name 角色名 / character name
      * @return 若已使用为 true；查询异常时也返回 true / true if used, or on query error
      */
     @Override
@@ -271,8 +271,8 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      * Inserts a newly created character and updates caches when enabled.
      *
      * @param pcd 新角色公共数据 / new player common data
-     * 账号 ID / account id
-     * account name
+     * @param accountId 账号 ID / account id
+     * @param accountName 账号名 / account name
      * @return 成功为 true，失败为 false / true on success, false on failure
      */
     @Override
@@ -319,7 +319,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      *
      * character name
      *
-     * @param name
+     * @param name 角色名 / character name
      * @return 公共数据，未找到时为 null / common data, or null if not found
      */
     @Override
@@ -357,7 +357,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      *
      * player object id
      *
-     * @param playerObjId
+     * @param playerObjId 玩家对象 ID / player object id
      * @return 公共数据，未找到时为 null / common data, or null if not found
      */
     @Override
@@ -507,7 +507,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      * 按对象 ID 删除角色，并同步清理缓存。
      * Deletes a player by object ID and clears related caches.
      *
-     * player object id
+     * @param playerId 玩家对象 ID / player object id
      */
     @Override
     public void deletePlayer(int playerId) {
@@ -585,8 +585,8 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      * 更新角色的删除时间。
      * Updates a character's deletion timestamp.
      *
-     * player object id
-     * deletion timestamp
+     * @param objectId 玩家对象 ID / player object id
+     * @param deletionDate 删除时间戳 / deletion timestamp
      */
     @Override
     public void updateDeletionTime(final int objectId, final Timestamp deletionDate) {
@@ -606,8 +606,8 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      * 保存角色的创建时间。
      * Stores a character's creation timestamp.
      *
-     * player object id
-     * creation timestamp
+     * @param objectId 玩家对象 ID / player object id
+     * @param creationDate 创建时间戳 / creation timestamp
      */
     @Override
     public void storeCreationTime(final int objectId, final Timestamp creationDate) {
@@ -627,7 +627,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      * 保存角色的最后在线时间。
      * Stores a character's last online timestamp.
      *
-     * player object id
+     * @param objectId 玩家对象 ID / player object id
      * @param lastOnline 最后在线时间 / last online timestamp
      */
     @Override
@@ -677,8 +677,8 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      * 更新单个玩家的在线状态。
      * Updates a single player's online status flag.
      *
-     * 玩家 / player
-     * whether online
+     * @param player 玩家 / player
+     *
      */
     @Override
     public void onlinePlayer(final Player player, final boolean online) {
@@ -720,7 +720,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      *
      * player object id
      *
-     * @param playerObjId
+     * @param playerObjId 玩家对象 ID / player object id
      * @return 角色名，未找到时为 null / name, or null if not found
      */
     @Override
@@ -748,7 +748,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      *
      * player object id
      *
-     * @param playerObjId
+     * @param playerObjId 玩家对象 ID / player object id
      * @return 月神消费点数，未找到或异常时为 0 / luna consume points, or 0 if missing/error
      */
     @Override
@@ -776,7 +776,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      *
      * character name
      *
-     * @param playerName
+     * @param playerName 角色名 / character name
      * @return 对象 ID，未找到或异常时为 0 / object id, or 0 if missing/error
      */
     @Override
@@ -804,7 +804,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      *
      * character name
      *
-     * @param name
+     * @param name 角色名 / character name
      * @return 账号 ID，未找到或异常时为 0 / account id, or 0 if missing/error
      */
     @Override
@@ -851,8 +851,8 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      * 统计账号下未删除（或删除时间未到）的角色数量。
      * Counts non-deleted (or not-yet-deleted) characters on an account.
      *
-     * 账号 ID / account id
-     * character count
+     * @param accountId 账号 ID / account id
+     * @return 角色数量 / character count
      */
     @Override
     public int getCharacterCountOnAccount(final int accountId) {
@@ -876,8 +876,8 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      * 按种族统计达到最低等级经验阈值的去重账号数。
      * Counts distinct accounts of a race that meet the minimum level exp threshold.
      *
-     * 阵营 / race
-     * account count
+     * @param race 阵营 / race
+     * @return 账号数量 / account count
      */
     @Override
     public int getCharacterCountForRace(Race race) {
@@ -962,7 +962,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      * 设置玩家上次转服时间。
      * Sets a player's last server-transfer time.
      *
-     * player object id
+     * @param playerId 玩家对象 ID / player object id
      * @param time 转服时间戳 / transfer timestamp
      */
     @Override
@@ -1008,7 +1008,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      * 更新玩家的军团加入申请状态。
      * Updates a player's legion join-request state.
      *
-     * player object id
+     * @param playerId 玩家对象 ID / player object id
      * @param state 申请状态 / join request state
      */
     @Override
@@ -1029,7 +1029,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      * 清除玩家的军团加入申请（军团 ID 置 0，状态置 NONE）。
      * Clears a player's legion join request (legion id 0, state NONE).
      *
-     * player object id
+     * @param playerId 玩家对象 ID / player object id
      */
     @Override
     public void clearJoinRequest(final int playerId) {
@@ -1050,7 +1050,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      * 从数据库读取并写入玩家的军团加入申请状态。
      * Loads the legion join-request state from DB into the player.
      *
-     * target player
+     * @param player 目标玩家 / target player
      */
     @Override
     public void getJoinRequestState(final Player player) {
@@ -1079,11 +1079,11 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      * 判断当前 DAO 是否支持给定数据库版本。
      * Reports whether this DAO supports the given database version.
      *
-     * @param databaseName 数据库产品名 / database product name
-     * major version
-     * minor version
      *
-     * @return 若 supported 则为 true / true if supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

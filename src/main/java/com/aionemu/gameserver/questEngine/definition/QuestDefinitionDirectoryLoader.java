@@ -13,7 +13,10 @@ import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-/** Scans every packaged quest definition for compile and consistency checks. */
+/**
+ * 扫描所有打包的任务定义以执行编译与一致性检查。
+ * Scans every packaged quest definition for compile and consistency checks.
+ */
 public final class QuestDefinitionDirectoryLoader {
 	private static final String QUEST_DIRECTORY =
 		"aion/data/static_data/quest_definition/quests";
@@ -22,6 +25,8 @@ public final class QuestDefinitionDirectoryLoader {
 	}
 
 	/**
+	 * 扫描并校验每个 {@code quests/<numericQuestId>.xml} 资源。没有节点和转换的定义
+	 * 仅作为元数据条目存在，绝不暴露为可执行归属。
 	 * Scan and validate every {@code quests/<numericQuestId>.xml} resource. Definitions without nodes and
 	 * transitions remain metadata-only entries and are never exposed as executable owners.
 	 */

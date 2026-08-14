@@ -41,7 +41,7 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	 * 加载玩家 CP 列表。
 	 * Loads the player's CP list.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * CP list
 	 */
 	@Override
@@ -70,10 +70,10 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	 * 保存玩家 CP。
 	 * Stores a player CP entry.
 	 *
-	 * player object id
-	 * slot
-	 * points
-	 * whether successful
+	 * @param objectId 玩家对象 ID / player object id
+	 * @param slot 槽位 / slot
+	 * @param point 点数 / points
+	 * @return 是否成功 / whether successful
 	 */
 	@Override
 	public boolean storeCP(int objectId, int slot, int point) {
@@ -94,9 +94,9 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	 * 删除玩家 CP 槽位。
 	 * Deletes a player CP slot.
 	 *
-	 * player object id
-	 * slot
-	 * whether successful
+	 * @param objectId 玩家对象 ID / player object id
+	 * @param slot 槽位 / slot
+	 * @return 是否成功 / whether successful
 	 */
 	@Override
 	public boolean deleteCP(int objectId, int slot) {
@@ -116,8 +116,8 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	 * 获取玩家 CP 槽位数量。
 	 * Gets the player's CP slot count.
 	 *
-	 * player object id
-	 * slot count
+	 * @param playerObjId 玩家对象 ID / player object id
+	 * @return 槽位数量 / slot count
 	 */
 	@Override
 	public int getSlotSize(int playerObjId) {
@@ -142,7 +142,7 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	 * Gets the first CP slot id of a player.
 	 *
 	 * @param obj 玩家对象 ID / player object id
-	 * slot id
+	 * @return 槽位 ID / slot id
 	 */
 	@Override
 	public int getCPSlotObjId(final int obj) {
@@ -166,10 +166,10 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
 	 *
-	 * database name
-	 * major version
-	 * minor version
-	 * whether supported
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
 	 */
 	@Override
 	public boolean supports(String databaseName, int majorVersion, int minorVersion) {

@@ -15,7 +15,7 @@ public abstract class AionServerPacket extends BaseServerPacket {
      * 以指定 opcode 构造服务端包。
      * Construct server packet with the given opcode.
      *
-     * Packet opcode
+     * @param opcode 包操作码 / Packet opcode
      */
     protected AionServerPacket(int opcode) {
         super(opcode);

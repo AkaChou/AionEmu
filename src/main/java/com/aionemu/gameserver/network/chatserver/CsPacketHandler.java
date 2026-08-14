@@ -24,8 +24,8 @@ public class CsPacketHandler {
 	 * 从缓冲中读取操作码并构造对应入站包。
 	 * Reads the opcode from the buffer and builds the matching inbound packet.
 	 *
-	 * packet data
-	 * owning connection
+	 * @param data 包数据 / packet data
+	 * @param client 所属连接 / owning connection
 	 * @return 入站包实例，未知操作码时为 null / inbound packet, or null for unknown opcode
 	 */
 	public CsClientPacket handle(ByteBuffer data, ChatServerConnection client) {
@@ -38,7 +38,7 @@ public class CsPacketHandler {
 	 * 为指定状态注册包原型。
 	 * Registers a packet prototype for the given states.
 	 *
-	 * packet prototype
+	 * @param packetPrototype 包原型 / packet prototype
 	 * @param states 适用连接状态 / applicable connection states
 	 */
 	public void addPacketPrototype(CsClientPacket packetPrototype, State... states) {

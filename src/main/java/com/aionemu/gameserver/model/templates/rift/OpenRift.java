@@ -13,18 +13,20 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "OpenRift")
 public class OpenRift {
+	/** 裂隙时间表 / Rift schedule */
 	@XmlAttribute(name = "schedule")
 	protected String schedule;
 
+	/** 是否刷出守卫 / Whether to spawn guards */
 	@XmlAttribute(name = "spawn")
 	protected boolean guards;
 
-	/** 返回 schedule / Returns the schedule */
+	/** 返回时间表 / Returns the schedule */
 	public String getSchedule() {
 		return schedule;
 	}
 
-	/** Spawn guards / Spawn guards */
+	/** 是否刷出守卫 / Whether to spawn guards */
 	public boolean spawnGuards() {
 		return guards;
 	}

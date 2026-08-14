@@ -24,7 +24,7 @@ public class Venge_Full_OrbAI2 extends NpcAI2
   	    super.handleSpawned();
 		final int skill;
 		switch (getNpcId()) {
-			case 284443: //Sorcerer Queen Modor.
+			case 284443: // 魔道女王莫多尔 / Sorcerer Queen Modor.
 				skill = 21178;
 		    break;
 			default:

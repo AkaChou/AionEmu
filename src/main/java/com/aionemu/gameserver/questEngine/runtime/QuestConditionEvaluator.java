@@ -10,7 +10,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts;
 import java.util.List;
 import java.util.Map;
 
-/** Pure evaluator; it has no service or mutable-state access. */
+/** 纯求值器：不访问任何服务或可变状态。 / Pure evaluator; it has no service or mutable-state access. */
 public final class QuestConditionEvaluator {
 	private QuestConditionEvaluator() {
 	}
@@ -191,6 +191,7 @@ public final class QuestConditionEvaluator {
 	}
 
 	private static boolean worldIs(QuestSnapshot snapshot, QuestCondition.WorldIs condition) {
+		// worldId == 0 表示玩家位置未被捕获；不要把未知事实变成成功的「不在该世界」条件。
 		// worldId == 0 means the player's position was not captured; do not turn
 		// that unknown fact into a successful "not in world" condition.
 		return snapshot.worldId() > 0

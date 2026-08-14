@@ -2,7 +2,10 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import java.util.Objects;
 
-/** Complete timer identity and lifecycle policy carried by the immutable IR. */
+/**
+ * 不可变 IR 携带的完整定时器标识与生命周期策略。
+ * Complete timer identity and lifecycle policy carried by the immutable IR.
+ */
 public record QuestTimerPolicy(Identity identity, Persistence persistence,
 		OverwritePolicy overwritePolicy, Delivery delivery) {
 	public static final String VISIBLE_TIMER_ID = "visible";
@@ -41,7 +44,10 @@ public record QuestTimerPolicy(Identity identity, Persistence persistence,
 		PLAYER_QUEST
 	}
 
-	/** Session timers are deliberately cancelled on logout and are not restored after restart. */
+	/**
+	 * 会话定时器在登出时被有意取消，重启后不恢复。
+	 * Session timers are deliberately cancelled on logout and are not restored after restart.
+	 */
 	public enum Persistence {
 		SESSION
 	}

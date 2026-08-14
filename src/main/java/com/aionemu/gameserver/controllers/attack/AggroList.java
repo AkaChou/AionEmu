@@ -27,7 +27,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 生物仇恨列表：维护攻击者伤害/仇恨，并提供最高仇恨、最高伤害与掉落归属等查询。
- * most-damage / loot ownership.
+ * Creature aggro list: tracks attacker damage/hate and provides most-hated, most-damage / loot ownership queries.
  *
  * @author ATracer, KKnD
  */
@@ -53,8 +53,8 @@ public class AggroList {
 	 * 仅对敌人累加伤害与等量仇恨（召唤物/陷阱/宠物等计入，坠落伤害等不计入）。
 	 * Adds damage and equal hate only from enemies (includes summons/traps/pets; excludes fall damage, etc.).
 	 *
-	 * attacker
-	 * damage amount
+	 * @param attacker 攻击者 / attacker
+	 * @param damage 伤害量 / damage amount
 	 */
 	@ObjectCallback(AddDamageValueCallback.class)
 	public void addDamage(Creature attacker, int damage) {
@@ -74,7 +74,7 @@ public class AggroList {
 		AggroInfo ai = getAggroInfo(attacker);
 		/**
 		 * 当前按每次受到伤害等量增加仇恨，并额外广播仇恨。
-	 * For now add hate equal to each damage received; additionally broadcast extra hate
+		 * For now add hate equal to each damage received; additionally broadcast extra hate.
 		 */
 			synchronized (ai) {
 			ai.addDamage(damage);
@@ -88,7 +88,7 @@ public class AggroList {
 	 * 累加非伤害技能等产生的额外仇恨。
 	 * Adds extra hate received from non-damage skill effects.
 	 *
-	 * hate source
+	 * @param creature 仇恨来源 / hate source
 	 * @param hate 仇恨增量 / hate amount
 	 */
 	public void addHate(final Creature creature, int hate) {
@@ -99,11 +99,12 @@ public class AggroList {
 	}
 
 	/**
+	 * 添加在指定时长后自动移除的临时仇恨。
 	 * Adds hate that is removed again after the supplied duration.
 	 *
-	 * @param creature hate source
-	 * @param hate hate amount
-	 * @param duration duration in milliseconds
+	 * @param creature 仇恨来源 / hate source
+	 * @param hate 仇恨增量 / hate amount
+	 * @param duration 持续时间（毫秒） / duration in milliseconds
 	 */
 	public void addHate(final Creature creature, int hate, int duration) {
 		if (duration <= 0) {
@@ -126,7 +127,7 @@ public class AggroList {
 	 * 以 1 点仇恨开始仇恨该生物。
 	 * Starts hating the creature by adding 1 hate.
 	 *
-	 * target creature
+	 * @param creature 目标生物 / target creature
 	 */
 	public void startHate(final Creature creature) {
 		addHateValue(creature, 1);
@@ -136,7 +137,7 @@ public class AggroList {
 	 * 内部：写入仇恨值并触发 AI/任务相关事件。
 	 * Internal: writes hate and fires AI/quest-related events.
 	 *
-	 * hate source
+	 * @param creature 仇恨来源 / hate source
 	 * @param hate 仇恨增量 / hate amount
 	 */
 	protected AggroInfo addHateValue(final Creature creature, int hate) {
@@ -343,7 +344,7 @@ public class AggroList {
 	 * 若已在仇恨列表中，则追加仇恨值。
 	 * Adds hate only if the creature is already on the hate list.
 	 *
-	 * target creature
+	 * @param creature 目标生物 / target creature
 	 * @param value 仇恨增量 / hate amount
 	 */
 	public void notifyHate(Creature creature, int value) {
@@ -356,7 +357,7 @@ public class AggroList {
 	 * 停止对该可见对象的仇恨（仇恨置 0，条目保留）。
 	 * Stops hating the visible object (sets hate to 0, keeps the entry).
 	 *
-	 * target object
+	 * @param creature 目标对象 / target object
 	 */
 	public void stopHating(VisibleObject creature) {
 		AggroInfo aggroInfo = aggroList.get(creature.getObjectId());
@@ -371,7 +372,7 @@ public class AggroList {
 	 * 从仇恨列表中完全移除该生物。
 	 * Completely removes the creature from the aggro list.
 	 *
-	 * target creature
+	 * @param creature 目标生物 / target creature
 	 */
 	public void remove(Creature creature) {
 		Creature previousMostHated = getMostHated();
@@ -391,8 +392,8 @@ public class AggroList {
 	 * 获取或创建指定生物的仇恨条目。
 	 * Gets or creates the aggro entry for the given creature.
 	 *
-	 * target creature
-	 * aggro info
+	 * @param creature 目标生物 / target creature
+	 * @return 仇恨条目 / aggro entry
 	 */
 	public AggroInfo getAggroInfo(Creature creature) {
 		AggroInfo ai = aggroList.get(creature.getObjectId());
@@ -410,9 +411,7 @@ public class AggroList {
 	 * 判断是否已仇恨该生物。
 	 * Returns whether this list is already hating the creature.
 	 *
-	 * target creature
-	 *
-	 * @param creature
+	 * @param creature 目标生物 / target creature
 	 * @return 是否在列表中 / whether present
 	 */
 	public boolean isHating(Creature creature) {
@@ -433,7 +432,7 @@ public class AggroList {
 	 * 返回列表中所有攻击者的伤害总和。
 	 * Returns the sum of all damage recorded in the list.
 	 *
-	 * total damage
+	 * @return 总伤害 / total damage
 	 */
 	public int getTotalDamage() {
 		int totalDamage = 0;
@@ -495,7 +494,7 @@ public class AggroList {
 	 * Returns whether this list is aware of the creature (not self, and enemy or tribe-hostile).
 	 *
 	 * @param creature 待判断生物 / creature to check
-	 * whether aware
+	 * @return 是否感知 / whether aware
 	 */
 	protected boolean isAware(Creature creature) {
 		return creature != null && !creature.getObjectId().equals(owner.getObjectId()) && (creature.isEnemy(owner)
@@ -513,8 +512,8 @@ public class AggroList {
 		 * Before call: always continue.
 		 *
 		 * @param obj 仇恨列表 / aggro list
-		 * arguments
-		 * continue result
+		 * @param args 调用参数 / call arguments
+		 * @return 继续执行 / continue result
 		 */
 		@Override
 		public final CallbackResult beforeCall(AggroList obj, Object[] args) {
@@ -528,7 +527,7 @@ public class AggroList {
 		 * @param obj 仇恨列表 / aggro list
 		 * @param args 参数（攻击者、伤害） / arguments (attacker, damage)
 		 * @param methodResult 方法返回值 / method result
-		 * continue result
+		 * @return 继续执行 / continue result
 		 */
 		@Override
 		public final CallbackResult afterCall(AggroList obj, Object[] args, Object methodResult) {
@@ -546,7 +545,7 @@ public class AggroList {
 		 * 返回回调基类类型。
 		 * Returns the callback base class type.
 		 *
-		 * base class
+		 * @return 基类类型 / base class
 		 */
 		@Override
 		public final Class<? extends Callback> getBaseClass() {
@@ -557,8 +556,8 @@ public class AggroList {
 		 * 伤害成功写入后的业务钩子。
 		 * Business hook after damage has been recorded.
 		 *
-		 * attacker
-		 * damage amount
+		 * @param creature 攻击者 / attacker
+		 * @param damage 伤害量 / damage amount
 		 */
 		public abstract void onDamageAdded(Creature creature, int damage);
 	}

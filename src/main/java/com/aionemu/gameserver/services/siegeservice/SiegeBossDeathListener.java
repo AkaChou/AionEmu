@@ -24,7 +24,7 @@ public class SiegeBossDeathListener extends OnDieEventCallback {
 	 * 死亡前回调。
 	 * Before-death callback.
 	 *
-	 * obj
+	 * @param obj 首领 AI / boss AI
 	 */
 	public void onBeforeDie(AbstractAI obj) {
 	}
@@ -34,7 +34,7 @@ public class SiegeBossDeathListener extends OnDieEventCallback {
 	 * 死亡后回调。
 	 * After-death callback.
 	 *
-	 * obj
+	 * @param obj 首领 AI / boss AI
 	 */
 	public void onAfterDie(AbstractAI obj) {
 		siege.setBossKilled(true);

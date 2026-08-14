@@ -98,12 +98,12 @@ public interface IStorage {
 	long decreaseItemCount(Item item, long count, ItemUpdateType updateType);
 
 	/**
-	 * 添加 operation 应为 used 用于新物品 incoming 到 storage 从 outside。 / Add operation should be used for new items incoming into storage from outside
+	 * 添加操作应仅用于从外部进入仓库的新物品。 / Add operation should be used for new items incoming into storage from outside
 	 */
 	Item add(Item item);
 
 	/**
-	 * Put operation is used in some operations like unequip
+	 * 放置操作，用于卸下装备等场景。 / Put operation is used in some operations like unequip
 	 */
 	Item put(Item item);
 

@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
  * 玩家创造点条目，用于创造点相关逻辑。
  * Player CP Entry for cp logic.
  */
-
 public class PlayerCPEntry extends CPEntry {
 
 	private PersistentState persistentState;

@@ -30,12 +30,16 @@ public class MechaturerkAI2 extends AggressiveNpcAI2
 	}
 	
 	@Override
+	/**
+	 * 死亡后随机散布 Mechaturerk 核心，并生成掉落宝箱、通往外界的通道与任务 NPC。
+	 * On death, scatters Mechaturerk cores randomly and spawns loot footlockers, the corridor out, and a quest NPC.
+	 */
 	protected void handleDied() {
 		spawnMechaturerkCore(245185);
 		spawn(703381, 138.86005f, 253.14404f, 191.8727f, (byte) 0); //Mechaturerk’s Footlocker.
 		spawn(703382, 138.84244f, 249.96141f, 191.8727f, (byte) 0); //Mechaturerk’s Core.
 		spawn(703383, 138.83214f, 246.4382f, 191.8727f, (byte) 0); //Destruction Golem’s Footlocker.
-		spawn(833998, 152.87827f, 268.53104f, 191.8727f, (byte) 106); //Corridor To Atreia.
+		spawn(833998, 152.87827f, 268.53104f, 191.8727f, (byte) 106); //通往亚特雷亚的通道。 / Corridor To Atreia.
 		spawn(834167, 149.93068f, 255.50876f, 191.8727f, (byte) 6); //Jay.
 		super.handleDied();
 	}

@@ -46,7 +46,7 @@ public class InstanceBuffData {
 	 * 返回已加载的副本增益模板数量。
 	 * Returns the number of loaded instance bonus templates.
 	 *
-	 * template count
+	 * @return 已加载的副本加成模板数量 / Returns the number of loaded instance bonus templates.
 	 */
 	public int size() {
 		return templates.size();
@@ -56,9 +56,7 @@ public class InstanceBuffData {
 	 * 按 Buff ID 获取副本增益属性模板。
 	 * Returns the instance bonus attribute template for the given buff id.
 	 *
-	 * buff id
-	 *
-	 * @param buffId
+	 * @param buffId 增益 ID / buff id
 	 * @return 增益属性模板或 null / bonus attribute template or null
 	 */
 	public InstanceBonusAttr getInstanceBonusattr(int buffId) {

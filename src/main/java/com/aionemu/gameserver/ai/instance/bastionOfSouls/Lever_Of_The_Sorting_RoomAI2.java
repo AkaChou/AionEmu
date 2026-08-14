@@ -68,9 +68,9 @@ public class Lever_Of_The_Sorting_RoomAI2 extends NpcAI2
 	protected void handleUseItemFinish(Player player) {
 		WorldPosition worldPosition = player.getPosition();
 		if (worldPosition.isInstanceMap()) {
-			if (worldPosition.getMapId() == 302340000) { //Bastion Of Souls 5.5
+			if (worldPosition.getMapId() == 302340000) { // 灵魂堡垒 5.5。 / Bastion Of Souls 5.5.
 				WorldMapInstance worldMapInstance = worldPosition.getWorldMapInstance();
-				killNpc(worldMapInstance.getNpcs(246925)); //Torture Door.
+				killNpc(worldMapInstance.getNpcs(246925)); // 拷问门。 / Torture Door.
 			}
 		}
 	}

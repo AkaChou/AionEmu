@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/** Reconciles live domain state after the owning JDBC transaction completes. */
+/** 所属 JDBC 事务完成后调和实时领域状态。 / Reconciles live domain state after the owning JDBC transaction completes. */
 public interface QuestTransactionParticipant {
 	QuestTransactionParticipant NONE = new QuestTransactionParticipant() {
 		@Override

@@ -353,19 +353,19 @@ public class PlayerController extends CreatureController<Player> {
 			if (
 			// 莫尔海姆 / Morheim
 			zone.getAreaTemplate().getZoneName() == ZoneName.get("MORHEIM_SNOW_FIELD_220020000") ||
-			// 贝卢斯兰 / Beluslan
+			// 贝鲁斯兰 / Beluslan
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("KURNGALFBERG_220040000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("RED_MANE_CAVERN_220040000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("BELUSLAN_FORTRESS_220040000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("HOARFROST_SHELTER_220040000") ||
-					// 布鲁斯特霍宁 / Brusthonin
+					// 布鲁斯特豪宁 / Brusthonin
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("POLLUTED_WASTE_220050000") ||
-					// 恩沙尔 / Enshar
+					// 厄夏勒 / Enshar
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("DAWNBREAK_TEMPLE_220080000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("WHIRLPOOL_TEMPLE_220080000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("DRAGONREST_TEMPLE_220080000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("FATEBOUND_LEGION_OUTPOST_220080000") ||
-					// 诺斯沃尔德 / Norsvold
+					// 诺斯珀德 / Norsvold
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("AZPHEL_SANCTUARY_220110000")) {
 				switch (player.getRace()) {
 				case ELYOS:
@@ -375,21 +375,21 @@ public class PlayerController extends CreatureController<Player> {
 					break;
 				}
 			} else if (
-			// 艾特南 / Eltnen
+			// 埃尔特内 / Eltnen
 			zone.getAreaTemplate().getZoneName() == ZoneName.get("MANDURI_FOREST_210020000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("GOLDEN_BOUGH_GARRISON_210020000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("MYSTIC_SPRING_OF_AGAIRON_210020000") ||
-					// 海隆 / Heiron
+					// 因特尔蒂卡 / Heiron
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("HEIRONOPOLIS_210040000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("PATEMA_RUINS_210040000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("ARBOLUS_HAVEN_210040000") ||
-					// 西奥波莫斯 / Theobomos
+					// 泰奥勃莫斯 / Theobomos
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("PORT_ANANGKE_210060000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("JOSNACKS_VIGIL_210060000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("CRIMSON_BARRENS_210060000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("OBSERVATORY_VILLAGE_210060000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("SOUTHERN_LATHERON_COAST_210060000") ||
-					// 西格尼亚 / Cygnea
+					// 希哥尼亚 / Cygnea
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("AEQUIS_OUTPOST_210070000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("AEQUIS_HEADQUARTERS_210070000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("AEQUIS_ADVANCE_POST_210070000")
@@ -426,7 +426,7 @@ public class PlayerController extends CreatureController<Player> {
 	}
 
 	/**
-	 * {@inheritDoc} Should only be triggered from one place (life stats)
+	 * {@inheritDoc} 应仅从一处触发（生命值状态）。 / Should only be triggered from one place (life stats)
 	 */
 	/**
 	 * 玩家进入世界时的处理。
@@ -572,7 +572,8 @@ public class PlayerController extends CreatureController<Player> {
 		}
 
 	/**
-	 * 释放召唤物 / Release Summon
+	 * 释放召唤物。
+	 * Release Summon
 	 */
 		Summon summon = player.getSummon();
 		if (summon != null) {
@@ -580,7 +581,8 @@ public class PlayerController extends CreatureController<Player> {
 		}
 
 	/**
-	 * 释放宠物 / Release Pet
+	 * 释放宠物。
+	 * Release Pet
 	 */
 		Pet pet = player.getPet();
 		if (pet != null) {
@@ -588,7 +590,8 @@ public class PlayerController extends CreatureController<Player> {
 		}
 
 	/**
-	 * 释放守护灵 / Release Minion
+	 * 释放守护灵。
+	 * Release Minion
 	 */
 		Minion minion = player.getMinion();
 		if (minion != null) {
@@ -752,7 +755,8 @@ public class PlayerController extends CreatureController<Player> {
 		lastAttackMilis = milis;
 
 	/**
-	 * 通知攻击观察者 / notify attack observers
+	 * 通知攻击观察者。
+	 * Notify attack observers
 	 */
 		super.attackTarget(target, time);
 	}
@@ -761,12 +765,13 @@ public class PlayerController extends CreatureController<Player> {
 	 * 玩家受到攻击时的处理。
 	 * Handles the player being attacked.
 	 *
-	 * attacker
-	 * skill id
+	 * @param creature 攻击者 / attacker
+	 * @param skillId 技能 ID / skill id
 	 * @param type 伤害类型 / damage type
-	 * damage
+	 * @param damage 伤害值 / damage
 	 * @param notifyAttack 是否通知攻击 / whether to notify attack
 	 * @param log 日志类型 / log type
+	 * @param attackStatus 攻击状态 / attack status
 	 */
 	@Override
 	public void onAttack(Creature creature, int skillId, TYPE type, int damage, boolean notifyAttack, LOG log,
@@ -816,13 +821,13 @@ public class PlayerController extends CreatureController<Player> {
 	 * 使用技能模板施放技能。
 	 * Casts a skill from a skill template.
 	 *
-	 * skill template
-	 * target type
+	 * @param template 技能模板 / skill template
+	 * @param targetType 目标类型 / target type
 	 * @param x X 坐标 / x coordinate
 	 * @param y Y 坐标 / y coordinate
 	 * @param z Z 坐标 / z coordinate
 	 * @param clientHitTime 客户端命中时间 / client hit time
-	 * skill level
+	 * @param skillLevel 技能等级 / skill level
 	 */
 	public void useSkill(SkillTemplate template, int targetType, float x, float y, float z, int clientHitTime, int skillLevel) {
 		Player player = getOwner();
@@ -1133,7 +1138,8 @@ public class PlayerController extends CreatureController<Player> {
 		}
 
 	/**
-	 * 导师状态会在满足条件时自动取消。 / http://static.ncsoft.com/aion/store/PatchNotes/AION_Patch_Notes_061715.pdf Mentor status now cancels automatically as soon as the lowest level group member reaches level 51
+	 * 导师状态在条件满足时自动取消（队伍最低等级成员达到 51 级时）。
+	 * Mentor status cancels automatically as soon as the lowest level group member reaches level 51.
 	 */
 		if (level == 51) {
 			PlayerGroupService.stopMentoring(player);

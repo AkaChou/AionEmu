@@ -41,6 +41,9 @@ public class FortressAssault extends Assault<FortressSiege> {
 	private List<float[]> spawnLocations;
 
 	/**
+	 * 为指定要塞攻城创建龙族突击。
+	 * Creates a Balaur assault for the given fortress siege.
+	 *
 	 * @param siege 关联要塞攻城 / related fortress siege
 	 */
 	public FortressAssault(FortressSiege siege) {
@@ -52,7 +55,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 	 * 按延迟调度德雷吉恩与突击部队刷新。
 	 * Schedules dredgion and attacker spawns after the given delay.
 	 *
-	 * delay in seconds
+	 * @param delay 延迟秒数 / delay in seconds
 	 */
 	@Override
 	protected void scheduleAssault(int delay) {
@@ -191,7 +194,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 	 * 按要塞 ID 解析德雷吉恩组装模板 ID。
 	 * Resolves the dredgion assembled-NPC template id by fortress location.
 	 *
-	 * assembled NPC template id
+	 * @return 组装 NPC 模板 ID / assembled NPC template id
 	 */
 	private int getSpawnIdByFortressId() {
 		switch (locationId) {
@@ -231,7 +234,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 	 * 按要塞 ID 返回突击部队 NPC 模板列表。
 	 * Returns attacker NPC template ids for the fortress location.
 	 *
-	 * NPC template id list
+	 * @return NPC 模板 ID 列表 / NPC template id list
 	 */
 	private List<Integer> getSpawnIds() {
 		List<Integer> Spawns = new ArrayList<Integer>();

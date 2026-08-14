@@ -28,10 +28,10 @@ public abstract class NpcSkillEntry extends SkillEntry {
 	/** 是否拥有冷却。 / Whether cooldown. */
 	public abstract boolean hasCooldown();
 
-	/** 刷新时使用 / Use In Spawned. */
+	/** 生成时使用 / Use in spawned. */
 	public abstract boolean UseInSpawned();
 
-	/** 返回上次时间已用 / Returns the last time used*/
+	/** 返回上次使用时间 / Returns the last time used */
 	public long getLastTimeUsed() {
 		return lastTimeUsed;
 	}

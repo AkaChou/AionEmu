@@ -27,9 +27,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @AIName("Unsealing_Device_Asmodians")
 public class Unsealing_Device_AsmodiansAI2 extends ActionItemNpcAI2
 {
-    private boolean isRewarded;
-	protected int startBarAnimation = 1;
-	protected int cancelBarAnimation = 2;
+    private boolean isRewarded; // 是否已发放过奖励 / whether the reward was already granted
+	protected int startBarAnimation = 1; // 读条开始动画 ID / start cast bar animation ID
+	protected int cancelBarAnimation = 2; // 读条取消动画 ID / cancel cast bar animation ID
 	
     @Override
     protected void handleDialogStart(Player player) {
@@ -41,6 +41,10 @@ public class Unsealing_Device_AsmodiansAI2 extends ActionItemNpcAI2
         super.handleDialogStart(player);
     }
 	
+	/**
+	 * 带读条的物品交互：延迟结束后触发使用完成逻辑，交互中断则取消任务。
+	 * Item use with a cast bar: triggers the finish logic after the delay, cancels the task on abort.
+	 */
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {
@@ -72,6 +76,8 @@ public class Unsealing_Device_AsmodiansAI2 extends ActionItemNpcAI2
 	
     @Override
     protected void handleUseItemFinish(Player player) {
+        // 仅首次使用生效：删除解封装置并生成对应阶段的周期装置。
+        // Applies only on first use: deletes the device and spawns the corresponding cycle devices.
         if (!isRewarded) {
             isRewarded = true;
 			AI2Actions.deleteOwner(this);

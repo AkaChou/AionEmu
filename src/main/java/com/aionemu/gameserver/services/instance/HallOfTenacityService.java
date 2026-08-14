@@ -23,7 +23,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
 
-/****/
 /**
  * 坚韧殿堂报名服务，管理开启窗口与冷却。
  * Hall of Tenacity registration service managing open windows and cooldowns.
@@ -39,8 +38,8 @@ public class HallOfTenacityService {
 	public static final int maskId = 125;
 
 	/**
-	 * initHallOfTenacity 方法。
-	 * initHallOfTenacity method.
+	 * 初始化黄金神庙训练所报名：按配置调度开启报名。
+	 * Initializes Hall of Tenacity registration by scheduling open windows per config.
 	 */
 	public void initHallOfTenacity() {
 		if (AutoGroupConfig.HALL_OF_TENACITY_ENABLED) {
@@ -97,8 +96,8 @@ public class HallOfTenacityService {
 	}
 
 	/**
-	 * startHallOfTenacityRegistration 方法。
-	 * startHallOfTenacityRegistration method.
+	 * 开启报名窗口。
+	 * Starts the registration window.
 	 */
 	public void startHallOfTenacityRegistration() {
 		this.registerAvailable = true;
@@ -119,20 +118,20 @@ public class HallOfTenacityService {
 	}
 
 	/**
-	 * isHallAvailable 方法。
-	 * isHallAvailable method.
-	 * result
+	 * 报名是否可用。
+	 * Whether registration is available.
+	 * @return 结果 / result
 	 */
 	public boolean isHallAvailable() {
 		return this.registerAvailable;
 	}
 
 	/**
-	 * getInstanceMaskId 方法。
-	 * getInstanceMaskId method.
+	 * 获取玩家的报名掩码 ID；等级不符时返回 0。
+	 * Returns the registration mask id for the player, or 0 if level mismatch.
 	 *
 	 * 玩家 / player
-	 * result
+	 * @return 结果 / result
 	 */
 	public byte getInstanceMaskId(Player player) {
 		int level = player.getLevel();
@@ -157,7 +156,7 @@ public class HallOfTenacityService {
 	 * Whether cooldown is active.
 	 *
 	 * 玩家 / player
-	 * result
+	 * @return 结果 / result
 	 */
 	public boolean hasCoolDown(Player player) {
 		return this.playersWithCooldown.contains(player.getObjectId());
@@ -167,8 +166,8 @@ public class HallOfTenacityService {
 	 * 显示报名窗口。
 	 * Shows the registration window.
 	 *
-	 * 玩家 / player
-	 * instanceMaskId
+	 * @param player 玩家 / player
+	 * @param instanceMaskId 副本掩码 ID / instance mask id
 	 */
 	public void showWindow(Player player, byte instanceMaskId) {
 		if (getInstanceMaskId(player) != instanceMaskId) {
@@ -186,7 +185,7 @@ public class HallOfTenacityService {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 * result
+	 * @return 结果 / result
 	 */
 	public static HallOfTenacityService getInstance() {
 		ObjectProvider<HallOfTenacityService> provider = instanceProvider;
@@ -197,10 +196,10 @@ public class HallOfTenacityService {
 	}
 
 	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
+	 * 设置服务提供者。
+	 * Sets the service provider.
 	 *
-	 * provider
+	 * @return 服务提供者 / provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<HallOfTenacityService> provider) {
 		instanceProvider = provider;

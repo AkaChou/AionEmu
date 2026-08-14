@@ -37,7 +37,7 @@ import com.google.common.base.Predicate;
  */
 
 public class PlayerTeamDistributionService {
-	/** Do Reward / Do Reward */
+	/** 执行奖励 / Do Reward */
 	public static void doReward(TemporaryPlayerTeam<?> team, float damagePercent, Npc owner, AionObject winner) {
 		if (team == null || owner == null) {
 			return;

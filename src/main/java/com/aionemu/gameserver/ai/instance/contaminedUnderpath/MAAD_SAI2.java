@@ -38,7 +38,13 @@ public class MAAD_SAI2 extends AggressiveNpcAI2
 		}
 		super.handleDied();
 	}
-	
+
+	/**
+	 * 死亡后在附近随机生成 6 个 MAD99S 核心。
+	 * Spawn 6 MAD99S cores at random nearby positions on death.
+	 *
+	 * @param npcId 核心 NPC ID / core NPC ID
+	 */
 	private void spawnMAD99SCore(int npcId) {
 		rndSpawnInRange(npcId, Rnd.get(1, 5));
 		rndSpawnInRange(npcId, Rnd.get(1, 5));
@@ -47,7 +53,15 @@ public class MAAD_SAI2 extends AggressiveNpcAI2
 		rndSpawnInRange(npcId, Rnd.get(1, 5));
 		rndSpawnInRange(npcId, Rnd.get(1, 5));
 	}
-	
+
+	/**
+	 * 在指定 NPC 周围随机方向、随机距离处生成一个 NPC。
+	 * Spawn an NPC at a random direction and distance around the owner.
+	 *
+	 * @param npcId 要生成的 NPC ID / NPC ID to spawn
+	 * @param distance 距离 / distance
+	 * @return 生成的 NPC / spawned NPC
+	 */
 	private Npc rndSpawnInRange(int npcId, float distance) {
 		float direction = Rnd.get(0, 199) / 100f;
 		float x1 = (float) (Math.cos(Math.PI * direction) * distance);

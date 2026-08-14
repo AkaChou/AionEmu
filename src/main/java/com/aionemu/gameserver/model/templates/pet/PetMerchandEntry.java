@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * 宠物 Merchand 条目模板（静态数据/XML）。
- * XML template.
+ * 宠物商品条目模板（静态数据/XML）。
+ * Pet merchandise entry template (static data / XML).
  *
  * @author Rinzler
  */

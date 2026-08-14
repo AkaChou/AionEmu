@@ -54,7 +54,7 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * Returns a vertex by index (0=A, 1=B, 2=C; null otherwise).
 	 *
 	 * @param i 顶点索引 / vertex index
-	 * vertex, or null
+	 * @return 顶点，否则为 null / vertex, or null
 	 */
 	public Vector3f get(int i) {
 		switch (i) {
@@ -75,7 +75,7 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * 返回第一个顶点。
 	 * Returns the first vertex.
 	 *
-	 * vertex A
+	 * @return 顶点 A / vertex A
 	 */
 	@Override
 	public Vector3f get1() {
@@ -86,7 +86,7 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * 返回第二个顶点。
 	 * Returns the second vertex.
 	 *
-	 * vertex B
+	 * @return 顶点 B / vertex B
 	 */
 	@Override
 	public Vector3f get2() {
@@ -97,7 +97,7 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * 返回第三个顶点。
 	 * Returns the third vertex.
 	 *
-	 * vertex C
+	 * @return 顶点 C / vertex C
 	 */
 	@Override
 	public Vector3f get3() {
@@ -109,7 +109,7 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * Copies and sets a vertex by index (0=A, 1=B, 2=C).
 	 *
 	 * @param i 顶点索引 / vertex index
-	 * new vertex
+	 * @param point 新顶点 / new vertex
 	 */
 	public void set(int i, Vector3f point) {
 		switch (i) {
@@ -229,7 +229,7 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * 返回质心；若尚未计算则先计算。
 	 * Returns the centroid; computes it first if absent.
 	 *
-	 * centroid
+	 * @return 质心 / centroid
 	 */
 	public Vector3f getCenter() {
 		if (this.center == null) {
@@ -242,7 +242,7 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * 直接设置质心引用（不从顶点推导）。
 	 * Sets the centroid reference directly (not derived from vertices).
 	 *
-	 * centroid
+	 * @param center 质心 / centroid
 	 */
 	public void setCenter(Vector3f center) {
 		this.center = center;
@@ -252,7 +252,7 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * 返回单位法线；若尚未计算则先计算。
 	 * Returns the unit normal; computes it first if absent.
 	 *
-	 * unit normal
+	 * @return 单位法线 / unit normal
 	 */
 	public Vector3f getNormal() {
 		if (this.normal == null) {
@@ -265,7 +265,7 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * 直接设置法线引用（不从顶点推导）。
 	 * Sets the normal reference directly (not derived from vertices).
 	 *
-	 * normal
+	 * @param normal 法线 / normal
 	 */
 	public void setNormal(Vector3f normal) {
 		this.normal = normal;
@@ -275,7 +275,7 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * 返回投影值。
 	 * Returns the projection value.
 	 *
-	 * projection
+	 * @return 投影 / projection
 	 */
 	public float getProjection() {
 		return this.projection;
@@ -285,7 +285,7 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * 设置投影值。
 	 * Sets the projection value.
 	 *
-	 * projection
+	 * @param projection 投影 / projection
 	 */
 	public void setProjection(float projection) {
 		this.projection = projection;
@@ -295,7 +295,7 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * 返回索引。
 	 * Returns the index.
 	 *
-	 * index
+	 * @return 索引 / index
 	 */
 	public int getIndex() {
 		return this.index;
@@ -305,7 +305,7 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * 设置索引。
 	 * Sets the index.
 	 *
-	 * index
+	 * @param index 索引 / index
 	 */
 	public void setIndex(int index) {
 		this.index = index;
@@ -335,7 +335,7 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * 返回运行时类标签。
 	 * Returns the runtime class tag.
 	 *
-	 * class object
+	 * @return 类对象 / class object
 	 */
 	public Class<? extends Triangle> getClassTag() {
 		return this.getClass();
@@ -345,7 +345,7 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * 深拷贝本三角形（三顶点独立克隆；center/normal 不克隆）。
 	 * Deep-clones this triangle (vertices cloned; center/normal not cloned).
 	 *
-	 * clone
+	 * @return 克隆 / clone
 	 */
 	public Triangle clone() {
 		try {
@@ -377,7 +377,7 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * 从工厂获取实例。
 	 * Obtains an instance from the factory.
 	 *
-	 * pooled instance
+	 * @return 池化实例 / pooled instance
 	 */
 	public static Triangle newInstance() {
 		return (Triangle) FACTORY.object();

@@ -37,8 +37,8 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	 * 累计点数。
 	 * Adds points.
 	 *
-	 * creature
-	 * damage
+	 * @param creature 造成伤害的生物 / damaging creature
+	 * @param damage 伤害量 / damage
 	 */
 	public void addPoints(Creature creature, int damage) {
 		addTotalDamage(damage);
@@ -51,7 +51,7 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	 * 累计总伤害。
 	 * Adds total damage.
 	 *
-	 * damage
+	 * @param damage 伤害量 / damage
 	 */
 	public void addTotalDamage(int damage) {
 		totalDamage.addAndGet(damage);
@@ -61,8 +61,8 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	 * 累计玩家伤害。
 	 * Adds player damage.
 	 *
-	 * 玩家 / player
-	 * damage
+	 * @param player 玩家 / player
+	 * @param damage 伤害量 / damage
 	 */
 	public void addPlayerDamage(Player player, int damage) {
 		addToCounter(player.getObjectId(), damage, playerDamageCounter);
@@ -72,8 +72,8 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	 * 累计欧比斯点数。
 	 * Adds abyss points.
 	 *
-	 * 玩家 / player
-	 * abyssPoints
+	 * @param player 玩家 / player
+	 * @param abyssPoints 欧比斯点数 / abyss points
 	 */
 	public void addAbyssPoints(Player player, int abyssPoints) {
 		addToCounter(player.getObjectId(), abyssPoints, playerAPCounter);
@@ -83,9 +83,9 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	 * 累加到计数器。
 	 * Adds to counter.
 	 *
-	 * key
-	 * value
-	 * @param AtomicLong 原子长整型 / AtomicLong
+	 * @param key 计数器键 / counter key
+	 * @param value 累加值 / value
+	 * @param counterMap 目标计数器表 / target counter map
 	 */
 	protected <K> void addToCounter(K key, int value, Map<K, AtomicLong> counterMap) {
 		AtomicLong counter;
@@ -100,38 +100,41 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	}
 
 	/**
-	 * getTotalDamage 方法。
-	 * getTotalDamage method.
-	 * result
+	 * 返回总伤害。
+	 * Returns the total damage.
+	 *
+	 * @return 总伤害 / total damage
 	 */
 	public long getTotalDamage() {
 		return totalDamage.get();
 	}
 
 	/**
-	 * getPlayerDamageCounter 方法。
-	 * getPlayerDamageCounter method.
-	 * result
+	 * 返回玩家伤害计数器（按伤害降序）。
+	 * Returns the player damage counter (descending by damage).
+	 *
+	 * @return 玩家伤害映射 / player damage map
 	 */
 	public Map<Integer, Long> getPlayerDamageCounter() {
 		return getOrderedCounterMap(playerDamageCounter);
 	}
 
 	/**
-	 * getPlayerAbyssPoints 方法。
-	 * getPlayerAbyssPoints method.
-	 * result
+	 * 返回玩家欧比斯点数计数器（按点数降序）。
+	 * Returns the player abyss-points counter (descending by points).
+	 *
+	 * @return 玩家欧比斯点数映射 / player abyss-points map
 	 */
 	public Map<Integer, Long> getPlayerAbyssPoints() {
 		return getOrderedCounterMap(playerAPCounter);
 	}
 
 	/**
-	 * getOrderedCounterMap 方法。
-	 * getOrderedCounterMap method.
+	 * 返回按值降序排序的计数器映射。
+	 * Returns the counter map ordered by value descending.
 	 *
-	 * @param AtomicLong 原子长整型 / AtomicLong
-	 * result
+	 * @param unorderedMap 原始计数器表 / raw counter map
+	 * @return 排序后的映射 / ordered map
 	 */
 	protected <K> Map<K, Long> getOrderedCounterMap(Map<K, AtomicLong> unorderedMap) {
 		LinkedList<Map.Entry<K, AtomicLong>> tempList;
@@ -147,9 +150,9 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 			 * 比较排序。
 			 * Compares for ordering.
 			 *
-			 * @param AtomicLong 原子长整型 / AtomicLong
-			 * @param AtomicLong 原子长整型 / AtomicLong
-			 * result
+			 * @param o1 前一条目 / first entry
+			 * @param o2 后一条目 / second entry
+			 * @return 比较结果 / comparison result
 			 */
 			public int compare(Map.Entry<K, AtomicLong> o1, Map.Entry<K, AtomicLong> o2) {
 				return Long.compare(o2.getValue().get(), o1.getValue().get());
@@ -166,29 +169,31 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 
 	@Override
 	/**
-	 * compareTo 方法。
-	 * compareTo method.
+	 * 按总伤害比较两个种族计数器。
+	 * Compares this race counter to another by total damage.
 	 *
-	 * @param o 对象 / o
-	 * result
+	 * @param o 对方计数器 / other counter
+	 * @return 比较结果 / comparison result
 	 */
 	public int compareTo(SiegeRaceCounter o) {
 		return Long.compare(o.getTotalDamage(), getTotalDamage());
 	}
 
 	/**
-	 * getSiegeRace 方法。
-	 * getSiegeRace method.
-	 * result
+	 * 返回本计数器所属阵营。
+	 * Returns the race of this counter.
+	 *
+	 * @return 阵营 / siege race
 	 */
 	public SiegeRace getSiegeRace() {
 		return siegeRace;
 	}
 
 	/**
-	 * getWinnerLegionId 方法。
-	 * getWinnerLegionId method.
-	 * result
+	 * 返回伤害最高的队伍所属军团 ID（无则 null）。
+	 * Returns the legion id of the top-damage team (or null when none).
+	 *
+	 * @return 军团 ID / legion id
 	 */
 	public Integer getWinnerLegionId() {
 		Map<Player, AtomicLong> teamDamageMap = new HashMap<Player, AtomicLong>();

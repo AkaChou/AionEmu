@@ -51,7 +51,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      *
      * player object id
      *
-     * @param playerObjId
+     * @param playerObjId 玩家对象 ID / player object id
      * @return 是否已使用 / whether used
      */
     @Override
@@ -78,7 +78,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      *
      * legion member
      *
-     * @param legionMember
+     * @param legionMember 军团成员 / legion member
      * @return 是否保存成功 / whether saved successfully
      */
     @Override
@@ -101,7 +101,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      * 更新指定玩家的军团成员信息。
      * Updates the legion member info for the given player.
      *
-     * player id
+     * @param playerId 玩家 ID / player id
      * @param legionMember 军团成员数据 / legion member data
      */
     @Override
@@ -110,7 +110,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
              PreparedStatement stmt = con.prepareStatement(UPDATE_LEGIONMEMBER_QUERY)) {
 
             stmt.setString(1, legionMember.getNickname());
-            stmt.setString(2, legionMember.getRank().toString()); // rank экранирован в запросе
+            stmt.setString(2, legionMember.getRank().toString()); // rank 已在查询中转义。 / rank is escaped in the query.
             stmt.setString(3, legionMember.getSelfIntro());
             stmt.setInt(4, legionMember.getChallengeScore());
             stmt.setInt(5, playerId);
@@ -126,7 +126,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      *
      * player object id
      *
-     * @param playerObjId
+     * @param playerObjId 玩家对象 ID / player object id
      * @return 军团成员，不存在则为 null / legion member or null
      */
     @Override
@@ -175,7 +175,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      *
      * player object id
      *
-     * @param playerObjId
+     * @param playerObjId 玩家对象 ID / player object id
      * @return 扩展军团成员，不存在则为 null / extended legion member or null
      */
     @Override
@@ -232,7 +232,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      *
      * player name
      *
-     * @param playerName
+     * @param playerName 玩家名 / player name
      * @return 扩展军团成员，不存在则为 null / extended legion member or null
      */
     @Override
@@ -289,7 +289,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      *
      * legion id
      *
-     * @param legionId
+     * @param legionId 军团 ID / legion id
      * @return 成员 ID 列表，无成员则为 null / member id list or null
      */
     @Override
@@ -318,7 +318,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      * 删除指定玩家的军团成员记录。
      * Deletes the legion member record for the given player.
      *
-     * player object id
+     * @param playerObjId 玩家对象 ID / player object id
      */
     @Override
     public void deleteLegionMember(int playerObjId) {
@@ -336,10 +336,10 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
      *
-     * @param databaseName 数据库名称 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

@@ -57,9 +57,7 @@ public class ItemUpgradeData {
 	 * 按基础物品 ID 获取升级模板。
 	 * Returns the upgrade template for the given base item id.
 	 *
-	 * base item id
-	 *
-	 * @param itemSetId
+	 * @param itemSetId 基础物品 ID / base item id
 	 * @return 升级模板或 null / upgrade template or null
 	 */
 	public ItemUpgradeTemplate getItemUpgradeTemplate(int itemSetId) {
@@ -70,9 +68,7 @@ public class ItemUpgradeData {
 	 * 按基础物品 ID 获取结果物品映射。
 	 * Returns the result-item map for the given base item id.
 	 *
-	 * base item id
-	 *
-	 * @param baseItemId
+	 * @param baseItemId 基础物品 ID / base item id
 	 * @return 结果物品映射，为空或不存在则为 null / result-item map or null
 	 */
 	public Map<Integer, UpgradeResultItem> getResultItemMap(int baseItemId) {
@@ -91,7 +87,7 @@ public class ItemUpgradeData {
 	 * 返回已加载的升级模板数量。
 	 * Returns the number of loaded upgrade templates.
 	 *
-	 * template count
+	 * @return 已加载的升级模板数量 / Returns the number of loaded upgrade templates.
 	 */
 	public int size() {
 		return itemUpgradeSets.size();

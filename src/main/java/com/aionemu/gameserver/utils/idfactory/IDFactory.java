@@ -76,7 +76,7 @@ public class IDFactory {
 	 * 获取 IDFactory 实例（优先 Spring 提供者）。
 	 * Get the IDFactory instance (Spring provider preferred).
 	 *
-	 * Instance
+	 * @return 实例 / Instance
 	 */
 	public static final IDFactory getInstance() {
 		ObjectProvider<IDFactory> provider = instanceProvider;
@@ -90,7 +90,7 @@ public class IDFactory {
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
 	 *
-	 * Provider
+	 * @param instanceProvider 实例提供者 / Provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<IDFactory> instanceProvider) {
 		IDFactory.instanceProvider = instanceProvider;
@@ -100,8 +100,8 @@ public class IDFactory {
 	 * 分配下一个空闲 ID。
 	 * Allocate the next free id.
 	 *
-	 * Next free id
-	 * If no free ids remain
+	 * @return 下一个空闲 ID / Next free id
+	 * @throws IDFactoryError 无空闲 ID 时 / If no free ids remain
 	 */
 	public int nextId() {
 		try {
@@ -139,7 +139,7 @@ public class IDFactory {
 	 * Lock the given ids (throws if already taken).
 	 *
 	 * @param ids 要锁定的 ID / Ids to lock
-	 * If some ids were already locked
+	 * @throws IDFactoryError 有 ID 已占用时 / If some ids were already locked
 	 */
 	private void lockIds(int... ids) {
 		try {
@@ -161,7 +161,7 @@ public class IDFactory {
 	 * Lock the given id collection (throws if already taken).
 	 *
 	 * @param ids 要锁定的 ID / Ids to lock
-	 * If some ids were already locked
+	 * @throws IDFactoryError 有 ID 已占用时 / If some ids were already locked
 	 */
 	public void lockIds(Iterable<Integer> ids) {
 		try {
@@ -183,7 +183,7 @@ public class IDFactory {
 	 * Release the given id.
 	 *
 	 * @param id 要释放的 ID / Id to release
-	 * If the id was not taken。
+	 * @throws IDFactoryError ID 未被占用时 / If the id was not taken
 	 */
 	public void releaseId(int id) {
 		try {
@@ -206,7 +206,7 @@ public class IDFactory {
 	 * Release a collection of ids.
 	 *
 	 * @param ids 要释放的 ID 集合 / Ids to release
-	 * If any id was not taken。
+	 * @throws IDFactoryError 有 ID 未被占用时 / If any id was not taken
 	 */
 	public void releaseIds(Collection<Integer> ids) {
 		if (GenericValidator.isBlankOrNull(ids)) {
@@ -234,7 +234,7 @@ public class IDFactory {
 	 * 返回已占用 ID 数量。
 	 * Amount of used ids.
 	 *
-	 * Used count
+	 * @return 已占用数量 / Used count
 	 */
 	public int getUsedCount() {
 		try {

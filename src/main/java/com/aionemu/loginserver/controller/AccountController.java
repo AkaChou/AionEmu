@@ -136,9 +136,9 @@ public class AccountController {
      * 校验快速重连账号是否允许重新认证。
      * Checks whether a reconnecting account may re-authenticate.
      *
-     * 账号 ID / Account id
+     * @param accountId 账号 ID / Account id
      * @param loginOk 登录确认码 / Login ok token
-     * Reconnect key
+     * @param reconnectKey 重连密钥 / Reconnect key
      * @param client 客户端连接 / Aion client connection
      */
     public synchronized void authReconnectingAccount(int accountId, int loginOk, int reconnectKey, LoginConnection client) {
@@ -165,9 +165,9 @@ public class AccountController {
      * On success returns {@link AionAuthResponse#AUTHED} and binds account to connection.<br>
      * Creates a new account when {@link com.aionemu.loginserver.configs.Config#ACCOUNT_AUTO_CREATION} is enabled.
      *
-     * Account name
-     * Password
-     * Login connection
+     * @param name 账号名称 / Account name
+     * @param password 密码 / Password
+     * @param connection 登录连接 / Login connection
      * @return 认证结果码 / Auth response with error code
      */
     public AionAuthResponse login(String name, String password, LoginConnection connection) {
@@ -272,8 +272,8 @@ public class AccountController {
      * 刷新账号的 last_mac。
      * Refreshes last_mac of account.
      *
-     * 账号 ID / Account id
-     * New MAC address
+     * @param accountId 账号 ID / Account id
+     * @param address 新 MAC 地址 / New MAC address
      *
      * @return 是否刷新成功 / Whether refresh succeeded
      */
@@ -285,9 +285,7 @@ public class AccountController {
      * 按名称从数据库加载账号；不存在则返回 null。
      * Loads account from DB by name; returns null if not found.
      *
-     * Account name
-     *
-     * @param name
+     * @param name 账号名称 / Account name
      * @return 已加载账号，或 null / Loaded account or null
      */
     public Account loadAccount(String name) {
@@ -317,8 +315,8 @@ public class AccountController {
      * 创建新账号并写入数据库；成功返回账号对象，失败返回 null。
      * Creates new account and stores it in DB; returns account on success or null on failure.
      *
-     * Account name
-     * Account password
+     * @param name 账号名称 / Account name
+     * @param password 账号密码 / Account password
      *
      * @return 账号对象或 null / Account object or null
      */
@@ -347,7 +345,7 @@ public class AccountController {
      * 获取 {@link AccountDAO} 快捷方法。
      * Shortcut for {@link AccountDAO}.
      *
-     * Account DAO
+     * @return AccountDAO 实例 / Account DAO
      */
     private AccountDAO getAccountDAO() {
         return DAOManager.getDAO(AccountDAO.class);
@@ -357,7 +355,7 @@ public class AccountController {
      * 获取 {@link AccountTimeDAO} 快捷方法。
      * Shortcut for {@link AccountTimeDAO}.
      *
-     * Account time DAO
+     * @return AccountTimeDAO 实例 / Account time DAO
      */
     private AccountTimeDAO getAccountTimeDAO() {
         return DAOManager.getDAO(AccountTimeDAO.class);
@@ -437,9 +435,9 @@ public class AccountController {
      * 记录某账号在指定游戏服上的角色数量。
      * Records character count for an account on a specific gameserver.
      *
-     * 账号 ID / Account id
-     * GameServer id
-     * Character count
+     * @param accountId 账号 ID / Account id
+     * @param gsid 游戏服 ID / GameServer id
+     * @param characterCount 角色数量 / Character count
      */
     public synchronized void addGSCharacterCountFor(int accountId, int gsid, int characterCount) {
         accountsGSCharacterCounts

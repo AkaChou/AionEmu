@@ -32,7 +32,7 @@ public class CM_SERVER_LIST extends AionClientPacket {
      * Construct CM_SERVER_LIST packet.
      *
      * @param buf 包体数据 / Packet data
-     * Login connection
+     * @param client 登录连接 / Login connection
      */
     public CM_SERVER_LIST(ByteBuffer buf, LoginConnection client) {
         super(buf, client, 0x05);

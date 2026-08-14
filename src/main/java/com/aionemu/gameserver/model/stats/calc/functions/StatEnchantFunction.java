@@ -231,9 +231,7 @@ public class StatEnchantFunction extends StatAddFunction {
 		long slot = item.getEquipmentSlot();
 		int equipmentSlot = (int) slot;
 		switch (item.getItemTemplate().getArmorType()) {
-		/**
-	 * 4.9 Enchant Stats
-	 */
+		// 4.9 附魔属性。 / 4.9 Enchant Stats.
 		case ROBE:
 			switch (equipmentSlot) {
 			case 1 << 5:
@@ -491,9 +489,7 @@ public class StatEnchantFunction extends StatAddFunction {
 				return 8 * plumeench;
 			}
 			return 0;
-		/**
-	 * 5.0 翅膀强化 / 5.0 Wings Enchant
-	 */
+		// 5.0 翅膀强化 / 5.0 Wings Enchant
 		 // 呵呵 / lol
 		case WING:
 			if (enchantLvl+enchantAdvLvl<20)

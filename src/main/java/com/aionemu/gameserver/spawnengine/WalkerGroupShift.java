@@ -19,7 +19,7 @@ public class WalkerGroupShift {
 
 	/**
 	 * 前后（冠状）偏移。
-	 * dorsoventral) shift.
+	 * Back/front (coronal) shift.
 	 */
 	private float coronalShift;
 
@@ -33,8 +33,8 @@ public class WalkerGroupShift {
 	 * 以左右与前后偏移构造。
 	 * Builds a shift from left/right and back/front offsets.
 	 *
-	 * left-right offset
-	 * back-front offset
+	 * @param leftRight 左右偏移 / left-right offset
+	 * @param backFront 前后偏移 / back-front offset
 	 */
 	public WalkerGroupShift(float leftRight, float backFront) {
 		sagittalShift = leftRight;

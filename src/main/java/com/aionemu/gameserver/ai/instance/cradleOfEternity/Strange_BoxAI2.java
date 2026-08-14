@@ -27,8 +27,8 @@ public class Strange_BoxAI2 extends GeneralNpcAI2
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
-				case 834140: //Strange Box.
-				case 834153: //Strange Box.
+				case 834140: // 奇怪的箱子 / Strange Box.
+				case 834153: // 奇怪的箱子 / Strange Box.
 			    break;
 			}
 		}

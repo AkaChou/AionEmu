@@ -25,7 +25,7 @@ public class cmd_honorsitems extends PlayerCommand {
 	 * Shows category info or grants honor gear by sub-command.
 	 *
 	 * @param player 执行命令的玩家 / invoking player
-	 * command parameters
+	 * @param params 命令参数 / command parameters
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -65,94 +65,94 @@ public class cmd_honorsitems extends PlayerCommand {
 		if (params[0].equalsIgnoreCase("wprices")) {
 			weaponsInfo(player);
 		}
-		if (params[0].equalsIgnoreCase("1")) {// Plate Breast
+		if (params[0].equalsIgnoreCase("1")) {// 板甲上衣 / Plate Breast
 			case1(player);
 		}
-		if (params[0].equalsIgnoreCase("2")) {// Plate Hands
+		if (params[0].equalsIgnoreCase("2")) {// 板甲手套 / Plate Hands
 			case2(player);
 		}
-		if (params[0].equalsIgnoreCase("3")) {// Plate Shoes
+		if (params[0].equalsIgnoreCase("3")) {// 板甲鞋子 / Plate Shoes
 			case3(player);
 		}
-		if (params[0].equalsIgnoreCase("4")) {// Plate Pants
+		if (params[0].equalsIgnoreCase("4")) {// 板甲下装 / Plate Pants
 			case4(player);
 		}
-		if (params[0].equalsIgnoreCase("5")) {// Plate Shoulders
+		if (params[0].equalsIgnoreCase("5")) {// 板甲护肩 / Plate Shoulders
 			case5(player);
 		}
-		if (params[0].equalsIgnoreCase("6")) {// Leather Breast
+		if (params[0].equalsIgnoreCase("6")) {// 皮甲上衣 / Leather Breast
 			case6(player);
 		}
-		if (params[0].equalsIgnoreCase("7")) {// Leather Hands
+		if (params[0].equalsIgnoreCase("7")) {// 皮甲手套 / Leather Hands
 			case7(player);
 		}
-		if (params[0].equalsIgnoreCase("8")) {// Leather Shoes
+		if (params[0].equalsIgnoreCase("8")) {// 皮甲鞋子 / Leather Shoes
 			case8(player);
 		}
-		if (params[0].equalsIgnoreCase("9")) {// Leather Pants
+		if (params[0].equalsIgnoreCase("9")) {// 皮甲下装 / Leather Pants
 			case9(player);
 		}
-		if (params[0].equalsIgnoreCase("10")) {// Leather Shoulders
+		if (params[0].equalsIgnoreCase("10")) {// 皮甲护肩 / Leather Shoulders
 			case10(player);
 		}
-		if (params[0].equalsIgnoreCase("11")) {// Cloth Breast
+		if (params[0].equalsIgnoreCase("11")) {// 布甲上衣 / Cloth Breast
 			case11(player);
 		}
-		if (params[0].equalsIgnoreCase("12")) {// Cloth Hands
+		if (params[0].equalsIgnoreCase("12")) {// 布甲手套 / Cloth Hands
 			case12(player);
 		}
-		if (params[0].equalsIgnoreCase("13")) {// Cloth Shoes
+		if (params[0].equalsIgnoreCase("13")) {// 布甲鞋子 / Cloth Shoes
 			case13(player);
 		}
-		if (params[0].equalsIgnoreCase("14")) {// Cloth Pants
+		if (params[0].equalsIgnoreCase("14")) {// 布甲下装 / Cloth Pants
 			case14(player);
 		}
-		if (params[0].equalsIgnoreCase("15")) {// Cloth Shoulders
+		if (params[0].equalsIgnoreCase("15")) {// 布甲护肩 / Cloth Shoulders
 			case15(player);
 		}
-		if (params[0].equalsIgnoreCase("16")) {// Chain Breast
+		if (params[0].equalsIgnoreCase("16")) {// 锁甲上衣 / Chain Breast
 			case16(player);
 		}
-		if (params[0].equalsIgnoreCase("17")) {// Chain Hands
+		if (params[0].equalsIgnoreCase("17")) {// 锁甲手套 / Chain Hands
 			case17(player);
 		}
-		if (params[0].equalsIgnoreCase("18")) {// Chain Shoes
+		if (params[0].equalsIgnoreCase("18")) {// 锁甲鞋子 / Chain Shoes
 			case18(player);
 		}
-		if (params[0].equalsIgnoreCase("19")) {// Chain Pants
+		if (params[0].equalsIgnoreCase("19")) {// 锁甲下装 / Chain Pants
 			case19(player);
 		}
-		if (params[0].equalsIgnoreCase("20")) {// Chain Shoulders
+		if (params[0].equalsIgnoreCase("20")) {// 锁甲护肩 / Chain Shoulders
 			case20(player);
 		}
-		if (params[0].equalsIgnoreCase("21")) {// Weapon Sword
+		if (params[0].equalsIgnoreCase("21")) {// 武器：剑 / Weapon Sword
 			case21(player);
 		}
-		if (params[0].equalsIgnoreCase("22")) {// Weapon Greatsword
+		if (params[0].equalsIgnoreCase("22")) {// 武器：双手剑 / Weapon Greatsword
 			case22(player);
 		}
-		if (params[0].equalsIgnoreCase("23")) {// Weapon Longbow
+		if (params[0].equalsIgnoreCase("23")) {// 武器：长弓 / Weapon Longbow
 			case23(player);
 		}
-		if (params[0].equalsIgnoreCase("24")) {// Weapon Dagger
+		if (params[0].equalsIgnoreCase("24")) {// 武器：匕首 / Weapon Dagger
 			case24(player);
 		}
-		if (params[0].equalsIgnoreCase("25")) {// Weapon Orb
+		if (params[0].equalsIgnoreCase("25")) {// 武器：宝珠 / Weapon Orb
 			case25(player);
 		}
-		if (params[0].equalsIgnoreCase("26")) {// Weapon Tome
+		if (params[0].equalsIgnoreCase("26")) {// 武器：魔法书 / Weapon Tome
 			case26(player);
 		}
-		if (params[0].equalsIgnoreCase("27")) {// Weapon Staff
+		if (params[0].equalsIgnoreCase("27")) {// 武器：法杖 / Weapon Staff
 			case27(player);
 		}
-		if (params[0].equalsIgnoreCase("28")) {// Weapon Mace
+		if (params[0].equalsIgnoreCase("28")) {// 武器：锤 / Weapon Mace
 			case28(player);
 		}
-		if (params[0].equalsIgnoreCase("29")) {// Weapon Shield
+		if (params[0].equalsIgnoreCase("29")) {// 武器：盾牌 / Weapon Shield
 			case29(player);
 		}
-		if (params[0].equalsIgnoreCase("30")) {// Weapon Spear
+		if (params[0].equalsIgnoreCase("30")) {// 武器：枪 / Weapon Spear
 			case30(player);
 		}
 	}
@@ -160,71 +160,71 @@ public class cmd_honorsitems extends PlayerCommand {
 	private void plateInfo(Player player) {
 		PacketSendUtility.sendYellowMessageOnCenter(player, "Armor Plate Prices");
 		PacketSendUtility.sendMessage(player, "----------------");
-		PacketSendUtility.sendMessage(player, "[item: 110601342] AP: 4329504 Medals: 105");// Plate Breast
-		PacketSendUtility.sendMessage(player, "[item: 111601305] AP: 2164752 Medals: 52");// Plate Hands
-		PacketSendUtility.sendMessage(player, "[item: 114601291] AP: 2164752 Medals: 52");// Plate Shoes
-		PacketSendUtility.sendMessage(player, "[item: 113601294] AP: 3247344 Medals: 78");// Plate Pants
-		PacketSendUtility.sendMessage(player, "[item: 112601285] AP: 2164752 Medals: 52");// Plate Shoulders
+		PacketSendUtility.sendMessage(player, "[item: 110601342] AP: 4329504 Medals: 105");// 板甲上衣 / Plate Breast
+		PacketSendUtility.sendMessage(player, "[item: 111601305] AP: 2164752 Medals: 52");// 板甲手套 / Plate Hands
+		PacketSendUtility.sendMessage(player, "[item: 114601291] AP: 2164752 Medals: 52");// 板甲鞋子 / Plate Shoes
+		PacketSendUtility.sendMessage(player, "[item: 113601294] AP: 3247344 Medals: 78");// 板甲下装 / Plate Pants
+		PacketSendUtility.sendMessage(player, "[item: 112601285] AP: 2164752 Medals: 52");// 板甲护肩 / Plate Shoulders
 		PacketSendUtility.sendMessage(player, "----------------");
 	}
 
 	private void leatherInfo(Player player) {
 		PacketSendUtility.sendYellowMessageOnCenter(player, "Leather Armor Prices");
 		PacketSendUtility.sendMessage(player, "----------------");
-		PacketSendUtility.sendMessage(player, "[item: 110301393] AP: 4329504 Medals: 105");// Leather Breast
-		PacketSendUtility.sendMessage(player, "[item: 111301334] AP: 2164752 Medals: 52");// Leather Hands
-		PacketSendUtility.sendMessage(player, "[item: 114301393] AP: 2164752 Medals: 52");// Leather Shoes
-		PacketSendUtility.sendMessage(player, "[item: 113301358] AP: 3247344 Medals: 78");// Leather Pants
-		PacketSendUtility.sendMessage(player, "[item: 112301277] AP: 2164752 Medals: 52");// Leather Shoulders
+		PacketSendUtility.sendMessage(player, "[item: 110301393] AP: 4329504 Medals: 105");// 皮甲上衣 / Leather Breast
+		PacketSendUtility.sendMessage(player, "[item: 111301334] AP: 2164752 Medals: 52");// 皮甲手套 / Leather Hands
+		PacketSendUtility.sendMessage(player, "[item: 114301393] AP: 2164752 Medals: 52");// 皮甲鞋子 / Leather Shoes
+		PacketSendUtility.sendMessage(player, "[item: 113301358] AP: 3247344 Medals: 78");// 皮甲下装 / Leather Pants
+		PacketSendUtility.sendMessage(player, "[item: 112301277] AP: 2164752 Medals: 52");// 皮甲护肩 / Leather Shoulders
 		PacketSendUtility.sendMessage(player, "----------------");
 	}
 
 	private void clothInfo(Player player) {
 		PacketSendUtility.sendYellowMessageOnCenter(player, "Cloth Armor prices");
 		PacketSendUtility.sendMessage(player, "----------------");
-		PacketSendUtility.sendMessage(player, "[item: 110101485] AP: 4329504 Medals: 105");// Cloth Breast
-		PacketSendUtility.sendMessage(player, "[item: 111101339] AP: 2164752 Medals: 52");// Cloth Hands
-		PacketSendUtility.sendMessage(player, "[item: 114101387] AP: 2164752 Medals: 52");// Cloth Shoes
-		PacketSendUtility.sendMessage(player, "[item: 113101356] AP: 3247344 Medals: 78");// Cloth Pants
-		PacketSendUtility.sendMessage(player, "[item: 112101296] AP: 2164752 Medals: 52");// Cloth Shoulders
+		PacketSendUtility.sendMessage(player, "[item: 110101485] AP: 4329504 Medals: 105");// 布甲上衣 / Cloth Breast
+		PacketSendUtility.sendMessage(player, "[item: 111101339] AP: 2164752 Medals: 52");// 布甲手套 / Cloth Hands
+		PacketSendUtility.sendMessage(player, "[item: 114101387] AP: 2164752 Medals: 52");// 布甲鞋子 / Cloth Shoes
+		PacketSendUtility.sendMessage(player, "[item: 113101356] AP: 3247344 Medals: 78");// 布甲下装 / Cloth Pants
+		PacketSendUtility.sendMessage(player, "[item: 112101296] AP: 2164752 Medals: 52");// 布甲护肩 / Cloth Shoulders
 		PacketSendUtility.sendMessage(player, "----------------");
 	}
 
 	private void chainInfo(Player player) {
 		PacketSendUtility.sendYellowMessageOnCenter(player, "Chain Armor Prices");
 		PacketSendUtility.sendMessage(player, "----------------");
-		PacketSendUtility.sendMessage(player, "[item: 110501368] AP: 4329504 Medals: 105");// Chain Breast
-		PacketSendUtility.sendMessage(player, "[item: 111501326] AP: 2164752 Medals: 52");// Chain Hands
-		PacketSendUtility.sendMessage(player, "[item: 114501349] AP: 2164752 Medals: 52");// Chain Shoes
-		PacketSendUtility.sendMessage(player, "[item: 113501341] AP: 3247344 Medals: 78");// Chain Pants
-		PacketSendUtility.sendMessage(player, "[item: 112501266] AP: 2164752 Medals: 52");// Chain Shoulders
+		PacketSendUtility.sendMessage(player, "[item: 110501368] AP: 4329504 Medals: 105");// 锁甲上衣 / Chain Breast
+		PacketSendUtility.sendMessage(player, "[item: 111501326] AP: 2164752 Medals: 52");// 锁甲手套 / Chain Hands
+		PacketSendUtility.sendMessage(player, "[item: 114501349] AP: 2164752 Medals: 52");// 锁甲鞋子 / Chain Shoes
+		PacketSendUtility.sendMessage(player, "[item: 113501341] AP: 3247344 Medals: 78");// 锁甲下装 / Chain Pants
+		PacketSendUtility.sendMessage(player, "[item: 112501266] AP: 2164752 Medals: 52");// 锁甲护肩 / Chain Shoulders
 		PacketSendUtility.sendMessage(player, "----------------");
 	}
 
 	private void weaponsInfo(Player player) {
 		PacketSendUtility.sendYellowMessageOnCenter(player, "Weapon Pprices");
 		PacketSendUtility.sendMessage(player, "----------------");
-		PacketSendUtility.sendMessage(player, "[item: 100001412] AP: 6494256 Medals: 156");// Weapon Sword
-		PacketSendUtility.sendMessage(player, "[item: 100901105] AP: 6494256 Medals: 156");// Weapon Greatsword
-		PacketSendUtility.sendMessage(player, "[item: 101701134] AP: 6494256 Medals: 156");// Weapon Longbow
-		PacketSendUtility.sendMessage(player, "[item: 100201251] AP: 6494256 Medals: 156");// Weapon Dagger
-		PacketSendUtility.sendMessage(player, "[item: 100501097] AP: 6494256 Medals: 156");// Weapon Orb
-		PacketSendUtility.sendMessage(player, "[item: 100601153] AP: 6494256 Medals: 156");// Weapon Tome
-		PacketSendUtility.sendMessage(player, "[item: 101501123] AP: 6494256 Medals: 156");// Weapon Staff
-		PacketSendUtility.sendMessage(player, "[item: 100101089] AP: 6494256 Medals: 156");// Weapon Mace
-		PacketSendUtility.sendMessage(player, "[item: 115001462] AP: 4329504 Medals: 105");// Weapon Shield
-		PacketSendUtility.sendMessage(player, "[item: 101301042] AP: 6494256 Medals: 156");// Weapon Spear
+		PacketSendUtility.sendMessage(player, "[item: 100001412] AP: 6494256 Medals: 156");// 武器：剑 / Weapon Sword
+		PacketSendUtility.sendMessage(player, "[item: 100901105] AP: 6494256 Medals: 156");// 武器：双手剑 / Weapon Greatsword
+		PacketSendUtility.sendMessage(player, "[item: 101701134] AP: 6494256 Medals: 156");// 武器：长弓 / Weapon Longbow
+		PacketSendUtility.sendMessage(player, "[item: 100201251] AP: 6494256 Medals: 156");// 武器：匕首 / Weapon Dagger
+		PacketSendUtility.sendMessage(player, "[item: 100501097] AP: 6494256 Medals: 156");// 武器：宝珠 / Weapon Orb
+		PacketSendUtility.sendMessage(player, "[item: 100601153] AP: 6494256 Medals: 156");// 武器：魔法书 / Weapon Tome
+		PacketSendUtility.sendMessage(player, "[item: 101501123] AP: 6494256 Medals: 156");// 武器：法杖 / Weapon Staff
+		PacketSendUtility.sendMessage(player, "[item: 100101089] AP: 6494256 Medals: 156");// 武器：锤 / Weapon Mace
+		PacketSendUtility.sendMessage(player, "[item: 115001462] AP: 4329504 Medals: 105");// 武器：盾牌 / Weapon Shield
+		PacketSendUtility.sendMessage(player, "[item: 101301042] AP: 6494256 Medals: 156");// 武器：枪 / Weapon Spear
 		PacketSendUtility.sendMessage(player, "----------------");
 	}
 
 	private void plate(Player player) {
 		PacketSendUtility.sendYellowMessageOnCenter(player, "Plates");
 		PacketSendUtility.sendMessage(player, "----------------");
-		PacketSendUtility.sendMessage(player, "[item: 110601342] (1)");// Plate Breast
-		PacketSendUtility.sendMessage(player, "[item: 111601305] (2)");// Plate Hands
-		PacketSendUtility.sendMessage(player, "[item: 114601291] (3)");// Plate Shoes
-		PacketSendUtility.sendMessage(player, "[item: 113601294] (4)");// Plate Pants
-		PacketSendUtility.sendMessage(player, "[item: 112601285] (5)");// Plate Shoulders
+		PacketSendUtility.sendMessage(player, "[item: 110601342] (1)");// 板甲上衣 / Plate Breast
+		PacketSendUtility.sendMessage(player, "[item: 111601305] (2)");// 板甲手套 / Plate Hands
+		PacketSendUtility.sendMessage(player, "[item: 114601291] (3)");// 板甲鞋子 / Plate Shoes
+		PacketSendUtility.sendMessage(player, "[item: 113601294] (4)");// 板甲下装 / Plate Pants
+		PacketSendUtility.sendMessage(player, "[item: 112601285] (5)");// 板甲护肩 / Plate Shoulders
 		PacketSendUtility.sendMessage(player, "----------------");
 		PacketSendUtility.sendYellowMessageOnCenter(player, "Use now .honoritems and the corresponding ID number (Examplel: .honoritems 1");
 	}
@@ -232,11 +232,11 @@ public class cmd_honorsitems extends PlayerCommand {
 	private void leather(Player player) {
 		PacketSendUtility.sendYellowMessageOnCenter(player, "Leather");
 		PacketSendUtility.sendMessage(player, "----------------");
-		PacketSendUtility.sendMessage(player, "[item: 110301393] (6)");// Leather Breast
-		PacketSendUtility.sendMessage(player, "[item: 111301334] (7)");// Leather Hands
-		PacketSendUtility.sendMessage(player, "[item: 114301393] (8)");// Leather Shoes
-		PacketSendUtility.sendMessage(player, "[item: 113301358] (9)");// Leather Pants
-		PacketSendUtility.sendMessage(player, "[item: 112301277] (10)");// Leather Shoulders
+		PacketSendUtility.sendMessage(player, "[item: 110301393] (6)");// 皮甲上衣 / Leather Breast
+		PacketSendUtility.sendMessage(player, "[item: 111301334] (7)");// 皮甲手套 / Leather Hands
+		PacketSendUtility.sendMessage(player, "[item: 114301393] (8)");// 皮甲鞋子 / Leather Shoes
+		PacketSendUtility.sendMessage(player, "[item: 113301358] (9)");// 皮甲下装 / Leather Pants
+		PacketSendUtility.sendMessage(player, "[item: 112301277] (10)");// 皮甲护肩 / Leather Shoulders
 		PacketSendUtility.sendMessage(player, "----------------");
 		PacketSendUtility.sendYellowMessageOnCenter(player, "Use now .honoritems and the corresponding ID number (Examplel: .honoritems 6");
 	}
@@ -244,11 +244,11 @@ public class cmd_honorsitems extends PlayerCommand {
 	private void cloth(Player player) {
 		PacketSendUtility.sendYellowMessageOnCenter(player, "Cloth");
 		PacketSendUtility.sendMessage(player, "----------------");
-		PacketSendUtility.sendMessage(player, "[item: 110101485] (11)");// Cloth Breast
-		PacketSendUtility.sendMessage(player, "[item: 111101339] (12)");// Cloth Hands
-		PacketSendUtility.sendMessage(player, "[item: 114101387] (13)");// Cloth Shoes
-		PacketSendUtility.sendMessage(player, "[item: 113101356] (14)");// Cloth Pants
-		PacketSendUtility.sendMessage(player, "[item: 112101296] (15)");// Cloth Shoulders
+		PacketSendUtility.sendMessage(player, "[item: 110101485] (11)");// 布甲上衣 / Cloth Breast
+		PacketSendUtility.sendMessage(player, "[item: 111101339] (12)");// 布甲手套 / Cloth Hands
+		PacketSendUtility.sendMessage(player, "[item: 114101387] (13)");// 布甲鞋子 / Cloth Shoes
+		PacketSendUtility.sendMessage(player, "[item: 113101356] (14)");// 布甲下装 / Cloth Pants
+		PacketSendUtility.sendMessage(player, "[item: 112101296] (15)");// 布甲护肩 / Cloth Shoulders
 		PacketSendUtility.sendMessage(player, "----------------");
 		PacketSendUtility.sendYellowMessageOnCenter(player, "Use now .honoritems and the corresponding ID number (Examplel: .honoritems 11");
 	}
@@ -256,11 +256,11 @@ public class cmd_honorsitems extends PlayerCommand {
 	private void chain(Player player) {
 		PacketSendUtility.sendYellowMessageOnCenter(player, "Chain");
 		PacketSendUtility.sendMessage(player, "----------------");
-		PacketSendUtility.sendMessage(player, "[item: 110501368] (16)");// Chain Breast
-		PacketSendUtility.sendMessage(player, "[item: 111501326] (17)");// Chain Hands
-		PacketSendUtility.sendMessage(player, "[item: 114501349] (18)");// Chain Shoes
-		PacketSendUtility.sendMessage(player, "[item: 113501341] (19)");// Chain Pants
-		PacketSendUtility.sendMessage(player, "[item: 112501266] (20)");// Chain Shoulders
+		PacketSendUtility.sendMessage(player, "[item: 110501368] (16)");// 锁甲上衣 / Chain Breast
+		PacketSendUtility.sendMessage(player, "[item: 111501326] (17)");// 锁甲手套 / Chain Hands
+		PacketSendUtility.sendMessage(player, "[item: 114501349] (18)");// 锁甲鞋子 / Chain Shoes
+		PacketSendUtility.sendMessage(player, "[item: 113501341] (19)");// 锁甲下装 / Chain Pants
+		PacketSendUtility.sendMessage(player, "[item: 112501266] (20)");// 锁甲护肩 / Chain Shoulders
 		PacketSendUtility.sendMessage(player, "----------------");
 		PacketSendUtility.sendYellowMessageOnCenter(player, "Use now .honoritems and the corresponding ID number (Examplel: .honoritems 16");
 	}
@@ -268,21 +268,21 @@ public class cmd_honorsitems extends PlayerCommand {
 	private void weapons(Player player) {
 		PacketSendUtility.sendYellowMessageOnCenter(player, "Weapons");
 		PacketSendUtility.sendMessage(player, "----------------");
-		PacketSendUtility.sendMessage(player, "[item: 100001412] (21)");// Weapon Sword
-		PacketSendUtility.sendMessage(player, "[item: 100901105] (22)");// Weapon Greatsword
-		PacketSendUtility.sendMessage(player, "[item: 101701134] (23)");// Weapon Longbow
-		PacketSendUtility.sendMessage(player, "[item: 100201251] (24)");// Weapon Dagger
-		PacketSendUtility.sendMessage(player, "[item: 100501097] (25)");// Weapon Orb
-		PacketSendUtility.sendMessage(player, "[item: 100601153] (26)");// Weapon Tome
-		PacketSendUtility.sendMessage(player, "[item: 101501123] (27)");// Weapon Staff
-		PacketSendUtility.sendMessage(player, "[item: 100101089] (28)");// Weapon Mace
-		PacketSendUtility.sendMessage(player, "[item: 115001462] (29)");// Weapon Shield
-		PacketSendUtility.sendMessage(player, "[item: 101301042] (30)");// Weapon Spear
+		PacketSendUtility.sendMessage(player, "[item: 100001412] (21)");// 武器：剑 / Weapon Sword
+		PacketSendUtility.sendMessage(player, "[item: 100901105] (22)");// 武器：双手剑 / Weapon Greatsword
+		PacketSendUtility.sendMessage(player, "[item: 101701134] (23)");// 武器：长弓 / Weapon Longbow
+		PacketSendUtility.sendMessage(player, "[item: 100201251] (24)");// 武器：匕首 / Weapon Dagger
+		PacketSendUtility.sendMessage(player, "[item: 100501097] (25)");// 武器：宝珠 / Weapon Orb
+		PacketSendUtility.sendMessage(player, "[item: 100601153] (26)");// 武器：魔法书 / Weapon Tome
+		PacketSendUtility.sendMessage(player, "[item: 101501123] (27)");// 武器：法杖 / Weapon Staff
+		PacketSendUtility.sendMessage(player, "[item: 100101089] (28)");// 武器：锤 / Weapon Mace
+		PacketSendUtility.sendMessage(player, "[item: 115001462] (29)");// 武器：盾牌 / Weapon Shield
+		PacketSendUtility.sendMessage(player, "[item: 101301042] (30)");// 武器：枪 / Weapon Spear
 		PacketSendUtility.sendMessage(player, "----------------");
 		PacketSendUtility.sendYellowMessageOnCenter(player, "Use now .honoritems and the corresponding ID number (Examplel: .honoritems 21");
 	}
 
-	private void case1(Player player) {// Plate Breast
+	private void case1(Player player) {// 板甲上衣 / Plate Breast
 		Storage bag = player.getInventory();
 		int count = 105;
 		int ap = 4329504;
@@ -303,7 +303,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case2(Player player) {// Plate Hands
+	private void case2(Player player) {// 板甲手套 / Plate Hands
 		Storage bag = player.getInventory();
 		int count = 52;
 		int ap = 2164752;
@@ -324,7 +324,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case3(Player player) {// Plate Shoes
+	private void case3(Player player) {// 板甲鞋子 / Plate Shoes
 		Storage bag = player.getInventory();
 		int count = 52;
 		int ap = 2164752;
@@ -345,7 +345,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case4(Player player) {// Plate Pants
+	private void case4(Player player) {// 板甲下装 / Plate Pants
 		Storage bag = player.getInventory();
 		int count = 78;
 		int ap = 3247344;
@@ -366,7 +366,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case5(Player player) {// Plate Shoulders
+	private void case5(Player player) {// 板甲护肩 / Plate Shoulders
 		Storage bag = player.getInventory();
 		int count = 52;
 		int ap = 2164752;
@@ -387,7 +387,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case6(Player player) {// Leather Breast
+	private void case6(Player player) {// 皮甲上衣 / Leather Breast
 		Storage bag = player.getInventory();
 		int count = 105;
 		int ap = 4329504;
@@ -408,7 +408,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case7(Player player) {// Leather Hands
+	private void case7(Player player) {// 皮甲手套 / Leather Hands
 		Storage bag = player.getInventory();
 		int count = 52;
 		int ap = 2164752;
@@ -429,7 +429,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case8(Player player) {// Leather Shoes
+	private void case8(Player player) {// 皮甲鞋子 / Leather Shoes
 		Storage bag = player.getInventory();
 		int count = 52;
 		int ap = 2164752;
@@ -450,7 +450,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case9(Player player) {// Leather Pants
+	private void case9(Player player) {// 皮甲下装 / Leather Pants
 		Storage bag = player.getInventory();
 		int count = 78;
 		int ap = 3247344;
@@ -471,7 +471,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case10(Player player) {// Leather Shoulders
+	private void case10(Player player) {// 皮甲护肩 / Leather Shoulders
 		Storage bag = player.getInventory();
 		int count = 52;
 		int ap = 2164752;
@@ -492,7 +492,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case11(Player player) {// Cloth Breast
+	private void case11(Player player) {// 布甲上衣 / Cloth Breast
 		Storage bag = player.getInventory();
 		int count = 105;
 		int ap = 4329504;
@@ -513,7 +513,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case12(Player player) {// Cloth Hands
+	private void case12(Player player) {// 布甲手套 / Cloth Hands
 		Storage bag = player.getInventory();
 		int count = 52;
 		int ap = 2164752;
@@ -534,7 +534,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case13(Player player) {// Cloth Shoes
+	private void case13(Player player) {// 布甲鞋子 / Cloth Shoes
 		Storage bag = player.getInventory();
 		int count = 52;
 		int ap = 2164752;
@@ -555,7 +555,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case14(Player player) {// Cloth Pants
+	private void case14(Player player) {// 布甲下装 / Cloth Pants
 		Storage bag = player.getInventory();
 		int count = 78;
 		int ap = 3247344;
@@ -576,7 +576,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case15(Player player) {// Cloth Shoulders
+	private void case15(Player player) {// 布甲护肩 / Cloth Shoulders
 		Storage bag = player.getInventory();
 		int count = 52;
 		int ap = 2164752;
@@ -597,7 +597,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case16(Player player) {// Chain Breast
+	private void case16(Player player) {// 锁甲上衣 / Chain Breast
 		Storage bag = player.getInventory();
 		int count = 105;
 		int ap = 4329504;
@@ -618,7 +618,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case17(Player player) {// Chain Hands
+	private void case17(Player player) {// 锁甲手套 / Chain Hands
 		Storage bag = player.getInventory();
 		int count = 52;
 		int ap = 2164752;
@@ -639,7 +639,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case18(Player player) {// Chain Shoes
+	private void case18(Player player) {// 锁甲鞋子 / Chain Shoes
 		Storage bag = player.getInventory();
 		int count = 52;
 		int ap = 2164752;
@@ -660,7 +660,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case19(Player player) {// Chain Pants
+	private void case19(Player player) {// 锁甲下装 / Chain Pants
 		Storage bag = player.getInventory();
 		int count = 78;
 		int ap = 3247344;
@@ -681,7 +681,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case20(Player player) {// Chain Shoulders
+	private void case20(Player player) {// 锁甲护肩 / Chain Shoulders
 		Storage bag = player.getInventory();
 		int count = 52;
 		int ap = 2164752;
@@ -702,7 +702,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case21(Player player) {// Weapon Sword
+	private void case21(Player player) {// 武器：剑 / Weapon Sword
 		Storage bag = player.getInventory();
 		int count = 156;
 		int ap = 6494256;
@@ -723,7 +723,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case22(Player player) {// Weapon Greatsword
+	private void case22(Player player) {// 武器：双手剑 / Weapon Greatsword
 		Storage bag = player.getInventory();
 		int count = 156;
 		int ap = 6494256;
@@ -744,7 +744,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case23(Player player) {// Weapon Longbow
+	private void case23(Player player) {// 武器：长弓 / Weapon Longbow
 		Storage bag = player.getInventory();
 		int count = 156;
 		int ap = 6494256;
@@ -765,7 +765,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case24(Player player) {// Weapon Dagger
+	private void case24(Player player) {// 武器：匕首 / Weapon Dagger
 		Storage bag = player.getInventory();
 		int count = 156;
 		int ap = 6494256;
@@ -786,7 +786,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case25(Player player) {// Weapon Orb
+	private void case25(Player player) {// 武器：宝珠 / Weapon Orb
 		Storage bag = player.getInventory();
 		int count = 156;
 		int ap = 6494256;
@@ -807,7 +807,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case26(Player player) {// Weapon Tome
+	private void case26(Player player) {// 武器：魔法书 / Weapon Tome
 		Storage bag = player.getInventory();
 		int count = 156;
 		int ap = 6494256;
@@ -828,7 +828,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case27(Player player) {// Weapon Staff
+	private void case27(Player player) {// 武器：法杖 / Weapon Staff
 		Storage bag = player.getInventory();
 		int count = 156;
 		int ap = 6494256;
@@ -849,7 +849,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case28(Player player) {// Weapon Mace
+	private void case28(Player player) {// 武器：锤 / Weapon Mace
 		Storage bag = player.getInventory();
 		int count = 156;
 		int ap = 6494256;
@@ -870,7 +870,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case29(Player player) {// Weapon Shield
+	private void case29(Player player) {// 武器：盾牌 / Weapon Shield
 		Storage bag = player.getInventory();
 		int count = 105;
 		int ap = 4329504;
@@ -891,7 +891,7 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
-	private void case30(Player player) {// Weapon Spear
+	private void case30(Player player) {// 武器：枪 / Weapon Spear
 		Storage bag = player.getInventory();
 		int count = 156;
 		int ap = 6494256;
@@ -917,7 +917,7 @@ public class cmd_honorsitems extends PlayerCommand {
 	 * Shows usage when arguments are invalid.
 	 *
 	 * @param player 执行命令的玩家 / invoking player
-	 * failure message
+	 * @param message 失败提示消息 / failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

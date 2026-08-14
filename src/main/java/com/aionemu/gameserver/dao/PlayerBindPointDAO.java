@@ -15,7 +15,7 @@ public abstract class PlayerBindPointDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public String getClassName() {
@@ -26,7 +26,7 @@ public abstract class PlayerBindPointDAO implements DAO {
 	 * 加载玩家绑定点。
 	 * Loads the player's bind point.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void loadBindPoint(Player player);
 
@@ -34,8 +34,8 @@ public abstract class PlayerBindPointDAO implements DAO {
 	 * 插入玩家绑定点记录。
 	 * Inserts a player bind-point record.
 	 *
-	 * 玩家 / player
-	 * 若 successful 则为 true / true if successful
+	 * @param player 玩家 / player
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean insertBindPoint(Player player);
 
@@ -43,8 +43,8 @@ public abstract class PlayerBindPointDAO implements DAO {
 	 * 更新玩家绑定点记录。
 	 * Updates a player bind-point record.
 	 *
-	 * 玩家 / player
-	 * 若 successful 则为 true / true if successful
+	 * @param player 玩家 / player
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean updateBindPoint(Player player);
 
@@ -52,8 +52,8 @@ public abstract class PlayerBindPointDAO implements DAO {
 	 * 持久化玩家绑定点（插入或更新）。
 	 * Persists the player's bind point (insert or update).
 	 *
-	 * 玩家 / player
-	 * 若 successful 则为 true / true if successful
+	 * @param player 玩家 / player
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean store(Player player);
 }

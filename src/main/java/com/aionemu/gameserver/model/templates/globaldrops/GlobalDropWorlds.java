@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 全局掉落 Worlds 模板（静态数据/XML）。
- * XML template.
+ * Global drop worlds template (static data/XML).
  *
  * @author Wnkrz
  */
@@ -20,7 +20,7 @@ public class GlobalDropWorlds {
 	@XmlElement(name = "gd_world")
 	protected List<GlobalDropWorld> gdWorlds;
 
-	/** 返回 global drop worlds / Returns the global drop worlds */
+	/** 返回全局掉落世界。 / Returns the global drop worlds. */
 	public List<GlobalDropWorld> getGlobalDropWorlds() {
 		if (gdWorlds == null) {
 			gdWorlds = new ArrayList<GlobalDropWorld>();

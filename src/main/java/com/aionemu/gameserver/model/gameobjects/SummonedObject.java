@@ -21,16 +21,20 @@ public class SummonedObject<T extends VisibleObject> extends Npc {
 	private byte level;
 
 	/**
-	 * Creator of this SummonedObject
+	 * 本召唤对象的创建者。
+	 * Creator of this SummonedObject.
 	 */
 	private T creator;
 
 	/**
-	 * @param objId
-	 * @param controller
-	 * @param spawnTemplate
-	 * @param objectTemplate
-	 * @param level
+	 * 构造被召唤对象。
+	 * Constructs a summoned object.
+	 *
+	 * @param objId 对象 ID / object id
+	 * @param controller NPC 控制器 / NPC controller
+	 * @param spawnTemplate 生成模板 / spawn template
+	 * @param objectTemplate NPC 模板 / NPC template
+	 * @param level 等级 / level
 	 */
 	public SummonedObject(int objId, NpcController controller, SpawnTemplate spawnTemplate, NpcTemplate objectTemplate,
 			byte level) {
@@ -50,13 +54,13 @@ public class SummonedObject<T extends VisibleObject> extends Npc {
 		return this.level;
 	}
 
-	/** 返回 creator / Returns the creator */
+	/** 返回创建者 / Returns the creator */
 	@Override
 	public T getCreator() {
 		return creator;
 	}
 
-	/** 设置 creator / Sets the creator */
+	/** 设置创建者 / Sets the creator */
 	public void setCreator(T creator) {
 		if (creator instanceof Player) {
 			((Player) creator).setSummonedObj(this);
@@ -64,19 +68,19 @@ public class SummonedObject<T extends VisibleObject> extends Npc {
 		this.creator = creator;
 	}
 
-	/** 返回大师名称 / Returns the master name */
+	/** 返回主人名称 / Returns the master name */
 	@Override
 	public String getMasterName() {
 		return creator != null ? creator.getName() : StringUtils.EMPTY;
 	}
 
-	/** 返回 creator id / Returns the creator id */
+	/** 返回创建者 ID / Returns the creator id */
 	@Override
 	public int getCreatorId() {
 		return creator != null ? creator.getObjectId() : 0;
 	}
 
-	/** 返回 acting creature / Returns the acting creature */
+	/** 返回实际行动的生物 / Returns the acting creature */
 	@Override
 	public Creature getActingCreature() {
 		if (creator instanceof Creature) {
@@ -85,7 +89,7 @@ public class SummonedObject<T extends VisibleObject> extends Npc {
 		return this;
 	}
 
-	/** 返回大师 / Returns the master*/
+	/** 返回主人 / Returns the master. */
 	@Override
 	public Creature getMaster() {
 		if (creator instanceof Creature) {

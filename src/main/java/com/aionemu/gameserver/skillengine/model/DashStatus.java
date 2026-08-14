@@ -29,7 +29,6 @@ public enum DashStatus {
 	 * 获取协议 ID。
 	 * Gets protocol id.
 	 *
-	 * dash status id
 	 */
 	public int getId() {
 		return id;

@@ -56,7 +56,7 @@ public class PlayerUpgradeArcade {
 	}
 
 	/**
-	 * @return Whether frenzy
+	 * @return 是否处于狂热状态 / Whether frenzy
 	 */
 	public boolean isFrenzy() {
 		return isFrenzy;

@@ -2,7 +2,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import java.util.Objects;
 
-/** A staged execution failure; {@code committed} prevents callers from ever replaying durable rewards. */
+/** 分阶段执行失败；{@code committed} 防止调用方重放耐久奖励。 / A staged execution failure; {@code committed} prevents callers from ever replaying durable rewards. */
 public final class QuestExecutionFailureException extends Exception {
 	private final QuestFailureStage stage;
 	private final boolean committed;

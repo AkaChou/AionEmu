@@ -16,8 +16,8 @@ final class ZoneChecker extends DestinationChecker {
 	 * 构造区域目的地检查器。
 	 * Constructs a zone destination checker.
 	 *
-	 * Follower creature
-	 * Target zone
+	 * @param follower 跟随生物 / follower creature
+	 * @param zoneName 目标区域 / target zone
 	 */
 	ZoneChecker(Creature follower, ZoneName zoneName) {
 		this.follower = follower;
@@ -49,9 +49,9 @@ final class ZoneChecker2 extends DestinationChecker {
 	 * 构造双区域目的地检查器。
 	 * Constructs a dual-zone destination checker.
 	 *
-	 * Follower creature
-	 * Zone 1
-	 * Zone 2
+	 * @param follower 跟随生物 / follower creature
+	 * @param zone1 区域 1 / zone 1
+	 * @param zone2 区域 2 / zone 2
 	 */
 	ZoneChecker2(Creature follower, ZoneName zone1, ZoneName zone2) {
 		this.follower = follower;

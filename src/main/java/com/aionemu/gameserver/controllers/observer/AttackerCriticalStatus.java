@@ -20,7 +20,7 @@ public class AttackerCriticalStatus {
 	 * 仅携带判定结果的构造。
 	 * Constructor with result only.
 	 *
-	 * check result
+	 * @param result 判定结果 / check result
 	 */
 	public AttackerCriticalStatus(boolean result) {
 		this.result = result;
@@ -41,7 +41,7 @@ public class AttackerCriticalStatus {
 	}
 
 	/**
-	 * remaining count
+	 * @return 剩余次数 / remaining count
 	 */
 	public int getCount() {
 		return count;
@@ -55,7 +55,7 @@ public class AttackerCriticalStatus {
 	}
 
 	/**
-	 * critical value
+	 * @return 暴击数值 / critical value
 	 */
 	public int getValue() {
 		return value;
@@ -69,14 +69,14 @@ public class AttackerCriticalStatus {
 	}
 
 	/**
-	 * check result
+	 * @return 判定结果 / check result
 	 */
 	public boolean isResult() {
 		return result;
 	}
 
 	/**
-	 * check result to set
+	 * @param result 判定结果 / check result to set
 	 */
 	public void setResult(boolean result) {
 		this.result = result;

@@ -27,7 +27,8 @@ public class Suspicious_CannonAI2 extends NpcAI2
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
         if (dialogId == 10000) {
             switch (getNpcId()) {
-                case 730207: //Suspicious Cannon.
+                case 730207: // 可疑的加农炮 / Suspicious Cannon.
+                    // 启动飞行传送。 / Start the flight teleport.
                     player.setState(CreatureState.FLIGHT_TELEPORT);
 					player.unsetState(CreatureState.ACTIVE);
 					player.setFlightTeleportId(73001);

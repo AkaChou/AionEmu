@@ -54,7 +54,11 @@ public class Kisk extends SummonedObject<Player> {
 	}
 
 	/**
-	 * @param npc 是否为敌对目标。 / Whether enemy from
+	 * 判断 NPC 是否为敌对目标。
+	 * Whether the NPC is an enemy.
+	 *
+	 * @param npc NPC / NPC
+	 * @return 是否敌对 / whether enemy
 	  */
 	@Override
 	public boolean isEnemyFrom(Npc npc) {
@@ -62,25 +66,29 @@ public class Kisk extends SummonedObject<Player> {
 	}
 
 	/**
-	 * @param player 是否为敌对目标。 / Whether enemy from
+	 * 判断玩家是否为敌对目标。
+	 * Whether the player is an enemy.
+	 *
+	 * @param player 玩家 / player
+	 * @return 是否敌对 / whether enemy
 	  */
 	@Override
 	public boolean isEnemyFrom(Player player) {
 		return player.getRace() != this.ownerRace;
 	}
 
-	/** 返回 npc object type / Returns the npc object type */
+	/** 返回 NPC 对象类型 / Returns the npc object type */
 	@Override
 	public NpcObjectType getNpcObjectType() {
 		return NpcObjectType.NORMAL;
 	}
 
-	/** 返回 use mask / Returns the use mask */
+	/** 返回使用掩码 / Returns the use mask */
 	public int getUseMask() {
 		return this.kiskStatsTemplate.getUseMask();
 	}
 
-	/** 返回 current member list / Returns the current member list */
+	/** 返回当前成员列表 / Returns the current member list */
 	public List<Player> getCurrentMemberList() {
 		List<Player> currentMemberList = new ArrayList<Player>();
 		for (int memberId : this.kiskMemberIds) {
@@ -92,39 +100,39 @@ public class Kisk extends SummonedObject<Player> {
 		return currentMemberList;
 	}
 
-	/** 返回 current member count / Returns the current member count */
+	/** 返回当前成员数 / Returns the current member count */
 	public int getCurrentMemberCount() {
 		return this.kiskMemberIds.size();
 	}
 
-	/** 返回 current member ids / Returns the current member ids */
+	/** 返回当前成员 ID 集合 / Returns the current member ids */
 	public Set<Integer> getCurrentMemberIds() {
 		return this.kiskMemberIds;
 	}
 
-	/** 返回 max members / Returns the max members */
+	/** 返回最大成员数 / Returns the max members */
 	public int getMaxMembers() {
 		return this.kiskStatsTemplate.getMaxMembers();
 	}
 
-	/** 返回 remaining resurrects / Returns the remaining resurrects */
+	/** 返回剩余复活次数 / Returns the remaining resurrects */
 	public int getRemainingResurrects() {
 		return this.remainingResurrections;
 	}
 
-	/** 返回 max ressurects / Returns the max ressurects */
+	/** 返回最大复活次数 / Returns the max resurrects */
 	public int getMaxRessurects() {
 		return this.kiskStatsTemplate.getMaxResurrects();
 	}
 
-	/** 返回 remaining lifetime / Returns the remaining lifetime */
+	/** 返回剩余持续时间 / Returns the remaining lifetime */
 	public int getRemainingLifetime() {
 		long timeElapsed = (System.currentTimeMillis() / 1000) - kiskSpawnTime;
 		int timeRemaining = (int) (KISK_LIFETIME_IN_SEC - timeElapsed);
 		return (timeRemaining > 0 ? timeRemaining : 0);
 	}
 
-	/** 是否可以绑定。 / Whether bind. */
+	/** 是否可绑定。 / Whether bindable. */
 	public boolean canBind(Player player) {
 		if (!player.getName().equals(getMasterName())) {
 			switch (this.getUseMask()) {
@@ -186,7 +194,7 @@ public class Kisk extends SummonedObject<Player> {
 		}
 		final Kisk kisk = this;
 		getKnownList().doOnAllPlayers(new Visitor<Player>() {
-			/** 访问 / visit. */
+			/** 访问 / Visit. */
 			@Override
 			public void visit(Player object) {
 				if (object.getRace() == ownerRace) {
@@ -196,7 +204,7 @@ public class Kisk extends SummonedObject<Player> {
 		});
 	}
 
-	/** Broadcast Packet / Broadcast Packet */
+	/** 广播封包 / Broadcasts a packet */
 	public void broadcastPacket(SM_SYSTEM_MESSAGE message) {
 		for (Player member : this.getCurrentMemberList()) {
 			if (member != null) {
@@ -205,7 +213,7 @@ public class Kisk extends SummonedObject<Player> {
 		}
 	}
 
-	/** 已使用复活 / resurrection Used. */
+	/** 已使用一次复活 / A resurrection was used. */
 	public void resurrectionUsed() {
 		remainingResurrections -= 1;
 		broadcastKiskUpdate();
@@ -214,12 +222,12 @@ public class Kisk extends SummonedObject<Player> {
 		}
 	}
 
-	/** 返回所有者种族 / Returns the owner race*/
+	/** 返回所有者种族 / Returns the owner race. */
 	public Race getOwnerRace() {
 		return this.ownerRace;
 	}
 
-	/** 是否激活。 / Whether Active. */
+	/** 是否激活。 / Whether active. */
 	public boolean isActive() {
 		return !this.getLifeStats().isAlreadyDead() && this.getRemainingResurrects() > 0;
 	}

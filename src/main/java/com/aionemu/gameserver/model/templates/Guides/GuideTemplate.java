@@ -16,7 +16,7 @@ import com.aionemu.gameserver.model.Race;
 
 /**
  * 指南模板（静态数据/XML）。
- * XML template.
+ * Guide template (static data/XML).
  *
  * @author xTz
  */

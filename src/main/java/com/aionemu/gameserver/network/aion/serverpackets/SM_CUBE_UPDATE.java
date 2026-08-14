@@ -38,7 +38,7 @@ public class SM_CUBE_UPDATE extends AionServerPacket {
 	 * Cube/warehouse capacity update.
 	 *
 	 * @param type   存储类型 / storage type
-	 * 玩家 / player
+	 * @param player 目标玩家 / target player
 	 */
 	public static SM_CUBE_UPDATE cubeSize(StorageType type, Player player) {
 		int itemsCount = 0;

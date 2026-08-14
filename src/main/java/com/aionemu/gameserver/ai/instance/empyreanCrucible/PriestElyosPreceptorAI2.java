@@ -73,13 +73,13 @@ public class PriestElyosPreceptorAI2 extends AggressiveNpcAI2 {
 						WorldPosition p = getPosition();
 						switch (Rnd.get(1, 3)) {
 							case 1:
-								applySoulSickness((Npc) spawn(282366, p.getX(), p.getY(), p.getZ(), p.getHeading())); //Boreas.
+								applySoulSickness((Npc) spawn(282366, p.getX(), p.getY(), p.getZ(), p.getHeading())); // 布雷亚斯 / Boreas
 							break;
 							case 2:
-								applySoulSickness((Npc) spawn(282367, p.getX(), p.getY(), p.getZ(), p.getHeading())); //Jumentis.
+								applySoulSickness((Npc) spawn(282367, p.getX(), p.getY(), p.getZ(), p.getHeading())); // 尤贝恩图斯 / Jumentis
 							break;
 							case 3:
-								applySoulSickness((Npc) spawn(282368, p.getX(), p.getY(), p.getZ(), p.getHeading())); //Charna.
+								applySoulSickness((Npc) spawn(282368, p.getX(), p.getY(), p.getZ(), p.getHeading())); // 黑卡泰 / Charna
 							break;
 						}
 					}
@@ -121,9 +121,9 @@ public class PriestElyosPreceptorAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void despawnNpcs() {
-		despawnNpc(getPosition().getWorldMapInstance().getNpc(282366)); //Boreas.
-		despawnNpc(getPosition().getWorldMapInstance().getNpc(282367)); //Jumentis.
-		despawnNpc(getPosition().getWorldMapInstance().getNpc(282368)); //Charna.
+		despawnNpc(getPosition().getWorldMapInstance().getNpc(282366)); // 布雷亚斯 / Boreas
+		despawnNpc(getPosition().getWorldMapInstance().getNpc(282367)); // 尤贝恩图斯 / Jumentis
+		despawnNpc(getPosition().getWorldMapInstance().getNpc(282368)); // 黑卡泰 / Charna
 	}
 	
 	@Override

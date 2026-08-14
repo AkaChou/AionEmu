@@ -7,9 +7,9 @@ package com.aionemu.gameserver.model.gameobjects.state;
  * @author ATracer, Sweetkr
  */
 public enum CreatureState {
-	/** 激活 / Active. */
+	/** 激活、飞行、飞行传送、休息、死亡、坐椅、漂浮的尸体、个人商店 / Active, flying, flight teleport, resting, dead, chair, floating corpse, private shop */
 	ACTIVE(1), FLYING(2), FLIGHT_TELEPORT(2), RESTING(4), DEAD(7), CHAIR(6), FLOATING_CORPSE(8), PRIVATE_SHOP(10),
-	/** 拾取中 / Looting. */
+	/** 拾取、武器已装备、行走、NPC 待机、力量石、治疗、滑翔 / Looting, weapon equipped, walking, NPC idle, powershard, treatment, gliding */
 	LOOTING(12), WEAPON_EQUIPPED(32), WALKING(64), NPC_IDLE(64), POWERSHARD(128), TREATMENT(256), GLIDING(512);
 
 	/**

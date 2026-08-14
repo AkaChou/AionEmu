@@ -26,7 +26,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
 /**
- * 烙印（Stigma）服务，处理装备/卸下烙印、技能授予、套装强化与登录校验。
+ * 烙印之石（Stigma）服务，处理装备/卸下烙印之石、技能授予、套装强化与登录校验。
  * Stigma service handling equip/unequip, skill grants, set enchant bonuses, and login validation.
  *
  * @author Wnkrz (Encom)

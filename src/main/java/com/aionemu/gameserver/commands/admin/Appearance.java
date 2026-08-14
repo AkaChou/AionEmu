@@ -27,7 +27,6 @@ public class Appearance extends AdminCommand {
 	 * 执行外观修改：按属性名写入外观数据并刷新客户端。
 	 * Executes appearance change: writes the attribute and refreshes the client.
 	 *
-	 * admin
 	 * @param params 参数：属性名与值，或 reset / attribute name and value, or reset
 	 */
 	@Override
@@ -248,8 +247,6 @@ public class Appearance extends AdminCommand {
 	 * 参数错误时输出 {@code //appearance} 用法。
 	 * Prints {@code //appearance} usage on invalid arguments.
 	 *
-	 * admin
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

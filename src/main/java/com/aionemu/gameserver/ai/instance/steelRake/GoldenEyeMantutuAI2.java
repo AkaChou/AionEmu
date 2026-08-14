@@ -42,6 +42,7 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleCustomEvent(int eventId, Object... args) {
 		if (eventId == 1 && args != null) {
+			// 停止战斗并走向饲料/供水装置 NPC。 / Stop fighting and walk to the feed/water supply NPC.
 			canThink = false;
 			getMoveController().abortMove();
 			EmoteManager.emoteStopAttacking(getOwner());
@@ -70,17 +71,23 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 		}
 	}
 	
+	/**
+	 * 走到装置后延迟 6 秒进食/饮水，移除对应负面效果并恢复战斗。
+	 * 6 seconds after reaching the device, feed/drink, remove the corresponding debuff and resume fighting.
+	 *
+	 * @param npc 饲料或供水装置 NPC / feed or water supply NPC
+	 */
 	private void startFeedTime(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead() && npc != null) {
 					switch (npc.getNpcId()) {
-						case 281128: //Feed Supply Device.
+						case 281128: // 饲料供给装置 / Feed Supply Device.
 							getEffectController().removeEffect(20489);
 							spawn(701386, 716.508f, 508.571f, 939.607f, (byte) 119);
 						break;
-						case 281129: //Water Supply Device.
+						case 281129: // 供水装置 / Water Supply Device.
 							spawn(701387, 716.389f, 494.207f, 939.607f, (byte) 119);
 							getEffectController().removeEffect(20490);
 						break;
@@ -139,6 +146,10 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 		super.handleBackHome();
 	}
 	
+	/**
+	 * 首次受击后启动定时任务，每隔一段时间随机施加饥饿或口渴效果。
+	 * On first hit, start a periodic task that randomly applies the hunger or thirst effect.
+	 */
 	private void doSchedule() {
 		hungerTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -147,10 +158,10 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 				int skill = 0;
 				switch (rnd) {
 					case 1:
-						skill = 20489; //Hunger.
+						skill = 20489; // 饥饿 / Hunger.
 					break;
 					case 2:
-						skill = 20490; //Thirst.
+						skill = 20490; // 口渴 / Thirst.
 					break;
 				}
 				GameEngineServices.skillEngine().getSkill(getOwner(), skill, 20, getOwner()).useNoAnimationSkill();

@@ -24,7 +24,7 @@ public class AIEventLog extends LinkedBlockingDeque<AIEventType> {
 	 * 使用指定容量构造有界事件日志。
 	 * Construct a bounded event log with the given capacity.
 	 *
-	 * Queue capacity
+	 * @param capacity 队列容量 / queue capacity
 	 */
 	public AIEventLog(int capacity) {
 		super(capacity);
@@ -35,7 +35,7 @@ public class AIEventLog extends LinkedBlockingDeque<AIEventType> {
 	 * Insert an event at the head; if full, remove the oldest event at the tail first.
 	 *
 	 * @param e 要记录的 AI 事件类型 / AI event type to record
-	 * @return Always {@code true}。
+	 * @return 始终返回 {@code true} / Always {@code true}
 	 */
 	@Override
 	public synchronized boolean offerFirst(AIEventType e) {

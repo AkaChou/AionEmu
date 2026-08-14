@@ -5,7 +5,7 @@ import com.aionemu.gameserver.model.instancerift.InstanceRiftStateType;
 
 /**
  * 副本裂隙默认实现：切入 OPEN / 回到 CLOSED。
- * back to CLOSED.
+ * Default rift implementation: transitions to OPEN / back to CLOSED.
  *
  * @author Rinzler (Encom)
  */
@@ -15,7 +15,7 @@ public class Rift extends RiftInstance<InstanceRiftLocation> {
 	 * 绑定裂隙地点。
 	 * Binds the rift location.
 	 *
-	 * location
+	 * @param instanceRift 裂隙地点 / rift location
 	 */
 	public Rift(InstanceRiftLocation instanceRift) {
 		super(instanceRift);

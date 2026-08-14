@@ -25,7 +25,7 @@ public class CM_PTRANSFER_CONTROL extends GsClientPacket {
     protected void readImpl() {
         actionId = this.readSC();
         switch (actionId) {
-            case 1: // request transfer
+            case 1: // 请求转移 / request transfer
             {
                 int taskId = readD();
                 String name = readS();
@@ -34,21 +34,21 @@ public class CM_PTRANSFER_CONTROL extends GsClientPacket {
                 LoginTransferServices.playerTransferService().requestTransfer(taskId, name, db);
             }
             break;
-            case 2: // ERROR
+            case 2: // 转移出错 / ERROR
             {
                 int taskId = readD();
                 String reason = readS();
                 LoginTransferServices.playerTransferService().onError(taskId, reason);
             }
             break;
-            case 3: // ok
+            case 3: // 转移成功 / ok
             {
                 int taskId = readD();
                 int playerId = readD();
                 LoginTransferServices.playerTransferService().onOk(taskId, playerId);
             }
             break;
-            case 4: // Task stop
+            case 4: // 任务停止 / Task stop
             {
                 int taskId = readD();
                 String reason = readS();

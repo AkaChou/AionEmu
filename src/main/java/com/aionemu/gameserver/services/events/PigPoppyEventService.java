@@ -37,17 +37,17 @@ public class PigPoppyEventService {
 	/** 随机刷怪坐标池。 / Spawn coordinate pool. */
 	private static List<float[]> floatArray = new ArrayList<float[]>();
 
-	/** Cached event cron expression / Cached event cron expression */
+	/** 缓存的活动 cron 表达式 / Cached event cron expression */
 	private static final String PIG_POPPY_EVENT_SCHEDULE = EventsConfig.PIG_POPPY_EVENT_SCHEDULE;
 
-	/** Sanctum world id / Sanctum world id */
-	private static int WORLD_ELY = 110010000; // Sanctum
+	/** 光之圣地世界 ID / Sanctum world id */
+	private static int WORLD_ELY = 110010000; // 光之圣地 / Sanctum
 
-	/** Pandaemonium world id / Pandaemonium world id */
-	private static int WORLD_ASMO = 120010000; // Pandaemonium
+	/** 伏魔殿世界 ID / Pandaemonium world id */
+	private static int WORLD_ASMO = 120010000; // 伏魔殿 / Pandaemonium
 
-	/** Poppy NPC template id / Poppy NPC template id */
-	private static int NPC_ID = 217385; // Poppy
+	/** 波比 NPC 模板 ID / Poppy NPC template id */
+	private static int NPC_ID = 217385; // 波比 / Poppy
 
 	/**
 	 * 缓存的奖励物品 ID 列表。
@@ -71,11 +71,11 @@ public class PigPoppyEventService {
 		for (int i = 0; i < list.length; i++) {
 			returnArray[i] = Integer.parseInt(list[i]);
 		}
-		// return the int array
+		// 返回 int 数组 / return the int array
 		return returnArray;
 	}
 
-	/** Current event main NPC / Current event main NPC */
+	/** 当前活动主 NPC / Current event main NPC */
 	private static Npc mainN;
 
 	/**
@@ -132,7 +132,7 @@ public class PigPoppyEventService {
 	}
 
 	/**
-	 * 在黑暗之都随机坐标刷出波比。
+	 * 在伏魔殿随机坐标刷出波比。
 	 * Spawns Poppy at a random Pandaemonium coordinate.
 	 */
 	private static void initPigAsmo() {

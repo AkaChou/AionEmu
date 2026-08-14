@@ -26,7 +26,7 @@ public class ReturnMotor extends AMovementMotor {
 	 * 创建指向指定回归点的电机。
 	 * Create a motor targeting the given return spot.
 	 *
-	 * Owner NPC
+	 * @param owner 所属 NPC / owner NPC
 	 * @param spot 回归目标点 / Return destination
 	 * @param processor 移动处理器 / Movement processor
 	 */

@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 运行时环境信息采集与打印（OS / CPU / JRE / JVM / 内存）。
- * CPU / JRE / JVM / memory).
+ * Runtime environment info collection and printing (OS / CPU / JRE / JVM / memory).
  */
 @Slf4j
 @UtilityClass
@@ -183,7 +183,7 @@ public class AEInfos {
      * Print lines under a section title.
      *
      * @param title 章节标题 / Section title
-     * Info lines
+     * @param lines 信息行数组 / Info lines
      */
     private void printSectioned(String title, String[] lines) {
         PrintUtils.printSection(title);

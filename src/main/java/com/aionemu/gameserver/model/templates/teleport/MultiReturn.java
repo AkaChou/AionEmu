@@ -7,8 +7,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * MultiReturn 模板（静态数据/XML）。
- * XML template.
+ * 多重返回模板（静态数据/XML）。
+ * Multi Return template (static data/XML).
  */
 
 @XmlType(name = "MultiReturn")
@@ -25,7 +25,7 @@ public class MultiReturn {
 		return id;
 	}
 
-	/** 返回返回按 ID 的数据 / Returns the return data by id */
+	/** 按索引返回返回数据 / Returns the return data at the given index */
 	public MultiReturnLocationList getReturnDataById(int id) {
 		if (MultiReturnList != null) {
 			return MultiReturnList.get(id);

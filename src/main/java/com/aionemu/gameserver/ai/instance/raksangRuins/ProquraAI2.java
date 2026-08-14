@@ -23,9 +23,9 @@ public class ProquraAI2 extends GeneralNpcAI2
 	@Override
 	protected void handleDialogStart(Player player) {
         switch (getNpcId()) {
-            case 206395: //Proqura A.
-			case 206396: //Proqura B.
-			case 206397: { //Proqura C.
+            case 206395: // Proqura 通道 A。 / Proqura Way A.
+			case 206396: // Proqura 通道 B。 / Proqura Way B.
+			case 206397: { // Proqura 通道 C。 / Proqura Way C.
 				super.handleDialogStart(player);
 				break;
 			} default: {
@@ -44,13 +44,13 @@ public class ProquraAI2 extends GeneralNpcAI2
 			return true;
 		} if (dialogId == 10000) {
 		    switch (getNpcId()) {
-				case 206395: //Proqura Way A.
+				case 206395: // Proqura 通道 A。 / Proqura Way A.
 				    TeleportService2.teleportTo(player, 300610000, instanceId, 519.06165f, 419.07617f, 927.697644f, (byte) 74);
 				break;
-				case 206396: //Proqura Way B.
+				case 206396: // Proqura 通道 B。 / Proqura Way B.
 				    TeleportService2.teleportTo(player, 300610000, instanceId, 810.93933f, 830.2498f, 733.6704f, (byte) 3);
 				break;
-				case 206397: //Proqura Way C.
+				case 206397: // Proqura 通道 C。 / Proqura Way C.
 				    TeleportService2.teleportTo(player, 300610000, instanceId, 384.6957f, 451.9979f, 120.786255f, (byte) 64);
 				break;
 			}

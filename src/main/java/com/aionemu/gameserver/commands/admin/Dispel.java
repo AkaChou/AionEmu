@@ -25,8 +25,6 @@ public class Dispel extends AdminCommand {
 	 * 移除目标玩家的全部效果。
 	 * Removes all effects from the targeted player.
 	 *
-	 * admin
-	 * unused
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

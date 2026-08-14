@@ -20,7 +20,7 @@ public final class ByteBufPacketWriter implements PacketWriter {
      * 返回底层 {@link ByteBuf}。
      * Returns the underlying {@link ByteBuf}.
      *
-     * Buffer
+     * @return 底层缓冲区 / Buffer
      */
     public ByteBuf buffer() {
         return buffer;

@@ -49,19 +49,19 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 	 * 默认 PASS 检测类型构造。
 	 * Constructor with default PASS check type.
 	 *
-	 * creature
-	 * geometry
-	 * material template
+	 * @param creature 被观察生物 / observed creature
+	 * @param geometry 碰撞几何体 / collision geometry
+	 * @param actionTemplate 材质行为模板 / material action template
 	 */
 	public CollisionMaterialActor(Creature creature, Spatial geometry, MaterialTemplate actionTemplate) {
 		this(creature, geometry, actionTemplate, CheckType.PASS);
 	}
 
 	/**
-	 * creature
-	 * geometry
-	 * material template
-	 * check type
+	 * @param creature 被观察生物 / observed creature
+	 * @param geometry 碰撞几何体 / collision geometry
+	 * @param actionTemplate 材质行为模板 / material action template
+	 * @param checkType 检测类型 / check type
 	 */
 	public CollisionMaterialActor(Creature creature, Spatial geometry, MaterialTemplate actionTemplate, CheckType checkType) {
 		super(creature, geometry, CollisionIntention.MATERIAL.getId(), checkType);
@@ -73,9 +73,7 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 	 * 几何体是否在进入区域时即生效（火焰等特殊命名）。
 	 * Whether the geometry acts on zone enter (special fire-named meshes).
 	 *
-	 * geometry
-	 *
-	 * @param geometry
+	 * @param geometry 几何体 / geometry
 	 * @return 是否进入即生效 / whether acts on enter
 	 */
 	public static boolean actsOnZoneEnter(Spatial geometry) {
@@ -89,9 +87,7 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 	 * 根据目标、天气与昼夜筛选应激活的材质技能。
 	 * Resolve material skills active for the target, weather and day-night.
 	 *
-	 * target creature
-	 *
-	 * @param creature
+	 * @param creature 目标生物 / target creature
 	 * @return 激活技能列表 / active skill list
 	 */
 	private List<MaterialSkill> getSkillsForTarget(Creature creature) {

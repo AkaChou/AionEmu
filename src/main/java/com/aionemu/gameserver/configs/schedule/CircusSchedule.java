@@ -68,8 +68,8 @@ public class CircusSchedule {
 	@XmlRootElement(name = "circus")
 	public static class Circus {
 		/**
-	 * 马戏团 ID / Circus ID
-	 */
+		 * 马戏团 ID / Circus ID
+		 */
 		@XmlAttribute(required = true)
 		private int id;
 

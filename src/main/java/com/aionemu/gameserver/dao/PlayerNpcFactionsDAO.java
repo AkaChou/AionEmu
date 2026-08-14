@@ -15,7 +15,7 @@ public abstract class PlayerNpcFactionsDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public String getClassName() {
@@ -26,7 +26,7 @@ public abstract class PlayerNpcFactionsDAO implements DAO {
 	 * 加载玩家 NPC 势力数据。
 	 * Loads player NPC-faction data.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void loadNpcFactions(Player player);
 
@@ -34,7 +34,7 @@ public abstract class PlayerNpcFactionsDAO implements DAO {
 	 * 存储玩家 NPC 势力数据。
 	 * Stores player NPC-faction data.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void storeNpcFactions(Player player);
 }

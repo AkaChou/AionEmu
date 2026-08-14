@@ -94,7 +94,7 @@ public class AionEmbeddedShutdownHandler {
      * 仅当 key 匹配时清除注册。
      * Clear registration only when key matches.
      *
-     * Registration key
+     * @param handler 注册键 / Registration key
      */
     private void clearByKey(Object handler) {
         Registration registration = HANDLER.get();
@@ -107,8 +107,8 @@ public class AionEmbeddedShutdownHandler {
      * 关闭处理器注册项。
      * Shutdown handler registration entry.
      *
-     * Registration key
-     * Callback
+     * @param key 注册键 / Registration key
+     * @param handler 回调 / Callback
      */
     private record Registration(Object key, Consumer<AionEmbeddedShutdownMode> handler) {
     }

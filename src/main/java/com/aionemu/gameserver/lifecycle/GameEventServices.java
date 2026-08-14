@@ -83,7 +83,7 @@ public final class GameEventServices implements DisposableBean {
      * 解析事件服务。
      * Resolve the event service.
      *
-     * Event service
+     * @return 事件服务 / Event service
      */
     public static EventService eventService() {
         ObjectProvider<EventService> provider = eventServiceProvider;

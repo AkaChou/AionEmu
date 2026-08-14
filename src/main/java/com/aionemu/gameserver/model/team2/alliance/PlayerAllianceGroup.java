@@ -17,7 +17,7 @@ public class PlayerAllianceGroup extends TemporaryPlayerTeam<PlayerAllianceMembe
 		this.alliance = alliance;
 	}
 
-	/** 添加 member / Adds member */
+	/** 添加成员 / Adds member */
 	@Override
 	public void addMember(PlayerAllianceMember member) {
 		super.addMember(member);
@@ -25,7 +25,7 @@ public class PlayerAllianceGroup extends TemporaryPlayerTeam<PlayerAllianceMembe
 		member.setAllianceId(getTeamId());
 	}
 
-	/** 移除 member / Removes member */
+	/** 移除成员 / Removes member */
 	@Override
 	public void removeMember(PlayerAllianceMember member) {
 		super.removeMember(member);

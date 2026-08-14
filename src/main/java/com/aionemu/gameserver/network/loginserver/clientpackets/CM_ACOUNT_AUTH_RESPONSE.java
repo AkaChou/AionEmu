@@ -44,7 +44,7 @@ public class CM_ACOUNT_AUTH_RESPONSE extends LsClientPacket {
 			membership = (byte) readC();
 			toll = readQ();
 			luna = readQ();
-			readC(); // return-account flag is not used by the GameServer
+			readC(); // 该返回账号标记不被游戏服使用 / return-account flag is not used by the GameServer
 			vipLevel = (byte) readC();
 			vipExp = readQ();
 			vipExpireTime = readQ();

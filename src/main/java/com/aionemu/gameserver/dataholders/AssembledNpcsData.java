@@ -43,7 +43,7 @@ public class AssembledNpcsData {
 	 * 返回已加载的模板数量。
 	 * Returns the number of loaded templates.
 	 *
-	 * template count
+	 * @return 已加载的模板数量 / Returns the number of loaded templates.
 	 */
 	public int size() {
 		return assembledNpcsTemplates.size();

@@ -60,7 +60,7 @@ public class AbyssRankUpdateService {
 	 * 获取单例（优先 Spring {@link ObjectProvider}）。
 	 * Obtain the singleton (prefer Spring {@link ObjectProvider}).
 	 *
-	 * Service instance
+	 * @return 服务实例 / service instance
 	 */
 	public static AbyssRankUpdateService getInstance() {
 		ObjectProvider<AbyssRankUpdateService> provider = instanceProvider;
@@ -242,9 +242,9 @@ public class AbyssRankUpdateService {
 	 * 按 GP 降序为指定种族分配军官名额。
 	 * Assign officer quotas for a race by descending GP.
 	 *
-	 * 阵营 / Race
-	 * Minimum GP threshold
-	 * @param activeAfterDays 活跃离线天数上限 / Max offline days still considered active
+	 * @param race 阵营 / Race
+	 * @param gpLimit 最低 GP 门槛 / minimum GP threshold
+	 * @param activeAfterDays 活跃离线天数上限 / max offline days still considered active
 	 */
 	private void updateAllRanksGpForRace(Race race, int gpLimit, int activeAfterDays) {
 		Map<Integer, Integer> playerGpMap = DAOManager.getDAO(AbyssRankDAO.class).loadPlayersGp(race, gpLimit,
@@ -267,8 +267,8 @@ public class AbyssRankUpdateService {
 	 * 从 GP 列表头部按名额选取玩家写入军阶。
 	 * Take quota players from the head of the GP list and write their ranks.
 	 *
-	 * @param rank            目标军阶 / Target rank
-	 * Ordered GP entries
+	 * @param rank 目标军阶 / Target rank
+	 * @param playerGpEntries 按 GP 排序的条目列表 / ordered GP entries
 	 */
 	private void selectGpRank(AbyssRankEnum rank, List<Entry<Integer, Integer>> playerGpEntries) {
 		int quota = (rank.getId() > 9 && rank.getId() < 18)
@@ -300,7 +300,7 @@ public class AbyssRankUpdateService {
 	 * 剩余未占名额玩家回写为最高指挥官（原逻辑保留）。
 	 * Write remaining players to SUPREME_COMMANDER (original logic preserved).
 	 *
-	 * Remaining GP entries
+	 * @param playerGpEntries 剩余 GP 条目 / remaining GP entries
 	 */
 	private void updateToNoQuotaGpRank(List<Entry<Integer, Integer>> playerGpEntries) {
 		for (Entry<Integer, Integer> playerGpEntry : playerGpEntries) {
@@ -312,8 +312,8 @@ public class AbyssRankUpdateService {
 	 * 将 AP 军阶写入在线玩家或离线 DAO。
 	 * Write AP rank to an online player or offline DAO.
 	 *
-	 * New rank
-	 * Player id
+	 * @param newRank 新军阶 / new rank
+	 * @param playerId 玩家 ID / player id
 	 */
 	protected void updateRankTo(AbyssRankEnum newRank, int playerId) {
 		// 检查在线玩家军阶是否变化 / check if rank is changed for online players
@@ -334,8 +334,8 @@ public class AbyssRankUpdateService {
 	 * 将 GP 军阶写入在线玩家或离线 DAO。
 	 * Write GP rank to an online player or offline DAO.
 	 *
-	 * New rank
-	 * Player id
+	 * @param newRank 新军阶 / new rank
+	 * @param playerId 玩家 ID / player id
 	 */
 	protected void updateGpRankTo(AbyssRankEnum newRank, int playerId) {
 		// 检查在线玩家 rankGp 是否变化 / check if rankGp is changed for online players

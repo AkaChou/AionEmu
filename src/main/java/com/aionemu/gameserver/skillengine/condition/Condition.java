@@ -25,7 +25,7 @@ public abstract class Condition implements StatCondition {
 	 * Validates whether the skill environment satisfies the condition specified in the template.
 	 *
 	 * @param env 技能环境 / skill environment
-	 * whether valid
+	 * @return 是否有效 / whether valid
 	 */
 	public abstract boolean validate(Skill env);
 
@@ -34,8 +34,8 @@ public abstract class Condition implements StatCondition {
 	 * Validates whether the stat calculation environment satisfies this condition; default always passes.
 	 *
 	 * @param stat 属性对象 / stat object
-	 * stat function
-	 * whether valid
+	 * @param statFunction 属性函数 / stat function
+	 * @return 是否有效 / whether valid
 	 */
 	@Override
 	public boolean validate(Stat2 stat, IStatFunction statFunction) {
@@ -46,8 +46,8 @@ public abstract class Condition implements StatCondition {
 	 * 校验效果环境是否满足本条件；默认恒为通过。
 	 * Validates whether the effect environment satisfies this condition; default always passes.
 	 *
-	 * effect environment
-	 * whether valid
+	 * @param effect 效果环境 / effect environment
+	 * @return 是否有效 / whether valid
 	 */
 	public boolean validate(Effect effect) {
 		return true;

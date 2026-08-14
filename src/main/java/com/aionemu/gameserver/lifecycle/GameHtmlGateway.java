@@ -61,7 +61,7 @@ public class GameHtmlGateway {
      * 解析 HTML 缓存：优先 Spring，否则经运行时桥回退。
      * Resolve HTML cache: prefer Spring, otherwise fall back via runtime bridge.
      *
-     * HTML cache instance
+     * @return HTML 缓存实例 / HTML cache instance
      */
     private HTMLCache htmlCache() {
         if (htmlCacheProvider == null) {

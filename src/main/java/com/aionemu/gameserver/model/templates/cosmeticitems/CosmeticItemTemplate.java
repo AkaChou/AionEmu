@@ -51,12 +51,12 @@ public class CosmeticItemTemplate {
 		return race;
 	}
 
-	/** 返回 gender permitted / Returns the gender permitted */
+	/** 返回允许的性别 / Returns the gender permitted */
 	public String getGenderPermitted() {
 		return genderPermitted;
 	}
 
-	/** 返回 preset / Returns the preset */
+	/** 返回预设 / Returns the preset */
 	public Preset getPreset() {
 		return preset;
 	}
@@ -79,37 +79,37 @@ public class CosmeticItemTemplate {
 		@XmlElement(name = "skin_color")
 		private int skinColor;
 
-		/** 返回 scale / Returns the scale */
+		/** 返回缩放 / Returns the scale */
 		public float getScale() {
 			return scale;
 		}
 
-		/** 返回 hair type / Returns the hair type */
+		/** 返回发型类型 / Returns the hair type */
 		public int getHairType() {
 			return hairType;
 		}
 
-		/** 返回 face type / Returns the face type */
+		/** 返回脸型类型 / Returns the face type */
 		public int getFaceType() {
 			return faceType;
 		}
 
-		/** 返回 hair color / Returns the hair color */
+		/** 返回发色 / Returns the hair color */
 		public int getHairColor() {
 			return hairColor;
 		}
 
-		/** 返回 lip color / Returns the lip color */
+		/** 返回唇色 / Returns the lip color */
 		public int getLipColor() {
 			return lipColor;
 		}
 
-		/** 返回 eye color / Returns the eye color */
+		/** 返回瞳色 / Returns the eye color */
 		public int getEyeColor() {
 			return eyeColor;
 		}
 
-		/** 返回 skin color / Returns the skin color */
+		/** 返回肤色 / Returns the skin color */
 		public int getSkinColor() {
 			return skinColor;
 		}

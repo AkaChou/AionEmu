@@ -29,7 +29,6 @@ public class Damage extends AdminCommand {
 	 * 对目标生物造成固定或百分比伤害。
 	 * Deals absolute or percentage damage to the targeted creature.
 	 *
-	 * admin
 	 * @param params 伤害值或百分比（如 50%） / damage amount or percent (e.g. 50%)
 	 */
 	@Override
@@ -69,8 +68,6 @@ public class Damage extends AdminCommand {
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
 	 *
-	 * admin
-	 * error message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

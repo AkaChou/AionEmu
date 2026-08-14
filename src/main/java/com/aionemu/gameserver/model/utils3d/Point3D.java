@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.model.utils3d;
 
 /**
- * 点3D，用于工具3d 相关逻辑。
- * Point 3 D for utils 3 d logic.
+ * 三维点，用于 3D 工具逻辑。
+ * Point 3D for utils 3D logic.
  *
  * @author M@xx modified by Wakizashi
  */
@@ -30,7 +30,7 @@ public class Point3D {
 		this.z = (double) z;
 	}
 
-	/** 距离 / distance. */
+	/** 计算与另一点的距离 / distance. */
 	public double distance(Point3D p) {
 		double dx = x - p.x;
 		double dy = y - p.y;
@@ -44,17 +44,17 @@ public class Point3D {
 		return "x=" + x + ", y=" + y + ", z=" + z;
 	}
 
-	/** 返回 x / Returns the x */
+	/** 返回 X 坐标 / Returns the x */
 	public double getX() {
 		return x;
 	}
 
-	/** 返回 y / Returns the y */
+	/** 返回 Y 坐标 / Returns the y */
 	public double getY() {
 		return y;
 	}
 
-	/** 返回 z / Returns the z */
+	/** 返回 Z 坐标 / Returns the z */
 	public double getZ() {
 		return z;
 	}

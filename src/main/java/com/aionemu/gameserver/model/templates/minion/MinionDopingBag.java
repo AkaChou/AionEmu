@@ -3,8 +3,8 @@ package com.aionemu.gameserver.model.templates.minion;
 import java.util.Arrays;
 
 /**
- * 守护灵 DopingBag 模板（静态数据/XML）。
- * XML template.
+ * 守护灵强化袋模板（静态数据/XML）。
+ * Minion doping bag template (static data/XML).
  *
  * @author jacjozs this copy Pet_Bag
  */

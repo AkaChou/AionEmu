@@ -61,9 +61,7 @@ public class InstanceCooltimeData {
 	 * 按世界 ID 获取副本冷却配置。
 	 * Returns the instance cooltime config for the given world id.
 	 *
-	 * 世界 ID / world id
-	 *
-	 * @param worldId
+	 * @param worldId 世界 ID / world id
 	 * @return 冷却配置或 null / cooltime config or null
 	 */
 	public InstanceCooltime getInstanceCooltimeByWorldId(int worldId) {
@@ -74,9 +72,7 @@ public class InstanceCooltimeData {
 	 * 将同步 ID 转换为世界 ID。
 	 * Converts a sync id to its world id.
 	 *
-	 * sync id
-	 *
-	 * @param syncId
+	 * @param syncId 同步 ID / sync id
 	 * @return 世界 ID，不存在则为 0 / world id or 0
 	 */
 	public int getWorldId(int syncId) {
@@ -90,8 +86,8 @@ public class InstanceCooltimeData {
 	 * 按同步 ID 计算玩家下次可进入副本的时间戳。
 	 * Computes the next entry timestamp for the player by sync id.
 	 *
-	 * 玩家 / player
-	 * sync id
+	 * @param player 玩家 / player
+	 * @param syncId 同步 ID / sync id
 	 * @return 下次进入时间（毫秒），不存在则为 0 / next entry time in ms or 0
 	 */
 	public long getInstanceEntranceCooltimeById(Player player, int syncId) {
@@ -105,9 +101,7 @@ public class InstanceCooltimeData {
 	 * 按世界 ID 返回每日最大进入次数。
 	 * Returns the max daily entry count for the given world id.
 	 *
-	 * 世界 ID / world id
-	 *
-	 * @param worldId
+	 * @param worldId 世界 ID / world id
 	 * @return 最大进入次数，无配置则为 0 / max entry count or 0
 	 */
 	public int getInstanceEntranceCountByWorldId(int worldId) {
@@ -121,11 +115,11 @@ public class InstanceCooltimeData {
 
 	/**
 	 * 按世界 ID 计算玩家下次可进入副本的时间戳，支持日 / 周 / 相对冷却并应用冷却倍率。
-	 * weekly / relative
+	 * Computes the next entry timestamp for the player by world id, supporting daily / weekly / relative
 	 * cooltimes and applying the instance cooldown rate.
 	 *
-	 * 玩家 / player
-	 * 世界 ID / world id
+	 * @param player 玩家 / player
+	 * @param worldId 世界 ID / world id
 	 * @return 下次进入时间（毫秒） / next entry time in ms
 	 */
 	public long getInstanceEntranceCooltime(Player player, int worldId) {
@@ -224,7 +218,7 @@ public class InstanceCooltimeData {
 	 * 返回已加载的副本冷却配置数量。
 	 * Returns the number of loaded instance cooltime configs.
 	 *
-	 * config count
+	 * @return 已加载的副本冷却配置数量 / Returns the number of loaded instance cooltime configs.
 	 */
 	public Integer size() {
 		return instanceCooltimes.size();

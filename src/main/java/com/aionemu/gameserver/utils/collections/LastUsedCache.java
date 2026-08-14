@@ -190,8 +190,8 @@ public class LastUsedCache<K extends Comparable, V> implements ICache<K, V>, Ser
 	 * 按键获取值；命中时提升为最近使用。未找到返回 null。
 	 * Get a value by key; promote to most-recent on hit. Returns null if not found.
 	 *
-	 * Key
-	 * Value or null
+	 * @param key 键 / Key
+	 * @return 缓存值，不存在时为 null / Value or null
 	 */
 	@Override
 	public V get(K key) {
@@ -209,8 +209,8 @@ public class LastUsedCache<K extends Comparable, V> implements ICache<K, V>, Ser
 	 * 添加或更新缓存项；已存在则更新并提升；满则淘汰最久未用。
 	 * Add or renew a cache pair; update and promote if present; evict least-recent when full.
 	 *
-	 * Key
-	 * Value
+	 * @param key 键 / Key
+	 * @param value 值 / Value
 	 */
 	@Override
 	public void put(K key, V value) {
@@ -235,7 +235,7 @@ public class LastUsedCache<K extends Comparable, V> implements ICache<K, V>, Ser
 	 * 按键移除缓存项。
 	 * Remove a cache entry by key.
 	 *
-	 * Key
+	 * @param key 键 / Key
 	 */
 	@Override
 	public void remove(K key) {
@@ -251,7 +251,7 @@ public class LastUsedCache<K extends Comparable, V> implements ICache<K, V>, Ser
 	 * 当前缓存大小。
 	 * Current cache size.
 	 *
-	 * Entry count
+	 * @return 条目数 / Entry count
 	 */
 	@Override
 	public int size() {

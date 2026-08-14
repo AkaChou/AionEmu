@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
+ * STS 端点：向国服客户端返回 account_vip 数据。
  * STS endpoint that returns account_vip data to the China client.
  * TODO: STS 服务尚未实现完成，当前仅用于联调。 / STS is not fully implemented and is for integration testing only.
  */
@@ -43,6 +44,10 @@ public final class StsVipServer {
         vipService = new VipService();
     }
 
+    /**
+     * 配置启用时启动 STS 服务（幂等）。
+     * Starts the STS server when enabled by config (idempotent).
+     */
     public static void startIfEnabled() {
         if (!VipConfig.STS_ENABLE) {
             return;
@@ -58,6 +63,10 @@ public final class StsVipServer {
         }
     }
 
+    /**
+     * 停止 STS 服务并清空已认证账号缓存。
+     * Stops the STS server and clears the authenticated-account cache.
+     */
     public static void shutdownIfStarted() {
         StsVipServer server;
         synchronized (LOCK) {

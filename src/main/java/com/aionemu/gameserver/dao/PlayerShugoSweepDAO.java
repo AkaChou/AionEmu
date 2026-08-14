@@ -15,7 +15,7 @@ public abstract class PlayerShugoSweepDAO implements DAO {
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
 	 *
-	 * fully qualified class name
+	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
 	public String getClassName() {
@@ -26,7 +26,7 @@ public abstract class PlayerShugoSweepDAO implements DAO {
 	 * 加载玩家术古扫荡数据。
 	 * Loads Shugo Sweep data for the player.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void load(Player player);
 
@@ -34,10 +34,10 @@ public abstract class PlayerShugoSweepDAO implements DAO {
 	 * 新增玩家术古扫荡记录。
 	 * Adds a Shugo Sweep record for the player.
 	 *
-	 * player object id
+	 * @param playerId 玩家对象 ID / player object id
 	 * @param freeDice 免费骰子数 / free dice count
 	 * @param step 当前步数 / current step
-	 * board id
+	 * @param boardId 排行榜 ID / board id
 	 * @return 是否添加成功 / true if added
 	 */
 	public abstract boolean add(final int playerId, int freeDice, int step, int boardId);
@@ -54,7 +54,7 @@ public abstract class PlayerShugoSweepDAO implements DAO {
 	 * 保存玩家术古扫荡数据。
 	 * Stores Shugo Sweep data for the player.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @return 是否保存成功 / true if stored
 	 */
 	public abstract boolean store(Player player);
@@ -66,7 +66,7 @@ public abstract class PlayerShugoSweepDAO implements DAO {
 	 * @param obj 玩家对象 ID / player object id
 	 * @param freeDice 免费骰子数 / free dice count
 	 * @param step 当前步数 / current step
-	 * board id
+	 * @param boardId 排行榜 ID / board id
 	 * @return 是否更新成功 / true if updated
 	 */
 	public abstract boolean setShugoSweepByObjId(final int obj, int freeDice, int step, int boardId);

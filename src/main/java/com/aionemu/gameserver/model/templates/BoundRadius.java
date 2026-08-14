@@ -8,7 +8,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 边界半径模板（静态数据/XML）。
- * XML template.
+ * Bound radius template (static data / XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

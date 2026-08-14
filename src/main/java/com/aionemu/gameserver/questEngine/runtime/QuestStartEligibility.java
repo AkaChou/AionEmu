@@ -2,7 +2,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import java.util.Objects;
 
-/** Immutable pre-event result of the authoritative quest-start checks. */
+/** 权威任务开始检查的不可变事件前结果。 / Immutable pre-event result of the authoritative quest-start checks. */
 public record QuestStartEligibility(boolean eligible, String reason) {
 	public QuestStartEligibility {
 		reason = Objects.requireNonNull(reason, "reason");

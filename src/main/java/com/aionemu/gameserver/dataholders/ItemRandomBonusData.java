@@ -60,10 +60,8 @@ public class ItemRandomBonusData {
 	 * 按权重随机抽取一组随机加成修正。
 	 * Randomly selects a modifiers set for the given bonus type and option set by weight.
 	 *
-	 * bonus type
-	 *
+	 * @param bonusType 加成类型 / bonus type
 	 * @param rndOptionSet 随机选项集 ID / random option-set id
-	 * @param rndOptionSet
 	 * @return 随机加成结果，无匹配则为 null / random bonus result or null
 	 */
 	public RandomBonusResult getRandomModifiers(StatBonusType bonusType, int rndOptionSet) {
@@ -92,11 +90,9 @@ public class ItemRandomBonusData {
 	 * 按加成类型、选项集与序号获取修正模板。
 	 * Returns the modifiers template for the given bonus type, option set and 1-based index.
 	 *
-	 * bonus type
-	 *
+	 * @param bonusType 加成类型 / bonus type
 	 * @param rndOptionSet 随机选项集 ID / random option-set id
 	 * @param number 1 起始的修正序号 / 1-based modifiers index
-	 * @param number
 	 * @return 修正模板或 null / modifiers template or null
 	 */
 	public ModifiersTemplate getTemplate(StatBonusType bonusType, int rndOptionSet, int number) {
@@ -111,7 +107,7 @@ public class ItemRandomBonusData {
 	 * 返回背包与抛光随机加成的总数量。
 	 * Returns the total number of inventory and polish random bonuses.
 	 *
-	 * total bonus count
+	 * @return 加成总数 / total bonus count
 	 */
 	public int size() {
 		return inventoryRandomBonusData.size() + polishRandomBonusData.size();

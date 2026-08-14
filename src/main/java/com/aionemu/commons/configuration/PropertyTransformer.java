@@ -20,7 +20,7 @@ public interface PropertyTransformer<T> {
      *
      * @param value 要转换的配置字符串值 Configuration string value to transform
      * @param field 要设置值的字段 Field to set the value for
-     * @return 转换后的值 Transformed value
+     * @return 转换后的值 / transformed value
      * @throws TransformationException 如果转换过程中发生错误 If error occurs during transformation
      */
     T transform(String value, Field field) throws TransformationException;

@@ -33,7 +33,7 @@ public class StaticDoorData {
 	 * After JAXB unmarshalling, rebuilds the door-template index by world id.
 	 *
 	 * @param u JAXB 反序列化器 / JAXB unmarshaller
-	 * parent object
+	 * @param parent 父对象 / parent object
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		staticDoorData.clear();
@@ -47,7 +47,7 @@ public class StaticDoorData {
 	 * 返回已加载的静态门世界数量。
 	 * Returns the number of loaded static-door worlds.
 	 *
-	 * world count
+	 * @return 已加载的静态门世界数量 / Returns the number of loaded static-door worlds.
 	 */
 	public int size() {
 		return staticDoorData.size();

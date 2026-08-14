@@ -24,10 +24,10 @@ public class StringSchemaOutputResolver extends SchemaOutputResolver {
 	 * 创建指向内存流的输出 Result。
 	 * Create an output Result backed by the in-memory stream.
 	 *
-	 * Namespace URI
+	 * @param namespaceUri 命名空间 URI / Namespace URI
 	 * @param suggestedFileName 建议文件名（设为 systemId） / Suggested file name (used as systemId)
-	 * Output Result
-	 * On I/O error
+	 * @return 输出 Result / Output Result
+	 * @throws IOException 发生 I/O 错误时 / On I/O error
 	 */
 	@Override
 	public Result createOutput(String namespaceUri, String suggestedFileName) throws IOException {
@@ -40,7 +40,7 @@ public class StringSchemaOutputResolver extends SchemaOutputResolver {
 	 * 获取已生成的 Schema 文本。
 	 * Get the generated schema text.
 	 *
-	 * Schema string
+	 * @return Schema 字符串 / Schema string
 	 */
 	public String getSchemaString() {
 		return baos.toString();

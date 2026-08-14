@@ -9,7 +9,7 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
  * 向管理员自身发送指定 ID 的系统消息包。
  * Sends a system-message packet with a given id to the admin.
  *
- * Created by Wnkrz on 08/07/2017.
+ * @author Wnkrz
  */
 public class SysMessage extends AdminCommand
 {
@@ -25,8 +25,6 @@ public class SysMessage extends AdminCommand
 	 * 解析消息 ID 并发送 SM_SYSTEM_MESSAGE。
 	 * Parses message id and sends SM_SYSTEM_MESSAGE.
 	 *
-	 * 执行 GM / Admin player
-	 * Message id
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

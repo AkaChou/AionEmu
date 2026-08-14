@@ -57,10 +57,10 @@ public class DropDistributionService {
 	 * 处理玩家掷骰结果（来自 CM_GROUP_LOOT）。
 	 * Handles a player roll result (from CM_GROUP_LOOT).
 	 *
-	 * rolling player
+	 * @param player 掷骰玩家 / rolling player
 	 * @param roll 掷骰值，0 表示放弃 / roll value, 0 means pass
-	 * item id
-	 * npc object id
+	 * @param itemId 物品 ID / item id
+	 * @param npcId NPC 对象 ID / npc object id
 	 * @param index 掉落索引 / drop index
 	 */
 	public void handleRoll(Player player, int roll, int itemId, int npcId, int index) {
@@ -100,10 +100,10 @@ public class DropDistributionService {
 	 * 处理玩家竞价结果（来自 CM_GROUP_LOOT）。
 	 * Handles a player bid result (from CM_GROUP_LOOT).
 	 *
-	 * bidding player
+	 * @param player 竞价玩家 / bidding player
 	 * @param bid 出价金额，0 表示放弃 / bid amount, 0 means pass
-	 * item id
-	 * npc object id
+	 * @param itemId 物品 ID / item id
+	 * @param npcId NPC 对象 ID / npc object id
 	 * @param index 掉落索引 / drop index
 	 */
 	public void handleBid(Player player, long bid, int itemId, int npcId, int index) {
@@ -157,8 +157,14 @@ public class DropDistributionService {
 	}
 
 	/**
-	 * @param player all players have Rolled or Bid then Distributes items
-	 *               accordingly
+	 * 全体玩家掷骰或竞价完成后分配战利品。
+	 * Distributes items after all players have rolled or bid accordingly.
+	 *
+	 * @param player 当前状态玩家 / current player
+	 * @param luckyPlayer 中标玩家对象 ID / lucky player object id
+	 * @param itemId 物品 ID / item id
+	 * @param requestedItem 请求的掉落物品 / requested drop item
+	 * @param dropNpc 掉落 NPC 注册项 / drop NPC registration
 	 */
 	private void distributeLoot(Player player, long luckyPlayer, int itemId, DropItem requestedItem, DropNpc dropNpc) {
 		player.unsetPlayerMode(PlayerMode.IN_ROLL);

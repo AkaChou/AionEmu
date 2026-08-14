@@ -8,7 +8,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FIND_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-/** Helper themoose (Encom)
+/* Helper themoose (Encom). */
 
 /**
  * 传送门/传送点 AI：Walk Of Honor（@AIName "walk_of_honor"），继承 GeneralNpcAI2。
@@ -22,8 +22,8 @@ public class Walk_Of_HonorAI2 extends GeneralNpcAI2
 	@Override
 	protected void handleDialogStart(Player player) {
         switch (getNpcId()) {
-			case 731193: //Walk Of Honor
-			case 731194: { //Walk Of Glory
+			case 731193: // 荣誉之路。 / Walk Of Honor.
+			case 731194: { // 荣耀之路。 / Walk Of Glory.
 				super.handleDialogStart(player);
 				break;
 			} default: {
@@ -43,8 +43,8 @@ public class Walk_Of_HonorAI2 extends GeneralNpcAI2
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 105) {
 			switch (getNpcId()) {
-			    case 731193: //Walk Of Honor
-				case 731194: //Walk Of Glory
+			    case 731193: // 荣誉之路。 / Walk Of Honor.
+				case 731194: // 荣耀之路。 / Walk Of Glory.
 				    AutoGroupType agt = AutoGroupType.getAutoGroup(player.getLevel(), getNpcId());
 					if (agt != null) {
 					    PacketSendUtility.sendPacket(player, new SM_FIND_GROUP(0x1A, agt.getInstanceMapId()));

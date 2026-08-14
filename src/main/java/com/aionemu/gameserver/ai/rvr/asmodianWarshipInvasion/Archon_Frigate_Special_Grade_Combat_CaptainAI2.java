@@ -22,6 +22,10 @@ public class Archon_Frigate_Special_Grade_Combat_CaptainAI2 extends AggressiveNp
 	}
 	
 	@Override
+	/**
+	 * 死亡后随机召唤一名指挥官（Suminid/Taina/Vasad），并清除突袭队长。
+	 * On death, randomly summons one of the commanders (Suminid/Taina/Vasad) and despawns the assault leader.
+	 */
 	protected void handleDied() {
 		switch (Rnd.get(1, 3)) {
 			case 1:

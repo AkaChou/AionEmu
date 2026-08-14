@@ -131,7 +131,7 @@ public class GameEventRuntimeBridge {
      * 事件服务是否启用。
      * Whether the event service is enabled.
      *
-     * @return {@code true} if enabled。
+     * @return 已启用为 {@code true} / {@code true} if enabled
      */
     public boolean isEventServiceEnabled() {
         return EventsConfig.ENABLE_EVENT_SERVICE;
@@ -141,7 +141,7 @@ public class GameEventRuntimeBridge {
      * 玩家事件是否启用。
      * Whether player events are enabled.
      *
-     * @return {@code true} if enabled。
+     * @return 已启用为 {@code true} / {@code true} if enabled
      */
     public boolean isPlayerEventEnabled() {
         return EventsConfig.EVENT_ENABLED;
@@ -151,7 +151,7 @@ public class GameEventRuntimeBridge {
      * 疯狂守护者是否启用。
      * Whether Crazy Daeva is enabled.
      *
-     * @return {@code true} if enabled。
+     * @return 已启用为 {@code true} / {@code true} if enabled
      */
     public boolean isCrazyDaevaEnabled() {
         return EventsConfig.ENABLE_CRAZY;
@@ -161,7 +161,7 @@ public class GameEventRuntimeBridge {
      * 顶级排名更新是否启用（按小时调度）。
      * Whether top-ranking update is enabled (hourly schedule).
      *
-     * @return {@code true} if enabled。
+     * @return 已启用为 {@code true} / {@code true} if enabled
      */
     public boolean isTopRankingUpdateEnabled() {
         return RankingConfig.TOP_RANKING_UPDATE_SETTING;
@@ -171,7 +171,7 @@ public class GameEventRuntimeBridge {
      * 解析事件服务。
      * Resolve the event service.
      *
-     * Event service
+     * @return 事件服务 / Event service
      */
     public EventService eventService() {
         if (eventServiceProvider == null) {

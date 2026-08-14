@@ -17,7 +17,7 @@ import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 
 /**
  * 称号模板（静态数据/XML）。
- * XML template.
+ * Title template (static data / XML).
  *
  * @author xavier
  */

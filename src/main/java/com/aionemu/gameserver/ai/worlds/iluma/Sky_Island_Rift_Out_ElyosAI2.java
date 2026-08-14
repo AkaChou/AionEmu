@@ -36,16 +36,16 @@ public class Sky_Island_Rift_Out_ElyosAI2 extends NpcAI2
 	protected void handleSpawned() {
 		super.handleSpawned();
 		switch (getNpcId()) {
-			case 805907: //Valley Of The Lost Scout Post.
-			case 805908: //Coast Of The Light-Deprived Scout Post.
-			case 805909: //Black Wind Valley Scout Post.
-			case 805910: //Forest Of Dormant Life Scout Post.
-			case 805911: //Ancient Temple Of Life Scout Post.
-			case 805912: //Krall Aether Mine Scout Post.
-			case 805913: //Polten Marsh.
-			case 805914: //Ariel's Rest.
-			case 805915: //Zephyr Vale.
-			case 805916: //Kojol Valley.
+			case 805907: // Valley Of The Lost 哨站 / Valley Of The Lost Scout Post.
+			case 805908: // Coast Of The Light-Deprived 哨站 / Coast Of The Light-Deprived Scout Post.
+			case 805909: // Black Wind Valley 哨站 / Black Wind Valley Scout Post.
+			case 805910: // Forest Of Dormant Life 哨站 / Forest Of Dormant Life Scout Post.
+			case 805911: // Ancient Temple Of Life 哨站 / Ancient Temple Of Life Scout Post.
+			case 805912: // Krall Aether Mine 哨站 / Krall Aether Mine Scout Post.
+			case 805913: // Polten 沼泽 / Polten Marsh.
+			case 805914: // Ariel 的安息地 / Ariel's Rest.
+			case 805915: // Zephyr 山谷 / Zephyr Vale.
+			case 805916: // Kojol 谷 / Kojol Valley.
 				startLifeTask();
 			break;
         }
@@ -57,7 +57,7 @@ public class Sky_Island_Rift_Out_ElyosAI2 extends NpcAI2
 			public void run() {
 				AI2Actions.deleteOwner(Sky_Island_Rift_Out_ElyosAI2.this);
 			}
-		}, 3600000); //1Hrs.
+		}, 3600000); // 1 小时后消失 / 1Hrs.
 	}
 	
 	protected void handleUseItemStart(final Player player) {
@@ -91,34 +91,34 @@ public class Sky_Island_Rift_Out_ElyosAI2 extends NpcAI2
 	
     protected void handleUseItemFinish(Player player) {
         switch (getNpcId()) {
-			case 805907: //Valley Of The Lost Scout Post.
+			case 805907: // Valley Of The Lost 哨站 / Valley Of The Lost Scout Post.
                 TeleportService2.teleportTo(player, 210100000, 2065.393f, 2626.8037f, 268.625f, (byte) 7);
             break;
-            case 805908: //Coast Of The Light-Deprived Scout Post.
+            case 805908: // Coast Of The Light-Deprived 哨站 / Coast Of The Light-Deprived Scout Post.
                 TeleportService2.teleportTo(player, 210100000, 2655.64f, 2357.6018f, 223.125f, (byte) 31);
             break;
-			case 805909: //Black Wind Valley Scout Post.
+			case 805909: // Black Wind Valley 哨站 / Black Wind Valley Scout Post.
                 TeleportService2.teleportTo(player, 210100000, 2142.0142f, 333.43063f, 302.75f, (byte) 100);
             break;
-            case 805910: //Forest Of Dormant Life Scout Post.
+            case 805910: // Forest Of Dormant Life 哨站 / Forest Of Dormant Life Scout Post.
                 TeleportService2.teleportTo(player, 210100000, 944.2284f, 715.76404f, 367.75f, (byte) 50);
             break;
-			case 805911: //Ancient Temple Of Life Scout Post.
+			case 805911: // Ancient Temple Of Life 哨站 / Ancient Temple Of Life Scout Post.
                 TeleportService2.teleportTo(player, 210100000, 336.9908f, 978.84924f, 267.75f, (byte) 99);
             break;
-			case 805912: //Krall Aether Mine Scout Post.
+			case 805912: // Krall Aether Mine 哨站 / Krall Aether Mine Scout Post.
                 TeleportService2.teleportTo(player, 210100000, 217.54932f, 2176.8188f, 298.65317f, (byte) 116);
             break;
-			case 805913: //Polten Marsh.
+			case 805913: // Polten 沼泽 / Polten Marsh.
                 TeleportService2.teleportTo(player, 210100000, 2438.378f, 1282.583f, 227.75f, (byte) 31);
             break;
-			case 805914: //Ariel's Rest.
+			case 805914: // Ariel 的安息地 / Ariel's Rest.
                 TeleportService2.teleportTo(player, 210100000, 1356.1259f, 381.74872f, 349.73428f, (byte) 93);
             break;
-			case 805915: //Zephyr Vale.
+			case 805915: // Zephyr 山谷 / Zephyr Vale.
                 TeleportService2.teleportTo(player, 210100000, 842.8415f, 1850.0061f, 310.42758f, (byte) 100);
             break;
-			case 805916: //Kojol Valley.
+			case 805916: // Kojol 谷 / Kojol Valley.
                 TeleportService2.teleportTo(player, 210100000, 1651.76f, 2645.18f, 1116.8591f, (byte) 117);
             break;
         }

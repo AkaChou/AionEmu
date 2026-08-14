@@ -48,7 +48,7 @@ public class SkinSkillData {
 	 * 返回已加载的皮肤技能数量。
 	 * Returns the number of loaded skin skills.
 	 *
-	 * template count
+	 * @return 已加载的皮肤技能数量 / Returns the number of loaded skin skills.
 	 */
 	public int size() {
 		return skinSkillData.size();
@@ -69,9 +69,7 @@ public class SkinSkillData {
 	 * 按组名获取皮肤技能模板。
 	 * Returns the skin skill template for the given group name.
 	 *
-	 * group name
-	 *
-	 * @param name
+	 * @param name 套装名 / set name
 	 * @return 模板，不存在则为 null / template or null
 	 */
 	public SkinSkillTemplate getSkinSkillByGroupName(String name) {

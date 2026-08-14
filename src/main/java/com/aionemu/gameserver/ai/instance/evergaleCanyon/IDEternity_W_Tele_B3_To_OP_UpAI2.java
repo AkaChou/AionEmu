@@ -74,7 +74,7 @@ public class IDEternity_W_Tele_B3_To_OP_UpAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//B3? ??  ? .
+					// 广播传送点开启公告 / broadcast teleport open announcement
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_War_tele_09);
 				}
 			}
@@ -85,7 +85,7 @@ public class IDEternity_W_Tele_B3_To_OP_UpAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//B3? ??  ? ? ?  .
+					// 广播传送点开启公告 / broadcast teleport open announcement
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_War_tele_01);
 				}
 			}
@@ -96,7 +96,7 @@ public class IDEternity_W_Tele_B3_To_OP_UpAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//B3? ??  ? ? ?  .
+					// 广播传送点开启公告 / broadcast teleport open announcement
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_War_tele_02);
 				}
 			}

@@ -48,9 +48,7 @@ public class HouseBuildingData {
 	 * 按建筑 ID 获取建筑模板。
 	 * Returns the building template for the given building id.
 	 *
-	 * building id
-	 *
-	 * @param buildingId
+	 * @param buildingId 建筑 ID / building id
 	 * @return 建筑模板，不存在则为 null / building template, or null if absent
 	 */
 	public Building getBuilding(int buildingId) {
@@ -61,7 +59,7 @@ public class HouseBuildingData {
 	 * 返回建筑模板数量。
 	 * Returns the number of building templates.
 	 *
-	 * template count
+	 * @return 房屋建筑模板数量 / Returns the number of building templates.
 	 */
 	public int size() {
 		return buildingById.size();

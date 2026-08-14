@@ -560,7 +560,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
      * 返回本副本奖励对象。
      * Return this instance's reward object.
      *
-     * result
+     * @return 副本奖励对象 / instance reward object
      */
     @Override
     public InstanceReward<?> getInstanceReward() {
@@ -571,7 +571,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
      * NPC 掉落表注册时处理。
      * Handle NPC drop-table registration.
      *
-     * npc
+     * @param npc NPC / npc
      */
     @Override
     public void onDropRegistered(Npc npc) {
@@ -603,7 +603,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
      * 处理死亡事件。
      * Handle a death event.
      *
-     * npc
+     * @param npc 死亡的 NPC / dead NPC
      */
     @Override
     public void onDie(Npc npc) {
@@ -869,8 +869,8 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
      * 玩家打开门时处理。
      * Handle a player opening a door.
      *
-     * 玩家 / player
-     * doorId
+     * @param player 玩家 / player
+     * @param doorId 门 ID / door id
      */
     @Override
     public void onOpenDoor(Player player, int doorId) {

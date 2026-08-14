@@ -42,7 +42,7 @@ public class ZoneUpdateService extends AbstractFIFOPeriodicTaskManager<Creature>
 	 * 返回被调用方法名（用于任务诊断）。
 	 * Return the called method name (for task diagnostics).
 	 *
-	 * method name
+	 * @return 被调方法名 / the method name
 	 */
 	@Override
 	protected String getCalledMethodName() {
@@ -67,7 +67,7 @@ public class ZoneUpdateService extends AbstractFIFOPeriodicTaskManager<Creature>
 	 * 设置 Spring 单例提供者。
 	 * Set the Spring singleton provider.
 	 *
-	 * provider
+	 * @param provider Spring 单例提供者 / the Spring singleton provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<ZoneUpdateService> provider) {
 		instanceProvider = provider;

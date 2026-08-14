@@ -25,7 +25,6 @@ public class Say extends AdminCommand {
 	 * Executes this admin command.
 	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
-	 * command arguments
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -64,7 +63,6 @@ public class Say extends AdminCommand {
 	 * Prints usage when arguments are invalid.
 	 *
 	 * @param player 接收提示的玩家 / player receiving the message
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

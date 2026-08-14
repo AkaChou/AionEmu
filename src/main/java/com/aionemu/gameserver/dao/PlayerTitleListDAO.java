@@ -20,7 +20,7 @@ public abstract class PlayerTitleListDAO implements DAO {
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
 	 *
-	 * fully qualified class name
+	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -31,8 +31,8 @@ public abstract class PlayerTitleListDAO implements DAO {
 	 * 加载玩家称号列表。
 	 * Loads the title list for the player.
 	 *
-	 * player object id
-	 * title list
+	 * @param playerId 玩家对象 ID / player object id
+	 * @return 称号列表 / title list
 	 */
 	public abstract TitleList loadTitleList(int playerId);
 
@@ -53,7 +53,7 @@ public abstract class PlayerTitleListDAO implements DAO {
 	 * 保存玩家一条称号记录。
 	 * Stores a title entry for the player.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @param entry 称号条目 / title entry
 	 * @return 是否保存成功 / true if stored
 	 */
@@ -63,8 +63,8 @@ public abstract class PlayerTitleListDAO implements DAO {
 	 * 移除玩家一条称号。
 	 * Removes a title from the player.
 	 *
-	 * player object id
-	 * title id
+	 * @param playerId 玩家对象 ID / player object id
+	 * @param titleId 称号 ID / title id
 	 * @return 是否移除成功 / true if removed
 	 */
 	public abstract boolean removeTitle(int playerId, int titleId);

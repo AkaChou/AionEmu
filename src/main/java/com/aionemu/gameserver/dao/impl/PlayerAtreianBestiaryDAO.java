@@ -36,8 +36,8 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
      * 加载玩家图鉴列表。
      * Loads player Atreian bestiary list.
      *
-     * 玩家 / player
-     * bestiary list
+     * @param player 玩家 / player
+     * @return 图鉴列表 / bestiary list
      */
     @Override
     public PlayerABList load(Player player) {
@@ -68,12 +68,12 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
      * 存储图鉴条目。
      * Stores a bestiary entry.
      *
-     * player object id
+     * @param objectId 玩家对象 ID / player object id
      * @param id 图鉴 ID / bestiary id
-     * kill count
-     * level
+     * @param kill_count 击杀数 / kill count
+     * @param level 等级 / level
      * @param claimReward 是否已领奖 / claim reward flag
-     * whether succeeded
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean store(int objectId, int id, int kill_count, int level, int claimReward) {
@@ -97,9 +97,9 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
      * 删除图鉴条目。
      * Deletes a bestiary entry.
      *
-     * player object id
+     * @param playerObjId 玩家对象 ID / player object id
      * @param id 图鉴 ID / bestiary id
-     * whether succeeded
+     * @return 是否成功 / whether succeeded
      */
     @Override
     public boolean delete(int playerObjId, int id) {
@@ -120,9 +120,9 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
      * 按 ID 获取击杀数。
      * Gets kill count by id.
      *
-     * player object id
+     * @param playerObjId 玩家对象 ID / player object id
      * @param id 图鉴 ID / bestiary id
-     * kill count
+     * @return 击杀数 / kill count
      */
     @Override
     public int getKillCountById(final int playerObjId, final int id) {
@@ -148,9 +148,9 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
      * 按 ID 获取等级。
      * Gets level by id.
      *
-     * player object id
+     * @param playerObjId 玩家对象 ID / player object id
      * @param id 图鉴 ID / bestiary id
-     * level
+     * @return 等级 / level
      */
     @Override
     public int getLevelById(final int playerObjId, final int id) {
@@ -176,9 +176,9 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
      * 按 ID 获取领奖状态。
      * Gets claim reward flag by id.
      *
-     * player object id
+     * @param playerObjId 玩家对象 ID / player object id
      * @param id 图鉴 ID / bestiary id
-     * claim reward flag
+     * @return 领取奖励标记 / claim reward flag
      */
     @Override
     public int getClaimRewardById(int playerObjId, int id) {
@@ -204,10 +204,10 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {

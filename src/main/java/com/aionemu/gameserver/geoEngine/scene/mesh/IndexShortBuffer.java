@@ -18,7 +18,7 @@ public class IndexShortBuffer extends IndexBuffer {
 	 * 使用给定 short 缓冲构造索引缓冲。
 	 * Constructs an index buffer over the given short buffer.
 	 *
-	 * short buffer
+	 * @param buffer short 缓冲 / short buffer
 	 */
 	public IndexShortBuffer(ShortBuffer buffer) {
 		this.buf = buffer;
@@ -41,7 +41,7 @@ public class IndexShortBuffer extends IndexBuffer {
 	 * Writes a short index value.
 	 *
 	 * @param i 索引位置 / index position
-	 * index value
+	 * @param value 索引值 / index value
 	 */
 	@Override
 	public void put(int i, int value) {
@@ -52,7 +52,7 @@ public class IndexShortBuffer extends IndexBuffer {
 	 * 返回缓冲 limit（元素个数）。
 	 * Returns the buffer limit (element count).
 	 *
-	 * element count
+	 * @return 元素个数 / element count
 	 */
 	@Override
 	public int size() {
@@ -63,7 +63,7 @@ public class IndexShortBuffer extends IndexBuffer {
 	 * 返回底层 short 缓冲。
 	 * Returns the underlying short buffer.
 	 *
-	 * short buffer
+	 * @return 底层 short 缓冲 / short buffer
 	 */
 	@Override
 	public Buffer getBuffer() {

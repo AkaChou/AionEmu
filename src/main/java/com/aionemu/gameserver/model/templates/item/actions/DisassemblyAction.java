@@ -114,7 +114,7 @@ public class DisassemblyAction extends AbstractItemAction
 			PacketSendUtility.sendPacket(player, new SM_SELECT_ITEM(finalItemCollection, parentItem.getObjectId().intValue()));
 			return;
 		} else { // Normal DisassemblyBox
-			// send the S_USE_ITEM packet
+			// 发送 S_USE_ITEM 使用动画包。 / send the S_USE_ITEM packet
 			PacketSendUtility.broadcastPacketAndReceive(player,
 					new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemId(), USAGE_DELAY,
 							0, 0));

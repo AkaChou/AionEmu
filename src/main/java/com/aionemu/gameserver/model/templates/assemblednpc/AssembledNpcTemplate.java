@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 组装 NPC 模板（静态数据/XML）。
- * XML template.
+ * Assembled NPC template (static data/XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

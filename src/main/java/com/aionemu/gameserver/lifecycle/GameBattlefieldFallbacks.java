@@ -27,7 +27,7 @@ final class GameBattlefieldFallbacks {
      * 卡玛战场服务回退实例。
      * Kamar battlefield service fallback instance.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     static KamarBattlefieldService kamarBattlefieldService() {
         return KamarBattlefieldServiceFallback.INSTANCE;
@@ -37,7 +37,7 @@ final class GameBattlefieldFallbacks {
      * 吞噬的奥菲丹桥服务回退实例。
      * Engulfed Ophidan Bridge service fallback instance.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     static EngulfedOphidanBridgeService engulfedOphidanBridgeService() {
         return EngulfedOphidanBridgeServiceFallback.INSTANCE;
@@ -47,7 +47,7 @@ final class GameBattlefieldFallbacks {
      * 可疑的奥菲丹桥服务回退实例。
      * Suspicious Ophidan Bridge service fallback instance.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     static SuspiciousOphidanBridgeService suspiciousOphidanBridgeService() {
         return SuspiciousOphidanBridgeServiceFallback.INSTANCE;
@@ -57,7 +57,7 @@ final class GameBattlefieldFallbacks {
      * 铁壁前线服务回退实例。
      * Iron Wall Warfront service fallback instance.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     static IronWallWarfrontService ironWallWarfrontService() {
         return IronWallWarfrontServiceFallback.INSTANCE;
@@ -67,7 +67,7 @@ final class GameBattlefieldFallbacks {
      * 伊迪尔穹顶服务回退实例。
      * Idgel Dome service fallback instance.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     static IdgelDomeService idgelDomeService() {
         return IdgelDomeServiceFallback.INSTANCE;
@@ -77,7 +77,7 @@ final class GameBattlefieldFallbacks {
      * 伊迪尔穹顶地标服务回退实例。
      * Idgel Dome Landmark service fallback instance.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     static IdgelDomeLandmarkService idgelDomeLandmarkService() {
         return IdgelDomeLandmarkServiceFallback.INSTANCE;
@@ -87,7 +87,7 @@ final class GameBattlefieldFallbacks {
      * 坚韧殿堂服务回退实例。
      * Hall of Tenacity service fallback instance.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     static HallOfTenacityService hallOfTenacityService() {
         return HallOfTenacityServiceFallback.INSTANCE;
@@ -97,7 +97,7 @@ final class GameBattlefieldFallbacks {
      * 大竞技场训练营服务回退实例。
      * Grand Arena Training Camp service fallback instance.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     static GrandArenaTrainingCampService grandArenaTrainingCampService() {
         return GrandArenaTrainingCampServiceFallback.INSTANCE;
@@ -107,7 +107,7 @@ final class GameBattlefieldFallbacks {
      * IDRun 服务回退实例。
      * IDRun service fallback instance.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     static IDRunService idRunService() {
         return IdRunServiceFallback.INSTANCE;

@@ -85,7 +85,7 @@ public abstract class Event implements Runnable {
 	 * 事件冷却时间（毫秒），默认 30 秒。
 	 * Cooldown in millis after finish; default 30 seconds.
 	 *
-	 * cooldown millis
+	 * @return 冷却毫秒 / cooldown millis
 	 */
 	public int getCooldown() {
 		return 30 * 1000;
@@ -95,7 +95,7 @@ public abstract class Event implements Runnable {
 	 * 获取优先级。
 	 * Returns the priority.
 	 *
-	 * priority
+	 * @return 优先级 / priority
 	 */
 	public int getPriority() {
 		return priority;
@@ -121,7 +121,7 @@ public abstract class Event implements Runnable {
 	 * 事件是否已结束。
 	 * Whether the event has finished.
 	 *
-	 * finished flag
+	 * @return 完成标记 / finished flag
 	 */
 	public boolean isFinished() {
 		return finished;
@@ -132,7 +132,7 @@ public abstract class Event implements Runnable {
 	 * Sends an event announce to a player.
 	 *
 	 * @param pl 玩家 / player
-	 * message
+	 * @param msg 消息 / message
 	 */
 	protected void announce(Player pl, String msg) {
 		announce(pl, msg, 0);
@@ -142,8 +142,8 @@ public abstract class Event implements Runnable {
 	 * 向玩家集合发送事件公告。
 	 * Sends an event announce to a player collection.
 	 *
-	 * players
-	 * message
+	 * @param players 玩家集合 / players
+	 * @param msg 消息 / message
 	 */
 	protected void announce(Collection<Player> players, String msg) {
 		for (Player pl : players) {
@@ -156,7 +156,7 @@ public abstract class Event implements Runnable {
 	 * Sends an event announce to a player, optionally delayed.
 	 *
 	 * @param pl 玩家 / player
-	 * message
+	 * @param msg 消息 / message
 	 * @param delay 延迟毫秒，0 表示立即 / delay millis, 0 means immediate
 	 */
 	protected void announce(final Player pl, final String msg, int delay) {
@@ -176,7 +176,7 @@ public abstract class Event implements Runnable {
 	 * 向全服（非战场）玩家广播事件公告。
 	 * Broadcasts an event announce to all non-battleground players.
 	 *
-	 * message
+	 * @param msg 消息 / message
 	 */
 	protected void announceAll(String msg) {
 		announceAll(msg, 0);
@@ -186,7 +186,7 @@ public abstract class Event implements Runnable {
 	 * 向全服（非战场）玩家广播事件公告，可延迟。
 	 * Broadcasts an event announce to all non-battleground players, optionally delayed.
 	 *
-	 * message
+	 * @param msg 消息 / message
 	 * @param delay 延迟毫秒，0 表示立即 / delay millis, 0 means immediate
 	 */
 	protected void announceAll(final String msg, int delay) {

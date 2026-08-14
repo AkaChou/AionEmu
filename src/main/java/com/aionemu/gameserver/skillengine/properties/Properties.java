@@ -287,7 +287,7 @@ public class Properties {
 	 * 获取目标关系属性。
 	 * Returns the target relation attribute.
 	 *
-	 * target relation
+	 * @return 目标关系 / target relation
 	 */
 	public TargetRelationAttribute getTargetRelation() {
 		return targetRelation;
@@ -307,7 +307,7 @@ public class Properties {
 	 * 获取目标距离。
 	 * Returns the target distance.
 	 *
-	 * target distance
+	 * @return 目标距离 / target distance
 	 */
 	public int getTargetDistance() {
 		return targetDistance;
@@ -341,7 +341,7 @@ public class Properties {
 	 * 获取修订距离。
 	 * Returns the revision distance.
 	 *
-	 * revision distance
+	 * @return 修订距离 / revision distance
 	 */
 	public int getRevisionDistance() {
 		return revisionDistance;
@@ -351,7 +351,7 @@ public class Properties {
 	 * 获取有效宽度。
 	 * Returns the effective width.
 	 *
-	 * effective width
+	 * @return 有效宽度 / effective width
 	 */
 	public int getEffectiveWidth() {
 		return effectiveWidth;
@@ -369,7 +369,7 @@ public class Properties {
 	 * 获取有效角度。
 	 * Returns the effective angle.
 	 *
-	 * effective angle
+	 * @return 有效角度 / effective angle
 	 */
 	public int getEffectiveAngle() {
 		return effectiveAngle;
@@ -389,7 +389,7 @@ public class Properties {
 	 * 获取目标物种属性。
 	 * Returns the target species attribute.
 	 *
-	 * target species
+	 * @return 目标物种 / target species
 	 */
 	public TargetSpeciesAttribute getTargetSpecies() {
 		return targetSpecies;

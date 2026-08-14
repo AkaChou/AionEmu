@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 点3D，用于几何相关逻辑。
- * Point 3 D for geometry logic.
+ * 三维点，用于几何相关逻辑。
+ * Point 3D for geometry logic.
  *
  * @author SoulKeeper
  */
@@ -17,54 +17,57 @@ import lombok.Setter;
 @Setter
 public class Point3D implements Cloneable, Serializable {
 
-	 /**
-	  * 点的 X 坐标。
-	  * X coord of the point
-	  */
+	/**
+	 * 点的 X 坐标。
+	 * X coord of the point.
+	 */
 	private float x;
 
-	 /**
-	  * 点的 Y 坐标。
-	  * Y coord of the point
-	  */
+	/**
+	 * 点的 Y 坐标。
+	 * Y coord of the point.
+	 */
 	private float y;
 
-	 /**
-	  * 点的 Z 坐标。
-	  * Z coord of the point
-	  */
+	/**
+	 * 点的 Z 坐标。
+	 * Z coord of the point.
+	 */
 	private float z;
 
-	 /**
-	  * 创建坐标为 0,0,0 的新点。
-	  * Creates new point with coords 0, 0, 0
-	  */
+	/**
+	 * 创建坐标为 0, 0, 0 的新点。
+	 * Creates new point with coords 0, 0, 0.
+	 */
 	public Point3D() {
 	}
 
 	/**
-	 * 创建新 3Dpoint 从 2Dpoint 并 zcoord。 / Creates new 3D point from 2D point and z coord
+	 * 由二维点和 Z 坐标创建新的三维点。
+	 * Creates new 3D point from 2D point and z coord.
 	 *
-	 * @param point 2D point
-	 * @param z     z coord
+	 * @param point 二维点 / 2D point
+	 * @param z     z 坐标 / z coord
 	 */
 	public Point3D(Point2D point, float z) {
 		this(point.getX(), point.getY(), z);
 	}
 
 	/**
-	 * 克隆另一个 3D 点。 / Clones another 3D point.
+	 * 克隆另一个三维点。
+	 * Clones another 3D point.
 	 */
 	public Point3D(Point3D point) {
 		this(point.getX(), point.getY(), point.getZ());
 	}
 
 	/**
-	 * 创建新 3dpoint 给定 coords。 / Creates new 3d point with given coords
+	 * 用给定坐标创建新的三维点。
+	 * Creates new 3D point with given coords.
 	 *
-	 * @param x x coord
-	 * @param y y coord
-	 * @param z z coord
+	 * @param x x 坐标 / x coord
+	 * @param y y 坐标 / y coord
+	 * @param z z 坐标 / z coord
 	 */
 	public Point3D(float x, float y, float z) {
 		this.x = x;
@@ -73,10 +76,11 @@ public class Point3D implements Cloneable, Serializable {
 	}
 
 	/**
-	 * 检查是否此 point 为 equal 到 anotherpoint。 / Checks if this point is equal to another point
+	 * 检查该点是否与另一个点相等。
+	 * Checks if this point is equal to another point.
 	 *
-	 * @param o point to compare with
-	 * @return true if equal
+	 * @param o 要比较的点 / point to compare with
+	 * @return 相等返回 true / true if equal
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -91,9 +95,10 @@ public class Point3D implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns point's hashcode.<br> <pre> int result = x; result = 31 * result + y; result = 31 * result + z; return result; </pre>。
+	 * 返回点的哈希码：result = x; result = 31 * result + y; result = 31 * result + z。
+	 * Returns point's hashcode: result = x; result = 31 * result + y; result = 31 * result + z.
 	 *
-	 * @return hashcode
+	 * @return 哈希码 / hashcode
 	 */
 	@Override
 	public int hashCode() {
@@ -104,8 +109,8 @@ public class Point3D implements Cloneable, Serializable {
 	}
 
 	/**
-	 * @return 克隆本点。 / Clones this point copy of this point
-	 * @throws CloneNotSupportedException never thrown
+	 * @return 本点的副本 / Clones this point, copy of this point
+	 * @throws CloneNotSupportedException 永不会抛出 / never thrown
 	 */
 	@Override
 	public Point3D clone() throws CloneNotSupportedException {
@@ -113,7 +118,8 @@ public class Point3D implements Cloneable, Serializable {
 	}
 
 	/**
-	 * 本点的格式化字符串表示。 / Formatted string representation of this point.
+	 * 本点的格式化字符串表示。
+	 * Formatted string representation of this point.
 	 */
 	@Override
 	public String toString() {

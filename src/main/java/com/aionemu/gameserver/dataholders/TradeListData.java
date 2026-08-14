@@ -57,7 +57,7 @@ public class TradeListData {
 	 * 返回已加载的普通交易列表数量。
 	 * Returns the number of loaded sell trade lists.
 	 *
-	 * list count
+	 * @return 已加载的出售交易列表数量 / Returns the number of loaded sell trade lists.
 	 */
 	public int size() {
 		return npctlistData.size();
@@ -67,9 +67,7 @@ public class TradeListData {
 	 * 按 NPC ID 获取普通交易列表模板。
 	 * Returns the sell trade-list template for the given NPC id.
 	 *
-	 * NPC id
-	 *
-	 * @param id
+	 * @param id NPC ID / npc id
 	 * @return 交易列表模板，不存在则为 null / trade-list template or null
 	 */
 	public TradeListTemplate getTradeListTemplate(int id) {
@@ -80,9 +78,7 @@ public class TradeListData {
 	 * 按 NPC ID 获取以物易物列表模板。
 	 * Returns the trade-in list template for the given NPC id.
 	 *
-	 * NPC id
-	 *
-	 * @param id
+	 * @param id NPC ID / npc id
 	 * @return 以物易物模板，不存在则为 null / trade-in template or null
 	 */
 	public TradeListTemplate getTradeInListTemplate(int id) {
@@ -93,9 +89,7 @@ public class TradeListData {
 	 * 按 NPC ID 获取收购列表模板。
 	 * Returns the purchase list template for the given NPC id.
 	 *
-	 * NPC id
-	 *
-	 * @param id
+	 * @param id NPC ID / npc id
 	 * @return 收购列表模板，不存在则为 null / purchase template or null
 	 */
 	public TradeListTemplate getPurchaseListTemplate(int id) {

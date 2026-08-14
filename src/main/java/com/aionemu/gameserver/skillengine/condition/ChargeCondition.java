@@ -29,8 +29,8 @@ public class ChargeCondition extends Condition {
 	 * Validates the charge level of the item owning the stat function.
 	 *
 	 * @param env 属性对象 / stat object
-	 * stat function
-	 * whether valid
+	 * @param statFunction 属性函数 / stat function
+	 * @return 是否有效 / whether valid
 	 */
 	@Override
 	public boolean validate(Stat2 env, IStatFunction statFunction) {
@@ -47,7 +47,7 @@ public class ChargeCondition extends Condition {
 	 * Charge condition is not supported on the skill cast path; always fails.
 	 *
 	 * @param env 技能环境 / skill environment
-	 * always false
+	 * @return 恒为 false / always false
 	 */
 	@Override
 	public boolean validate(Skill env) {

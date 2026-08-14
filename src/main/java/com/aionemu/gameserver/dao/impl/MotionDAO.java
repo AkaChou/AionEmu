@@ -34,10 +34,10 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {
@@ -67,8 +67,8 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
      * 按玩家 ID 加载动作列表。
      * Loads the motion list by player id.
      *
-     * player id
-     * motion list
+     * @param playerId 玩家 ID / player id
+     * @return 动作列表 / motion list
      */
     @Override
     public List<Motion> loadMotions(Integer playerId) {
@@ -96,9 +96,9 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
      * 保存动作。
      * Stores a motion.
      *
-     * player object id
-     * motion
-     * whether successful
+     * @param objectId 玩家对象 ID / player object id
+     * @param motion 动作 / motion
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean storeMotion(int objectId, Motion motion) {
@@ -121,9 +121,9 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
      * 删除动作。
      * Deletes a motion.
      *
-     * player object id
-     * motion id
-     * whether successful
+     * @param objectId 玩家对象 ID / player object id
+     * @param motionId 动作 ID / motion id
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean deleteMotion(int objectId, int motionId) {
@@ -144,9 +144,9 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
      * 更新动作激活状态。
      * Updates the motion active state.
      *
-     * player object id
-     * motion
-     * whether successful
+     * @param objectId 玩家对象 ID / player object id
+     * @param motion 动作 / motion
+     * @return 是否成功 / whether successful
      */
     @Override
     public boolean updateMotion(int objectId, Motion motion) {

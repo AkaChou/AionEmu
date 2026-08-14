@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 世界引导运行时桥：解析 IDFactory / Zone / Hotspot / Road / World。
- * Zone / Hotspot / Road / World.
+ * World-bootstrap runtime bridge: resolves IDFactory / Zone / Hotspot / Road / World.
  */
 @Component
 public class GameWorldBootstrapRuntimeBridge {
@@ -50,7 +50,7 @@ public class GameWorldBootstrapRuntimeBridge {
      * 注入 IDFactory 提供者。
      * Inject the IDFactory provider.
      *
-     * IDFactory provider
+     * @param idFactoryProvider IDFactory 提供者 / IDFactory provider
      */
     @Autowired(required = false)
     void setIdFactoryProvider(ObjectProvider<IDFactory> idFactoryProvider) {
@@ -61,7 +61,7 @@ public class GameWorldBootstrapRuntimeBridge {
      * 注入 ZoneService 提供者。
      * Inject the ZoneService provider.
      *
-     * ZoneService provider
+     * @param zoneServiceProvider ZoneService 提供者 / ZoneService provider
      */
     @Autowired(required = false)
     void setZoneServiceProvider(ObjectProvider<ZoneService> zoneServiceProvider) {
@@ -72,7 +72,7 @@ public class GameWorldBootstrapRuntimeBridge {
      * 注入 HotspotTeleportService 提供者。
      * Inject the HotspotTeleportService provider.
      *
-     * HotspotTeleportService provider
+     * @param hotspotTeleportServiceProvider HotspotTeleportService 提供者 / HotspotTeleportService provider
      */
     @Autowired(required = false)
     void setHotspotTeleportServiceProvider(ObjectProvider<HotspotTeleportService> hotspotTeleportServiceProvider) {
@@ -83,7 +83,7 @@ public class GameWorldBootstrapRuntimeBridge {
      * 注入 RoadService 提供者。
      * Inject the RoadService provider.
      *
-     * RoadService provider
+     * @param roadServiceProvider RoadService 提供者 / RoadService provider
      */
     @Autowired(required = false)
     void setRoadServiceProvider(ObjectProvider<RoadService> roadServiceProvider) {
@@ -94,7 +94,7 @@ public class GameWorldBootstrapRuntimeBridge {
      * 注入 World 提供者。
      * Inject the World provider.
      *
-     * World provider
+     * @param worldProvider World 提供者 / World provider
      */
     @Autowired(required = false)
     void setWorldProvider(ObjectProvider<World> worldProvider) {
@@ -105,7 +105,7 @@ public class GameWorldBootstrapRuntimeBridge {
      * 解析 IDFactory：优先 Spring，否则回退。
      * Resolve IDFactory: prefer Spring, otherwise fallback.
      *
-     * IDFactory instance
+     * @return IDFactory 实例 / IDFactory instance
      */
     public IDFactory idFactory() {
         if (idFactoryProvider == null) {
@@ -118,7 +118,7 @@ public class GameWorldBootstrapRuntimeBridge {
      * 解析 ZoneService：优先 Spring，否则回退。
      * Resolve ZoneService: prefer Spring, otherwise fallback.
      *
-     * ZoneService instance
+     * @return ZoneService 实例 / ZoneService instance
      */
     public ZoneService zoneService() {
         if (zoneServiceProvider == null) {
@@ -131,7 +131,7 @@ public class GameWorldBootstrapRuntimeBridge {
      * 解析 HotspotTeleportService：优先 Spring，否则回退。
      * Resolve HotspotTeleportService: prefer Spring, otherwise fallback.
      *
-     * HotspotTeleportService instance
+     * @return HotspotTeleportService 实例 / HotspotTeleportService instance
      */
     public HotspotTeleportService hotspotTeleportService() {
         if (hotspotTeleportServiceProvider == null) {
@@ -144,7 +144,7 @@ public class GameWorldBootstrapRuntimeBridge {
      * 解析 RoadService：优先 Spring，否则回退。
      * Resolve RoadService: prefer Spring, otherwise fallback.
      *
-     * RoadService instance
+     * @return RoadService 实例 / RoadService instance
      */
     public RoadService roadService() {
         if (roadServiceProvider == null) {
@@ -157,7 +157,7 @@ public class GameWorldBootstrapRuntimeBridge {
      * 解析 World：优先 Spring，否则回退。
      * Resolve World: prefer Spring, otherwise fallback.
      *
-     * World instance
+     * @return World 实例 / World instance
      */
     public World world() {
         if (worldProvider == null) {

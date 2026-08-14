@@ -221,7 +221,7 @@ public class CrazyDaevaService {
 				});
 				log.info(I18n.get("log.f2f29a601942"));
 			}
-		}, EventsConfig.CRAZY_ENDTIME * 60 * 1000); // time stop
+		}, EventsConfig.CRAZY_ENDTIME * 60 * 1000); // 活动停止时间 / time stop
 	}
 
 	/**

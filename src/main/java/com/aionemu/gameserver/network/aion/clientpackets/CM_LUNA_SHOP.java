@@ -50,14 +50,14 @@ public class CM_LUNA_SHOP extends AionClientPacket {
 	protected void readImpl() {
 		actionId = readC();
 		switch (actionId) {
-		case 0: // Taki's Missions Teleport.
+		case 0: // Taki 的任务传送 / Taki's Missions Teleport.
 			indun_id = readD();
 			indun_unk = readC();
 			break;
-		case 2: // Karunerk's Workshop.
+		case 2: // Karunerk 的工坊 / Karunerk's Workshop.
 			recipe_id = readD();
 			break;
-		case 4: // Buy Necessary Materials.
+		case 4: // 购买必需材料 / Buy Necessary Materials.
 			material_item_id = readD();
 			material_item_count = readQ();
 			break;
@@ -65,27 +65,27 @@ public class CM_LUNA_SHOP extends AionClientPacket {
 		case 7:
 			this.teleportId = readD();
 			break;
-		case 8: // Dorinerk's Wardrobe.
+		case 8: // Dorinerk 的衣柜 / Dorinerk's Wardrobe.
 			break;
-		case 9: // Expand wardrobe slot
+		case 9: // 扩展衣柜栏位 / Expand wardrobe slot
 			break;
-		case 10: // Apply wardrobe appearance
+		case 10: // 应用衣柜外观 / Apply wardrobe appearance
 			slot = readC();
 			ItemObjId = readD();
 			break;
-		case 11: // Modify appearance
+		case 11: // 修改外观 / Modify appearance
 			slot = readC();
 			ItemObjId = readD();
 			lunaCost = readC();
 			break;
-		case 12: // Open Chest.
+		case 12: // 打开宝箱 / Open Chest.
 			break;
-		case 14: // Taki's Adventure.
+		case 14: // Taki 的冒险 / Taki's Adventure.
 			indun_id = readD();
 			break;
-		case 15: // Luna Dice Game
+		case 15: // 月之骰子游戏 / Luna Dice Game
 			break;
-		case 16:// Luna Dice Game Reward
+		case 16:// 月之骰子游戏奖励 / Luna Dice Game Reward
 			break;
 		}
 	}
@@ -114,13 +114,13 @@ public class CM_LUNA_SHOP extends AionClientPacket {
 				GameEventBootstrapServices.lunaShopService().takiAdventureTeleport(player, indun_unk, indun_id);
 			}
 			break;
-		case 2: // Karunerk's Workshop
+		case 2: // Karunerk 的工坊 / Karunerk's Workshop
 			GameEventBootstrapServices.lunaShopService().specialDesign(player, recipe_id);
 			break;
 		case 3:
 			GameEventBootstrapServices.lunaShopService().craftBox(player);
 			break;
-		case 4: // Buy Necessary Materials
+		case 4: // 购买必需材料 / Buy Necessary Materials
 			GameEventBootstrapServices.lunaShopService().buyMaterials(player, material_item_id, material_item_count);
 			break;
 		case 5:

@@ -14,7 +14,7 @@ public class NetworkUtils {
      * Check whether an IP matches a pattern ({@code *} and ranges supported).
      *
      * @param pattern 匹配模式，如 {@code 192.168.*.*} 或 {@code 192.168.1-100.*} / Pattern, e.g. {@code 192.168.*.*} or {@code 192.168.1-100.*}
-     * IP address to check
+     * @param address 待检查 IP 地址 / IP address to check
      *
      * @return 匹配时为 {@code true} / {@code true} if matched
      */

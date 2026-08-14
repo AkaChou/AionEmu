@@ -42,7 +42,7 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc 注册掉落的 NPC / registered NPC
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -112,7 +112,7 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc 死亡的 NPC / dead NPC
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -206,9 +206,9 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 ID / message id
+	 * @param race 阵营 / race
+	 * @param time 延迟时间 / delay time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {

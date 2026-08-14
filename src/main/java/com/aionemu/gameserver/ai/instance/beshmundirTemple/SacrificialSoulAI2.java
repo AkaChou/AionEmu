@@ -25,9 +25,9 @@ public class SacrificialSoulAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		AI2Actions.useSkill(this, 18901); //Time Wrinkle.
+		AI2Actions.useSkill(this, 18901); // 时间褶皱 / Time Wrinkle.
 		this.setStateIfNot(AIState.FOLLOWING);
-		boss = getPosition().getWorldMapInstance().getNpc(216263); //Isbariya The Resolute.
+		boss = getPosition().getWorldMapInstance().getNpc(216263); // Boss：Isbariya The Resolute / Isbariya The Resolute.
 		if (boss != null && !NpcActions.isAlreadyDead(boss)) {
 			AI2Actions.targetCreature(this, boss);
 			getMoveController().moveToTargetObject();
@@ -37,7 +37,7 @@ public class SacrificialSoulAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
-		if (creature.getEffectController().hasAbnormalEffect(18959)) { //Sixth Sense.
+		if (creature.getEffectController().hasAbnormalEffect(18959)) { // 第六感 / Sixth Sense.
 			getMoveController().abortMove();
 			AI2Actions.deleteOwner(this);
 		}
@@ -46,7 +46,7 @@ public class SacrificialSoulAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleMoveArrived() {
 		if (boss != null && !NpcActions.isAlreadyDead(boss)) {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 18960, 55, boss).useNoAnimationSkill(); //Call Of The Grave.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 18960, 55, boss).useNoAnimationSkill(); // 死亡召唤 / Call Of The Grave.
 			AI2Actions.deleteOwner(this);
 		}
 	}

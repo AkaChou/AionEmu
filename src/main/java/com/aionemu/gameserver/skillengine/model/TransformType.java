@@ -38,7 +38,6 @@ public enum TransformType {
 	 * 获取协议 ID。
 	 * Gets protocol id.
 	 *
-	 * transform type id
 	 */
 	public int getId() {
 		return id;

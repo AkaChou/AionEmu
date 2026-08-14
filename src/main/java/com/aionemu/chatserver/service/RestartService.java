@@ -62,7 +62,7 @@ public class RestartService {
         // 切换频率 / switch frequency
         switch (frequency) {
             case DAILY:
-                if (isMissed) //execute next day if we missed the time today (what is mostly the case)
+                if (isMissed) // 今日时刻已过则顺延到次日（多数情况如此） / execute next day if missed today
                 {
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                 }
@@ -110,7 +110,7 @@ public class RestartService {
      * 获取单例（已废弃，迁移至 Boot 后请使用注入）。
      * Return the singleton (deprecated; prefer injection after Boot migration).
      *
-     * Singleton instance
+     * @return 单例实例 / singleton instance
      * @deprecated boot-migration
      */
     @Deprecated(since = "boot-migration")

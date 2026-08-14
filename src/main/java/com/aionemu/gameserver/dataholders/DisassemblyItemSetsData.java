@@ -44,7 +44,7 @@ public class DisassemblyItemSetsData
 	 * 返回原始拆解套装列表。
 	 * Returns the raw disassembly item-set list.
 	 *
-	 * item-set list
+	 * @return 原始分解物品套装列表 / Returns the raw disassembly item-set list.
 	 */
 	public List<DisassemblyItemSet> getDisassemblyItemSet()
 	{
@@ -55,7 +55,7 @@ public class DisassemblyItemSetsData
 	 * 返回已索引的拆解套装数量。
 	 * Returns the number of indexed disassembly sets.
 	 *
-	 * set count
+	 * @return 已索引的分解套装数量 / Returns the number of indexed disassembly sets.
 	 */
 	public int size()
 	{
@@ -66,9 +66,7 @@ public class DisassemblyItemSetsData
 	 * 按物品 ID 获取拆解分组列表。
 	 * Returns the disassemble group list for the given item id.
 	 *
-	 * item id
-	 *
-	 * @param itemId
+	 * @param itemId 物品 ID / item id
 	 * @return 分组列表，不存在则为 null / group list or null
 	 */
 	public List<DisassembleItemGroups> getInfoByItemId(int itemId)

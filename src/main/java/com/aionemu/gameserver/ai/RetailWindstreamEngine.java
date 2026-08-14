@@ -11,7 +11,10 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** 真端 AI 控制的实例级风道开关。 */
+/**
+ * 真端 AI 控制的实例级风道开关。
+ * Retail AI-controlled instance-level windstream switches.
+ */
 public final class RetailWindstreamEngine {
 
 	private static final Map<WorldMapInstance, Map<Integer, Integer>> STATES = new ConcurrentHashMap<>();

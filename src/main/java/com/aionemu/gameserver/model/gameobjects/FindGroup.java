@@ -44,7 +44,7 @@ public class FindGroup {
 		return instanceId;
 	}
 
-	/** 返回 min members / Returns the min members */
+	/** 返回最少成员数 / Returns the min members */
 	public int getMinMembers() {
 		return minMembers;
 	}
@@ -103,7 +103,7 @@ public class FindGroup {
 		return 1;
 	}
 
-	/** 返回 unk / Returns the unk */
+	/** 返回未知字段 / Returns the unk */
 	public int getUnk() {
 		if (object instanceof Player) {
 			return 65557;
@@ -113,14 +113,20 @@ public class FindGroup {
 	}
 
 	/**
-	 * @return the lastUpdate
+	 * 返回最后更新时间。
+	 * Returns the last update time.
+	 *
+	 * @return 最后更新时间 / the lastUpdate
 	 */
 	public int getLastUpdate() {
 		return lastUpdate;
 	}
 
 	/**
-	 * @return the name
+	 * 返回队伍名称。
+	 * Returns the team name.
+	 *
+	 * @return 名称 / the name
 	 */
 	public String getName() {
 		if (object instanceof Player) {
@@ -133,7 +139,7 @@ public class FindGroup {
 		return "";
 	}
 
-	/** 返回大小 / Returns the size*/
+	/** 返回大小 / Returns the size. */
 	public int getSize() {
 		if (object instanceof Player) {
 			return 1;

@@ -28,7 +28,7 @@ public class LiefAI2 extends GeneralNpcAI2
     public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
-			    case 835271: //Lief.
+			    case 835271: // 利夫 / Lief.
 					GameEngineServices.skillEngine().applyEffectDirectly(11253, player, player, 7200000 * 1);
 				break;
 			}

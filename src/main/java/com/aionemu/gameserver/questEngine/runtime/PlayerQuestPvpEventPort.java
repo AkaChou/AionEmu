@@ -16,9 +16,12 @@ import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 /**
+ * 从真实服务器击杀扇出构建不可变的 PvP 事实。
  * Builds immutable PvP facts from the actual server kill fanout.
  *
- * <p>The caller must be the authoritative {@code PvpService} fanout. The port
+ * <p>调用方必须是权威 {@code PvpService} 扇出。端口会复检安全边界，
+ * 使直接或过期调用无法为同族、已死亡、超范围或跨世界目标创建类型化任务事件。
+ * The caller must be the authoritative {@code PvpService} fanout. The port
  * rechecks the safety boundary so a direct or stale invocation cannot create a
  * typed quest event for a same-race, dead, out-of-range, or wrong-world target.</p>
  */

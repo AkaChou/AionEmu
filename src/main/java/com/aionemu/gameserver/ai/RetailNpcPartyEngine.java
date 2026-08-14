@@ -12,6 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 真端 NPC Party 刷怪引擎：按 Party 配置生成显式成员。
+ * Retail NPC party spawn engine that spawns explicit party members by config.
+ */
 @Slf4j
 public final class RetailNpcPartyEngine {
 

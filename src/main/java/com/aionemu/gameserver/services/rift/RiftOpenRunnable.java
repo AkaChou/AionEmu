@@ -20,7 +20,7 @@ public class RiftOpenRunnable implements Runnable {
 	 * 构造指定世界的裂隙开启任务。
 	 * Create an open-rift task for the given world.
 	 *
-	 * World map id
+	 * @param worldId 世界地图 ID / World map id
 	 */
 	public RiftOpenRunnable(int worldId) {
 		this.worldId = worldId;

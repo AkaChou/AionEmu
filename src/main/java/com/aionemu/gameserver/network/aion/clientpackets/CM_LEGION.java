@@ -15,10 +15,6 @@ import com.aionemu.gameserver.services.NameRestrictionService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * @author Simple
- */
-
-/**
  * 军团综合操作（创建、邀请、权限、公告等）的客户端包。
  * Client packet for general legion operations (create, invite, rights, announcements, etc.).
  *
@@ -66,9 +62,7 @@ public class CM_LEGION extends AionClientPacket {
 		exOpcode = readC();
 
 		switch (exOpcode) {
-		/**
-	 * 创建军团。 / Create a legion *
-	 */
+		/** 创建军团。 / Create a legion */
 		case 0x00:
 			creatorNpcObjectId = readD();
 			legionName = readS();
@@ -100,7 +94,7 @@ public class CM_LEGION extends AionClientPacket {
 			break;
 		/** 降为军团兵 / Demote to Legionary */
 		case 0x07:
-			readD(); // char id? 00 78 19 00 40
+			readD(); // 空或角色 ID？00 78 19 00 40 / char id? 00 78 19 00 40
 			charName = readS();
 			break;
 		/** 刷新军团信息 / Refresh legion info */
@@ -110,12 +104,12 @@ public class CM_LEGION extends AionClientPacket {
 			break;
 		/** 编辑公告 / Edit announcements */
 		case 0x09:
-			readD(); // empty or char id?
+			readD(); // 空或角色 ID？ / empty or char id?
 			announcement = readS();
 			break;
 		/** 修改自我介绍 / Change self introduction */
 		case 0x0A:
-			readD(); // empty char id?
+			readD(); // 空或角色 ID？ / empty char id?
 			newSelfIntro = readS();
 			break;
 		/** 编辑权限 / Edit permissions */
@@ -221,9 +215,7 @@ public class CM_LEGION extends AionClientPacket {
 			}
 		} else {
 			switch (exOpcode) {
-			/**
-	 * 创建军团。 / Create a legion *
-	 */
+			/** 创建军团。 / Create a legion */
 			case 0x00:
 				if (NameRestrictionService.isForbiddenWord(legionName)) {
 					PacketSendUtility.sendMessage(activePlayer,

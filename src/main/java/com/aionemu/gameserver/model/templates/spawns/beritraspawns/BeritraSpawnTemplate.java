@@ -46,14 +46,20 @@ public class BeritraSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether beritra invasion
+	 * 是否处于贝里特拉入侵状态。
+	 * Whether beritra invasion.
+	 *
+	 * @return 是否为入侵状态 / whether beritra invasion
 	 */
 	public final boolean isBeritraInvasion() {
 		return beritraType.equals(BeritraStateType.INVASION);
 	}
 
 	/**
-	 * @return Whether beritra peace
+	 * 是否处于贝里特拉和平状态。
+	 * Whether beritra peace.
+	 *
+	 * @return 是否为和平状态 / whether beritra peace
 	 */
 	public final boolean isBeritraPeace() {
 		return beritraType.equals(BeritraStateType.PEACE);

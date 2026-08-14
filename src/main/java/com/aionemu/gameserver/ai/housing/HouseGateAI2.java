@@ -27,6 +27,10 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 public class HouseGateAI2 extends NpcAI2
 {
 	@Override
+	/**
+	 * 房屋门扉对话：仅房主或其组队成员可触发；确认弹窗后把玩家传送至房屋所在区域（个人房屋或退出点）。
+	 * House gate dialog: only the house owner or group members may trigger it; on confirmation teleports the player to the house area (personal instance or exit point).
+	 */
 	protected void handleDialogStart(Player player) {
 		final int creatorId = getCreatorId();
 		if (!player.getObjectId().equals(creatorId)) {

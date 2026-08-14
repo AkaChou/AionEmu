@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 邮件奖励模板（静态数据/XML）。
- * XML template.
+ * Mail reward template (static data/XML).
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

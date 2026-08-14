@@ -13,10 +13,20 @@ import com.aionemu.gameserver.world.geo.path.PathService;
  */
 public class Geo extends AdminCommand {
 
+	/**
+	 * 注册 {@code //geo} 命令。
+	 * Registers the {@code //geo} command.
+	 */
 	public Geo() {
 		super("geo");
 	}
 
+	/**
+	 * 执行地理/寻路诊断：输出玩家高度或 PathService 与 NPC 移动恢复的队列指标。
+	 * Executes geo/path diagnostics: prints player height or PathService and NPC move-recovery queue metrics.
+	 *
+	 * @param params 参数：z 或 path / z or path
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params == null || params.length < 1) {
@@ -59,6 +69,10 @@ public class Geo extends AdminCommand {
 		onFail(player, null);
 	}
 
+	/**
+	 * 参数错误时的用法提示。
+	 * Usage hint on invalid parameters.
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "Usage: //geo z | //geo path");

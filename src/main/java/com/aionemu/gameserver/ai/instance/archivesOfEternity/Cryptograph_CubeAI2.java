@@ -30,7 +30,7 @@ public class Cryptograph_CubeAI2 extends GeneralNpcAI2
 			switch (getNpcId()) {
 				case 806152: //密码背包。 / Cryptograph Cube.
 				case 806153: //密码背包。 / Cryptograph Cube.
-				    ItemService.addItem(player, 125004516, 1); //?? ?? ?.
+				    ItemService.addItem(player, 125004516, 1); // 发放密码背包 / Grant the Cryptograph Cube
 			    break;
 			}
 		}

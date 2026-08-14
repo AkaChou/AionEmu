@@ -64,7 +64,7 @@ public class ChatServerConnection extends AConnection {
 	 * 基于传输层创建聊天服连接。
 	 * Creates a chat-server connection on the given transport.
 	 *
-	 * transport
+	 * @param transport 传输 / transport
 	 * @param csPacketHandler 入站包处理器 / inbound packet handler
 	 */
 	public ChatServerConnection(ConnectionTransport transport, CsPacketHandler csPacketHandler) {
@@ -199,7 +199,7 @@ public class ChatServerConnection extends AConnection {
 	 * 返回当前连接状态。
 	 * Returns the current connection state.
 	 *
-	 * connection state
+	 * @return 连接状态 / connection state
 	 */
 	public State getState() {
 		return state;
@@ -209,7 +209,7 @@ public class ChatServerConnection extends AConnection {
 	 * 设置连接状态。
 	 * Sets the connection state.
 	 *
-	 * new state
+	 * @param state 新状态 / new state
 	 */
 	public void setState(State state) {
 		this.state = state;

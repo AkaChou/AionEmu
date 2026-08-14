@@ -80,7 +80,7 @@ public class GameDisputeLandGateway {
      * 解析争议之地服务：优先 Spring，否则经运行时桥回退。
      * Resolve dispute-land service: prefer Spring, otherwise fall back via runtime bridge.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private DisputeLandService disputeLandService() {
         if (disputeLandServiceProvider == null) {
@@ -93,7 +93,7 @@ public class GameDisputeLandGateway {
      * 解析前哨服务。
      * Resolve outpost service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private OutpostService outpostService() {
         if (outpostServiceProvider == null) {
@@ -106,7 +106,7 @@ public class GameDisputeLandGateway {
      * 解析功能服务运行时桥：优先 Spring，否则新建。
      * Resolve feature-services runtime bridge: prefer Spring, otherwise create new.
      *
-     * Runtime bridge
+     * @return 运行时桥 / Runtime bridge
      */
     private GameFeatureServicesRuntimeBridge runtimeBridge() {
         if (runtimeBridgeProvider == null) {

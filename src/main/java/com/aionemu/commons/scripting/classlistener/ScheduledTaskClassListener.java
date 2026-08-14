@@ -8,8 +8,8 @@ import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.ClassUtils;
 
 /**
- * 定时任务类监听器，负责管理带有@Scheduled 注解的类的生命周期
- * Scheduled task class listener that manages lifecycle of classes with @Scheduled annotation
+ * 定时任务类监听器，负责管理带有@Scheduled 注解的类的生命周期。
+ * Scheduled task class listener that manages lifecycle of classes with @Scheduled annotation.
  *
  * 该类实现了以下功能：
  * This class implements the following features:
@@ -133,10 +133,10 @@ public class ScheduledTaskClassListener implements ClassListener {
 	}
 	
     /**
- * 获取 CronService 实例
-     * Get CronService instance
+     * 获取 CronService 实例。
+     * Get CronService instance.
      *
- * CronService instance
+     * @return CronService 实例 / CronService instance
      */
     protected CronService getCronService() {
 		return CronService.requireCurrent();

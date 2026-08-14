@@ -32,9 +32,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("Artifact_Overlord_Kroban")
 public class Artifact_Overlord_KrobanAI2 extends AggressiveNpcAI2
 {
+	// 阶段定时任务：周期性施放毁灭性元素爆炸技能。 / Phase task: periodically casts the destructive elemental blast skill.
 	private Future<?> phaseTask;
 	private boolean canThink = true;
+	// 是否已进入攻击状态（首次受到攻击置位）。 / Whether already aggroed (set on first attack).
 	private AtomicBoolean isAggred = new AtomicBoolean(false);
+	// 各血量阶段事件是否已启动。 / Whether the phase event for a given HP threshold has started.
 	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
 	
 	@Override

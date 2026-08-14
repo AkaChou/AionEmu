@@ -156,7 +156,7 @@ public class GameHousingGateway {
      * 解析城镇服务。
      * Resolve the town service.
      *
-     * Town service
+     * @return 城镇服务 / Town service
      */
     private TownService townService() {
         if (townServiceProvider == null) {
@@ -169,7 +169,7 @@ public class GameHousingGateway {
      * 解析房屋服务。
      * Resolve the housing service.
      *
-     * Housing service
+     * @return 房屋服务 / Housing service
      */
     private HousingService housingService() {
         if (housingServiceProvider == null) {

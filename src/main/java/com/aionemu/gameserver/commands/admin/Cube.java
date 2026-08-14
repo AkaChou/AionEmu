@@ -25,8 +25,6 @@ public class Cube extends AdminCommand {
 	 * 循环扩展背包直至满级（9 次）。
 	 * Expands the inventory cube up to the maximum (9 expansions).
 	 *
-	 * admin
-	 * unused
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -44,8 +42,6 @@ public class Cube extends AdminCommand {
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
 	 *
-	 * admin
-	 * error message
 	 */
 	@Override
 	public void onFail(Player admin, String message) {

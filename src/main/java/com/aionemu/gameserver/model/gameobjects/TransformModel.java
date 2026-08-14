@@ -42,7 +42,7 @@ public class TransformModel {
 		this.transformType = TransformType.NONE;
 	}
 
-	/** 返回 model id / Returns the model id */
+	/** 返回模型 ID / Returns the model id */
 	public int getModelId() {
 		if (isActive) {
 			return modelId;
@@ -50,7 +50,7 @@ public class TransformModel {
 		return originalModelId;
 	}
 
-	/** 设置 model id / Sets the model id */
+	/** 设置模型 ID / Sets the model id */
 	public void setModelId(int modelId) {
 		this.modelId = modelId;
 		if (modelId == 0 || modelId == originalModelId) {
@@ -90,7 +90,7 @@ public class TransformModel {
 		this.transformType = transformType;
 	}
 
-	/** 返回 panel id / Returns the panel id */
+	/** 返回面板 ID / Returns the panel id */
 	public int getPanelId() {
 		if (isActive) {
 			return panelId;
@@ -98,17 +98,17 @@ public class TransformModel {
 		return 0;
 	}
 
-	/** 设置 panel id / Sets the panel id */
+	/** 设置面板 ID / Sets the panel id */
 	public void setPanelId(int id) {
 		this.panelId = id;
 	}
 
-	/** 是否激活。 / Whether Active. */
+	/** 是否激活。 / Whether active. */
 	public boolean isActive() {
 		return this.isActive;
 	}
 
-	/** 设置 active / Sets the active */
+	/** 设置激活状态 / Sets the active state */
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}

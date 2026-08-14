@@ -16,7 +16,7 @@ public abstract class PlayerAppearanceDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -27,7 +27,7 @@ public abstract class PlayerAppearanceDAO implements DAO {
 	 * 按玩家 ID 加载外观；数据库中不存在时返回 null。
 	 * Loads player appearance by player ID; returns null if not found in database.
 	 *
-	 * player id
+	 * @param playerId 玩家 ID / player id
 	 * @return 玩家外观，或 null / player appearance or null
 	 */
 	public abstract PlayerAppearance load(int playerId);
@@ -48,8 +48,8 @@ public abstract class PlayerAppearanceDAO implements DAO {
 	 * Stores appearance in the database.
 	 *
 	 * @param id 玩家 ID / player id
-	 * player appearance
-	 * 若 the SQL query was successful 则为 true / true if the SQL query was successful
+	 * @param playerAppearance 玩家外观 / player appearance
+	 * @return 若 SQL 查询成功则为 true / true if the SQL query was successful
 	 */
 	public abstract boolean store(int id, PlayerAppearance playerAppearance);
 }

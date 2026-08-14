@@ -32,7 +32,7 @@ public final class ShoutEventHandler {
 	 * 看见生物时触发 SEE 喊话。
 	 * Fires SEE shouts when a creature is seen.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param target 看见的目标 / seen target
 	 */
 	public static void onSee(NpcAI2 npcAI, Creature target) {
@@ -49,7 +49,7 @@ public final class ShoutEventHandler {
 	 * 消失前触发 BEFORE_DESPAWN 喊话。
 	 * Fires BEFORE_DESPAWN shouts before despawn.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onBeforeDespawn(NpcAI2 npcAI) {
 		Npc npc = npcAI.getOwner();
@@ -66,7 +66,7 @@ public final class ShoutEventHandler {
 	 * 到达行走路点时，按概率触发转向或路点喊话。
 	 * On reaching a walk point, randomly fires direction-change or waypoint shouts.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onReachedWalkPoint(NpcAI2 npcAI) {
 		Npc npc = npcAI.getOwner();
@@ -92,8 +92,8 @@ public final class ShoutEventHandler {
 	 * 切换目标时触发 SWITCH_TARGET 喊话。
 	 * Fires SWITCH_TARGET shouts when the target is switched.
 	 *
-	 * NPC AI instance
-	 * new target
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 * @param creature 新目标 / new target
 	 */
 	public static void onSwitchedTarget(NpcAI2 npcAI, Creature creature) {
 		Npc npc = npcAI.getOwner();
@@ -110,7 +110,7 @@ public final class ShoutEventHandler {
 	 * 死亡时触发 DIED 喊话。
 	 * Fires DIED shouts on death.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onDied(NpcAI2 npcAI) {
 		Npc owner = npcAI.getOwner();
@@ -129,8 +129,8 @@ public final class ShoutEventHandler {
 	 * 准备攻击时触发 ATTACK_BEGIN 喊话。
 	 * Fires ATTACK_BEGIN shouts when the NPC is ready to attack.
 	 *
-	 * NPC AI instance
-	 * attack target
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 * @param creature 攻击目标 / attack target
 	 */
 	public static void onAttackBegin(NpcAI2 npcAI, Creature creature) {
 		Npc npc = npcAI.getOwner();
@@ -146,10 +146,10 @@ public final class ShoutEventHandler {
 
 	/**
 	 * 处理被攻击 / 求助喊话（首次受击时 ATTACKED 或 HELPCALL）。
-	 * help shouts (ATTACKED or HELPCALL on first hit).
+	 * Handles attacked / help shouts (ATTACKED or HELPCALL on first hit).
 	 *
-	 * NPC AI instance
-	 * attacker
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 * @param creature 攻击者 / attacker
 	 */
 	public static void onHelp(NpcAI2 npcAI, Creature creature) {
 		Npc npc = npcAI.getOwner();
@@ -199,7 +199,7 @@ public final class ShoutEventHandler {
 	 * All such shouts must be of type SAY.
 	 * </p>
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param target 被攻击目标 / attack target
 	 */
 	public static void onEnemyAttack(NpcAI2 npcAI, Creature target) {
@@ -249,8 +249,8 @@ public final class ShoutEventHandler {
 	 * 施法时触发 CAST_K 数值型喊话。
 	 * Fires CAST_K numeric shouts when casting.
 	 *
-	 * NPC AI instance
-	 * target creature
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 * @param creature 目标生物 / target creature
 	 */
 	public static void onCast(NpcAI2 npcAI, Creature creature) {
 		handleNumericEvent(npcAI, creature, ShoutEventType.CAST_K);
@@ -260,8 +260,8 @@ public final class ShoutEventHandler {
 	 * 攻击目标时触发 ATTACK_K 数值型喊话。
 	 * Fires ATTACK_K numeric shouts when attacking a target.
 	 *
-	 * NPC AI instance
-	 * attack target
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 * @param creature 攻击目标 / attack target
 	 */
 	public static void onAttack(NpcAI2 npcAI, Creature creature) {
 		handleNumericEvent(npcAI, creature, ShoutEventType.ATTACK_K);
@@ -271,8 +271,8 @@ public final class ShoutEventHandler {
 	 * 处理按技能编号匹配的数值型喊话事件。
 	 * Handles numeric shout events matched by skill number.
 	 *
-	 * NPC AI instance
-	 * target creature
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 * @param creature 目标生物 / target creature
 	 * @param eventType 喊话事件类型 / shout event type
 	 */
 	private static void handleNumericEvent(NpcAI2 npcAI, Creature creature, ShoutEventType eventType) {
@@ -311,7 +311,7 @@ public final class ShoutEventHandler {
 	 * 攻击结束时触发 ATTACK_END 喊话。
 	 * Fires ATTACK_END shouts when the attack sequence ends.
 	 *
-	 * NPC AI instance
+	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onAttackEnd(NpcAI2 npcAI) {
 		Npc npc = npcAI.getOwner();

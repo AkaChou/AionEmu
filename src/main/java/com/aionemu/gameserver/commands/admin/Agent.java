@@ -32,8 +32,6 @@ public class Agent extends AdminCommand
 	 * 执行代理战控制：解析 start/stop 与地点 ID。
 	 * Executes agent-fight control: parses start/stop and location id.
 	 *
-	 * admin
-	 * start|stop, location id。
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -49,7 +47,6 @@ public class Agent extends AdminCommand
 	 * 处理代理战的开始/停止逻辑。
 	 * Handles start/stop logic for an agent fight.
 	 *
-	 * admin
 	 * @param params 参数：动作与地点 ID / action and location id
 	 */
 	protected void handleStartStopFight(Player player, String... params) {
@@ -88,8 +85,6 @@ public class Agent extends AdminCommand
 	 * 校验代理战地点 ID 是否有效。
 	 * Validates whether the agent location id exists.
 	 *
-	 * admin
-	 * location id
 	 *
 	 * @return {@code true} if valid。
 	 */
@@ -105,7 +100,6 @@ public class Agent extends AdminCommand
 	 * 向管理员输出 {@code //agent} 用法。
 	 * Sends {@code //agent} usage help to the admin.
 	 *
-	 * admin
 	 */
 	protected void showHelp(Player player) {
 		PacketSendUtility.sendMessage(player, "AdminCommand //agent start|stop <Id>");

@@ -23,9 +23,9 @@ public class MathUtil {
 	 * 计算两点（2D 模板点）的欧氏距离。
 	 * Compute Euclidean distance between two 2D template points.
 	 *
-	 * Point 1
-	 * Point 2
-	 * Distance
+	 * @param point1 点 1 / Point 1
+	 * @param point2 点 2 / Point 2
+	 * @return 距离 / Distance
 	 */
 	public static double getDistance(Point2D point1, Point2D point2) {
 		return getDistance(point1.getX(), point1.getY(), point2.getX(), point2.getY());
@@ -39,7 +39,7 @@ public class MathUtil {
 	 * @param y1 点 1 的 Y / Y of point 1
 	 * @param x2 点 2 的 X / X of point 2
 	 * @param y2 点 2 的 Y / Y of point 2
-	 * Distance
+	 * @return 距离 / Distance
 	 */
 	public static double getDistance(float x1, float y1, float x2, float y2) {
 		float dx = x2 - x1;
@@ -51,9 +51,9 @@ public class MathUtil {
 	 * 计算两点（3D）的欧氏距离；任一点为 null 时返回 0。
 	 * Compute 3D Euclidean distance; returns 0 if either point is null.
 	 *
-	 * Point 1
-	 * Point 2
-	 * Distance
+	 * @param point1 点 1 / Point 1
+	 * @param point2 点 2 / Point 2
+	 * @return 距离 / Distance
 	 */
 	public static double getDistance(Point3D point1, Point3D point2) {
 		if (point1 == null || point2 == null) {
@@ -72,7 +72,7 @@ public class MathUtil {
 	 * @param x2 点 2 的 X / X of point 2
 	 * @param y2 点 2 的 Y / Y of point 2
 	 * @param z2 点 2 的 Z / Z of point 2
-	 * Distance
+	 * @return 距离 / Distance
 	 */
 	public static double getDistance(float x1, float y1, float z1, float x2, float y2, float z2) {
 		float dx = x1 - x2;
@@ -85,11 +85,11 @@ public class MathUtil {
 	 * 计算可见对象到目标坐标的 3D 距离。
 	 * Compute 3D distance from a visible object to a target position.
 	 *
-	 * Visible object
+	 * @param object 可见对象 / Visible object
 	 * @param x 目标 X / Target X
 	 * @param y 目标 Y / Target Y
 	 * @param z 目标 Z / Target Z
-	 * Distance
+	 * @return 距离 / Distance
 	 */
 	public static double getDistance(VisibleObject object, float x, float y, float z) {
 		return getDistance(object.getX(), object.getY(), object.getZ(), x, y, z);
@@ -99,9 +99,9 @@ public class MathUtil {
 	 * 计算两个可见对象之间的 3D 距离。
 	 * Compute 3D distance between two visible objects.
 	 *
-	 * Object 1
-	 * Object 2
-	 * Distance
+	 * @param object 对象 1 / Object 1
+	 * @param object2 对象 2 / Object 2
+	 * @return 距离 / Distance
 	 */
 	public static double getDistance(VisibleObject object, VisibleObject object2) {
 		return getDistance(object.getX(), object.getY(), object.getZ(), object2.getX(), object2.getY(), object2.getZ());
@@ -114,7 +114,7 @@ public class MathUtil {
 	 * @param ss 线段起点 / Segment start
 	 * @param se 线段终点 / Segment end
 	 * @param p 查询点 / Query point
-	 * Closest point
+	 * @return 最近点 / Closest point
 	 */
 	public static Point2D getClosestPointOnSegment(Point ss, Point se, Point p) {
 		return getClosestPointOnSegment(ss.x, ss.y, se.x, se.y, p.x, p.y);
@@ -130,7 +130,7 @@ public class MathUtil {
 	 * @param sy2 线段终点 Y / Segment end Y
 	 * @param px 查询点 X / Query point X
 	 * @param py 查询点 Y / Query point Y
-	 * Closest point
+	 * @return 最近点 / Closest point
 	 * When the segment is degenerate。
 	 */
 	public static Point2D getClosestPointOnSegment(float sx1, float sy1, float sx2, float sy2, float px, float py) {
@@ -158,7 +158,7 @@ public class MathUtil {
 	 * @param ss 线段起点 / Segment start
 	 * @param se 线段终点 / Segment end
 	 * @param p 查询点 / Query point
-	 * Distance
+	 * @return 距离 / Distance
 	 */
 	public static double getDistanceToSegment(Point ss, Point se, Point p) {
 		return getDistanceToSegment(ss.x, ss.y, se.x, se.y, p.x, p.y);
@@ -174,7 +174,7 @@ public class MathUtil {
 	 * @param sy2 线段终点 Y / Segment end Y
 	 * @param px 查询点 X / Query point X
 	 * @param py 查询点 Y / Query point Y
-	 * Distance
+	 * @return 距离 / Distance
 	 */
 	public static double getDistanceToSegment(int sx1, int sy1, int sx2, int sy2, int px, int py) {
 		Point2D closestPoint = getClosestPointOnSegment(sx1, sy1, sx2, sy2, px, py);
@@ -185,8 +185,8 @@ public class MathUtil {
 	 * 判断两对象是否在同一世界/实例且 2D 距离小于 range。
 	 * Whether two objects share world/instance and are within 2D range.
 	 *
-	 * Object 1
-	 * Object 2
+	 * @param object1 对象 1 / Object 1
+	 * @param object2 对象 2 / Object 2
 	 * @param range 范围半径 / Range radius
 	 * @return 在范围内返回 true / True if in range
 	 */
@@ -203,8 +203,8 @@ public class MathUtil {
 	 * 判断两对象是否在同一世界/实例且 3D 距离小于 range。
 	 * Whether two objects share world/instance and are within 3D range.
 	 *
-	 * Object 1
-	 * Object 2
+	 * @param object1 对象 1 / Object 1
+	 * @param object2 对象 2 / Object 2
 	 * @param range 范围半径 / Range radius
 	 * @return 在范围内返回 true / True if in range
 	 */
@@ -222,10 +222,10 @@ public class MathUtil {
 	 * 判断两对象 3D 距离是否落在 [minRange, maxRange) 区间。
 	 * Whether 3D distance between two objects is in [minRange, maxRange).
 	 *
-	 * Object 1
-	 * Object 2
-	 * Minimum range
-	 * Maximum range
+	 * @param object1 对象 1 / Object 1
+	 * @param object2 对象 2 / Object 2
+	 * @param minRange 最小范围 / Minimum range
+	 * @param maxRange 最大范围 / Maximum range
 	 *
 	 * @return 在区间内返回 true / True if within the band
 	 */
@@ -244,12 +244,12 @@ public class MathUtil {
 	 * 判断两组 3D 坐标是否在给定半径内。
 	 * Whether two 3D positions are within the given radius.
 	 *
-	 * Object 1 X
-	 * Object 1 Y
-	 * Object 1 Z
-	 * Object 2 X
-	 * Object 2 Y
-	 * Object 2 Z
+	 * @param obj1X Object 1 X / Object 1 X
+	 * @param obj1Y Object 1 Y / Object 1 Y
+	 * @param obj1Z Object 1 Z / Object 1 Z
+	 * @param obj2X Object 2 X / Object 2 X
+	 * @param obj2Y Object 2 Y / Object 2 Y
+	 * @param obj2Z Object 2 Z / Object 2 Z
 	 * @param range 范围半径 / Range radius
 	 * @return 在范围内返回 true / True if in range
 	 */
@@ -265,11 +265,11 @@ public class MathUtil {
 	 * 判断可见对象是否在以中心点为球心的球体内。
 	 * Whether a visible object lies inside a sphere.
 	 *
-	 * Object
-	 * Sphere center X
-	 * Sphere center Y
-	 * Sphere center Z
-	 * Radius
+	 * @param obj 对象 / Object
+	 * @param centerX 球心 X / Sphere center X
+	 * @param centerY 球心 Y / Sphere center Y
+	 * @param centerZ 球心 Z / Sphere center Z
+	 * @param radius 半径 / Radius
 	 *
 	 * @return 在球内返回 true / True if inside the sphere
 	 */
@@ -285,11 +285,11 @@ public class MathUtil {
 	 * 计算从 (obj1X, obj1Y) 指向 (obj2X, obj2Y) 的角度（度，0–360）。
 	 * Angle in degrees from (obj1X, obj1Y) toward (obj2X, obj2Y), range 0–360.
 	 *
-	 * Origin X
-	 * Origin Y
-	 * Target X
-	 * Target Y
-	 * Angle in degrees
+	 * @param obj1X 原点 X / Origin X
+	 * @param obj1Y 原点 Y / Origin Y
+	 * @param obj2X 目标 X / Target X
+	 * @param obj2Y 目标 Y / Target Y
+	 * @return 角度（度） / Angle in degrees
 	 */
 	public final static float calculateAngleFrom(float obj1X, float obj1Y, float obj2X, float obj2Y) {
 		float angleTarget = (float) Math.toDegrees(Math.atan2(obj2Y - obj1Y, obj2X - obj1X));
@@ -305,7 +305,7 @@ public class MathUtil {
 	 *
 	 * @param obj1 起点对象 / Origin object
 	 * @param obj2 终点对象 / Target object
-	 * Angle in degrees
+	 * @return 角度（度） / Angle in degrees
 	 */
 	public static float calculateAngleFrom(VisibleObject obj1, VisibleObject obj2) {
 		return calculateAngleFrom(obj1.getX(), obj1.getY(), obj2.getX(), obj2.getY());
@@ -316,7 +316,7 @@ public class MathUtil {
 	 * Convert client heading (0–120) to degrees.
 	 *
 	 * @param clientHeading 客户端朝向 / Client heading
-	 * Degrees
+	 * @return 度 / Degrees
 	 */
 	public final static float convertHeadingToDegree(byte clientHeading) {
 		float degree = clientHeading * 3;
@@ -331,7 +331,7 @@ public class MathUtil {
 	 *
 	 * @param obj1 起点对象 / Origin object
 	 * @param obj2 终点对象 / Target object
-	 * Estimated heading (0–120)
+	 * @return Estimated heading (0–120) / Estimated heading (0–120)
 	 */
 	public final static byte estimateHeadingFrom(VisibleObject obj1, VisibleObject obj2) {
 		return (byte) (diamondAngle(obj2.getX() - obj1.getX(), obj2.getY() - obj1.getY()) * 30F);
@@ -343,9 +343,9 @@ public class MathUtil {
 	 * 使用菱形角度算法优化计算性能。
 	 * Uses diamond-angle approximation for performance.
 	 *
-	 * X delta
-	 * Y delta
-	 * Estimated heading (0–120)
+	 * @param deltaX X 增量 / X delta
+	 * @param deltaY Y 增量 / Y delta
+	 * @return Estimated heading (0–120) / Estimated heading (0–120)
 	 */
 	public final static byte estimateHeadingFrom(float deltaX, float deltaY) {
 		return (byte) (diamondAngle(deltaX, deltaY) * 30F);
@@ -373,8 +373,8 @@ public class MathUtil {
 	 * 将角度（度）转换为客户端 Heading。
 	 * Convert degrees to client heading.
 	 *
-	 * Angle in degrees
-	 * Heading value
+	 * @param angle 角度（度） / Angle in degrees
+	 * @return 朝向值 / Heading value
 	 */
 	public final static byte convertDegreeToHeading(float angle) {
 		return (byte) (angle / 3);
@@ -384,11 +384,11 @@ public class MathUtil {
 	 * 判断对象是否接近目标坐标（含移动检测偏移）。
 	 * Whether an object is near a target position (includes move-check offset).
 	 *
-	 * Object
+	 * @param obj 对象 / Object
 	 * @param x 目标 X / Target X
 	 * @param y 目标 Y / Target Y
 	 * @param z 目标 Z / Target Z
-	 * Extra offset
+	 * @param offset 额外偏移 / Extra offset
 	 *
 	 * @return 若 near 则为 true / True if near
 	 */
@@ -400,9 +400,9 @@ public class MathUtil {
 	 * 判断两对象是否接近（含移动检测偏移）。
 	 * Whether two objects are near each other (includes move-check offset).
 	 *
-	 * Object 1
-	 * Object 2
-	 * Extra offset
+	 * @param obj 对象 1 / Object 1
+	 * @param obj2 对象 2 / Object 2
+	 * @param offset 额外偏移 / Extra offset
 	 *
 	 * @return 若 near 则为 true / True if near
 	 */
@@ -415,8 +415,8 @@ public class MathUtil {
 	 * 判断是否在攻击范围内（含碰撞半径与移动补偿）。
 	 * Whether targets are within attack range (collision radii and move compensation).
 	 *
-	 * Creature 1
-	 * Creature 2
+	 * @param object1 生物 1 / Creature 1
+	 * @param object2 生物 2 / Creature 2
 	 * @param range 攻击范围 / Attack range
 	 * @return 在攻击范围内返回 true / True if in attack range
 	 */
@@ -443,9 +443,9 @@ public class MathUtil {
 	 * 判断 obj2 是否位于 obj1 朝向前/后的攻击圆柱体内。
 	 * Whether obj2 is inside the attack cylinder in front of or behind obj1.
 	 *
-	 * Source object
+	 * @param obj1 源对象 / Source object
 	 * @param obj2 目标对象 / Target object
-	 * Cylinder length
+	 * @param length 柱体长度 / Cylinder length
 	 * @param radius 圆柱半径（平方比较侧） / Cylinder radius (squared-side compare)
 	 * @param isFront true 为前方，false 为后方 / true front, false rear
 	 * @return 在圆柱内返回 true / True if inside the cylinder
@@ -471,10 +471,10 @@ public class MathUtil {
 	 * 在圆内随机采样一个 2D 点。
 	 * Sample a random 2D point inside a circle.
 	 *
-	 * Center X
-	 * Center Y
-	 * Radius
-	 * Sampled point
+	 * @param CenterX 中心 X / Center X
+	 * @param CenterY 中心 Y / Center Y
+	 * @param Radius 半径 / Radius
+	 * @return 采样点 / Sampled point
 	 */
 	public final static Point get2DPointInsideCircle(float CenterX, float CenterY, int Radius) {
 		double X = Math.random() * 2 - 1;
@@ -490,11 +490,11 @@ public class MathUtil {
 	 * 按给定角度在圆周上取点。
 	 * Point on circle circumference for a given angle in degrees.
 	 *
-	 * Center X
-	 * Center Y
-	 * Radius
-	 * Angle in degrees
-	 * Point on circumference
+	 * @param CenterX 中心 X / Center X
+	 * @param CenterY 中心 Y / Center Y
+	 * @param Radius 半径 / Radius
+	 * @param angleInDegrees 角度（度） / Angle in degrees
+	 * @return 圆周上的点 / Point on circumference
 	 */
 	public final static Point get2DPointOnCircleCircumference(float CenterX, float CenterY, int Radius,
 			float angleInDegrees) {
@@ -507,10 +507,10 @@ public class MathUtil {
 	 * 沿中心指向终点的方向，在给定半径圆周上取点。
 	 * Point on circumference along the direction from center toward end point.
 	 *
-	 * Center point
+	 * @param CenterPoint 中心点 / Center point
 	 * @param EndPoint 方向参考终点 / Direction end point
-	 * Radius
-	 * Point on circumference
+	 * @param Radius 半径 / Radius
+	 * @return 圆周上的点 / Point on circumference
 	 */
 	public final static Point get2DPointOnCircleCircumference(Point CenterPoint, Point EndPoint, int Radius) {
 		double AngleinXAxis = getAngle(CenterPoint, EndPoint);
@@ -525,7 +525,7 @@ public class MathUtil {
 	 *
 	 * @param P1 起点 / Origin
 	 * @param P2 终点 / Target
-	 * Angle in degrees
+	 * @return 角度（度） / Angle in degrees
 	 */
 	public final static double getAngle(Point P1, Point P2) {
 		float dx = P2.x - P1.x;
@@ -538,9 +538,9 @@ public class MathUtil {
 	 * 圆上最接近给定点的点（投影到圆周）。
 	 * Point on the circle closest to the given point (radial projection).
 	 *
-	 * Center
-	 * Radius
-	 * Reference point
+	 * @param Center 中心 / Center
+	 * @param Radius 半径 / Radius
+	 * @param GivenPoint Reference point / Reference point
 	 * @return 圆周上最近点 / Closest point on circumference
 	 */
 	public final static Point get2DPointInsideCircleClosestTo(Point Center, int Radius, Point GivenPoint) {
@@ -556,10 +556,10 @@ public class MathUtil {
 	 * 在圆环（annulus）内随机采样一个 2D 点。
 	 * Sample a random 2D point inside an annulus.
 	 *
-	 * Center
-	 * Outer radius
-	 * Inner radius
-	 * Sampled point
+	 * @param Center 中心 / Center
+	 * @param Radius1 外半径 / Outer radius
+	 * @param Radius2 内半径 / Inner radius
+	 * @return 采样点 / Sampled point
 	 */
 	public final static Point get2DPointInsideAnnulus(Point Center, int Radius1, int Radius2) {
 		double theta = 360 * Math.random();
@@ -573,10 +573,10 @@ public class MathUtil {
 	 * 判断对象是否位于 3D 圆环壳内（在大球内且不在小球内）。
 	 * Whether an object lies in a 3D annular shell (inside outer, outside inner sphere).
 	 *
-	 * Object
-	 * Center
-	 * Outer radius
-	 * Inner radius
+	 * @param obj 对象 / Object
+	 * @param Center 中心 / Center
+	 * @param Radius1 外半径 / Outer radius
+	 * @param Radius2 内半径 / Inner radius
 	 *
 	 * @return 在环壳内返回 true / True if inside the annulus
 	 */
@@ -599,11 +599,11 @@ public class MathUtil {
 	 * 高精度 BigDecimal 平方根（牛顿迭代）。
 	 * High-precision BigDecimal square root (Newton iteration).
 	 *
-	 * Value to take the square root of
+	 * @param squarD 开方值 / Value to take the square root of
 	 * @param rootMC 结果精度上下文 / Math context for the result
-	 * Square root
-	 * When the value is negative
-	 * When precision is 0
+	 * @return 平方根 / Square root
+	 * @throws ArithmeticException 值为负时 / When the value is negative
+	 * @throws IllegalArgumentException 精度为 0 时 / When precision is 0
 	 */
 	public static BigDecimal bigSqrt(BigDecimal squarD, MathContext rootMC) {
 		int sign = squarD.signum();

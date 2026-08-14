@@ -7,9 +7,9 @@ package com.aionemu.gameserver.utils.stats.enums;
 public enum CRIT_SPELL {
 	WARRIOR(0), GLADIATOR(0), TEMPLAR(0), SCOUT(0), ASSASSIN(0), RANGER(0), MAGE(0), SORCERER(0), SPIRIT_MASTER(0),
 	PRIEST(0), CLERIC(0), CHANTER(0),
-	// 资讯类 4.3 / News Class 4.3
+	// 新职业 4.3 / New Class 4.3
 	TECHNIST(0), GUNSLINGER(0), MUSE(0), SONGWEAVER(0),
-	// 资讯类 4.5 / News Class 4.5
+	// 新职业 4.5 / New Class 4.5
 	AETHERTECH(0);
 
 	/**
@@ -26,7 +26,7 @@ public enum CRIT_SPELL {
 	 * 获取该职业的基础属性值。
 	 * Returns the baseline attribute value for this class.
 	 *
-	 * Attribute value
+	 * @return 基础属性值 / baseline attribute value
 	 */
 	public int getValue() {
 		return value;

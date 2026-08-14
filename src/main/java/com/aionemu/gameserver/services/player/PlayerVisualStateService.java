@@ -20,10 +20,10 @@ public class PlayerVisualStateService {
 
 			@Override
 			/**
-			 * visit 方法。
-			 * visit method.
+			 * 访问观察者：同步隐身可见状态。
+			 * Visits the observer: syncs hide visibility.
 			 *
-			 * observer
+			 * @param observer 观察者玩家 / observer player
 			 */
 			public void visit(Player observer) {
 				boolean canSee = observer.canSee(hiden);
@@ -49,10 +49,10 @@ public class PlayerVisualStateService {
 
 			@Override
 			/**
-			 * visit 方法。
-			 * visit method.
+			 * 访问目标玩家：同步看见状态。
+			 * Visits the target player: syncs see state.
 			 *
-			 * hide
+			 * @param hide 被查看玩家 / player being checked
 			 */
 			public void visit(Player hide) {
 				boolean canSee = search.canSee(hide);

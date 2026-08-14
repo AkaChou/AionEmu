@@ -23,9 +23,9 @@ public class QuestTasks {
 	 * Schedules a periodic follow-check task toward a target NPC.
 	 *
 	 * @param env 任务环境 / Quest environment
-	 * Following NPC
-	 * Target NPC
-	 * Scheduled future
+	 * @param npc 跟随 NPC / following NPC
+	 * @param target 目标 NPC / target NPC
+	 * @return 定时任务句柄 / scheduled future
 	 */
 	public static final Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, Npc target) {
 		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
@@ -37,10 +37,10 @@ public class QuestTasks {
 	 * Schedules a periodic follow-check task toward a living NPC or its spawn point.
 	 *
 	 * @param env 任务环境 / Quest environment
-	 * Following NPC
-	 * Target NPC template id
-	 * Scheduled future
-	 * if the target NPC has no spawn in the map
+	 * @param npc 跟随 NPC / following NPC
+	 * @param npcTargetId 目标 NPC 模板 ID / target NPC template id
+	 * @return 定时任务句柄 / scheduled future
+	 * @throws IllegalArgumentException 目标 NPC 在地图中无刷新点时抛出 / if the target NPC has no spawn in the map
 	 */
 	public static final Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, int npcTargetId) {
 		Npc target = findLivingTarget(npc, npcTargetId);
@@ -74,11 +74,11 @@ public class QuestTasks {
 	 * Schedules a periodic follow-check task toward the given coordinates.
 	 *
 	 * @param env 任务环境 / Quest environment
-	 * Following NPC
+	 * @param npc 跟随 NPC / following NPC
 	 * @param x 目标 X / Target X
 	 * @param y 目标 Y / Target Y
 	 * @param z 目标 Z / Target Z
-	 * Scheduled future
+	 * @return 定时任务句柄 / scheduled future
 	 */
 	public static final Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, float x, float y,
 			float z) {
@@ -91,9 +91,9 @@ public class QuestTasks {
 	 * Schedules a periodic follow-check task toward the given zone.
 	 *
 	 * @param env 任务环境 / Quest environment
-	 * Following NPC
-	 * Target zone
-	 * Scheduled future
+	 * @param npc 跟随 NPC / following NPC
+	 * @param zoneName 目标区域 / target zone
+	 * @return 定时任务句柄 / scheduled future
 	 */
 	public static final Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, ZoneName zoneName) {
 		return GameThreadPoolServices.threadPoolManager()
@@ -105,10 +105,10 @@ public class QuestTasks {
 	 * Schedules a periodic follow-check task toward either of two zones.
 	 *
 	 * @param env 任务环境 / Quest environment
-	 * Following NPC
-	 * Zone 1
-	 * Zone 2
-	 * Scheduled future
+	 * @param npc 跟随 NPC / following NPC
+	 * @param zoneName1 区域 1 / zone 1
+	 * @param zoneName2 区域 2 / zone 2
+	 * @return 定时任务句柄 / scheduled future
 	 */
 	public static final Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, ZoneName zoneName1,
 			ZoneName zoneName2) {

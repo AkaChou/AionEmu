@@ -43,7 +43,6 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
 /**
  * 露娜商店服务，管理露娜点数、每日工艺与特价。
  * Luna shop service managing luna points, daily craft and specials.
@@ -232,8 +231,8 @@ public class LunaShopService {
 	 * 露娜点数控制。
 	 * Luna point controller.
 	 *
-	 * 玩家 / player
-	 * point
+	 * @param player 玩家 / player
+	 * @param point 点数 / points
 	 */
 	public void lunaPointController(Player player, int point) {
 		player.setLunaAccount(point);
@@ -241,11 +240,11 @@ public class LunaShopService {
 	}
 
 	/**
-	 * muniKeysController 方法。
-	 * muniKeysController method.
+	 * Muni 钥匙控制器。
+	 * Muni keys controller.
 	 *
-	 * 玩家 / player
-	 * keys
+	 * @param player 玩家 / player
+	 * @param keys 钥匙数量 / key count
 	 */
 	public void muniKeysController(Player player, int keys) {
 		player.setMuniKeys(keys);
@@ -288,11 +287,11 @@ public class LunaShopService {
 	}
 
 	/**
-	 * specialDesign 方法。
-	 * specialDesign method.
+	 * 特殊设计处理。
+	 * Special design handler.
 	 *
-	 * 玩家 / player
-	 * recipeId
+	 * @param player 玩家 / player
+	 * @param recipeId 配方 ID / recipe id
 	 */
 	public void specialDesign(Player player, int recipeId) {
 		LunaTemplate recipe = DataManager.LUNA_DATA.getLunaTemplateById(recipeId);
@@ -366,8 +365,8 @@ public class LunaShopService {
 	}
 
 	/**
-	 * buyMaterials 方法。
-	 * buyMaterials method.
+	 * 购买材料。
+	 * Buys materials.
 	 *
 	 * 玩家 / player
 	 * itemId

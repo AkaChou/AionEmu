@@ -33,7 +33,7 @@ public class QuestVars {
 	 * Returns the quest sub-variable at the given index.
 	 *
 	 * @param id 子变量索引（0–5） / Sub-variable index (0–5)
-	 * Sub-variable value
+	 * @return 子变量值 / Sub-variable value
 	 */
 	public int getVarById(int id) {
 		return questVars[id];

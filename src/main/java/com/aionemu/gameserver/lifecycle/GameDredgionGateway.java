@@ -85,7 +85,7 @@ public class GameDredgionGateway {
      * 解析挖掘场服务：优先 Spring，否则经运行时桥回退。
      * Resolve Dredgion service: prefer Spring, otherwise fall back via runtime bridge.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private DredgionService2 dredgionService() {
         if (dredgionServiceProvider == null) {
@@ -98,7 +98,7 @@ public class GameDredgionGateway {
      * 解析 Asyunatar 服务。
      * Resolve Asyunatar service.
      *
-     * Service instance
+     * @return 服务实例 / Service instance
      */
     private AsyunatarService asyunatarService() {
         if (asyunatarServiceProvider == null) {
@@ -111,7 +111,7 @@ public class GameDredgionGateway {
      * 解析功能服务运行时桥：优先 Spring，否则新建。
      * Resolve feature-services runtime bridge: prefer Spring, otherwise create new.
      *
-     * Runtime bridge
+     * @return 运行时桥 / Runtime bridge
      */
     private GameFeatureServicesRuntimeBridge runtimeBridge() {
         if (runtimeBridgeProvider == null) {

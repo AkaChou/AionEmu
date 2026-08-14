@@ -9,8 +9,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * 守护灵 Actions 模板（静态数据/XML）。
- * XML template.
+ * 守护灵动作模板（静态数据/XML）。
+ * Minion actions template (static data/XML).
  *
  * @author Falke_34
  */

@@ -37,11 +37,11 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 {
 	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
-	/** anuhart 任务 A1 / anuhart task a1 */
+		/** anuhart 任务 A1 / anuhart task a1 */
 		private Future<?> anuhartTaskA1;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
-	/** fallen 任务 / fallen task */
+		/** fallen 任务 / fallen task */
 		private final List<Future<?>> fallenTask = new ArrayList<Future<?>>();
 	
 	/**
@@ -91,7 +91,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -178,7 +178,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -302,8 +302,8 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
@@ -654,9 +654,9 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg 消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
 	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
@@ -696,13 +696,13 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	 * 处理 sp。
 	 * Handle sp.
 	 *
-	 * NPC
+	 * @param npcId NPC / NPC
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / h
-	 * time
-	 * walkerId
+	 * @param time 时间 / time
+	 * @param walkerId 寻路器 ID / walkerId
 	 */
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
@@ -747,7 +747,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	 * 处理 killNpc。
 	 * Handle killNpc.
 	 *
-	 * npcs
+	 * @param npcs NPC 列表 / npcs
 	 */
 	
 	protected void killNpc(List<Npc> npcs) {
@@ -759,8 +759,8 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	 * 返回 npcs。
 	 * Return the npcs.
 	 *
-	 * NPC
-	 * result
+	 * @param npcId NPC / NPC
+	 * @return 结果 / result
 	 */
 	
 	protected List<Npc> getNpcs(int npcId) {

@@ -51,9 +51,7 @@ public class AutoGroupData {
 	 * 按实例 mask ID 获取自动组队模板。
 	 * Returns the auto-group template for the given instance mask id.
 	 *
-	 * instance mask id
-	 *
-	 * @param maskId
+	 * @param maskId 实例掩码 ID / instance mask id
 	 * @return 模板，不存在则为 null / template or null
 	 */
 	public AutoGroup getTemplateByInstaceMaskId(int maskId) {
@@ -64,7 +62,7 @@ public class AutoGroupData {
 	 * 返回已加载的自动组队模板数量。
 	 * Returns the number of loaded auto-group templates.
 	 *
-	 * template count
+	 * @return 已加载的自动组队模板数量 / Returns the number of loaded auto-group templates.
 	 */
 	public int size() {
 		return autoGroupByInstanceId.size();

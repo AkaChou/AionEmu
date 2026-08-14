@@ -254,7 +254,6 @@ public class Add extends AdminCommand {
      * 执行添加物品：支持物品链接、基纳、限制物品检查与目标玩家发放。
      * Executes add-item: supports item links, kinah, restricted-item checks, and granting to a target player.
      *
-     * admin
      * @param params 参数：玩家、物品 ID/链接、数量等 / player, item id/link, quantity, etc.
      */
     @Override
@@ -468,7 +467,6 @@ public class Add extends AdminCommand {
      * 判断物品是否在运营限制列表中。
      * Returns whether the item is on the operator-restricted list.
      *
-     * item template id
      *
      * @param itemId
      * @return 若受限返回 {@code true} / {@code true} if restricted
@@ -488,7 +486,6 @@ public class Add extends AdminCommand {
      * 从参数或物品链接中解析物品 ID。
      * Resolves an item ID from params or an item link.
      *
-     * admin
      *
      * @param itemCode 数值物品 ID 回退值 / numeric item id fallback
      * @param itemLink 命令参数（含物品链接） / command params (may include item link)
@@ -531,8 +528,6 @@ public class Add extends AdminCommand {
      * 参数错误时输出 {@code //add} 用法。
      * Prints {@code //add} usage on invalid arguments.
      *
-     * admin
-     * failure message
      */
     @Override
     public void onFail(Player player, String message) {

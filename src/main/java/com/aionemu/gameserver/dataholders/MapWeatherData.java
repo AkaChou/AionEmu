@@ -48,8 +48,8 @@ public class MapWeatherData {
 	 * 按地图 ID 获取天气表。
 	 * Returns the weather table for the given map id.
 	 *
-	 * map id
-	 * weather table or null
+	 * @param mapId 地图 ID / map id
+	 * @return 天气表或 null / weather table or null
 	 */
 	public WeatherTable getWeather(int mapId) {
 		return mapWeather.get(mapId);

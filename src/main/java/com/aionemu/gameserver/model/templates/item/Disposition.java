@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Disposition 模板（静态数据/XML）。
- * XML template.
+ * 处理方式模板：物品处置计数。
+ * Disposition template: item disposal count.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

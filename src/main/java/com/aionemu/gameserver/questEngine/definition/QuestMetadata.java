@@ -6,7 +6,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.Collections;
 
-/** Immutable metadata shared by every execution representation. */
+/**
+ * 每种执行表示共用的不可变元数据。
+ * Immutable metadata shared by every execution representation.
+ */
 public record QuestMetadata(
 	String name,
 	int displayNameId,
@@ -47,7 +50,10 @@ public record QuestMetadata(
 	List<QuestRewardGroup> extendedRewardGroups,
 	List<QuestStartConditionGroup> startConditionGroups) {
 
-	/** Backward-compatible constructor for the initial definition DSL. */
+	/**
+	 * 初始定义 DSL 的向后兼容构造函数。
+	 * Backward-compatible constructor for the initial definition DSL.
+	 */
 	public QuestMetadata(String name, int displayNameId, int minLevel, int maxLevel,
 		Set<String> permittedRaces, String category, RepeatPolicy repeatPolicy,
 		Set<Integer> prerequisites, List<QuestItemRequirement> itemRequirements,
@@ -58,7 +64,10 @@ public record QuestMetadata(
 			List.of(), List.of(), List.of(), List.of(), List.of(), Map.of(), groupsOf(rewards), List.of(), List.of());
 	}
 
-	/** Backward-compatible full constructor for Java DSL definitions created before grouped metadata. */
+	/**
+	 * 为分组元数据出现前创建的 Java DSL 定义提供的向后兼容全量构造函数。
+	 * Backward-compatible full constructor for Java DSL definitions created before grouped metadata.
+	 */
 	public QuestMetadata(String name, int displayNameId, int minLevel, int maxLevel,
 		Set<String> permittedRaces, String category, RepeatPolicy repeatPolicy,
 		Set<Integer> prerequisites, List<QuestItemRequirement> itemRequirements,
@@ -133,7 +142,10 @@ public record QuestMetadata(
 		startConditionGroups = normalizeStartConditionGroups(startConditions, startConditionGroups);
 	}
 
-	/** Returns whether the actual player race is permitted; empty and PC_ALL are wildcards. */
+	/**
+	 * 返回实际玩家种族是否被允许；空集合与 PC_ALL 为通配。
+	 * Returns whether the actual player race is permitted; empty and PC_ALL are wildcards.
+	 */
 	public boolean permitsRace(String race) {
 		return permittedRaces.isEmpty() || permittedRaces.contains("PC_ALL")
 			|| race != null && permittedRaces.contains(race);

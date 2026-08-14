@@ -13,11 +13,12 @@ import java.util.concurrent.Future;
 
 /**
  * 领域持有的 quest NPC handle 注册表。
+ * Domain-owned registry for quest NPC handles.
  *
- * <p>key = {@code playerId:questId:slot}。slot 由任务编译期常量决定,despawn 只能通过
- * slot 反引用本注册表里 spawn 过的权威 handle;禁止凭 templateId 删任意同类,也禁止把
+ * <p>key = {@code playerId:questId:slot}。slot 由任务编译期常量决定，despawn 只能通过
+ * slot 反引用本注册表里 spawn 过的权威 handle；禁止凭 templateId 删任意同类，也禁止把
  * handle/实体状态编码进 quest_vars。任务完成/失败/实例销毁时按 (playerId, questId)
- * 清理,避免孤儿 NPC。</p>
+ * 清理，避免孤儿 NPC。</p>
  */
 public final class QuestSpawnRegistry {
 	private static final QuestSpawnRegistry GLOBAL = new QuestSpawnRegistry();
@@ -34,9 +35,10 @@ public final class QuestSpawnRegistry {
 	}
 
 	/**
-	 * 幂等注册:slot 已存在时跳过并返回 false。
+	 * 幂等注册：slot 已存在时跳过并返回 false。
+	 * Idempotent register: skips and returns false when the slot already exists.
 	 *
-	 * @return true 表示本次注册成功; false 表示该 slot 已有 handle (跳过, 不重复刷怪)
+	 * @return true 表示本次注册成功；false 表示该 slot 已有 handle（跳过，不重复刷怪） / true if registered; false if the slot already has a handle (skipped, no duplicate spawn)
 	 */
 	public boolean register(QuestSnapshot snapshot, String slot, Npc npc) {
 		Objects.requireNonNull(snapshot, "snapshot");
@@ -49,9 +51,10 @@ public final class QuestSpawnRegistry {
 	}
 
 	/**
-	 * 权威反引用并删除该 slot 的 NPC (由调用方执行 onDelete)。
+	 * 权威反引用并删除该 slot 的 NPC（由调用方执行 onDelete）。
+	 * Authoritative dereference and removal of the slot's NPC (caller performs onDelete).
 	 *
-	 * @return 被删除的 handle,或 null 表示该 slot 无 handle
+	 * @return 被删除的 handle，或 null 表示该 slot 无 handle / the removed handle, or null if the slot has none
 	 */
 	public Npc remove(QuestSnapshot snapshot, String slot) {
 		Objects.requireNonNull(snapshot, "snapshot");
@@ -63,17 +66,17 @@ public final class QuestSpawnRegistry {
 		return spawns.remove(key);
 	}
 
-	/** 该 slot 当前是否已注册 handle。 */
+	/** 该 slot 当前是否已注册 handle。 / Whether a handle is currently registered for this slot. */
 	public boolean contains(QuestSnapshot snapshot, String slot) {
 		return spawns.containsKey(key(snapshot, slot));
 	}
 
-	/** 只读反查该 slot 的权威 handle;未注册返回 null (不删除)。 */
+	/** 只读反查该 slot 的权威 handle；未注册返回 null（不删除）。 / Read-only lookup of the slot's authoritative handle; null when unregistered (no removal). */
 	public Npc get(QuestSnapshot snapshot, String slot) {
 		return spawns.get(key(snapshot, slot));
 	}
 
-	/** Replaces one slot atomically and returns its previous authoritative handle, if any. */
+	/** 原子替换一个 slot 并返回其先前的权威 handle（如有）。 / Replaces one slot atomically and returns its previous authoritative handle, if any. */
 	public Npc replace(QuestSnapshot snapshot, String slot, Npc npc) {
 		Objects.requireNonNull(npc, "npc");
 		Key key = key(snapshot, slot);
@@ -84,7 +87,7 @@ public final class QuestSpawnRegistry {
 		return spawns.put(key, npc);
 	}
 
-	/** Replaces the follow checker associated with one authoritative spawn slot. */
+	/** 替换与一个权威生成 slot 关联的跟随检查器。 / Replaces the follow checker associated with one authoritative spawn slot. */
 	public boolean registerFollowTask(QuestSnapshot snapshot, String slot, Future<?> task) {
 		Objects.requireNonNull(task, "task");
 		Key key = key(snapshot, slot);
@@ -105,8 +108,10 @@ public final class QuestSpawnRegistry {
 	}
 
 	/**
-	 * 按 (playerId, questId) 清理该任务全部 spawn (完成/失败/实例销毁时调用),
+	 * 按 (playerId, questId) 清理该任务全部 spawn（完成/失败/实例销毁时调用），
 	 * 返回被清理的 handle 供调用方逐个 onDelete。
+	 * Cleans up all spawns of a quest by (playerId, questId) (invoked on completion/failure/instance teardown);
+	 * returns the cleaned handles for the caller to onDelete one by one.
 	 */
 	public List<Npc> cleanup(int playerId, int questId) {
 		if (playerId <= 0 || questId <= 0) {

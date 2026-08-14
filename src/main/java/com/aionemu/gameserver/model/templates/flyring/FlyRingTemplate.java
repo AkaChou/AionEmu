@@ -49,17 +49,17 @@ public class FlyRingTemplate {
 		return radius;
 	}
 
-	/** 返回居中 / Returns the center*/
+	/** 返回中心点 / Returns the center*/
 	public FlyRingPoint getCenter() {
 		return center;
 	}
 
-	/** 返回 left / Returns the left */
+	/** 返回左点 / Returns the left */
 	public FlyRingPoint getLeft() {
 		return left;
 	}
 
-	/** 返回 right / Returns the right */
+	/** 返回右点 / Returns the right */
 	public FlyRingPoint getRight() {
 		return right;
 	}

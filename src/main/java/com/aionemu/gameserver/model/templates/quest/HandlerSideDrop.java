@@ -33,7 +33,7 @@ public class HandlerSideDrop extends QuestDrop {
 		this.collecting_step = step;
 	}
 
-	/** 返回 needed amount / Returns the needed amount */
+	/** 返回所需数量 / Returns the needed amount */
 	public int getNeededAmount() {
 		return neededAmount;
 	}

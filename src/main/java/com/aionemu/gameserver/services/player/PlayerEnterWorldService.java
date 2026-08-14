@@ -196,8 +196,8 @@ public final class PlayerEnterWorldService {
 	 * 开始进入世界：冷却/封禁/二级密码校验后进图。
 	 * Starts enter-world: re-entry cooldown, ban, and passkey checks, then enters.
 	 *
-	 * character object id
-	 * connection
+	 * @param objectId 角色对象 ID / character object id
+	 * @param client 客户端连接 / client connection
 	 */
 	public static final void startEnterWorld(final int objectId, final AionConnection client) {
 		PlayerAccountData playerAccData = client.getAccount().getPlayerAccountData(objectId);
@@ -456,7 +456,7 @@ public final class PlayerEnterWorldService {
 				TeleportService2.moveToBindLocation(player, true);
 			}
 			/**
-	 * 若在伊卢玛/诺斯沃尔德敌对领地登出，将被传送。 / http://static.ncsoft.com/aion/store/PatchNotes/AION_Patch_Notes_071316.pdf If a user logs out in hostile territory in Iluma/Norsvold, they will be transported back to the last registered Obelisk
+	 * 若在伊卢玛/诺斯珀德敌对领地登出，将被传送。 / http://static.ncsoft.com/aion/store/PatchNotes/AION_Patch_Notes_071316.pdf If a user logs out in hostile territory in Iluma/Norsvold, they will be transported back to the last registered Obelisk
 	 */
 			TeleportService2.onLogOutOppositeMap(player);
 			TeleportService2.sendSetBindPoint(player);
@@ -793,8 +793,8 @@ public final class PlayerEnterWorldService {
 	 * 下发背包与装备物品信息。
 	 * Sends inventory and equipment item info.
 	 *
-	 * connection
-	 * 玩家 / player
+	 * @param client 客户端连接 / client connection
+	 * @param player 玩家 / player
 	 */
 	private static void sendItemInfos(AionConnection client, Player player) {
 		int questExpands = player.getQuestExpands();
@@ -823,8 +823,8 @@ public final class PlayerEnterWorldService {
 	 * 下发宏列表。
 	 * Sends the macro list.
 	 *
-	 * connection
-	 * 玩家 / player
+	 * @param client 客户端连接 / client connection
+	 * @param player 玩家 / player
 	 */
 	private static void sendMacroList(AionConnection client, Player player) {
 		client.sendPacket(new SM_MACRO_LIST(player, 1));

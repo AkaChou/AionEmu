@@ -5,7 +5,10 @@ import com.aionemu.gameserver.model.PlayerClass;
 import java.util.List;
 import java.util.Objects;
 
-/** Closed set of best-effort actions allowed after a successful commit. */
+/**
+ * 提交成功后允许执行的尽力而为动作的封闭集合。
+ * Closed set of best-effort actions allowed after a successful commit.
+ */
 public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		AfterCommitAction.ShowQuestDialog, AfterCommitAction.ShowQuestSelectionDialog,
 		AfterCommitAction.ShowDialogWindow,
@@ -31,7 +34,10 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 	record CloseDialog() implements AfterCommitAction {
 	}
 
-	/** Sends the committed QuestStatus/quest_vars projection and refreshes quest visibility. */
+	/**
+	 * 发送已提交的 QuestStatus/quest_vars 投影并刷新任务可见性。
+	 * Sends the committed QuestStatus/quest_vars projection and refreshes quest visibility.
+	 */
 	record SyncQuestState(QuestStateSyncMode mode) implements AfterCommitAction {
 		public SyncQuestState {
 			if (mode == null) {
@@ -40,7 +46,10 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
-	/** Sends the committed player-stat projection after reward mutations. */
+	/**
+	 * 奖励变更后发送已提交的玩家属性投影。
+	 * Sends the committed player-stat projection after reward mutations.
+	 */
 	record RefreshPlayerStats() implements AfterCommitAction {
 	}
 
@@ -62,7 +71,10 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
-	/** Sends a raw SM_DIALOG_WINDOW page without attaching the quest id. */
+	/**
+	 * 发送不附带任务 id 的原始 SM_DIALOG_WINDOW 页面。
+	 * Sends a raw SM_DIALOG_WINDOW page without attaching the quest id.
+	 */
 	record ShowDialogWindow(int dialogId) implements AfterCommitAction {
 		public ShowDialogWindow {
 			if (dialogId <= 0) {
@@ -157,7 +169,10 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
-	/** Spawns one uniformly selected authoritative variant; optionally replaces the slot handle. */
+	/**
+	 * 等概率生成一个权威变体；可选替换 slot 句柄。
+	 * Spawns one uniformly selected authoritative variant; optionally replaces the slot handle.
+	 */
 	record SpawnNpcRandom(String slot, List<QuestSpawnVariant> variants, boolean replaceExisting)
 			implements AfterCommitAction {
 		public SpawnNpcRandom {
@@ -228,7 +243,10 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
-	/** Lets a task-owned NPC attack a named NPC template in the player's current world instance. */
+	/**
+	 * 让任务拥有的 NPC 攻击玩家当前世界中指定模板的 NPC。
+	 * Lets a task-owned NPC attack a named NPC template in the player's current world instance.
+	 */
 	record AttackNpcTemplate(String slot, int templateId) implements AfterCommitAction {
 		public AttackNpcTemplate {
 			if (slot == null || slot.isBlank()) {
@@ -260,7 +278,10 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
-	/** Broadcasts an emote from the authoritative NPC used by the current interaction. */
+	/**
+	 * 从当前交互使用的权威 NPC 广播一个表情。
+	 * Broadcasts an emote from the authoritative NPC used by the current interaction.
+	 */
 	record BroadcastInteractionNpcEmotion(QuestNpcEmotion emotion) implements AfterCommitAction {
 		public BroadcastInteractionNpcEmotion {
 			if (emotion != QuestNpcEmotion.NO && emotion != QuestNpcEmotion.PANIC) {
@@ -324,7 +345,10 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
-	/** Cancels either a visible or invisible timer by its typed identity. */
+	/**
+	 * 按其类型化标识取消可见或隐形定时器。
+	 * Cancels either a visible or invisible timer by its typed identity.
+	 */
 	record CancelQuestTimer(QuestTimerPolicy.Identity identity) implements AfterCommitAction {
 		public CancelQuestTimer() {
 			this(QuestTimerPolicy.visible().identity());
@@ -361,7 +385,10 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
-	/** Starts the NPC-faction quest lifecycle after the quest state commit. */
+	/**
+	 * 任务状态提交后启动 NPC 阵营任务生命周期。
+	 * Starts the NPC-faction quest lifecycle after the quest state commit.
+	 */
 	record StartNpcFactionQuest(int npcFactionId) implements AfterCommitAction {
 		public StartNpcFactionQuest {
 			if (npcFactionId <= 0) {
@@ -370,7 +397,10 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
-	/** Marks the NPC-faction quest complete after rewards and quest state commit. */
+	/**
+	 * 奖励与任务状态提交后标记 NPC 阵营任务完成。
+	 * Marks the NPC-faction quest complete after rewards and quest state commit.
+	 */
 	record CompleteNpcFactionQuest(int npcFactionId) implements AfterCommitAction {
 		public CompleteNpcFactionQuest {
 			if (npcFactionId <= 0) {
@@ -379,7 +409,10 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
-	/** Aborts the NPC-faction quest after an explicit abandon transition. */
+	/**
+	 * 显式放弃转换后中止 NPC 阵营任务。
+	 * Aborts the NPC-faction quest after an explicit abandon transition.
+	 */
 	record AbortNpcFactionQuest(int npcFactionId) implements AfterCommitAction {
 		public AbortNpcFactionQuest {
 			if (npcFactionId <= 0) {
@@ -388,7 +421,10 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
-	/** Applies a skill effect to the quest owner after the state transaction commits. */
+	/**
+	 * 状态事务提交后对任务所有者施加一个技能效果。
+	 * Applies a skill effect to the quest owner after the state transaction commits.
+	 */
 	record ApplyEffect(int skillId, int durationMillis) implements AfterCommitAction {
 		public ApplyEffect {
 			if (skillId <= 0) {
@@ -400,7 +436,10 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
-	/** Removes the effect identified by its skill/effect id from the quest owner. */
+	/**
+	 * 从任务所有者身上移除由技能/效果 id 标识的效果。
+	 * Removes the effect identified by its skill/effect id from the quest owner.
+	 */
 	record RemoveEffect(int effectId) implements AfterCommitAction {
 		public RemoveEffect {
 			if (effectId <= 0) {
@@ -409,7 +448,10 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
-	/** Sends a modeled system message after the quest state transaction commits. */
+	/**
+	 * 任务状态事务提交后发送一条建模的系统消息。
+	 * Sends a modeled system message after the quest state transaction commits.
+	 */
 	record SendSystemMessage(QuestSystemMessage message) implements AfterCommitAction {
 		public SendSystemMessage {
 			if (message == null) {
@@ -451,7 +493,10 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
-	/** Starts a flight teleport for the given route (FLIGHT_TELEPORT state + START_FLYTELEPORT emote). */
+	/**
+	 * 为给定路由启动飞行传送（FLIGHT_TELEPORT 状态 + START_FLYTELEPORT 表情）。
+	 * Starts a flight teleport for the given route (FLIGHT_TELEPORT state + START_FLYTELEPORT emote).
+	 */
 	record FlightTeleport(int flightTeleportId) implements AfterCommitAction {
 		public FlightTeleport {
 			if (flightTeleportId <= 0) {
@@ -468,7 +513,10 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 	record DeleteInteractionNpc(boolean scheduleRespawn) implements AfterCommitAction {
 	}
 
-	/** Deletes every NPC currently present in the player's authoritative world-map instance. */
+	/**
+	 * 删除玩家权威世界地图实例中当前存在的每个 NPC。
+	 * Deletes every NPC currently present in the player's authoritative world-map instance.
+	 */
 	record DeleteWorldNpcs() implements AfterCommitAction {
 	}
 

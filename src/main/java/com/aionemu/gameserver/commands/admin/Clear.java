@@ -27,8 +27,6 @@ public class Clear extends AdminCommand {
 	 * 按类型清理缓存：groups、allys 或 findgroup。
 	 * Clears caches by type: groups, allys or findgroup.
 	 *
-	 * admin
-	 * groups|allys|findgroup。
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -47,8 +45,6 @@ public class Clear extends AdminCommand {
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
 	 *
-	 * admin
-	 * error message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

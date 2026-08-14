@@ -62,7 +62,7 @@ public class GsConnection extends AConnection {
      * 基于传输层创建 GS 连接。
      * Create a GS connection over the given transport.
      *
-     * Connection transport
+     * @param transport 连接传输 / Connection transport
      */
     public GsConnection(ConnectionTransport transport) {
         super(transport, 8192 * 8, 8192 * 8);
@@ -185,7 +185,7 @@ public class GsConnection extends AConnection {
      * 返回当前连接状态。
      * Return current connection state.
      *
-     * Current state
+     * @return 当前状态 / Current state
      */
     public State getState() {
         return state;
@@ -195,7 +195,7 @@ public class GsConnection extends AConnection {
      * 设置连接状态；进入 AUTHED 时按配置启动 ping。
      * Set connection state; when AUTHED, start ping if configured.
      *
-     * New state
+     * @param state 新状态 / New state
      */
     public void setState(State state) {
         this.state = state;
@@ -249,7 +249,7 @@ public class GsConnection extends AConnection {
      * 处理游戏服 pong 响应。
      * Handle GameServer pong response.
      *
-     * Ping id
+     * @param pid Ping ID / Ping id
      */
     public void pong(int pid) {
         if (Config.ENABLE_PINGPONG) {

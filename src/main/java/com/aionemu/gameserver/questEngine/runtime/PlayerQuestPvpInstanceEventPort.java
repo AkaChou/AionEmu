@@ -5,7 +5,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestPvpInstanceFacts;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
-/** Builds settlement facts from the player passed by a real instance reward fanout. */
+/** 从真实副本奖励扇出传入的玩家构建结算事实。 / Builds settlement facts from the player passed by a real instance reward fanout. */
 public final class PlayerQuestPvpInstanceEventPort implements QuestPvpInstanceEventPort {
 	@Override public QuestEvent.DredgionReward dredgionReward(QuestEnv env) {
 		return new QuestEvent.DredgionReward(facts(env, "DREDGION"));

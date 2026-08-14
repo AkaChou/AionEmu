@@ -22,7 +22,7 @@ public class Prestige_Society_Medical_AttendantAI2 extends NpcAI2
 {
 	@Override
 	protected void handleDialogStart(Player player) {
-        if (player.getInventory().getFirstItemByItemId(186000344) != null) { //Prestige Crystal.
+        if (player.getInventory().getFirstItemByItemId(186000344) != null) { // 声望水晶 / Prestige Crystal.
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 10));
         } else {
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
@@ -33,10 +33,10 @@ public class Prestige_Society_Medical_AttendantAI2 extends NpcAI2
 	
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
-		if (dialogId == 10000 && player.getInventory().decreaseByItemId(186000344, 1)) { //Prestige Coin.
+		if (dialogId == 10000 && player.getInventory().decreaseByItemId(186000344, 1)) { // 声望硬币 / Prestige Coin.
 		    switch (getNpcId()) {
-		        case 833764: //Prestige Society Medical Attendant.
-				    GameEngineServices.skillEngine().applyEffectDirectly(21650, player, player, 1800000 * 1); //Prestigious Blessing.
+		        case 833764: // 声望协会医疗服务员 / Prestige Society Medical Attendant.
+				    GameEngineServices.skillEngine().applyEffectDirectly(21650, player, player, 1800000 * 1); // 尊贵祝福 / Prestigious Blessing.
 				break;
 			}
 		}

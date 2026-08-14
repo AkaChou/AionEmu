@@ -14,11 +14,11 @@ public class Array3f implements Reusable {
 		}
 	};
 
-	/** Component a / Component a */
+	/** 分量 a / Component a */
 	public float a = 0.0f;
-	/** Component b / Component b */
+	/** 分量 b / Component b */
 	public float b = 0.0f;
-	/** Component c / Component c */
+	/** 分量 c / Component c */
 	public float c = 0.0f;
 
 	/**
@@ -35,7 +35,7 @@ public class Array3f implements Reusable {
 	 * 从工厂获取实例。
 	 * Obtains an instance from the factory.
 	 *
-	 * pooled instance
+	 * @return 池化实例 / pooled instance
 	 */
 	public static Array3f newInstance() {
 		return (Array3f) FACTORY.object();

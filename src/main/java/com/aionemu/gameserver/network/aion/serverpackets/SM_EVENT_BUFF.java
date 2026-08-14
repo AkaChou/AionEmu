@@ -14,6 +14,13 @@ public class SM_EVENT_BUFF extends AionServerPacket {
 	private final Player player;
 	private final int value;
 
+	/**
+	 * 构造活动 Buff 同步包。
+	 * Creates an event buff sync packet.
+	 *
+	 * @param player 目标玩家 / target player
+	 * @param id 活动 buff 值 / event buff value
+	 */
 	public SM_EVENT_BUFF(Player player, int id) {
 		this.player = player;
 		this.value = id;

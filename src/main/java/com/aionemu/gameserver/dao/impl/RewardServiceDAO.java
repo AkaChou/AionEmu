@@ -34,9 +34,10 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
      * Whether the current database is supported.
      *
      * @param arg0 数据库名 / database name
-     * major version
-     * minor version
-     * whether supported
+     * @param databaseName 数据库名 / database name
+     * @param majorVersion 主版本 / major version
+     * @param minorVersion 次版本 / minor version
+     * @return 是否支持 / whether supported
      */
     @Override
     public boolean supports(String arg0, int arg1, int arg2) {
@@ -47,7 +48,7 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
      * 将奖励标记为未领取。
      * Marks a reward as not yet received.
      *
-     * unique reward id
+     * @param unique 唯一奖励 ID / unique reward id
      */
     public void setUpdateDown(int unique) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -67,7 +68,7 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
      *
      * unique reward id
      *
-     * @param unique
+     * @param unique 唯一奖励 ID / unique reward id
      * @return 是否更新成功 / whether update succeeded
      */
     public boolean setUpdate(int unique) {
@@ -89,7 +90,7 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
      *
      * player id
      *
-     * @param playerId
+     * @param playerId 玩家 ID / player id
      * @return 可用奖励条目 / available reward entries
      */
     @Override

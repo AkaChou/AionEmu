@@ -20,7 +20,7 @@ public enum LetterType {
 		return id;
 	}
 
-	/** 按 ID 返回 letter type / Returns the letter type by id */
+	/** 按 ID 返回信件类型 / Returns the letter type by id */
 	public static LetterType getLetterTypeById(int id) {
 		for (LetterType lt : values()) {
 			if (lt.id == id) {

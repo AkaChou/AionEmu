@@ -45,7 +45,7 @@ public class MinionData {
 	 * 返回已加载的守护灵模板数量。
 	 * Returns the number of loaded minion templates.
 	 *
-	 * template count
+	 * @return 已加载的Minion 模板数量 / Returns the number of loaded minion templates.
 	 */
 	public int size() {
 		return minionData.size();
@@ -55,9 +55,7 @@ public class MinionData {
 	 * 按守护灵 ID 获取模板。
 	 * Returns the minion template for the given minion id.
 	 *
-	 * minion id
-	 *
-	 * @param minionId
+	 * @param minionId Minion ID / minion id
 	 * @return 守护灵模板或 null / minion template or null
 	 */
 	public MinionTemplate getMinionTemplate(int minionId) {

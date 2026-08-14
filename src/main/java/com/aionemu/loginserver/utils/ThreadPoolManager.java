@@ -87,7 +87,7 @@ public final class ThreadPoolManager {
      *
      * @param r 任务 / runnable
      * @param delay 延迟毫秒 / delay in milliseconds
-     * cancellable future
+     * @return 可取消的 Future / cancellable future
      */
     public final ScheduledFuture<?> schedule(Runnable r, long delay) {
         r = new ThreadPoolRunnableWrapper(r);
@@ -102,7 +102,7 @@ public final class ThreadPoolManager {
      *
      * @param r 任务 / runnable
      * @param delay 延迟毫秒 / delay in milliseconds
-     * cancellable future
+     * @return 可取消的 Future / cancellable future
      */
     public final ScheduledFuture<?> scheduleEffect(Runnable r, long delay) {
         return schedule(r, delay);
@@ -115,8 +115,8 @@ public final class ThreadPoolManager {
      *
      * @param r 任务 / runnable
      * @param delay 初始延迟毫秒 / initial delay in milliseconds
-     * 周期（毫秒） / period in milliseconds
-     * cancellable future
+     * @param period 周期（毫秒） / period in milliseconds
+     * @return 可取消的 Future / cancellable future
      */
     public final ScheduledFuture<?> scheduleAtFixedRate(Runnable r, long delay, long period) {
         r = new ThreadPoolRunnableWrapper(r);
@@ -132,8 +132,8 @@ public final class ThreadPoolManager {
      *
      * @param r 任务 / runnable
      * @param delay 初始延迟毫秒 / initial delay in milliseconds
-     * 周期（毫秒） / period in milliseconds
-     * cancellable future
+     * @param period 周期（毫秒） / period in milliseconds
+     * @return 可取消的 Future / cancellable future
      */
     public final ScheduledFuture<?> scheduleEffectAtFixedRate(Runnable r, long delay, long period) {
         return scheduleAtFixedRate(r, delay, period);
@@ -180,7 +180,7 @@ public final class ThreadPoolManager {
      * Submits a runnable to the instant pool.
      *
      * @param r 任务 / runnable
-     * @return Future
+     * @return 任务 Future / task future
      */
     public final Future<?> submit(Runnable r) {
         r = new ThreadPoolRunnableWrapper(r);
@@ -193,7 +193,7 @@ public final class ThreadPoolManager {
      * Submits a runnable to the long-running pool.
      *
      * @param r 任务 / runnable
-     * @return Future
+     * @return 任务 Future / task future
      */
     public final Future<?> submitLongRunning(Runnable r) {
         r = new RunnableWrapper(r);
@@ -351,7 +351,7 @@ public final class ThreadPoolManager {
      * 获取单例实例（已弃用，请走 boot 注入）。
      * Returns the singleton instance (deprecated; prefer boot injection).
      *
-     * singleton instance
+     * @return 单例实例 / singleton instance
      */
     @Deprecated(since = "boot-migration")
     public static ThreadPoolManager getInstance() {

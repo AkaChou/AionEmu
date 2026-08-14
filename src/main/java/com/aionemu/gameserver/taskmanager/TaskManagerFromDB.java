@@ -150,7 +150,7 @@ public class TaskManagerFromDB {
 	 * 获取 {@link TaskFromDBDAO} 快捷方法。
 	 * Shortcut to obtain {@link TaskFromDBDAO}.
 	 *
-	 * DAO instance
+	 * @return DAO 实例 / the DAO instance
 	 */
 	private static TaskFromDBDAO getDAO() {
 		return DAOManager.getDAO(TaskFromDBDAO.class);
@@ -174,7 +174,7 @@ public class TaskManagerFromDB {
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
 	 *
-	 * Provider
+	 * @param instanceProvider Spring 实例提供者 / the Spring instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<TaskManagerFromDB> instanceProvider) {
 		TaskManagerFromDB.instanceProvider = instanceProvider;

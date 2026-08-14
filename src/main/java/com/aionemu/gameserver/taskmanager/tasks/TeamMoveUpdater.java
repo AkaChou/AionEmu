@@ -54,7 +54,7 @@ public final class TeamMoveUpdater extends AbstractIterativePeriodicTaskManager<
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
 	 *
-	 * Provider
+	 * @param provider 实例提供者 / Provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<TeamMoveUpdater> provider) {
 		instanceProvider = provider;
@@ -89,7 +89,7 @@ public final class TeamMoveUpdater extends AbstractIterativePeriodicTaskManager<
 	 * 耗时统计方法名。
 	 * Method name for runtime stats.
 	 *
-	 * Method name
+	 * @return 方法名 / Method name
 	 */
 	@Override
 	protected String getCalledMethodName() {

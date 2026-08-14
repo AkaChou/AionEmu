@@ -22,7 +22,7 @@ public class Idle_Power_GeneratorAI2 extends NpcAI2
 	@Override
 	protected void handleSpawned() {
 		switch (getNpcId()) {
-			case 806391: //North Power Generator.
+			case 806391: // 北方发电机。 / North Power Generator.
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 					public void run() {
@@ -31,7 +31,7 @@ public class Idle_Power_GeneratorAI2 extends NpcAI2
 					}
 				}, 300000); //5 分钟。 / 5 Minutes.
 			break;
-			case 806392: //South Power Generator.
+			case 806392: // 南方发电机。 / South Power Generator.
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 					public void run() {

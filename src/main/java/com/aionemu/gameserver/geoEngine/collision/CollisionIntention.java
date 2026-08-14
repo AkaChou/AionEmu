@@ -48,7 +48,7 @@ public enum CollisionIntention {
 	ALL(PHYSICAL.getId() | MATERIAL.getId() | SKILL.getId() | WALK.getId() | DOOR.getId() | EVENT.getId()
 			| MOVEABLE.getId() | PHYSICAL_SEE_THROUGH.getId());
 
-	/** Intention bit id / Intention bit id */
+	/** 意图位 id / Intention bit id. */
 	private byte id;
 
 	/**
@@ -65,7 +65,7 @@ public enum CollisionIntention {
 	 * 返回意图位 id。
 	 * Returns the intention bit id.
 	 *
-	 * bit id
+	 * @return 意图位 id / bit id
 	 */
 	public byte getId() {
 		return id;

@@ -17,8 +17,8 @@ public class DAOUtils {
 	 * Checks whether the given database and version are treated as MySQL 8 support.
 	 *
 	 * @param db 数据库产品名 / database product name
-	 * major version
-	 * minor version
+	 * @param majorVersion 主版本号 / major version
+	 * @param minorVersion 次版本号 / minor version
 	 *
 	 * @return 若 supported 则为 true / true if supported
 	 */

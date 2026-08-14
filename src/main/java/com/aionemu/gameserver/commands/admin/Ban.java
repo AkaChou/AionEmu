@@ -29,7 +29,6 @@ public class Ban extends AdminCommand {
 	 * 执行封禁：解析目标与类型后通知登录服。
 	 * Executes ban: resolves target and type, then notifies the login server.
 	 *
-	 * admin
 	 * @param params 参数：玩家名、类型、时长 / player name, type, duration
 	 */
 	@Override
@@ -96,8 +95,6 @@ public class Ban extends AdminCommand {
 	 * 参数错误时输出 {@code //ban} 用法。
 	 * Prints {@code //ban} usage on invalid arguments.
 	 *
-	 * admin
-	 * failure message
 	 */
 	@Override
 	public void onFail(Player player, String message) {

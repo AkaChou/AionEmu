@@ -13,7 +13,7 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 
 /**
  * 裂隙刷新点模板（静态数据/XML）。
- * XML template.
+ * Rift spawn template (static data / XML).
  *
  * @author Source
  */

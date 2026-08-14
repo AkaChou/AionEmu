@@ -42,6 +42,10 @@ public class GaneshAI2 extends AggressiveNpcAI2
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
 	
+	/**
+	 * 按血量百分比（90%/70%/50%/30%/10%）触发阶段事件：首次触发时刷新能量 NPC 并启动周期召唤任务。
+	 * Triggers phase events by HP percentage (90/70/50/30/10%): on first trigger, spawns energy NPCs and starts the periodic summon task.
+	 */
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 90) {
 			if (isStartedEvent.compareAndSet(false, true)) {
@@ -70,6 +74,10 @@ public class GaneshAI2 extends AggressiveNpcAI2
 		}
 	}
 	
+	/**
+	 * 启动周期任务：每隔一段时间在存活玩家位置附近召唤小怪（人数少时全员召唤）。
+	 * Starts a periodic task that summons adds near living players every interval (summons for all when few players are alive).
+	 */
 	private void startPhaseTask() {
 		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override

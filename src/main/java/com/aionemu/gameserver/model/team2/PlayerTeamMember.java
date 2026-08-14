@@ -35,12 +35,12 @@ public class PlayerTeamMember implements TeamMember<Player> {
 		return player;
 	}
 
-	/** 返回 last online time / Returns the last online time */
+	/** 返回最后在线时间 / Returns the last online time */
 	public long getLastOnlineTime() {
 		return lastOnlineTime;
 	}
 
-	/** 更新 last online time / Update last online time */
+	/** 更新最后在线时间 / Update last online time */
 	public void updateLastOnlineTime() {
 		lastOnlineTime = System.currentTimeMillis();
 	}
@@ -50,22 +50,22 @@ public class PlayerTeamMember implements TeamMember<Player> {
 		return player.isOnline();
 	}
 
-	/** 返回 x / Returns the x */
+	/** 返回 X 坐标 / Returns the x */
 	public float getX() {
 		return player.getX();
 	}
 
-	/** 返回 y / Returns the y */
+	/** 返回 Y 坐标 / Returns the y */
 	public float getY() {
 		return player.getY();
 	}
 
-	/** 返回 z / Returns the z */
+	/** 返回 Z 坐标 / Returns the z */
 	public float getZ() {
 		return player.getZ();
 	}
 
-	/** 返回 heading / Returns the heading */
+	/** 返回朝向 / Returns the heading */
 	public byte getHeading() {
 		return player.getHeading();
 	}

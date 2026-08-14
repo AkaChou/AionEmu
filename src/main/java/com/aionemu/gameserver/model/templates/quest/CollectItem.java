@@ -21,18 +21,20 @@ public class CollectItem {
 	protected Integer count;
 
 	 /**
-	  * 获取 itemId 属性值。
-	  * Gets the value of the itemId property
-	  * @return possible object is {@link Integer }
+	  * 返回物品 ID。
+	  * Returns the item id.
+	  *
+	  * @return 物品 ID / possible object is {@link Integer}
 	  */
 	public Integer getItemId() {
 		return itemId;
 	}
 
 	/**
-	 * 获取 value 的数量 property。 / Gets the value of the count property
+	 * 返回所需数量。
+	 * Returns the required count.
 	 *
-	 * @return possible object is {@link Integer }
+	 * @return 数量 / possible object is {@link Integer}
 	 */
 	public Integer getCount() {
 		return count;

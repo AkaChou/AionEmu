@@ -14,6 +14,6 @@ public class SM_GAME_TIME extends AionServerPacket {
 
 	@Override
 	protected void writeImpl(AionConnection con) {
-		writeD(GameTimeManager.getGameTime().getTime()); // Minutes since 1/1/00 00:00:00
+		writeD(GameTimeManager.getGameTime().getTime()); // 自 1/1/00 00:00:00 起的分钟数 / minutes since 1/1/00 00:00:00
 	}
 }

@@ -14,16 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author (Encom)
- */
-@AIName("recharger") //730397
-
-/**
  * 开放世界区域 NPC AI：Recharger（@AIName "recharger"），继承 ActionItemNpcAI2。
  * Open-world zone NPC AI: Recharger (@AIName "recharger"), extends ActionItemNpcAI2.
  *
  * @author (Encom)
  */
+@AIName("recharger") //730397
 public class RechargerAI2 extends ActionItemNpcAI2 {
 
     @Override
@@ -41,6 +37,10 @@ public class RechargerAI2 extends ActionItemNpcAI2 {
         AI2Actions.deleteOwner(this);
     }
 
+    /**
+     * 重置玩家状态：回满 HP/MP、清除异常、刷新技能冷却。
+     * Resets the player: restores full HP/MP, removes abnormal effects, and refreshes skill cooldowns.
+     */
     public void reseter(Player player){
         player.getLifeStats().increaseHp(SM_ATTACK_STATUS.TYPE.HP, player.getLifeStats().getMaxHp() + 1);
         player.getLifeStats().increaseMp(SM_ATTACK_STATUS.TYPE.MP, player.getLifeStats().getMaxMp() + 1);

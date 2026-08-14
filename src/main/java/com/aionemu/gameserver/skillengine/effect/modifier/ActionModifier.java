@@ -29,8 +29,8 @@ public abstract class ActionModifier {
 	 * 计算修正值。
 	 * Computes the modifier value.
 	 *
-	 * @param effect 运行中效果 / runtime effect
-	 * modifier amount
+	 * @param effect 运行中效果 / Runtime effect
+	 * @return 修正量 / Modifier amount
 	 */
 	public abstract int analyze(Effect effect);
 
@@ -38,8 +38,8 @@ public abstract class ActionModifier {
 	 * 检查修正条件是否成立。
 	 * Checks whether the modifier condition holds.
 	 *
-	 * @param effect 运行中效果 / runtime effect
-	 * 若 applicable 则为 true / true if applicable
+	 * @param effect 运行中效果 / Runtime effect
+	 * @return 条件成立则为 true / True if applicable
 	 */
 	public abstract boolean check(Effect effect);
 
@@ -47,7 +47,7 @@ public abstract class ActionModifier {
 	 * 获取运算模式（加/乘等）。
 	 * Returns the arithmetic mode (add/multiply, etc.).
 	 *
-	 * function mode
+	 * @return 运算模式 / Function mode
 	 */
 	public Func getFunc() {
 		return mode;

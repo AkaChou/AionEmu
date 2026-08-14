@@ -25,7 +25,7 @@ public class AetherMineQInstance extends GeneralInstanceHandler
 {
 	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
-	/** 对象 / objects */
+		/** 对象 / objects */
 		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	
 	/**
@@ -53,7 +53,7 @@ public class AetherMineQInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {

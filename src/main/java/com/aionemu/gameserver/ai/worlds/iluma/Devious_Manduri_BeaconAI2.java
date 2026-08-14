@@ -15,7 +15,7 @@ public class Devious_Manduri_BeaconAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		spawn(242923, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Baby Manduri Beacon.
+		spawn(242923, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); // 幼年 Manduri 信标 / Baby Manduri Beacon.
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}

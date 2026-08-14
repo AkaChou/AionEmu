@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Bombs，用于 ai 相关逻辑。
- * Bombs for ai logic.
+ * 炸弹集合：容纳单个炸弹模板。
+ * Bomb container: holds a single bomb template.
  *
  * @author xTz
  */

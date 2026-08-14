@@ -15,7 +15,7 @@ public abstract class PlayerGrowthDAO implements DAO {
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
 	 *
-	 * DAO class name
+	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
 	public String getClassName() {
@@ -26,7 +26,7 @@ public abstract class PlayerGrowthDAO implements DAO {
 	 * 加载玩家成长数据。
 	 * Loads player growth data.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public abstract void load(Player player);
 
@@ -34,10 +34,10 @@ public abstract class PlayerGrowthDAO implements DAO {
 	 * 新增一条成长记录。
 	 * Adds a growth record.
 	 *
-	 * player id
-	 * free flag
-	 * recharge count
-	 * 若 successful 则为 true / true if successful
+	 * @param playerId 玩家 ID / player id
+	 * @param isFree 免费标记 / free flag
+	 * @param rechargeCount 充值次数 / recharge count
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean add(final int playerId, boolean isFree, int rechargeCount);
 
@@ -45,7 +45,7 @@ public abstract class PlayerGrowthDAO implements DAO {
 	 * 删除成长数据。
 	 * Deletes growth data.
 	 *
-	 * 若 successful 则为 true / true if successful
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean delete();
 
@@ -53,8 +53,8 @@ public abstract class PlayerGrowthDAO implements DAO {
 	 * 持久化玩家成长数据。
 	 * Stores player growth data.
 	 *
-	 * 玩家 / player
-	 * 若 successful 则为 true / true if successful
+	 * @param player 玩家 / player
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean store(Player player);
 
@@ -62,10 +62,10 @@ public abstract class PlayerGrowthDAO implements DAO {
 	 * 按对象 ID 设置成长状态。
 	 * Sets growth state by object ID.
 	 *
-	 * object id
-	 * free flag
-	 * recharge count
-	 * 若 successful 则为 true / true if successful
+	 * @param obj 对象 ID / object id
+	 * @param isFree 免费标记 / free flag
+	 * @param rechargeCount 充值次数 / recharge count
+	 * @return 若成功则为 true / true if successful
 	 */
 	public abstract boolean setGrowthByObjId(final int obj, boolean isFree, int rechargeCount);
 }

@@ -34,7 +34,7 @@ public class Entrance_Of_Oracular_ChamberAI2 extends NpcAI2
 	@Override
     protected void handleDialogStart(Player player) {
 		if (player.getRace() == Race.ELYOS) {
-			QuestState qsE = player.getQuestStateList().getQuestState(30208); //[Group] The Truth Hurts.
+			QuestState qsE = player.getQuestStateList().getQuestState(30208); // 团队任务：The Truth Hurts / [Group] The Truth Hurts.
             if (qsE != null && qsE.getStatus() != QuestStatus.NONE) {
                 handleUseItemStart(player);
             } else {
@@ -42,7 +42,7 @@ public class Entrance_Of_Oracular_ChamberAI2 extends NpcAI2
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(30208));
             }
         } else if (player.getRace() == Race.ASMODIANS) {
-			QuestState qsA = player.getQuestStateList().getQuestState(30308); //[Group] Summon Respondent Utra.
+			QuestState qsA = player.getQuestStateList().getQuestState(30308); // 团队任务：Summon Respondent Utra / [Group] Summon Respondent Utra.
             if (qsA != null && qsA.getStatus() != QuestStatus.NONE) {
                 handleUseItemStart(player);
             } else {
