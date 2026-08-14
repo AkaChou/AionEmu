@@ -3,6 +3,7 @@ package com.aionemu.gameserver.spawnengine;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
 import com.aionemu.gameserver.ai.RetailNpcPartyEngine;
+import com.aionemu.gameserver.ai2.NpcAI2;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -280,7 +281,15 @@ public class SpawnEngine {
 	}
 
 	static float projectedSpawnZ(VisibleObject visibleObject, SpawnTemplate spawn, Function<Npc, float[]> projector) {
-		if (!(visibleObject instanceof Npc npc) || spawn.canFly()) {
+		return projectedSpawnZ(visibleObject, spawn, projector, npc ->
+			GameWorldServices.geoService().getTerrainZ(npc.getWorldId(), spawn.getX(), spawn.getY()));
+	}
+
+	static float projectedSpawnZ(VisibleObject visibleObject, SpawnTemplate spawn, Function<Npc, float[]> projector,
+			Function<Npc, Float> terrainHeight) {
+		// 零移速交互物可能使用水面或摆件高度，必须保留静态数据中的 Z。 / Immobile objects may use authored water/prop height.
+		if (!(visibleObject instanceof Npc npc) || spawn.canFly()
+				|| !(npc.getAi2() instanceof NpcAI2 ai) || !ai.isMoveSupported()) {
 			return spawn.getZ();
 		}
 		float[] point = projector.apply(npc);
@@ -288,7 +297,7 @@ public class SpawnEngine {
 			return point[2];
 		}
 		// PATH 节点容差外的出生点（如出生 Z 悬空于树冠上方）：用地形高度兜底，避免出生即悬空
-		float terrainZ = GameWorldServices.geoService().getTerrainZ(npc.getWorldId(), spawn.getX(), spawn.getY());
+		float terrainZ = terrainHeight.apply(npc);
 		return Float.isNaN(terrainZ) ? spawn.getZ() : terrainZ;
 	}
 

@@ -1066,8 +1066,8 @@
       <spot x="869.659363" y="1197.746216" z="114.883545" h="93"/>
     </spawn>
     <spawn npc_id="700008" respawn_time="120">
-		<temporary_spawn spawn_time="21.*.*" despawn_time="4.*.*"/>
-		<spot x="483.67554" y="1544.7524" z="108.88557"/>
+		<temporary_spawn spawn_time="19.*.*" despawn_time="8.*.*"/>
+		<spot x="483.675537" y="1544.752441" z="114.441620"/>
     </spawn>
     <spawn npc_id="203194" respawn_time="60">
       <spot x="804.924194" y="1244.598145" z="118.98627" h="105"/>
