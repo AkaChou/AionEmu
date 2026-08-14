@@ -78,6 +78,7 @@ public final class QuestMutationPlanner {
 		List<QuestAction> actions = expandSelectedRewards(definition, transition.actions());
 		appendFinalRepeatRewards(definition, snapshot, actions);
 		appendAbandonWorkItemCleanup(definition, event, transition.event(), actions);
+		appendCompletionWorkItemCleanup(definition, actions);
 		Map<String, Integer> variables = new LinkedHashMap<>(layout.unpack(snapshot.packedVariables()));
 		Set<String> actionTouchedFields = new HashSet<>();
 		Map<QuestRewardKind, Long> plannedDebits = new LinkedHashMap<>();
@@ -261,6 +262,31 @@ public final class QuestMutationPlanner {
 			|| declaredEvent instanceof QuestEvent.Abandon
 			|| actions.stream().anyMatch(QuestAction.AbandonQuest.class::isInstance);
 		if (!abandons) {
+			return;
+		}
+		for (var item : definition.definition().metadata().questWorkItems()) {
+			boolean alreadyRemovesAll = actions.stream().anyMatch(action -> action instanceof QuestAction.RemoveItem removal
+				&& removal.itemId() == item.itemId() && removal.removeAll());
+			if (!alreadyRemovesAll) {
+				actions.add(new QuestAction.RemoveItem(item.itemId(), QuestAction.RemoveItem.ALL));
+			}
+		}
+	}
+
+	/**
+	 * 完成必须在同一事务中随 COMPLETE 投影移除任务工作物品，对齐旧引擎
+	 * {@code QuestService.setFinishingState} 的零售行为：完成时无条件清理所有
+	 * {@code questWorkItems}。转换已显式声明 {@code remove-item count="ALL"} 的物品跳过。
+	 * RemovalItem 对全部堆叠（ALL）总是可行的，玩家未持有也不会阻断完成。
+	 * Completion must remove quest work items in the same transaction as the COMPLETE
+	 * projection, mirroring the retail behaviour of {@code QuestService.setFinishingState}:
+	 * all {@code questWorkItems} are unconditionally cleared on completion. Items already
+	 * covered by an explicit {@code remove-item count="ALL"} are skipped. A RemoveItem for the
+	 * whole stack (ALL) is always feasible and never blocks completion when the player lacks
+	 * the item.
+	 */
+	private static void appendCompletionWorkItemCleanup(CompiledQuestDefinition definition, List<QuestAction> actions) {
+		if (actions.stream().noneMatch(QuestAction.CompleteQuest.class::isInstance)) {
 			return;
 		}
 		for (var item : definition.definition().metadata().questWorkItems()) {

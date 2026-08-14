@@ -417,4 +417,112 @@ class QuestMutationPlannerTest {
 
 		assertEquals(1, plan.nextPackedVariables());
 	}
+
+	@Test
+	void completingQuestAppendsTransactionalRemoveAllForWorkItemsNotExplicitlyRemoved() {
+		// 完成路径须对齐旧引擎 setFinishingState: 无条件清理 questWorkItems。
+		// 此 quest 的 work-item 182400005 未在完成转换内显式 remove-item,引擎须自动追加 ALL 清理。
+		String xml = """
+
+						<quest-definition id="1308" version="1">
+						  <metadata name="complete-clean" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+						    <work-items><item id="182400005" count="1"/></work-items>
+						  </metadata>
+						  <nodes>
+						    <node label="reward" status="REWARD"/>
+						    <node label="complete" status="COMPLETE"/>
+						  </nodes>
+						  <transitions>
+						    <transition source="reward" target="complete">
+						      <event><talk-to-npc npc-id="700001"/></event>
+						      <actions><complete-quest reward-index="0"/></actions>
+						      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
+						    </transition>
+						  </transitions>
+						</quest-definition>
+
+				""";
+		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
+			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+		var transition = definition.definition().transitions().get(0);
+
+		var plan = QuestMutationPlanner.plan(definition,
+			new QuestSnapshot(7, 1308, QuestStatus.REWARD, 0, Map.of(182400005, 1)),
+			new QuestEvent.TalkToNpc(700001), transition).orElseThrow();
+
+		assertEquals(List.of(new QuestAction.CompleteQuest(0),
+			new QuestAction.RemoveItem(182400005, QuestAction.RemoveItem.ALL)), plan.requiredActions());
+	}
+
+	@Test
+	void completingQuestDoesNotDuplicateExplicitRemoveAllOfWorkItem() {
+		// 转换已显式声明 remove-item count="ALL" 的 work-item 不应被引擎重复追加。
+		String xml = """
+
+						<quest-definition id="1309" version="1">
+						  <metadata name="complete-dedup" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+						    <work-items><item id="182400006" count="1"/></work-items>
+						  </metadata>
+						  <nodes>
+						    <node label="reward" status="REWARD"/>
+						    <node label="complete" status="COMPLETE"/>
+						  </nodes>
+						  <transitions>
+						    <transition source="reward" target="complete">
+						      <event><talk-to-npc npc-id="700001"/></event>
+						      <actions>
+						        <remove-item item-id="182400006" count="ALL"/>
+						        <complete-quest reward-index="0"/>
+						      </actions>
+						      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
+						    </transition>
+						  </transitions>
+						</quest-definition>
+
+				""";
+		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
+			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+		var transition = definition.definition().transitions().get(0);
+
+		var plan = QuestMutationPlanner.plan(definition,
+			new QuestSnapshot(7, 1309, QuestStatus.REWARD, 0, Map.of(182400006, 1)),
+			new QuestEvent.TalkToNpc(700001), transition).orElseThrow();
+		long removals = plan.requiredActions().stream()
+			.filter(action -> action instanceof QuestAction.RemoveItem remove && remove.itemId() == 182400006)
+			.count();
+
+		assertEquals(1L, removals);
+	}
+
+	@Test
+	void completingQuestRemainsFeasibleWhenPlayerLacksTheWorkItem() {
+		// RemoveItem(ALL) 对全部堆叠恒可行: 玩家未持有 work-item 时完成不应被阻断。
+		String xml = """
+
+						<quest-definition id="1310" version="1">
+						  <metadata name="complete-empty" display-name-id="0" min-level="1" max-level="55" category="QUEST">
+						    <work-items><item id="182400007" count="1"/></work-items>
+						  </metadata>
+						  <nodes>
+						    <node label="reward" status="REWARD"/>
+						    <node label="complete" status="COMPLETE"/>
+						  </nodes>
+						  <transitions>
+						    <transition source="reward" target="complete">
+						      <event><talk-to-npc npc-id="700001"/></event>
+						      <actions><complete-quest reward-index="0"/></actions>
+						      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
+						    </transition>
+						  </transitions>
+						</quest-definition>
+
+				""";
+		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
+			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+		var transition = definition.definition().transitions().get(0);
+
+		assertTrue(QuestMutationPlanner.plan(definition,
+			new QuestSnapshot(7, 1310, QuestStatus.REWARD, 0, Map.of()),
+			new QuestEvent.TalkToNpc(700001), transition).isPresent());
+	}
 }
