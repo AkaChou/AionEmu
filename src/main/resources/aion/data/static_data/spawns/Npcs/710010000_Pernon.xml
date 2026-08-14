@@ -345,7 +345,7 @@
 		</spawn>
 		<!-- Peidoni -->
 		<spawn npc_id="830750" respawn_time="295">
-			<spot x="1003.925415" y="1570.951172" z="104.265228" walker_id="41388345962CC8BAB562B8705A47F088F5523B5A" walker_index="2" h="73" resolve_z="true"/>
+			<spot x="1004.76" y="1569.82" z="100.61375" walker_id="41388345962CC8BAB562B8705A47F088F5523B5A" walker_index="2"/>
 		</spawn>
 		<!-- Dariten -->
 		<spawn npc_id="830415" respawn_time="295">

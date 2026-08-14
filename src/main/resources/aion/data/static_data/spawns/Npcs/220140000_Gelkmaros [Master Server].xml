@@ -639,7 +639,7 @@
 		<spawn npc_id="209274" respawn_time="295">
 			<spot x="2449.03" y="1290.92" z="332.189" h="71"/>
 			<spot x="1084.63" y="1810.08" z="350.04437" h="57" walker_id="6E070A628CDFB97DE9C54EA88B9A1C7D5FC5FBE4" walker_index="1"/>
-			<spot x="988.460022" y="2564.370117" z="242.000000" h="110" walker_id="F737E9114784506D61619D07376E61C2A53292F9" walker_index="1" resolve_z="true"/>
+			<spot x="988.55" y="2565.7" z="240.625" h="57" walker_id="F737E9114784506D61619D07376E61C2A53292F9" walker_index="1"/>
 		</spawn>
 		<!-- Lord Dhuni -->
 		<spawn npc_id="216579" respawn_time="1800">
@@ -671,7 +671,7 @@
 		</spawn>
 		<!-- Goldentail Dorion -->
 		<spawn npc_id="799731" respawn_time="295">
-			<spot x="1772.415283" y="2882.003174" z="566.000000" h="63" walker_id="30AE9FAADF71BF5E93BFB6EAFB9342C7C43A9959" walker_index="3" resolve_z="true"/>
+			<spot x="1772.04" y="2881.84" z="548.52515" h="97" walker_id="30AE9FAADF71BF5E93BFB6EAFB9342C7C43A9959" walker_index="3"/>
 		</spawn>
 		<!-- Bowmaster Kemar -->
 		<spawn npc_id="216623" respawn_time="1800">
@@ -738,8 +738,8 @@
 			<spot x="1719.200928" y="2678.356934" z="511.562988" h="71" resolve_z="true"/>
 			<spot x="1924.741211" y="2823.380859" z="529.480225" h="60" resolve_z="true"/>
 			<spot x="1708.614502" y="2692.131104" z="512.000000" h="73" resolve_z="true"/>
-			<spot x="1802.390015" y="2752.310059" z="532.000000" h="0" walker_id="A40B07467B3C29581B028961086848B439F8BEDC" walker_index="2" resolve_z="true"/>
-			<spot x="1897.150024" y="2797.229980" z="531.000000" h="0" walker_id="94496DB4091E2B742B7826D357CDFC281E88DD29" walker_index="2" resolve_z="true"/>
+			<spot x="1801.68" y="2752.31" z="530.5854" h="29" walker_id="A40B07467B3C29581B028961086848B439F8BEDC" walker_index="2"/>
+			<spot x="1897.13" y="2797.33" z="530.05316" h="62" walker_id="94496DB4091E2B742B7826D357CDFC281E88DD29" walker_index="2"/>
 		</spawn>
 		<!-- Hunter Huruhuru -->
 		<spawn npc_id="216626" respawn_time="1800">
@@ -6876,7 +6876,7 @@
 			<spot x="982.969177" y="1350.662842" z="63.000000" random_walk="2" h="0" resolve_z="true"/>
 			<spot x="1036.039673" y="1450.833984" z="63.000000" random_walk="2" h="0" resolve_z="true"/>
 			<spot x="994.124" y="1394.14" z="57.7885" h="43" random_walk="2"/>
-			<spot x="1005.972290" y="1405.146851" z="86.000000" h="76" walker_id="C8C75C0CD0C78B8BD9FC225CDD2DA5CA58D572C0" resolve_z="true"/>
+			<spot x="1004.68" y="1403.95" z="55.25" h="64" walker_id="C8C75C0CD0C78B8BD9FC225CDD2DA5CA58D572C0"/>
 			<spot x="1091.12" y="1543.84" z="50.0" h="65" walker_id="274AE225A7BF05CF1501BC87453BCF224940BA83"/>
 			<spot x="1091.12" y="1543.84" z="50.0" h="65" walker_id="274AE225A7BF05CF1501BC87453BCF224940BA83"/>
 		</spawn>
@@ -7400,11 +7400,11 @@
 		</spawn>
 		<!-- Mischievous Manduri -->
 		<spawn npc_id="799749" respawn_time="295">
-			<spot x="1771.415283" y="2883.003174" z="566.000000" h="63" walker_id="30AE9FAADF71BF5E93BFB6EAFB9342C7C43A9959" walker_index="2" resolve_z="true"/>
+			<spot x="1772.04" y="2881.84" z="548.52515" h="100" walker_id="30AE9FAADF71BF5E93BFB6EAFB9342C7C43A9959" walker_index="2"/>
 		</spawn>
 		<!-- Acute Shugo -->
 		<spawn npc_id="799747" respawn_time="295">
-			<spot x="1773.415283" y="2883.003174" z="566.000000" h="63" walker_id="30AE9FAADF71BF5E93BFB6EAFB9342C7C43A9959" walker_index="4" resolve_z="true"/>
+			<spot x="1772.04" y="2881.84" z="548.52515" h="99" walker_id="30AE9FAADF71BF5E93BFB6EAFB9342C7C43A9959" walker_index="4"/>
 		</spawn>
 		<!-- Antimoni -->
 		<spawn npc_id="700724" respawn_time="295">
@@ -7538,7 +7538,7 @@
          </spawn>
          <!-- Naduka Stalker -->
 		 <spawn npc_id="216434" respawn_time="295">
-            <spot x="1305.824585" y="1272.119141" z="324.800140" h="10" walker_id="6E7066D53123B8865CFD1033AEF626EA27E7EB62" resolve_z="true"/>
+            <spot x="1304.5" y="1272.03" z="286.7481" h="89" walker_id="6E7066D53123B8865CFD1033AEF626EA27E7EB62"/>
         </spawn>
 		<!-- Naduka Raider -->
 		<spawn npc_id="216450" respawn_time="295">

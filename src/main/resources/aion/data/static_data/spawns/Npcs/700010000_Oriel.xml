@@ -1218,7 +1218,7 @@
 		</spawn>
 		<!-- Tiriris -->
 		<spawn npc_id="830358" respawn_time="295">
-			<spot x="2499.407715" y="2534.312012" z="185.148117" walker_id="F5202441FF8A8330C76156108561F6021A26DFF6" walker_index="2" h="90" resolve_z="true"/>
+			<spot x="2499.96" y="2534.62" z="183.5" walker_id="F5202441FF8A8330C76156108561F6021A26DFF6" walker_index="2"/>
 		</spawn>
 		<!-- Hirshia -->
 		<spawn npc_id="830909" respawn_time="295">
@@ -1250,7 +1250,7 @@
 		</spawn>
 		<!-- Frilien -->
 		<spawn npc_id="830700" respawn_time="295">
-			<spot x="1358.399414" y="1854.966919" z="111.053459" walker_id="22066350099D01C3801738287F03BCAEA0A60004" walker_index="2" h="90" resolve_z="true"/>
+			<spot x="1357.7" y="1855.88" z="102.93624" walker_id="22066350099D01C3801738287F03BCAEA0A60004" walker_index="2"/>
 		</spawn>
 		<!-- Grinea -->
 		<spawn npc_id="830709" respawn_time="295">
@@ -1306,7 +1306,7 @@
 		</spawn>
 		<!-- Sesilrina -->
 		<spawn npc_id="830905" respawn_time="295">
-			<spot x="860.687378" y="817.569641" z="82.040039" walker_id="7F78D8DC1657CEAA41D2D2D9A84B95AA7182CA24" walker_index="2" h="110" resolve_z="true"/>
+			<spot x="859.45" y="816.25" z="77.60625" walker_id="7F78D8DC1657CEAA41D2D2D9A84B95AA7182CA24" walker_index="2"/>
 		</spawn>
 		<!-- Kedaronis -->
 		<spawn npc_id="830840" respawn_time="295">
@@ -1314,7 +1314,7 @@
 		</spawn>
 		<!-- Badelran -->
 		<spawn npc_id="830839" respawn_time="295">
-			<spot x="343.894836" y="783.153931" z="86.173889" walker_id="4419DB16FF7E4DC8C3B1F281C8FD5E5E566578D6" walker_index="0" h="110" resolve_z="true"/>
+			<spot x="343.68" y="784.53" z="85.229996" walker_id="4419DB16FF7E4DC8C3B1F281C8FD5E5E566578D6" walker_index="0"/>
 		</spawn>
 		<!-- Saeron -->
 		<spawn npc_id="830864" respawn_time="295">
@@ -1322,7 +1322,7 @@
 		</spawn>
 		<!-- Herenia -->
 		<spawn npc_id="830879" respawn_time="295">
-			<spot x="342.894836" y="786.153931" z="86.173889" walker_id="4419DB16FF7E4DC8C3B1F281C8FD5E5E566578D6" walker_index="2" h="110" resolve_z="true"/>
+			<spot x="343.68" y="784.53" z="85.229996" walker_id="4419DB16FF7E4DC8C3B1F281C8FD5E5E566578D6" walker_index="2"/>
 		</spawn>
 		<!-- Siwenna -->
 		<spawn npc_id="830904" respawn_time="295">
@@ -1342,7 +1342,7 @@
 		</spawn>
 		<!-- Rilisien -->
 		<spawn npc_id="830882" respawn_time="295">
-			<spot x="1192.607788" y="1131.295654" z="105.042267" walker_id="DC78B05DD5347B792D17919F7F7C099D70972B66" walker_index="1" h="110" resolve_z="true"/>
+			<spot x="1192.39" y="1130.68" z="102.125" walker_id="DC78B05DD5347B792D17919F7F7C099D70972B66" walker_index="1"/>
 		</spawn>
 		<!-- Belrasion -->
 		<spawn npc_id="830867" respawn_time="295">
@@ -1350,7 +1350,7 @@
 		</spawn>
 		<!-- Talefus -->
 		<spawn npc_id="830842" respawn_time="295">
-			<spot x="1193.607788" y="1131.295654" z="105.042267" walker_id="DC78B05DD5347B792D17919F7F7C099D70972B66" walker_index="3" h="110" resolve_z="true"/>
+			<spot x="1192.39" y="1130.68" z="102.125" walker_id="DC78B05DD5347B792D17919F7F7C099D70972B66" walker_index="3"/>
 		</spawn>
 		<!-- Permir -->
 		<spawn npc_id="830868" respawn_time="295">
@@ -1366,11 +1366,11 @@
 		</spawn>
 		<!-- Sirenia -->
 		<spawn npc_id="830883" respawn_time="295">
-			<spot x="1230.734741" y="575.013306" z="112.038651" walker_id="9F4DDA666E8FAB9B574467FB56D9F29A182E976C" walker_index="3" h="110" resolve_z="true"/>
+			<spot x="1229.5" y="573.69" z="110.0" walker_id="9F4DDA666E8FAB9B574467FB56D9F29A182E976C" walker_index="3"/>
 		</spawn>
 		<!-- Gionia -->
 		<spawn npc_id="830906" respawn_time="295">
-			<spot x="698.314514" y="274.960663" z="122.896378" walker_id="2F1AE5406AD5F44142E32715BA4F74A36BEF563B" walker_index="0" h="110" resolve_z="true"/>
+			<spot x="698.1" y="274.34" z="120.60375" walker_id="2F1AE5406AD5F44142E32715BA4F74A36BEF563B" walker_index="0"/>
 		</spawn>
 		<!-- Fodaron -->
 		<spawn npc_id="830841" respawn_time="295">
@@ -1378,7 +1378,7 @@
 		</spawn>
 		<!-- Elromiron -->
 		<spawn npc_id="830866" respawn_time="295">
-			<spot x="699.314514" y="274.960663" z="122.896378" walker_id="2F1AE5406AD5F44142E32715BA4F74A36BEF563B" walker_index="2" h="110" resolve_z="true"/>
+			<spot x="698.1" y="274.34" z="120.60375" walker_id="2F1AE5406AD5F44142E32715BA4F74A36BEF563B" walker_index="2"/>
 		</spawn>
 		<!-- Rinia -->
 		<spawn npc_id="830881" respawn_time="295">
