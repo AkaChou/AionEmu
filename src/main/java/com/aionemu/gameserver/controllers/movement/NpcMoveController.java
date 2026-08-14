@@ -191,7 +191,7 @@ public class NpcMoveController
      * 使用指定 NPC 构造控制器。
      * Construct the controller for the given NPC.
      *
-     * NPC owner
+     * @param owner NPC 所有者 / NPC owner
      */
     public NpcMoveController(Npc owner) {
         super(owner);
@@ -214,7 +214,7 @@ public class NpcMoveController
      * 对目标应用跟随马达；目标不变时复用。
      * Apply a follow motor to the target; reuse when target is unchanged.
      *
-     * Follow target
+     * @param target 跟随目标 / Follow target
      */
     private void applyFollow(VisibleObject target) {
         if ((this._followMotor != null && this._followMotor._target == target)) {
@@ -293,10 +293,10 @@ public class NpcMoveController
      * 是否应向客户端广播移动状态变化。
      * Whether a movement state change should be broadcast to clients.
      *
-     * Current mask
-     * New mask
+     * @param currentMask 当前掩码 / Current mask
+     * @param newMask 新掩码 / New mask
      * @param destinationChanged 目标是否变化 / Whether destination changed
-     * Whether to broadcast
+     * @return 是否广播 / Whether to broadcast
      */
     static boolean shouldBroadcastMovement(byte currentMask, byte newMask, boolean destinationChanged) {
         return currentMask != newMask || destinationChanged;
@@ -375,8 +375,7 @@ public class NpcMoveController
                 targetY + (float) Math.sin(angle) * radius, targetZ};
     }
 
-    static boolean shouldAdjustGeoHeight(boolean enhancedHomeReturn, boolean returning, boolean spawnDestination,
-            float[][] path) {
+    static boolean shouldAdjustGeoHeight(boolean enhancedHomeReturn, boolean returning, boolean spawnDestination) {
         return enhancedHomeReturn && returning || !returning && !spawnDestination;
     }
 
@@ -707,10 +706,10 @@ public class NpcMoveController
      * 按速度插值向坐标推进，处理掩码广播与路径缓存消费。
      * Interpolate toward coordinates by speed; handle mask broadcast and path-cache consumption.
      *
-     * Target X
-     * Target Y
-     * Target Z
-     * Stop offset
+     * @param targetX 目标 X 坐标 / Target X
+     * @param targetY 目标 Y 坐标 / Target Y
+     * @param targetZ 目标 Z 坐标 / Target Z
+     * @param offset 停止偏移 / Stop offset
      */
     protected void moveToLocation(float targetX, float targetY, float targetZ, float offset) {
         moveToLocation(targetX, targetY, targetZ, offset, null);
@@ -783,7 +782,7 @@ public class NpcMoveController
         boolean returning = owner.getAi2().getState() == AIState.RETURNING;
         SpawnTemplate spawn = owner.getSpawn();
         boolean spawnDestination = spawn.getX() == targetDestX && spawn.getY() == targetDestY && spawn.getZ() == targetDestZ;
-        if (shouldAdjustGeoHeight(AIConfig.ENHANCED_HOME_RETURN, returning, spawnDestination, path)
+        if (shouldAdjustGeoHeight(AIConfig.ENHANCED_HOME_RETURN, returning, spawnDestination)
                 && GeoDataConfig.GEO_NPC_MOVE && GeoDataConfig.GEO_ENABLE
                 && !GameWorldServices.pathService().usesSpatialPath(owner)
                 && owner.getAi2().getSubState() != AISubState.WALK_PATH
@@ -792,7 +791,7 @@ public class NpcMoveController
             if (Math.abs(newZ - geoZ) > 1) {
                 directionChanged = true;
             }
-            newZ = geoZ;
+            newZ += (geoZ - newZ) * 0.5f; // 坡面贴地走半步，避免 600ms 节流下的 Z 锯齿抖动
         }
         if (((Npc)this.owner).getAi2().isLogging()) {
             AI2Logger.moveinfo((Creature)this.owner, "newX=" + newX + " newY=" + newY + " newZ=" + newZ + " mask=" + this.movementMask);
@@ -912,7 +911,7 @@ public class NpcMoveController
      * Compute the movement mask from direction change, AI state, and speed bonus.
      *
      * @param directionChanged 方向是否变化 / Whether direction changed
-     * Movement mask
+     * @return 移动掩码 / Movement mask
      */
     private byte getMoveMask(boolean directionChanged) {
         if (directionChanged) {
@@ -1756,8 +1755,8 @@ public class NpcMoveController
      * 设置当前与上一路线步骤，处理编队偏移与地形高度。
      * Set current/previous route steps; handle formation offset and terrain Z.
      *
-     * Current step
-     * Previous step
+     * @param paramRouteStep1 当前步骤 / Current step
+     * @param paramRouteStep2 上一步骤 / Previous step
      */
     public void setRouteStep(RouteStep paramRouteStep1, RouteStep paramRouteStep2) {
         Point2D localPoint2D = null;
@@ -1783,7 +1782,7 @@ public class NpcMoveController
      * 返回当前路线点索引。
      * Return the current route point index.
      *
-     * Point index
+     * @return 路线点索引 / Point index
      */
     public int getCurrentPoint() {
         return this.currentPoint;
@@ -1793,7 +1792,7 @@ public class NpcMoveController
      * 是否已到达当前目标点。
      * Whether the current target point has been reached.
      *
-     * Whether reached
+     * @return 是否已到达 / Whether reached
      */
     public boolean isReachedPoint() {
         return MathUtil.getDistance(((Npc)this.owner).getX(), ((Npc)this.owner).getY(), ((Npc)this.owner).getZ(), this.pointX, this.pointY, this.pointZ) < (double)0.05f;
@@ -1824,7 +1823,7 @@ public class NpcMoveController
      * 返回当前路线点停顿时间（毫秒）。
      * Return the current route-step rest time in milliseconds.
      *
-     * Rest time ms
+     * @return 停顿毫秒数 / Rest time ms
      */
     public int getWalkPause() {
         return this.walkPause;
@@ -1834,7 +1833,7 @@ public class NpcMoveController
      * 是否正在转向（位于路线起点）。
      * Whether direction is changing (at route start).
      *
-     * Whether changing direction
+     * @return 是否正在转向 / Whether changing direction
      */
     public boolean isChangingDirection() {
         return this.currentPoint == 0;
@@ -1844,7 +1843,7 @@ public class NpcMoveController
      * 返回目标 X；未启动时返回当前位置。
      * Return target X; current position when not started.
      *
-     * Target X
+     * @return 目标 X / Target X
      */
     @Override
     public final float getTargetX2() {
@@ -1855,7 +1854,7 @@ public class NpcMoveController
      * 返回目标 Y；未启动时返回当前位置。
      * Return target Y; current position when not started.
      *
-     * Target Y
+     * @return 目标 Y / Target Y
      */
     @Override
     public final float getTargetY2() {
@@ -1866,7 +1865,7 @@ public class NpcMoveController
      * 返回目标 Z；未启动时返回当前位置。
      * Return target Z; current position when not started.
      *
-     * Target Z
+     * @return 目标 Z / Target Z
      */
     @Override
     public final float getTargetZ2() {
@@ -1877,7 +1876,7 @@ public class NpcMoveController
      * 是否正在跟随目标对象。
      * Whether currently following a target object.
      *
-     * Whether following
+     * @return 是否正在跟随 / Whether following
      */
     public boolean isFollowingTarget() {
         return this.destination == Destination.TARGET_OBJECT;
@@ -1908,7 +1907,7 @@ public class NpcMoveController
      * 取回上一个回退步并设为目标；无记录时回退到出生点。
      * Recall the previous back-step as destination; fall back to spawn when none.
      *
-     * Recalled point
+     * @return 回退点 / Recalled point
      */
     public Point3D recallPreviousStep() {
         Point3D result =  stepSequenceNr == 0 ? null : lastSteps.get(stepSequenceNr--);
