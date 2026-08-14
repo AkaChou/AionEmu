@@ -27,6 +27,7 @@ public class cmd_job extends PlayerCommand {
 	 */
 	@Override
 	public void execute(Player player, String... params) {
+		player.getSkillList().addSkill(player, 30001, 49); // 采集 / Collection
 		player.getSkillList().addSkill(player, 30002, 499); // 采集 / Vita
 		player.getSkillList().addSkill(player, 30003, 499); // 奥德采集 / Ether
 		player.getSkillList().addSkill(player, 40001, 550); // 烹饪 / Cuisine
