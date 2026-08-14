@@ -38,9 +38,10 @@ public class BattlefieldUnionService {
 	}
 
 	/**
-	 * getSiegeActive 方法。
-	 * getSiegeActive method.
-	 * result
+	 * 返回当前进行的攻城 ID（无则保持上次值）。
+	 * Returns the currently active siege id (keeps last value when none).
+	 *
+	 * @return 活跃攻城 ID / active siege id
 	 */
 	public int getSiegeActive() {
 		if (GameFeatureServices.siegeService().isSiegeInProgress(1011)) {
@@ -52,7 +53,7 @@ public class BattlefieldUnionService {
 		} else if (GameFeatureServices.siegeService().isSiegeInProgress(1141)) {
 			activeSiegeId = 1141;
 		} else if (GameFeatureServices.siegeService().isSiegeInProgress(1221)) {
-			activeSiegeId = 1231;
+			activeSiegeId = 1221;
 		} else if (GameFeatureServices.siegeService().isSiegeInProgress(1231)) {
 			activeSiegeId = 1231;
 		} else if (GameFeatureServices.siegeService().isSiegeInProgress(1241)) {
@@ -67,7 +68,7 @@ public class BattlefieldUnionService {
 	 * 攻城开始回调。
 	 * Callback when siege starts.
 	 *
-	 * fortressId
+	 * @param fortressId 要塞 ID / fortress id
 	 */
 	public void onSiegeStart(final int fortressId) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
@@ -88,7 +89,7 @@ public class BattlefieldUnionService {
 	 * 攻城结束回调。
 	 * Callback when siege finishes.
 	 *
-	 * fortressId
+	 * @param fortressId 要塞 ID / fortress id
 	 */
 	public void onSiegeFinish(final int fortressId) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
@@ -109,9 +110,9 @@ public class BattlefieldUnionService {
 	 * 注册处理。
 	 * Handles registration.
 	 *
-	 * 玩家 / player
-	 * requestId
-	 * activeSiegeId
+	 * @param player 玩家 / player
+	 * @param requestId 请求 ID / request id
+	 * @param activeSiegeId 活跃攻城 ID / active siege id
 	 */
 	public void onRegister(Player player, int requestId, int activeSiegeId) {
 		boolean register = false;
@@ -123,27 +124,30 @@ public class BattlefieldUnionService {
 	}
 
 	/**
-	 * getSize 方法。
-	 * getSize method.
-	 * result
+	 * 返回当前已注册人数。
+	 * Returns the current registered size.
+	 *
+	 * @return 已注册人数 / registered size
 	 */
 	public int getSize() {
 		return size;
 	}
 
 	/**
-	 * getMaxSize 方法。
-	 * getMaxSize method.
-	 * result
+	 * 返回联盟人数上限。
+	 * Returns the maximum registered size.
+	 *
+	 * @return 人数上限 / max size
 	 */
 	public int getMaxSize() {
 		return maxSize;
 	}
 
 	/**
-	 * getrequestId 方法。
-	 * getrequestId method.
-	 * result
+	 * 返回当前请求 ID。
+	 * Returns the current request id.
+	 *
+	 * @return 请求 ID / request id
 	 */
 	public int getrequestId() {
 		return requestId;
@@ -152,7 +156,8 @@ public class BattlefieldUnionService {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 * result
+	 *
+	 * @return 服务实例 / service instance
 	 */
 	public static BattlefieldUnionService getInstance() {
 		ObjectProvider<BattlefieldUnionService> provider = instanceProvider;
@@ -163,10 +168,10 @@ public class BattlefieldUnionService {
 	}
 
 	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
+	 * 注入 Spring 单例提供者。
+	 * Injects the Spring singleton provider.
 	 *
-	 * provider
+	 * @param provider Spring 提供者 / spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<BattlefieldUnionService> provider) {
 		instanceProvider = provider;

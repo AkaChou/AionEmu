@@ -1,8 +1,5 @@
 package com.aionemu.gameserver.services.conquestservice;
 
-import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import com.aionemu.commons.callbacks.EnhancedObject;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -10,6 +7,11 @@ import com.aionemu.gameserver.model.conquest.ConquestLocation;
 import com.aionemu.gameserver.model.conquest.ConquestStateType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 征服/供奉活动抽象基类。
@@ -24,10 +26,49 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 public abstract class ConquestOffering<CL extends ConquestLocation> {
 
 	private boolean started;
+	/**
+	 * -- SETTER --
+	 * 设置供奉 BOSS NPC。
+	 * Sets the offering boss NPC.
+	 * boss
+	 * -- GETTER --
+	 * 获取供奉 BOSS NPC。
+	 * Returns the offering boss NPC.
+	 * boss
+	 */
+	@Getter
+	@Setter
 	private Npc conquestBoss;
+	/**
+	 * -- GETTER --
+	 * 获取绑定地点。
+	 * Returns the bound location.
+	 * location
+	 */
+	@Getter
 	private final CL conquestLocation;
+	/**
+	 * -- SETTER --
+	 * 设置供奉 BOSS 摧毁状态。
+	 * Sets the offering boss destroyed flag.
+	 * state
+	 * -- GETTER --
+	 * 供奉 BOSS 是否已被摧毁。
+	 * Whether the offering boss has been destroyed.
+	 *
+	 * @return 已摧毁则为 true / true if destroyed
+	 */
+	@Getter
+	@Setter
 	private boolean conquestBossDestroyed;
 	private final AtomicBoolean finished = new AtomicBoolean();
+    /**
+     * -- GETTER --
+	 *  获取 BOSS 死亡监听器。
+	 *  Returns the boss destroy listener.
+	 *  listener
+	 */
+	@Getter
 	private final ConquestBossDestroyListener conquestBossDestroyListener = new ConquestBossDestroyListener(this);
 
 	/**
@@ -89,13 +130,15 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 		Npc cb = null;
 		for (VisibleObject obj : new ArrayList<VisibleObject>(getConquestLocation().getSpawned())) {
 			int npcId = ((Npc) obj).getNpcId();
-			// 征服/供奉 因格森。 / Conquest/Offering Inggison.
-			if ((npcId < 236530) || npcId > 236553) {
+			// 征服/供奉 英吉斯温。 / Conquest/Offering Inggison.
+			if (npcId >= 236530 && npcId <= 236553) {
 				cb = (Npc) obj;
+				break;
 			}
-			// 征服/供奉 吉尔克马罗斯。 / Conquest/Offering Gelkmaros.
-			else if ((npcId < 236586) || npcId > 236609) {
+			// 征服/供奉 格尔克马洛斯。 / Conquest/Offering Gelkmaros.
+			if (npcId >= 236586 && npcId <= 236609) {
 				cb = (Npc) obj;
+				break;
 			}
 		}
 		if (cb == null) {
@@ -143,57 +186,7 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 		eo.removeCallback(getConquestBossDestroyListener());
 	}
 
-	/**
-	 * 供奉 BOSS 是否已被摧毁。
-	 * Whether the offering boss has been destroyed.
-	 *
-	 * @return 已摧毁则为 true / true if destroyed
-	 */
-	public boolean isConquestBossDestroyed() {
-		return conquestBossDestroyed;
-	}
-
-	/**
-	 * 设置供奉 BOSS 摧毁状态。
-	 * Sets the offering boss destroyed flag.
-	 *
-	 * state
-	 */
-	public void setConquestBossDestroyed(boolean state) {
-		this.conquestBossDestroyed = state;
-	}
-
-	/**
-	 * 获取供奉 BOSS NPC。
-	 * Returns the offering boss NPC.
-	 *
-	 * boss
-	 */
-	public Npc getConquestBoss() {
-		return conquestBoss;
-	}
-
-	/**
-	 * 设置供奉 BOSS NPC。
-	 * Sets the offering boss NPC.
-	 *
-	 * boss
-	 */
-	public void setConquestBoss(Npc conquestBoss) {
-		this.conquestBoss = conquestBoss;
-	}
-
-	/**
-	 * 获取 BOSS 死亡监听器。
-	 * Returns the boss destroy listener.
-	 *
-	 * listener
-	 */
-	public ConquestBossDestroyListener getConquestBossDestroyListener() {
-		return conquestBossDestroyListener;
-	}
-
-	/**
+    /**
 	 * 是否已结束。
 	 * Whether the event has finished.
 	 *
@@ -203,20 +196,10 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 		return finished.get();
 	}
 
-	/**
-	 * 获取绑定地点。
-	 * Returns the bound location.
-	 *
-	 * location
-	 */
-	public CL getConquestLocation() {
-		return conquestLocation;
-	}
-
-	/**
+    /**
 	 * 获取地点 ID。
 	 * Returns the location id.
-	 *
+	 * <p>
 	 * location id
 	 */
 	public int getConquestLocationId() {

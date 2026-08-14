@@ -35,12 +35,14 @@ public class ButlerAI2 extends GeneralNpcAI2
 	}
 	
 	@Override
+	/**
+	 * 玩家可见管家时，将房屋脚本数据按 8141 字节分包上限切块，逐包发送给玩家。
+	 * When a player sees the butler, sends the house's script data in chunks up to the 8141-byte packet limit.
+	 */
 	protected void handleCreatureSee(Creature creature) {
 		if (creature instanceof Player) {
 			Player player = (Player) creature;
 			House house = (House) getCreator();
-			if (player.getObjectId() == house.getOwnerId()) {
-			}
 			Map<Integer, PlayerScript> scriptMap = house.getPlayerScripts().getScripts();
 			try {
 				for (int position = 0; position < 8; position++) {

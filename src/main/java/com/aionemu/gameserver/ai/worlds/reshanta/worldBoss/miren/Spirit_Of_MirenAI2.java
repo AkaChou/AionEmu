@@ -79,10 +79,11 @@ public class Spirit_Of_MirenAI2 extends AggressiveNpcAI2
 	}
 	
 	private void updateMirenLanding() {
+		final com.aionemu.gameserver.model.gameobjects.Creature mostHated = getOwner().getAggroList().getMostHated();
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
+				if (mostHated != null && MathUtil.isIn3dRange(mostHated, getOwner(), 20)) {
 					if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
 						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 14, 0);
 					} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {

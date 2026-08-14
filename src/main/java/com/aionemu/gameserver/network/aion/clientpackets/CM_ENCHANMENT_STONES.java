@@ -5,7 +5,7 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
-import com.aionemu.gameserver.model.gameobjects.VisibleObject;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.ItemCategory;
 import com.aionemu.gameserver.model.templates.item.actions.EnchantItemAction;
@@ -83,16 +83,14 @@ public class CM_ENCHANMENT_STONES extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
-		VisibleObject obj = player.getKnownList().getObject(npcObjId);
 		switch (actionType) {
-		case 1: // Enchant Stone.
-		case 2: // Add Manastone.
+		case 1: // 强化石 / Enchant Stone.
+		case 2: // 镶嵌魔石 / Add Manastone.
 			EnchantItemAction action = new EnchantItemAction();
 			EnchantStigmaAction action2 = new EnchantStigmaAction();
 			Item manastone = player.getInventory().getItemByObjId(stoneUniqueId);
 			Item stigmaStone = player.getInventory().getItemByObjId(stoneUniqueId);
 			Item targetItem = player.getEquipment().getEquippedItemByObjId(targetItemUniqueId);
-			Item targetStone = player.getInventory().getItemByObjId(targetItemUniqueId);
 			if (targetItem == null) {
 				targetItem = player.getInventory().getItemByObjId(targetItemUniqueId);
 			}
@@ -112,7 +110,7 @@ public class CM_ENCHANMENT_STONES extends AionClientPacket {
 				}
 			}
 			break;
-		case 3: // Remove Manastone.
+		case 3: // 移除魔石 / Remove Manastone.
 			long price = PricesService.getPriceForService(17161, player.getRace());
 			if (player.getInventory().getKinah() > price) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_KINA(price));
@@ -124,10 +122,10 @@ public class CM_ENCHANMENT_STONES extends AionClientPacket {
 				}
 			}
 			break;
-		case 4: // Godstone Socket.
+		case 4: // 镶嵌神石 / Godstone Socket.
 			ItemSocketService.socketGodstone(player, targetItemUniqueId, stoneUniqueId);
 			break;
-		case 8: // Amplification.
+		case 8: // 增幅 / Amplification.
 			ItemSocketService.amplification(player, targetItemUniqueId, toppedItemObjId, stoneUniqueId);
 			break;
 		}

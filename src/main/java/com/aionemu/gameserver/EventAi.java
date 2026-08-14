@@ -97,7 +97,7 @@ public class EventAi extends AdminCommand {
                 PacketSendUtility.sendMessage(admin, "Every player within 100 meters has been successfully rewarded with " + rewardAmount + " AP!");
             }
         } else if (params[0].equalsIgnoreCase("reward_range")) {
-            // eventai reward_range [TS] [Omega] [gp] [toll] [range]
+            // 用法：eventai reward_range [TS] [Omega] [gp] [toll] [range] / eventai reward_range [TS] [Omega] [gp] [toll] [range]
             final int TS = Integer.parseInt(params[1]);
             final int Omega = Integer.parseInt(params[2]);
             final int GP = Integer.parseInt(params[3]);
@@ -160,7 +160,7 @@ public class EventAi extends AdminCommand {
 
                 while(ita.hasNext()){
                     Player player = ita.next();
-                    if(!(player.getName() == admin.getName() && GameWorldServices.geoService().canSee(admin, player))){
+                    if(!(player.getObjectId() == admin.getObjectId() && GameWorldServices.geoService().canSee(admin, player))){
                     	AbyssPointsService.addGp(player, rewardAmount);
                         PacketSendUtility.sendMessage(player, "You've rewarded "+rewardAmount+" GP from an Event!");
                         PacketSendUtility.sendMessage(admin, "Player : "+player.getName()+" has been rewarded!");
@@ -173,7 +173,7 @@ public class EventAi extends AdminCommand {
             }else if(params[1].equals("ap")){
                 while(ita.hasNext()){
                     Player player = ita.next();
-                    if(!(player.getName() == admin.getName() && GameWorldServices.geoService().canSee(admin, player))){
+                    if(!(player.getObjectId() == admin.getObjectId() && GameWorldServices.geoService().canSee(admin, player))){
                     	AbyssPointsService.addAp(player, rewardAmount);
                         PacketSendUtility.sendMessage(player, "You've rewarded "+rewardAmount+" AP from an Event!");
                     }
@@ -208,7 +208,7 @@ public class EventAi extends AdminCommand {
            Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
            while(ita.hasNext()){
                Player player = ita.next();
-               if(player.getWorldId() == admin.getWorldId() && !(player.getName() == admin.getName())){
+               if(player.getWorldId() == admin.getWorldId() && !(player.getObjectId() == admin.getObjectId())){
                    TeleportService2.teleportTo(player, admin.getWorldId(),admin.getInstanceId(), admin.getX(),admin.getY(),admin.getZ());
                    PacketSendUtility.sendMessage(player, "You have been ported by a GM");
                }
@@ -344,7 +344,7 @@ public class EventAi extends AdminCommand {
      * 发送 {@code //eventai} 子命令用法说明。
      * Sends {@code //eventai} subcommand usage help.
      *
-     * 执行 GM / admin player
+     * @param admin 执行 GM / admin player
      * @param Msg 可选消息 / optional message
      */
     public void onFail(Player admin, String Msg){

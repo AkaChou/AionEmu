@@ -35,6 +35,10 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 	private Future<?> phaseTask;
 	private AtomicBoolean isAggred = new AtomicBoolean(false);
 	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
+	private AtomicBoolean isStartedEvent2 = new AtomicBoolean(false);
+	private AtomicBoolean isStartedEvent3 = new AtomicBoolean(false);
+	private AtomicBoolean isStartedEvent4 = new AtomicBoolean(false);
+	private AtomicBoolean isStartedEvent5 = new AtomicBoolean(false);
 	
 	@Override
 	protected void handleAttack(Creature creature) {
@@ -52,25 +56,25 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 				startPadmarashkaEggs();
 			}
 		} if (hpPercentage <= 75) {
-			if (isStartedEvent.compareAndSet(false, true)) {
+			if (isStartedEvent2.compareAndSet(false, true)) {
 				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400537, getOwner().getObjectId(), 0, 1000);
 				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400538, getOwner().getObjectId(), 0, 9000);
 				startHugePadmarashkaEggs();
 			}
 		} if (hpPercentage <= 55) {
-			if (isStartedEvent.compareAndSet(false, true)) {
+			if (isStartedEvent3.compareAndSet(false, true)) {
 				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400539, getOwner().getObjectId(), 0, 1000);
 				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400540, getOwner().getObjectId(), 0, 9000);
 				spawnRockslam();
 			}
 		} if (hpPercentage <= 35) {
-			if (isStartedEvent.compareAndSet(false, true)) {
+			if (isStartedEvent4.compareAndSet(false, true)) {
 				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400541, getOwner().getObjectId(), 0, 1000);
 				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400542, getOwner().getObjectId(), 0, 9000);
 				startPhaseTask();
 			}
 		} if (hpPercentage <= 15) {
-			if (isStartedEvent.compareAndSet(false, true)) {
+			if (isStartedEvent5.compareAndSet(false, true)) {
 				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400541, getOwner().getObjectId(), 0, 1000);
 				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400542, getOwner().getObjectId(), 0, 9000);
 				startPhaseTask();
@@ -162,6 +166,7 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 				public void run() {
 					if (!isAlreadyDead()) {
 						spawn(281829, x, y, z, (byte) 0); //Votaic Column.
+						// 伏泰克之柱。 / Votaic Column.
 					}
 				}
 			}, 3000);
@@ -189,9 +194,13 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 		final WorldPosition p = getPosition();
 		if (p != null) {
 			deleteNpcs(p.getWorldMapInstance().getNpcs(281829)); //Votaic Column.
+			// 伏泰克之柱。 / Votaic Column.
 			deleteNpcs(p.getWorldMapInstance().getNpcs(283137)); //Rockslam.
+			// 岩石猛击。 / Rockslam.
 			deleteNpcs(p.getWorldMapInstance().getNpcs(282613)); //Padmarashka's Eggs.
+			// 帕德玛拉什卡的蛋。 / Padmarashka's Eggs.
 			deleteNpcs(p.getWorldMapInstance().getNpcs(282614)); //Huge Padmarashka's Eggs.
+			// 巨型帕德玛拉什卡的蛋。 / Huge Padmarashka's Eggs.
 		}
 		cancelPhaseTask();
 		super.handleDied();
@@ -202,13 +211,21 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 		final WorldPosition p = getPosition();
 		if (p != null) {
 			deleteNpcs(p.getWorldMapInstance().getNpcs(281829)); //Votaic Column.
+			// 伏泰克之柱。 / Votaic Column.
 			deleteNpcs(p.getWorldMapInstance().getNpcs(283137)); //Rockslam.
+			// 岩石猛击。 / Rockslam.
 			deleteNpcs(p.getWorldMapInstance().getNpcs(282613)); //Padmarashka's Eggs.
+			// 帕德玛拉什卡的蛋。 / Padmarashka's Eggs.
 			deleteNpcs(p.getWorldMapInstance().getNpcs(282614)); //Huge Padmarashka's Eggs.
+			// 巨型帕德玛拉什卡的蛋。 / Huge Padmarashka's Eggs.
 		}
 		cancelPhaseTask();
 		isAggred.set(false);
 		isStartedEvent.set(false);
+		isStartedEvent2.set(false);
+		isStartedEvent3.set(false);
+		isStartedEvent4.set(false);
+		isStartedEvent5.set(false);
 		super.handleBackHome();
 	}
 	

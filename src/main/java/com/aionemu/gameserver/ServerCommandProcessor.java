@@ -248,7 +248,7 @@ public class ServerCommandProcessor {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (playerNameFieled.getText() != null || messageAnnounce.getText() != "Announce message") {
+			if (!"Announce message".equals(messageAnnounce.getText())) {
 				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 
 				while (iter.hasNext()) {

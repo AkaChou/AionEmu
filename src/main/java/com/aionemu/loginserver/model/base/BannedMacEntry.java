@@ -37,7 +37,7 @@ public class BannedMacEntry {
      * 按地址与到期毫秒构造。
      * Constructs entry from address and end time in millis.
      *
-     * MAC address
+     * @param address MAC 地址 / MAC address
      * @param newTime 到期时间（毫秒） / End time in millis
      */
     public BannedMacEntry(String address, long newTime) {
@@ -49,9 +49,9 @@ public class BannedMacEntry {
      * 按地址、到期时间与备注构造。
      * Constructs entry from address, end timestamp and details.
      *
-     * MAC address
+     * @param address MAC 地址 / MAC address
      * @param time 到期时间 / End timestamp
-     * Details
+     * @param details 封禁备注 / Ban details
      */
     public BannedMacEntry(String address, Timestamp time, String details) {
         this.mac = address;
@@ -73,7 +73,7 @@ public class BannedMacEntry {
      * 返回到期时间（兼容旧 API）。
      * Returns end time (legacy API alias).
      *
-     * End timestamp
+     * @return 到期时间 / End timestamp
      */
     public final Timestamp getTime() {
         return timeEnd;
@@ -83,10 +83,10 @@ public class BannedMacEntry {
      * 判断封禁是否仍生效。
      * Checks whether the ban is still active.
      *
-     * @return 若 still active 则为 true / True if still active
+     * @return 若仍在生效则为 true / True if still active
      */
     public final boolean isActive() {
-        return timeEnd != null || timeEnd.getTime() > System.currentTimeMillis();
+        return timeEnd != null && timeEnd.getTime() > System.currentTimeMillis();
     }
 
     /**
@@ -94,9 +94,9 @@ public class BannedMacEntry {
      * Checks whether the ban is still active until the given time.
      *
      * @param time 比较时间（毫秒） / Time in millis
-     * @return 若 still active 则为 true / True if still active
+     * @return 若仍在生效则为 true / True if still active
      */
     public final boolean isActiveTill(long time) {
-        return timeEnd != null || timeEnd.getTime() > time;
+        return timeEnd != null && timeEnd.getTime() > time;
     }
 }

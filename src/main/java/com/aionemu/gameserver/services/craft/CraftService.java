@@ -47,8 +47,8 @@ public class CraftService {
 	 * 完成制作：发放产物、结算经验，并处理限次配方与冷却。
 	 * Finish crafting: grant product, settle experience, handle limited recipes and cooldown.
 	 *
-	 * 玩家 / Player
-	 * Recipe template
+	 * @param player 玩家 / Player
+	 * @param recipetemplate 配方模板 / Recipe template
 	 * @param critCount 暴击次数（决定连击产物） / Crit count (selects combo product)
 	 * @param bonus 经验加成百分比 / Experience bonus percent
 	 */
@@ -118,10 +118,10 @@ public class CraftService {
 	 * 开始制作（默认制作数量为 1）。
 	 * Start crafting (default craft count is 1).
 	 *
-	 * 玩家 / Player
-	 * Recipe id
+	 * @param player 玩家 / Player
+	 * @param recipeId 配方 ID / Recipe id
 	 * @param targetObjId 目标工作台对象 ID / Target workbench object id
-	 * Craft type
+	 * @param craftType 制作类型 / Craft type
 	 */
 	public static void startCrafting(Player player, int recipeId, int targetObjId, int craftType) {
 		startCrafting(player, recipeId, targetObjId, craftType, 1);
@@ -131,11 +131,11 @@ public class CraftService {
 	 * 开始制作流程，创建对应的制作/变形任务。
 	 * Start the crafting process and create the matching crafting/morphing task.
 	 *
-	 * 玩家 / Player
-	 * Recipe id
+	 * @param player 玩家 / Player
+	 * @param recipeId 配方 ID / Recipe id
 	 * @param targetObjId 目标工作台对象 ID / Target workbench object id
-	 * Craft type
-	 * Craft count
+	 * @param craftType 制作类型 / Craft type
+	 * @param craftCount 制作数量 / Craft count
 	 */
 	public static void startCrafting(Player player, int recipeId, int targetObjId, int craftType, int craftCount) {
 		RecipeTemplate recipeTemplate = DataManager.RECIPE_DATA.getRecipeTemplateById(recipeId);
@@ -158,28 +158,23 @@ public class CraftService {
 	 * 停止奥德锻造（构造中断观察器，用于打断流程）。
 	 * Stop aetherforging (build abort observer used to interrupt the process).
 	 *
-	 * 玩家 / Player
-	 * Recipe id
+	 * @param player 玩家 / Player
+	 * @param recipeId 配方 ID / Recipe id
 	 */
 	public static void stopAetherforging(final Player player, int recipeId) {
-		final RecipeTemplate recipeTemplate = DataManager.RECIPE_DATA.getRecipeTemplateById(recipeId);
-		final ItemUseObserver observer = new ItemUseObserver() {
-			@Override
-			public void abort() {
-				player.getController().cancelTask(TaskId.ITEM_USE);
-				player.getObserveController().removeObserver(this);
-				PacketSendUtility.broadcastPacket(player, new SM_AETHERFORGING_ANIMATION(player, recipeTemplate.getId(), 0, 1), true);
-			}
-		};
+		ItemUseObserver observer = player.getCraftObserver();
+		if (observer != null) {
+			observer.abort();
+		}
 	}
 
 	/**
 	 * 开始奥德锻造（默认制作数量为 1）。
 	 * Start aetherforging (default craft count is 1).
 	 *
-	 * 玩家 / Player
-	 * Recipe id
-	 * Craft type
+	 * @param player 玩家 / Player
+	 * @param recipeId 配方 ID / Recipe id
+	 * @param craftType 制作类型 / Craft type
 	 */
 	public static void startAetherforging(final Player player, int recipeId, int craftType) {
 		startAetherforging(player, recipeId, craftType, 1);
@@ -189,10 +184,10 @@ public class CraftService {
 	 * 开始奥德锻造：播放动画、延迟结算产物与经验。
 	 * Start aetherforging: play animation, then settle product and experience after delay.
 	 *
-	 * 玩家 / Player
-	 * Recipe id
-	 * Craft type
-	 * Craft count
+	 * @param player 玩家 / Player
+	 * @param recipeId 配方 ID / Recipe id
+	 * @param craftType 制作类型 / Craft type
+	 * @param craftCount 制作数量 / Craft count
 	 */
 	public static void startAetherforging(final Player player, int recipeId, int craftType, int craftCount) {
 		final RecipeTemplate recipeTemplate = DataManager.RECIPE_DATA.getRecipeTemplateById(recipeId);
@@ -203,10 +198,12 @@ public class CraftService {
 			public void abort() {
 				player.getController().cancelTask(TaskId.ITEM_USE);
 				player.getObserveController().removeObserver(this);
+				player.setCraftObserver(null);
 				PacketSendUtility.broadcastPacket(player, new SM_AETHERFORGING_ANIMATION(player, recipeTemplate.getId(), 0, 1), true);
 			}
 		};
 		player.getObserveController().attach(observer);
+		player.setCraftObserver(observer);
 		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
@@ -215,6 +212,7 @@ public class CraftService {
 				if (remaining != 0) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
 					player.getObserveController().removeObserver(observer);
+					player.setCraftObserver(null);
 					PacketSendUtility.broadcastPacket(player, new SM_AETHERFORGING_ANIMATION(player, recipeTemplate.getId(), 0, 1), true);
 					return;
 				}
@@ -224,6 +222,7 @@ public class CraftService {
 					player.getSkillList().addSkill(player, 40011, player.getSkillList().getSkillLevel(40011) + 1);
 				}
 				player.getObserveController().removeObserver(observer);
+				player.setCraftObserver(null);
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CRAFT_SUCCESS_GETEXP);
 				PacketSendUtility.sendPacket(player, new SM_AETHERFORGING_ANIMATION(player, recipeTemplate.getId(), 0, 2));
 			}
@@ -234,9 +233,9 @@ public class CraftService {
 	 * 按客户端请求匹配完整材料面板，并按统一制作次数一次扣料。
 	 * Matches a complete component panel and consumes all materials for one uniform craft count.
 	 *
-	 * 玩家 / Player
-	 * Recipe id
-	 * Requested material quantities
+	 * @param player 玩家 / Player
+	 * @param recipeId 配方 ID / Recipe id
+	 * @param requestedComponents 请求的材料数量 / Requested material quantities
 	 *
 	 * @return 可制作次数，失败返回 0 / Craftable count, or 0 on failure
 	 */
@@ -291,8 +290,8 @@ public class CraftService {
 	 * Compute craft count from required-per-craft and requested total quantity.
 	 *
 	 * @param requiredQuantity 单次所需数量 / Quantity required per craft
-	 * Requested total quantity
-	 * Craft count
+	 * @param requestedQuantity 请求总量 / Requested total quantity
+	 * @return 可制作次数 / Craft count
 	 */
 	static int getCraftCount(int requiredQuantity, long requestedQuantity) {
 		if (requiredQuantity < 1 || requestedQuantity < requiredQuantity) {
@@ -321,26 +320,24 @@ public class CraftService {
 	 * 按技能 ID 返回对应的加成需求物品 ID。
 	 * Return the bonus-required item id for the given craft skill id.
 	 *
-	 * Craft skill id
-	 *
-	 * @param skillId
+	 * @param skillId 制作技能 ID / Craft skill id
 	 * @return 加成物品 ID，未匹配返回 0 / Bonus item id, or 0 if unmatched
 	 */
 	private static int getBonusReqItem(int skillId) {
 		switch (skillId) {
-		case 40001: // Cooking.
+		case 40001: // 料理。 / Cooking.
 			return 169401081;
-		case 40002: // Weaponsmithing.
+		case 40002: // 武器制作。 / Weaponsmithing.
 			return 169401076;
-		case 40003: // Armorsmithing.
+		case 40003: // 防具制作。 / Armorsmithing.
 			return 169401077;
-		case 40004: // Tailoring.
+		case 40004: // 裁缝。 / Tailoring.
 			return 169401078;
-		case 40007: // Alchemy.
+		case 40007: // 炼金。 / Alchemy.
 			return 169401080;
-		case 40008: // Handicrafting.
+		case 40008: // 手工制作。 / Handicrafting.
 			return 169401079;
-		case 40010: // Menuisier.
+		case 40010: // 木工。 / Menuisier.
 			return 169401082;
 		}
 		return 0;

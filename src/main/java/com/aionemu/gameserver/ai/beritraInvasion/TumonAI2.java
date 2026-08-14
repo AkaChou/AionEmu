@@ -111,7 +111,7 @@ public class TumonAI2 extends AggressiveNpcAI2
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
-						spawn(287261, x, y, z, (byte) 0); //Cannon Ball.
+						spawn(287261, x, y, z, (byte) 0); // 炮弹。 / Cannon Ball.
 					}
 				}
 			}, 3000);
@@ -142,7 +142,7 @@ public class TumonAI2 extends AggressiveNpcAI2
 	private void deleteHelpers() {
 		WorldMapInstance instance = getPosition().getWorldMapInstance();
 		if (instance != null) {
-			deleteNpcs(instance.getNpcs(287261)); //Cannon Ball.
+			deleteNpcs(instance.getNpcs(287261)); // 炮弹。 / Cannon Ball.
 		}
 	}
 	
@@ -151,7 +151,7 @@ public class TumonAI2 extends AggressiveNpcAI2
 		cancelPhaseTask();
 		final WorldPosition p = getPosition();
 		if (p != null) {
-			deleteNpcs(p.getWorldMapInstance().getNpcs(287261)); //Cannon Ball.
+			deleteNpcs(p.getWorldMapInstance().getNpcs(287261)); // 炮弹。 / Cannon Ball.
 		} switch (getNpcId()) {
 		    // 图蒙与主图蒙与精英图蒙。 / Tumon & Prime Tumon & Elite Tumon.
 			case 236722:
@@ -198,10 +198,11 @@ public class TumonAI2 extends AggressiveNpcAI2
 	}
 	
 	private void updateTumonLanding1() {
+		final com.aionemu.gameserver.model.gameobjects.Creature mostHated = getOwner().getAggroList().getMostHated();
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
+				if (mostHated != null && MathUtil.isIn3dRange(mostHated, getOwner(), 20)) {
 					if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
 						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 21, 0);
 					} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
@@ -212,10 +213,11 @@ public class TumonAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void updateTumonLanding2() {
+		final com.aionemu.gameserver.model.gameobjects.Creature mostHated = getOwner().getAggroList().getMostHated();
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
+				if (mostHated != null && MathUtil.isIn3dRange(mostHated, getOwner(), 20)) {
 					if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
 						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 22, 0);
 					} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {

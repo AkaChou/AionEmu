@@ -30,6 +30,10 @@ public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 	private Future<?> phaseTask;
 	private AtomicBoolean isAggred = new AtomicBoolean(false);
 	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
+	private AtomicBoolean isStartedEvent2 = new AtomicBoolean(false);
+	private AtomicBoolean isStartedEvent3 = new AtomicBoolean(false);
+	private AtomicBoolean isStartedEvent4 = new AtomicBoolean(false);
+	private AtomicBoolean isStartedEvent5 = new AtomicBoolean(false);
 	
 	@Override
 	protected void handleDespawned() {
@@ -57,21 +61,21 @@ public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 				startPhaseTask();
 			}
 		} if (hpPercentage <= 75) {
-			if (isStartedEvent.compareAndSet(false, true)) {
+			if (isStartedEvent2.compareAndSet(false, true)) {
 				startPhaseTask();
 				startMiserablyStruggle();
 			}
 		} if (hpPercentage <= 55) {
-			if (isStartedEvent.compareAndSet(false, true)) {
+			if (isStartedEvent3.compareAndSet(false, true)) {
 				startPhaseTask();
 			}
 		} if (hpPercentage <= 25) {
-			if (isStartedEvent.compareAndSet(false, true)) {
+			if (isStartedEvent4.compareAndSet(false, true)) {
 				startPhaseTask();
 				startMiserablyStruggle();
 			}
 		} if (hpPercentage <= 15) {
-			if (isStartedEvent.compareAndSet(false, true)) {
+			if (isStartedEvent5.compareAndSet(false, true)) {
 				startPhaseTask();
 			}
 		}
@@ -84,7 +88,7 @@ public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 17056, 1, getOwner()).useNoAnimationSkill(); //Miserably Struggle.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 17056, 1, getOwner()).useNoAnimationSkill(); // 痛苦的挣扎。 / Miserably Struggle.
 				}
 			}
 		}, 3000, 10000);
@@ -97,7 +101,7 @@ public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 16674, 1, getOwner()).useNoAnimationSkill(); //Guilty Verdict.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 16674, 1, getOwner()).useNoAnimationSkill(); // 有罪判决。 / Guilty Verdict.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -129,7 +133,7 @@ public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
-						spawn(281243, x, y, z, (byte) 0); //Sticky Trap.
+						spawn(281243, x, y, z, (byte) 0); // 粘性陷阱。 / Sticky Trap.
 					}
 				}
 			}, 3000);
@@ -156,6 +160,10 @@ public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 	protected void handleBackHome() {
 		cancelPhaseTask();
 		isStartedEvent.set(false);
+		isStartedEvent2.set(false);
+		isStartedEvent3.set(false);
+		isStartedEvent4.set(false);
+		isStartedEvent5.set(false);
 		isAggred.set(false);
 		super.handleBackHome();
 	}

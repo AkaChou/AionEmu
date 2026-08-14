@@ -56,16 +56,13 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
     public static final String FIELD_NAME_CALLBACKS_LOCK = "$$$callbackLock";
 
     /**
-     * 执行实际的类字节码转换与对象回调增强
-     * Perform the actual class bytecode transformation and object-callback enhancement
+     * 执行实际的类字节码转换与对象回调增强。
+     * Perform the actual class bytecode transformation and object-callback enhancement.
      *
-     * Class loader
-     * Class bytecode
-     *
-     * @param loader
-     * @return 增强后的字节码；无需增强时返回 null / Enhanced bytecode, or null when no enhancement is needed
-     * @param clazzBytes
-     * @throws Exception 增强失败时 / When enhancement fails
+     * @param loader 类加载器 / class loader
+     * @param clazzBytes 类字节码 / class bytecode
+     * @return 增强后的字节码；无需增强时返回 null / enhanced bytecode, or null when no enhancement is needed
+     * @throws Exception 增强失败时 / when enhancement fails
      */
     protected byte[] transformClass(ClassLoader loader, byte[] clazzBytes) throws Exception {
         ClassPool cp = new ClassPool();
@@ -109,10 +106,10 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
      * 增强方法，写入前后置回调调用代码
      * Enhance a method by writing pre/post callback invocation code
      *
-     * @param method 需要编辑的方法 / Method that has to be edited
-     * When code compilation fails。
-     * When a type is not found。
-     * When an annotation class cannot be loaded。
+     * @param method 需要编辑的方法 / method that has to be edited
+     * @throws CannotCompileException 代码编译失败时 / when code compilation fails
+     * @throws NotFoundException 类型未找到时 / when a type is not found
+     * @throws ClassNotFoundException 注解类无法加载时 / when an annotation class cannot be loaded
      */
     protected void enhanceMethod(CtMethod method) throws CannotCompileException, NotFoundException, ClassNotFoundException {
         ClassPool cp = method.getDeclaringClass().getClassPool();
@@ -140,12 +137,12 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
      * 生成插入方法开头的前置回调代码
      * Generate code inserted at the beginning of the method for before-callbacks
      *
-     * @param method 需要编辑的方法 / Method that should be edited
-     * @param paramLength 方法参数个数 / Number of method parameters
-     * @param listenerFieldName 监听器类字段名 / Listener class field name used for the method
-     * @return 插入方法前的代码 / Code that will be inserted before the method body
-     * When a type is not found。
-     * When code generation fails。
+     * @param method 需要编辑的方法 / method that should be edited
+     * @param paramLength 方法参数个数 / number of method parameters
+     * @param listenerFieldName 监听器类字段名 / listener class field name used for the method
+     * @return 插入方法前的代码 / code that will be inserted before the method body
+     * @throws NotFoundException 类型未找到时 / when a type is not found
+     * @throws CannotCompileException 代码生成失败时 / when code generation fails
      */
     protected String writeBeforeMethod(CtMethod method, int paramLength, String listenerFieldName) throws NotFoundException, CannotCompileException {
         StringBuilder sb = new StringBuilder();
@@ -182,7 +179,7 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
         } else if (returnType.equals(CtClass.charType)) {
             sb.append("return 'a'");
         } else if (returnType.equals(CtClass.byteType) || returnType.equals(CtClass.shortType) || returnType.equals(CtClass.intType) || returnType.equals(CtClass.floatType)
-                || returnType.equals(CtClass.longType) || returnType.equals(CtClass.longType)) {
+                || returnType.equals(CtClass.longType)) {
             sb.append("return 0");
         }
         sb.append(";}}");
@@ -194,11 +191,11 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
      * 生成插入方法结尾的后置回调代码
      * Generate code inserted after the method for after-callbacks
      *
-     * @param method 需要编辑的方法 / Method to edit
-     * @param paramLength 方法参数个数 / Number of method parameters
-     * @param listenerFieldName 监听器类字段名 / Method listener field name
-     * @return 实际插入的代码 / Actual code that should be inserted
-     * When a type is not found。
+     * @param method 需要编辑的方法 / method to edit
+     * @param paramLength 方法参数个数 / number of method parameters
+     * @param listenerFieldName 监听器类字段名 / method listener field name
+     * @return 实际插入的代码 / actual code that should be inserted
+     * @throws NotFoundException 类型未找到时 / when a type is not found
      */
     protected String writeAfterMethod(CtMethod method, int paramLength, String listenerFieldName) throws NotFoundException {
         StringBuilder sb = new StringBuilder();
@@ -243,9 +240,9 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
      * 为实现 {@link EnhancedObject} 写入字段与方法
      * Write fields and methods that implement {@link EnhancedObject}
      *
-     * @param clazz 需要编辑的类 / Class to edit
-     * When a type is not found。
-     * When code compilation fails。
+     * @param clazz 需要编辑的类 / class to edit
+     * @throws NotFoundException 类型未找到时 / when a type is not found
+     * @throws CannotCompileException 代码编译失败时 / when code compilation fails
      */
     protected void writeEnhancedObjectImpl(CtClass clazz) throws NotFoundException, CannotCompileException {
         ClassPool cp = clazz.getClassPool();
@@ -258,9 +255,9 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
      * 为实现 {@link EnhancedObject} 添加字段
      * Add fields required by {@link EnhancedObject}
      *
-     * @param clazz 需要添加字段的类 / Class to add fields to
-     * When field generation fails。
-     * When a type is not found。
+     * @param clazz 需要添加字段的类 / class to add fields to
+     * @throws CannotCompileException 字段生成失败时 / when field generation fails
+     * @throws NotFoundException 类型未找到时 / when a type is not found
      */
     private void writeEnhancedOBjectFields(CtClass clazz) throws CannotCompileException, NotFoundException {
         ClassPool cp = clazz.getClassPool();
@@ -280,9 +277,9 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
      * 为实现 {@link EnhancedObject} 添加方法
      * Add methods required by {@link EnhancedObject}
      *
-     * @param clazz 需要添加方法的类 / Class to add methods to
-     * When a type is not found。
-     * When method generation fails。
+     * @param clazz 需要添加方法的类 / class to add methods to
+     * @throws NotFoundException 类型未找到时 / when a type is not found
+     * @throws CannotCompileException 方法生成失败时 / when method generation fails
      */
     private void writeEnhancedObjectMethods(CtClass clazz) throws NotFoundException, CannotCompileException {
         

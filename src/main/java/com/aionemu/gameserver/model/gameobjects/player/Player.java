@@ -25,6 +25,7 @@ import com.aionemu.gameserver.controllers.attack.PlayerAggroList;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.controllers.movement.PlayerMoveController;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
+import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerVarsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -230,7 +231,8 @@ public class Player extends Creature {
 	private boolean hasAbyssBonus;
 	private int abyssId = 0;
 	/**
-	 * 玩家的静态信息。 / Static information for players
+	 * 玩家的静态信息。
+	 * Static information for players
 	 */
 	private static final int CUBE_SPACE = 9;
 	private static final int WAREHOUSE_SPACE = 8;
@@ -258,6 +260,7 @@ public class Player extends Creature {
 	private int subtractedSupplementId;
 	private int portAnimation;
 	private boolean isInSprintMode;
+	private ItemUseObserver craftObserver;
 	private List<ActionObserver> rideObservers;
 	private List<ActionObserver> hotTeleObservers;
 	private Protector protectorList;
@@ -322,14 +325,16 @@ public class Player extends Creature {
 
 	private boolean isInDuel;
 	/**
-	 * 玩家技能动画列表。 / Player Skill Animation List
+	 * 玩家技能动画列表。
+	 * Player Skill Animation List
 	 */
 	private SkillSkinList skillSkinList;
 	private boolean isThieves = false;
 	private boolean thievesDuel;
 	private ThievesStatusList thieves;
 	/**
-	 * 活动调用与注册 / EventCaller + Event Reg
+	 * 活动调用与注册。
+	 * EventCaller + Event Reg
 	 */
 	private int checkpoints;
 	private int countPlayers;
@@ -337,11 +342,12 @@ public class Player extends Creature {
 	private boolean isEventStarted = false;
 	public List<Player> QueuedPlayers;
 	/**
-	 * 自定义 PvE 与 PK 系统相关变量。 / This variables are for the custom PvE and PK system
+	 * 自定义 PvE 与 PK 系统相关变量。
+	 * These variables are for the custom PvE and PK system
 	 */
 	private boolean isInPkMode;
 	private boolean isInPvEMode;
-	// 这些变量用于自定义 RP 与 GM 系统 / This variables are for the custom RP and GM system
+	// 这些变量用于自定义 RP 与 GM 系统 / These variables are for the custom RP and GM system
 	private boolean isGmMode = false;
 	private long creationDay;
 
@@ -435,14 +441,16 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * 仅用于 Size 管理员命令。 / Only use for the Size admin command.
+	 * 仅用于 Size 管理员命令。
+	 * Only use for the Size admin command.
 	 */
 	public PlayerAppearance getSavedPlayerAppearance() {
 		return savedPlayerAppearance;
 	}
 
 	/**
-	 * 仅用于 Size 管理员命令。 / Only use for the Size admin command.
+	 * 仅用于 Size 管理员命令。
+	 * Only use for the Size admin command.
 	 */
 	public void setSavedPlayerAppearance(PlayerAppearance savedPlayerAppearance) {
 		this.savedPlayerAppearance = savedPlayerAppearance;
@@ -462,7 +470,7 @@ public class Player extends Creature {
 	 * 获取 connection 玩家。
 	 * Get connection of this player
 	 *
-	 * @return AionConnection of this player.
+	 * @return 玩家的连接对象 / AionConnection of this player
 	 */
 	public AionConnection getClientConnection() {
 		return this.clientConnection;
@@ -536,17 +544,17 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return 该玩家是否正在寻找小队。 true / false / Is this player looking for a group true or false
+	 * @return 该玩家是否正在寻找小队 / Is this player looking for a group, true or false
 	 */
 	public boolean isLookingForGroup() {
 		return lookingForGroup;
 	}
 
 	/**
-	 * 设置或玩家 lookinggroup。
+	 * 设置玩家是否正在寻找小队。
 	 * Sets whether or not this player is looking for a group
 	 *
-	 * @param lookingForGroup
+	 * @param lookingForGroup 是否寻找小队 / whether looking for a group
 	 */
 	public void setLookingForGroup(boolean lookingForGroup) {
 		this.lookingForGroup = lookingForGroup;
@@ -636,9 +644,10 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * 获取 ResponseRequester 用于此玩家。 / Gets the ResponseRequester for this player
+	 * 获取该玩家的 ResponseRequester。
+	 * Gets the ResponseRequester for this player
 	 *
-	 * @return ResponseRequester
+	 * @return ResponseRequester / response requester
 	 */
 	public ResponseRequester getResponseRequester() {
 		return requester;
@@ -675,9 +684,10 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * 返回 PlayerController 的此玩家 Object。 / Return PlayerController of this Player Object
+	 * 返回该玩家的 PlayerController。
+	 * Returns the PlayerController of this Player
 	 *
-	 * @return PlayerController.
+	 * @return PlayerController / player controller
 	 */
 	@Override
 	public PlayerController getController() {
@@ -1042,9 +1052,10 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * 检查对象 ID 是否相同。 / Check whether the object ids are equal.
+	 * 检查对象 ID 是否相同。
+	 * Check whether the object ids are equal.
 	 *
-	 * @return true if the object id is the same
+	 * @return 对象 ID 相同返回 true / true if the object id is the same
 	 */
 	public boolean sameObjectId(int objectId) {
 		return this.getObjectId() == objectId;
@@ -1061,7 +1072,8 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * 移除军团玩家。 / Removes legion from player
+	 * 从玩家身上移除军团。
+	 * Removes legion from player
 	 */
 	public void resetLegionMember() {
 		setLegionMember(null);
@@ -1218,9 +1230,10 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * 检查为玩家为 invul。 / Check is player is invul
+	 * 检查玩家是否无敌。
+	 * Checks whether the player is invulnerable
 	 *
-	 * @return boolean
+	 * @return 是否无敌 / whether invulnerable
 	 */
 	public boolean isInvul() {
 		return invul;
@@ -1784,28 +1797,28 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return current {@link PlayerGroup}, {@link PlayerAlliance} or null
+	 * @return 当前队伍（小队或联盟）或 null / current {@link PlayerGroup}, {@link PlayerAlliance} or null
 	 */
 	public final TemporaryPlayerTeam<? extends TeamMember<Player>> getCurrentTeam() {
 		return isInGroup2() ? getPlayerGroup2() : getPlayerAlliance2();
 	}
 
 	/**
-	 * @return current {@link PlayerGroup}, {@link PlayerAllianceGroup} or null
+	 * @return 当前队伍（小队或联盟小队）或 null / current {@link PlayerGroup}, {@link PlayerAllianceGroup} or null
 	 */
 	public final TemporaryPlayerTeam<? extends TeamMember<Player>> getCurrentGroup() {
 		return isInGroup2() ? getPlayerGroup2() : getPlayerAllianceGroup2();
 	}
 
 	/**
-	 * @return current team id
+	 * @return 当前队伍 ID / current team id
 	 */
 	public final int getCurrentTeamId() {
 		return isInTeam() ? getCurrentTeam().getTeamId() : 0;
 	}
 
 	/**
-	 * @return portal cooldown list
+	 * @return 传送门冷却列表 / portal cooldown list
 	 */
 	public PortalCooldownList getPortalCooldownList() {
 		return portalCooldownList;
@@ -1856,6 +1869,7 @@ public class Player extends Creature {
 	}
 
 	/**
+	 * 任务完成。
 	 * Quest completion
 	 */
 	public boolean isCompleteQuest(int questId) {
@@ -1883,6 +1897,7 @@ public class Player extends Creature {
 	}
 
 	/**
+	 * 连锁技能。
 	 * chain skills
 	 */
 	public ChainSkills getChainSkills() {
@@ -1934,7 +1949,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return the Resurrection Positional State
+	 * @return 复活位置状态 / the Resurrection Positional State
 	 */
 	public boolean isInResPostState() {
 		return this.isInResurrectPosState;
@@ -1955,7 +1970,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return the Resurrection Positional X value
+	 * @return 复活位置 X 值 / the Resurrection Positional X value
 	 */
 	public float getResPosX() {
 		return this.resPosX;
@@ -1969,7 +1984,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return the Resurrection Positional Y value
+	 * @return 复活位置 Y 值 / the Resurrection Positional Y value
 	 */
 	public float getResPosY() {
 		return this.resPosY;
@@ -1983,7 +1998,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return the Resurrection Positional Z value
+	 * @return 复活位置 Z 值 / the Resurrection Positional Z value
 	 */
 	public float getResPosZ() {
 		return this.resPosZ;
@@ -2005,14 +2020,14 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return true if player is under NoFly Effect
+	 * @return 玩家处于禁飞效果下返回 true / true if player is under NoFly Effect
 	 */
 	public boolean isUnderNoFly() {
 		return this.getEffectController().isAbnormalSet(AbnormalState.NOFLY);
 	}
 
 	/**
-	 * @param value status of NoFpConsum Effect
+	 * @param value 禁消耗飞行值效果状态 / status of NoFpConsum Effect
 	 */
 	public void setUnderNoFPConsum(boolean value) {
 		this.underNoFPConsum = value;
@@ -2210,14 +2225,15 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return true if player is in Flying mode
+	 * @return 玩家处于飞行模式下返回 true / true if player is in Flying mode
 	 */
 	public boolean isInFlyingMode() {
 		return this.isFlying;
 	}
 
 	/**
-	 * 复活石使用顺序由背包最高槽位决定（若有两种可能用错）。 / Stone Use Order determined by highest inventory slot. :( If player has two types, wrong one might be used.
+	 * 复活石使用顺序由背包最高槽位决定（若有两种类型可能用错）。
+	 * Stone Use Order determined by highest inventory slot. If player has two types, wrong one might be used.
 	 */
 	public Item getSelfRezStone() {
 		Item item = null;
@@ -2237,8 +2253,8 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @param stoneId
-	 * @return stoneItem or null
+	 * @param stoneId 复活石物品 ID / stone item id
+	 * @return 复活石物品或 null / stoneItem or null
 	 */
 	private Item getReviveStone(int stoneId) {
 		Item item = getInventory().getFirstItemByItemId(stoneId);
@@ -2549,6 +2565,14 @@ public class Player extends Creature {
 
 	public List<ActionObserver> getRideObservers() {
 		return rideObservers;
+	}
+
+	public ItemUseObserver getCraftObserver() {
+		return craftObserver;
+	}
+
+	public void setCraftObserver(ItemUseObserver craftObserver) {
+		this.craftObserver = craftObserver;
 	}
 
 	public String getCustomTag(boolean isForChatCommands) {
@@ -3145,14 +3169,14 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return Whether spectating
+	 * @return 是否观战 / Whether spectating
 	 */
 	public boolean isSpectating() {
 		return isSpectating;
 	}
 
 	/**
-	 * @return Whether lawless
+	 * @return 是否无规则状态 / Whether lawless
 	 */
 	public boolean isLawless() {
 		return lawless;
@@ -3285,7 +3309,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return GM Mode
+	 * @return GM 模式 / GM Mode
 	 */
 	public boolean isGmMode() {
 		return isGmMode;
@@ -3319,7 +3343,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return Whether reged event
+	 * @return 是否已注册活动 / Whether reged event
 	 */
 	public boolean isRegedEvent() {
 		return isRegedEvent;
@@ -3331,7 +3355,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return Whether event started
+	 * @return 活动是否已开始 / Whether event started
 	 */
 	public boolean isEventStarted() {
 		return isEventStarted;
@@ -3356,6 +3380,7 @@ public class Player extends Creature {
 	}
 
 	/**
+	 * 月华骰子游戏。
 	 * Luna Dice Game
 	 */
 	public int getLunaDiceGame() {
@@ -3386,7 +3411,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return Custom PK / PVE Mode
+	 * @return 自定义 PK/PVE 模式 / Custom PK / PVE Mode
 	 */
 	public boolean isInPkMode() {
 		return isInPkMode;
@@ -3398,7 +3423,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return 是否处于 PvE 模式。 / Whether in pv e mode
+	 * @return 是否处于 PvE 模式 / Whether in PvE mode
 	  */
 	public boolean isInPvEMode() {
 		return isInPvEMode;
@@ -3410,6 +3435,7 @@ public class Player extends Creature {
 	}
 
 	/**
+	 * 技能外观列表。
 	 * Skill Skin List
 	 */
 	public SkillSkinList getSkillSkinList() {

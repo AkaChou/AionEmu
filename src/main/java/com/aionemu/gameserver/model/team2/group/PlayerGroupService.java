@@ -54,7 +54,6 @@ import java.util.LinkedHashMap;
 public class PlayerGroupService {
 	private static final Map<Integer, PlayerGroup> groups = new ConcurrentHashMap<Integer, PlayerGroup>();
 	private static final AtomicBoolean offlineCheckStarted = new AtomicBoolean();
-	private static Map<Integer, PlayerGroup> groupMembers;
 
 	/** 邀请小队 / Invite To Group*/
 	public static final void inviteToGroup(final Player inviter, final Player invited) {
@@ -72,16 +71,14 @@ public class PlayerGroupService {
 	public static final boolean canInvite(Player inviter, Player invited) {
 		if (inviter.isInInstance()) {
 			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(inviter.getInstanceId())) {
-				// 在此区域无法使用与小队或 / You cannot use invite, leave or kick commands related to your group or
-				// 联盟相关的邀请、离开或踢出命令。 / alliance in this region.
+				// 在此区域无法使用与小队或联盟相关的邀请、离开或踢出命令。 / You cannot use invite, leave or kick commands related to your group or alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);
 				return false;
 			}
 		}
 		if (invited.isInInstance()) {
 			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(invited.getInstanceId())) {
-				// 在此区域无法使用与小队或 / You cannot use invite, leave or kick commands related to your group or
-				// 联盟相关的邀请、离开或踢出命令。 / alliance in this region.
+				// 在此区域无法使用与小队或联盟相关的邀请、离开或踢出命令。 / You cannot use invite, leave or kick commands related to your group or alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);
 				return false;
 			}
@@ -91,8 +88,7 @@ public class PlayerGroupService {
 			if (invited.isInTeam()) {
 				for (Player pm : invited.getCurrentTeam().getMembers()) {
 					if (pm.isInInstance()) {
-						// 因对方为小队长，无法邀请该玩家加入战团。 / You cannot invite the player to the force as the group leader of the player
-						// 处于副本中。 / is in an Instanced Zone.
+						// 因对方为小队长，且该玩家处于副本中，无法邀请其加入战团。 / You cannot invite the player to the force as the group leader of the player is in an Instanced Zone.
 						PacketSendUtility.sendPacket(inviter, new SM_SYSTEM_MESSAGE(1400128));
 						return false;
 					}
@@ -128,7 +124,7 @@ public class PlayerGroupService {
 	}
 
 	@GlobalCallback(PlayerGroupCreateCallback.class)
-	/** 创建指定协议类型的单人队伍。 */
+	/** 创建指定协议类型的单人队伍。 / Creates a single-player group with the given team type. */
 	public static final PlayerGroup createGroup(Player leader, TeamType type) {
 		PlayerGroup newGroup = new PlayerGroup(new PlayerGroupMember(leader), type);
 		groups.put(newGroup.getTeamId(), newGroup);
@@ -197,7 +193,8 @@ public class PlayerGroupService {
 	}
 
 	/**
-	 * Service Bonus 5.5
+	 * 服务增益 5.5。
+	 * Service Bonus 5.5.
 	 */
 	public static void checkGroupBonus(Player player, boolean add) {
 		ServiceBuff serviceBuff;
@@ -317,13 +314,6 @@ public class PlayerGroupService {
 				currentGroup.onEvent(new PlayerGroupLeavedEvent(currentGroup, member.getObject()));
 			}
 			return true;
-		}
-	}
-
-	/** 添加 group member to cache / Adds group member to cache */
-	public static void addGroupMemberToCache(Player player) {
-		if (!groupMembers.containsKey(player.getObjectId())) {
-			groupMembers.put(player.getObjectId(), player.getPlayerGroup2());
 		}
 	}
 }

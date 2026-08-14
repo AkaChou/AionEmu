@@ -39,6 +39,10 @@ public class BrigadeGeneralLaksyakaAI2 extends AggressiveNpcAI2
 	private AtomicBoolean isHome = new AtomicBoolean(true);
 	private AtomicBoolean isAggred = new AtomicBoolean(false);
 	private AtomicBoolean isStartedEvent = new AtomicBoolean(false);
+	private AtomicBoolean isStartedEvent2 = new AtomicBoolean(false);
+	private AtomicBoolean isStartedEvent3 = new AtomicBoolean(false);
+	private AtomicBoolean isStartedEvent4 = new AtomicBoolean(false);
+	private AtomicBoolean isStartedEvent5 = new AtomicBoolean(false);
 	
 	@Override
 	protected void handleAttack(Creature creature) {
@@ -58,19 +62,19 @@ public class BrigadeGeneralLaksyakaAI2 extends AggressiveNpcAI2
 				startPhaseTask();
 			}
 		} if (hpPercentage <= 70) {
-			if (isStartedEvent.compareAndSet(false, true)) {
+			if (isStartedEvent2.compareAndSet(false, true)) {
 				startSkillTask();
 			}
 		} if (hpPercentage <= 50) {
-			if (isStartedEvent.compareAndSet(false, true)) {
+			if (isStartedEvent3.compareAndSet(false, true)) {
 				startPhaseTask();
 			}
 		} if (hpPercentage <= 30) {
-			if (isStartedEvent.compareAndSet(false, true)) {
+			if (isStartedEvent4.compareAndSet(false, true)) {
 				startSkillTask();
 			}
 		} if (hpPercentage <= 10) {
-			if (isStartedEvent.compareAndSet(false, true)) {
+			if (isStartedEvent5.compareAndSet(false, true)) {
 				startPhaseTask();
 			}
 		}
@@ -222,5 +226,9 @@ public class BrigadeGeneralLaksyakaAI2 extends AggressiveNpcAI2
 		isAggred.set(false);
 		isFinalBuff = false;
 		isStartedEvent.set(false);
+		isStartedEvent2.set(false);
+		isStartedEvent3.set(false);
+		isStartedEvent4.set(false);
+		isStartedEvent5.set(false);
 	}
 }

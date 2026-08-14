@@ -99,9 +99,9 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 准备计时秒数 / prepare timer seconds */
-		private int prepareTimerSeconds = 180000; // Красное время. Ожидание начала данжа 3 минуты.
+		private int prepareTimerSeconds = 180000; // 红色时间：等待副本开始 3 分钟。 / Red time: waiting 3 minutes for dungeon start.
 	/** 副本计时秒数 / instance timer seconds */
-		private int instanceTimerSeconds = 3600000; // Длительность данжа. 1 час.
+		private int instanceTimerSeconds = 3600000; // 副本持续时间：1 小时。 / Dungeon duration: 1 hour.
 	/** 副本奖励对象 / instance reward object */
 	private ContaminatedUnderpathReward instanceReward;
 	/** contamined 任务 / contamined task */
@@ -141,23 +141,23 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
-			case 703384: //Infected Bone Mound.
-			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182216109, 1)); //Maad-S Molar.
+			case 703384: // 感染的骨头堆 / Infected Bone Mound.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182216109, 1)); // MAAD-S 臼齿 / Maad-S Molar.
 			break;
-			case 703385: //Infected Flesh Lump.
-			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182216110, 1)); //Maad-S Skin Tissue.
+			case 703385: // 感染的肉块 / Infected Flesh Lump.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182216110, 1)); // MAAD-S 皮肤组织 / Maad-S Skin Tissue.
 			break;
-			case 833866: //Unstable Aether Energy.
-			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182007405, 3)); //Bright Aether.
+			case 833866: // 不稳定的奥德能量 / Unstable Aether Energy.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182007405, 3)); // 明亮的奥德 / Bright Aether.
 			break;
-			case 834253: //Maedrunerk Legion Treasures.
+			case 834253: // Maedrunerk 军团宝藏 / Maedrunerk Legion Treasures.
 			break;
 		}
 	}
 	
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
-		storage.decreaseByItemId(182007405, storage.getItemCountByItemId(182007405)); //Bright Aether.
+		storage.decreaseByItemId(182007405, storage.getItemCountByItemId(182007405)); // 明亮的奥德 / Bright Aether.
 	}
 	
 	/**
@@ -170,10 +170,10 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	@Override
     public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
-		    case 833812: //Flame Switch.
+		    case 833812: // 火焰开关 / Flame Switch.
 			    despawnNpc(npc);
-				spawn(833813, 232.31128f, 239.1524f, 160.36285f, (byte) 90); //Contaminated Underpath Fire.
-                spawn(833813, 225.83708f, 239.09781f, 160.36285f, (byte) 90); //Contaminated Underpath Fire.
+				spawn(833813, 232.31128f, 239.1524f, 160.36285f, (byte) 90); // 污染地下道火焰 / Contaminated Underpath Fire.
+                spawn(833813, 225.83708f, 239.09781f, 160.36285f, (byte) 90); // 污染地下道火焰 / Contaminated Underpath Fire.
 			break;
         }
     }
@@ -190,47 +190,47 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		int npcId = npc.getNpcId();
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
-			case 243647: //MAD-74C.
+			case 243647: // MAD-74C 机体 / MAD-74C.
 			    points = 50;
 			break;
-			case 245543: //Experimental Daeva M.
-			case 245544: //Experimental Daeva F.
-			case 245545: //Transfectant Crawler.
-			case 245549: //Cursed Brave Warrior.
-			case 245550: //Crazy Priest.
-			case 245551: //Infected Zaif.
-			case 245552: //Transfectant Flyer.
-			case 245553: //Transfectant Flyer.
-			case 245554: //Infected Saam King.
-			case 245555: //Transfectant Crawler.
-			case 245559: //Cursed Brave Warrior.
-			case 245560: //Crazy Priest.
-			case 245561: //Infected Zaif.
-			case 245562: //Transfectant Flyer.
-			case 245563: //Transfectant Flyer.
-			case 245564: //Infected Saam King.
-			case 245565: //Transfectant Crawler.
-			case 245569: //Cursed Brave Warrior.
-			case 245570: //Crazy Priest.
-			case 246175: //Aetherflame.
+			case 245543: // 实验体守护者（男）/ Experimental Daeva M.
+			case 245544: // 实验体守护者（女）/ Experimental Daeva F.
+			case 245545: // 转基因爬行者 / Transfectant Crawler.
+			case 245549: // 被诅咒的勇士 / Cursed Brave Warrior.
+			case 245550: // 疯狂的祭司 / Crazy Priest.
+			case 245551: // 感染的扎伊夫 / Infected Zaif.
+			case 245552: // 转基因飞行者 / Transfectant Flyer.
+			case 245553: // 转基因飞行者 / Transfectant Flyer.
+			case 245554: // 感染的萨姆王 / Infected Saam King.
+			case 245555: // 转基因爬行者 / Transfectant Crawler.
+			case 245559: // 被诅咒的勇士 / Cursed Brave Warrior.
+			case 245560: // 疯狂的祭司 / Crazy Priest.
+			case 245561: // 感染的扎伊夫 / Infected Zaif.
+			case 245562: // 转基因飞行者 / Transfectant Flyer.
+			case 245563: // 转基因飞行者 / Transfectant Flyer.
+			case 245564: // 感染的萨姆王 / Infected Saam King.
+			case 245565: // 转基因爬行者 / Transfectant Crawler.
+			case 245569: // 被诅咒的勇士 / Cursed Brave Warrior.
+			case 245570: // 疯狂的祭司 / Crazy Priest.
+			case 246175: // 奥德火焰 / Aetherflame.
 			    points = 150;
 			break;
-			case 245547: //Experimental Reian.
-			case 245548: //Experimental Reian.
-			case 245557: //Experimental Reian.
-			case 245558: //Experimental Reian.
-			case 245567: //Experimental Reian.
-			case 245568: //Experimental Reian.
+			case 245547: // 实验体鸢族 / Experimental Reian.
+			case 245548: // 实验体鸢族 / Experimental Reian.
+			case 245557: // 实验体鸢族 / Experimental Reian.
+			case 245558: // 实验体鸢族 / Experimental Reian.
+			case 245567: // 实验体鸢族 / Experimental Reian.
+			case 245568: // 实验体鸢族 / Experimental Reian.
 			    points = 600;
 			break;
-			case 245546: //Gringol The Devourer.
+			case 245546: // 吞噬者格林戈尔 / Gringol The Devourer.
 			    points = 2500;
 			break;
-			case 245575: //MAAD-S.
+			case 245575: // MAAD-S 主体 / MAAD-S.
 				points = 540000;
 				
-				spawn(703384, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading()); //Infected Bone Mound.
-				spawn(703385, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading()); //Infected Flesh Lump.
+				spawn(703384, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading()); // 感染的骨头堆 / Infected Bone Mound.
+				spawn(703385, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading()); // 感染的肉块 / Infected Flesh Lump.
 				
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					/**
@@ -255,7 +255,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 					}
 				}, 5000);
 			break;
-			case 246352: //MAD-99S' Core.
+			case 246352: // MAD-99S 核心 / MAD-99S' Core.
 			    // 击杀“核心”给予玩家 50000 经验。 / Give 50.000 Exp to player by "Core" kill.
 			    player.getCommonData().addExp(50000, RewardType.QUEST);
 			break;
@@ -264,12 +264,12 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			instanceReward.addPoints(points);
 			sendPacket(npc.getObjectTemplate().getNameId(), points);
 		} switch (npcId) {
-			case 833863: //Frontal Barricade.
+			case 833863: // 前路障 / Frontal Barricade.
 			    // 前方路障被摧毁。 / The barricade in the front was destroyed.
 				sendMsgByRace(1403609, Race.PC_ALL, 0);
 			    instanceReward.addPoints(-500);
 			break;
-			case 833864: //Rear Barricade.
+			case 833864: // 后路障 / Rear Barricade.
 			    // 后方路障被摧毁。阿特雷亚危在旦夕。 / The barricade in the back was destroyed. Atreia is in danger.
 				sendMsgByRace(1403610, Race.PC_ALL, 0);
 			    instanceReward.addPoints(-25000);
@@ -958,15 +958,15 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	}
 	
 	private int checkRank(int totalPoints) {
-		if (totalPoints >= 549000) { //Rank S.
+		if (totalPoints >= 549000) { // S 级 / Rank S.
 			rank = 1;
-		} else if (totalPoints >= 544000) { //Rank A.
+		} else if (totalPoints >= 544000) { // A 级 / Rank A.
 			rank = 2;
-		} else if (totalPoints >= 50) { //Rank B.
+		} else if (totalPoints >= 534000) { // B 级 / Rank B.
 			rank = 3;
-		} else if (totalPoints >= 50) { //Rank C.
+		} else if (totalPoints >= 524000) { // C 级 / Rank C.
 			rank = 4;
-		} else if (totalPoints >= 50) { //Rank D.
+		} else if (totalPoints >= 50) { // D 级 / Rank D.
 			rank = 5;
 		} else {
 			rank = 6;
@@ -989,7 +989,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403628, Race.PC_ALL, 0);
             }
 			
-        }, 30000)); // 30 Секунд после старта времени первая волна
+        }, 30000)); // 开始后 30 秒第一波 / 30 seconds after start, first wave
 		contaminedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -1001,7 +1001,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA1.cancel(true);
 				sendMsgByRace(1403657, Race.PC_ALL, 0);
             }
-        }, 60000)); // Через 1 минуту вторая волна
+        }, 60000)); // 1 分钟后第二波 / 1 minute later, second wave
 		contaminedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -1013,7 +1013,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA2.cancel(true);
 				sendMsgByRace(1403655, Race.PC_ALL, 0);
             }
-        }, 90000)); // 1.5 минуты после старта
+        }, 90000)); // 开始后 1.5 分钟 / 1.5 minutes after start
 		contaminedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -1025,7 +1025,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA3.cancel(true);
 				sendMsgByRace(1403662, Race.PC_ALL, 0);
             }
-        }, 120000)); // 2 минуты после старта
+        }, 120000)); // 开始后 2 分钟 / 2 minutes after start
 		contaminedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -1037,7 +1037,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA4.cancel(true);
 				sendMsgByRace(1403656, Race.PC_ALL, 0);
             }
-        }, 150000)); // 2.5 минуты
+        }, 150000)); // 2.5 分钟 / 2.5 minutes
 		contaminedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -1049,7 +1049,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA5.cancel(true);
 				sendMsgByRace(1403661, Race.PC_ALL, 0);
             }
-        }, 180000)); // 3 минуты
+        }, 180000)); // 3 分钟 / 3 minutes
 		contaminedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -1061,7 +1061,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA6.cancel(true);
 				sendMsgByRace(1403659, Race.PC_ALL, 0);
             }
-        }, 210000)); //...3.5
+        }, 210000)); //...3.5 分钟 / ...3.5
 		contaminedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -1073,7 +1073,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA7.cancel(true);
 				sendMsgByRace(1403660, Race.PC_ALL, 0);
             }
-        }, 240000)); //4 минуты
+        }, 240000)); // 4 分钟 / 4 minutes
 		contaminedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -1085,7 +1085,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA8.cancel(true);
 				sendMsgByRace(1403657, Race.PC_ALL, 0);
             }
-        }, 300000)); // 5 минута
+        }, 300000)); // 5 分钟 / 5 minutes
 		contaminedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -1097,7 +1097,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA9.cancel(true);
 				sendMsgByRace(1403655, Race.PC_ALL, 0);
             }
-        }, 330000)); //...5.5
+        }, 330000)); //...5.5 分钟 / ...5.5
 		contaminedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -1107,10 +1107,10 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
             public void run() {
 				startContaminedUnderPath11();
 				underpathTaskA10.cancel(true);
-				//Волна с РБ
+				// 带 Boss 的波次 / Wave with RB
 				sendMsgByRace(1403658, Race.PC_ALL, 0);
             }
-        }, 360000)); // 6 минут
+        }, 360000)); // 6 分钟 / 6 minutes
 		contaminedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -1122,7 +1122,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA11.cancel(true);
 				sendMsgByRace(1403659, Race.PC_ALL, 0);
             }
-        }, 420000)); //...7 мин
+        }, 420000)); //...7 分钟 / ...7 min
 		contaminedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -1134,7 +1134,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA12.cancel(true);
 				sendMsgByRace(1403660, Race.PC_ALL, 0);
             }
-        }, 480000)); //...8
+        }, 480000)); //...8 分钟 / ...8
 		contaminedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -1146,7 +1146,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA13.cancel(true);
 				sendMsgByRace(1403661, Race.PC_ALL, 0);
             }
-        }, 540000)); //...9
+        }, 540000)); //...9 分钟 / ...9
 		contaminedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -1158,7 +1158,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA14.cancel(true);
 				sendMsgByRace(1403662, Race.PC_ALL, 0);
             }
-        }, 600000)); //...31Min
+        }, 600000)); //...31 分钟 / ...31Min
 		contaminedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -1170,7 +1170,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA15.cancel(true);
 				sendMsgByRace(1403655, Race.PC_ALL, 0);
             }
-        }, 660000)); //...11 мин
+        }, 660000)); //...11 分钟 / ...11 min
 		contaminedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -1182,7 +1182,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA16.cancel(true);
 				sendMsgByRace(1403656, Race.PC_ALL, 0);
             }
-        }, 720000)); //... 12 Минут
+        }, 720000)); //...12 分钟 / ...12 minutes
     }
 	
 	/**
@@ -1198,9 +1198,9 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			startInstanceTask();
 			doors.get(28).setOpen(true);
 			sendMsgByRace(1403696, Race.PC_ALL, 0);
-			// Остановка таймера при преждивременном открытии двери
+			// 提前开门时停止计时器 / Stop timer on premature door opening
 			if ((timerPrepare != null) && (!timerPrepare.isDone() || !timerPrepare.isCancelled())) {
-				//	Запуск основного таймера инстанса
+				//	启动副本主计时器 / Start the instance main timer
 				startMainInstanceTimer();
 			}
 		}
@@ -1294,22 +1294,22 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			playerReward.setRewarded();
 			int contaminatedRank = instanceReward.getRank();
 			switch (contaminatedRank) {
-				case 1: //Rank S
+				case 1: // S 级 / Rank S
 					playerReward.setContaminatedPremiumRewardBundle(1);
 					// 污染高级奖励包。 / Contaminated Premium Reward Bundle.
 					ItemService.addItem(player, 188055598, 1);
 				break;
-				case 2: //Rank A
+				case 2: // A 级 / Rank A
 				    playerReward.setContaminatedHighestRewardBundle(1);
 					// 污染最高奖励包。 / Contaminated Highest Reward Bundle.
 					ItemService.addItem(player, 188055599, 1);
 				break;
-				case 3: //Rank B
+				case 3: // B 级 / Rank B
 				    playerReward.setContaminatedUnderpathSpecialPouch(1);
 					// 污染地下通道特殊袋。 / Contaminated Underpath Special Pouch.
 					ItemService.addItem(player, 188055664, 1);
 				break;
-				case 4: //Rank C
+				case 4: // C 级 / Rank C
 				    playerReward.setContaminatedUnderpathSpecialPouch(1);
 					// 污染地下通道特殊袋。 / Contaminated Underpath Special Pouch.
 					ItemService.addItem(player, 188055664, 1);

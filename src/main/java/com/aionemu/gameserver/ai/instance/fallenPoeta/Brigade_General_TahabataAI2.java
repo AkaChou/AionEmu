@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Fallen Poeta 副本 NPC AI：Brigade General Tahabata（@AIName "Brigade_General_Tahabata"），继承 AggressiveNpcAI2。
@@ -23,13 +22,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Brigade_General_TahabataAI2 extends AggressiveNpcAI2
 {
 	private int phase = 0;
-	private AtomicBoolean isAggred = new AtomicBoolean(false);
 	
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
-		if (isAggred.compareAndSet(false, true)) {
-		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
 	
@@ -60,22 +56,6 @@ public class Brigade_General_TahabataAI2 extends AggressiveNpcAI2
 	
 	private void startPhase() {
 		AI2Actions.useSkill(this, 20060); //Lava Eruption.
-	}
-	
-	private void startParalyze() {
-		AI2Actions.useSkill(this, 20761); //Flame Terror.
-	}
-	
-	private void schedule() {
-		if (isAlreadyDead()) {
-			return;
-		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				startParalyze();
-			}
-		}, 10000);
 	}
 	
 	@Override

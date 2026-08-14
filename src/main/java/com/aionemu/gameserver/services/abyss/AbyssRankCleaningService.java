@@ -53,7 +53,7 @@ public class AbyssRankCleaningService {
 		int periodInDays = CleaningConfig.ABYSS_CLEANING_PERIOD;
 
 		if (periodInDays > SECURITY_MINIMUM_PERIOD) {
-			runAbyssRankingCleaning();
+			runAbyssRankingCleaning(periodInDays);
 		} else {
 			log.warn(I18n.get("log.d2c5a329849e"));
 		}
@@ -63,19 +63,20 @@ public class AbyssRankCleaningService {
 	 * 扫描双方上榜玩家，移除过期离线者并刷新缓存。
 	 * Scan both races' ranked players, remove stale offline ones, and reload cache.
 	 */
-	private void runAbyssRankingCleaning() {
+	private void runAbyssRankingCleaning(int periodInDays) {
 		ArrayList<AbyssRankingResult> rankingsElyos = DAOManager.getDAO(AbyssRankDAO.class)
 				.getAbyssRankingPlayers(Race.ELYOS);
 		ArrayList<AbyssRankingResult> rankingsAsmos = DAOManager.getDAO(AbyssRankDAO.class)
 				.getAbyssRankingPlayers(Race.ASMODIANS);
 		List<Player> ToArray = new ArrayList<Player>();
+		long offlineThresholdMs = (long) periodInDays * 24L * 60L * 60L * 1000L;
 		for (AbyssRankingResult result : rankingsElyos) {
 			Player p = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(result.getPlayerName());
 			if (p == null) {
-				return;
+				continue;
 			}
 			Timestamp t = p.getCommonData().getLastOnline();
-			boolean isOutOfDate = (t.getTime() / 1000) >= 43200 ? true : false; // Every 30 Days
+			boolean isOutOfDate = (System.currentTimeMillis() - t.getTime()) >= offlineThresholdMs;
 			if (isOutOfDate) {
 				ToArray.add(p);
 			}
@@ -84,11 +85,11 @@ public class AbyssRankCleaningService {
 		for (AbyssRankingResult result : rankingsAsmos) {
 			Player p = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(result.getPlayerName());
 			if (p == null) {
-				return;
+				continue;
 			}
 
 			Timestamp t = p.getCommonData().getLastOnline();
-			boolean isOutOfDate = (t.getTime() / 1000) >= 43200 ? true : false;
+			boolean isOutOfDate = (System.currentTimeMillis() - t.getTime()) >= offlineThresholdMs;
 			if (isOutOfDate) {
 				ToArray.add(p);
 			}

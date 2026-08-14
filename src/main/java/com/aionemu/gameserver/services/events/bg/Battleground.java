@@ -70,7 +70,7 @@ import java.util.Map;
 public abstract class Battleground {
 	/** 默认传送延迟（毫秒）。 / Default teleport delay in ms. */
 	protected static final int TELEPORT_DEFAULT_DELAY = 0;
-	/** Elo rating K-value / Elo rating K-value */
+	/** Elo 评分 K 值 / Elo rating K-value. */
 	protected final int K_VALUE = 20;
 
 	/** 战场显示名 → 实现类。 / Display name → implementation class. */
@@ -99,7 +99,7 @@ public abstract class Battleground {
 	protected List<BattlegroundMap> maps = new ArrayList<BattlegroundMap>();
 	/** 当前副本 ID / Current instance id */
 	protected int instanceId = -1;
-	/** Registered battleground id / Registered battleground id */
+	/** 战场注册 ID / Registered battleground id. */
 	protected Integer bgId = -1;
 	/** 对局开始时间戳。 / Match start timestamp. */
 	protected long startStamp = 0;
@@ -107,9 +107,7 @@ public abstract class Battleground {
 	protected boolean isTournament = false;
 	/** 是否活动模式。 / Whether event mode. */
 	protected boolean isEvent = false;
-	/**
-	 * Whether 1v1 mode
-	 */
+	/** 是否 1v1 模式 / Whether 1v1 mode. */
 	protected boolean is1v1 = false;
 	/** 当前世界地图实例。 / Current world map instance. */
 	protected WorldMapInstance instance = null;
@@ -160,7 +158,7 @@ public abstract class Battleground {
 	 * 处理玩家死亡事件。
 	 * Handles a player death event.
 	 *
-	 * dead player
+	 * @param player 死亡玩家 / dead player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
 	public abstract void onDie(final Player player, Creature lastAttacker);
@@ -170,7 +168,7 @@ public abstract class Battleground {
 	 * Handles a player leaving the battleground.
 	 *
 	 * @param player 离开的玩家 / leaving player
-	 * whether logout
+	 * @param isLogout 是否登出 / whether logout
 	 * @param isAfk 是否挂机 / whether AFK
 	 */
 	public abstract void onLeave(Player player, boolean isLogout, boolean isAfk);
@@ -179,7 +177,7 @@ public abstract class Battleground {
 	 * 神器被摧毁时回调（子类可覆盖）。
 	 * Callback when an artifact is destroyed (override in subclasses).
 	 *
-	 * team index
+	 * @param teamIndex 队伍索引 / team index
 	 */
 	public void onArtifactDie(int teamIndex) {
 	}
@@ -188,8 +186,8 @@ public abstract class Battleground {
 	 * 资源被采集时回调（子类可覆盖）。
 	 * Callback when a resource is gathered (override in subclasses).
 	 *
-	 * gatherable
-	 * team index
+	 * @param resource 被采集的资源 / the gathered resource
+	 * @param teamIndex 队伍索引 / team index
 	 */
 	public void onResourceGathered(Gatherable resource, int teamIndex) {
 	}
@@ -233,7 +231,7 @@ public abstract class Battleground {
 	 * Creates a tournament match; unsupported by default.
 	 *
 	 * @param teams 各队玩家列表 / teams of players
-	 * true on success
+	 * @return 成功则 true / true on success
 	 */
 	public boolean createTournament(List<List<Player>> teams) {
 		return false;
@@ -273,8 +271,8 @@ public abstract class Battleground {
 	 * 按排队人数与模式计算本局抽取规模。
 	 * Computes match draw size from queue size and mode.
 	 *
-	 * queue size
-	 * draw size
+	 * @param playerCount 排队人数 / queue size
+	 * @return 本局抽取规模 / draw size
 	 */
 	protected int getRandomSize(int playerCount) {
 		int avgCount = (int) Math.floor(playerCount / getTeamCount());
@@ -295,8 +293,8 @@ public abstract class Battleground {
 	 * 处理单人队列匹配。
 	 * Handles solo queue matchmaking.
 	 *
-	 * queued player ids
-	 * true on success
+	 * @param players 排队玩家对象 ID / queued player ids
+	 * @return 成功则 true / true on success
 	 */
 	protected boolean handleQueueSolo(List<Integer> players) {
 		int size = getRandomSize(players.size());
@@ -327,8 +325,8 @@ public abstract class Battleground {
 	 * 处理小队队列匹配。
 	 * Handles group queue matchmaking.
 	 *
-	 * queued player ids
-	 * true on success
+	 * @param players 排队玩家对象 ID / queued player ids
+	 * @return 成功则 true / true on success
 	 */
 	protected boolean handleQueueGroup(List<Integer> players) {
 		int groupSize = getRandomSize(players.size());
@@ -366,8 +364,8 @@ public abstract class Battleground {
 	 * 处理联盟队列匹配。
 	 * Handles alliance queue matchmaking.
 	 *
-	 * queued player ids
-	 * true on success
+	 * @param players 排队玩家对象 ID / queued player ids
+	 * @return 成功则 true / true on success
 	 */
 	protected boolean handleQueueAlliance(List<Integer> players) {
 		int allianceSize = getRandomSize(players.size());
@@ -406,7 +404,7 @@ public abstract class Battleground {
 	 * Creates groups for each team and registers them.
 	 *
 	 * @param teams 各队玩家 / teams of players
-	 * true on success
+	 * @return 成功则 true / true on success
 	 */
 	protected boolean createGroups(List<List<Player>> teams) {
 		if (teams.size() < getTeamCount()) {
@@ -447,7 +445,7 @@ public abstract class Battleground {
 	 * Creates alliances for each team and registers them.
 	 *
 	 * @param teams 各队玩家 / teams of players
-	 * true on success
+	 * @return 成功则 true / true on success
 	 */
 	protected boolean createAlliances(List<List<Player>> teams) {
 		if (teams.size() < getTeamCount()) {
@@ -487,8 +485,8 @@ public abstract class Battleground {
 	 * 登记单人参赛者列表。
 	 * Registers solo participants.
 	 *
-	 * sides of players
-	 * true on success
+	 * @param players 各方玩家列表 / sides of players
+	 * @return 成功则 true / true on success
 	 */
 	protected boolean createPlayers(List<List<Player>> players) {
 		List<Integer> playerList = new ArrayList<Integer>();
@@ -519,7 +517,7 @@ public abstract class Battleground {
 	 * 添加小队参赛者。
 	 * Adds a group participant.
 	 *
-	 * group
+	 * @param group 小队 / group
 	 */
 	protected void addGroup(PlayerGroup group) {
 		if (!getGroups().contains(group)) {
@@ -531,7 +529,7 @@ public abstract class Battleground {
 	 * 添加联盟参赛者。
 	 * Adds an alliance participant.
 	 *
-	 * alliance
+	 * @param alliance 联盟 / alliance
 	 */
 	protected void addAlliance(PlayerAlliance alliance) {
 		if (!getAlliances().contains(alliance)) {
@@ -555,8 +553,8 @@ public abstract class Battleground {
 	 * 冻结玩家并在指定时长后解冻。
 	 * Freezes the player and unfreezes after the given duration.
 	 *
-	 * 玩家 / player
-	 * duration in ms
+	 * @param player 玩家 / player
+	 * @param duration 时长毫秒 / duration in ms
 	 */
 	protected void freezePlayer(final Player player, int duration) {
 		player.getEffectController().setAbnormal(AbnormalState.PARALYZE.getId());
@@ -586,8 +584,8 @@ public abstract class Battleground {
 	 * 治疗玩家并可选择是否重置 DP。
 	 * Heals the player, optionally resetting DP.
 	 *
-	 * 玩家 / player
-	 * whether to reset DP
+	 * @param player 玩家 / player
+	 * @param resetDp 是否重置 DP / whether to reset DP
 	 */
 	protected void healPlayer(Player player, boolean resetDp) {
 		player.getLifeStats().increaseHp(SM_ATTACK_STATUS.TYPE.HP, player.getLifeStats().getMaxHp() + 1);
@@ -660,9 +658,9 @@ public abstract class Battleground {
 	 * 延迟向玩家发送带发送者的公告。
 	 * Schedules an announcement with sender to the player.
 	 *
-	 * 玩家 / player
-	 * sender name
-	 * message
+	 * @param player 玩家 / player
+	 * @param sender 发送者名称 / sender name
+	 * @param msg 消息 / message
 	 * @param delay 延迟毫秒 / delay ms
 	 */
 	protected void scheduleAnnouncement(final Player player, final String sender, final String msg, int delay) {
@@ -682,8 +680,8 @@ public abstract class Battleground {
 	 * 延迟向玩家发送默认发送者公告。
 	 * Schedules a default-sender announcement to the player.
 	 *
-	 * 玩家 / player
-	 * message
+	 * @param player 玩家 / player
+	 * @param msg 消息 / message
 	 * @param delay 延迟毫秒 / delay ms
 	 */
 	protected void scheduleAnnouncement(Player player, String msg, int delay) {
@@ -700,7 +698,7 @@ public abstract class Battleground {
 	 * 向全部观战者即时公告。
 	 * Announces immediately to all spectators.
 	 *
-	 * message
+	 * @param msg 消息 / message
 	 */
 	protected void specAnnounce(String msg) {
 		for (Player spectator : getSpectators()) {
@@ -712,7 +710,7 @@ public abstract class Battleground {
 	 * 延迟向全部观战者公告。
 	 * Schedules an announcement to all spectators.
 	 *
-	 * message
+	 * @param msg 消息 / message
 	 * @param delay 延迟毫秒 / delay ms
 	 */
 	protected void specAnnounce(final String msg, int delay) {
@@ -744,7 +742,7 @@ public abstract class Battleground {
 	 * 延迟解散小队。
 	 * Schedules group disband.
 	 *
-	 * group
+	 * @param group 小队 / group
 	 * @param delay 延迟毫秒 / delay ms
 	 */
 	protected void scheduleGroupDisband(final PlayerGroup group, int delay) {
@@ -762,7 +760,7 @@ public abstract class Battleground {
 	 * 延迟解散联盟。
 	 * Schedules alliance disband.
 	 *
-	 * alliance
+	 * @param alliance 联盟 / alliance
 	 * @param delay 延迟毫秒 / delay ms
 	 */
 	protected void scheduleAllianceDisband(final PlayerAlliance alliance, int delay) {
@@ -793,7 +791,7 @@ public abstract class Battleground {
 	 *
 	 * @param pl 玩家 / player
 	 * @param time 准备时长毫秒 / prepare time ms
-	 * whether to announce
+	 * @param announce 是否公告 / whether to announce
 	 */
 	protected void preparePlayer(final Player pl, int time, boolean announce) {
 		GameGameplayServices.duelService().loseDuel(pl);
@@ -893,7 +891,7 @@ public abstract class Battleground {
 	 * 计算对局剩余秒数。
 	 * Remaining match seconds.
 	 *
-	 * seconds left
+	 * @return 剩余秒数 / seconds left
 	 */
 	public int getSecondsLeft() {
 		return (getMatchLength() - Math.round((float) (System.currentTimeMillis() - getStartStamp()) / 1000));
@@ -903,8 +901,8 @@ public abstract class Battleground {
 	 * 向玩家创建任务式倒计时 UI。
 	 * Creates quest-style timer UI for the player.
 	 *
-	 * 玩家 / player
-	 * seconds
+	 * @param player 玩家 / player
+	 * @param seconds 秒数 / seconds
 	 */
 	protected void createTimer(Player player, int seconds) {
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, seconds));
@@ -924,8 +922,8 @@ public abstract class Battleground {
 	 * 记录玩家胜场与评分变化。
 	 * Records a player win and rating change.
 	 *
-	 * 玩家 / player
-	 * rating delta
+	 * @param player 玩家 / player
+	 * @param ratingChange 评分变化量 / rating delta
 	 */
 	protected void playerWinMatch(Player player, int ratingChange) {
 		if (is1v1()) {
@@ -939,8 +937,8 @@ public abstract class Battleground {
 	 * 记录玩家负场与评分变化。
 	 * Records a player loss and rating change.
 	 *
-	 * 玩家 / player
-	 * rating delta
+	 * @param player 玩家 / player
+	 * @param ratingChange 评分变化量 / rating delta
 	 */
 	protected void playerLoseMatch(Player player, int ratingChange) {
 		if (is1v1()) {
@@ -954,8 +952,8 @@ public abstract class Battleground {
 	 * 按胜负双方批量更新天梯。
 	 * Batch ladder update for winners and losers.
 	 *
-	 * winners
-	 * losers
+	 * @param winner 胜方玩家集合 / winners
+	 * @param loser 败方玩家集合 / losers
 	 */
 	protected void performLadderUpdate(Collection<Player> winner, Collection<Player> loser) {
 		int avgWinnerRating = 0;
@@ -964,9 +962,9 @@ public abstract class Battleground {
 			getLadderDAO().addWin(pl);
 			avgWinnerRating += getLadderDAO().getRating(pl);
 		}
-		for (Player pl : winner) {
+		for (Player pl : loser) {
 			getLadderDAO().addLoss(pl);
-			avgWinnerRating += getLadderDAO().getRating(pl);
+			avgLoserRating += getLadderDAO().getRating(pl);
 		}
 		if (winner.size() > 0) {
 			avgWinnerRating = avgWinnerRating / winner.size();
@@ -987,9 +985,9 @@ public abstract class Battleground {
 	 * 计算 Elo 评分变化量。
 	 * Calculates Elo rating change.
 	 *
-	 * rating A
-	 * rating B
-	 * delta
+	 * @param ratingA 胜方平均评分 / rating A
+	 * @param ratingB 败方平均评分 / rating B
+	 * @return 评分变化量 / delta
 	 */
 	protected int calcRatingChange(int ratingA, int ratingB) {
 		return (int) Math.round(K_VALUE * (1 / (1 + Math.pow(10, ((float) ratingB - (float) ratingA) / 400))));
@@ -1106,9 +1104,9 @@ public abstract class Battleground {
 	 * 默认离场处理：登记离开者、惩罚与清理。
 	 * Default leave handling: register leaver, penalize and cleanup.
 	 *
-	 * 玩家 / player
-	 * logout
-	 * @param isAfk 是否挂机 / AFK
+	 * @param player 玩家 / player
+	 * @param isLogout 是否登出 / whether logout
+	 * @param isAfk 是否挂机 / whether AFK
 	 */
 	protected void onLeaveDefault(Player player, boolean isLogout, boolean isAfk) {
 		if (player.isSpectating()) {
@@ -1154,7 +1152,7 @@ public abstract class Battleground {
 	 * 通用生物死亡入口（默认空实现，子类可覆盖）。
 	 * Generic creature-death entry (no-op by default; override as needed).
 	 *
-	 * dead creature
+	 * @param creature 死亡生物 / dead creature
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
 	public void onDie(Creature creature, Creature lastAttacker) {
@@ -1164,7 +1162,7 @@ public abstract class Battleground {
 	 * 默认死亡处理：击杀统计与公告。
 	 * Default death handling: kill stats and announcements.
 	 *
-	 * dead player
+	 * @param player 死亡玩家 / dead player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
 	protected void onDieDefault(Player player, Creature lastAttacker) {
@@ -1347,7 +1345,7 @@ public abstract class Battleground {
 	 * 观战者加入：隐身传送进场并启动计时。
 	 * Spectator joins: hide, teleport in and start timer.
 	 *
-	 * spectator
+	 * @param spectator 观战者 / spectator
 	 */
 	public void onSpectatorJoin(Player spectator) {
 		spectator.setBattleground(this);
@@ -1370,7 +1368,7 @@ public abstract class Battleground {
 	 * 观战者离开：还原状态并传回原坐标。
 	 * Spectator leaves: restore state and return to previous location.
 	 *
-	 * spectator
+	 * @param spectator 观战者 / spectator
 	 * @param isIterating 是否在批量遍历中（避免并发修改） / whether iterating (avoid CME)
 	 */
 	public void onSpectatorLeave(final Player spectator, boolean isIterating) {
@@ -1403,7 +1401,7 @@ public abstract class Battleground {
 	 * 重连已离开的参赛者，恢复队伍/位置与天梯扣分。
 	 * Reconnects a leaver, restoring team/position and undoing leave penalty.
 	 *
-	 * reconnecting player
+	 * @param player 重连玩家 / reconnecting player
 	 */
 	public void reconnectPlayer(Player player) {
 		if (player.getBattleground() != null) {
@@ -1465,7 +1463,7 @@ public abstract class Battleground {
 	 * 获取天梯 DAO。
 	 * Returns the ladder DAO.
 	 *
-	 * DAO
+	 * @return 天梯 DAO / the ladder DAO
 	 */
 	protected static LadderDAO getLadderDAO() {
 		return DAOManager.getDAO(LadderDAO.class);
@@ -1511,7 +1509,7 @@ public abstract class Battleground {
 	 * 获取战场名称。
 	 * Returns the battleground name.
 	 *
-	 * name
+	 * @return 战场名称 / the name
 	 */
 	public String getName() {
 		return name;
@@ -1521,7 +1519,7 @@ public abstract class Battleground {
 	 * 获取战场描述。
 	 * Returns the battleground description.
 	 *
-	 * description
+	 * @return 战场描述 / the description
 	 */
 	public String getDescription() {
 		return description;
@@ -1531,7 +1529,7 @@ public abstract class Battleground {
 	 * 获取最小人数。
 	 * Returns minimum size.
 	 *
-	 * min size
+	 * @return 最小人数 / minimum size
 	 */
 	public int getMinSize() {
 		return minSize;
@@ -1541,7 +1539,7 @@ public abstract class Battleground {
 	 * 获取最大人数。
 	 * Returns maximum size.
 	 *
-	 * max size
+	 * @return 最大人数 / maximum size
 	 */
 	public int getMaxSize() {
 		return maxSize;
@@ -1551,7 +1549,7 @@ public abstract class Battleground {
 	 * 获取队伍数量。
 	 * Returns team count.
 	 *
-	 * team count
+	 * @return 队伍数量 / team count
 	 */
 	public int getTeamCount() {
 		return teamCount;
@@ -1561,7 +1559,7 @@ public abstract class Battleground {
 	 * 获取当前地图 ID。
 	 * Returns current map id.
 	 *
-	 * map id
+	 * @return 地图 ID / map id
 	 */
 	public int getMapId() {
 		return mapId;
@@ -1571,7 +1569,7 @@ public abstract class Battleground {
 	 * 设置对局时长（秒）。
 	 * Sets match length in seconds.
 	 *
-	 * length in seconds
+	 * @param matchLength 对局时长秒 / length in seconds
 	 */
 	public void setMatchLength(int matchLength) {
 		this.matchLength = matchLength;
@@ -1581,7 +1579,7 @@ public abstract class Battleground {
 	 * 获取对局时长（秒）。
 	 * Returns match length in seconds.
 	 *
-	 * length in seconds
+	 * @return 对局时长秒 / length in seconds
 	 */
 	public int getMatchLength() {
 		return matchLength;
@@ -1591,7 +1589,7 @@ public abstract class Battleground {
 	 * 获取当前战场地图配置。
 	 * Returns the current battleground map config.
 	 *
-	 * map config
+	 * @return 地图配置 / map config
 	 */
 	public BattlegroundMap getMap() {
 		return map;
@@ -1601,7 +1599,7 @@ public abstract class Battleground {
 	 * 设置副本实例 ID。
 	 * Sets instance id.
 	 *
-	 * instance id
+	 * @param instanceId 实例 ID / instance id
 	 */
 	protected void setInstanceId(int instanceId) {
 		this.instanceId = instanceId;
@@ -1611,7 +1609,7 @@ public abstract class Battleground {
 	 * 获取副本实例 ID。
 	 * Returns instance id.
 	 *
-	 * instance id
+	 * @return 实例 ID / instance id
 	 */
 	public int getInstanceId() {
 		return instanceId;
@@ -1621,7 +1619,7 @@ public abstract class Battleground {
 	 * 设置战场注册 ID。
 	 * Sets registered battleground id.
 	 *
-	 * battleground id
+	 * @param bgId 战场注册 ID / battleground id
 	 */
 	public void setBgId(Integer bgId) {
 		this.bgId = bgId;
@@ -1631,7 +1629,7 @@ public abstract class Battleground {
 	 * 获取战场注册 ID。
 	 * Returns registered battleground id.
 	 *
-	 * battleground id
+	 * @return 战场注册 ID / battleground id
 	 */
 	public Integer getBgId() {
 		return bgId;
@@ -1641,7 +1639,7 @@ public abstract class Battleground {
 	 * 设置对局开始时间戳。
 	 * Sets match start timestamp.
 	 *
-	 * timestamp
+	 * @param startStamp 时间戳 / timestamp
 	 */
 	protected void setStartStamp(long startStamp) {
 		this.startStamp = startStamp;
@@ -1651,7 +1649,7 @@ public abstract class Battleground {
 	 * 获取对局开始时间戳。
 	 * Returns match start timestamp.
 	 *
-	 * timestamp
+	 * @return 时间戳 / timestamp
 	 */
 	public long getStartStamp() {
 		return startStamp;
@@ -1681,7 +1679,7 @@ public abstract class Battleground {
 	 * 设置是否活动模式。
 	 * Sets event mode flag.
 	 *
-	 * event flag
+	 * @param isEvent 是否活动模式 / event flag
 	 */
 	public void setIsEvent(boolean isEvent) {
 		this.isEvent = isEvent;
@@ -1731,7 +1729,7 @@ public abstract class Battleground {
 	 * 设置结束时是否解散队伍。
 	 * Sets whether teams should disband on end.
 	 *
-	 * disband flag
+	 * @param shouldDisband 是否解散 / disband flag
 	 */
 	public void setShouldDisband(boolean shouldDisband) {
 		this.shouldDisband = shouldDisband;
@@ -1761,7 +1759,7 @@ public abstract class Battleground {
 	 * 获取世界地图实例。
 	 * Returns the world map instance.
 	 *
-	 * instance
+	 * @return 世界地图实例 / the instance
 	 */
 	public WorldMapInstance getInstance() {
 		return instance;
@@ -1771,7 +1769,7 @@ public abstract class Battleground {
 	 * 设置世界地图实例。
 	 * Sets the world map instance.
 	 *
-	 * instance
+	 * @param instance 世界地图实例 / the instance
 	 */
 	public void setInstance(WorldMapInstance instance) {
 		this.instance = instance;
@@ -1781,7 +1779,7 @@ public abstract class Battleground {
 	 * 获取单人参赛者列表。
 	 * Returns solo participants.
 	 *
-	 * players
+	 * @return 单人参赛者列表 / players
 	 */
 	protected List<Player> getPlayers() {
 		return _players;
@@ -1791,7 +1789,7 @@ public abstract class Battleground {
 	 * 获取小队参赛者列表。
 	 * Returns group participants.
 	 *
-	 * groups
+	 * @return 小队参赛者列表 / groups
 	 */
 	protected List<PlayerGroup> getGroups() {
 		return _groups;
@@ -1801,7 +1799,7 @@ public abstract class Battleground {
 	 * 获取联盟参赛者列表。
 	 * Returns alliance participants.
 	 *
-	 * alliances
+	 * @return 联盟参赛者列表 / alliances
 	 */
 	protected List<PlayerAlliance> getAlliances() {
 		return _alliances;
@@ -1811,7 +1809,7 @@ public abstract class Battleground {
 	 * 获取观战者列表。
 	 * Returns spectators.
 	 *
-	 * spectators
+	 * @return 观战者列表 / spectators
 	 */
 	protected List<Player> getSpectators() {
 		return _spectators;
@@ -1841,7 +1839,7 @@ public abstract class Battleground {
 	 * 设置过期/结束任务。
 	 * Sets the expire/end task.
 	 *
-	 * task
+	 * @param expireTask 过期/结束任务 / the task
 	 */
 	protected void setExpireTask(ScheduledFuture<?> expireTask) {
 		this.expireTask = expireTask;
@@ -1851,7 +1849,7 @@ public abstract class Battleground {
 	 * 获取过期/结束任务。
 	 * Returns the expire/end task.
 	 *
-	 * task
+	 * @return 过期/结束任务 / the task
 	 */
 	protected ScheduledFuture<?> getExpireTask() {
 		return expireTask;
@@ -1861,7 +1859,7 @@ public abstract class Battleground {
 	 * 获取后台周期任务。
 	 * Returns the background periodic task.
 	 *
-	 * task
+	 * @return 后台周期任务 / the task
 	 */
 	public ScheduledFuture<?> getBackgroundTask() {
 		return backgroundTask;
@@ -1871,7 +1869,7 @@ public abstract class Battleground {
 	 * 设置后台周期任务。
 	 * Sets the background periodic task.
 	 *
-	 * task
+	 * @param backgroundTask 后台周期任务 / the task
 	 */
 	public void setBackgroundTask(ScheduledFuture<?> backgroundTask) {
 		this.backgroundTask = backgroundTask;
@@ -1881,7 +1879,7 @@ public abstract class Battleground {
 	 * 获取显示名到实现类的别名表。
 	 * Returns display-name to implementation-class aliases.
 	 *
-	 * aliases
+	 * @return 别名表 / aliases
 	 */
 	public static Map<String, Class<?>> getAliases() {
 		return aliases;
@@ -1892,7 +1890,7 @@ public abstract class Battleground {
 	 * Spawn position coordinates.
 	 */
 	public static class SpawnPosition {
-		/** 映射 ID / Map id */
+		/** 地图 ID / Map id */
 		private int mapId = 0;
 		/** X coordinate / X coordinate */
 		private float x;
@@ -1919,7 +1917,7 @@ public abstract class Battleground {
 		 * 使用地图 ID 与 XYZ 构造出生点。
 		 * Creates a spawn position with map id and XYZ.
 		 *
-		 * map id
+		 * @param mapId 地图 ID / map id
 		 * @param x X 坐标 / x
 		 * @param y Y 坐标 / y
 		 * @param z Z 坐标 / z
@@ -1935,7 +1933,7 @@ public abstract class Battleground {
 		 * 获取 X 坐标。
 		 * Returns X.
 		 *
-		 * x
+		 * @return X 坐标 / x
 		 */
 		public float getX() {
 			return x;
@@ -1955,7 +1953,7 @@ public abstract class Battleground {
 		 * 获取 Y 坐标。
 		 * Returns Y.
 		 *
-		 * y
+		 * @return Y 坐标 / y
 		 */
 		public float getY() {
 			return y;
@@ -1975,7 +1973,7 @@ public abstract class Battleground {
 		 * 获取 Z 坐标。
 		 * Returns Z.
 		 *
-		 * z
+		 * @return Z 坐标 / z
 		 */
 		public float getZ() {
 			return z;
@@ -1995,7 +1993,7 @@ public abstract class Battleground {
 		 * 获取地图 ID。
 		 * Returns map id.
 		 *
-		 * map id
+		 * @return 地图 ID / map id
 		 */
 		public int getMapId() {
 			return mapId;
@@ -2005,7 +2003,7 @@ public abstract class Battleground {
 		 * 设置地图 ID。
 		 * Sets map id.
 		 *
-		 * map id
+		 * @param mapId 地图 ID / map id
 		 */
 		public void setMapId(int mapId) {
 			this.mapId = mapId;
@@ -2017,7 +2015,7 @@ public abstract class Battleground {
 	 * Battleground map config: spawns, static doors, kill Z and flight restriction.
 	 */
 	public static class BattlegroundMap {
-		/** 映射 ID / Map id */
+		/** 地图 ID / Map id */
 		private int mapId = 0;
 		/** 出生点列表。 / Spawn points. */
 		private List<SpawnPosition> spawnPoints = null;
@@ -2032,7 +2030,7 @@ public abstract class Battleground {
 		 * 创建指定地图的配置。
 		 * Creates map config for the given map id.
 		 *
-		 * map id
+		 * @param mapId 地图 ID / map id
 		 */
 		public BattlegroundMap(int mapId) {
 			this.setMapId(mapId);
@@ -2042,7 +2040,7 @@ public abstract class Battleground {
 		 * 添加出生点。
 		 * Adds a spawn position.
 		 *
-		 * spawn position
+		 * @param pos 出生点 / spawn position
 		 */
 		public void addSpawn(SpawnPosition pos) {
 			if (spawnPoints == null) {
@@ -2055,7 +2053,7 @@ public abstract class Battleground {
 		 * 添加静态门 ID。
 		 * Adds a static door id.
 		 *
-		 * door id
+		 * @param doorId 门 ID / door id
 		 */
 		public void addStaticDoor(Integer doorId) {
 			if (staticDoors == null) {
@@ -2068,7 +2066,7 @@ public abstract class Battleground {
 		 * 设置地图 ID。
 		 * Sets map id.
 		 *
-		 * map id
+		 * @param mapId 地图 ID / map id
 		 */
 		public void setMapId(int mapId) {
 			this.mapId = mapId;
@@ -2078,7 +2076,7 @@ public abstract class Battleground {
 		 * 获取地图 ID。
 		 * Returns map id.
 		 *
-		 * map id
+		 * @return 地图 ID / map id
 		 */
 		public int getMapId() {
 			return mapId;
@@ -2088,7 +2086,7 @@ public abstract class Battleground {
 		 * 获取出生点列表。
 		 * Returns spawn points.
 		 *
-		 * spawn points
+		 * @return 出生点列表 / spawn points
 		 */
 		public List<SpawnPosition> getSpawnPoints() {
 			return spawnPoints;
@@ -2098,7 +2096,7 @@ public abstract class Battleground {
 		 * 设置出生点列表。
 		 * Sets spawn points.
 		 *
-		 * spawn points
+		 * @param spawnPoints 出生点列表 / spawn points
 		 */
 		public void setSpawnPoints(List<SpawnPosition> spawnPoints) {
 			this.spawnPoints = spawnPoints;
@@ -2108,7 +2106,7 @@ public abstract class Battleground {
 		 * 获取静态门 ID 列表。
 		 * Returns static door ids.
 		 *
-		 * door ids
+		 * @return 门 ID 列表 / door ids
 		 */
 		public List<Integer> getStaticDoors() {
 			return staticDoors;
@@ -2118,7 +2116,7 @@ public abstract class Battleground {
 		 * 设置坠落击杀高度。
 		 * Sets kill Z.
 		 *
-		 * kill Z
+		 * @param killZ 坠落击杀高度 / kill Z
 		 */
 		public void setKillZ(float killZ) {
 			this.killZ = killZ;
@@ -2128,7 +2126,7 @@ public abstract class Battleground {
 		 * 获取坠落击杀高度。
 		 * Returns kill Z.
 		 *
-		 * kill Z
+		 * @return 坠落击杀高度 / kill Z
 		 */
 		public float getKillZ() {
 			return killZ;
@@ -2148,7 +2146,7 @@ public abstract class Battleground {
 		 * 设置是否限制飞行。
 		 * Sets flight restriction.
 		 *
-		 * restriction flag
+		 * @param restrictFlight 是否限制飞行 / restriction flag
 		 */
 		public void setRestrictFlight(boolean restrictFlight) {
 			this.restrictFlight = restrictFlight;

@@ -31,14 +31,14 @@ public final class PlayerABList implements ABList<Player> {
 		}
 	}
 
-	/** 返回 all ab / Returns the all ab */
+	/** 返回全部 AB 条目。 / Returns all AB entries. */
 	public PlayerABEntry[] getAllAB() {
 		List<PlayerABEntry> allCp = new ArrayList<PlayerABEntry>();
 		allCp.addAll(entry.values());
 		return allCp.toArray(new PlayerABEntry[allCp.size()]);
 	}
 
-	/** 返回 basic ab / Returns the basic ab */
+	/** 返回基础 AB 条目。 / Returns the basic AB entries. */
 	public PlayerABEntry[] getBasicAB() {
 		return entry.values().toArray(new PlayerABEntry[entry.size()]);
 	}
@@ -65,10 +65,10 @@ public final class PlayerABList implements ABList<Player> {
 			entry.remove(id);
 			DAOManager.getDAO(PlayerABDAO.class).delete(player.getObjectId(), id);
 		}
-		return entry != null;
+		return entries != null;
 	}
 
-	/** 大小 / size. */
+	/** 返回条目数。 / Returns the number of entries. */
 	@Override
 	public int size() {
 		return entry.size();

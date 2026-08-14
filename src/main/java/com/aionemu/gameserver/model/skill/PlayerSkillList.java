@@ -56,7 +56,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 	}
 
 	/**
-	 * @return 返回 array 带全部 skills。 / Returns array with all skills
+	 * @return 包含全部技能的数组 / Returns array with all skills
 	 */
 	public PlayerSkillEntry[] getAllSkills() {
 		List<PlayerSkillEntry> allSkills = new ArrayList<PlayerSkillEntry>();
@@ -66,7 +66,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return allSkills.toArray(new PlayerSkillEntry[allSkills.size()]);
 	}
 
-	/** 返回 all skills 2 / Returns the all skills 2 */
+	/** 返回全部技能 ID 列表 / Returns all skill IDs */
 	public List<Integer> getAllSkills2() {
 		HashSet<Integer> allSkills = new HashSet<Integer>();
 		for (PlayerSkillEntry i : basicSkills.values()) {
@@ -101,7 +101,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return deletedSkills.toArray(new PlayerSkillEntry[deletedSkills.size()]);
 	}
 
-	/** Captures all mutable skill projections touched by transactional equipment changes. */
+	/** 捕获事务性装备变更所触及的全部可变技能投影。 / Captures all mutable skill projections touched by transactional equipment changes. */
 	public synchronized TransactionSnapshot transactionSnapshot() {
 		return new TransactionSnapshot();
 	}
@@ -166,7 +166,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return addSkill(player, skillId, skillLevel, false, false, PersistentState.NEW);
 	}
 
-	/** Addsgm 技能 / Adds gm skill */
+	/** 添加 GM 技能 / Adds gm skill */
 	public boolean addGMSkill(Player player, int skillId, int skillLevel) {
 		return addSkillAct(player, skillId, skillLevel, true, false, PersistentState.NOACTION, true);
 	}
@@ -221,18 +221,19 @@ public final class PlayerSkillList implements SkillList<Player> {
 	}
 
 	/**
-	 * Add temporary skill which will not be saved in db
+	 * 添加临时技能（不保存到数据库）。
+	 * Add a temporary skill which will not be saved in db.
 	 *
-	 * @param player
-	 * @param skillId
-	 * @param skillLevel
-	 * @return
+	 * @param player 玩家 / Player
+	 * @param skillId 技能 ID / Skill ID
+	 * @param skillLevel 技能等级 / Skill level
+	 * @return 是否成功 / Whether successful
 	 */
 	public boolean addAbyssSkill(Player player, int skillId, int skillLevel) {
 		return addSkill(player, skillId, skillLevel, false, false, PersistentState.NOACTION);
 	}
 
-	/** Addslinkedstigma 技能 / Adds linked stigma skill */
+	/** 添加关联烙印之石技能 / Adds linked stigma skill */
 	public void addLinkedStigmaSkill(Player player, int skillId, int skillLvl) {
 		PlayerSkillEntry skill = new PlayerSkillEntry(skillId, false, true, skillLvl, 0, null, 0, false,
 				PersistentState.NOACTION);
@@ -327,10 +328,14 @@ public final class PlayerSkillList implements SkillList<Player> {
 	}
 
 	/**
-	 * @param player
-	 * @param skillId
-	 * @param xpReward
-	 * @return
+	 * 为制作技能添加经验。
+	 * Add XP to a craft skill.
+	 *
+	 * @param player 玩家 / Player
+	 * @param skillId 技能 ID / Skill ID
+	 * @param xpReward 奖励经验 / XP reward
+	 * @param objSkillPoints 目标技能点数 / Objective skill points
+	 * @return 是否成功 / Whether successful
 	 */
 	public boolean addSkillXp(Player player, int skillId, int xpReward, int objSkillPoints) {
 		PlayerSkillEntry skillEntry = getSkillEntry(skillId);
@@ -375,7 +380,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return true;
 	}
 
-	/** 是否技能存在 / Whether skill present*/
+	/** 是否技能存在 / Whether skill present */
 	@Override
 	public boolean isSkillPresent(int skillId) {
 		return basicSkills.containsKey(skillId) || stigmaSkills.containsKey(skillId)
@@ -391,7 +396,10 @@ public final class PlayerSkillList implements SkillList<Player> {
 		if (linkedSkills.containsKey(skillId)) {
 			return linkedSkills.get(skillId).getSkillLevel();
 		}
-		return stigmaSkills.get(skillId).getSkillLevel();
+		if (stigmaSkills.containsKey(skillId)) {
+			return stigmaSkills.get(skillId).getSkillLevel();
+		}
+		return 0;
 	}
 
 	/** 移除技能。 / Removes skill. */
@@ -400,6 +408,8 @@ public final class PlayerSkillList implements SkillList<Player> {
 		PlayerSkillEntry entry = basicSkills.get(skillId);
 		if (entry == null) {
 			entry = stigmaSkills.get(skillId);
+		}
+		if (entry == null) {
 			entry = linkedSkills.get(skillId);
 		}
 		if (entry != null) {
@@ -419,8 +429,12 @@ public final class PlayerSkillList implements SkillList<Player> {
 	}
 
 	/**
-	 * @param player
-	 * @param skillId
+	 * 发送技能列表更新消息给玩家。
+	 * Send skill list update message to the player.
+	 *
+	 * @param player 玩家 / Player
+	 * @param skillId 技能 ID / Skill ID
+	 * @param isNew 是否为新增技能 / Whether newly added
 	 */
 	private void sendMessage(Player player, int skillId, boolean isNew) {
 		switch (skillId) {
