@@ -29,7 +29,7 @@
 
 1. 写 `quests/<id>.xml`；仅在完全符合下述标准模式时使用领域积木，其他流程继续写普通 transition。
 2. 在 schema v2 `quest_definition_catalog.xml` 注册一行 `<definition id="<id>" resource="aion/data/static_data/quest_definition/quests/<id>.xml" mode="EXECUTABLE"/>`（每个 ID 只注册一次）。
-3. 旧模板仍存在时，以 `quest_data.xml` 作为静态元数据迁移来源；旧模板缺失时必须从真端/客户端取得逐字段权威证据，禁止从现有候选 XML 或任务行为反推猜值。
+3. 旧模板仍存在时，以 `quest_data.xml` 作为静态元数据迁移来源；旧模板缺失时必须从真实/客户端取得逐字段权威证据，禁止从现有候选 XML 或任务行为反推猜值。
 4. 删除旧执行入口（`quest_script_data/*.xml` 中对应节点 / 旧 Java handler），同一改动完成 owner 交接。
 
 Catalog 只有两种 mode：`EXECUTABLE` 同时提供 metadata 与唯一执行 Owner；`METADATA_ONLY` 只提供名称、分类、重复规则、历史状态解释等 canonical metadata，XML 中不得声明 `nodes` 或 `transitions`，事件索引和 dispatcher 永远不会装载它。只有旧 `item_collecting` Owner 的 `start_npc_ids`、`end_npc_ids`、`action_item_ids`、`next_npc_id` 全部为 0，且存在权威旧模板时，才可按“无任何可注册入口”迁为 `METADATA_ONLY`。缺任一权威字段或仍有执行入口时必须保持 BLOCKED，不能为了清零旧 Owner 而生成定义。
@@ -115,7 +115,7 @@ transition 内部顺序固定：`event` → `conditions` → `actions` → `afte
 </npc-complete>
 ```
 
-choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目降为具体 `ITEM` 奖励。preview、普通领取、choice、fallback 的 dialog ID 不能重复。source 必须投影为 `REWARD`，target 必须投影为 `COMPLETE`。每条完成路径的动作顺序固定为：固定奖励、可选的 choice 奖励、`complete-quest`；提交后始终执行 `refresh-player-stats`、`sync-quest-state mode="COMPLETION"`，最后按 `SELECTION_DIALOG`、`CLOSE_DIALOG`、`NONE` 三选一结束。预览路径固定显示 page 5。普通 NPC 默认 `SELECTION_DIALOG`；`useitem`、`quest_use_item`、`quest_start_use_item` 交互物默认 `CLOSE_DIALOG`。`NONE` 只允许有旧包序列或真端行为证据的白名单任务。
+choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目降为具体 `ITEM` 奖励。preview、普通领取、choice、fallback 的 dialog ID 不能重复。source 必须投影为 `REWARD`，target 必须投影为 `COMPLETE`。每条完成路径的动作顺序固定为：固定奖励、可选的 choice 奖励、`complete-quest`；提交后始终执行 `refresh-player-stats`、`sync-quest-state mode="COMPLETION"`，最后按 `SELECTION_DIALOG`、`CLOSE_DIALOG`、`NONE` 三选一结束。预览路径固定显示 page 5。普通 NPC 默认 `SELECTION_DIALOG`；`useitem`、`quest_use_item`、`quest_start_use_item` 交互物默认 `CLOSE_DIALOG`。`NONE` 只允许有旧包序列或真实行为证据的白名单任务。
 
 只有整个展开结果都正确时才使用积木。接取附加条件、非标准 dialog/page、领奖事务动作或额外 after-commit 副作用都必须写显式 `<transition>`。编译失败使用稳定的 `QuestCompilationException` code，并指出任务、积木和出错属性。
 
@@ -135,7 +135,7 @@ choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目
             source="started" target="reward" page="1352"/>
 ```
 
-固定展开为两条边：dialog 31 在 START 节点自环并显示显式 `page`，dialog 1009 进入 REWARD，依次执行 `PACKET_ONLY` 同步和页面 5。`page` 只允许真端协议页面 `1352`、`2375`、`10002`；source 必须投影 START，target 必须投影 REWARD。成长任务中的 10000/10001、4762 或其他特殊页面协议不使用此积木。
+固定展开为两条边：dialog 31 在 START 节点自环并显示显式 `page`，dialog 1009 进入 REWARD，依次执行 `PACKET_ONLY` 同步和页面 5。`page` 只允许真实协议页面 `1352`、`2375`、`10002`；source 必须投影 START，target 必须投影 REWARD。成长任务中的 10000/10001、4762 或其他特殊页面协议不使用此积木。
 
 标准带物品报告：
 
@@ -514,7 +514,7 @@ private static QuestDsl.QuestBuilder simpleCollect1103() {
 
 1. XML 通过 XSD 校验；`metadata` 子元素与 transition 内部顺序正确（drops 在 rewards 之后）。
 2. catalog schema v2 注册一次且 mode 正确；`EXECUTABLE` 的旧入口（quest_script_data / Java handler）已删除，无双 owner；`METADATA_ONLY` 无节点、无 transition、无事件 route。
-3. 静态元数据逐字段有权威来源；旧模板缺失时查真端（58Server/Map/XML/quest.xml 等）或客户端，不能核对就标记 BLOCKED，禁止猜测。
+3. 静态元数据逐字段有权威来源；旧模板缺失时查真实（58Server/Map/XML/quest.xml 等）或客户端，不能核对就标记 BLOCKED，禁止猜测。
 4. 接受类过渡带 `start-eligible`；状态变更后带 `sync-quest-state`。
 5. `grant-reward` 与选中的有序 reward group 一一对应（GOLD/EXP 用 QUEST_BASE）；多组不扁平化。
 6. 有 drops 的任务 metadata 已写 `<drops>` 段；有 work item 的任务 give/has/remove 齐全且无物品拒绝分支存在。

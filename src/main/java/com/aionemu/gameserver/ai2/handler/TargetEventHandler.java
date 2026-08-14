@@ -127,7 +127,7 @@ public class TargetEventHandler {
 	}
 
 	/**
-	 * 按真端 NPC 数据处理连续寻路失败。
+	 * 按真实 NPC 数据处理连续寻路失败。
 	 * Handles consecutive path-find failures per retail NPC data.
 	 */
 	public static void onPathFindFailed(NpcAI2 npcAI) {

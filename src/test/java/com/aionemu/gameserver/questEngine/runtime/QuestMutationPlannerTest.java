@@ -126,7 +126,7 @@ class QuestMutationPlannerTest {
 			"/aion/data/static_data/quest_definition/quests/2392.xml"))) {
 			definition = QuestDefinitionXmlCompiler.compile(input);
 		}
-		// 真端 quest.xml: quest_2392a/b/c 各 1 个；remove 显式 count=1 与收集数量一致（404c5814b 起 XML 用精确数量而非 ALL）
+		// 真实 quest.xml: quest_2392a/b/c 各 1 个；remove 显式 count=1 与收集数量一致（404c5814b 起 XML 用精确数量而非 ALL）
 		List<QuestAction> cleanup = List.of(
 			new QuestAction.RemoveItem(182204159, 1),
 			new QuestAction.RemoveItem(182204160, 1),
@@ -352,7 +352,7 @@ class QuestMutationPlannerTest {
 
 	@Test
 	void dailyRotatingNpcFactionQuestStartsTheFactionLifecycleOnAccept() throws Exception {
-		// 真端依据:36525 阵营任务每日轮换,daily 标志不可靠;NONE→START 接取即应
+		// 真实依据:36525 阵营任务每日轮换,daily 标志不可靠;NONE→START 接取即应
 		// 启动阵营生命周期,不再按 timeBased 取消。
 		CompiledQuestDefinition definition;
 		try (InputStream input = Objects.requireNonNull(getClass().getResourceAsStream(

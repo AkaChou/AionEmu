@@ -741,7 +741,7 @@ public class EffectController {
 	}
 
 	/**
-	 * 按真端通用驱散规则筛选效果，并应用驱散等级、强度与最大移除数。
+	 * 按真实通用驱散规则筛选效果，并应用驱散等级、强度与最大移除数。
 	 * Filters effects using retail dispel level, power and removal-limit rules.
 	 */
 	public int removeEffectsByDispel(Predicate<Effect> filter, int count, int dispelLevel, int power) {

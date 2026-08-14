@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 80016/80018 MOVIE 事件任务（Sock Hop / Sock It To 'Em）：
  * 活动激活时 onLvlUp 自动接取、活动不激活弃任、收集 15 扣物进 REWARD、MOVIE bonus 随机播放。
- * authority: 旧 handler _80016/_80018.java; quest_data.xml:52874/52899; 真端 quest.xml; client_strings_quest.xml nameId。
+ * authority: 旧 handler _80016/_80018.java; quest_data.xml:52874/52899; 真实 quest.xml; client_strings_quest.xml nameId。
  */
 class QuestMovieEventDefinitionTest {
 

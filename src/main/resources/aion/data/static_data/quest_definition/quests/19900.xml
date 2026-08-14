@@ -70,7 +70,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <!-- 真端按任务工作物品播放使用动画后推进奖励状态。 -->
+    <!-- 真实按任务工作物品播放使用动画后推进奖励状态。 -->
     <transition source="started" target="reward">
       <event>
         <item-play item-id="190080020" animation-millis="1500"/>

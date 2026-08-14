@@ -2,8 +2,8 @@
 <!--
   80016 [Event] Sock Hop (윈터링 양말 찾기, MOVIE 事件任务)
   Runtime: 活动激活时 onLvlUp 自动接取（或与 799763 对话接取）; 收集 182214008 x15 (掉落 217280 100%); CHECK_COLLECTED_ITEMS(39) 扣物进 REWARD; MOVIE bonus 在 REWARD 状态随机播放 movie 103/104。
-  authority: 旧 handler _80016EventSockHop.java; quest_data.xml:52874 (collect 182214008x15/奖励 gold100000+exp50000+188051107+125040047/quest_drop 217280); 真端 quest.xml 80016 块 (max_repeat 1/drop_prob 100); client_strings_quest.xml STR_QUEST_NAME_Q80016 → nameId 1180016。
-  注: handler 的 completeCount==9 Hat Box (188051106) 分支不可达——真端与 quest_data 均 max_repeat=1 且无 extended_rewards（Hat Box 属 80017 语义），已省略。
+  authority: 旧 handler _80016EventSockHop.java; quest_data.xml:52874 (collect 182214008x15/奖励 gold100000+exp50000+188051107+125040047/quest_drop 217280); 真实 quest.xml 80016 块 (max_repeat 1/drop_prob 100); client_strings_quest.xml STR_QUEST_NAME_Q80016 → nameId 1180016。
+  注: handler 的 completeCount==9 Hat Box (188051106) 分支不可达——真实与 quest_data 均 max_repeat=1 且无 extended_rewards（Hat Box 属 80017 语义），已省略。
 -->
 <quest-definition id="80016" version="1">
   <metadata name="[Event] Sock Hop" display-name-id="1180016" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">

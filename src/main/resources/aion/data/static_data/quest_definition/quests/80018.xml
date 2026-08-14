@@ -2,8 +2,8 @@
 <!--
   80018 [Event] Sock It To 'Em (루돌픈 양말 찾기, MOVIE 事件任务)
   Runtime: 活动激活时 onLvlUp 自动接取（或与 799778 对话接取）; 收集 182214010 x15 (掉落 217279 100%); CHECK_COLLECTED_ITEMS(39) 扣物进 REWARD; MOVIE bonus 在 REWARD 状态随机播放 movie 103/104。
-  authority: 旧 handler _80018EventSockItToEm.java; quest_data.xml:52899 (collect 182214010x15/奖励 gold100000+exp50000+188051107+125040047/quest_drop 217279); 真端 quest.xml 80018 块 (max_repeat 1/drop_prob 100); client_strings_quest.xml STR_QUEST_NAME_Q80018 → nameId 1180018。
-  注: handler 的 completeCount==9 Hat Box (188051106) 分支不可达——真端与 quest_data 均 max_repeat=1 且无 extended_rewards（Hat Box 属 80017 语义），已省略。
+  authority: 旧 handler _80018EventSockItToEm.java; quest_data.xml:52899 (collect 182214010x15/奖励 gold100000+exp50000+188051107+125040047/quest_drop 217279); 真实 quest.xml 80018 块 (max_repeat 1/drop_prob 100); client_strings_quest.xml STR_QUEST_NAME_Q80018 → nameId 1180018。
+  注: handler 的 completeCount==9 Hat Box (188051106) 分支不可达——真实与 quest_data 均 max_repeat=1 且无 extended_rewards（Hat Box 属 80017 语义），已省略。
 -->
 <quest-definition id="80018" version="1">
   <metadata name="[Event] Sock It To 'Em" display-name-id="1180018" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">

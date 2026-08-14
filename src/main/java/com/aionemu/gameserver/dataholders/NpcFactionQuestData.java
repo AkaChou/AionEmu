@@ -16,7 +16,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 /**
  * NPC 势力每日任务的星期位数据容器。
  * <p>
- * 每个条目描述某势力每日任务（按 quest id）在星期几可发放，数据源自真端
+ * 每个条目描述某势力每日任务（按 quest id）在星期几可发放，数据源自真实
  * npcfactions_quest.xml（由 docs/quest/tools/retail-alignment/generate_npc_faction_quests.py 生成）。
  * 星期位全 0 表示该任务已禁用；未收录的任务按历史行为视为每天可发放（向后兼容）。
  *

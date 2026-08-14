@@ -67,7 +67,7 @@ public abstract class Creature extends VisibleObject {
 	private int attackedCount;
 	private long spawnTime = System.currentTimeMillis();
 	private int PulledMulti = 1;
-	/** 真端 stat ratio，1000 表示 1.0。 / Retail stat ratio, 1000 = 1.0. */
+	/** 真实 stat ratio，1000 表示 1.0。 / Retail stat ratio, 1000 = 1.0. */
 	private int statRatio = 1000;
 
 	/**
@@ -337,7 +337,7 @@ public abstract class Creature extends VisibleObject {
 				|| isInState(CreatureState.RESTING) || isInState(CreatureState.PRIVATE_SHOP));
 	}
 
-	/** 返回真端战斗属性缩放系数。 / Returns the retail combat-stat scaling ratio. */
+	/** 返回真实战斗属性缩放系数。 / Returns the retail combat-stat scaling ratio. */
 	public float getStatRatio() {
 		int ratio = statRatio;
 		if (this instanceof Player) {
@@ -346,7 +346,7 @@ public abstract class Creature extends VisibleObject {
 		return Math.max(1000, Math.min(65000, ratio)) / 1000f;
 	}
 
-	/** 设置 stat ratio（真端范围为 1000~65000）。 / Sets the retail stat ratio. */
+	/** 设置 stat ratio（真实范围为 1000~65000）。 / Sets the retail stat ratio. */
 	public void setStatRatio(int statRatio) {
 		this.statRatio = Math.max(1000, Math.min(65000, statRatio));
 	}

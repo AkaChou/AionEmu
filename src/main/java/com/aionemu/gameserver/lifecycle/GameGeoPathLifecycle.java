@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
- * 地理与 PATH 生命周期：委托网关初始化地理数据和真端 PATH。
+ * 地理与 PATH 生命周期：委托网关初始化地理数据和真实 PATH。
  * Geo/path lifecycle: initializes geodata and retail path data via the gateway.
  */
 @Component

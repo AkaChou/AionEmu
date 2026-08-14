@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class Quest2110WorkItemRegressionTest {
 	@Test
 	void retailQuestHasNoWorkItemAndAcceptsWithoutGiving182203110() {
-		// 客户端/真端证据:quest.xml 2110 块 work-item 的 itemId=0、count=0,
+		// 客户端/真实证据:quest.xml 2110 块 work-item 的 itemId=0、count=0,
 		// 接取不发 182203110,reward 转移无 has-item/remove-item。
 		CompiledQuestDefinition definition = load();
 		assertEquals(List.of(), definition.definition().metadata().questWorkItems());

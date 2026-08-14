@@ -2,8 +2,8 @@
 <!--
   51019 [活动/每日]巧克力塔的装饰 (Chocolate Tower Decoration, Asmodian)
   Runtime: collect 3 Chocolate Tower Decoration (182215178), report to 202549 for reward; prerequisite quest 51010 finished. Drops are handled by event system at runtime (no npc-id mapping in retail data).
-  运行语义: 收集 3 个巧克力塔装饰(182215178)后向 202549 交付领取奖励; 前置任务 51010 已完成。掉落由活动系统运行时下发(真端无 npc-id 可映射)。
-  真端 authority: 58Server-new/Map/XML/quest.xml (51019 块: min 9/collect quest_51011a x3/work quest_51013a/前置 Q51010:1/奖励 188051769+160010208+160010209); Quest.pak quest_monster.csv 51019,Progress(0),quest_51011a,questItemDropMonster,valentineevent_brownie_solo; client_strings_quest.xml STR_QUEST_NAME_Q51019 → nameId 1150066; legacy event.xml <monster_hunt start_npc_ids="202549" id="51019">; 同族 50019.xml 已迁移先例。
+  运行语义: 收集 3 个巧克力塔装饰(182215178)后向 202549 交付领取奖励; 前置任务 51010 已完成。掉落由活动系统运行时下发(真实无 npc-id 可映射)。
+  真实 authority: 58Server-new/Map/XML/quest.xml (51019 块: min 9/collect quest_51011a x3/work quest_51013a/前置 Q51010:1/奖励 188051769+160010208+160010209); Quest.pak quest_monster.csv 51019,Progress(0),quest_51011a,questItemDropMonster,valentineevent_brownie_solo; client_strings_quest.xml STR_QUEST_NAME_Q51019 → nameId 1150066; legacy event.xml <monster_hunt start_npc_ids="202549" id="51019">; 同族 50019.xml 已迁移先例。
 -->
 <quest-definition id="51019" version="1">
   <metadata name="[活动/每日]巧克力塔的装饰" display-name-id="1150066" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">

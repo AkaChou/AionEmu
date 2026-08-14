@@ -2,7 +2,7 @@
 <!--
   50019 [活动/每日]巧克力塔的装饰 (Chocolate Tower Decoration)
   Runtime: collect 3 Chocolate Tower Decoration (182215172), report to 202549 for reward; prerequisite quest 50010 finished. Drops are handled by event system at runtime (no npc-id mapping in retail data).
-  运行语义: 收集 3 个巧克力塔装饰(182215172)后向 202549 交付领取奖励; 前置任务 50010 已完成。掉落由活动系统运行时下发(真端无 npc-id 可映射)。
+  运行语义: 收集 3 个巧克力塔装饰(182215172)后向 202549 交付领取奖励; 前置任务 50010 已完成。掉落由活动系统运行时下发(真实无 npc-id 可映射)。
 -->
 <quest-definition id="50019" version="1">
   <metadata name="[活动/每日]巧克力塔的装饰" display-name-id="1150062" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">

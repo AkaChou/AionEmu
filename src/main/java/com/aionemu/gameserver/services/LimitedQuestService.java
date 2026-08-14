@@ -45,7 +45,7 @@ public final class LimitedQuestService {
 		return Holder.INSTANCE.requiresAcquisition(questId, maxCount);
 	}
 
-	/** 真端 AI 的 charge_limitedquest：恢复默认数量或直接充满。 */
+	/** 真实 AI 的 charge_limitedquest：恢复默认数量或直接充满。 */
 	public static boolean charge(int questId, boolean chargeMaxCount) {
 		return Holder.INSTANCE.chargeConfigured(questId, chargeMaxCount);
 	}

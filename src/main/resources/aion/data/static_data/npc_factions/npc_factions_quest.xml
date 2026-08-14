@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	生成自真端 /Users/mc/IdeaProjects/58Server/Map/XML/npcfactions_quest.xml（436 条）,星期位缺失记 0。
+	生成自真实 /Users/mc/IdeaProjects/58Server/Map/XML/npcfactions_quest.xml（436 条）,星期位缺失记 0。
 	生成脚本: docs/quest/tools/retail-alignment/generate_npc_faction_quests.py
  -->
 <npc_faction_quests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="npc_factions_quest.xsd">

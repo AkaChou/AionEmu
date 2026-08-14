@@ -287,7 +287,7 @@ public class AttackUtil {
 	}
 
 	/**
-	 * 按真端随机伤害表的 20 个等概率区间对技能伤害做波动。
+	 * 按真实随机伤害表的 20 个等概率区间对技能伤害做波动。
 	 * Randomizes skill damage using the retail table's 20 equally likely ranges.
 	 *
 	 * @param randomDamageType 随机伤害类型 / random damage type

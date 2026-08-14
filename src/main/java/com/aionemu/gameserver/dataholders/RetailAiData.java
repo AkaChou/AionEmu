@@ -9,7 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-/** 真端 NPC AI Pattern 及 NPC 到 Pattern 的映射。 */
+/** 真实 NPC AI Pattern 及 NPC 到 Pattern 的映射。 */
 public final class RetailAiData {
 
 	private final Map<String, Pattern> patterns;

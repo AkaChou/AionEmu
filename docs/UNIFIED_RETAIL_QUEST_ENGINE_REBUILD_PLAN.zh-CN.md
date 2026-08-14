@@ -5,14 +5,14 @@
 
 ## 2026-08-09 批次进展
 
-- 完成 110 个剩余 legacy XML Owner 的全面权威证据审计（客户端 unpak 字符串表/quest.xml + 真端 + 5.8 静态文件）。
+- 完成 110 个剩余 legacy XML Owner 的全面权威证据审计（客户端 unpak 字符串表/quest.xml + 真实 + 5.8 静态文件）。
 - 迁移 34 个任务：24 个 EXECUTABLE（hunt/talk 行为建模，含 80278/80280/80281/80283 monster_hunt、8017x/8020x 事件链）+ 10 个 METADATA_ONLY（无行为任务）。
-- 76 个任务 BLOCKED（客户端/真端/字符串表均无权威证据：90001-90070 Encom 私有 book 任务、80267、39716/49716、50011/50012/51011/51012 收集物品缺失）。
+- 76 个任务 BLOCKED（客户端/真实/字符串表均无权威证据：90001-90070 Encom 私有 book 任务、80267、39716/49716、50011/50012/51011/51012 收集物品缺失）。
 - 关键证据突破：`/Users/mc/PycharmProjects/unpak/`（Aion PAK 解包工具）提供 client_strings_quest.xml（9546 条权威 nameId）与 Quest_unpacked/quest.xml。
 - 能力缺口记录：EXTEND_INVENTORY 奖励 kind 枚举存在但 PlayerQuestRewardPort.supported() fail-closed（50033 受影响，已记录）。
 - legacy_xml_owners: 110 → 76；catalog_entries: 6477 → 6511；typed_owners: 6032 → 6056。
 - 完整 mvn verify：Tests run: 2371, Failures: 0, Errors: 0, BUILD SUCCESS。
-- **2026-08-09 用户指示删除私服任务**：90001-90070（69 个 Encom book 任务）+ 80267 + 39716/49716 共 72 个无客户端/真端记录的私服任务已从 quest_script_data（book.xml/merry_and_green.xml/event.xml）删除，claims 标记 RELEASED。
+- **2026-08-09 用户指示删除私服任务**：90001-90070（69 个 Encom book 任务）+ 80267 + 39716/49716 共 72 个无客户端/真实记录的私服任务已从 quest_script_data（book.xml/merry_and_green.xml/event.xml）删除，claims 标记 RELEASED。
 - 删除后：legacy_xml_owners: 76 → **4**（仅剩 50011/50012/51011/51012 官方任务 BLOCKED）；ids: 6587 → 6515；MISSING_AUTHORITY_METADATA: 148 → 76。
 
 ## 目标
@@ -20,7 +20,7 @@
 生产任务统一使用 XML 定义；类型化 Java DSL 保留为同一不可变 IR 的等价编译与测试入口。中央执行链
 最终替换全部旧 Java/XML Handler。运行时状态继续使用现有 `QuestStatus + quest_vars`，不建立第二套玩家任务状态。
 
-当前阶段以本项目实际加载的 Handler、公共 helper、服务调用和外部任务 writer 为行为基线。真端资料只用于
+当前阶段以本项目实际加载的 Handler、公共 helper、服务调用和外部任务 writer 为行为基线。真实资料只用于
 后续校正任务数据和补充通用能力，不得作为本项目资源路径或运行时依赖。
 
 ## 已确定路线

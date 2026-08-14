@@ -418,7 +418,7 @@ public class StatFunctions {
 		return Rnd.get(Math.min(minDamage, maxDamage), Math.max(minDamage, maxDamage));
 	}
 
-	/** 保留真端随机区间，同时应用 NPC 当前攻击属性修正。 / Preserves the retail roll while applying current attack modifiers. */
+	/** 保留真实随机区间，同时应用 NPC 当前攻击属性修正。 / Preserves the retail roll while applying current attack modifiers. */
 	static float scaleNpcAttackDamage(int rolledDamage, int minDamage, int maxDamage, float currentAttack) {
 		int rangeTotal = minDamage + maxDamage;
 		return rangeTotal == 0 ? rolledDamage : rolledDamage * currentAttack / (rangeTotal * 0.5f);
@@ -544,7 +544,7 @@ public class StatFunctions {
 		return damage * (1 - elementalDefense / elementalDefenseDenominator);
 	}
 
-	/** 应用真端物理防御与对象系数。 / Applies retail physical defense and object coefficient. */
+	/** 应用真实物理防御与对象系数。 / Applies retail physical defense and object coefficient. */
 	public static float applyPhysicalDefenseModifiers(float damage, float physicalDefense, float statRatio) {
 		return (damage - physicalDefense * 0.1f) / Math.max(1f, statRatio);
 	}
@@ -757,7 +757,7 @@ public class StatFunctions {
 	}
 
 	/**
-	 * 真端在玩家攻击带有 limitAttr 的 NPC 时追加一次伤害。
+	 * 真实在玩家攻击带有 limitAttr 的 NPC 时追加一次伤害。
 	 * Retail adds an additional damage portion for a player's matching limit attribute.
 	 */
 	public static float applyLimitAttributeBonus(Creature attacker, Creature target, float finalDamage, float baseDamage) {

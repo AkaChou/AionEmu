@@ -78,7 +78,7 @@ class NpcFactionQuestDataTest {
 			.map(NpcFactionTemplate::getId).collect(Collectors.toSet());
 		Set<Integer> referencedFactionIds = questData.getEntries().stream()
 			.map(NpcFactionQuestData.NpcFactionQuestEntry::getFactionId).collect(Collectors.toSet());
-		// 真端快照还含 10-13（无 AionEmu 模板的开发势力，其任务永远不会被发放），
+		// 真实快照还含 10-13（无 AionEmu 模板的开发势力，其任务永远不会被发放），
 		// 因此只要求快照覆盖 AionEmu 全部已注册势力。
 		assertTrue(referencedFactionIds.containsAll(knownFactionIds));
 	}

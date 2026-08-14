@@ -2,7 +2,7 @@
 <!--
   80008 [Event] Piece Of Cake! (케이크 조각을 찾아라!, 活动任务)
   Runtime: 与 798415 对话接取; START 状态 31 说明窗口 2375; SELECT_REWARD(1009) 扣收集物 182214006 x1 进 REWARD; REWARD 对话发奖完成; 事件不激活时 onLvlUp 弃任。
-  authority: 旧 handler _80008PieceOfCake.java; quest_data.xml:52806 (work item 182214006/rewards gold20000+exp10000+160010100x5+164002019x3/ELYOS/max_repeat 10); 真端 quest.xml (max_repeat_count 10, race pc_light); client_strings_quest.xml → nameId 1180008。
+  authority: 旧 handler _80008PieceOfCake.java; quest_data.xml:52806 (work item 182214006/rewards gold20000+exp10000+160010100x5+164002019x3/ELYOS/max_repeat 10); 真实 quest.xml (max_repeat_count 10, race pc_light); client_strings_quest.xml → nameId 1180008。
   注: handler 的 targetId==0 接取分支（活动 UI 入口）在 typed DSL 用 NPC 1002 接取表达（与 80016 一致）; 1009 加 has-item 条件防 remove-item 事务回滚卡死（任务物品由活动发放, 正常流程恒足）。
 -->
 <quest-definition id="80008" version="1">

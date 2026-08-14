@@ -294,7 +294,7 @@ public class NpcFactions {
 				var catalog = questEngine.questCatalog();
 				PlayerQuestStartEligibilityPort eligibility = new PlayerQuestStartEligibilityPort(playerId -> owner,
 					id -> catalog.findMetadata(id).orElse(null));
-				// 真端按星期位控制势力每日任务发放；当天不可发放的任务不进随机池，空池跳过不发。
+				// 真实按星期位控制势力每日任务发放；当天不可发放的任务不进随机池，空池跳过不发。
 				int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 				List<Integer> quests = canonicalDailyQuestCandidates(catalog, faction.getId(),
 					questEngine::isHaveHandler,

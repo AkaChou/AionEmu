@@ -38,7 +38,7 @@ class NpcFactionQuestMutationPlannerTest {
 
 	@Test
 	void startsFactionLifecycleForDailyQuestOnAccept() {
-		// 真端依据:阵营任务 daily 标志不可靠,接取即启动生命周期,不再按 timeBased 取消。
+		// 真实依据:阵营任务 daily 标志不可靠,接取即启动生命周期,不再按 timeBased 取消。
 		CompiledQuestDefinition definition = compile(true);
 		var start = definition.definition().transitions().get(0);
 

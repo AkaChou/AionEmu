@@ -76,7 +76,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 /**
- * 执行真端 NPC AI Pattern 的通用 AI。
+ * 执行真实 NPC AI Pattern 的通用 AI。
  * General AI that executes retail NPC AI patterns.
  */
 @AIName("retail_pattern")

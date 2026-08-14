@@ -111,12 +111,12 @@ public class NpcStatsTemplate extends StatsTemplate {
 		return retailDamageRange;
 	}
 
-	/** 返回真端 stat ratio（1000 = 1.0）。 / Returns the retail stat ratio. */
+	/** 返回真实 stat ratio（1000 = 1.0）。 / Returns the retail stat ratio. */
 	public int getStatRatio() {
 		return statRatio;
 	}
 
-	/** 设置真端 stat ratio。 / Sets the retail stat ratio. */
+	/** 设置真实 stat ratio。 / Sets the retail stat ratio. */
 	public void setStatRatio(int statRatio) {
 		this.statRatio = statRatio;
 	}

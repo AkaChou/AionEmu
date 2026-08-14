@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 地理与 PATH 网关：初始化地理数据和真端 PATH。
+ * 地理与 PATH 网关：初始化地理数据和真实 PATH。
  * Geo/path gateway: initializes geodata and retail path data.
  */
 @Component

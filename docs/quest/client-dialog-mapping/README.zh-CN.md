@@ -55,16 +55,16 @@ HtmlPages  ID 31 = HTML_PAGE_PACKAGE_LIMITATION
 
 - `PAGE_ACTION_MATCHED`：当前页面的可见动作在编译 IR 中有匹配路由；这不单独证明该动作的响应页面或状态副作用。
 - `TERMINAL_PAGE_REACHED`：服务端到达客户端存在且没有可见动作的终止页。
-- `EVIDENCE_REQUIRED`：服务端页面不在 active 页面索引、可见动作没有协议 ID，或可见动作没有匹配路由；必须结合旧 handler 或真端证据处理。
+- `EVIDENCE_REQUIRED`：服务端页面不在 active 页面索引、可见动作没有协议 ID，或可见动作没有匹配路由；必须结合旧 handler 或真实证据处理。
 - `CLIENT_PAGE_UNREACHED`：带可见动作的 active 客户端页面未由当前 IR 显示，现有路径不足以确定它对应的 NPC 和状态。
 
 `fix_status=FIXED` 表示该路径已经结合客户端 HTML、`origin/history` 旧 handler 和权威任务奖励数据修复；`NOT_NEEDED` 表示当前 IR 满足本阶段页面/动作合同。任务 1913 和 8 个装备兑换任务由测试要求不得存在 `EVIDENCE_REQUIRED` 或 `CLIENT_PAGE_UNREACHED`。
 
 生命周期对齐器不会把“包含接受/报告按钮的页面”直接当作入口。它先按动作符号构建页面图，沿前驱边回溯到唯一链根，并显式处理 `ASK_QUEST_ACCEPT(1007) -> SHOW_ASK_QUEST_ACCEPT_WINDOW(4)` 的协议边。只有客户端链根唯一、当前 NPC 属于旧正式模板合同，且报告前后状态与旧合同一致时，页面错配才可自动修复。应用时每个 XML 都先重验扫描时的 SHA-256，只替换 `start-page` 或 `page` 属性，不重排文档。
 
-截至 2026-08-13，相对迁移基线已按强证据门槛修复 738 条 XML 页面属性：483 条 `NPC_START` 接取页和 255 条 `NPC_REPORT` 报告页，其中报告页包含 19 条 `item_order` 路由。本轮新增的 `report_to_many` 合同建模只在状态时序已由旧 handler 或专用历史测试确认的任务上应用；1913 系列等专用传送任务保留 `START + var0` 中间状态，不套用通用模板的 `REWARD` 时序。当前 `client-lifecycle-alignment.csv` 中 3,570 条路由为 `NOT_NEEDED`，2,367 条为 `EVIDENCE_REQUIRED`；后者主要是缺少唯一旧模板合同、当前 NPC 不属于旧模板，或报告动作/状态时机需要专用 handler 或真端证据。`EVIDENCE_REQUIRED` 是待补证据，不应被描述为已与客户端完全一致，也不应只改页面掩盖状态问题。
+截至 2026-08-13，相对迁移基线已按强证据门槛修复 738 条 XML 页面属性：483 条 `NPC_START` 接取页和 255 条 `NPC_REPORT` 报告页，其中报告页包含 19 条 `item_order` 路由。本轮新增的 `report_to_many` 合同建模只在状态时序已由旧 handler 或专用历史测试确认的任务上应用；1913 系列等专用传送任务保留 `START + var0` 中间状态，不套用通用模板的 `REWARD` 时序。当前 `client-lifecycle-alignment.csv` 中 3,570 条路由为 `NOT_NEEDED`，2,367 条为 `EVIDENCE_REQUIRED`；后者主要是缺少唯一旧模板合同、当前 NPC 不属于旧模板，或报告动作/状态时机需要专用 handler 或真实证据。`EVIDENCE_REQUIRED` 是待补证据，不应被描述为已与客户端完全一致，也不应只改页面掩盖状态问题。
 
-当前 `quest-order-audit.csv` 包含 80,748 条 `PAGE_ACTION_MATCHED`、14,330 条 `TERMINAL_PAGE_REACHED`、8,122 条 `CLIENT_PAGE_UNREACHED` 和 7,877 条 `EVIDENCE_REQUIRED`。前两类只证明当前可达页面和动作合同，不能单独证明所有状态副作用都与真端一致；后两类必须继续补充客户端路径、旧 handler 或真端抓包证据。
+当前 `quest-order-audit.csv` 包含 80,748 条 `PAGE_ACTION_MATCHED`、14,330 条 `TERMINAL_PAGE_REACHED`、8,122 条 `CLIENT_PAGE_UNREACHED` 和 7,877 条 `EVIDENCE_REQUIRED`。前两类只证明当前可达页面和动作合同，不能单独证明所有状态副作用都与真实一致；后两类必须继续补充客户端路径、旧 handler 或真实抓包证据。
 
 客户端的一个可见动作可能对应多个互斥的服务端条件分支。审计表会为每个候选分支输出一行，并用 `candidate_count` 和 `candidate_index` 关联；没有匹配路由时 `candidate_count=0`。候选合同字段包括：
 
@@ -74,7 +74,7 @@ HtmlPages  ID 31 = HTML_PAGE_PACKAGE_LIMITATION
 - `candidate_response`：从 after-commit 中提取的任务页、选择窗口、通用窗口或关闭行为，并保留它们在完整序列中的位置。
 - `candidate_after_commit_sequence`：提交成功后的完整副作用顺序。
 
-候选按完整合同稳定排序，因此生成结果不依赖同义分支的输入枚举顺序；`candidate_index` 是展示序号，不代表运行时调度顺序，调度依据应查看 `candidate_priority` 和条件。这些字段准确描述当前服务端 IR，但不把它自动判定为真端行为；响应页面、状态推进、奖励和其他副作用仍需结合 `origin/history` 旧 handler 或真端抓包证据审定。
+候选按完整合同稳定排序，因此生成结果不依赖同义分支的输入枚举顺序；`candidate_index` 是展示序号，不代表运行时调度顺序，调度依据应查看 `candidate_priority` 和条件。这些字段准确描述当前服务端 IR，但不把它自动判定为真实行为；响应页面、状态推进、奖励和其他副作用仍需结合 `origin/history` 旧 handler 或真实抓包证据审定。
 
 ## 重新生成
 

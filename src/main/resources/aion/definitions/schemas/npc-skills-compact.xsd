@@ -4,7 +4,7 @@
 
   <xs:element name="npc_skill_data">
     <xs:annotation>
-      <xs:documentation xml:lang="zh-CN">真端 NPC 技能的无损紧凑表示。技能组只定义一次，再由 NPC ID 数组引用。</xs:documentation>
+      <xs:documentation xml:lang="zh-CN">真实 NPC 技能的无损紧凑表示。技能组只定义一次，再由 NPC ID 数组引用。</xs:documentation>
       <xs:documentation xml:lang="en">Lossless compact retail NPC skills. A skill group is defined once and referenced by an NPC ID list.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
@@ -46,7 +46,7 @@
   <xs:complexType name="RetailNpcSkill">
     <xs:attribute name="name" type="xs:string">
       <xs:annotation>
-        <xs:documentation xml:lang="zh-CN">真端原始 skill_name；无法映射 ID 时仍保留。</xs:documentation>
+        <xs:documentation xml:lang="zh-CN">真实原始 skill_name；无法映射 ID 时仍保留。</xs:documentation>
         <xs:documentation xml:lang="en">Original retail skill_name, retained even when no ID can be resolved.</xs:documentation>
       </xs:annotation>
     </xs:attribute>

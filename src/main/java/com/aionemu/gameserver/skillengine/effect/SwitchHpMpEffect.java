@@ -27,7 +27,7 @@ public class SwitchHpMpEffect extends EffectTemplate {
 	private int mpDelta;
 
 	/**
-	 * 真端公式：reserved1/2 计算 HP 交换比例，reserved3/4 计算 MP 交换比例。
+	 * 真实公式：reserved1/2 计算 HP 交换比例，reserved3/4 计算 MP 交换比例。
 	 * Retail formula: reserved1/2 calculate the HP rate; reserved3/4 calculate the MP rate.
 	 */
 	@Override

@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 真端 AI 控制的实例级风道开关。
+ * 真实 AI 控制的实例级风道开关。
  * Retail AI-controlled instance-level windstream switches.
  */
 public final class RetailWindstreamEngine {

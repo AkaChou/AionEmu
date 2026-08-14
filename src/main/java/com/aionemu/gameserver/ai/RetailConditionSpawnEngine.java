@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 /**
- * 真端实例级条件变量与条件刷怪。
+ * 真实实例级条件变量与条件刷怪。
  * Retail instance-level condition variables and condition-based spawning.
  */
 public final class RetailConditionSpawnEngine {

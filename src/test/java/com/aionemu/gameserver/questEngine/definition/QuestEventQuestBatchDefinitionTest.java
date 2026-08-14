@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 80008/80009（Cake 系, 收集 1 扣物完成）与 80028/80031/80032（Fayrefolk 系, 对话即完成）:
  * 事件激活自动弃任（level-up + event-active(false) + abandon-quest）、1009/23 进 REWARD。
- * authority: 旧 handler _80008/_80009/_80028/_80031/_80032; quest_data.xml:52806/52815/53016/53037/53042; 真端 quest.xml; client_strings_quest.xml nameId。
+ * authority: 旧 handler _80008/_80009/_80028/_80031/_80032; quest_data.xml:52806/52815/53016/53037/53042; 真实 quest.xml; client_strings_quest.xml nameId。
  */
 class QuestEventQuestBatchDefinitionTest {
 

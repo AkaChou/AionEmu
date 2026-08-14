@@ -113,7 +113,7 @@ public class QuestRandomRewardsData {
 		}
 	}
 
-	/** 池内概率选项（真端 prob 基数 1_000_000）。 Weighted option; retail prob base is 1_000_000. */
+	/** 池内概率选项（真实 prob 基数 1_000_000）。 Weighted option; retail prob base is 1_000_000. */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static class QuestRandomRewardItem {
 

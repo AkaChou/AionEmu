@@ -57,7 +57,7 @@ public enum TeamType {
 		return this.getSubType() == 4;
 	}
 
-	/** 是否为真端区域控制器创建的自动团队。 / Whether created as an auto team by the retail in-area controller. */
+	/** 是否为真实区域控制器创建的自动团队。 / Whether created as an auto team by the retail in-area controller. */
 	public boolean isInArea() {
 		return switch (this) {
 			case IN_AREA_DEFAULT, IN_AREA_TARGET_1, IN_AREA_TARGET_2, IN_AREA_TARGET_3, IN_AREA_TARGET_4 -> true;

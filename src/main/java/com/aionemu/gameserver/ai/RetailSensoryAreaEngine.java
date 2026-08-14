@@ -11,7 +11,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 真端感知区域移动事件分发。
+ * 真实感知区域移动事件分发。
  * Retail sensory-area movement event dispatch.
  */
 public final class RetailSensoryAreaEngine {

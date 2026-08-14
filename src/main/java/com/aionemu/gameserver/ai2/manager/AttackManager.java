@@ -136,7 +136,7 @@ public class AttackManager {
 				return;
 			}
 		}
-		// 保留丢失目标，继续追踪；连续寻路失败由真端 react_to_pathfind_fail 处理。
+		// 保留丢失目标，继续追踪；连续寻路失败由真实 react_to_pathfind_fail 处理。
 		// Keep the lost target and continue tracking; repeated pathfinding failures are handled by retail react_to_pathfind_fail.
 		if (!npc.canSee((Creature) npc.getTarget())) {
 			npcAI.setSubStateIfNot(AISubState.TARGET_LOST);
@@ -186,7 +186,7 @@ public class AttackManager {
 	}
 
 	/**
-	 * 按真端 NPC 数据检查是否停止追击。
+	 * 按真实 NPC 数据检查是否停止追击。
 	 * Checks whether chase should stop according to retail NPC data.
 	 *
 	 * @return NPC AI 实例 / NPC AI instance

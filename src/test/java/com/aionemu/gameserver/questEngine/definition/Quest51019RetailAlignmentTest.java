@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 51019 [活动/每日]巧克力塔的装饰（魔族版）：与已迁移同族 50019 同构（Asmodian 镜像）。
- * nameId 1150066 来自客户端字符串表（STR_QUEST_NAME_Q51019），真端 quest.xml 51019 块
+ * nameId 1150066 来自客户端字符串表（STR_QUEST_NAME_Q51019），真实 quest.xml 51019 块
  * （min 9/collect quest_51011a x3=182215178/work quest_51013a=182215180/前置 Q51010:1/奖励三件套），
  * Quest.pak quest_monster.csv 掉落 valentineevent_brownie_solo，legacy event.xml start_npc_ids=202549。
  */

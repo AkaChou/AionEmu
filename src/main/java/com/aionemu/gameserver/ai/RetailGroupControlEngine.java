@@ -38,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 /**
- * 真端 InAreaObjCtrl 团队区域控制。
+ * 真实 InAreaObjCtrl 团队区域控制。
  * Retail InAreaObjCtrl team area control.
  */
 @Slf4j

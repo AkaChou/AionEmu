@@ -2,7 +2,7 @@
 <!--
   80032 [Event] A Charmed Existence (매혹적인 존재, 活动任务, 对话即完成)
   Runtime: 与 799781 对话接取; START 状态 31 说明窗口 1011 / 1002 窗口 2375; SELECT_REWARD(1009) 或 SELECT_NO_REWARD(23) 直接进 REWARD（无收集物, defaultCloseDialog 0→0）; REWARD 对话发奖完成; 事件不激活时 onLvlUp 弃任。
-  authority: 旧 handler _80032EventMeetTheFayrefolk.java; quest_data.xml:53016 (rewards 169610036x1/ASMODIANS/max_repeat 1); 真端 quest.xml (max_repeat_count 1, race pc_light, reward world_event_add_title_152_14); client_strings_quest.xml → nameId 1180032。
+  authority: 旧 handler _80032EventMeetTheFayrefolk.java; quest_data.xml:53016 (rewards 169610036x1/ASMODIANS/max_repeat 1); 真实 quest.xml (max_repeat_count 1, race pc_light, reward world_event_add_title_152_14); client_strings_quest.xml → nameId 1180032。
 -->
 <quest-definition id="80032" version="1">
   <metadata name="[Event] A Charmed Existence" display-name-id="1180032" min-level="15" max-level="2147483647" category="EVENT" cannot-share="true">

@@ -2,7 +2,7 @@
 
 > 状态：P0/P1 已实施；P2-A 已加入参考 HPA* 的长距离 block/portal 分层寻路，并保留完整低层 A* 回退；等待真实副本压测
 >
-> 范围：地面 NPC 为主，继续使用当前 `PathData` A* 与真端 PATH 数据；飞行/游泳沿用现有空间寻路，后续按相同恢复框架接入。
+> 范围：地面 NPC 为主，继续使用当前 `PathData` A* 与真实 PATH 数据；飞行/游泳沿用现有空间寻路，后续按相同恢复框架接入。
 >
 > 核心目标：怪物遇到坡地、障碍物、拥挤和移动目标时能够持续前进、自动恢复，并且在怪物数量增加时不造成 A*、GEO、移动线程或网络广播失控。
 
@@ -138,7 +138,7 @@ PathData.MapData.searchAStar
 | `PathService` | 异步调度、缓存、地面/空间路径、压缩 | 请求快照、恢复上下文、最终段校验、指标 | 每只 NPC 的 Stuck 状态机 |
 | `NpcMoveController` | 路点消费、追击、移动帧、回家 | 进度检测、恢复阶段、Waypoint Skip、目标槽位 | 扩展 A* 节点、全局队列管理 |
 | `NpcCrowdManager` | 邻居预测、候选选择 | 有序角度、同层候选投影、稳定左右偏好 | 全局 A*、回出生点策略 |
-| `TargetEventHandler` | 真端失败反应 | 只接收“恢复已耗尽”事件 | 每次暂时不动就立即回家 |
+| `TargetEventHandler` | 真实失败反应 | 只接收“恢复已耗尽”事件 | 每次暂时不动就立即回家 |
 
 不新增独立导航线程、不新增第二份地图数据、不引入 ORCA/RVO 库，也不把恢复逻辑塞入 AI Pattern。
 
@@ -648,7 +648,7 @@ target center
 
 - 远程 NPC 的理想距离与技能选择有关，第一阶段不统一处理。
 - 飞行/游泳需要三维槽位和净空校验，沿用空间路径后单独扩展。
-- Boss、大型 NPC 或真端 AI 明确指定位置的 NPC 应允许关闭目标偏移。
+- Boss、大型 NPC 或真实 AI 明确指定位置的 NPC 应允许关闭目标偏移。
 
 ## 13. 最近 PATH 节点与最终兜底
 
@@ -677,7 +677,7 @@ nearestPathPoint(x, y, z, maxRadius, maxVerticalDelta)
 
 ### 13.3 回家与传送
 
-战斗恢复耗尽后继续使用现有真端策略：
+战斗恢复耗尽后继续使用现有真实策略：
 
 - `pull_target`：最多现有次数，然后回家。
 - `abandon_target`：清目标，停止追击。
@@ -1198,7 +1198,7 @@ mvn -q -Dtest=NpcMoveControllerPathTest,NpcCrowdManagerTest,PathServiceCompressi
   750ms 冷却下最多重算 2 次 A*
   恢复请求绕过普通缓存
   仍失败则寻找 2m 内最近同层 PATH 节点
-  5s 后执行真端 pathfind fail reaction
+  5s 后执行真实 pathfind fail reaction
 
 怪群追击：
   保留现有空间桶和速度预测
@@ -1235,7 +1235,7 @@ mvn -q -Dtest=NpcMoveControllerPathTest,NpcCrowdManagerTest,PathServiceCompressi
 - [x] 坡地候选 Z 来自 PATH 同层。
 - [x] 目标槽位稳定且不会频繁重寻。
 - [x] 最近节点不会跨楼层。
-- [x] 回家和真端失败反应保持原语义。
+- [x] 回家和真实失败反应保持原语义。
 
 ### P2-A 完成
 
