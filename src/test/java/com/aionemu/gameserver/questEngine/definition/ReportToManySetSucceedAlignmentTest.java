@@ -67,11 +67,7 @@ class ReportToManySetSucceedAlignmentTest {
 	@Test
 	void completedReportToManyStepsOpenTheRewardSelectionDirectly() throws Exception {
 		for (CompletedQuest quest : List.of(
-			new CompletedQuest(1115, "started", 203072, 10000, 203058),
-			new CompletedQuest(3201, "started", 804601, 10000, 204534),
-			new CompletedQuest(4201, "started", 205233, 10000, 204791),
-			new CompletedQuest(19004, "s1", 203701, 10001, 798500),
-			new CompletedQuest(39000, "started", 800501, 10000, 800500))) {
+			new CompletedQuest(19004, "s1", 203701, 10001, 798500))) {
 			QuestDefinition definition = compile(quest.id());
 			QuestTransition progress = route(definition, quest.source(), quest.stepNpcId(),
 				quest.progressDialogId(), null);

@@ -23,22 +23,75 @@ class XmlQuestFamilyDefinitionTest {
 		CompiledQuestDefinition compiled = definition("1115.xml");
 		List<QuestTransition> transitions = compiled.definition().transitions();
 
-		// The only report step reaches REWARD; the end NPC then opens the reward preview directly.
-		QuestTransition progress = talk(transitions, "started", 203072, 10000, "reward");
+		// 佩拉(203072)推进 var0 到 1，进入中间节点 v1；终端 NPC(203058) 再报告进入 reward。
+		// Pela (203072) advances var0 to 1 into the v1 node; the end NPC (203058) then reports into reward.
+		QuestTransition progress = talk(transitions, "started", 203072, 10000, "v1");
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestSelectionDialog(10)), progress.afterCommit());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(5)),
-			talk(transitions, "reward", 203058, 1009, "reward").afterCommit());
+		// 终端 NPC(203058) 报告：先展示 SELECT5 页，再选奖励推进到 reward。
+		// End NPC (203058) report: shows the SELECT5 page, then the reward selection advances to reward.
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)),
+			talk(transitions, "v1", 203058, 31, "v1").afterCommit());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(5)),
+			talk(transitions, "v1", 203058, 1009, "reward").afterCommit());
 		assertTrue(talk(transitions, "unaccepted", 203072, 31, "unaccepted") != null);
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1352)),
 			talk(transitions, "started", 203072, 31, "started").afterCommit());
 
-		assertEquals(0, varsOf(compiled, "reward").get("var0"));
+		assertEquals(1, varsOf(compiled, "v1").get("var0"));
+		assertEquals(1, varsOf(compiled, "reward").get("var0"));
 		List<QuestAction> rewardActions = completions(transitions, "reward");
 		assertTrue(rewardActions.contains(new QuestAction.GrantReward("GOLD", 0, 680, QuestRewardAmountMode.QUEST_BASE)));
 		assertTrue(rewardActions.contains(new QuestAction.GrantReward("EXP", 0, 2673, QuestRewardAmountMode.QUEST_BASE)));
 		assertTrue(rewardActions.contains(new QuestAction.CompleteQuest(0)));
+	}
+
+	/**
+	 * 同构两步报告链：中间 NPC 的 SETPRO1 推进 var0 到 1（k1 节点），终端 NPC 再报告进入 reward。
+	 * 客户端 select2→SETPRO1 与 select5→SELECT_QUEST_REWARD 分属两个 NPC，中间必须有 var 节点区分阶段。
+	 * Isomorphic two-step report chain: the mid-NPC's SETPRO1 advances var0 to 1 (k1 node),
+	 * the end NPC then reports into reward. The client's select2→SETPRO1 and select5→SELECT_QUEST_REWARD
+	 * belong to two distinct NPCs, so an intermediate var node must separate the phases.
+	 */
+	@Test
+	void twoStepReportChainsKeepAnIntermediateVarNodeBetweenSetproAndReport() throws Exception {
+		for (TwoStepReport quest : List.of(
+			new TwoStepReport(1115, "v1", 203072, 203058),
+			new TwoStepReport(3201, "k1", 804601, 204534),
+			new TwoStepReport(4201, "k1", 205233, 204791),
+			new TwoStepReport(39000, "k1", 800501, 800500),
+			new TwoStepReport(49000, "k1", 800503, 800502))) {
+			CompiledQuestDefinition compiled = definition(quest.id() + ".xml");
+			List<QuestTransition> transitions = compiled.definition().transitions();
+
+			// SETPRO1 推进 var0 到 1，进入中间节点，而非直达 reward。
+			QuestTransition progress = talk(transitions, "started", quest.midNpcId(), 10000, quest.midNode());
+			assertEquals(List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestSelectionDialog(10)), progress.afterCommit(),
+				"quest " + quest.id() + " SETPRO1 protocol");
+
+			// 终端 NPC 报告：先展示 SELECT5 页，再选奖励推进到 reward。
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)),
+				talk(transitions, quest.midNode(), quest.endNpcId(), 31, quest.midNode()).afterCommit(),
+				"quest " + quest.id() + " report page");
+			assertEquals(List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestDialog(5)),
+				talk(transitions, quest.midNode(), quest.endNpcId(), 1009, "reward").afterCommit(),
+				"quest " + quest.id() + " reward transition");
+
+			assertEquals(1, varsOf(compiled, quest.midNode()).get("var0"),
+				"quest " + quest.id() + " mid node var0");
+			assertEquals(1, varsOf(compiled, "reward").get("var0"),
+				"quest " + quest.id() + " reward var0");
+		}
+	}
+
+	private record TwoStepReport(int id, String midNode, int midNpcId, int endNpcId) {
 	}
 
 	@Test
