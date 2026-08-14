@@ -118,8 +118,10 @@ public class LifeStatsRestoreService {
 		@Override
 		public void run() {
 			boolean inWorld = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().isInWorld(lifeStats.getOwner());
+			AIState state = lifeStats.getOwner().getAi2().getState();
+			// FIGHT/FEAR 都算战斗中：逃跑中被追击不应回血
 			if (!inWorld || lifeStats.isAlreadyDead() || lifeStats.isFullyRestoredHp()
-					|| lifeStats.getOwner().getAi2().getState().equals(AIState.FIGHT)) {
+					|| state == AIState.FIGHT || state == AIState.FEAR) {
 				lifeStats.cancelRestoreTask();
 				lifeStats = null;
 			} else {
