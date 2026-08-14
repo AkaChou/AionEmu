@@ -28,9 +28,9 @@ class QuestEventShardRetailAlignmentTest {
 			List.of(new QuestReward("ITEM", 188053253, 1))),
 		50041, new Facts("[Event/Weekly] Death to the Generals", 1800103, 25, false, true, true, "ELYOS",
 			List.of(new QuestReward("ITEM", 166030007, 1))),
-		50073, new Facts("[Event] Attack on the Kumuki Hideout", 1803481, 46, false, false, false, "PC_ALL",
+		50073, new Facts("[Event] Attack on the Kumuki Hideout", 1803481, 46, false, false, true, "PC_ALL",
 			List.of(new QuestReward("EXP", 0, 20000000), new QuestReward("ITEM", 162001063, 5))),
-		50074, new Facts("[Event] Major attack on the Kumuki Hideout", 1803482, 51, false, false, false, "PC_ALL",
+		50074, new Facts("[Event] Major attack on the Kumuki Hideout", 1803482, 51, false, false, true, "PC_ALL",
 			List.of(new QuestReward("EXP", 0, 55000000), new QuestReward("ITEM", 162001063, 5))));
 
 	/** Hunt steps per quest from retail quest.xml progress_info. */

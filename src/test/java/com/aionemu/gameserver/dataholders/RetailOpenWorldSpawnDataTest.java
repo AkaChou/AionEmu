@@ -56,6 +56,12 @@ class RetailOpenWorldSpawnDataTest {
 	}
 
 	@Test
+	void keepsNymphGownAtReachableHeightAndRetailNightWindow() throws Exception {
+		assertTemporarySpawn("210010000_Poeta.xml", 700008,
+			483.675537, 1544.752441, 108.885570);
+	}
+
+	@Test
 	void keepsRetailOpenWorldWalkerBindingsResolvable() throws Exception {
 		SpawnsData2.load(NPCS.toFile(), null);
 
@@ -92,5 +98,27 @@ class RetailOpenWorldSpawnDataTest {
 
 		assertEquals(165, boundSpots);
 		assertEquals(164, boundRoutes.size());
+	}
+
+	private static void assertTemporarySpawn(String fileName, int npcId, double x, double y, double z)
+			throws Exception {
+		var document = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+			.parse(NPCS.resolve(fileName).toFile());
+		var spawns = document.getElementsByTagName("spawn");
+		for (int i = 0; i < spawns.getLength(); i++) {
+			Element spawn = (Element) spawns.item(i);
+			if (!Integer.toString(npcId).equals(spawn.getAttribute("npc_id"))) {
+				continue;
+			}
+			Element window = (Element) spawn.getElementsByTagName("temporary_spawn").item(0);
+			Element spot = (Element) spawn.getElementsByTagName("spot").item(0);
+			assertEquals("19.*.*", window.getAttribute("spawn_time"));
+			assertEquals("8.*.*", window.getAttribute("despawn_time"));
+			assertEquals(x, Double.parseDouble(spot.getAttribute("x")), 0.000001);
+			assertEquals(y, Double.parseDouble(spot.getAttribute("y")), 0.000001);
+			assertEquals(z, Double.parseDouble(spot.getAttribute("z")), 0.000001);
+			return;
+		}
+		throw new AssertionError("missing NPC " + npcId + " in " + fileName);
 	}
 }

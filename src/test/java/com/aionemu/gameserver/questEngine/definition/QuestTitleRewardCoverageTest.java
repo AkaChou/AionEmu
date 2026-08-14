@@ -39,7 +39,7 @@ class QuestTitleRewardCoverageTest {
 		assertEquals(182, ownerIds(expected).size(), "unexpected total title-owner count");
 		assertEquals(expected.regular(), actual.regular(), "regular title rewards differ from server baseline");
 		assertEquals(expected.extended(), actual.extended(), "extended title rewards differ from server baseline");
-		assertEquals(174, expected.regular().keySet().stream()
+		assertEquals(178, expected.regular().keySet().stream()
 			.filter(id -> catalog.findExecutable(id).isPresent()).count(),
 			"unexpected executable regular title-owner count");
 	}
