@@ -59,19 +59,37 @@ class XmlQuestFamilyDefinitionTest {
 	@Test
 	void twoStepReportChainsKeepAnIntermediateVarNodeBetweenSetproAndReport() throws Exception {
 		for (TwoStepReport quest : List.of(
-			new TwoStepReport(1115, "v1", 203072, 203058),
-			new TwoStepReport(3201, "k1", 804601, 204534),
-			new TwoStepReport(4201, "k1", 205233, 204791),
-			new TwoStepReport(39000, "k1", 800501, 800500),
-			new TwoStepReport(49000, "k1", 800503, 800502))) {
+			new TwoStepReport(1115, "v1", 203072, 203058, List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestSelectionDialog(10))),
+			new TwoStepReport(3201, "k1", 804601, 204534, List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestSelectionDialog(10))),
+			new TwoStepReport(4201, "k1", 205233, 204791, List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestSelectionDialog(10))),
+			new TwoStepReport(39000, "k1", 800501, 800500, List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestSelectionDialog(10))),
+			new TwoStepReport(49000, "k1", 800503, 800502, List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestSelectionDialog(10))),
+			// 11109 的 SETPRO1 后关闭对话（零售设计），玩家再去找终端 NPC 报告。
+			// 11109's SETPRO1 closes the dialog (retail design); the player then seeks the end NPC.
+			new TwoStepReport(11109, "k1", 798979, 799075, List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.CloseDialog())),
+			// 1158 的物件 700003 SETPRO1 后关闭对话（捡起印章），玩家再找 203128 交还印章领奖。
+			// 1158's object 700003 SETPRO1 closes the dialog (pick up seal); player then returns it to 203128.
+			new TwoStepReport(1158, "k1", 700003, 203128, List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.CloseDialog())))) {
 			CompiledQuestDefinition compiled = definition(quest.id() + ".xml");
 			List<QuestTransition> transitions = compiled.definition().transitions();
 
 			// SETPRO1 推进 var0 到 1，进入中间节点，而非直达 reward。
 			QuestTransition progress = talk(transitions, "started", quest.midNpcId(), 10000, quest.midNode());
-			assertEquals(List.of(
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestSelectionDialog(10)), progress.afterCommit(),
+			assertEquals(quest.setproAfterCommit(), progress.afterCommit(),
 				"quest " + quest.id() + " SETPRO1 protocol");
 
 			// 终端 NPC 报告：先展示 SELECT5 页，再选奖励推进到 reward。
@@ -91,7 +109,8 @@ class XmlQuestFamilyDefinitionTest {
 		}
 	}
 
-	private record TwoStepReport(int id, String midNode, int midNpcId, int endNpcId) {
+	private record TwoStepReport(int id, String midNode, int midNpcId, int endNpcId,
+			List<AfterCommitAction> setproAfterCommit) {
 	}
 
 	@Test

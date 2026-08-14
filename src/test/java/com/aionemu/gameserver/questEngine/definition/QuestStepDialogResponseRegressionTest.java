@@ -21,7 +21,7 @@ class QuestStepDialogResponseRegressionTest {
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
 			new AfterCommitAction.CloseDialog()), undeliveredArmor.afterCommit());
 
-		QuestTransition villageSeal = route(1158, "started", "reward", 700003, 10000);
+		QuestTransition villageSeal = route(1158, "started", "k1", 700003, 10000);
 		assertTrue(villageSeal.actions().contains(new QuestAction.GiveItem(182200502, 1)));
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
