@@ -193,6 +193,8 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private AISubState waypointReturnSubState = AISubState.NONE;
 	private Future<?> fleeMoveTask;
 	private Future<?> fleeStopTask;
+	private Creature fleeSource;
+	private static final long FLEE_RESELECT_TIMEOUT_MS = 2000L;
 	private AIState fleeReturnState = AIState.IDLE;
 	private AISubState fleeReturnSubState = AISubState.NONE;
 	private Creature deathKiller;
@@ -882,6 +884,14 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	@Override
 	protected void handleMoveArrived() {
+		// FEAR 逃跑：到达目标点立即选下一个逃跑点，而非按固定间隔重选
+		if (getState() == AIState.FEAR && fleeSource != null && !isAlreadyDead()) {
+			if (fleeMoveTask != null) {
+				fleeMoveTask.cancel(false);
+			}
+			moveAwayFrom(fleeSource);
+			return;
+		}
 		if (!waypointMoving) {
 			super.handleMoveArrived();
 			return;
@@ -1360,11 +1370,17 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		getOwner().getMoveController().abortMove();
 		setStateIfNot(AIState.FEAR);
 		setSubStateIfNot(AISubState.NONE);
-		fleeMoveTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> moveAwayFrom(source), 0, 500);
+		fleeSource = source;
+		// 到达目标点后再选下一点（handleMoveArrived），定时器仅作卡死兜底
+		scheduleNextFlee(source, 0);
 		fleeStopTask = GameThreadPoolServices.threadPoolManager().schedule(
 			() -> stopFlee(source, pushState), Math.max(1L, integer(action, "seconds")) * 1000);
-		actionTasks.add(fleeMoveTask);
 		actionTasks.add(fleeStopTask);
+	}
+
+	private void scheduleNextFlee(Creature source, long delayMs) {
+		fleeMoveTask = GameThreadPoolServices.threadPoolManager().schedule(() -> moveAwayFrom(source), delayMs);
+		actionTasks.add(fleeMoveTask);
 	}
 
 	private void moveAwayFrom(Creature source) {
@@ -1382,6 +1398,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			groundZ, true, intentions);
 		getOwner().getMoveController().resetMove();
 		getOwner().getMoveController().moveToPoint(destination.getX(), destination.getY(), destination.getZ());
+		// 兜底：若迟迟未到达目标点（卡死/寻路失败），超时后重选
+		fleeMoveTask = GameThreadPoolServices.threadPoolManager().schedule(() -> moveAwayFrom(source),
+			FLEE_RESELECT_TIMEOUT_MS);
+		actionTasks.add(fleeMoveTask);
 	}
 
 	private synchronized void stopFlee(Creature source, boolean pushState) {
@@ -1391,6 +1411,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		fleeMoveTask.cancel(false);
 		fleeMoveTask = null;
 		fleeStopTask = null;
+		fleeSource = null;
 		if (isAlreadyDead()) {
 			return;
 		}
