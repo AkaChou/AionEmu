@@ -34,8 +34,20 @@ public class Geo extends AdminCommand {
 			return;
 		}
 		if ("z".startsWith(params[0])) {
-			PacketSendUtility.sendMessage(player,
-					"GeoZ: " + GameWorldServices.geoService().getZ(player) + " current Z: " + player.getZ());
+			com.aionemu.gameserver.model.gameobjects.VisibleObject target = player.getTarget();
+			com.aionemu.gameserver.model.gameobjects.Creature subject = target instanceof com.aionemu.gameserver.model.gameobjects.Creature c ? c : player;
+			int worldId = subject.getWorldId();
+			float curZ = subject.getZ();
+			float geoZ = GameWorldServices.geoService().getZ(worldId, subject.getX(), subject.getY(), curZ, 100, subject.getInstanceId());
+			float terrainZ = GameWorldServices.geoService().getTerrainZ(worldId, subject.getX(), subject.getY());
+			float[] pathGround = GameWorldServices.pathService().projectGroundPoint(subject, subject.getX(), subject.getY(), curZ);
+			String spawnInfo = "";
+			if (subject.getSpawn() != null) {
+				spawnInfo = " spawnZ=" + subject.getSpawn().getZ();
+			}
+			PacketSendUtility.sendMessage(player, "[" + subject.getClass().getSimpleName() + "] curZ=" + curZ
+				+ " geoZ=" + geoZ + " terrainZ=" + terrainZ
+				+ " pathGround=" + (pathGround == null ? "null" : pathGround[2]) + spawnInfo);
 			return;
 		}
 		if ("path".startsWith(params[0])) {

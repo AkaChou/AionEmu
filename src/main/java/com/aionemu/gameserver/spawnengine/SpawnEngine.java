@@ -284,7 +284,12 @@ public class SpawnEngine {
 			return spawn.getZ();
 		}
 		float[] point = projector.apply(npc);
-		return point == null ? spawn.getZ() : point[2];
+		if (point != null) {
+			return point[2];
+		}
+		// PATH 节点容差外的出生点（如出生 Z 悬空于树冠上方）：用地形高度兜底，避免出生即悬空
+		float terrainZ = GameWorldServices.geoService().getTerrainZ(npc.getWorldId(), spawn.getX(), spawn.getY());
+		return Float.isNaN(terrainZ) ? spawn.getZ() : terrainZ;
 	}
 
 	/**

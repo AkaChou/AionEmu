@@ -342,12 +342,12 @@ public class WalkManager {
 						float targetX = randomPoint.x;
 						float targetY = randomPoint.y;
 
-						if (!isTargetPointValid(owner, targetX, targetY, owner.getSpawn().getZ())) {
+						if (!isTargetPointValid(owner, targetX, targetY, owner.getZ())) {
 							attempts++;
 							continue;
 						}
 
-						float targetZ = owner.getSpawn().getZ();
+						float targetZ = owner.getZ();
 
 						if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE && !owner.isFlying()) {
 							try {
