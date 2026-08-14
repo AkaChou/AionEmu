@@ -13,6 +13,8 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 征服/供奉活动抽象基类。
  * Abstract base for Conquest/Offering world events.
@@ -23,6 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author Rinzler (Encom)
  * @param <CL> 征服地点类型 / conquest location type
  */
+@Slf4j(topic = "com.aionemu.gameserver.services.conquestservice.ConquestOffering")
 public abstract class ConquestOffering<CL extends ConquestLocation> {
 
 	private boolean started;
@@ -142,7 +145,10 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 			}
 		}
 		if (cb == null) {
-			throw new NullPointerException("No <Conquest/Offering Boss> was found in loc:" + getConquestLocationId());
+			// id 3-14 为限时副本入口通知（术古宝库/火神殿/库穆奇/提亚之眼等），本身无征服 BOSS，
+			// 仅靠 spawn(CONQUEST) 刷出入口 NPC 即可，不应中断活动。
+			log.warn("No <Conquest/Offering Boss> in loc:{} — 入口型活动，跳过 BOSS 初始化", getConquestLocationId());
+			return;
 		}
 		setConquestBoss(cb);
 		addConquestBossListeners();
@@ -181,6 +187,9 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 	 * Removes the death callback from the offering boss AI.
 	 */
 	protected void rmvConquestBossListener() {
+		if (getConquestBoss() == null) {
+			return;
+		}
 		AbstractAI ai = (AbstractAI) getConquestBoss().getAi2();
 		EnhancedObject eo = (EnhancedObject) ai;
 		eo.removeCallback(getConquestBossDestroyListener());
