@@ -40,6 +40,15 @@ public class Spawn {
 	@XmlAttribute(name = "difficult_id")
 	private byte difficultId;
 
+	@XmlAttribute(name = "spawn_page")
+	private Integer spawnPage;
+
+	@XmlAttribute(name = "spawn_page_end")
+	private Integer spawnPageEnd;
+
+	@XmlAttribute(name = "initial_delay")
+	private int initialDelay;
+
 	@XmlElement(name = "temporary_spawn")
 	private TemporarySpawn temporaySpawn;
 
@@ -142,5 +151,25 @@ public class Spawn {
 	/** 返回难度 ID / Returns the difficult id */
 	public byte getDifficultId() {
 		return difficultId;
+	}
+
+	/** 返回出生页起点。 / Returns the first matching spawn page. */
+	public int getSpawnPage() {
+		return spawnPage == null ? 0 : spawnPage;
+	}
+
+	/** 是否声明了出生页限制。 / Whether a spawn page restriction is declared. */
+	public boolean hasSpawnPage() {
+		return spawnPage != null;
+	}
+
+	/** 返回出生页终点（含）。 / Returns the last matching spawn page, inclusive. */
+	public int getSpawnPageEnd() {
+		return spawnPageEnd == null ? getSpawnPage() : spawnPageEnd;
+	}
+
+	/** 返回首次出生延迟（秒）。 / Returns the initial spawn delay in seconds. */
+	public int getInitialDelay() {
+		return initialDelay;
 	}
 }

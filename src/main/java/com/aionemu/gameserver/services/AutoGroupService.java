@@ -659,7 +659,7 @@ public class AutoGroupService {
 					}
 				}
 				if (canCreate) {
-					WorldMapInstance instance = createInstance(agt.getInstanceMapId(), agt.getDifficultId());
+					WorldMapInstance instance = createInstance(agt.getInstanceMapId(), agt.getSpawnPage());
 					autoInstance.onInstanceCreate(instance);
 					autoInstances.put(instance.getInstanceId(), autoInstance);
 					for (Player player : players) {
@@ -866,12 +866,12 @@ public class AutoGroupService {
 		return player.getPortalCooldownList().isPortalUseDisabled(worldId) && useDelay > 0;
 	}
 
-	private WorldMapInstance createInstance(int worldId, byte difficultId) {
+	private WorldMapInstance createInstance(int worldId, byte spawnPage) {
 		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
 		int nextInstanceId = map.getNextInstanceId();
 		WorldMapInstance worldMapInstance = WorldMapInstanceFactory.createWorldMapInstance(map, nextInstanceId);
 		map.addInstance(nextInstanceId, worldMapInstance);
-		SpawnEngine.spawnInstance(worldId, worldMapInstance.getInstanceId(), difficultId);
+		SpawnEngine.spawnInstance(worldId, worldMapInstance.getInstanceId(), 0, spawnPage, 0);
 		GameEngineServices.instanceEngine().onInstanceCreate(worldMapInstance);
 		return worldMapInstance;
 	}

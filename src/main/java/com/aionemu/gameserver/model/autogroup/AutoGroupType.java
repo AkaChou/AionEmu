@@ -47,13 +47,13 @@ public enum AutoGroupType {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	ARENA_OF_CHAOS_46_60_2(22, 110000, 2, 2) {
+	ARENA_OF_CHAOS_46_60_2(22, 110000, 2, 11) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	ARENA_OF_CHAOS_46_60_3(23, 110000, 2, 3) {
+	ARENA_OF_CHAOS_46_60_3(23, 110000, 2, 21) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
@@ -65,13 +65,13 @@ public enum AutoGroupType {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	ARENA_OF_DISCIPLINE_46_60_2(25, 110000, 2, 2) {
+	ARENA_OF_DISCIPLINE_46_60_2(25, 110000, 2, 11) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	ARENA_OF_DISCIPLINE_46_60_3(26, 110000, 2, 3) {
+	ARENA_OF_DISCIPLINE_46_60_3(26, 110000, 2, 21) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
@@ -83,13 +83,13 @@ public enum AutoGroupType {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	CHAOS_TRAINING_GROUNDS_46_60_2(28, 110000, 2, 2) {
+	CHAOS_TRAINING_GROUNDS_46_60_2(28, 110000, 2, 11) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	CHAOS_TRAINING_GROUNDS_46_60_3(29, 110000, 2, 3) {
+	CHAOS_TRAINING_GROUNDS_46_60_3(29, 110000, 2, 21) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
@@ -101,13 +101,13 @@ public enum AutoGroupType {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	DISCIPLINE_TRAINING_GROUNDS_46_60_2(31, 110000, 2, 2) {
+	DISCIPLINE_TRAINING_GROUNDS_46_60_2(31, 110000, 2, 11) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	DISCIPLINE_TRAINING_GROUNDS_46_60_3(32, 110000, 2, 3) {
+	DISCIPLINE_TRAINING_GROUNDS_46_60_3(32, 110000, 2, 21) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
@@ -119,19 +119,19 @@ public enum AutoGroupType {
 			return new AutoHarmonyInstance();
 		}
 	},
-	ARENA_OF_HARMONY_46_60_2(34, 110000, 4, 2) {
+	ARENA_OF_HARMONY_46_60_2(34, 110000, 4, 11) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoHarmonyInstance();
 		}
 	},
-	ARENA_OF_HARMONY_46_60_3(35, 110000, 4, 3) {
+	ARENA_OF_HARMONY_46_60_3(35, 110000, 4, 21) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoHarmonyInstance();
 		}
 	},
-	ARENA_OF_GLORY_46_60_1(38, 110000, 4) {
+	ARENA_OF_GLORY_46_60_1(38, 110000, 4, 21) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
@@ -143,13 +143,13 @@ public enum AutoGroupType {
 			return new AutoHarmonyInstance();
 		}
 	},
-	HARMONY_TRAINING_GROUNDS_46_60_2(102, 110000, 4, 2) {
+	HARMONY_TRAINING_GROUNDS_46_60_2(102, 110000, 4, 11) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoHarmonyInstance();
 		}
 	},
-	HARMONY_TRAINING_GROUNDS_46_60_3(103, 110000, 4, 3) {
+	HARMONY_TRAINING_GROUNDS_46_60_3(103, 110000, 4, 21) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoHarmonyInstance();
@@ -161,13 +161,13 @@ public enum AutoGroupType {
 			return new AutoHarmonyInstance();
 		}
 	},
-	UNITY_TRAINING_GROUNDS_46_60_2(105, 110000, 4, 2) {
+	UNITY_TRAINING_GROUNDS_46_60_2(105, 110000, 4, 11) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoHarmonyInstance();
 		}
 	},
-	UNITY_TRAINING_GROUNDS_46_60_3(106, 110000, 4, 3) {
+	UNITY_TRAINING_GROUNDS_46_60_3(106, 110000, 4, 21) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoHarmonyInstance();
@@ -175,49 +175,49 @@ public enum AutoGroupType {
 	},
 
 	// 竞技场 PVP 61–65 / ARENA PVP 61-65
-	ARENA_OF_CHAOS_61_65_1(39, 110000, 2, 1) {
+	ARENA_OF_CHAOS_61_65_1(39, 110000, 2, 31) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	ARENA_OF_DISCIPLINE_61_65_1(40, 110000, 2, 1) {
+	ARENA_OF_DISCIPLINE_61_65_1(40, 110000, 2, 31) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	ARENA_OF_HARMONY_61_65_1(41, 110000, 4, 1) {
+	ARENA_OF_HARMONY_61_65_1(41, 110000, 4, 31) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoHarmonyInstance();
 		}
 	},
-	ARENA_OF_GLORY_61_65_1(42, 110000, 4) {
+	ARENA_OF_GLORY_61_65_1(42, 110000, 4, 31) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	CHAOS_TRAINING_GROUNDS_61_65_1(43, 110000, 2, 1) {
+	CHAOS_TRAINING_GROUNDS_61_65_1(43, 110000, 2, 31) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	DISCIPLINE_TRAINING_GROUNDS_61_65_1(44, 110000, 2, 1) {
+	DISCIPLINE_TRAINING_GROUNDS_61_65_1(44, 110000, 2, 31) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	HARMONY_TRAINING_GROUNDS_61_65_1(45, 110000, 4, 1) {
+	HARMONY_TRAINING_GROUNDS_61_65_1(45, 110000, 4, 31) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoHarmonyInstance();
 		}
 	},
-	UNITY_TRAINING_GROUNDS_61_65_1(46, 110000, 4, 1) {
+	UNITY_TRAINING_GROUNDS_61_65_1(46, 110000, 4, 31) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoHarmonyInstance();
@@ -225,49 +225,49 @@ public enum AutoGroupType {
 	},
 
 	// 竞技场 PVP 66–83 / ARENA PVP 66-83
-	ARENA_OF_CHAOS_66_83_1(113, 110000, 2, 1) {
+	ARENA_OF_CHAOS_66_83_1(113, 110000, 2, 41) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	ARENA_OF_DISCIPLINE_66_83_1(114, 110000, 2, 1) {
+	ARENA_OF_DISCIPLINE_66_83_1(114, 110000, 2, 41) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	ARENA_OF_HARMONY_66_83_1(115, 110000, 4, 1) {
+	ARENA_OF_HARMONY_66_83_1(115, 110000, 4, 41) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoHarmonyInstance();
 		}
 	},
-	ARENA_OF_GLORY_66_83_1(116, 110000, 4) {
+	ARENA_OF_GLORY_66_83_1(116, 110000, 4, 41) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	CHAOS_TRAINING_GROUNDS_66_83_1(117, 110000, 2, 1) {
+	CHAOS_TRAINING_GROUNDS_66_83_1(117, 110000, 2, 41) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	DISCIPLINE_TRAINING_GROUNDS_66_83_1(118, 110000, 2, 1) {
+	DISCIPLINE_TRAINING_GROUNDS_66_83_1(118, 110000, 2, 41) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoPvPFFAInstance();
 		}
 	},
-	HARMONY_TRAINING_GROUNDS_66_83_1(119, 110000, 4, 1) {
+	HARMONY_TRAINING_GROUNDS_66_83_1(119, 110000, 4, 41) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoHarmonyInstance();
 		}
 	},
-	UNITY_TRAINING_GROUNDS_66_83_1(120, 110000, 4, 1) {
+	UNITY_TRAINING_GROUNDS_66_83_1(120, 110000, 4, 41) {
 		@Override
 		AutoInstance newAutoInstance() {
 			return new AutoHarmonyInstance();
@@ -773,12 +773,12 @@ public enum AutoGroupType {
 	@Getter
 	private byte playerSize;
 	@Getter
-	private byte difficultId;
+	private byte spawnPage;
 	private AutoGroup template;
 
-	private AutoGroupType(int instanceMaskId, int time, int playerSize, int difficultId) {
+	private AutoGroupType(int instanceMaskId, int time, int playerSize, int spawnPage) {
 		this(instanceMaskId, time, playerSize);
-		this.difficultId = (byte) difficultId;
+		this.spawnPage = (byte) spawnPage;
 	}
 
 	private AutoGroupType(int instanceMaskId, int time, int playerSize) {

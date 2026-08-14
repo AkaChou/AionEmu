@@ -9,6 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import javax.xml.XMLConstants;
+import javax.xml.validation.SchemaFactory;
+
 import jakarta.xml.bind.JAXBContext;
 
 import org.junit.jupiter.api.Test;
@@ -35,6 +38,29 @@ class SpawnsData2IndexTest {
 		assertEquals(102, spawns.get(0).getNpcId());
 		assertEquals(101, spawns.get(1).getNpcId());
 		assertTrue(data.getSpawnsForNpc(100, 101).isCustom());
+	}
+
+	@Test
+	void keepsSpawnPageAndInitialDelayVariants() throws Exception {
+		SpawnsData2 data = unmarshal("""
+			<spawns>
+				<spawn_map map_id="100">
+					<spawn npc_id="101" spawn_page="1" spawn_page_end="41" initial_delay="125"/>
+					<spawn npc_id="101" spawn_page="11" initial_delay="130"/>
+					<spawn npc_id="102" initial_delay="420"/>
+					<spawn npc_id="102" initial_delay="720"/>
+				</spawn_map>
+			</spawns>
+			""");
+
+		List<SpawnGroup2> spawns = data.getSpawnsByWorldId(100);
+		assertEquals(4, spawns.size());
+		assertEquals(List.of(1, 11), spawns.stream().filter(spawn -> spawn.getNpcId() == 101)
+				.map(SpawnGroup2::getSpawnPage).toList());
+		assertEquals(41, spawns.stream().filter(spawn -> spawn.getNpcId() == 101).findFirst().orElseThrow()
+				.getSpawnPageEnd());
+		assertEquals(List.of(420, 720), spawns.stream().filter(spawn -> spawn.getNpcId() == 102)
+				.map(SpawnGroup2::getInitialDelay).toList());
 	}
 
 	@Test
@@ -66,6 +92,22 @@ class SpawnsData2IndexTest {
 
 		assertEquals(101, data.getSpawnsByWorldId(100).getFirst().getNpcId());
 		assertEquals(202, data.getSpawnsByWorldId(200).getFirst().getNpcId());
+	}
+
+	@Test
+	void loadsGeneratedSpawnMetadataThroughSchema() throws Exception {
+		Path spawnDirectory = Path.of("src/main/resources/aion/data/static_data/spawns");
+		var schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+				.newSchema(spawnDirectory.resolve("spawns.xsd").toFile());
+
+		SpawnsData2 data = SpawnsData2.load(spawnDirectory.toFile(), schema);
+
+		SpawnGroup2 sharedArenaSpawn = data.getSpawnsByWorldId(300350000).stream()
+				.filter(spawn -> spawn.getNpcId() == 207037 && spawn.getSpawnPage() != 0).findFirst().orElseThrow();
+		assertEquals(1, sharedArenaSpawn.getSpawnPage());
+		assertEquals(41, sharedArenaSpawn.getSpawnPageEnd());
+		assertEquals(List.of(420, 720), data.getSpawnsByWorldId(301310000).stream()
+				.filter(spawn -> spawn.getNpcId() == 234751).map(SpawnGroup2::getInitialDelay).toList());
 	}
 
 	private static SpawnsData2 unmarshal(String xml) throws Exception {

@@ -6,6 +6,7 @@ import com.aionemu.gameserver.ai.RetailNpcPartyEngine;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
@@ -45,6 +46,8 @@ import com.aionemu.gameserver.model.templates.spawns.zorshivdredgionspawns.Zorsh
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.world.World;
+import com.aionemu.gameserver.world.WorldMap;
+import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
@@ -407,14 +410,30 @@ public class SpawnEngine {
 	 * @param ownerId 房屋所有者 ID / house owner id
 	 */
 	public static void spawnInstance(int worldId, int instanceId, int difficultId, int ownerId) {
+		spawnInstance(worldId, instanceId, difficultId, 0, ownerId);
+	}
+
+	/**
+	 * 刷出指定世界实例，并独立匹配难度与真端出生页。
+	 * Spawns a world instance while matching difficulty and retail spawn page independently.
+	 *
+	 * @param worldId 世界 ID / world id
+	 * @param instanceId 实例 ID / instance id
+	 * @param difficultId 难度 ID / difficulty id
+	 * @param spawnPage 真端出生页 / retail spawn page
+	 * @param ownerId 房屋所有者 ID / house owner id
+	 */
+	public static void spawnInstance(int worldId, int instanceId, int difficultId, int spawnPage, int ownerId) {
 		List<SpawnGroup2> worldSpawns = DataManager.SPAWNS_DATA2.getSpawnsByWorldId(worldId);
 		WorldMapTemplate worldTemplate = DataManager.WORLD_MAPS_DATA.getTemplate(worldId);
+		WorldMap worldMap = GameWorldBootstrapServices.world().getWorldMap(worldId);
+		WorldMapInstance instance = worldMap.getWorldMapInstanceById(instanceId);
+		long instanceCreatedAt = System.currentTimeMillis();
 		StaticDoorSpawnManager.spawnTemplate(worldId, instanceId);
 		int spawnedCounter = 0;
 		if (worldSpawns != null) {
 			for (SpawnGroup2 spawn : worldSpawns) {
-				int difficult = spawn.getDifficultId();
-				if (difficult != 0 && difficult != difficultId) {
+				if (!matchesInstance(spawn, difficultId, spawnPage)) {
 					continue;
 				}
 
@@ -425,39 +444,70 @@ public class SpawnEngine {
 					continue;
 				}
 
-				if (spawn.getHandlerType() != null) {
-					switch (spawn.getHandlerType()) {
-					case RIFT:
-					case VOLATILE_RIFT:
-						RiftManager.addRiftSpawnTemplate(spawn);
-						break;
-					case STATIC:
-						StaticObjectSpawnManager.spawnTemplate(spawn, instanceId);
-					default:
-						break;
-					}
-				} else if (spawn.hasPool() && checkPool(spawn)) {
-					for (int i = 0; i < spawn.getPool(); i++) {
-						SpawnTemplate template = spawn.getRndTemplate(instanceId);
-						if (template == null)
-							break;
-						spawnObject(template, instanceId);
-						spawnedCounter++;
+				if (spawn.getInitialDelay() > 0) {
+					long deadline = initialSpawnDeadline(spawn, instanceCreatedAt);
+					long now = System.currentTimeMillis();
+					if (deadline <= now) {
+						spawnedCounter += spawnGroup(spawn, instanceId);
+					} else {
+						GameThreadPoolServices.threadPoolManager().schedule(() -> {
+							if (worldMap.getWorldMapInstanceById(instanceId) == instance) {
+								spawnGroup(spawn, instanceId);
+							}
+						}, deadline - now);
 					}
 				} else {
-					for (SpawnTemplate template : spawn.getSpawnTemplates()) {
-						spawnObject(template, instanceId);
-						spawnedCounter++;
-					}
+					spawnedCounter += spawnGroup(spawn, instanceId);
 				}
 			}
 			WalkerFormator.organizeAndSpawn(worldId, instanceId);
 		}
 		log.info(I18n.get("log.1a270a579228", worldId, instanceId, spawnedCounter));
 		GameHousingServices.housingService().spawnHouses(worldId, instanceId, ownerId);
-		var instance = GameWorldBootstrapServices.world().getWorldMap(worldId).getWorldMapInstanceById(instanceId);
 		RetailNpcPartyEngine.initialize(instance);
 		RetailConditionSpawnEngine.initialize(instance);
+	}
+
+	static boolean matchesInstance(SpawnGroup2 spawn, int difficultId, int spawnPage) {
+		boolean matchesDifficulty = spawn.getDifficultId() == 0 || spawn.getDifficultId() == difficultId;
+		boolean matchesPage = !spawn.hasSpawnPage()
+				|| spawnPage >= spawn.getSpawnPage() && spawnPage <= spawn.getSpawnPageEnd();
+		return matchesDifficulty && matchesPage;
+	}
+
+	static long initialSpawnDeadline(SpawnGroup2 spawn, long instanceCreatedAt) {
+		return instanceCreatedAt + spawn.getInitialDelay() * 1000L;
+	}
+
+	private static int spawnGroup(SpawnGroup2 spawn, int instanceId) {
+		if (spawn.getHandlerType() != null) {
+			switch (spawn.getHandlerType()) {
+				case RIFT:
+				case VOLATILE_RIFT:
+					RiftManager.addRiftSpawnTemplate(spawn);
+					break;
+				case STATIC:
+					StaticObjectSpawnManager.spawnTemplate(spawn, instanceId);
+				default:
+					break;
+			}
+			return 0;
+		}
+		if (spawn.hasPool() && checkPool(spawn)) {
+			int spawned = 0;
+			for (int i = 0; i < spawn.getPool(); i++) {
+				SpawnTemplate template = spawn.getRndTemplate(instanceId);
+				if (template == null)
+					break;
+				spawnObject(template, instanceId);
+				spawned++;
+			}
+			return spawned;
+		}
+		for (SpawnTemplate template : spawn.getSpawnTemplates()) {
+			spawnObject(template, instanceId);
+		}
+		return spawn.getSpawnTemplates().size();
 	}
 
 	/**

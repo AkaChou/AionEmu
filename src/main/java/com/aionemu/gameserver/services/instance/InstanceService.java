@@ -97,7 +97,7 @@ public class InstanceService {
 		WorldMapInstance worldMapInstance = WorldMapInstanceFactory.createWorldMapInstance(map, nextInstanceId,
 				ownerId);
 		map.addInstance(nextInstanceId, worldMapInstance);
-		SpawnEngine.spawnInstance(worldId, worldMapInstance.getInstanceId(), (byte) 0, ownerId);
+		SpawnEngine.spawnInstance(worldId, worldMapInstance.getInstanceId(), 0, 0, ownerId);
 		GameEngineServices.instanceEngine().onInstanceCreate(worldMapInstance);
 		if (map.isInstanceType()) {
 			startInstanceChecker(worldMapInstance);

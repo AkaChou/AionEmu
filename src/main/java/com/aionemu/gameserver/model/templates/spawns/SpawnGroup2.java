@@ -67,6 +67,10 @@ public class SpawnGroup2 extends AbstractLockManager {
 	private int npcId;
 	private int pool;
 	private byte difficultId;
+	private int spawnPage;
+	private int spawnPageEnd;
+	private boolean spawnPageRestricted;
+	private int initialDelay;
 	private TemporarySpawn temporarySpawn;
 	private int respawnTime;
 	private SpawnHandlerType handlerType;
@@ -336,6 +340,10 @@ public class SpawnGroup2 extends AbstractLockManager {
 		npcId = spawn.getNpcId();
 		handlerType = spawn.getSpawnHandlerType();
 		difficultId = spawn.getDifficultId();
+		spawnPage = spawn.getSpawnPage();
+		spawnPageEnd = spawn.getSpawnPageEnd();
+		spawnPageRestricted = spawn.hasSpawnPage();
+		initialDelay = spawn.getInitialDelay();
 		if (hasPool()) {
 			poolUsedTemplates = new HashMap<Integer, HashMap<SpawnTemplate, Boolean>>();
 		}
@@ -479,5 +487,25 @@ public class SpawnGroup2 extends AbstractLockManager {
 	/** 返回难度 ID / Returns the difficult id */
 	public byte getDifficultId() {
 		return difficultId;
+	}
+
+	/** 返回出生页起点。 / Returns the first matching spawn page. */
+	public int getSpawnPage() {
+		return spawnPage;
+	}
+
+	/** 是否声明了出生页限制。 / Whether a spawn page restriction is declared. */
+	public boolean hasSpawnPage() {
+		return spawnPageRestricted;
+	}
+
+	/** 返回出生页终点（含）。 / Returns the last matching spawn page, inclusive. */
+	public int getSpawnPageEnd() {
+		return spawnPageEnd;
+	}
+
+	/** 返回首次出生延迟（秒）。 / Returns the initial spawn delay in seconds. */
+	public int getInitialDelay() {
+		return initialDelay;
 	}
 }

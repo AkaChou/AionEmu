@@ -84,6 +84,7 @@ public class SpawnsData2 {
 	protected List<SpawnMap> templates;
 
 	private IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>>();
+	private IntObjectHashMap<Map<Integer, List<SpawnGroup2>>> normalSpawnVariants = new IntObjectHashMap<Map<Integer, List<SpawnGroup2>>>();
 	private IntObjectHashMap<List<SpawnGroup2>> siegeSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
 	private IntObjectHashMap<List<SpawnGroup2>> baseSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
 	private IntObjectHashMap<List<SpawnGroup2>> vortexSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
@@ -117,6 +118,15 @@ public class SpawnsData2 {
 		return worldSpawns;
 	}
 
+	private Map<Integer, List<SpawnGroup2>> normalSpawnVariantsForWorld(int mapId) {
+		Map<Integer, List<SpawnGroup2>> variants = normalSpawnVariants.get(mapId);
+		if (variants == null) {
+			variants = new LinkedHashMap<Integer, List<SpawnGroup2>>();
+			normalSpawnVariants.put(mapId, variants);
+		}
+		return variants;
+	}
+
 	private List<SpawnGroup2> spawnGroupsFor(IntObjectHashMap<List<SpawnGroup2>> spawnMaps, int id) {
 		List<SpawnGroup2> spawnGroups = spawnMaps.get(id);
 		if (spawnGroups == null) {
@@ -139,16 +149,20 @@ public class SpawnsData2 {
 			for (SpawnMap spawnMap : templates) {
 				int mapId = spawnMap.getMapId();
 				Map<Integer, SimpleEntry<SpawnGroup2, Spawn>> worldSpawns = spawnIndexForWorld(mapId);
+				Map<Integer, List<SpawnGroup2>> normalSpawns = normalSpawnVariantsForWorld(mapId);
 				for (Spawn spawn : spawnMap.getSpawns()) {
 					if (spawn.isCustom()) {
 						if (worldSpawns.containsKey(spawn.getNpcId())) {
 							worldSpawns.remove(spawn.getNpcId());
 						}
+						normalSpawns.remove(spawn.getNpcId());
 						customs.put(spawn.getNpcId(), spawn);
 					} else if (customs.containsKey(spawn.getNpcId())) {
 						continue;
 					}
-					worldSpawns.put(spawn.getNpcId(), new SimpleEntry(new SpawnGroup2(mapId, spawn), spawn));
+					SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn);
+					worldSpawns.put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
+					normalSpawns.computeIfAbsent(spawn.getNpcId(), ignored -> new ArrayList<>()).add(spawnGroup);
 				}
 				for (SiegeSpawn SiegeSpawn : spawnMap.getSiegeSpawns()) {
 					int siegeId = SiegeSpawn.getSiegeId();
@@ -693,8 +707,15 @@ public class SpawnsData2 {
 			return Collections.emptyList();
 		}
 		List<SpawnGroup2> result = new ArrayList<SpawnGroup2>();
+		Map<Integer, List<SpawnGroup2>> normalSpawns = normalSpawnVariants.get(worldId);
 		for (SimpleEntry<SpawnGroup2, Spawn> spawnEntry : allSpawnMaps.get(worldId).values()) {
-			result.add(spawnEntry.getKey());
+			List<SpawnGroup2> variants = normalSpawns == null ? null : normalSpawns.get(spawnEntry.getValue().getNpcId());
+			if (variants != null && variants.contains(spawnEntry.getKey()) && variants.stream()
+					.anyMatch(spawn -> spawn.hasSpawnPage() || spawn.getInitialDelay() != 0)) {
+				result.addAll(variants);
+			} else {
+				result.add(spawnEntry.getKey());
+			}
 		}
 		return result;
 	}
