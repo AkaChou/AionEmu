@@ -32,7 +32,7 @@ class ConsoleStaticDataProgressReporterTest {
 	}
 
 	@Test
-	void enabledReporterPrintsOneBlockProgressLinePerSection() {
+	void enabledReporterPrintsSeparatorAndSummaryWithoutProgressBars() {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		ConsoleStaticDataProgressReporter reporter = new ConsoleStaticDataProgressReporter(
 			new PrintStream(bytes, true, StandardCharsets.UTF_8),
@@ -50,15 +50,14 @@ class ConsoleStaticDataProgressReporterTest {
 
 		String output = bytes.toString(StandardCharsets.UTF_8);
 		assertTrue(output.startsWith("────────────────────────────────────────────────────────\n" + I18n.get("console.static_data.loading") + "\n"));
-		assertTrue(output.contains("\r█████████░░░░░░░░░░░ | \"ItemData\" | 41/87"));
-		assertTrue(output.contains("\r████████████████████ | \"ItemData\" | 87/87\n"));
-		assertTrue(output.contains("\r████████████████████ | \"NpcDropData\" | 5342/5342\n"));
 		assertTrue(output.contains(I18n.get("console.static_data.loaded", 1234) + "\n"));
-		assertFalse(output.contains("\"ItemData\" | 0/87"));
-		assertFalse(output.contains("\"NpcDropData\" | 0/5342"));
-		assertFalse(output.contains("%"));
-		assertFalse(output.contains("[1/3]"));
-		assertEquals(5, output.chars().filter(character -> character == '\n').count());
+		// 进度条已移除：不含方块字符、回车覆盖或分段进度行。 / Progress bar removed: no block chars, carriage returns, or section progress lines.
+		assertFalse(output.contains("█"));
+		assertFalse(output.contains("░"));
+		assertFalse(output.contains("\r"));
+		assertFalse(output.contains("\"ItemData\""));
+		assertFalse(output.contains("\"NpcDropData\""));
+		assertEquals(3, output.chars().filter(character -> character == '\n').count());
 	}
 
 	@Test
@@ -97,7 +96,7 @@ class ConsoleStaticDataProgressReporterTest {
 	}
 
 	@Test
-	void currentConsoleReporterWritesProgressWhenEntryCountsAreEnabled() {
+	void currentConsoleReporterWritesSummaryWhenEntryCountsAreEnabled() {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		System.setOut(new PrintStream(bytes, true, StandardCharsets.UTF_8));
 
@@ -109,7 +108,12 @@ class ConsoleStaticDataProgressReporterTest {
 		reporter.sectionFinished(1, 1, "ItemData", 1);
 		reporter.finish(1, 5);
 
-		assertTrue(bytes.toString(StandardCharsets.UTF_8).contains("\r████████████████████ | \"ItemData\" | 1/1"));
+		String output = bytes.toString(StandardCharsets.UTF_8);
+		assertTrue(output.contains(I18n.get("console.static_data.loading")));
+		assertTrue(output.contains(I18n.get("console.static_data.loaded", 5)));
+		// 进度条已移除：不含方块字符或回车覆盖。 / Progress bar removed: no block chars or carriage returns.
+		assertFalse(output.contains("█"));
+		assertFalse(output.contains("\r"));
 	}
 
 	@Test

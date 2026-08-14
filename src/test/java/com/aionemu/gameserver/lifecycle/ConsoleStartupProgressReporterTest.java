@@ -31,7 +31,7 @@ class ConsoleStartupProgressReporterTest {
 	}
 
 	@Test
-	void enabledReporterPrintsYarnStyleStepBarsWithCurrentAndTotal() {
+	void enabledReporterPrintsSectionSeparatorAndSummaryWithoutProgressBars() {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		ConsoleStartupProgressReporter reporter = new ConsoleStartupProgressReporter(
 			new PrintStream(bytes, true, StandardCharsets.UTF_8),
@@ -47,13 +47,14 @@ class ConsoleStartupProgressReporterTest {
 
 		String output = bytes.toString(StandardCharsets.UTF_8);
 		assertTrue(output.startsWith("────────────────────────────────────────────────────────\nLoading game world..\n"));
-		assertTrue(output.contains("\r████████████████████ | \"IDFactory\" | 1/1\n"));
-		assertTrue(output.contains("\r████████████████████ | \"Zone\" | 1/1\n"));
 		assertTrue(output.contains("Loaded game world in 123 ms\n"));
-		assertFalse(output.contains("\"IDFactory\" | 0/1"));
-		assertFalse(output.contains("\"Zone\" | 0/1"));
-		assertFalse(output.contains("%"));
-		assertEquals(5, output.chars().filter(character -> character == '\n').count());
+		// 进度条已移除：不含方块字符、回车覆盖或逐步骤进度行。 / Progress bar removed: no block chars, carriage returns, or per-step progress lines.
+		assertFalse(output.contains("█"));
+		assertFalse(output.contains("░"));
+		assertFalse(output.contains("\r"));
+		assertFalse(output.contains("\"IDFactory\""));
+		assertFalse(output.contains("\"Zone\""));
+		assertEquals(3, output.chars().filter(character -> character == '\n').count());
 	}
 
 	@Test

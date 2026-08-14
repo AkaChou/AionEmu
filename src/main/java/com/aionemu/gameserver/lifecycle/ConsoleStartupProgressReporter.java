@@ -4,7 +4,6 @@ import java.io.PrintStream;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.GSConfig;
-import com.aionemu.gameserver.utils.ConsoleProgressLineRenderer;
 
 /**
  * 控制台启动进度报告器：按分组输出加载进度行。
@@ -31,12 +30,6 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 	private final boolean enabled;
 
 	/**
-	 * 控制台进度行渲染器。
-	 * Console progress-line renderer.
-	 */
-	private final ConsoleProgressLineRenderer progressRenderer;
-
-	/**
 	 * 构造控制台进度报告器。
 	 * Construct a console progress reporter.
 	 *
@@ -46,7 +39,6 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 	ConsoleStartupProgressReporter(PrintStream out, boolean enabled) {
 		this.out = out;
 		this.enabled = enabled;
-		this.progressRenderer = new ConsoleProgressLineRenderer(out, enabled);
 	}
 
 	/**
@@ -87,14 +79,14 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 	}
 
 	/**
-	 * 步骤完成时渲染进度行。
-	 * Render the progress line when a step finishes.
+	 * 步骤完成时不再渲染进度行（已移除进度条）。
+	 * Step finished; no progress line is rendered (progress bar removed).
 	 *
 	 * @param stepName 步骤名 / Step name
 	 */
 	@Override
 	public void stepFinished(String stepName) {
-		progressRenderer.finished(stepName, 1);
+		// 进度条已移除，步骤完成时不输出。 / Progress bar removed; nothing to output on step finish.
 	}
 
 	/**
@@ -120,11 +112,11 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 	}
 
 	/**
-	 * 失败时清除当前进度行。
-	 * Clear the current progress line on failure.
+	 * 失败时不再清除进度行（已移除进度条）。
+	 * Failure; no progress line to clear (progress bar removed).
 	 */
 	@Override
 	public void failed() {
-		progressRenderer.clearLine();
+		// 进度条已移除，失败时无需清除。 / Progress bar removed; nothing to clear on failure.
 	}
 }

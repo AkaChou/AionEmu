@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -21,7 +20,6 @@ import com.aionemu.gameserver.geoEngine.scene.Node;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
-import com.aionemu.gameserver.utils.ConsoleProgressLineRenderer;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
@@ -56,9 +54,6 @@ public class RealGeoData implements GeoData {
 	 */
 	protected void loadWorldMaps(final Map<String, Spatial> models) {
 		log.info(I18n.get("log.b518dba13a24"));
-		int totalMaps = DataManager.WORLD_MAPS_DATA.size();
-		ConsoleProgressLineRenderer progressRenderer = new ConsoleProgressLineRenderer(System.out, true);
-		AtomicInteger completedMaps = new AtomicInteger();
 		final List<Integer> mapsWithErrors = new ArrayList<>();
 		final Set<String> missingMeshes = ConcurrentHashMap.newKeySet();
 		List<Callable<Void>> tasks = new ArrayList<>();
@@ -89,7 +84,6 @@ public class RealGeoData implements GeoData {
 							mapsWithErrors.add(mapId);
 						}
 					}
-					progressRenderer.progress(I18n.get("console.progress.geo_maps"), completedMaps.incrementAndGet(), totalMaps);
 					return null;
 				}
 			});
@@ -107,7 +101,6 @@ public class RealGeoData implements GeoData {
 			log.error(I18n.get("log.21e643902d47", e));
 		}
 
-		progressRenderer.finished(I18n.get("console.progress.geo_maps"), totalMaps);
 		if (!mapsWithErrors.isEmpty()) {
 			for (Integer mapId : mapsWithErrors) {
 				geoMaps.put(mapId, DummyGeoData.DUMMY_MAP);

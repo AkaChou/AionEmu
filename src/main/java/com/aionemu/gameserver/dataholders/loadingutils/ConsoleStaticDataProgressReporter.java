@@ -4,7 +4,6 @@ import java.io.PrintStream;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.GSConfig;
-import com.aionemu.gameserver.utils.ConsoleProgressLineRenderer;
 
 /**
  * 控制台静态数据加载进度报告器，将各分段进度渲染到启动控制台。
@@ -16,7 +15,6 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 
 	private final PrintStream out;
 	private final boolean enabled;
-	private final ConsoleProgressLineRenderer progressRenderer;
 
 	/**
 	 * 使用指定输出流与启用开关创建报告器。
@@ -28,7 +26,6 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 	ConsoleStaticDataProgressReporter(PrintStream out, boolean enabled) {
 		this.out = out;
 		this.enabled = enabled;
-		this.progressRenderer = new ConsoleProgressLineRenderer(out, enabled);
 	}
 
 	/**
@@ -72,8 +69,8 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 	}
 
 	/**
-	 * 更新当前分段的进度行。
-	 * Updates the progress line for the current section.
+	 * 更新当前分段的进度行（进度条已移除，不再输出）。
+	 * Updates the progress line for the current section (no-op; progress bar removed).
 	 *
 	 * @param sectionIndex 当前分段序号 / current section index
 	 * @param totalSections 分段总数 / total section count
@@ -83,15 +80,12 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 	 */
 	@Override
 	public void sectionProgress(int sectionIndex, int totalSections, String sectionName, int currentEntries, int totalEntries) {
-		if (!progressEnabled()) {
-			return;
-		}
-		progressRenderer.progress(sectionName, currentEntries, totalEntries);
+		// 进度条已移除，分段进度不再输出。 / Progress bar removed; section progress no longer rendered.
 	}
 
 	/**
-	 * 标记当前分段完成并渲染完成行。
-	 * Marks the current section finished and renders the completion line.
+	 * 标记当前分段完成（进度条已移除，不再渲染完成行）。
+	 * Marks the current section finished (no-op; progress bar removed).
 	 *
 	 * @param sectionIndex 当前分段序号 / current section index
 	 * @param totalSections 分段总数 / total section count
@@ -100,10 +94,7 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 	 */
 	@Override
 	public void sectionFinished(int sectionIndex, int totalSections, String sectionName, int totalEntries) {
-		if (!progressEnabled()) {
-			return;
-		}
-		progressRenderer.finished(sectionName, totalEntries);
+		// 进度条已移除，分段完成不再渲染。 / Progress bar removed; section finish no longer rendered.
 	}
 
 	/**
@@ -123,15 +114,12 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 	}
 
 	/**
-	 * 加载失败时清除当前进度行。
-	 * Clears the current progress line when loading fails.
+	 * 加载失败时不再清除进度行（进度条已移除）。
+	 * Clears the current progress line when loading fails (no-op; progress bar removed).
 	 */
 	@Override
 	public void failed() {
-		if (!progressEnabled()) {
-			return;
-		}
-		progressRenderer.clearLine();
+		// 进度条已移除，失败时无需清除。 / Progress bar removed; nothing to clear on failure.
 	}
 
 	/**
