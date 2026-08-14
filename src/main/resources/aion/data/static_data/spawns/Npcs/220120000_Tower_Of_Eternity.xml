@@ -18,28 +18,28 @@
 		</spawn>
 		<!-- Archives Of Eternity -->
 		<spawn npc_id="806029" respawn_time="295">
-			<spot x="371.17728" y="515.09894" z="322.94241" entity_id="9"/>
+			<spot x="370.966492" y="514.286072" z="321.599091" entity_id="9" h="0" resolve_z="true" fly="1"/>
 		</spawn>
 		<!-- Cradle Of Eternity -->
 		<spawn npc_id="806031" respawn_time="295">
-			<spot x="373.19901" y="508.41525" z="357.63672" entity_id="1"/>
+			<spot x="371.958954" y="508.701172" z="354.926086" entity_id="1" h="0" resolve_z="true" fly="1"/>
 		</spawn>
 		<!-- Heart Of Eternity -->
 		<spawn npc_id="806033" respawn_time="295">
-			<spot x="372.23135" y="501.32590" z="386.36182" entity_id="3"/>
+			<spot x="370.272949" y="502.340759" z="385.411438" entity_id="3" h="0" resolve_z="true" fly="1"/>
 		</spawn>
 		<!-- Aionic Ward -->
 		<spawn npc_id="806084" respawn_time="295">
-			<spot x="498.60571" y="499.99774" z="302.45605" entity_id="11"/>
+			<spot x="498.700684" y="500.005157" z="303.612549" entity_id="11" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Astride -->
 		<spawn npc_id="806233" respawn_time="295">
-		    <spot x="473.22833" y="499.9748" z="302.3885" h="60"/>
+		    <spot x="474.800690" y="499.528870" z="303.609985" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Tower Of Eternity Guardian -->
 		<spawn npc_id="806235" respawn_time="295">
-		    <spot x="484.8338" y="493.29144" z="302.3885" h="20"/>
-            <spot x="485.38068" y="506.70386" z="302.3885" h="104"/>
+		    <spot x="485.280487" y="492.954315" z="303.609985" h="10" resolve_z="true"/>
+            <spot x="485.280487" y="506.954315" z="303.609985" h="110" resolve_z="true"/>
             <spot x="512.1093" y="493.09662" z="302.3885" h="43"/>
             <spot x="512.52344" y="506.85507" z="302.3885" h="81"/>
             <spot x="465.09744" y="510.10986" z="299.85013" h="69"/>
@@ -53,10 +53,10 @@
 		<!-- Barota -->
 		<spawn npc_id="806394">
 		    <spot x="551.13257" y="500.0916" z="299.85013" h="60"/>
-		  <spot x="545.100281" y="502.213715" z="299.85013" h="65"/>
+		  <spot x="545.100281" y="502.213715" z="300.858276" h="65" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="206537" respawn_time="1">
-		  <spot x="489.800690" y="499.528870" z="302.3885"/>
+		  <spot x="489.800690" y="499.528870" z="303.609985" h="0" resolve_z="true"/>
 		</spawn>
 	</spawn_map>
 </spawns>

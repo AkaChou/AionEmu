@@ -110,7 +110,7 @@
         </spawn>
 		<!-- Old Stone Statue -->
 		<spawn npc_id="700480">
-			<spot x="505.27969" y="375.68188" z="93.839989" entity_id="33"/>
+			<spot x="505.243103" y="377.041412" z="94.443062" entity_id="33" h="30" resolve_z="true"/>
 		</spawn>
 		<!-- Klenod -->
 		<spawn npc_id="805429">
@@ -121,14 +121,14 @@
             <spot x="497.3961" y="400.64923" z="94.34823" h="104"/>
         </spawn>
         <spawn npc_id="206088" respawn_time="1">
-          <spot x="504.426666" y="413.824341" z="97.557632"/>
+          <spot x="504.426666" y="413.824341" z="97.557632" h="0" resolve_z="true"/>
         </spawn>
         <spawn npc_id="283080" respawn_time="1">
-          <spot x="504.282135" y="405.522125" z="94.911774"/>
-          <spot x="504.282135" y="453.855896" z="90.884521"/>
+          <spot x="504.282135" y="405.522125" z="94.911774" h="0" resolve_z="true"/>
+          <spot x="504.282135" y="453.855896" z="90.884521" h="0" resolve_z="true"/>
         </spawn>
         <spawn npc_id="856595" respawn_time="1">
-          <spot x="499.588135" y="399.692169" z="94.911774"/>
+          <spot x="499.588135" y="399.692169" z="94.911774" h="0" resolve_z="true"/>
         </spawn>
 	</spawn_map>
 </spawns>

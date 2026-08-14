@@ -499,7 +499,16 @@ public final class RetailAiData {
 		}
 	}
 
-	public record NpcPartyMember(int id, float x, float y, float z) {
+	public record NpcPartyMember(int id, float x, float y, float z, int heading, boolean fly) {
+		public NpcPartyMember(int id, float x, float y, float z, int heading) {
+			this(id, x, y, z, heading, false);
+		}
+
+		public NpcPartyMember {
+			if (heading < 0 || heading >= 120) {
+				throw new IllegalArgumentException("NPC party heading is out of range: " + heading);
+			}
+		}
 	}
 
 	public record DynamicArea(int worldId, String worldName, String type, int id, String name,
@@ -553,6 +562,10 @@ public final class RetailAiData {
 	}
 
 	public record ConditionSpawnNpc(int id, float x, float y, float z, int heading,
+			int initialDelay, int initialDelayExtra, String walkerId, Area sensoryArea, boolean fly) {
+		public ConditionSpawnNpc(int id, float x, float y, float z, int heading,
 				int initialDelay, int initialDelayExtra, String walkerId, Area sensoryArea) {
+			this(id, x, y, z, heading, initialDelay, initialDelayExtra, walkerId, sensoryArea, false);
+		}
 	}
 }

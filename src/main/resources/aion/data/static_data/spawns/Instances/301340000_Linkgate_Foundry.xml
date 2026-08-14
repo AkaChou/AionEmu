@@ -7,15 +7,16 @@
     <spawn_map map_id="301340000">
         <!-- Secret Zone Invasion Corridor -->
         <spawn npc_id="731532">
-            <spot x="209.27135" y="292.69138" z="397.09052" entity_id="141"/>
+            <spot x="209.296188" y="291.735718" z="400.652069" entity_id="141" h="0" resolve_z="true"/>
         </spawn>
         <!-- Central Lab Entrance -->
 		<spawn npc_id="702339">
-			<spot x="162.02763" y="258.59445" z="312.54651" entity_id="51"/>
+			<spot x="161.457367" y="258.574890" z="313.867065" entity_id="51" h="0" resolve_z="true"/>
 		</spawn>
         <!-- Spy Ditono -->
         <spawn npc_id="804556">
             <spot x="207.13373" y="303.79062" z="392.3871" h="59"/>
+          <spot x="198.591583" y="315.887268" z="392.892578" h="100" random_walk="2" resolve_z="true"/>
         </spawn>
 		<!-- Containment Barrier
 		<spawn npc_id="234193">
@@ -26,22 +27,23 @@
         <spawn npc_id="234680">
             <spot x="247.38011" y="309.43850" z="395.42487" h="27"/>
             <spot x="241.70723" y="309.64450" z="395.42880" h="36"/>
+          <spot x="253.930893" y="329.287231" z="392.892578" h="60" random_walk="2" resolve_z="true"/>
         </spawn>
         <spawn npc_id="206359" respawn_time="30">
-          <spot x="214.930176" y="316.455719" z="392.3429" h="60"/>
+          <spot x="214.930176" y="316.455719" z="392.892578" h="60" resolve_z="true"/>
         </spawn>
         <spawn npc_id="234193" respawn_time="30">
-          <spot x="218.766098" y="318.364838" z="392.36932"/>
+          <spot x="218.766098" y="318.364838" z="392.892578" h="0" resolve_z="true" entity_id="338"/>
         </spawn>
         <spawn npc_id="234681" respawn_time="30">
-          <spot x="185.079895" y="302.975677" z="392.50748" h="110"/>
-          <spot x="194.415512" y="290.687225" z="392.387" h="30"/>
+          <spot x="185.079895" y="302.975677" z="392.892578" h="110" resolve_z="true"/>
+          <spot x="194.415512" y="290.687225" z="392.892578" h="30" resolve_z="true"/>
         </spawn>
         <spawn npc_id="832852" respawn_time="30">
-          <spot x="200.524307" y="287.483948" z="392.66968" h="60"/>
-          <spot x="212.800018" y="302.222046" z="392.66968" h="60"/>
-          <spot x="253.711609" y="313.683563" z="392.75537" h="60"/>
-          <spot x="234.521759" y="313.838104" z="392.75537" h="60"/>
+          <spot x="200.524307" y="287.483948" z="393.078796" h="60" resolve_z="true"/>
+          <spot x="212.800018" y="302.222046" z="393.078796" h="60" resolve_z="true"/>
+          <spot x="253.711609" y="313.683563" z="393.078796" h="60" resolve_z="true"/>
+          <spot x="234.521759" y="313.838104" z="393.078796" h="60" resolve_z="true"/>
         </spawn>
     </spawn_map>
 </spawns>

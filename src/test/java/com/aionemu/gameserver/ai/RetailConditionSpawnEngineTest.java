@@ -68,6 +68,7 @@ class RetailConditionSpawnEngineTest {
 			assertNotNull(world.object);
 			VisibleObject spawned = world.object;
 			assertTrue(spawned.isSpawned());
+			assertTrue(spawned.getSpawn().canFly());
 
 			assertTrue(RetailConditionSpawnEngine.setVariable(instance, "wave", 1, 0));
 
@@ -109,7 +110,7 @@ class RetailConditionSpawnEngineTest {
 	}
 
 	private static RetailAiData retailAiData() {
-		ConditionSpawnNpc npc = new ConditionSpawnNpc(NPC_ID, 10, 20, 30, 0, 0, 0, null, null);
+		ConditionSpawnNpc npc = new ConditionSpawnNpc(NPC_ID, 10, 20, 30, 0, 0, 0, null, null, true);
 		ConditionSpawnChoice choice = new ConditionSpawnChoice(10_000, null, List.of(npc));
 		ConditionSpawnGroup group = new ConditionSpawnGroup(1_000, List.of(List.of(choice)));
 		ConditionSpawn condition = new ConditionSpawn(1, "wave == 0", true, "all", List.of(group));

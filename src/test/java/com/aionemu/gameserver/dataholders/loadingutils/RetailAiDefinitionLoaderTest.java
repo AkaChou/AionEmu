@@ -8,6 +8,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.regex.Matcher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,6 +22,21 @@ class RetailAiDefinitionLoaderTest {
 
 	@TempDir
 	Path tempDir;
+
+	@Test
+	void loadsRetailNpcPartyHeading() throws Exception {
+		Path parties = tempDir.resolve("npc-parties.xml");
+		Files.writeString(parties, """
+			<npc_parties version="1"><world id="123" name="world">
+			<party token="party-1"><npc id="1" x="10" y="20" z="30" h="10" fly="true"/></party>
+			</world></npc_parties>
+			""");
+
+		var member = RetailAiDefinitionLoader.loadNpcParties(parties.toFile()).get(123).getFirst().members().getFirst();
+
+		assertEquals(10, member.heading());
+		assertTrue(member.fly());
+	}
 
 	void rejectsExactMemberAssignedToMultiplePartyTokens() throws Exception {
 		Path parties = tempDir.resolve("npc-parties.xml");
@@ -118,6 +134,12 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(56, data.groupControllerCount());
 		assertEquals(276, data.skillAreaCount());
 		assertEquals(4430, data.conditionSpawnCount());
+		assertTrue(data.getConditionSpawns(302340000).stream()
+			.flatMap(condition -> condition.groups().stream())
+			.flatMap(group -> group.slots().stream())
+			.flatMap(List::stream)
+			.flatMap(choice -> choice.members().stream())
+			.anyMatch(npc -> npc.id() == 246548 && npc.fly()));
 		assertEquals(39, data.sensoryAreaCount());
 		var sensoryArea = data.findSensoryArea(301550000, 220582, 980.914185f, 774.380676f, 1046.33447f);
 		assertNotNull(sensoryArea);

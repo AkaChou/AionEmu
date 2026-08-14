@@ -178,6 +178,8 @@ public final class RetailConditionSpawnEngine {
 		}
 		SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(instance.getMapId(), npc.id(), npc.x(), npc.y(),
 			npc.z(), MathUtil.convertDegreeToHeading(npc.heading()));
+		template.setResolveZ(true);
+		template.setFly(npc.fly() ? 1 : 0);
 		template.setWalkerId(npc.walkerId());
 		template.setNpcPartyId(partyId);
 		VisibleObject object = SpawnEngine.spawnObject(template, instance.getInstanceId());

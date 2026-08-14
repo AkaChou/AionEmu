@@ -6,11 +6,11 @@
 	<spawn_map map_id="730010000">
 		<!-- Studio Exit -->
 		<spawn npc_id="830558">
-			<spot x="133.59409" y="349.0886" z="267.8835" entity_id="8"/>
+			<spot x="133.594086" y="349.088593" z="268.729889" entity_id="8" h="66" resolve_z="true"/>
 		</spawn>
 		<!-- Studio Exit -->
 		<spawn npc_id="830559">
-			<spot x="119.12719" y="346.609" z="267.8835" entity_id="7"/>
+			<spot x="119.127190" y="346.609009" z="268.780334" entity_id="7" h="6" resolve_z="true"/>
 		</spawn>
 	</spawn_map>
 </spawns>

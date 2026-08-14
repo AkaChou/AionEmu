@@ -264,16 +264,20 @@ public final class PathService implements DisposableBean {
 		if (context == null || context.isFlying()) {
 			return null;
 		}
+		return projectGroundPoint(context.getWorldId(), x, y, referenceZ);
+	}
+
+	public float[] projectGroundPoint(int worldId, float x, float y, float referenceZ) {
 		PathData.MapData map;
 		try {
-			map = data.getMap(context.getWorldId());
+			map = data.getMap(worldId);
 		} catch (IllegalStateException e) {
 			return null;
 		}
 		if (map == null) {
 			return null;
 		}
-		PathData.PathPoint projected = map.projectPoint(x, y, referenceZ, terrain(context.getWorldId()));
+		PathData.PathPoint projected = map.projectPoint(x, y, referenceZ, terrain(worldId));
 		return projected == null ? null : new float[] {x, y, projected.z()};
 	}
 

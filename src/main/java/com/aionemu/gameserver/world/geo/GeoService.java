@@ -267,6 +267,10 @@ public class GeoService {
 		return newZ;
 	}
 
+	public float projectGroundZ(int worldId, float x, float y, float referenceZ, int instanceId) {
+		return this.geoData.getMap(worldId).getZ(x, y, referenceZ + 2, referenceZ - 100, instanceId);
+	}
+
 	/**
 	 * 采样地表高度（水下兼容路径）。
 	 * Samples ground height (water-compatible path).

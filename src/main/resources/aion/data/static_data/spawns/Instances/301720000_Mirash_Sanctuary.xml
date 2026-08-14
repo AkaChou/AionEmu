@@ -7,12 +7,12 @@
 	<spawn_map map_id="301720000">
 		<!-- IDAbRe_Core_03_Drakan_Fi_An -->
 		<spawn npc_id="248001">
-			<spot h="73" z="515.625" y="797.3426" x="808.912"/>
+			<spot h="45" z="517.015137" y="797.378906" x="808.877441" resolve_z="true"/>
 			<spot h="30" z="518.75" y="744.20703" x="798.90173"/>
 		</spawn>
 		<!-- IDAbRe_Core_03_Drakan_Ra_An -->
 		<spawn npc_id="248003">
-			<spot h="61" z="515.625" y="764.9665" x="809.48444"/>
+			<spot h="105" z="517.015137" y="764.878906" x="809.377441" resolve_z="true"/>
 		</spawn>
 		<!-- IDAbRe_Core_03_Drakan_Pr_An -->
 		<spawn npc_id="248004">
@@ -24,11 +24,11 @@
 		</spawn>
 		<!-- IDAbRe_Core_03_Drakan_High_As_An -->
 		<spawn npc_id="248007">
-			<spot h="106" z="526.7078" y="737.4994" x="721.5814"/>
+			<spot h="110" z="527.015137" y="738.500000" x="723.000000" resolve_z="true"/>
 		</spawn>
 		<!-- IDAbRe_Core_03_Witch_Boss_Ae -->
 		<spawn npc_id="248013">
-		    <spot h="32" z="544.28406" y="437.23602" x="281.97717"/>
+		    <spot h="30" z="544.842651" y="437.531677" x="281.871887" resolve_z="true"/>
 		</spawn>
 		<!-- IDAbRe_Core_03_Bonus_Drakan_Fi_An -->
 		<spawn npc_id="248381">
@@ -36,15 +36,15 @@
 		</spawn>
 		<!-- IDAbRe_Core_03_A1_Witch_An -->
 		<spawn npc_id="248382">
-			<spot h="40" z="516.2206" y="778.5023" x="798.5354"/>
+			<spot h="30" z="521.015137" y="779.000000" x="798.000000" resolve_z="true"/>
 		</spawn>
 		<!-- IDAbRe_Core_03_A1_Drakan_Fi_An -->
 		<spawn npc_id="248383">
-			<spot h="30" z="519.2788" y="777.7784" x="779.02094"/>
+			<spot h="60" z="521.015137" y="778.000000" x="779.000000" resolve_z="true"/>
             <spot h="29" z="518.875" y="787.20795" x="768.7726"/>
-            <spot h="30" z="518.875" y="778.078" x="767.623"/>
-            <spot h="30" z="519.2788" y="787.37836" x="778.40344"/>
-            <spot h="30" z="534.6808" y="593.16864" x="668.64"/>
+            <spot h="0" z="521.015137" y="778.000000" x="767.000000" resolve_z="true"/>
+            <spot h="60" z="521.015137" y="786.000000" x="779.000000" resolve_z="true"/>
+            <spot h="30" z="536.015137" y="595.000000" x="668.321045" resolve_z="true"/>
 			<spot h="102" z="529.83856" y="679.6617" x="682.1225"/>
             <spot h="12" z="533.9761" y="650.5236" x="668.15704"/>
             <spot h="53" z="529.70905" y="663.9427" x="692.7696"/>
@@ -53,25 +53,25 @@
 		</spawn>
 		<!-- IDAbRe_Core_03_A1_Drakan_Wi_An -->
 		<spawn npc_id="248384">
-			<spot h="12" z="527.0" y="720.3536" x="705.5862"/>
+			<spot h="30" z="529.015137" y="721.000000" x="705.000000" resolve_z="true"/>
 			<spot h="27" z="533.15454" y="605.5273" x="669.46533" walker_id="IDAbRe_Core_03_A1_Drakan_Fi_An"/>
 		</spawn>
 		<!-- IDAbRe_Core_03_A1_Drakan_Pr_An -->
 		<spawn npc_id="248385">
-			<spot h="2" z="532.47406" y="626.43915" x="663.84564"/>
-			<spot h="56" z="530.071" y="657.569" x="690.2839"/>
+			<spot h="0" z="533.442139" y="626.371826" x="663.727417" resolve_z="true"/>
+			<spot h="60" z="531.560791" y="658.000000" x="690.757874" resolve_z="true"/>
 			<spot h="30" z="542.24554" y="583.78546" x="354.32184"/>
 			<spot h="27" z="533.15454" y="605.5273" x="669.46533" walker_id="IDAbRe_Core_03_A1_Drakan_Fi_An"/>
 		</spawn>
 		<!-- IDAbRe_Core_03_A1_Drakan_Ra_An -->
 		<spawn npc_id="248386">
-			<spot h="13" z="518.875" y="745.1977" x="771.1347"/>
-            <spot h="30" z="518.875" y="783.93976" x="771.66016"/>
+			<spot h="60" z="521.015137" y="744.878906" x="771.877441" resolve_z="true"/>
+            <spot h="60" z="521.015137" y="783.878906" x="771.877441" resolve_z="true"/>
 			<spot h="27" z="533.15454" y="605.5273" x="669.46533" walker_id="IDAbRe_Core_03_A1_Drakan_Fi_An"/>
 		</spawn>
 		<!-- IDAbRe_Core_03_A1_Drakan_As_An -->
 		<spawn npc_id="248387">
-			<spot h="38" z="527.0" y="720.3508" x="712.7069"/>
+			<spot h="30" z="529.015137" y="721.000000" x="713.000000" resolve_z="true"/>
             <spot h="1" z="525.7968" y="758.9185" x="734.7642"/>
 			<spot h="16" z="531.12335" y="683.11365" x="695.9764"/>
 		</spawn>
@@ -121,22 +121,22 @@
 		</spawn>
 		<!-- IDAbre_Core_03_Attackable_01 -->
 		<spawn npc_id="248466">
-			<spot h="74" z="548.018" y="449.3369" x="295.42664"/>
-            <spot h="90" z="546.41565" y="597.2817" x="347.77945"/>
-            <spot h="30" z="546.41565" y="583.18463" x="347.85745"/>
-            <spot h="107" z="548.018" y="449.55252" x="268.5692"/>
-            <spot h="0" z="525.76245" y="758.5757" x="764.2652"/>
-            <spot h="110" z="540.5126" y="601.2782" x="579.40326"/>
-            <spot h="46" z="548.018" y="425.56046" x="295.50522"/>
-            <spot h="81" z="540.50684" y="615.1292" x="614.08044"/>
+			<spot h="75" z="548.732788" y="449.134460" x="295.335419" resolve_z="true"/>
+            <spot h="90" z="547.618591" y="597.017700" x="347.818481" resolve_z="true"/>
+            <spot h="30" z="547.618591" y="583.608398" x="348.056519" resolve_z="true"/>
+            <spot h="105" z="548.732788" y="449.337677" x="268.625580" resolve_z="true"/>
+            <spot h="0" z="526.311157" y="759.254456" x="765.022278" resolve_z="true"/>
+            <spot h="111" z="541.462219" y="600.653625" x="579.338806" resolve_z="true"/>
+            <spot h="45" z="548.732788" y="426.030640" x="295.456879" resolve_z="true"/>
+            <spot h="83" z="541.462219" y="614.191101" x="614.243835" resolve_z="true"/>
             <spot h="115" z="533.9761" y="655.6254" x="673.4058"/>
-            <spot h="91" z="540.1572" y="597.36804" x="519.88727"/>
-            <spot h="29" z="540.1572" y="583.2487" x="520.0731"/>
-            <spot h="53" z="540.49475" y="580.61993" x="629.0946"/>
-            <spot h="16" z="548.018" y="425.6828" x="268.41565"/>
-            <spot h="22" z="540.49023" y="565.5586" x="592.9113"/>
-            <spot h="30" z="531.1697" y="719.65515" x="720.9162"/>
-            <spot h="30" z="518.64984" y="757.7448" x="798.7089"/>
+            <spot h="90" z="541.560242" y="596.923401" x="519.929077" resolve_z="true"/>
+            <spot h="30" z="541.560242" y="583.538330" x="519.971375" resolve_z="true"/>
+            <spot h="50" z="541.462219" y="579.923828" x="628.198303" resolve_z="true"/>
+            <spot h="15" z="548.732788" y="425.749725" x="268.850342" resolve_z="true"/>
+            <spot h="21" z="541.462219" y="566.136536" x="593.143982" resolve_z="true"/>
+            <spot h="30" z="531.437805" y="719.924377" x="720.705139" resolve_z="true"/>
+            <spot h="30" z="519.056519" y="758.000000" x="798.140808" resolve_z="true"/>
 		</spawn>
 		<!-- IDAbRe_Core_03_Boss_HailStorm -->
 		<spawn npc_id="248472">
@@ -244,11 +244,11 @@
 		</spawn>
 		<!-- IDAbRe_Core_03_FOBJ_Empty_Altar_Q10113A -->
 		<spawn npc_id="731844">
-			<spot x="427.19919" y="596.67609" z="539.66431" entity_id="214"/>
+			<spot x="427.197021" y="596.826050" z="540.929443" entity_id="214" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- IDAbRe_Core_03_FOBJ_Ere_Mirror_Q10113A -->
 		<spawn npc_id="731845">
-			<spot x="281.95999" y="399.11292" z="547.75903" entity_id="352"/>
+			<spot x="281.887543" y="398.218658" z="548.732788" entity_id="352" h="30" resolve_z="true"/>
 		</spawn>
 		<!-- IDAbRe_Core_03_TreasureBox01 -->
 		<spawn npc_id="835730">
@@ -261,23 +261,32 @@
             <spot h="0" z="547.98047" y="470.27017" x="277.2389"/>
 		</spawn>
 		<spawn npc_id="206659" respawn_time="1">
-		  <spot x="605.105957" y="577.005798" z="533.15"/>
+		  <spot x="605.105957" y="577.005798" z="540.099976" h="0" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="248399" respawn_time="1">
-		  <spot x="449.075531" y="589.949829" z="538.2016" h="90"/>
-		  <spot x="406.075531" y="580.949829" z="540.8067" h="90"/>
+		  <spot x="449.075531" y="589.949829" z="539.015137" h="90" resolve_z="true"/>
+		  <spot x="406.075531" y="580.949829" z="542.015137" h="90" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="248432" respawn_time="1">
-		  <spot x="637.391785" y="590.187134" z="533.99603"/>
+		  <spot x="637.391785" y="590.187134" z="537.670837" h="0" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="248434" respawn_time="1">
-		  <spot x="454.997711" y="589.789917" z="537.4944"/>
+		  <spot x="454.997711" y="589.789917" z="537.670837" h="0" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="248435" respawn_time="1">
-		  <spot x="282.000000" y="553.250000" z="547.9942" h="30"/>
+		  <spot x="282.000000" y="553.250000" z="549.765137" h="30" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="835690" respawn_time="1">
-		  <spot x="770.998352" y="836.178894" z="520.644" h="60"/>
+		  <spot x="770.998352" y="836.178894" z="521.015137" h="60" resolve_z="true" entity_id="32"/>
+		</spawn>
+		<spawn npc_id="248383" initial_delay="1">
+		  <spot x="797.877441" y="755.878906" z="521.015137" h="30" random_walk="2" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="248385" initial_delay="1">
+		  <spot x="685.480591" y="630.827637" z="531.310791" h="60" random_walk="2" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="248427" initial_delay="1">
+		  <spot x="771.020203" y="815.567200" z="521.015137" h="60" random_walk="2" resolve_z="true"/>
 		</spawn>
 	</spawn_map>
 </spawns>

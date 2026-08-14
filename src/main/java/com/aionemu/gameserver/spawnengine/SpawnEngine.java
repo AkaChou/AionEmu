@@ -274,7 +274,8 @@ public class SpawnEngine {
 	 * @param instanceIndex 实例索引 / instance index
 	 */
 	static void bringIntoWorld(VisibleObject visibleObject, SpawnTemplate spawn, int instanceIndex) {
-		float z = projectedSpawnZ(visibleObject, spawn, npc -> GameWorldServices.pathService()
+		float z = spawn.isResolveZ() ? SpawnSurfaceResolver.resolve(spawn, instanceIndex)
+			: projectedSpawnZ(visibleObject, spawn, npc -> GameWorldServices.pathService()
 				.projectGroundPoint(npc, spawn.getX(), spawn.getY(), spawn.getZ()));
 		bringIntoWorld(visibleObject, spawn.getWorldId(), instanceIndex, spawn.getX(), spawn.getY(), z,
 				spawn.getHeading());

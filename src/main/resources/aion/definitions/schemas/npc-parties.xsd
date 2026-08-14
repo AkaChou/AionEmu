@@ -15,6 +15,14 @@
                         <xs:attribute name="x" type="xs:float" use="required"/>
                         <xs:attribute name="y" type="xs:float" use="required"/>
                         <xs:attribute name="z" type="xs:float" use="required"/>
+                        <xs:attribute name="h" use="required">
+                          <xs:simpleType>
+                            <xs:restriction base="xs:unsignedByte">
+                              <xs:maxInclusive value="119"/>
+                            </xs:restriction>
+                          </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="fly" type="xs:boolean" use="optional" default="false"/>
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>

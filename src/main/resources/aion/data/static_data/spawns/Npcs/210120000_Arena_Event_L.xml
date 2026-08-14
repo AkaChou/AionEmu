@@ -37,5 +37,8 @@
             <spot x="1915.1642" y="994.53442" z="230.74126" entity_id="6"/>
 			<spot x="1982.9791" y="898.16022" z="231.01685" entity_id="36"/>
         </spawn>
+        <spawn npc_id="207050" spawn_page="1" initial_delay="125">
+          <spot x="679.169922" y="1776.821167" z="171.156952" h="0" random_walk="2" fly="1" resolve_z="true"/>
+        </spawn>
 	</spawn_map>
 </spawns>

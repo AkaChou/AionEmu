@@ -240,7 +240,7 @@
         </spawn>
 		<!-- IDEternity_03_Teleporter_6 -->
 	    <spawn npc_id="731736">
-		    <spot x="529.57593" y="1216.2897" z="712.68573" entity_id="964"/>
+		    <spot x="530.786743" y="1216.791504" z="713.420288" entity_id="964" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- IDEternity_03_Entrance_Out_1 -->
 	    <spawn npc_id="731743">
@@ -305,31 +305,31 @@
 		    <spot x="917.20160" y="1229.5979" z="747.18304" entity_id="69"/>
 		</spawn>
 	    <spawn npc_id="206610" respawn_time="1">
-	      <spot x="1245.647827" y="1006.477783" z="763.3289" h="60"/>
+	      <spot x="1245.647827" y="1006.477783" z="761.879150" h="60" resolve_z="true"/>
 	    </spawn>
 	    <spawn npc_id="206611" respawn_time="1">
-	      <spot x="949.633301" y="1313.663330" z="767.3065" h="60"/>
+	      <spot x="949.633301" y="1313.663330" z="767.306519" h="60" resolve_z="true"/>
 	    </spawn>
 	    <spawn npc_id="206613" respawn_time="1">
-	      <spot x="533.191467" y="1107.142578" z="758.69073" h="60"/>
+	      <spot x="533.191467" y="1107.142578" z="758.147156" h="60" resolve_z="true"/>
 	    </spawn>
 	    <spawn npc_id="206615" respawn_time="1">
-	      <spot x="428.640442" y="1029.212280" z="710.1895" h="60"/>
+	      <spot x="428.640442" y="1029.212280" z="758.147156" h="60" resolve_z="true"/>
 	    </spawn>
 	    <spawn npc_id="206617" respawn_time="1">
-	      <spot x="321.865601" y="1022.255371" z="710.83307" h="60"/>
+	      <spot x="321.865601" y="1022.255371" z="758.147156" h="60" resolve_z="true"/>
 	    </spawn>
 	    <spawn npc_id="246443" respawn_time="1">
-	      <spot x="1221.837158" y="1026.479492" z="761.2246" h="60"/>
+	      <spot x="1221.837158" y="1026.479492" z="761.879150" h="60" resolve_z="true"/>
 	    </spawn>
 	    <spawn npc_id="246681" respawn_time="1">
-	      <spot x="916.915955" y="1200.866943" z="747.97296" h="90"/>
+	      <spot x="916.915955" y="1200.866943" z="751.074707" h="90" resolve_z="true"/>
 	    </spawn>
 	    <spawn npc_id="246754" respawn_time="1">
-	      <spot x="1221.677002" y="1030.119141" z="761.17596" h="60"/>
+	      <spot x="1221.677002" y="1030.119141" z="761.879150" h="60" resolve_z="true"/>
 	    </spawn>
 	    <spawn npc_id="246800" respawn_time="1">
-	      <spot x="224.820175" y="1027.177856" z="706.75494" h="75"/>
+	      <spot x="224.820175" y="1027.177856" z="715.127930" h="75" resolve_z="true"/>
 	    </spawn>
 	    <spawn npc_id="246965" respawn_time="1">
 	      <spot x="538.899536" y="893.338684" z="701.3576" h="60"/>
@@ -339,13 +339,13 @@
 	      <spot x="402.143219" y="1021.435486" z="711.86884" h="90"/>
 	    </spawn>
 	    <spawn npc_id="247027" respawn_time="1">
-	      <spot x="1136.581665" y="1026.168457" z="759.24866" h="60"/>
+	      <spot x="1136.581665" y="1026.168457" z="759.975281" h="60" resolve_z="true"/>
 	    </spawn>
 	    <spawn npc_id="731738" respawn_time="1">
-	      <spot x="226.659485" y="1027.719238" z="752.20886"/>
+	      <spot x="226.659485" y="1027.719238" z="759.551208" h="0" resolve_z="true" fly="1"/>
 	    </spawn>
 	    <spawn npc_id="731746" respawn_time="1">
-	      <spot x="916.324524" y="1230.745972" z="747.06537" h="60"/>
+	      <spot x="916.324524" y="1230.745972" z="747.850952" h="60" resolve_z="true" entity_id="336"/>
 	    </spawn>
     </spawn_map>
 </spawns>

@@ -10,7 +10,7 @@
 		</spawn>
 		<!-- Balaurea Advance Portal -->
 		<spawn npc_id="804678" respawn_time="295">
-			<spot x="234.51263" y="295.91507" z="130.30666" entity_id="1"/>
+			<spot x="234.509842" y="295.946747" z="132.538605" entity_id="1" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Balaurea Invasion Portal -->
 		<spawn npc_id="804679" respawn_time="295">
@@ -22,15 +22,15 @@
 		</spawn>
 		<!-- South Balaurea Portal -->
 		<spawn npc_id="804681" respawn_time="295">
-			<spot x="242.17957" y="303.01187" z="130.30666" entity_id="17"/>
+			<spot x="241.924530" y="302.965210" z="132.538605" entity_id="17" h="90" resolve_z="true"/>
 		</spawn>
 		<!-- Arena_L_Clobby_06_Entrance_In -->
 		<spawn npc_id="806245" respawn_time="295">
-			<spot x="251.88835" y="302.98904" z="130.30666" entity_id="30"/>
+			<spot x="251.976898" y="303.046295" z="132.538605" entity_id="30" h="90" resolve_z="true"/>
 		</spawn>
 		<!-- Sanctum Teleport Statue -->
 		<spawn npc_id="804687" respawn_time="295">
-			<spot x="247.06088" y="220.67172" z="129.28482" entity_id="81"/>
+			<spot x="247.007248" y="220.523239" z="131.000290" entity_id="81" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Mailbox -->
 	    <spawn npc_id="700000" respawn_time="295">
@@ -38,7 +38,7 @@
         </spawn>
 		<!-- Lena -->
 		<spawn npc_id="804651" respawn_time="295">
-			<spot x="243.40108" y="238.91174" z="129.22829" h="26"/>
+			<spot x="243.381226" y="238.803421" z="130.236038" h="105" resolve_z="true"/>
 		</spawn>
 		<!-- Rosette -->
 		<spawn npc_id="804652" respawn_time="295">
@@ -50,11 +50,11 @@
 		</spawn>
 		<!-- Agnes -->
 		<spawn npc_id="804654" respawn_time="295">
-			<spot x="259.33" y="292.94937" z="130.21106" h="72"/>
+			<spot x="259.282745" y="292.824249" z="131.290405" h="75" resolve_z="true"/>
 		</spawn>
 		<!-- Kiran -->
 		<spawn npc_id="804655" respawn_time="295">
-			<spot x="254.10918" y="280.62003" z="130.21106" h="45"/>
+			<spot x="254.007324" y="280.717072" z="131.290405" h="45" resolve_z="true"/>
 		</spawn>
 		<!-- Ardeus -->
 		<spawn npc_id="804656" respawn_time="295">
@@ -62,27 +62,27 @@
 		</spawn>
 		<!-- Kalana -->
 		<spawn npc_id="804657" respawn_time="295">
-			<spot x="259.33807" y="255.03786" z="128.85756" h="60"/>
+			<spot x="258.306030" y="254.270721" z="130.236038" h="60" resolve_z="true"/>
 		</spawn>
 		<!-- Elgon -->
 		<spawn npc_id="804658" respawn_time="295">
-			<spot x="234.64473" y="259.91797" z="128.85756"/>
+			<spot x="235.342056" y="260.162048" z="130.236038" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Tezea -->
 		<spawn npc_id="804659" respawn_time="295">
-			<spot x="234.6178" y="254.96533" z="128.85756"/>
+			<spot x="235.314835" y="256.391998" z="130.236038" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Tobias -->
 		<spawn npc_id="804660" respawn_time="295">
-			<spot x="251.50085" y="266.79102" z="128.85756" h="80"/>
+			<spot x="251.581970" y="266.747375" z="130.236038" h="90" resolve_z="true"/>
 		</spawn>
 		<!-- Adrena -->
 		<spawn npc_id="804661" respawn_time="295">
-			<spot x="242.52312" y="266.72507" z="128.85756" h="93"/>
+			<spot x="242.500534" y="266.850342" z="130.236038" h="90" resolve_z="true"/>
 		</spawn>
 		<!-- Dereus -->
 		<spawn npc_id="804693" respawn_time="295">
-			<spot x="259.29642" y="250.18523" z="128.85756" h="60"/>
+			<spot x="258.306030" y="250.472000" z="130.236038" h="60" resolve_z="true"/>
 		</spawn>
 		<!-- Amrinerk -->
 		<spawn npc_id="804695" respawn_time="295">
@@ -90,15 +90,15 @@
 		</spawn>
 		<!-- Margges -->
 		<spawn npc_id="805304" respawn_time="295">
-            <spot x="245.02826" y="302.62253" z="130.21106" h="97"/>
+            <spot x="244.876785" y="302.049683" z="132.538605" h="100" resolve_z="true"/>
         </spawn>
 		<!-- Malina -->
         <spawn npc_id="805306" respawn_time="295">
-            <spot x="251.0" y="238.0" z="129.22829" h="30"/>
+            <spot x="251.723236" y="238.803421" z="130.236038" h="78" resolve_z="true"/>
         </spawn>
 		<!-- Junion -->
         <spawn npc_id="805307" respawn_time="295">
-            <spot x="259.42038" y="265.0158" z="128.85756" h="60"/>
+            <spot x="258.306030" y="265.399658" z="130.236038" h="60" resolve_z="true"/>
         </spawn>
 		<!-- Amilia -->
         <spawn npc_id="805308" respawn_time="295">
@@ -106,7 +106,16 @@
         </spawn>
 		<!-- Gilios -->
 		<spawn npc_id="806243" respawn_time="295">
-            <spot x="253.8803" y="300.82907" z="130.21106" h="82"/>
+            <spot x="253.157806" y="300.545258" z="132.538605" h="86" resolve_z="true"/>
         </spawn>
+		<spawn npc_id="804677" initial_delay="1">
+		  <spot x="236.831924" y="281.666382" z="132.538605" h="0" entity_id="2" random_walk="2" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="804679" initial_delay="1">
+		  <spot x="259.310486" y="295.507751" z="132.538605" h="0" entity_id="18" random_walk="2" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="804680" initial_delay="1">
+		  <spot x="256.834106" y="281.029419" z="132.538605" h="0" entity_id="26" random_walk="2" resolve_z="true"/>
+		</spawn>
 	</spawn_map>
 </spawns>

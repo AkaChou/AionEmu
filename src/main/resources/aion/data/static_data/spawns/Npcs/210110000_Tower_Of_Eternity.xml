@@ -10,7 +10,7 @@
         </spawn>
 		<!-- Room Of The Sage Corridor -->
 		<spawn npc_id="731717" respawn_time="295">
-		    <spot x="557.9449" y="498.00113" z="299.85013" h="60"/>
+		    <spot x="558.461365" y="498.362762" z="301.859589" h="60" resolve_z="true"/>
 		</spawn>
 		<!-- Room Of The Sage Exit -->
 		<spawn npc_id="731718" respawn_time="295">
@@ -18,28 +18,28 @@
 		</spawn>
 		<!-- Archives Of Eternity -->
 		<spawn npc_id="806028" respawn_time="295">
-			<spot x="371.17728" y="515.09894" z="322.94241" entity_id="9"/>
+			<spot x="370.115662" y="513.531616" z="322.690399" entity_id="9" h="0" resolve_z="true" fly="1"/>
 		</spawn>
 		<!-- Cradle Of Eternity -->
 		<spawn npc_id="806030" respawn_time="295">
-			<spot x="373.19901" y="508.41525" z="357.63672" entity_id="1"/>
+			<spot x="372.299286" y="508.278412" z="355.625000" entity_id="1" h="0" resolve_z="true" fly="1"/>
 		</spawn>
 		<!-- Heart Of Eternity -->
 		<spawn npc_id="806032" respawn_time="295">
-			<spot x="372.23135" y="501.32590" z="386.36182" entity_id="3"/>
+			<spot x="370.873169" y="502.365936" z="385.700714" entity_id="3" h="0" resolve_z="true" fly="1"/>
 		</spawn>
 		<!-- Aionic Ward -->
 		<spawn npc_id="806083" respawn_time="295">
-			<spot x="498.60571" y="499.99774" z="302.45605" entity_id="11"/>
+			<spot x="498.573395" y="500.062897" z="302.905487" entity_id="11" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Eusebios -->
 		<spawn npc_id="806232" respawn_time="295">
-		    <spot x="473.22833" y="499.9748" z="302.3885" h="60"/>
+		    <spot x="474.800690" y="499.528870" z="303.609985" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Tower Of Eternity Guardian -->
 		<spawn npc_id="806234" respawn_time="295">
-		    <spot x="484.8338" y="493.29144" z="302.3885" h="20"/>
-            <spot x="485.38068" y="506.70386" z="302.3885" h="104"/>
+		    <spot x="485.273499" y="492.774292" z="303.609985" h="10" resolve_z="true"/>
+            <spot x="485.273499" y="507.005432" z="303.609985" h="110" resolve_z="true"/>
             <spot x="512.1093" y="493.09662" z="302.3885" h="43"/>
             <spot x="512.52344" y="506.85507" z="302.3885" h="81"/>
             <spot x="465.09744" y="510.10986" z="299.85013" h="69"/>
@@ -47,14 +47,14 @@
 		</spawn>
 		<!-- Dejabobo -->
 		<spawn npc_id="806291" respawn_time="295">
-		    <spot x="498.52692" y="499.85306" z="348.79135" h="118"/>
+		    <spot x="498.922272" y="499.565491" z="362.779816" h="60" resolve_z="true"/>
 		</spawn>
 		<!-- Pores -->
 		<spawn npc_id="806393" respawn_time="295">
 		    <spot x="551.18555" y="499.9848" z="299.85013" h="60"/>
 		</spawn>
 		<spawn npc_id="206536" respawn_time="1">
-		  <spot x="489.800690" y="499.528870" z="302.3885"/>
+		  <spot x="489.800690" y="499.528870" z="303.609985" h="0" resolve_z="true"/>
 		</spawn>
 	</spawn_map>
 </spawns>

@@ -30,8 +30,8 @@ class RetailNpcPartyEngineTest {
 	void createsEveryExplicitMemberWithWorldScopedStableToken() {
 		List<SpawnTemplate> templates = RetailNpcPartyEngine.createSpawnTemplates(300540000, List.of(
 			new NpcParty("world/world_N.xml#party4", List.of(
-				new NpcPartyMember(231113, 10, 20, 30),
-				new NpcPartyMember(231111, 12, 22, 32)))));
+					new NpcPartyMember(231113, 10, 20, 30, 10, true),
+					new NpcPartyMember(231111, 12, 22, 32, 30)))));
 
 		assertEquals(2, templates.size());
 		assertEquals(List.of(231113, 231111), templates.stream().map(SpawnTemplate::getNpcId).toList());
@@ -40,14 +40,17 @@ class RetailNpcPartyEngineTest {
 		assertEquals(List.of(10f, 12f), templates.stream().map(SpawnTemplate::getX).toList());
 		assertEquals(List.of(20f, 22f), templates.stream().map(SpawnTemplate::getY).toList());
 		assertEquals(List.of(30f, 32f), templates.stream().map(SpawnTemplate::getZ).toList());
+		assertEquals(List.of((byte) 10, (byte) 30), templates.stream().map(SpawnTemplate::getHeading).toList());
+		assertEquals(List.of(true, true), templates.stream().map(SpawnTemplate::isResolveZ).toList());
+		assertEquals(List.of(1, 0), templates.stream().map(SpawnTemplate::getFly).toList());
 	}
 
 	@Test
 	void constructedNpcsDiscoverPartyMembersInTheSameInstance() throws ReflectiveOperationException {
 		List<SpawnTemplate> templates = RetailNpcPartyEngine.createSpawnTemplates(300540000, List.of(
 			new NpcParty("world/world_N.xml#party4", List.of(
-				new NpcPartyMember(231113, 10, 20, 30),
-				new NpcPartyMember(231111, 12, 22, 32)))));
+					new NpcPartyMember(231113, 10, 20, 30, 10),
+					new NpcPartyMember(231111, 12, 22, 32, 30)))));
 		NpcSkillData oldNpcSkillData = DataManager.NPC_SKILL_DATA;
 		DataManager.NPC_SKILL_DATA = new NpcSkillData();
 		try {

@@ -56,9 +56,9 @@ class RetailOpenWorldSpawnDataTest {
 	}
 
 	@Test
-	void keepsNymphGownAtReachableHeightAndRetailNightWindow() throws Exception {
+	void keepsNymphGownRetailReferenceHeightAndNightWindow() throws Exception {
 		assertTemporarySpawn("210010000_Poeta.xml", 700008,
-			483.675537, 1544.752441, 108.885570);
+			483.675537, 1544.752441, 114.441620);
 	}
 
 	@Test
@@ -117,6 +117,7 @@ class RetailOpenWorldSpawnDataTest {
 			assertEquals(x, Double.parseDouble(spot.getAttribute("x")), 0.000001);
 			assertEquals(y, Double.parseDouble(spot.getAttribute("y")), 0.000001);
 			assertEquals(z, Double.parseDouble(spot.getAttribute("z")), 0.000001);
+			assertEquals("true", spot.getAttribute("resolve_z"));
 			return;
 		}
 		throw new AssertionError("missing NPC " + npcId + " in " + fileName);

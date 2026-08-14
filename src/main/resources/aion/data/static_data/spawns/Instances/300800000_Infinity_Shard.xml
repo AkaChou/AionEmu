@@ -6,61 +6,61 @@
 	<spawn_map map_id="300800000">
 		<!-- Hyperion -->
 		<spawn npc_id="231073">
-			<spot x="128.75" y="137.86" z="113.95"/>
+			<spot x="128.824249" y="138.098892" z="113.794411" h="60" resolve_z="true"/>
 		</spawn>
 		<!-- Agent Kabalash -->
 		<spawn npc_id="231075">
-			<spot x="135.09" y="114.61" z="130.39" h="10"/>
+			<spot x="135.192719" y="114.580612" z="130.389771" h="10" resolve_z="true"/>
 		</spawn>
 		<!-- Hyperion Defense Elite Sniper -->
 		<spawn npc_id="231076">
-			<spot x="133.31" y="116.45" z="130.39" h="10"/>
+			<spot x="133.418274" y="116.417473" z="130.389771" h="10" resolve_z="true"/>
 		</spawn>
 		<!-- Hyperion Defense Elite Sniper -->
 		<spawn npc_id="231077">
-			<spot x="135.85" y="112.08" z="130.39" h="13"/>
+			<spot x="135.960327" y="112.048859" z="130.389771" h="13" resolve_z="true"/>
 		</spawn>
 		<!-- Hyperion Defense Elite Assassin -->
 		<spawn npc_id="231079">
-			<spot x="149.95" y="128.60" z="114.50" h="61"/>
+			<spot x="150.056351" y="128.567581" z="114.495827" h="60" resolve_z="true"/>
 		</spawn>
 		<!-- Hyperion Defense Elite Sniper -->
 		<spawn npc_id="231080">
-			<spot x="147.30" y="131.29" z="114.50" h="61"/>
+			<spot x="147.410492" y="131.256897" z="114.495827" h="60" resolve_z="true"/>
 		</spawn>
 		<!-- Hyperion Defense Elite Medic -->
 		<spawn npc_id="231081">
-			<spot x="153.50" y="129.64" z="114.50" h="61"/>
+			<spot x="153.601578" y="129.607742" z="114.495827" h="60" resolve_z="true"/>
 		</spawn>
 		<!-- Hyperion Defense Elite Assassin -->
 		<spawn npc_id="231083">
-			<spot x="108.49" y="145.45" z="114.03" h="16"/>
+			<spot x="108.592102" y="145.417023" z="114.030434" h="16" resolve_z="true"/>
             <spot x="114.12855" y="154.01147" z="126.6723" h="94"/>
             <spot x="146.32094" y="123.357025" z="126.644264" h="67"/>
 		</spawn>
 		<!-- Hyperion Defense Elite Assaulter -->
 		<spawn npc_id="231084">
-			<spot x="103.78" y="144.25" z="114.03" h="16"/>
+			<spot x="103.889580" y="144.222885" z="114.030434" h="16" resolve_z="true"/>
 		</spawn>
 		<!-- Hyperion Defense Elite Medic -->
 		<spawn npc_id="231085">
-			<spot x="110.77" y="142.66" z="114.03" h="20"/>
+			<spot x="110.879562" y="142.633423" z="114.030434" h="20" resolve_z="true"/>
 			<spot x="106.97135" y="133.35056" z="124.67736" h="97" walker_id="Hyperion_Defense_Elite_2"/>
 		</spawn>
 		<!-- Hyperion Defense Elite Magus -->
 		<spawn npc_id="231087">
-			<spot x="124.16" y="162.37" z="129.50" h="71"/>
+			<spot x="124.268494" y="162.343094" z="129.497910" h="70" resolve_z="true"/>
 			<spot x="109.69791" y="148.10576" z="112.8431" h="20" walker_id="Hyperion_Defense_Elite_1"/>
 		</spawn>
 		<!-- Hyperion Defense Elite Sniper -->
 		<spawn npc_id="231088">
-			<spot x="123.08" y="163.91" z="129.5" h="71"/>
+			<spot x="123.185738" y="163.880890" z="129.497910" h="70" resolve_z="true"/>
             <spot x="107.5329" y="143.58759" z="125.69311" h="111"/>
             <spot x="150.84091" y="133.52611" z="125.69311" h="51"/>
 		</spawn>
 		<!-- Hyperion Defense Elite Sniper -->
 		<spawn npc_id="231089">
-			<spot x="124.96" y="160.60" z="129.50" h="71"/>
+			<spot x="125.071098" y="160.569702" z="129.497910" h="70" resolve_z="true"/>
 		</spawn>
 		<!-- Hyperion Defense Elite Fighter -->
 		<spawn npc_id="231090">
@@ -76,33 +76,42 @@
         </spawn>
 		<!-- Ide Forcefield Generator -->
 		<spawn npc_id="231074">
-			<spot x="131.1161" y="112.20678" z="128.9285" entity_id="29"/>
+			<spot x="131.319641" y="112.190536" z="130.443817" entity_id="29" h="30" resolve_z="true"/>
 		</spawn>
 		<!-- Ide Forcefield Generator -->
 		<spawn npc_id="231078">
-			<spot x="152.0999" y="136.23021" z="112.0556" entity_id="31"/>
+			<spot x="151.642593" y="136.276077" z="113.974327" entity_id="31" h="60" resolve_z="true"/>
 		</spawn>
 		<!-- Ide Forcefield Generator -->
 		<spawn npc_id="231082">
-			<spot x="106.40" y="139.75" z="114.08" entity_id="30"/>
+			<spot x="106.485542" y="139.819214" z="114.076981" entity_id="30" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Ide Forcefield Generator -->
 		<spawn npc_id="231086">
-			<spot x="127.53" y="163.42" z="130.95" entity_id="28"/>
+			<spot x="127.615196" y="163.486664" z="130.948059" entity_id="28" h="60" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="231104" respawn_time="1">
-		  <spot x="134.483551" y="141.749008" z="112.12277"/>
-		  <spot x="140.802643" y="139.374878" z="112.12277"/>
-		  <spot x="136.988983" y="133.623108" z="112.12359"/>
-		  <spot x="124.172447" y="145.957169" z="112.12359"/>
-		  <spot x="132.111908" y="127.709084" z="112.12359"/>
-		  <spot x="125.360603" y="129.540787" z="112.12277"/>
-		  <spot x="132.678070" y="147.731476" z="112.12277"/>
-		  <spot x="119.271553" y="140.535065" z="112.12277"/>
-		  <spot x="121.167221" y="133.089203" z="112.12202"/>
+		  <spot x="134.483551" y="141.749008" z="112.721657" h="0" resolve_z="true"/>
+		  <spot x="140.802643" y="139.374878" z="112.721657" h="0" resolve_z="true"/>
+		  <spot x="136.988983" y="133.623108" z="112.721657" h="0" resolve_z="true"/>
+		  <spot x="124.172447" y="145.957169" z="112.721657" h="0" resolve_z="true"/>
+		  <spot x="132.111908" y="127.709084" z="112.721657" h="0" resolve_z="true"/>
+		  <spot x="125.360603" y="129.540787" z="112.721657" h="0" resolve_z="true"/>
+		  <spot x="132.678070" y="147.731476" z="112.721657" h="0" resolve_z="true"/>
+		  <spot x="119.271553" y="140.535065" z="112.721657" h="0" resolve_z="true"/>
+		  <spot x="121.167221" y="133.089203" z="112.721657" h="0" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="855171" respawn_time="1">
-		  <spot x="122.291054" y="138.052643" z="112.17429"/>
+		  <spot x="122.291054" y="138.052643" z="112.920113" h="0" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="284656" initial_delay="1">
+		  <spot x="128.549744" y="137.941132" z="131.151215" h="0" random_walk="2" fly="1" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="730741" initial_delay="1">
+		  <spot x="129.348572" y="137.987473" z="113.291222" h="0" entity_id="27" random_walk="2" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="730742" respawn_time="1" initial_delay="1">
+		  <spot x="129.178360" y="131.665939" z="113.942917" h="0" random_walk="2" resolve_z="true"/>
 		</spawn>
 	</spawn_map>
 </spawns>

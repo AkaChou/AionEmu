@@ -157,10 +157,10 @@
 			<spot x="557.3924" y="415.5823" z="96.81002" h="41"/>
 		</spawn>
 		<spawn npc_id="206385" respawn_time="1">
-		  <spot x="174.258362" y="116.979874" z="231.28467" h="21"/>
+		  <spot x="174.258362" y="116.979874" z="232.458359" h="21" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="731584" respawn_time="1">
-		  <spot x="167.696899" y="122.813293" z="231.67023"/>
+		  <spot x="167.696899" y="122.813293" z="232.852493" h="0" resolve_z="true"/>
 		</spawn>
 	</spawn_map>
 </spawns>

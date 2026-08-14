@@ -22,15 +22,15 @@
 		</spawn>
 		<!-- South Balaurea Portal -->
 		<spawn npc_id="804686" respawn_time="295">
-			<spot x="207.23204" y="261.17157" z="97.435745" entity_id="5"/>
+			<spot x="207.328186" y="260.824646" z="98.896912" entity_id="5" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Arena_D_Clobby_06_Entrance_In -->
 		<spawn npc_id="806246" respawn_time="295">
-			<spot x="207.1351" y="271.12704" z="97.435745" entity_id="6"/>
+			<spot x="207.240326" y="271.087219" z="98.896912" entity_id="6" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Pandaemonium Teleport Statue -->
 		<spawn npc_id="804688" respawn_time="295">
-			<spot x="287.2496" y="266.16083" z="96.462944" entity_id="83"/>
+			<spot x="286.936035" y="266.108856" z="98.274803" entity_id="83" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Mailbox -->
 	    <spawn npc_id="700079" respawn_time="295">
@@ -38,7 +38,7 @@
         </spawn>
 		<!-- Melanka -->
 		<spawn npc_id="804662" respawn_time="295">
-			<spot x="269.46524" y="261.9121" z="96.10612" h="61"/>
+			<spot x="269.465240" y="261.912109" z="97.338799" h="15" resolve_z="true"/>
 		</spawn>
 		<!-- Alda -->
 		<spawn npc_id="804663" respawn_time="295">
@@ -46,19 +46,19 @@
 		</spawn>
 		<!-- Leopold -->
 		<spawn npc_id="804664" respawn_time="295">
-			<spot x="213.09053" y="255.87689" z="97.086685" h="25"/>
+			<spot x="214.061981" y="256.138214" z="98.683357" h="15" resolve_z="true"/>
 		</spawn>
 		<!-- Madril -->
 		<spawn npc_id="804665" respawn_time="295">
-			<spot x="217.6259" y="278.54227" z="97.0867" h="101"/>
+			<spot x="217.411026" y="278.310974" z="98.683357" h="106" resolve_z="true"/>
 		</spawn>
 		<!-- Sigurd -->
 		<spawn npc_id="804666" respawn_time="295">
-			<spot x="229.96667" y="272.77707" z="97.0867" h="72"/>
+			<spot x="229.854446" y="272.689362" z="98.683357" h="75" resolve_z="true"/>
 		</spawn>
 		<!-- Guthrum -->
 		<spawn npc_id="804667" respawn_time="295">
-			<spot x="251.40276" y="276.5929" z="95.78592" h="90"/>
+			<spot x="253.209366" y="276.054108" z="97.338799" h="90" resolve_z="true"/>
 		</spawn>
 		<!-- Zhenya -->
 		<spawn npc_id="804668" respawn_time="295">
@@ -66,19 +66,19 @@
 		</spawn>
 		<!-- Jarl -->
 		<spawn npc_id="804669" respawn_time="295">
-			<spot x="251.43771" y="255.94452" z="95.78592" h="29"/>
+			<spot x="250.721771" y="256.407318" z="97.338799" h="30" resolve_z="true"/>
 		</spawn>
 		<!-- Dagrun -->
 		<spawn npc_id="804670" respawn_time="295">
-			<spot x="254.22192" y="255.80788" z="95.78592" h="29"/>
+			<spot x="253.791840" y="256.407318" z="97.338799" h="30" resolve_z="true"/>
 		</spawn>
 		<!-- Eomer -->
 		<spawn npc_id="804671" respawn_time="295">
-			<spot x="242.69879" y="271.04605" z="95.78592" h="113"/>
+			<spot x="242.767792" y="270.812561" z="97.338799" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Belia -->
 		<spawn npc_id="804672" respawn_time="295">
-			<spot x="242.69589" y="261.4958" z="95.78592" h="6"/>
+			<spot x="242.633499" y="261.473785" z="97.338799" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Tet -->
 		<spawn npc_id="804694" respawn_time="295">
@@ -86,19 +86,19 @@
 		</spawn>
 		<!-- Irinerk -->
 		<spawn npc_id="804696" respawn_time="295">
-			<spot x="257.17773" y="255.79863" z="95.78592" h="30"/>
+			<spot x="256.986572" y="256.407318" z="97.338799" h="30" resolve_z="true"/>
 		</spawn>
 		<!-- Brunk -->
 		<spawn npc_id="805305" respawn_time="295">
-            <spot x="207.44894" y="264.15247" z="97.08668" h="7"/>
+            <spot x="208.057159" y="263.751007" z="98.896912" h="10" resolve_z="true"/>
         </spawn>
 		<!-- Melika -->
         <spawn npc_id="805311" respawn_time="295">
-            <spot x="269.71954" y="271.07214" z="96.10612" h="62"/>
+            <spot x="269.465240" y="270.705811" z="97.338799" h="105" resolve_z="true"/>
         </spawn>
 		<!-- Zumank -->
         <spawn npc_id="805312" respawn_time="295">
-            <spot x="248.48946" y="276.7271" z="95.78592" h="90"/>
+            <spot x="247.060486" y="276.054108" z="97.338799" h="90" resolve_z="true"/>
         </spawn>
 		<!-- Amillota -->
         <spawn npc_id="805313" respawn_time="295">
@@ -106,7 +106,19 @@
         </spawn>
 		<!-- Biolis -->
 		<spawn npc_id="806244" respawn_time="295">
-            <spot x="209.44917" y="273.1125" z="97.086685" h="113"/>
+            <spot x="209.579620" y="272.670654" z="98.896912" h="116" resolve_z="true"/>
         </spawn>
+		<spawn npc_id="804682" initial_delay="1">
+		  <spot x="229.772430" y="256.991669" z="98.896912" h="0" entity_id="52" random_walk="2" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="804683" initial_delay="1">
+		  <spot x="214.964417" y="253.435028" z="98.896912" h="0" entity_id="73" random_walk="2" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="804684" initial_delay="1">
+		  <spot x="214.671127" y="278.907623" z="98.896912" h="0" entity_id="48" random_walk="2" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="804685" initial_delay="1">
+		  <spot x="229.615524" y="275.719574" z="98.896912" h="0" entity_id="68" random_walk="2" resolve_z="true"/>
+		</spawn>
 	</spawn_map>
 </spawns>

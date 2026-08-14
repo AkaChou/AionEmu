@@ -90,6 +90,9 @@ public class SpawnSpotTemplate {
 	@XmlAttribute(name = "entity_id")
 	private Integer entityId = 0;
 
+	@XmlAttribute(name = "resolve_z")
+	private Boolean resolveZ = false;
+
 	@XmlAttribute(name = "h", required = true)
 	private byte h;
 
@@ -115,6 +118,9 @@ public class SpawnSpotTemplate {
 	void beforeMarshal(Marshaller marshaller) {
 		if (ZERO.equals(entityId)) {
 			entityId = null;
+		}
+		if (Boolean.FALSE.equals(resolveZ)) {
+			resolveZ = null;
 		}
 		if (ZERO.equals(fly)) {
 			fly = null;
@@ -181,6 +187,9 @@ public class SpawnSpotTemplate {
 	void afterMarshal(Marshaller marshaller) {
 		if (entityId == null) {
 			entityId = 0;
+		}
+		if (resolveZ == null) {
+			resolveZ = false;
 		}
 		if (fly == null) {
 			fly = 0;
@@ -279,6 +288,10 @@ public class SpawnSpotTemplate {
 	/** 返回实体 ID / Returns the entity id */
 	public int getEntityId() {
 		return entityId;
+	}
+
+	public boolean isResolveZ() {
+		return Boolean.TRUE.equals(resolveZ);
 	}
 
 	/** 设置实体 ID / Sets the entity id */

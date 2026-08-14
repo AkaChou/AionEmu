@@ -6,78 +6,78 @@
 	<spawn_map map_id="320020000">
 		<!-- Hagen -->
 		<spawn npc_id="205020">
-			<spot x="434.750" y="399.500" z="233.566" h="15"/>
+			<spot x="434.750000" y="399.500000" z="235.000000" h="15" resolve_z="true"/>
 		</spawn>
 		<!-- Archon Legionary -->
 		<spawn npc_id="205023" respawn_time="60">
-			<spot x="445.0" y="416.75" z="229.792" h="3"/>
+			<spot x="445.000000" y="416.750000" z="233.000000" h="3" resolve_z="true"/>
 		</spawn>
 		<!-- Archon Legionary -->
 		<spawn npc_id="205024">
-			<spot x="445.000" y="409.250" z="230.627" h="16"/>
-			<spot x="448.750" y="420.250" z="230.262" h="3"/>
+			<spot x="445.000000" y="409.250000" z="233.000000" h="16" resolve_z="true"/>
+			<spot x="448.750000" y="420.250000" z="233.000000" h="3" resolve_z="true"/>
 		</spawn>
 		<!-- Archon Legionary -->
 		<spawn npc_id="205035" respawn_time="1">
-			<spot x="442.500" y="413.250" z="230.186" h="10"/>
-			<spot x="451.500" y="415.750" z="229.943" h="6"/>
-			<spot x="256.750" y="220.000" z="207.500" h="90" random_walk="6"/>
-			<spot x="238.000" y="282.750" z="210.000" h="90" random_walk="6"/>			
+			<spot x="442.500000" y="413.250000" z="233.000000" h="10" resolve_z="true"/>
+			<spot x="451.500000" y="415.750000" z="233.000000" h="6" resolve_z="true"/>
+			<spot x="256.750000" y="220.000000" z="207.500000" h="116" random_walk="6" resolve_z="true"/>
+			<spot x="238.000000" y="282.750000" z="210.000000" h="105" random_walk="6" resolve_z="true"/>
 		</spawn>
 		<!-- Archon Legionary -->
 		<spawn npc_id="205036" respawn_time="1">
-			<spot x="448.000" y="412.750" z="229.835" h="15"/>
-			<spot x="254.000" y="298.250" z="207.000" h="90" random_walk="6"/>
-			<spot x="229.500" y="272.750" z="207.500" h="90" random_walk="6"/>			
+			<spot x="448.000000" y="412.750000" z="233.000000" h="15" resolve_z="true"/>
+			<spot x="254.000000" y="298.250000" z="210.000000" h="11" random_walk="6" resolve_z="true"/>
+			<spot x="229.500000" y="272.750000" z="207.500000" h="15" random_walk="6" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="205038" respawn_time="1"><!-- AbProD2_Guardian_Chanter -->
-			<spot x="270.000" y="300.250" z="206.000" h="90" random_walk="6"/>
+			<spot x="270.000000" y="300.250000" z="210.000000" h="0" random_walk="6" resolve_z="true"/>
 			<spot x="256.000" y="300.000" z="207.000" h="90" random_walk="6"/>
 			<spot x="232.000" y="233.250" z="207.500" h="90" random_walk="6"/>
-			<spot x="259.000" y="218.750" z="207.500" h="90" random_walk="6"/>
+			<spot x="259.000000" y="218.750000" z="207.500000" h="53" random_walk="6" resolve_z="true"/>
 			<spot x="239.000" y="280.750" z="210.000" h="90" random_walk="6"/>
-			<spot x="282.000" y="221.750" z="209.750" h="90" random_walk="6"/>
+			<spot x="282.000000" y="221.750000" z="209.750000" h="60" random_walk="6" resolve_z="true"/>
 			<spot x="230.000" y="274.500" z="207.500" h="90" random_walk="6"/>
-		  <spot x="256.250000" y="300.000000" z="207.25702" h="80"/>
-		  <spot x="232.500000" y="233.250000" z="206.55968" h="30"/>
-		  <spot x="239.500000" y="280.750000" z="208.36931" h="45"/>
-		  <spot x="230.750000" y="274.500000" z="205.75064" h="73"/>
+		  <spot x="256.250000" y="300.000000" z="210.000000" h="80" resolve_z="true"/>
+		  <spot x="232.500000" y="233.250000" z="207.500000" h="30" resolve_z="true"/>
+		  <spot x="239.500000" y="280.750000" z="210.000000" h="45" resolve_z="true"/>
+		  <spot x="230.750000" y="274.500000" z="207.500000" h="73" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="205028" respawn_time="1"><!-- AbProD2_Combat_Archon_F2 -->
-			<spot x="376.250" y="368.250" z="229.750" h="90" fly="1"/>
-			<spot x="369.250" y="327.250" z="221.000" h="90" fly="1"/>
+			<spot x="376.250000" y="368.250000" z="229.750000" h="10" fly="1" resolve_z="true"/>
+			<spot x="369.250000" y="327.250000" z="221.000000" h="70" fly="1" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="205025" respawn_time="1"><!-- AbProD2_Combat_Archon_M1 -->
-			<spot x="381.500" y="352.000" z="234.500" h="90" fly="1"/>
-			<spot x="413.000" y="385.500" z="224.000" h="90" fly="1"/>
-			<spot x="329.750" y="318.000" z="203.750" h="90" fly="1"/>
+			<spot x="381.500000" y="352.000000" z="234.500000" h="30" fly="1" resolve_z="true"/>
+			<spot x="413.000000" y="385.500000" z="224.000000" h="10" fly="1" resolve_z="true"/>
+			<spot x="329.750000" y="318.000000" z="203.750000" h="43" fly="1" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="205039" respawn_time="1"><!-- AbProD2_Guardian_Knight -->
-			<spot x="405.750" y="370.250" z="231.750" h="90" fly="1"/>
-			<spot x="365.750" y="325.000" z="221.500" h="90" fly="1"/>
-			<spot x="366.500" y="353.250" z="217.500" h="90" fly="1"/>
-			<spot x="414.500" y="389.250" z="224.000" h="90" fly="1"/>
-			<spot x="327.750" y="321.000" z="203.750" h="90" fly="1"/>
-			<spot x="358.250" y="367.750" z="216.250" h="90" fly="1"/>
-			<spot x="379.250" y="372.250" z="229.750" h="90" fly="1"/>
-			<spot x="334.500" y="358.000" z="209.750" h="90" fly="1"/>
-			<spot x="343.000" y="317.750" z="201.750" h="90" fly="1"/>
-			<spot x="382.250" y="356.000" z="234.500" h="90" fly="1"/>			
+			<spot x="405.750000" y="370.250000" z="231.750000" h="16" fly="1" resolve_z="true"/>
+			<spot x="365.750000" y="325.000000" z="221.000000" h="8" fly="1" resolve_z="true"/>
+			<spot x="366.500000" y="353.250000" z="217.500000" h="113" fly="1" resolve_z="true"/>
+			<spot x="414.500000" y="389.250000" z="224.000000" h="76" fly="1" resolve_z="true"/>
+			<spot x="327.750000" y="321.000000" z="203.750000" h="100" fly="1" resolve_z="true"/>
+			<spot x="358.250000" y="367.750000" z="216.250000" h="63" fly="1" resolve_z="true"/>
+			<spot x="379.250000" y="372.250000" z="229.750000" h="81" fly="1" resolve_z="true"/>
+			<spot x="334.500000" y="358.000000" z="209.750000" h="103" fly="1" resolve_z="true"/>
+			<spot x="343.000000" y="317.750000" z="201.750000" h="78" fly="1" resolve_z="true"/>
+			<spot x="382.250000" y="356.000000" z="234.500000" h="93" fly="1" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="205033" respawn_time="1"><!-- AbProD2_Air_Archon_M4 -->
-			<spot x="313.500" y="257.000" z="225.000" h="90" fly="1"/>
+			<spot x="313.500000" y="257.000000" z="225.000000" h="60" fly="1" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="205034" respawn_time="1"><!-- AbProD2_Air_Archon_F4 -->
-			<spot x="195.500" y="256.250" z="225.000" h="90" fly="1"/>
+			<spot x="195.500000" y="256.250000" z="225.000000" h="0" fly="1" resolve_z="true"/>
 		</spawn>	
 		<spawn npc_id="205026" respawn_time="1"><!-- AbProD2_Combat_Archon_M2 -->
-			<spot x="355.250" y="366.250" z="216.250" h="90" fly="1"/>
-			<spot x="369.000" y="351.000" z="217.500" h="90" fly="1"/>
+			<spot x="355.250000" y="366.250000" z="216.250000" h="3" fly="1" resolve_z="true"/>
+			<spot x="369.000000" y="351.000000" z="217.500000" h="56" fly="1" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="205027" respawn_time="1"><!-- AbProD2_Combat_Archon_F1 -->
-			<spot x="337.000" y="354.250" z="209.750" h="90" fly="1"/>
-			<spot x="408.250" y="374.000" z="231.750" h="90" fly="1"/>
-			<spot x="340.000" y="314.250" z="201.750" h="90" fly="1"/>
+			<spot x="337.000000" y="354.250000" z="209.750000" h="43" fly="1" resolve_z="true"/>
+			<spot x="408.250000" y="374.000000" z="231.750000" h="81" fly="1" resolve_z="true"/>
+			<spot x="340.000000" y="314.250000" z="201.750000" h="10" fly="1" resolve_z="true"/>
 		</spawn>
 	</spawn_map>
 </spawns>

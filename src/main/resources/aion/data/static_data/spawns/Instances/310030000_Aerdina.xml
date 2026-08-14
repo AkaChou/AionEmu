@@ -20,6 +20,8 @@
 		<spawn npc_id="211625">
 			<spot x="264.054" y="215.517" z="210.201" h="95"/>
 			<spot x="258.055" y="241.453" z="219.08" h="94"/>
+		  <spot x="268.633179" y="243.761551" z="226.000000" h="95" random_walk="2" resolve_z="true"/>
+		  <spot x="253.363342" y="222.916183" z="215.000000" h="96" random_walk="2" resolve_z="true"/>
 		</spawn>
 		<!-- Crusader -->
 		<spawn npc_id="211624">

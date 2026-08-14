@@ -21,6 +21,8 @@ public class SpawnTemplate {
 	private float z;
 	private byte h;
 	private int entityId;
+	private boolean resolveZ;
+	private volatile float resolvedZ = Float.NaN;
 	private int randomWalk;
 	private String walkerId;
 	private int walkerIdx;
@@ -63,6 +65,7 @@ public class SpawnTemplate {
 		z = spot.getZ();
 		h = spot.getHeading();
 		entityId = spot.getEntityId();
+		resolveZ = spot.isResolveZ();
 		randomWalk = spot.getRandomWalk();
 		walkerId = spot.getWalkerId();
 		fly = spot.getFly();
@@ -116,6 +119,7 @@ public class SpawnTemplate {
 	/** 设置 x 坐标 / Sets the x */
 	public void setX(float x) {
 		this.x = x;
+		resolvedZ = Float.NaN;
 	}
 
 	/** 返回 y 坐标 / Returns the y */
@@ -126,6 +130,7 @@ public class SpawnTemplate {
 	/** 设置 y 坐标 / Sets the y */
 	public void setY(float y) {
 		this.y = y;
+		resolvedZ = Float.NaN;
 	}
 
 	/** 返回 z 坐标 / Returns the z */
@@ -136,6 +141,7 @@ public class SpawnTemplate {
 	/** 设置 z 坐标 / Sets the z */
 	public void setZ(float z) {
 		this.z = z;
+		resolvedZ = Float.NaN;
 	}
 
 	/** 返回 heading / Returns the heading */
@@ -151,6 +157,23 @@ public class SpawnTemplate {
 	/** 设置实体 ID / Sets the entity id */
 	public void setEntityId(int entityId) {
 		this.entityId = entityId;
+	}
+
+	public boolean isResolveZ() {
+		return resolveZ;
+	}
+
+	public void setResolveZ(boolean resolveZ) {
+		this.resolveZ = resolveZ;
+		resolvedZ = Float.NaN;
+	}
+
+	public float getResolvedZ() {
+		return resolvedZ;
+	}
+
+	public void setResolvedZ(float resolvedZ) {
+		this.resolvedZ = resolvedZ;
 	}
 
 	/** 返回静态 ID / Returns the static id */

@@ -7,14 +7,14 @@
 	<spawn_map map_id="310070000">
 		<!-- Icaronix -->
 		<spawn npc_id="205110">
-			<spot x="338" y="103" z="1191"/>
+			<spot x="338.000000" y="103.000000" z="1191.000000" h="90" resolve_z="true"/>
 		</spawn>
 		<!-- Icaronixs Box -->
 		<spawn npc_id="700240">
-			<spot x="196.118" y="263.438" z="1374.08" entity_id="7"/>
+			<spot x="196.469315" y="263.485504" z="1375.000000" entity_id="7" h="0" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="206073" respawn_time="60">
-		  <spot x="214.176300" y="278.872620" z="1387.2676"/>
+		  <spot x="214.176300" y="278.872620" z="1388.000000" h="0" resolve_z="true" fly="1"/>
 		</spawn>
 	</spawn_map>
 </spawns>

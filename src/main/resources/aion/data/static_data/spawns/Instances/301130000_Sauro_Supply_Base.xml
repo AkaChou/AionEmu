@@ -20,7 +20,7 @@
             <spot x="319.0723" y="364.12384" z="159.13863" h="59"/>
 		</spawn>
 		<spawn npc_id="230791">
-			<spot x="169.8857" y="429.41443" z="151.5528" h="119"/>
+			<spot x="169.567795" y="429.953583" z="152.327362" h="0" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="230792">
 		    <spot h="90" z="158.95453" y="429.84207" x="289.33316"/>
@@ -72,7 +72,7 @@
             <spot x="464.4351" y="411.7299" z="182.15321" h="72"/>
 		</spawn>
 		<spawn npc_id="230818">
-			<spot x="480.46115" y="358.8696" z="182.2329" h="29"/>
+			<spot x="479.799500" y="358.785767" z="184.258377" h="30" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="230820">
 		    <spot h="60" z="159.24051" y="363.69852" x="305.3056"/>
@@ -149,7 +149,7 @@
 		</spawn>
 		<!-- Guard Captain Rohuka -->
 		<spawn npc_id="230849">
-			<spot x="598.4606" y="354.03815" z="202.91283" h="0"/>
+			<spot x="600.346863" y="354.438507" z="203.012833" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Research Teselik -->
 		<spawn npc_id="230850">
@@ -165,7 +165,7 @@
 		</spawn>
 		<!-- Chief Of Staff Moriata -->
 		<spawn npc_id="230853">
-			<spot x="146.53566" y="429.89893" z="150.77364" h="119"/>
+			<spot x="146.145920" y="429.865509" z="152.171600" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Guard Captain Ahuradim's -->
 		<spawn npc_id="230857">
@@ -266,9 +266,9 @@
         </spawn>
 		<!-- Sauro Supply Base Ancient War Machine -->
 		<spawn npc_id="801955">
-			<spot x="490.16394" y="380.58337" z="182.03795" entity_id="134"/>
-			<spot x="454.54834" y="502.78647" z="181.88437" entity_id="136"/>
-			<spot x="430.89337" y="452.41830" z="182.00000" entity_id="178"/>
+			<spot x="490.356323" y="380.892761" z="182.165558" entity_id="134" h="0" resolve_z="true"/>
+			<spot x="455.248840" y="502.428467" z="182.672668" entity_id="136" h="0" resolve_z="true"/>
+			<spot x="431.440369" y="452.869965" z="182.165558" entity_id="178" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Flame Cannon -->
         <spawn npc_id="284453">
@@ -293,8 +293,8 @@
 			<spot x="262.72226" y="396.23676" z="156.83209" h="30"/>
 		</spawn>
 		<spawn npc_id="230797" respawn_time="60">
-		  <spot x="610.890686" y="518.652405" z="191.2776" h="75"/>
-		  <spot x="611.111145" y="452.693542" z="191.2776" h="43"/>
+		  <spot x="610.890686" y="518.652405" z="192.012466" h="75" resolve_z="true"/>
+		  <spot x="611.111145" y="452.693542" z="191.863312" h="43" resolve_z="true"/>
 		</spawn>
 	</spawn_map>
 </spawns>

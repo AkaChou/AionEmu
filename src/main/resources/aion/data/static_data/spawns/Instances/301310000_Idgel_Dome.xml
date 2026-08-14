@@ -8,6 +8,7 @@
 		<spawn npc_id="234186">
 			<spot x="214.0987" y="255.10202" z="85.17249" h="59"/>
             <spot x="315.37213" y="254.68036" z="85.17249" h="1"/>
+		  <spot x="203.692261" y="255.727890" z="91.802505" h="0" random_walk="2" resolve_z="true"/>
 		</spawn>
 		 <!-- Sheban Intelligence Unit Hunter -->
 		<spawn npc_id="234187">
@@ -57,16 +58,36 @@
 			<spot x="254.50739" y="167.65588" z="79.575386" h="18"/>
 		</spawn>
 		<spawn npc_id="702320" respawn_time="1">
-		  <spot x="258.407318" y="169.474899" z="79.430855"/>
+		  <spot x="258.407318" y="169.474899" z="80.489204" h="0" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="702321" respawn_time="1">
-		  <spot x="270.002625" y="347.999573" z="79.44365"/>
+		  <spot x="270.002625" y="347.999573" z="81.162560" h="0" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="855008" respawn_time="1">
-		  <spot x="303.850372" y="313.054108" z="79.86219"/>
-		  <spot x="288.043976" y="283.516785" z="92.968704"/>
-		  <spot x="223.533508" y="206.048782" z="79.86219"/>
-		  <spot x="239.786591" y="233.325119" z="92.98285"/>
+		  <spot x="303.850372" y="313.054108" z="86.938484" h="0" resolve_z="true"/>
+		  <spot x="288.043976" y="283.516785" z="94.413620" h="0" resolve_z="true"/>
+		  <spot x="223.533508" y="206.048782" z="87.175323" h="0" resolve_z="true"/>
+		  <spot x="239.786591" y="233.325119" z="94.413620" h="0" resolve_z="true"/>
+		  <spot x="267.087585" y="280.766724" z="87.703285" h="0" random_walk="2" resolve_z="true"/>
+		  <spot x="262.402374" y="237.313370" z="88.629883" h="0" random_walk="2" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="234751" initial_delay="420">
+		  <spot x="250.637192" y="244.033600" z="94.840950" h="75" random_walk="2" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="234751" initial_delay="720">
+		  <spot x="273.763733" y="258.954224" z="94.840950" h="15" random_walk="2" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="234752" initial_delay="420">
+		  <spot x="264.939301" y="267.924133" z="94.840950" h="45" random_walk="2" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="234753" initial_delay="420">
+		  <spot x="278.261902" y="273.789642" z="94.840950" h="15" random_walk="2" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="234753" initial_delay="720">
+		  <spot x="256.338928" y="259.022095" z="94.840950" h="75" random_walk="2" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="234754" initial_delay="420">
+		  <spot x="264.971527" y="249.829453" z="94.840950" h="105" random_walk="2" resolve_z="true"/>
 		</spawn>
 	</spawn_map>
 </spawns>

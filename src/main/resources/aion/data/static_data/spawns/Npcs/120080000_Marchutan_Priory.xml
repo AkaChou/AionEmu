@@ -46,9 +46,9 @@
 	    </spawn>
 		<!-- Crucible Guard -->
 		<spawn npc_id="799634" respawn_time="295">
-            <spot x="577.197" y="236.737" z="93.5045" h="58"/>
+            <spot x="577.128235" y="236.641449" z="94.299934" h="60" resolve_z="true"/>
 		    <spot x="546.705" y="281.065" z="93.48" h="89"/>
-		    <spot x="577.431" y="258.438" z="93.4936" h="60"/>
+		    <spot x="577.135803" y="258.218658" z="94.299934" h="60" resolve_z="true"/>
 		    <spot x="520.454" y="252.92" z="93.48" h="106"/>
 		    <spot x="536.227" y="215.655" z="93.4796" h="89"/>
 		    <spot x="561.509" y="215.644" z="93.4796" h="91"/>
@@ -59,13 +59,21 @@
 		<spawn npc_id="799635" respawn_time="295">
             <spot x="520.473" y="247.871" z="93.49" h="11"/>
 		    <spot x="541.585" y="215.656" z="93.4796" h="89"/>
-		    <spot x="577.197" y="241.736" z="93.5045" h="60"/>
-		    <spot x="577.431" y="263.392" z="93.487" h="60"/>
+		    <spot x="577.128906" y="241.795212" z="94.299934" h="60" resolve_z="true"/>
+		    <spot x="577.136475" y="263.372437" z="94.299934" h="60" resolve_z="true"/>
 		    <spot x="551.923" y="281.064" z="93.4685" h="89"/>
 		    <spot x="556.207" y="215.65" z="93.4796" h="90"/>
 		    <spot x="485.759" y="250.355" z="93.52" walker_id="CRUCIBLEGUARDMARCHUTANPRIORY000000000002"/>
 		    <spot x="563.34186" y="229.95085" z="93.486755" h="30" walker_id="CRUCIBLEGUARDMARCHUTANPRIORY000000000003"/>
 		    <spot x="549.39075" y="261.78043" z="93.52" h="30" walker_id="CRUCIBLEGUARDMARCHUTANPRIORY000000000004"/>
+		  <spot x="533.433167" y="339.438141" z="94.299934" h="105" random_walk="2" resolve_z="true"/>
+		  <spot x="533.872131" y="316.220947" z="94.299934" h="15" random_walk="2" resolve_z="true"/>
+		  <spot x="564.694641" y="339.828796" z="94.258217" h="75" random_walk="2" resolve_z="true"/>
+		  <spot x="564.582458" y="316.465881" z="94.258217" h="45" random_walk="2" resolve_z="true"/>
+		  <spot x="537.598328" y="312.240326" z="94.299934" h="15" random_walk="2" resolve_z="true"/>
+		  <spot x="560.603638" y="312.520020" z="94.258217" h="45" random_walk="2" resolve_z="true"/>
+		  <spot x="537.306885" y="343.115448" z="94.258217" h="105" random_walk="2" resolve_z="true"/>
+		  <spot x="560.751038" y="343.731537" z="94.258217" h="75" random_walk="2" resolve_z="true"/>
         </spawn>
 		<!-- Hall Guard -->
 		<spawn npc_id="702559" respawn_time="295">
@@ -81,7 +89,7 @@
         </spawn>
 		<!-- Inggness -->
 		<spawn npc_id="205320" respawn_time="295">
-            <spot x="528.832" y="269.624" z="93.8866" h="115"/>
+            <spot x="528.832458" y="269.623810" z="94.483833" h="115" resolve_z="true"/>
         </spawn>
 		<!-- Reigar -->
 		<spawn npc_id="207164" respawn_time="295">
@@ -105,31 +113,31 @@
         </spawn>
 		<!-- Lansmol -->
 		<spawn npc_id="205328" respawn_time="295">
-            <spot x="567.926" y="267.613" z="93.4694" h="73"/>
+            <spot x="567.006897" y="268.056122" z="94.299934" h="73" resolve_z="true"/>
         </spawn>
 		<!-- Mordan -->
 		<spawn npc_id="205329" respawn_time="295">
-            <spot x="572.975" y="233.972" z="93.4991" h="53"/>
+            <spot x="572.975159" y="233.972290" z="94.299934" h="53" resolve_z="true"/>
         </spawn>
 		<!-- Adumra -->
 		<spawn npc_id="205330" respawn_time="295">
-            <spot x="574.557" y="265.354" z="93.4808" h="90"/>
+            <spot x="574.556702" y="265.354462" z="94.299934" h="90" resolve_z="true"/>
         </spawn>
 		<!-- Gerd -->
 		<spawn npc_id="205447" respawn_time="295">
-            <spot x="485.564" y="186.411" z="93.42" h="30"/>
+            <spot x="485.564087" y="186.410782" z="94.299934" h="30" resolve_z="true"/>
         </spawn>
 		<!-- Duinna -->
 		<spawn npc_id="205448" respawn_time="295">
-            <spot x="502.356" y="202.738" z="93.43" h="60"/>
+            <spot x="502.355804" y="202.737991" z="94.299934" h="60" resolve_z="true"/>
         </spawn>
 		<!-- Iselin -->
 		<spawn npc_id="205452" respawn_time="295">
-            <spot x="468.349" y="202.738" z="93.43"/>
+            <spot x="468.349243" y="202.737747" z="94.299934" h="0" resolve_z="true"/>
         </spawn>
 		<!-- Meiren -->
 		<spawn npc_id="205460" respawn_time="295">
-            <spot x="534.541" y="267.211" z="93.48"/>
+            <spot x="534.541260" y="267.211304" z="94.299934" h="0" resolve_z="true"/>
         </spawn>
 		<!-- Renen -->
 		<spawn npc_id="205472" respawn_time="295">
@@ -145,7 +153,7 @@
         </spawn>
 		<!-- Shinin -->
 		<spawn npc_id="205986" respawn_time="295">
-            <spot x="546.163" y="279.156" z="93.480" h="90"/>
+            <spot x="546.162659" y="279.156006" z="94.167732" h="90" resolve_z="true"/>
         </spawn>
 		<!-- Os -->
 		<spawn npc_id="207029" respawn_time="295">
@@ -169,11 +177,11 @@
         </spawn>
 		<!-- Merca -->
 		<spawn npc_id="207093" respawn_time="295">
-            <spot x="549.7483" y="346.06796" z="93.4828" h="90"/>
+            <spot x="548.571594" y="346.471008" z="94.766228" h="90" resolve_z="true"/>
         </spawn>
 		<!-- Trium -->
 		<spawn npc_id="207096" respawn_time="295">
-            <spot x="548.5227" y="346.0717" z="93.4828" h="90"/>
+            <spot x="547.268066" y="346.495697" z="94.766228" h="90" resolve_z="true"/>
         </spawn>
 	    <!-- Belgen -->
 	    <spawn npc_id="207098" respawn_time="295">

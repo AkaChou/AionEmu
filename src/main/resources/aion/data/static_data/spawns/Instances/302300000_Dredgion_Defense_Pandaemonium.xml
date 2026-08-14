@@ -308,14 +308,14 @@
 			<spot x="2242.77" y="1309.98" z="216.54" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Design_5.25"/>
 			<spot x="2234.87" y="1361.43" z="175.84" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Design_5.28"/>
 			<spot x="2221.22" y="1477.19" z="225.73" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Design_5.24"/>
-			<spot x="2195.67" y="1220.15" z="189.40" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Design_5.12"/>
+			<spot x="2195.737549" y="1220.134644" z="189.401978" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Design_5.12" resolve_z="true" fly="1"/>
 			<spot x="2242.78" y="1309.97" z="216.54" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Design_5.16"/>
 			<spot x="2302.29" y="1427.22" z="223.08" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Design_5.15"/>
 			<spot x="2087.74" y="1316.36" z="223.37" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Design_5.18"/>
 			<spot x="2234.88" y="1361.41" z="175.84" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Design_5.14"/>
 			<spot x="2221.23" y="1477.18" z="225.73" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Design_5.19"/>
 			<spot x="2193.49" y="1398.08" z="215.24" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Design_5.20"/>
-			<spot x="2183.75" y="1360.55" z="171.26" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Design_5.17"/>
+			<spot x="2183.812256" y="1360.544312" z="171.257965" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Design_5.17" resolve_z="true" fly="1"/>
         </spawn>
 		<!-- Dreadgion_Ship_Drakan_Fi_71_Ae -->
         <spawn npc_id="220773">
@@ -625,25 +625,25 @@
         </spawn>
 		<!-- Dreadgion_N_Drakan_Flying_71 -->
 		<spawn npc_id="220865">
-			<spot x="2026.06" y="1261.50" z="176.21" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.162"/>
-            <spot x="1992.26" y="1309.14" z="170.87" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.132"/>
-            <spot x="1906.50" y="1476.41" z="170.87" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.150"/>
-            <spot x="2153.85" y="1113.39" z="111.33" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.169"/>
-            <spot x="2026.94" y="1163.09" z="234.71" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.163"/>
-            <spot x="1995.32" y="1187.61" z="194.74" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.172"/>
-            <spot x="1911.49" y="1340.78" z="147.15" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.166"/>
-            <spot x="2296.38" y="1049.21" z="102.65" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.171"/>
-            <spot x="1998.52" y="1274.97" z="120.56" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.170"/>
-            <spot x="2026.11" y="1483.38" z="170.87" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.186"/>
-            <spot x="1996.89" y="1440.97" z="170.87" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.141"/>
-            <spot x="2233.00" y="1078.72" z="166.42" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.182"/>
-            <spot x="2250.81" y="1627.19" z="102.65" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.168"/>
-            <spot x="2109.11" y="1552.30" z="218.48" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.144"/>
-            <spot x="1945.24" y="1211.08" z="164.11" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.139"/>
-            <spot x="2332.87" y="1604.65" z="189.62" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.180"/>
-            <spot x="1961.80" y="1468.88" z="229.38" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.143"/>
-            <spot x="2034.97" y="1386.30" z="161.89" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.165"/>
-            <spot x="2100.94" y="1561.86" z="112.52" h="0" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.160"/>
+			<spot x="2025.985107" y="1261.487671" z="176.207428" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.162" resolve_z="true" fly="1"/>
+            <spot x="1992.187744" y="1309.120850" z="170.869659" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.132" resolve_z="true" fly="1"/>
+            <spot x="1906.425171" y="1476.393433" z="170.869659" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.150" resolve_z="true" fly="1"/>
+            <spot x="2153.776123" y="1113.378784" z="111.325760" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.169" resolve_z="true" fly="1"/>
+            <spot x="2026.869629" y="1163.072632" z="234.710052" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.163" resolve_z="true" fly="1"/>
+            <spot x="1995.242554" y="1187.599365" z="194.736526" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.172" resolve_z="true" fly="1"/>
+            <spot x="1911.421753" y="1340.767822" z="147.147476" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.166" resolve_z="true" fly="1"/>
+            <spot x="2296.308594" y="1049.195190" z="102.653763" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.171" resolve_z="true" fly="1"/>
+            <spot x="1998.447266" y="1274.952515" z="120.561493" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.170" resolve_z="true" fly="1"/>
+            <spot x="2026.037231" y="1483.367676" z="170.869659" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.186" resolve_z="true" fly="1"/>
+            <spot x="1996.819214" y="1440.952637" z="170.869659" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.141" resolve_z="true" fly="1"/>
+            <spot x="2232.926270" y="1078.702637" z="166.424484" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.182" resolve_z="true" fly="1"/>
+            <spot x="2250.735352" y="1627.173218" z="102.653763" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.168" resolve_z="true" fly="1"/>
+            <spot x="2109.033936" y="1552.288574" z="218.478561" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.144" resolve_z="true" fly="1"/>
+            <spot x="1945.167847" y="1211.069946" z="164.107056" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.139" resolve_z="true" fly="1"/>
+            <spot x="2332.794189" y="1604.635864" z="189.624695" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.180" resolve_z="true" fly="1"/>
+            <spot x="1961.731689" y="1468.868530" z="229.381439" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.143" resolve_z="true" fly="1"/>
+            <spot x="2034.893555" y="1386.289917" z="161.892792" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.165" resolve_z="true" fly="1"/>
+            <spot x="2100.866943" y="1561.842163" z="112.523407" h="90" walker_id="iddc1_dreadgion_NPCPathIDLC1_Dreadgion_Defense_5.160" resolve_z="true" fly="1"/>
 		</spawn>
 		<!-- Dreadgion_S_Main_Module_A -->
 		<spawn npc_id="220866">

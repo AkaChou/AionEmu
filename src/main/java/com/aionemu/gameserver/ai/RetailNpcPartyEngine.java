@@ -40,7 +40,9 @@ public final class RetailNpcPartyEngine {
 			String partyId = worldId + ":" + party.token();
 			for (NpcPartyMember member : party.members()) {
 				SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(worldId, member.id(), member.x(), member.y(),
-					member.z(), (byte) 0);
+					member.z(), (byte) member.heading());
+				template.setResolveZ(true);
+				template.setFly(member.fly() ? 1 : 0);
 				template.setNpcPartyId(partyId);
 				templates.add(template);
 			}

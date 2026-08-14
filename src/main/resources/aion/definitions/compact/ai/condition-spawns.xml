@@ -880,7 +880,7 @@
     <condition id="110" expression="boss_po6 == 1" despawn_at_other="false" group_mode="all" source="IDAb1_Ere/world_N.xml#31">
       <group probability="1000">
         <slot>
-          <npc id="246548" probability="10000" x="1052.75781" y="704.029602" z="389.28714" heading="90" initial_delay="1" initial_delay_extra="0"/>
+          <npc id="246548" probability="10000" x="1052.75781" y="704.029602" z="389.28714" heading="90" initial_delay="1" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -894,7 +894,7 @@
     <condition id="112" expression="boss_po2 == 1" despawn_at_other="false" group_mode="all" source="IDAb1_Ere/world_N.xml#41">
       <group probability="1000">
         <slot>
-          <npc id="246548" probability="10000" x="1020.3114" y="704.033936" z="389.27063" heading="90" initial_delay="1" initial_delay_extra="0"/>
+          <npc id="246548" probability="10000" x="1020.3114" y="704.033936" z="389.27063" heading="90" initial_delay="1" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -929,7 +929,7 @@
     <condition id="117" expression="boss_po3 == 1" despawn_at_other="false" group_mode="all" source="IDAb1_Ere/world_N.xml#92">
       <group probability="1000">
         <slot>
-          <npc id="246548" probability="10000" x="1028.7561" y="751.264771" z="389.379852" heading="270" initial_delay="1" initial_delay_extra="0"/>
+          <npc id="246548" probability="10000" x="1028.7561" y="751.264771" z="389.379852" heading="270" initial_delay="1" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -964,14 +964,14 @@
     <condition id="122" expression="boss_po5 == 1" despawn_at_other="false" group_mode="all" source="IDAb1_Ere/world_N.xml#178">
       <group probability="1000">
         <slot>
-          <npc id="246548" probability="10000" x="1045.41931" y="751.264771" z="389.397552" heading="270" initial_delay="1" initial_delay_extra="0"/>
+          <npc id="246548" probability="10000" x="1045.41931" y="751.264771" z="389.397552" heading="270" initial_delay="1" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="123" expression="boss_po4 == 1" despawn_at_other="false" group_mode="all" source="IDAb1_Ere/world_N.xml#190">
       <group probability="1000">
         <slot>
-          <npc id="246548" probability="10000" x="1036.69824" y="704.031372" z="389.263947" heading="90" initial_delay="1" initial_delay_extra="0"/>
+          <npc id="246548" probability="10000" x="1036.69824" y="704.031372" z="389.263947" heading="90" initial_delay="1" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -1076,7 +1076,7 @@
     <condition id="138" expression="boss_po1 == 1" despawn_at_other="false" group_mode="all" source="IDAb1_Ere/world_N.xml#374">
       <group probability="1000">
         <slot>
-          <npc id="246548" probability="10000" x="1013.78339" y="751.264771" z="389.382904" heading="270" initial_delay="1" initial_delay_extra="0"/>
+          <npc id="246548" probability="10000" x="1013.78339" y="751.264771" z="389.382904" heading="270" initial_delay="1" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -2339,14 +2339,14 @@
     <condition id="314" expression="NAMED_KILLED_D == 1" despawn_at_other="false" group_mode="all" source="IDDreadgion_04/world_N.xml#2">
       <group probability="1000">
         <slot>
-          <npc id="801994" probability="10000" x="496.177948" y="761.770142" z="390.805359" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="801994" probability="10000" x="496.177948" y="761.770142" z="390.805359" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="315" expression="TSWITCH_1_DESTROYED == 1" despawn_at_other="false" group_mode="all" source="IDDreadgion_04/world_N.xml#3">
       <group probability="1000">
         <slot>
-          <npc id="801991" probability="10000" x="396.97934" y="184.391739" z="433.94046" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="801991" probability="10000" x="396.97934" y="184.391739" z="433.94046" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -2360,14 +2360,14 @@
     <condition id="317" expression="NAMED_KILLED_L == 1" despawn_at_other="false" group_mode="all" source="IDDreadgion_04/world_N.xml#8">
       <group probability="1000">
         <slot>
-          <npc id="801993" probability="10000" x="473.758545" y="761.864258" z="390.805359" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="801993" probability="10000" x="473.758545" y="761.864258" z="390.805359" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="318" expression="TSWITCH_2_DESTROYED == 1" despawn_at_other="false" group_mode="all" source="IDDreadgion_04/world_N.xml#9">
       <group probability="1000">
         <slot>
-          <npc id="801992" probability="10000" x="554.648438" y="173.535248" z="433.94046" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="801992" probability="10000" x="554.648438" y="173.535248" z="433.94046" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -2463,7 +2463,7 @@
     <condition id="331" expression="teleport_01 &lt; 3" despawn_at_other="true" group_mode="all" source="IDElemental_2_E/world_N.xml#14">
       <group probability="1000">
         <slot>
-          <npc id="731651" probability="10000" x="882" y="1091" z="94.185379" heading="90" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="731651" probability="10000" x="882" y="1091" z="94.185379" heading="90" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -2498,7 +2498,7 @@
     <condition id="336" expression="teleport_02 == 3" despawn_at_other="true" group_mode="all" source="IDElemental_2_E/world_N.xml#22">
       <group probability="1000">
         <slot>
-          <npc id="856573" probability="10000" x="824.71405" y="1279.94214" z="84.619461" heading="180" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="856573" probability="10000" x="824.71405" y="1279.94214" z="84.619461" heading="180" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -2981,70 +2981,70 @@
     <condition id="388" expression="rock1_1 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#3">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="938.483704" y="1004.39239" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="938.483704" y="1004.39239" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="389" expression="rock1_2 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#5">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="923.58252" y="1104.15027" z="757.153442" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="923.58252" y="1104.15027" z="757.153442" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="390" expression="rock1_2 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#8">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="886.399231" y="1160.97632" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="886.399231" y="1160.97632" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="391" expression="rock1_2 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#9">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="936.215149" y="1097.42334" z="764.842102" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="936.215149" y="1097.42334" z="764.842102" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="392" expression="rock1_4 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#13">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="547.224548" y="1238.93347" z="714.008606" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="547.224548" y="1238.93347" z="714.008606" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="393" expression="rock1_4 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#20">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="549.808105" y="1166.47925" z="715.419006" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="549.808105" y="1166.47925" z="715.419006" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="394" expression="rock1_1 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#25">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="1020.29181" y="1030.90649" z="751.158325" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="1020.29181" y="1030.90649" z="751.158325" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="395" expression="rock1_1 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#28">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="952.491943" y="1008.13702" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="952.491943" y="1008.13702" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="396" expression="rock1_2 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#29">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="906.077515" y="1105.3042" z="757.153442" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="906.077515" y="1105.3042" z="757.153442" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="397" expression="rock1_3 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#31">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="684.915344" y="1387.55591" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="684.915344" y="1387.55591" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3058,42 +3058,42 @@
     <condition id="399" expression="rock1_1 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#35">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="898.020081" y="1008.62958" z="750.64563" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="898.020081" y="1008.62958" z="750.64563" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="400" expression="rock1_1 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#36">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="939.823181" y="1049.46301" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="939.823181" y="1049.46301" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="401" expression="rock1_3 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#38">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="750.335388" y="1313.70142" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="750.335388" y="1313.70142" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="402" expression="rock1_1 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#39">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="885.524963" y="1052.01611" z="750.64563" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="885.524963" y="1052.01611" z="750.64563" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="403" expression="rock1_1 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#43">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="1037.10059" y="1018.28717" z="751.158325" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="1037.10059" y="1018.28717" z="751.158325" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="404" expression="rock1_3 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#47">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="724.242554" y="1358.67969" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="724.242554" y="1358.67969" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3107,56 +3107,56 @@
     <condition id="406" expression="rock1_3 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#52">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="763.811157" y="1273.12317" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="763.811157" y="1273.12317" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="407" expression="rock1_1 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#53">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="1008.59637" y="1007.11737" z="751.158325" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="1008.59637" y="1007.11737" z="751.158325" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="408" expression="rock1_4 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#54">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="502.053986" y="1219.02087" z="726.716858" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="502.053986" y="1219.02087" z="726.716858" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="409" expression="rock1_4 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#58">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="548.759949" y="1208.41821" z="713.13031" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="548.759949" y="1208.41821" z="713.13031" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="410" expression="rock1_2 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#70">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="955.061096" y="1148.85632" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="955.061096" y="1148.85632" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="411" expression="rock1_3 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#71">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="735.617493" y="1353.33997" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="735.617493" y="1353.33997" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="412" expression="rock1_2 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#73">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="934.594055" y="1210.46167" z="747.725647" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="934.594055" y="1210.46167" z="747.725647" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="413" expression="rock1_4 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#75">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="538.145813" y="1209.62891" z="711.949219" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="538.145813" y="1209.62891" z="711.949219" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3170,42 +3170,42 @@
     <condition id="415" expression="rock1_4 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#82">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="538.388123" y="1221.31299" z="711.949219" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="538.388123" y="1221.31299" z="711.949219" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="416" expression="rock1_3 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#83">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="787.355042" y="1318.37817" z="735.739441" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="787.355042" y="1318.37817" z="735.739441" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="417" expression="rock1_3 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#89">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="728.894775" y="1300.51538" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="728.894775" y="1300.51538" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="418" expression="rock1_4 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#94">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="557.163391" y="1231.70862" z="714.008606" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="557.163391" y="1231.70862" z="714.008606" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="419" expression="rock1_3 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#95">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="677.881531" y="1365.09973" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="677.881531" y="1365.09973" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="420" expression="rock1_1 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#103">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="976.018494" y="1052.07398" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="976.018494" y="1052.07398" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3219,35 +3219,35 @@
     <condition id="422" expression="rock1_3 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#110">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="667.40332" y="1357.40186" z="736.855286" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="667.40332" y="1357.40186" z="736.855286" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="423" expression="rock1_2 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#112">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="915.116638" y="1126.0404" z="756.236877" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="915.116638" y="1126.0404" z="756.236877" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="424" expression="rock1_3 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#116">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="735.145203" y="1393.76672" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="735.145203" y="1393.76672" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="425" expression="rock1_4 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#118">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="553.591553" y="1262.77331" z="715.297791" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="553.591553" y="1262.77331" z="715.297791" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="426" expression="rock1_2 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#121">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="932.769409" y="1257.01587" z="745.941772" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="932.769409" y="1257.01587" z="745.941772" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3296,21 +3296,21 @@
     <condition id="433" expression="rock1_3 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#142">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="701.899231" y="1308.35425" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="701.899231" y="1308.35425" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="434" expression="rock1_3 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#145">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="730.992737" y="1342.41699" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="730.992737" y="1342.41699" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="435" expression="rock1_3 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#152">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="694.726013" y="1316.56494" z="736.855286" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="694.726013" y="1316.56494" z="736.855286" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3324,49 +3324,49 @@
     <condition id="437" expression="rock1_4 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#154">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="530.013733" y="1263.59277" z="715.297791" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="530.013733" y="1263.59277" z="715.297791" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="438" expression="rock1_3 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#158">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="689.213867" y="1340.00317" z="736.855286" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="689.213867" y="1340.00317" z="736.855286" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="439" expression="rock1_3 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#160">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="680.098206" y="1311.81042" z="736.855286" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="680.098206" y="1311.81042" z="736.855286" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="440" expression="rock1_4 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#166">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="544.551453" y="1251.32044" z="715.297791" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="544.551453" y="1251.32044" z="715.297791" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="441" expression="rock1_2 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#172">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="955.414368" y="1237.30688" z="745.941772" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="955.414368" y="1237.30688" z="745.941772" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="442" expression="rock1_2 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#174">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="881.188049" y="1150.90222" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="881.188049" y="1150.90222" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="443" expression="rock1_3 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#175">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="772.974854" y="1343.61279" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="772.974854" y="1343.61279" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3380,35 +3380,35 @@
     <condition id="445" expression="rock1_1 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#178">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="916.25946" y="1005.90198" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="916.25946" y="1005.90198" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="446" expression="rock1_2 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#179">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="931.608398" y="1233.91553" z="745.941772" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="931.608398" y="1233.91553" z="745.941772" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="447" expression="rock1_3 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#182">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="693.620544" y="1271.26086" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="693.620544" y="1271.26086" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="448" expression="rock1_2 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#185">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="944.358459" y="1196.83533" z="748.737244" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="944.358459" y="1196.83533" z="748.737244" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="449" expression="rock1_2 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#186">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="946.298462" y="1163.29822" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="946.298462" y="1163.29822" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3422,14 +3422,14 @@
     <condition id="451" expression="rock1_3 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#188">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="739.536377" y="1295.79712" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="739.536377" y="1295.79712" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="452" expression="rock1_3 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#190">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="718.355042" y="1323.99451" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="718.355042" y="1323.99451" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3443,14 +3443,14 @@
     <condition id="454" expression="rock1_3 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#199">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="735.095886" y="1286.57117" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="735.095886" y="1286.57117" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="455" expression="rock1_3 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#204">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="764.998535" y="1371.33911" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="764.998535" y="1371.33911" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3464,28 +3464,28 @@
     <condition id="457" expression="rock1_2 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#209">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="945.061157" y="1139.48877" z="751.315552" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="945.061157" y="1139.48877" z="751.315552" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="458" expression="rock1_2 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#210">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="901.702332" y="1125.6427" z="756.236877" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="901.702332" y="1125.6427" z="756.236877" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="459" expression="rock1_2 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#211">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="887.937012" y="1139.64062" z="751.315552" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="887.937012" y="1139.64062" z="751.315552" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="460" expression="rock1_4 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#215">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="548.834106" y="1218.53955" z="713.13031" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="548.834106" y="1218.53955" z="713.13031" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3499,7 +3499,7 @@
     <condition id="462" expression="rock1_3 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#220">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="769.242798" y="1298.46045" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="769.242798" y="1298.46045" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3513,21 +3513,21 @@
     <condition id="464" expression="rock1_4 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#228">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="515.874512" y="1226.40076" z="726.716858" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="515.874512" y="1226.40076" z="726.716858" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="465" expression="rock1_1 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#229">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="989.03595" y="1050.21777" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="989.03595" y="1050.21777" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="466" expression="rock1_2 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#232">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="958.332153" y="1170.01965" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="958.332153" y="1170.01965" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3541,14 +3541,14 @@
     <condition id="468" expression="rock1_3 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#236">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="680.522583" y="1289.90088" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="680.522583" y="1289.90088" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="469" expression="rock1_1 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#237">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="1029.9563" y="1049.16492" z="751.158325" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="1029.9563" y="1049.16492" z="751.158325" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3562,63 +3562,63 @@
     <condition id="471" expression="rock1_4 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#240">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="541.161377" y="1262.48376" z="715.297791" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="541.161377" y="1262.48376" z="715.297791" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="472" expression="rock1_2 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#247">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="954.689636" y="1184.25684" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="954.689636" y="1184.25684" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="473" expression="rock1_4 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#255">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="545.819763" y="1180.26123" z="715.419006" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="545.819763" y="1180.26123" z="715.419006" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="474" expression="rock1_3 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#256">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="764.609009" y="1332.89319" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="764.609009" y="1332.89319" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="475" expression="rock1_4 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#257">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="524.275085" y="1252.94739" z="715.297791" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="524.275085" y="1252.94739" z="715.297791" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="476" expression="rock1_2 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#262">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="891.095276" y="1186.61658" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="891.095276" y="1186.61658" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="477" expression="rock1_4 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#263">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="516.134583" y="1212.53784" z="726.716858" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="516.134583" y="1212.53784" z="726.716858" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="478" expression="rock1_1 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#265">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="896.493652" y="1047.2616" z="750.64563" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="896.493652" y="1047.2616" z="750.64563" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="479" expression="rock1_4 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#267">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="525.679871" y="1187.54089" z="712.882263" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="525.679871" y="1187.54089" z="712.882263" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3632,49 +3632,49 @@
     <condition id="481" expression="rock1_1 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#270">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="1016.66119" y="1051.45715" z="751.158325" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="1016.66119" y="1051.45715" z="751.158325" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="482" expression="rock1_3 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#276">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="733.064697" y="1267.19324" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="733.064697" y="1267.19324" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="483" expression="rock1_1 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#281">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="1041.43335" y="1037.94604" z="751.158325" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="1041.43335" y="1037.94604" z="751.158325" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="484" expression="rock1_3 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#283">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="706.726929" y="1364.26538" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="706.726929" y="1364.26538" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="485" expression="rock1_3 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#289">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="738.238708" y="1323.61633" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="738.238708" y="1323.61633" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="486" expression="rock1_3 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#291">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="746.080811" y="1266.42822" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="746.080811" y="1266.42822" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="487" expression="rock1_3 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#294">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="750.190674" y="1335.31287" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="750.190674" y="1335.31287" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3688,70 +3688,70 @@
     <condition id="489" expression="rock1_4 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#299">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="548.092102" y="1185.65271" z="713.13031" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="548.092102" y="1185.65271" z="713.13031" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="490" expression="rock1_4 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#302">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="504.918701" y="1205.51196" z="726.716858" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="504.918701" y="1205.51196" z="726.716858" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="491" expression="rock1_3 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#306">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="781.24585" y="1293.01599" z="735.739441" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="781.24585" y="1293.01599" z="735.739441" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="492" expression="rock1_3 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#307">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="686.84082" y="1355.07044" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="686.84082" y="1355.07044" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="493" expression="rock1_3 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#309">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="722.504272" y="1371.50037" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="722.504272" y="1371.50037" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="494" expression="rock1_2 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#317">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="934.368896" y="1186.37378" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="934.368896" y="1186.37378" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="495" expression="rock1_3 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#318">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="709.747375" y="1391.87158" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="709.747375" y="1391.87158" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="496" expression="rock1_4 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#319">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="534.228882" y="1179.5957" z="715.419006" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="534.228882" y="1179.5957" z="715.419006" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="497" expression="rock1_3 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#324">
       <group probability="1000">
         <slot>
-          <npc id="246455" probability="10000" x="778.065918" y="1330.36682" z="739.13855" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246455" probability="10000" x="778.065918" y="1330.36682" z="739.13855" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="498" expression="rock1_3 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#326">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="752.5896" y="1273.86255" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="752.5896" y="1273.86255" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3765,14 +3765,14 @@
     <condition id="500" expression="rock1_1 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#333">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="1024.10742" y="1004.16687" z="751.158325" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="1024.10742" y="1004.16687" z="751.158325" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="501" expression="rock1_2 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#335">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="912.565002" y="1118.37146" z="757.153442" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="912.565002" y="1118.37146" z="757.153442" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3786,7 +3786,7 @@
     <condition id="503" expression="rock1_3 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#339">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="741.024353" y="1370.79871" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="741.024353" y="1370.79871" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3800,91 +3800,91 @@
     <condition id="505" expression="rock1_1 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#346">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="952.110596" y="1057.42896" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="952.110596" y="1057.42896" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="506" expression="rock1_2 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#349">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="916.503296" y="1220.56384" z="745.941772" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="916.503296" y="1220.56384" z="745.941772" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="507" expression="rock1_3 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#353">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="670.86554" y="1338.16711" z="736.855286" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="670.86554" y="1338.16711" z="736.855286" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="508" expression="rock1_1 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#355">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="954.403442" y="1032.28308" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="954.403442" y="1032.28308" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="509" expression="rock1_2 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#357">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="955.302124" y="1111.6626" z="764.842102" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="955.302124" y="1111.6626" z="764.842102" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="510" expression="rock1_4 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#359">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="533.293762" y="1170.28125" z="715.419006" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="533.293762" y="1170.28125" z="715.419006" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="511" expression="rock1_2 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#362">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="904.949097" y="1173.11646" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="904.949097" y="1173.11646" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="512" expression="rock1_4 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#365">
       <group probability="1000">
         <slot>
-          <npc id="246456" probability="10000" x="536.745117" y="1264.31543" z="719.233093" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246456" probability="10000" x="536.745117" y="1264.31543" z="719.233093" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="513" expression="rock1_3 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#367">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="710.024231" y="1268.72693" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="710.024231" y="1268.72693" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="514" expression="rock1_4 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#371">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="524.276306" y="1241.02258" z="714.008606" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="524.276306" y="1241.02258" z="714.008606" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="515" expression="rock1_3 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#373">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="716.972717" y="1288.17822" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="716.972717" y="1288.17822" z="737.316345" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="516" expression="rock1_2 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#375">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="890.598877" y="1236.15503" z="745.941772" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="890.598877" y="1236.15503" z="745.941772" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="517" expression="rock1_2 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#376">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="918.465698" y="1196.51782" z="748.737244" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="918.465698" y="1196.51782" z="748.737244" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3898,21 +3898,21 @@
     <condition id="519" expression="rock1_1 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#383">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="979.158325" y="1028.27356" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="979.158325" y="1028.27356" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="520" expression="rock1_2 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#387">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="940.609497" y="1172.83826" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="940.609497" y="1172.83826" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="521" expression="rock1_4 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#396">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="548.463135" y="1197.70325" z="713.13031" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="548.463135" y="1197.70325" z="713.13031" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3926,21 +3926,21 @@
     <condition id="523" expression="rock1_3 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#401">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="756.69928" y="1296.99097" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="756.69928" y="1296.99097" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="524" expression="rock1_2 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#403">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="928.43927" y="1128.02002" z="756.236877" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="928.43927" y="1128.02002" z="756.236877" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="525" expression="rock1_1 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#404">
       <group probability="1000">
         <slot>
-          <npc id="246453" probability="10000" x="1053.06067" y="1026.17981" z="754.076111" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246453" probability="10000" x="1053.06067" y="1026.17981" z="754.076111" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -3954,49 +3954,49 @@
     <condition id="527" expression="rock1_3 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#407">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="784.308655" y="1356.328" z="735.739441" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="784.308655" y="1356.328" z="735.739441" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="528" expression="rock1_1 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#409">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="873.064636" y="1006.68109" z="750.64563" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="873.064636" y="1006.68109" z="750.64563" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="529" expression="rock1_2 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#411">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="907.917358" y="1148.39502" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="907.917358" y="1148.39502" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="530" expression="rock1_3 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#413">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="703.862305" y="1286.59717" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="703.862305" y="1286.59717" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="531" expression="rock1_2 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#416">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="905.283691" y="1196.78564" z="748.737244" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="905.283691" y="1196.78564" z="748.737244" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="532" expression="rock1_1 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#418">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="866.053711" y="1041.51135" z="750.64563" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="866.053711" y="1041.51135" z="750.64563" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="533" expression="rock1_3 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#419">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="668.586609" y="1298.47302" z="736.855286" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="668.586609" y="1298.47302" z="736.855286" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -4010,35 +4010,35 @@
     <condition id="535" expression="rock1_1 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#426">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="896.900024" y="1032.56628" z="750.64563" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="896.900024" y="1032.56628" z="750.64563" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="536" expression="rock1_1 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#427">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="926.936035" y="1042.76929" z="751.422791" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="926.936035" y="1042.76929" z="751.422791" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="537" expression="rock1_2 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#428">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="947.318726" y="1120.5459" z="764.842102" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="947.318726" y="1120.5459" z="764.842102" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="538" expression="rock1_2 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#432">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="880.400879" y="1174.08508" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="880.400879" y="1174.08508" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="539" expression="rock1_2 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#433">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="882.49176" y="1209.92627" z="747.725647" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="882.49176" y="1209.92627" z="747.725647" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -4052,98 +4052,98 @@
     <condition id="541" expression="rock1_4 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#438">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="536.696106" y="1187.10425" z="711.949219" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="536.696106" y="1187.10425" z="711.949219" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="542" expression="rock1_1 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#441">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="975.549988" y="1003.16528" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="975.549988" y="1003.16528" z="751.304382" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="543" expression="rock1_3 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#444">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="667.595642" y="1321.62537" z="736.855286" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="667.595642" y="1321.62537" z="736.855286" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="544" expression="rock1_3 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#452">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="755.591858" y="1358.07874" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="755.591858" y="1358.07874" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="545" expression="rock1_2 &gt;= 3" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#453">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="932.620056" y="1150.67786" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="932.620056" y="1150.67786" z="748.359619" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="546" expression="rock1_2 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#455">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="916.669189" y="1245.60791" z="745.941772" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="916.669189" y="1245.60791" z="745.941772" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="547" expression="rock1_3 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#456">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="748.250366" y="1390.20837" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="748.250366" y="1390.20837" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="548" expression="rock1_3 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#459">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="697.187622" y="1335.72717" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="697.187622" y="1335.72717" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="549" expression="rock1_1 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#468">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="859.581848" y="1022.93048" z="750.64563" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="859.581848" y="1022.93048" z="750.64563" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="550" expression="rock1_2 &gt;= 1" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#471">
       <group probability="1000">
         <slot>
-          <npc id="246454" probability="10000" x="918.135864" y="1116.61169" z="773.922241" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246454" probability="10000" x="918.135864" y="1116.61169" z="773.922241" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="551" expression="rock1_3 &gt;= 4" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#473">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="697.368042" y="1388.94812" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="697.368042" y="1388.94812" z="736.052795" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="552" expression="rock1_4 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#476">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="534.718445" y="1231.23181" z="714.008606" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="534.718445" y="1231.23181" z="714.008606" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="553" expression="rock1_3 &gt;= 2" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#478">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="774.388123" y="1321.17175" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="774.388123" y="1321.17175" z="735.287292" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="554" expression="rock1_2 &gt;= 5" despawn_at_other="true" group_mode="all" source="IDEternity_03/world_N.xml#480">
       <group probability="1000">
         <slot>
-          <npc id="246452" probability="10000" x="894.421448" y="1257.05725" z="745.941772" heading="270" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="246452" probability="10000" x="894.421448" y="1257.05725" z="745.941772" heading="270" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -11092,7 +11092,7 @@
           </npc>
         </slot>
         <slot>
-          <npc id="206407" probability="10000" x="486.964264" y="183.016617" z="1687.88513" heading="0" initial_delay="1" initial_delay_extra="0">
+          <npc id="206407" probability="10000" x="486.964264" y="183.016617" z="1687.88513" heading="0" initial_delay="1" initial_delay_extra="0" fly="true">
             <sensory_area bottom="1684.56323" top="1699.56323">
               <point x="485.989563" y="142.630539"/>
               <point x="500.292694" y="142.699097"/>
@@ -11249,7 +11249,7 @@
     <condition id="1374" expression="TWIN_RESURRECT == 1" despawn_at_other="true" group_mode="all" source="IDSeal/world_N.xml#115">
       <group probability="1000">
         <slot>
-          <npc id="855517" probability="10000" x="527.979675" y="182.263901" z="1686.27661" heading="0" initial_delay="1" initial_delay_extra="0"/>
+          <npc id="855517" probability="10000" x="527.979675" y="182.263901" z="1686.27661" heading="0" initial_delay="1" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -22763,7 +22763,7 @@
     <condition id="2155" expression="mainmodule == 1" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#140">
       <group probability="1000">
         <slot>
-          <npc id="221189" probability="10000" x="1267.72485" y="1408.88782" z="1414.52087" heading="90" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221189" probability="10000" x="1267.72485" y="1408.88782" z="1414.52087" heading="90" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -23910,95 +23910,95 @@
     <condition id="2291" expression="mainmodule == 2" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#484">
       <group probability="1000">
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="2292" expression="mainmodule == 3" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#485">
       <group probability="1000">
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="2293" expression="mainmodule == 4" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#486">
       <group probability="1000">
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="2294" expression="mainmodule == 5" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#487">
       <group probability="1000">
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="2295" expression="mainmodule == 6" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#488">
       <group probability="1000">
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1268.12866" y="1405.80627" z="1405.54382" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -24805,7 +24805,7 @@
     <condition id="2387" expression="dreadgion_weapon == 1" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#732">
       <group probability="1000">
         <slot>
-          <npc id="220966" probability="10000" x="894.304382" y="1112.25439" z="207.692032" heading="287" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="220966" probability="10000" x="894.304382" y="1112.25439" z="207.692032" heading="287" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -25815,7 +25815,7 @@
     <condition id="2499" expression="(submodule_a_01 == 2) &amp;&amp; (submodule_a_02 == 2) &amp;&amp; (submodule_a_03 == 2)" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#996">
       <group probability="1000">
         <slot>
-          <npc id="221353" probability="10000" x="1268.28113" y="1402.79858" z="1431.4541" heading="135" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221353" probability="10000" x="1268.28113" y="1402.79858" z="1431.4541" heading="135" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -26261,7 +26261,7 @@
     <condition id="2550" expression="dreadgion_weapon == 1" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#1129">
       <group probability="1000">
         <slot>
-          <npc id="220967" probability="10000" x="1036.51904" y="1503.15381" z="243.054596" heading="50" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="220967" probability="10000" x="1036.51904" y="1503.15381" z="243.054596" heading="50" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -26640,7 +26640,7 @@
     <condition id="2591" expression="(submodule_a_01 == 2) &amp;&amp; (submodule_a_02 == 2) &amp;&amp; (submodule_a_03 == 2)" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#1220">
       <group probability="1000">
         <slot>
-          <npc id="221353" probability="10000" x="1268.28113" y="1402.79858" z="1373.18665" heading="135" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221353" probability="10000" x="1268.28113" y="1402.79858" z="1373.18665" heading="135" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -26938,7 +26938,7 @@
     <condition id="2625" expression="flag_c == 1" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#1305">
       <group probability="1000">
         <slot>
-          <npc id="703409" probability="10000" x="1268.26086" y="1403.10547" z="1420.15552" heading="135" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="703409" probability="10000" x="1268.26086" y="1403.10547" z="1420.15552" heading="135" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -27234,7 +27234,7 @@
     <condition id="2664" expression="mainmodule == 1" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#1400">
       <group probability="1000">
         <slot>
-          <npc id="220868" probability="10000" x="1267.8241" y="1408.47583" z="1414.69043" heading="90" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="220868" probability="10000" x="1267.8241" y="1408.47583" z="1414.69043" heading="90" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -28120,7 +28120,7 @@
     <condition id="2764" expression="(submodule_a_01 == 2) &amp;&amp; (submodule_a_02 == 2) &amp;&amp; (submodule_a_03 == 2)" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#1640">
       <group probability="1000">
         <slot>
-          <npc id="221384" probability="10000" x="1268.30225" y="1402.78125" z="1426.75732" heading="135" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221384" probability="10000" x="1268.30225" y="1402.78125" z="1426.75732" heading="135" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -28248,7 +28248,7 @@
     <condition id="2777" expression="(submodule_a_01 == 2) &amp;&amp; (submodule_a_02 == 2) &amp;&amp; (submodule_a_03 == 2)" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#1670">
       <group probability="1000">
         <slot>
-          <npc id="221384" probability="10000" x="1268.30225" y="1402.78125" z="1372.28894" heading="135" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221384" probability="10000" x="1268.30225" y="1402.78125" z="1372.28894" heading="135" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -28877,7 +28877,7 @@
     <condition id="2850" expression="dreadgion_weapon == 1" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#1842">
       <group probability="1000">
         <slot>
-          <npc id="221278" probability="10000" x="1036.56982" y="1503.32886" z="243.054596" heading="50" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221278" probability="10000" x="1036.56982" y="1503.32886" z="243.054596" heading="50" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -29650,7 +29650,7 @@
     <condition id="2940" expression="dreadgion_weapon == 1" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#2075">
       <group probability="1000">
         <slot>
-          <npc id="221277" probability="10000" x="894.355103" y="1112.42944" z="207.692032" heading="287" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221277" probability="10000" x="894.355103" y="1112.42944" z="207.692032" heading="287" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -30428,102 +30428,102 @@
     <condition id="3029" expression="mainmodule == 2" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#2283">
       <group probability="1000">
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3030" expression="mainmodule == 3" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#2284">
       <group probability="1000">
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3031" expression="mainmodule == 4" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#2285">
       <group probability="1000">
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3032" expression="mainmodule == 5" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#2286">
       <group probability="1000">
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3033" expression="mainmodule == 6" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#2287">
       <group probability="1000">
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1268.34546" y="1405.53979" z="1405.98987" heading="280" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3034" expression="flag_c == 1" despawn_at_other="true" group_mode="all" source="iddc1_dreadgion/world_N.xml#2288">
       <group probability="1000">
         <slot>
-          <npc id="703409" probability="10000" x="1268.23975" y="1403.12268" z="1420.15552" heading="135" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="703409" probability="10000" x="1268.23975" y="1403.12268" z="1420.15552" heading="135" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -30838,14 +30838,14 @@
     <condition id="3071" expression="TELEPORT_D_DESTROYED == 1" despawn_at_other="false" group_mode="all" source="iddreadgion_02/world_N.xml#2">
       <group probability="1000">
         <slot>
-          <npc id="730358" probability="10000" x="496.177948" y="761.770142" z="390.805359" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="730358" probability="10000" x="496.177948" y="761.770142" z="390.805359" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3072" expression="TELEPORT_4_DESTROYED == 1" despawn_at_other="false" group_mode="all" source="iddreadgion_02/world_N.xml#6">
       <group probability="1000">
         <slot>
-          <npc id="730314" probability="10000" x="396.97934" y="184.391739" z="433.94046" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="730314" probability="10000" x="396.97934" y="184.391739" z="433.94046" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -30859,14 +30859,14 @@
     <condition id="3074" expression="TELEPORT_L_DESTROYED == 1" despawn_at_other="false" group_mode="all" source="iddreadgion_02/world_N.xml#10">
       <group probability="1000">
         <slot>
-          <npc id="730357" probability="10000" x="473.758545" y="761.864258" z="390.805359" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="730357" probability="10000" x="473.758545" y="761.864258" z="390.805359" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3075" expression="TELEPORT_5_DESTROYED == 1" despawn_at_other="false" group_mode="all" source="iddreadgion_02/world_N.xml#12">
       <group probability="1000">
         <slot>
-          <npc id="730315" probability="10000" x="554.648438" y="173.535248" z="433.94046" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="730315" probability="10000" x="554.648438" y="173.535248" z="433.94046" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -30889,14 +30889,14 @@
     <condition id="3077" expression="NAMED_KILLED_D == 1" despawn_at_other="false" group_mode="all" source="iddreadgion_03/world_N.xml#2">
       <group probability="1000">
         <slot>
-          <npc id="730563" probability="10000" x="496.177948" y="761.770142" z="390.805359" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="730563" probability="10000" x="496.177948" y="761.770142" z="390.805359" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3078" expression="TSWITCH_1_DESTROYED == 1" despawn_at_other="false" group_mode="all" source="iddreadgion_03/world_N.xml#3">
       <group probability="1000">
         <slot>
-          <npc id="730560" probability="10000" x="396.97934" y="184.391739" z="433.94046" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="730560" probability="10000" x="396.97934" y="184.391739" z="433.94046" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -30917,14 +30917,14 @@
     <condition id="3081" expression="NAMED_KILLED_L == 1" despawn_at_other="false" group_mode="all" source="iddreadgion_03/world_N.xml#8">
       <group probability="1000">
         <slot>
-          <npc id="730562" probability="10000" x="473.758545" y="761.864258" z="390.805359" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="730562" probability="10000" x="473.758545" y="761.864258" z="390.805359" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3082" expression="TSWITCH_2_DESTROYED == 1" despawn_at_other="false" group_mode="all" source="iddreadgion_03/world_N.xml#9">
       <group probability="1000">
         <slot>
-          <npc id="730561" probability="10000" x="554.648438" y="173.535248" z="433.94046" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="730561" probability="10000" x="554.648438" y="173.535248" z="433.94046" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -30937,14 +30937,14 @@
     <condition id="3083" expression="IDElim_3F_Boss == 2" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#2">
       <group probability="1000">
         <slot>
-          <npc id="700741" probability="10000" x="634.214233" y="787.21283" z="1384.85999" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="700741" probability="10000" x="634.214233" y="787.21283" z="1384.85999" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3084" expression="IDElim_3F_Boss == 1" despawn_at_other="true" group_mode="all" source="idelim/world_N.xml#4">
       <group probability="1000">
         <slot>
-          <npc id="700740" probability="10000" x="634.214233" y="787.21283" z="1383" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="700740" probability="10000" x="634.214233" y="787.21283" z="1383" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -30990,21 +30990,21 @@
     <condition id="3089" expression="Drana_2nd_gate_1  == 1" despawn_at_other="true" group_mode="all" source="idf4re_drana/world_N.xml#17">
       <group probability="1000">
         <slot>
-          <npc id="258262" probability="10000" x="1058.33411" y="890.047913" z="346.955902" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="258262" probability="10000" x="1058.33411" y="890.047913" z="346.955902" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3090" expression="condition_type2 == 1" despawn_at_other="true" group_mode="all" source="idf4re_drana/world_N.xml#31">
       <group probability="1000">
         <slot>
-          <npc id="282292" probability="10000" x="1315.90002" y="1171.45019" z="112.50898" heading="1" initial_delay="0" initial_delay_extra="0"/>
+          <npc id="282292" probability="10000" x="1315.90002" y="1171.45019" z="112.50898" heading="1" initial_delay="0" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3091" expression="Drana_3rd_Boss_gate == 1" despawn_at_other="true" group_mode="all" source="idf4re_drana/world_N.xml#39">
       <group probability="1000">
         <slot>
-          <npc id="258262" probability="10000" x="1347.5946" y="1029.35449" z="204.190262" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="258262" probability="10000" x="1347.5946" y="1029.35449" z="204.190262" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -31018,7 +31018,7 @@
     <condition id="3093" expression="Drana_2nd_gate_3  == 1" despawn_at_other="true" group_mode="all" source="idf4re_drana/world_N.xml#50">
       <group probability="1000">
         <slot>
-          <npc id="258262" probability="10000" x="1058.35303" y="901.449463" z="346.955902" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="258262" probability="10000" x="1058.35303" y="901.449463" z="346.955902" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -31032,21 +31032,21 @@
     <condition id="3095" expression="condition_type2 == 1" despawn_at_other="true" group_mode="all" source="idf4re_drana/world_N.xml#74">
       <group probability="1000">
         <slot>
-          <npc id="282292" probability="10000" x="1316.02002" y="1171.46655" z="113.468163" heading="1" initial_delay="5" initial_delay_extra="0"/>
+          <npc id="282292" probability="10000" x="1316.02002" y="1171.46655" z="113.468163" heading="1" initial_delay="5" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3096" expression="condition_type2 == 1" despawn_at_other="true" group_mode="all" source="idf4re_drana/world_N.xml#81">
       <group probability="1000">
         <slot>
-          <npc id="282292" probability="10000" x="1316.20886" y="1170.21631" z="152.719757" heading="1" initial_delay="0" initial_delay_extra="0"/>
+          <npc id="282292" probability="10000" x="1316.20886" y="1170.21631" z="152.719757" heading="1" initial_delay="0" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3097" expression="condition_type2 == 1" despawn_at_other="true" group_mode="all" source="idf4re_drana/world_N.xml#95">
       <group probability="1000">
         <slot>
-          <npc id="282292" probability="10000" x="1316.47986" y="1170.2157" z="143.597107" heading="1" initial_delay="5" initial_delay_extra="0"/>
+          <npc id="282292" probability="10000" x="1316.47986" y="1170.2157" z="143.597107" heading="1" initial_delay="5" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -31060,14 +31060,14 @@
     <condition id="3099" expression="Drana_3rd_Boss_gate == 1" despawn_at_other="true" group_mode="all" source="idf4re_drana/world_N.xml#163">
       <group probability="1000">
         <slot>
-          <npc id="258262" probability="10000" x="1344.20142" y="1038.84021" z="204.190262" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="258262" probability="10000" x="1344.20142" y="1038.84021" z="204.190262" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3100" expression="condition_type2 == 1" despawn_at_other="true" group_mode="all" source="idf4re_drana/world_N.xml#174">
       <group probability="1000">
         <slot>
-          <npc id="282292" probability="10000" x="1316.5033" y="1170.28467" z="142.545135" heading="1" initial_delay="0" initial_delay_extra="0"/>
+          <npc id="282292" probability="10000" x="1316.5033" y="1170.28467" z="142.545135" heading="1" initial_delay="0" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -31081,7 +31081,7 @@
     <condition id="3102" expression="Drana_2nd_gate_2  == 1" despawn_at_other="true" group_mode="all" source="idf4re_drana/world_N.xml#184">
       <group probability="1000">
         <slot>
-          <npc id="258262" probability="10000" x="1058.35303" y="895.644348" z="346.955902" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="258262" probability="10000" x="1058.35303" y="895.644348" z="346.955902" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -31860,7 +31860,7 @@
     <condition id="3195" expression="mainmodule == 1" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#144">
       <group probability="1000">
         <slot>
-          <npc id="221189" probability="10000" x="1522.65161" y="1272.75171" z="1575.44617" heading="90" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221189" probability="10000" x="1522.65161" y="1272.75171" z="1575.44617" heading="90" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -32856,7 +32856,7 @@
     <condition id="3311" expression="dreadgion_weapon == 1" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#444">
       <group probability="1000">
         <slot>
-          <npc id="221277" probability="10000" x="1336.91919" y="1503.42786" z="573.01001" heading="285" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221277" probability="10000" x="1336.91919" y="1503.42786" z="573.01001" heading="285" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -34365,7 +34365,7 @@
     <condition id="3480" expression="flag_c == 1" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#890">
       <group probability="1000">
         <slot>
-          <npc id="703409" probability="10000" x="1522.79126" y="1282.08313" z="1581.03931" heading="135" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="703409" probability="10000" x="1522.79126" y="1282.08313" z="1581.03931" heading="135" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -34432,7 +34432,7 @@
     <condition id="3487" expression="dreadgion_weapon == 1" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#904">
       <group probability="1000">
         <slot>
-          <npc id="220966" probability="10000" x="1337.12744" y="1503.49292" z="573.01001" heading="285" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="220966" probability="10000" x="1337.12744" y="1503.49292" z="573.01001" heading="285" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -34554,95 +34554,95 @@
     <condition id="3502" expression="mainmodule == 2" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#941">
       <group probability="1000">
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3503" expression="mainmodule == 3" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#942">
       <group probability="1000">
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3504" expression="mainmodule == 4" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#943">
       <group probability="1000">
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3505" expression="mainmodule == 5" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#944">
       <group probability="1000">
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3506" expression="mainmodule == 6" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#945">
       <group probability="1000">
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221460" probability="10000" x="1522.64795" y="1273.62073" z="1567.48206" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -34910,7 +34910,7 @@
     <condition id="3538" expression="dreadgion_weapon == 1" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#1021">
       <group probability="1000">
         <slot>
-          <npc id="220966" probability="10000" x="1583.75159" y="1332.17639" z="564.343872" heading="3" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="220966" probability="10000" x="1583.75159" y="1332.17639" z="564.343872" heading="3" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -35909,7 +35909,7 @@
     <condition id="3647" expression="flag_c == 1" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#1260">
       <group probability="1000">
         <slot>
-          <npc id="703409" probability="10000" x="1522.83179" y="1282.04211" z="1581.03931" heading="135" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="703409" probability="10000" x="1522.83179" y="1282.04211" z="1581.03931" heading="135" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -36095,7 +36095,7 @@
     <condition id="3670" expression="mainmodule == 1" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#1336">
       <group probability="1000">
         <slot>
-          <npc id="220868" probability="10000" x="1522.78723" y="1273.23914" z="1575.47998" heading="90" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="220868" probability="10000" x="1522.78723" y="1273.23914" z="1575.47998" heading="90" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -37035,7 +37035,7 @@
     <condition id="3779" expression="dreadgion_weapon == 1" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#1587">
       <group probability="1000">
         <slot>
-          <npc id="221277" probability="10000" x="1583.54334" y="1332.11133" z="564.343872" heading="3" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221277" probability="10000" x="1583.54334" y="1332.11133" z="564.343872" heading="3" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -37623,95 +37623,95 @@
     <condition id="3848" expression="mainmodule == 2" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#1751">
       <group probability="1000">
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3849" expression="mainmodule == 3" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#1752">
       <group probability="1000">
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3850" expression="mainmodule == 4" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#1753">
       <group probability="1000">
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3851" expression="mainmodule == 5" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#1754">
       <group probability="1000">
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="3852" expression="mainmodule == 6" despawn_at_other="true" group_mode="all" source="idlc1_dreadgion/world_N.xml#1755">
       <group probability="1000">
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
         <slot>
-          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="221446" probability="10000" x="1522.6344" y="1273.65112" z="1567.50232" heading="87" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -41771,7 +41771,7 @@
     <condition id="4285" expression="cProtection03 &gt;= 3" despawn_at_other="false" group_mode="all" source="idruneweapon/world_N.xml#16">
       <group probability="1000">
         <slot>
-          <npc id="284767" probability="10000" x="106.208443" y="137.613403" z="115.201576" heading="0" initial_delay="1" initial_delay_extra="0"/>
+          <npc id="284767" probability="10000" x="106.208443" y="137.613403" z="115.201576" heading="0" initial_delay="1" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -41799,28 +41799,28 @@
     <condition id="4289" expression="cProtection04 &gt;= 3" despawn_at_other="false" group_mode="all" source="idruneweapon/world_N.xml#23">
       <group probability="1000">
         <slot>
-          <npc id="284768" probability="10000" x="125.214897" y="163.288406" z="131.151215" heading="0" initial_delay="1" initial_delay_extra="0"/>
+          <npc id="284768" probability="10000" x="125.214897" y="163.288406" z="131.151215" heading="0" initial_delay="1" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4290" expression="cProtection02 &gt;= 3" despawn_at_other="false" group_mode="all" source="idruneweapon/world_N.xml#25">
       <group probability="1000">
         <slot>
-          <npc id="284766" probability="10000" x="149.603943" y="135.704132" z="115.201576" heading="0" initial_delay="1" initial_delay_extra="0"/>
+          <npc id="284766" probability="10000" x="149.603943" y="135.704132" z="115.201576" heading="0" initial_delay="1" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4291" expression="cProtection01 &gt;= 3" despawn_at_other="false" group_mode="all" source="idruneweapon/world_N.xml#26">
       <group probability="1000">
         <slot>
-          <npc id="284765" probability="10000" x="133.368927" y="111.949287" z="131.151215" heading="0" initial_delay="1" initial_delay_extra="0"/>
+          <npc id="284765" probability="10000" x="133.368927" y="111.949287" z="131.151215" heading="0" initial_delay="1" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4292" expression="cSetFastCharge==1" despawn_at_other="false" group_mode="all" source="idruneweapon/world_N.xml#27">
       <group probability="1000">
         <slot>
-          <npc id="233259" probability="10000" x="128.549744" y="137.941132" z="131.134506" heading="0" initial_delay="1" initial_delay_extra="0"/>
+          <npc id="233259" probability="10000" x="128.549744" y="137.941132" z="131.134506" heading="0" initial_delay="1" initial_delay_extra="0" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -42205,7 +42205,7 @@
     <condition id="4314" expression="IDTIAMAT_REAL_COLLISION == 1" despawn_at_other="true" group_mode="all" source="idtiamat_1/world_N.xml#83">
       <group probability="1000">
         <slot>
-          <npc id="730613" probability="10000" x="1542.38025" y="1068.56042" z="493.450958" heading="0" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="730613" probability="10000" x="1542.38025" y="1068.56042" z="493.450958" heading="0" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -42553,7 +42553,7 @@
     <condition id="4358" expression="weapon == 1" despawn_at_other="true" group_mode="all" source="idyun/world_N.xml#1">
       <group probability="1000">
         <slot>
-          <npc id="702678" probability="10000" x="447.288208" y="473.621582" z="153.195862" heading="205" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702678" probability="10000" x="447.288208" y="473.621582" z="153.195862" heading="205" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -42567,49 +42567,49 @@
     <condition id="4360" expression="weapon == 2" despawn_at_other="true" group_mode="all" source="idyun/world_N.xml#3">
       <group probability="1000">
         <slot>
-          <npc id="702685" probability="10000" x="444.001495" y="483.648468" z="154.989899" heading="205" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702685" probability="10000" x="444.001495" y="483.648468" z="154.989899" heading="205" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4361" expression="weapon == 2" despawn_at_other="true" group_mode="all" source="idyun/world_N.xml#4">
       <group probability="1000">
         <slot>
-          <npc id="702688" probability="10000" x="413.964539" y="459.749176" z="153.659683" heading="30" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702688" probability="10000" x="413.964539" y="459.749176" z="153.659683" heading="30" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4362" expression="weapon == 1" despawn_at_other="true" group_mode="all" source="idyun/world_N.xml#5">
       <group probability="1000">
         <slot>
-          <npc id="702682" probability="10000" x="414.008118" y="459.394531" z="152.54686" heading="30" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702682" probability="10000" x="414.008118" y="459.394531" z="152.54686" heading="30" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4363" expression="weapon == 1" despawn_at_other="true" group_mode="all" source="idyun/world_N.xml#6">
       <group probability="1000">
         <slot>
-          <npc id="702680" probability="10000" x="423.869019" y="442.786591" z="152.54686" heading="30" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702680" probability="10000" x="423.869019" y="442.786591" z="152.54686" heading="30" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4364" expression="weapon == 2" despawn_at_other="true" group_mode="all" source="idyun/world_N.xml#7">
       <group probability="1000">
         <slot>
-          <npc id="702687" probability="10000" x="418.692383" y="452.071533" z="153.659683" heading="30" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702687" probability="10000" x="418.692383" y="452.071533" z="153.659683" heading="30" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4365" expression="weapon == 1" despawn_at_other="true" group_mode="all" source="idyun/world_N.xml#9">
       <group probability="1000">
         <slot>
-          <npc id="702677" probability="10000" x="451.333435" y="463.745789" z="153.928757" heading="205" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702677" probability="10000" x="451.333435" y="463.745789" z="153.928757" heading="205" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4366" expression="weapon == 2" despawn_at_other="true" group_mode="all" source="idyun/world_N.xml#11">
       <group probability="1000">
         <slot>
-          <npc id="702684" probability="10000" x="447.237518" y="473.634827" z="154.308685" heading="205" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702684" probability="10000" x="447.237518" y="473.634827" z="154.308685" heading="205" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -42637,7 +42637,7 @@
     <condition id="4370" expression="weapon == 2" despawn_at_other="true" group_mode="all" source="idyun/world_N.xml#17">
       <group probability="1000">
         <slot>
-          <npc id="702683" probability="10000" x="451.201843" y="463.640747" z="155.04158" heading="205" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702683" probability="10000" x="451.201843" y="463.640747" z="155.04158" heading="205" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -42651,14 +42651,14 @@
     <condition id="4372" expression="weapon == 2" despawn_at_other="true" group_mode="all" source="idyun/world_N.xml#19">
       <group probability="1000">
         <slot>
-          <npc id="702686" probability="10000" x="423.825439" y="443.141235" z="153.659683" heading="30" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702686" probability="10000" x="423.825439" y="443.141235" z="153.659683" heading="30" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4373" expression="weapon == 1" despawn_at_other="true" group_mode="all" source="idyun/world_N.xml#21">
       <group probability="1000">
         <slot>
-          <npc id="702679" probability="10000" x="444.045074" y="483.293823" z="153.877075" heading="205" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702679" probability="10000" x="444.045074" y="483.293823" z="153.877075" heading="205" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -42672,14 +42672,14 @@
     <condition id="4375" expression="weapon == 1" despawn_at_other="true" group_mode="all" source="idyun/world_N.xml#24">
       <group probability="1000">
         <slot>
-          <npc id="702681" probability="10000" x="418.735962" y="451.716888" z="152.54686" heading="30" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702681" probability="10000" x="418.735962" y="451.716888" z="152.54686" heading="30" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4376" expression="rasta_spawn == 1" despawn_at_other="true" group_mode="all" source="idyun/world_N.xml#26">
       <group probability="1000">
         <slot>
-          <npc id="855430" probability="10000" x="521.329529" y="499.491425" z="181.946228" heading="80" initial_delay="1" initial_delay_extra="1" walker="retail:300280000:npcpathnamed_path1"/>
+          <npc id="855430" probability="10000" x="521.329529" y="499.491425" z="181.946228" heading="80" initial_delay="1" initial_delay_extra="1" walker="retail:300280000:npcpathnamed_path1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -42707,7 +42707,7 @@
     <condition id="4379" expression="weapon == 1" despawn_at_other="true" group_mode="all" source="idyun_Hard/world_N.xml#1">
       <group probability="1000">
         <slot>
-          <npc id="702678" probability="10000" x="447.288208" y="473.621582" z="153.195862" heading="205" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702678" probability="10000" x="447.288208" y="473.621582" z="153.195862" heading="205" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -42721,49 +42721,49 @@
     <condition id="4381" expression="weapon == 2" despawn_at_other="true" group_mode="all" source="idyun_Hard/world_N.xml#3">
       <group probability="1000">
         <slot>
-          <npc id="702685" probability="10000" x="444.001495" y="483.648468" z="154.989899" heading="205" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702685" probability="10000" x="444.001495" y="483.648468" z="154.989899" heading="205" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4382" expression="weapon == 2" despawn_at_other="true" group_mode="all" source="idyun_Hard/world_N.xml#4">
       <group probability="1000">
         <slot>
-          <npc id="702688" probability="10000" x="413.964539" y="459.749176" z="153.659683" heading="30" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702688" probability="10000" x="413.964539" y="459.749176" z="153.659683" heading="30" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4383" expression="weapon == 1" despawn_at_other="true" group_mode="all" source="idyun_Hard/world_N.xml#5">
       <group probability="1000">
         <slot>
-          <npc id="702682" probability="10000" x="414.008118" y="459.394531" z="152.54686" heading="30" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702682" probability="10000" x="414.008118" y="459.394531" z="152.54686" heading="30" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4384" expression="weapon == 1" despawn_at_other="true" group_mode="all" source="idyun_Hard/world_N.xml#6">
       <group probability="1000">
         <slot>
-          <npc id="702680" probability="10000" x="423.869019" y="442.786591" z="152.54686" heading="30" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702680" probability="10000" x="423.869019" y="442.786591" z="152.54686" heading="30" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4385" expression="weapon == 2" despawn_at_other="true" group_mode="all" source="idyun_Hard/world_N.xml#7">
       <group probability="1000">
         <slot>
-          <npc id="702687" probability="10000" x="418.692383" y="452.071533" z="153.659683" heading="30" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702687" probability="10000" x="418.692383" y="452.071533" z="153.659683" heading="30" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4386" expression="weapon == 1" despawn_at_other="true" group_mode="all" source="idyun_Hard/world_N.xml#9">
       <group probability="1000">
         <slot>
-          <npc id="702677" probability="10000" x="451.333435" y="463.745789" z="153.928757" heading="205" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702677" probability="10000" x="451.333435" y="463.745789" z="153.928757" heading="205" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4387" expression="weapon == 2" despawn_at_other="true" group_mode="all" source="idyun_Hard/world_N.xml#11">
       <group probability="1000">
         <slot>
-          <npc id="702684" probability="10000" x="447.237518" y="473.634827" z="154.308685" heading="205" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702684" probability="10000" x="447.237518" y="473.634827" z="154.308685" heading="205" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -42791,7 +42791,7 @@
     <condition id="4391" expression="weapon == 2" despawn_at_other="true" group_mode="all" source="idyun_Hard/world_N.xml#17">
       <group probability="1000">
         <slot>
-          <npc id="702683" probability="10000" x="451.201843" y="463.640747" z="155.04158" heading="205" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702683" probability="10000" x="451.201843" y="463.640747" z="155.04158" heading="205" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -42805,14 +42805,14 @@
     <condition id="4393" expression="weapon == 2" despawn_at_other="true" group_mode="all" source="idyun_Hard/world_N.xml#19">
       <group probability="1000">
         <slot>
-          <npc id="702686" probability="10000" x="423.825439" y="443.141235" z="153.659683" heading="30" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702686" probability="10000" x="423.825439" y="443.141235" z="153.659683" heading="30" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4394" expression="weapon == 1" despawn_at_other="true" group_mode="all" source="idyun_Hard/world_N.xml#21">
       <group probability="1000">
         <slot>
-          <npc id="702679" probability="10000" x="444.045074" y="483.293823" z="153.877075" heading="205" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702679" probability="10000" x="444.045074" y="483.293823" z="153.877075" heading="205" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -42826,14 +42826,14 @@
     <condition id="4396" expression="weapon == 1" despawn_at_other="true" group_mode="all" source="idyun_Hard/world_N.xml#24">
       <group probability="1000">
         <slot>
-          <npc id="702681" probability="10000" x="418.735962" y="451.716888" z="152.54686" heading="30" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="702681" probability="10000" x="418.735962" y="451.716888" z="152.54686" heading="30" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4397" expression="rasta_spawn == 1" despawn_at_other="true" group_mode="all" source="idyun_Hard/world_N.xml#26">
       <group probability="1000">
         <slot>
-          <npc id="236271" probability="10000" x="521.329529" y="499.491425" z="181.946228" heading="80" initial_delay="1" initial_delay_extra="1" walker="retail:300620000:npcpathnamed_path1"/>
+          <npc id="236271" probability="10000" x="521.329529" y="499.491425" z="181.946228" heading="80" initial_delay="1" initial_delay_extra="1" walker="retail:300620000:npcpathnamed_path1" fly="true"/>
         </slot>
       </group>
     </condition>
@@ -42895,189 +42895,189 @@
     <condition id="4404" expression="condition == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#1">
       <group probability="1000">
         <slot>
-          <npc id="286936" probability="10000" x="263.322113" y="182.346069" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286936" probability="10000" x="263.322113" y="182.346069" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4405" expression="condition == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#2">
       <group probability="1000">
         <slot>
-          <npc id="286936" probability="10000" x="235.90947" y="174.23967" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286936" probability="10000" x="235.90947" y="174.23967" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4406" expression="condition == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#3">
       <group probability="1000">
         <slot>
-          <npc id="286936" probability="10000" x="178.907654" y="230.728561" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286936" probability="10000" x="178.907654" y="230.728561" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4407" expression="condition_5 == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#4">
       <group probability="1000">
         <slot>
-          <npc id="286938" probability="10000" x="234.59967" y="229.835327" z="325.053192" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286938" probability="10000" x="234.59967" y="229.835327" z="325.053192" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4408" expression="condition_5 == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#5">
       <group probability="1000">
         <slot>
-          <npc id="286938" probability="10000" x="222.260468" y="223.523819" z="71.123772" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286938" probability="10000" x="222.260468" y="223.523819" z="71.123772" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4409" expression="condition == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#6">
       <group probability="1000">
         <slot>
-          <npc id="286936" probability="10000" x="283.13855" y="256.624817" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286936" probability="10000" x="283.13855" y="256.624817" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4410" expression="condition == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#7">
       <group probability="1000">
         <slot>
-          <npc id="286936" probability="10000" x="290.008453" y="231.438904" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286936" probability="10000" x="290.008453" y="231.438904" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4411" expression="condition == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#8">
       <group probability="1000">
         <slot>
-          <npc id="286936" probability="10000" x="185.329636" y="257.286133" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286936" probability="10000" x="185.329636" y="257.286133" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4412" expression="condition == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#9">
       <group probability="1000">
         <slot>
-          <npc id="286936" probability="10000" x="236.387863" y="286.207581" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286936" probability="10000" x="236.387863" y="286.207581" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4413" expression="condition_5 == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#10">
       <group probability="1000">
         <slot>
-          <npc id="286938" probability="10000" x="235.415543" y="230.981644" z="325.053192" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286938" probability="10000" x="235.415543" y="230.981644" z="325.053192" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4414" expression="condition_5 == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#11">
       <group probability="1000">
         <slot>
-          <npc id="286938" probability="10000" x="234.190002" y="230.690002" z="71.860001" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286938" probability="10000" x="234.190002" y="230.690002" z="71.860001" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4415" expression="condition == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#12">
       <group probability="1000">
         <slot>
-          <npc id="286936" probability="10000" x="263.892456" y="277.525055" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286936" probability="10000" x="263.892456" y="277.525055" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4416" expression="condition_4 == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#13">
       <group probability="1000">
         <slot>
-          <npc id="286937" probability="10000" x="234.195923" y="231.674561" z="154.920792" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286937" probability="10000" x="234.195923" y="231.674561" z="154.920792" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4417" expression="condition_4 == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#14">
       <group probability="1000">
         <slot>
-          <npc id="286937" probability="10000" x="233.385147" y="231.603165" z="170.081177" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286937" probability="10000" x="233.385147" y="231.603165" z="170.081177" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4418" expression="condition_5 == 3" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#15">
       <group probability="1000">
         <slot>
-          <npc id="286939" probability="10000" x="234.59967" y="229.835327" z="154.920792" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286939" probability="10000" x="234.59967" y="229.835327" z="154.920792" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4419" expression="condition_5 == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#16">
       <group probability="1000">
         <slot>
-          <npc id="286938" probability="10000" x="232.46225" y="228.121582" z="325.053192" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286938" probability="10000" x="232.46225" y="228.121582" z="325.053192" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4420" expression="condition == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#17">
       <group probability="1000">
         <slot>
-          <npc id="286936" probability="10000" x="205.493042" y="277.91745" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286936" probability="10000" x="205.493042" y="277.91745" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4421" expression="condition == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#18">
       <group probability="1000">
         <slot>
-          <npc id="286936" probability="10000" x="283.176941" y="203.13002" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286936" probability="10000" x="283.176941" y="203.13002" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4422" expression="condition_5 == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#19">
       <group probability="1000">
         <slot>
-          <npc id="286938" probability="10000" x="243.476196" y="214.853729" z="71.123772" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286938" probability="10000" x="243.476196" y="214.853729" z="71.123772" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4423" expression="condition_4 == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#20">
       <group probability="1000">
         <slot>
-          <npc id="286937" probability="10000" x="234.195908" y="231.674561" z="154.920792" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286937" probability="10000" x="234.195908" y="231.674561" z="154.920792" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4424" expression="condition_5 == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#21">
       <group probability="1000">
         <slot>
-          <npc id="286938" probability="10000" x="232.171753" y="231.379257" z="325.053192" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286938" probability="10000" x="232.171753" y="231.379257" z="325.053192" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4425" expression="condition == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#22">
       <group probability="1000">
         <slot>
-          <npc id="286936" probability="10000" x="207.527237" y="180.706421" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286936" probability="10000" x="207.527237" y="180.706421" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4426" expression="condition_4 == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#23">
       <group probability="1000">
         <slot>
-          <npc id="286937" probability="10000" x="234.195923" y="231.674561" z="154.920792" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286937" probability="10000" x="234.195923" y="231.674561" z="154.920792" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4427" expression="condition_5 == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#24">
       <group probability="1000">
         <slot>
-          <npc id="286938" probability="10000" x="249.810638" y="239.265427" z="71.123772" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286938" probability="10000" x="249.810638" y="239.265427" z="71.123772" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4428" expression="condition_5 == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#25">
       <group probability="1000">
         <slot>
-          <npc id="286938" probability="10000" x="227.099182" y="246.440491" z="71.123772" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286938" probability="10000" x="227.099182" y="246.440491" z="71.123772" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4429" expression="condition == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#26">
       <group probability="1000">
         <slot>
-          <npc id="286936" probability="10000" x="185.604706" y="202.981216" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286936" probability="10000" x="185.604706" y="202.981216" z="161.051361" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>
     <condition id="4430" expression="condition_5 == 2" despawn_at_other="true" group_mode="all" source="test_mrt_idzone/world.xml#27">
       <group probability="1000">
         <slot>
-          <npc id="286938" probability="10000" x="234.1931" y="230.689911" z="124.872223" heading="1" initial_delay="1" initial_delay_extra="1"/>
+          <npc id="286938" probability="10000" x="234.1931" y="230.689911" z="124.872223" heading="1" initial_delay="1" initial_delay_extra="1" fly="true"/>
         </slot>
       </group>
     </condition>

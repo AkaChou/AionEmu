@@ -6,15 +6,15 @@
 	<spawn_map map_id="301680000">
 		<!-- BattleGround_ClodwormR_65_An -->
         <spawn npc_id="243965">
-	        <spot x="319.97946" y="258.47797" z="85.17249" h="60"/>
-            <spot x="207.28038" y="258.77856" z="85.17249" h="119"/>
+	        <spot x="320.258057" y="258.706116" z="91.802505" h="60" resolve_z="true"/>
+            <spot x="206.964813" y="259.001373" z="91.802505" h="0" resolve_z="true"/>
 	    </spawn>
 		<!-- BattleGround_MudthornM_65_An -->
         <spawn npc_id="243966">
-	        <spot x="305.7222" y="312.62772" z="79.86219" h="44"/>
-            <spot x="323.43155" y="320.24994" z="79.86219" h="74"/>
-            <spot x="222.4243" y="207.94353" z="79.9401" h="105"/>
-            <spot x="205.67796" y="197.70412" z="79.86219" h="14"/>
+	        <spot x="305.595917" y="312.742218" z="83.259178" h="0" resolve_z="true"/>
+            <spot x="324.261078" y="320.935913" z="85.132545" h="0" resolve_z="true"/>
+            <spot x="222.823517" y="207.734619" z="83.259178" h="0" resolve_z="true"/>
+            <spot x="205.451874" y="197.546005" z="85.132545" h="0" resolve_z="true"/>
 	    </spawn>
 		<!-- Danuar Icone Elyos -->
 		<spawn npc_id="702300">
@@ -64,28 +64,40 @@
 	        <spot x="255.54253" y="175.07214" z="81.271751"/>
 	    </spawn> -->
         <spawn npc_id="206546" respawn_time="1">
-          <spot x="272.742615" y="256.944733" z="85.94378"/>
+          <spot x="272.742615" y="256.944733" z="86.899185" h="0" resolve_z="true"/>
         </spawn>
         <spawn npc_id="702320" respawn_time="1">
-          <spot x="258.407318" y="169.474899" z="79.430855"/>
+          <spot x="258.407318" y="169.474899" z="80.489204" h="0" resolve_z="true"/>
         </spawn>
         <spawn npc_id="702321" respawn_time="1">
-          <spot x="270.002625" y="347.999573" z="79.44365"/>
+          <spot x="270.002625" y="347.999573" z="81.162560" h="0" resolve_z="true"/>
         </spawn>
         <spawn npc_id="806303" respawn_time="1">
-          <spot x="249.883896" y="172.181427" z="79.77505" h="45"/>
+          <spot x="249.883896" y="172.181427" z="81.025360" h="45" resolve_z="true" entity_id="198"/>
         </spawn>
         <spawn npc_id="806304" respawn_time="1">
-          <spot x="279.601105" y="346.317932" z="79.78691" h="105"/>
+          <spot x="279.601105" y="346.317932" z="81.025360" h="105" resolve_z="true" entity_id="197"/>
         </spawn>
         <spawn npc_id="833923" respawn_time="1">
-          <spot x="272.610687" y="262.036560" z="85.94378"/>
+          <spot x="272.610687" y="262.036560" z="86.885094" h="0" resolve_z="true"/>
         </spawn>
         <spawn npc_id="855008" respawn_time="1">
-          <spot x="303.850372" y="313.054108" z="79.86219"/>
-          <spot x="288.043976" y="283.516785" z="92.968704"/>
-          <spot x="223.533508" y="206.048782" z="79.86219"/>
-          <spot x="239.786591" y="233.325119" z="92.98285"/>
+          <spot x="303.850372" y="313.054108" z="86.938484" h="0" resolve_z="true"/>
+          <spot x="288.043976" y="283.516785" z="94.413620" h="0" resolve_z="true"/>
+          <spot x="223.533508" y="206.048782" z="87.175323" h="0" resolve_z="true"/>
+          <spot x="239.786591" y="233.325119" z="94.413620" h="0" resolve_z="true"/>
+          <spot x="241.929321" y="262.280457" z="87.790657" h="0" random_walk="2" resolve_z="true"/>
+          <spot x="249.387878" y="273.555420" z="87.790657" h="0" random_walk="2" resolve_z="true"/>
+          <spot x="262.131561" y="282.358734" z="87.790657" h="0" random_walk="2" resolve_z="true"/>
+          <spot x="265.686127" y="276.397095" z="87.722496" h="0" random_walk="2" resolve_z="true"/>
+          <spot x="246.717194" y="256.181976" z="87.790657" h="0" random_walk="2" resolve_z="true"/>
+          <spot x="257.681091" y="265.773895" z="87.741714" h="0" random_walk="2" resolve_z="true"/>
+          <spot x="263.941620" y="236.115494" z="88.636635" h="0" random_walk="2" resolve_z="true"/>
+          <spot x="286.392181" y="259.755798" z="88.665665" h="0" random_walk="2" resolve_z="true"/>
+          <spot x="278.498016" y="245.191772" z="88.629883" h="0" random_walk="2" resolve_z="true"/>
+          <spot x="260.686401" y="243.936050" z="88.735268" h="0" random_walk="2" resolve_z="true"/>
+          <spot x="279.913513" y="264.000153" z="88.676834" h="0" random_walk="2" resolve_z="true"/>
+          <spot x="270.898865" y="252.895477" z="88.629883" h="0" random_walk="2" resolve_z="true"/>
         </spawn>
 	</spawn_map>
 </spawns>

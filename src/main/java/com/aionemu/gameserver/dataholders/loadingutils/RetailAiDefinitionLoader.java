@@ -168,7 +168,8 @@ final class RetailAiDefinitionLoader {
 						case "npc" -> {
 							NpcPartyMember member = new NpcPartyMember(Integer.parseInt(attribute(reader, "id")),
 								Float.parseFloat(attribute(reader, "x")), Float.parseFloat(attribute(reader, "y")),
-								Float.parseFloat(attribute(reader, "z")));
+								Float.parseFloat(attribute(reader, "z")), Integer.parseInt(attribute(reader, "h", "0")),
+								Boolean.parseBoolean(attribute(reader, "fly", "false")));
 							String key = worldId + ":" + member.id() + ":" + member.x() + ":" + member.y() + ":" + member.z();
 							if (!members.add(key)) {
 								throw new IllegalStateException("Retail NPC party member belongs to multiple parties: " + key);
@@ -376,6 +377,7 @@ final class RetailAiDefinitionLoader {
 			List<ConditionSpawnNpc> partyMembers = null;
 			String partyId = null;
 			int npcId = 0, choiceProbability = 0, npcHeading = 0, initialDelay = 0, initialDelayExtra = 0;
+			boolean npcFly = false;
 			float npcX = 0, npcY = 0, npcZ = 0, sensoryBottom = 0, sensoryTop = 0;
 			String walker = null;
 			List<Point2D> sensoryPoints = null;
@@ -416,6 +418,7 @@ final class RetailAiDefinitionLoader {
 							npcY = Float.parseFloat(attribute(reader, "y"));
 							npcZ = Float.parseFloat(attribute(reader, "z"));
 							npcHeading = Integer.parseInt(attribute(reader, "heading"));
+							npcFly = Boolean.parseBoolean(attribute(reader, "fly", "false"));
 							initialDelay = Integer.parseInt(attribute(reader, "initial_delay"));
 							initialDelayExtra = Integer.parseInt(attribute(reader, "initial_delay_extra"));
 							walker = attribute(reader, "walker");
@@ -440,7 +443,7 @@ final class RetailAiDefinitionLoader {
 								ZoneName.createOrGet("retail_sensory_" + worldId + "_" + npcId + "_" + npcX + "_" + npcY),
 								worldId, sensoryPoints, sensoryBottom, sensoryTop);
 							ConditionSpawnNpc npc = new ConditionSpawnNpc(npcId, npcX, npcY, npcZ, npcHeading,
-								initialDelay, initialDelayExtra, walker, sensoryArea);
+								initialDelay, initialDelayExtra, walker, sensoryArea, npcFly);
 							if (partyMembers == null) {
 								slot.add(new ConditionSpawnChoice(choiceProbability, null, List.of(npc)));
 							} else {

@@ -15,7 +15,7 @@
 			<spot h="71" z="94.35405" y="1220.8717" x="1018.9328"/>
 			<spot h="80" z="94.34871" y="1222.1642" x="990.65"/>
 			<spot h="80" z="94.34694" y="1231.9512" x="1002.9946"/>
-			<spot h="107" z="93.52813" y="1047.9209" x="989.3353"/>
+			<spot h="60" z="94.000000" y="1047.000000" x="990.000000" resolve_z="true"/>
 			<spot h="116" z="93.52811" y="1045.3523" x="967.0571"/>
 			<spot h="16" z="93.52806" y="1041.905" x="943.5041"/>
 			<spot h="107" z="91.23403" y="1074.6221" x="940.2485"/>
@@ -27,8 +27,14 @@
             <spot h="60" z="53.687073" y="1093.9888" x="835.1182"/>
 			<spot h="91" z="95.93635" y="1244.4934" x="832.7228"/>
             <spot h="87" z="95.93634" y="1244.3225" x="807.2666"/>
-			<spot h="71" z="69.9307" y="1074.6285" x="1020.9462" walker_id="Sturdy_Hetgolem_Sealed_Argent_Manor_1"/>
+			<spot h="60" z="70.250000" y="1075.000000" x="1021.000000" walker_id="Sturdy_Hetgolem_Sealed_Argent_Manor_1" resolve_z="true"/>
 			<spot h="28" z="69.98283" y="1068.6936" x="945.8562" walker_id="Sturdy_Hetgolem_Sealed_Argent_Manor_2"/>
+		  <spot x="919.182922" y="1120.634033" z="92.716599" h="90" random_walk="2" resolve_z="true"/>
+		  <spot x="918.697937" y="1061.409790" z="92.201973" h="30" random_walk="2" resolve_z="true"/>
+		  <spot x="902.577148" y="1057.602295" z="92.147980" h="30" random_walk="2" resolve_z="true"/>
+		  <spot x="803.923340" y="1254.384033" z="96.000000" h="90" random_walk="2" resolve_z="true"/>
+		  <spot x="954.000000" y="1047.000000" z="70.000000" h="30" random_walk="2" resolve_z="true"/>
+		  <spot x="902.406799" y="1123.276367" z="92.826523" h="90" random_walk="2" resolve_z="true"/>
 		</spawn>
 		<!-- Agile Hetgolem -->
 		<spawn npc_id="237181">
@@ -68,6 +74,10 @@
             <spot h="0" z="93.366035" y="1195.6726" x="777.8438"/>
             <spot h="12" z="93.36388" y="1187.8624" x="764.02997"/>
 			<spot h="116" z="69.98283" y="1137.9999" x="946.32294" walker_id="Mystic_Hetgolem_Sealed_Argent_Manor"/>
+		  <spot x="1013.000000" y="1058.000000" z="70.250000" h="30" random_walk="2" resolve_z="true"/>
+		  <spot x="944.000000" y="1042.000000" z="94.000000" h="0" random_walk="2" resolve_z="true"/>
+		  <spot x="942.000000" y="1063.000000" z="70.000000" h="0" random_walk="2" resolve_z="true"/>
+		  <spot x="1018.000000" y="1138.000000" z="71.000000" h="90" random_walk="2" resolve_z="true"/>
 		</spawn>
 		<!-- Wary Alarm -->
 		<spawn npc_id="237186">
@@ -87,17 +97,17 @@
 		<spawn npc_id="237190">
 			<spot x="973.2345" y="1042.281" z="69.97156" h="26"/>
             <spot x="943.3579" y="1138.5004" z="69.98283" h="116"/>
-			<spot x="909.7142" y="1090.661" z="91.22842" h="0"/>
+			<spot x="909.000000" y="1091.000000" z="93.776749" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Elemental Iron Prison -->
 		<spawn npc_id="237195">
-			<spot x="820.60413" y="1120.0999" z="53.711323" entity_id="111"/>
+			<spot x="820.675659" y="1119.539551" z="56.250000" entity_id="111" h="90" resolve_z="true"/>
 		</spawn>
 		<!-- Hard Hetgolem -->
 		<spawn npc_id="237200">
 			<spot x="884.73883" y="1107.7944" z="91.25827" h="7" random_walk="2"/>
 			<spot x="810.4657" y="1271.5292" z="95.93739" h="95" random_walk="2"/>
-			<spot x="884.717" y="1073.594" z="91.25827" h="116" random_walk="2"/>
+			<spot x="885.000000" y="1073.000000" z="93.000000" h="0" random_walk="2" resolve_z="true"/>
 			<spot x="831.7323" y="1271.0824" z="95.93723" h="87" random_walk="2"/>
 		</spawn>
 		<!-- Nameless Wall -->
@@ -106,26 +116,26 @@
 		</spawn>
 		<!-- Transformation Bonfire -->
 		<spawn npc_id="701001">
-			<spot x="801.63086" y="1106.1558" z="53.982426" entity_id="67"/>
+			<spot x="801.425659" y="1106.289551" z="56.000000" entity_id="67" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Spirit's Bucket -->
 		<spawn npc_id="701002">
-			<spot x="839.55225" y="1114.2223" z="53.775692" entity_id="89"/>
+			<spot x="839.175659" y="1114.289551" z="56.000000" entity_id="89" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Magic Pinwheel -->
 		<spawn npc_id="701003">
-			<spot x="803.01263" y="1090.7640" z="55.089676" entity_id="69"/>
+			<spot x="803.425659" y="1091.539551" z="56.000000" entity_id="69" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Magical Soil Mound -->
 		<spawn npc_id="701004">
-			<spot x="839.31415" y="1078.6278" z="54.266319" entity_id="109"/>
+			<spot x="838.425659" y="1078.539551" z="56.000000" entity_id="109" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Argent Manor Treasure Box -->
 		<spawn npc_id="702816">
-			<spot x="781.38684" y="1042.4866" z="64.875145" h="60"/>
-            <spot x="781.2233" y="1038.419" z="64.87492" h="60"/>
+			<spot x="781.250549" y="1042.764038" z="65.264748" h="30" resolve_z="true"/>
+            <spot x="781.233154" y="1037.831787" z="65.691055" h="30" resolve_z="true"/>
             <spot x="770.1901" y="1160.0662" z="93.36387" h="30"/>
-            <spot x="971.4286" y="1142.1215" z="93.52788" h="60"/>
+            <spot x="971.817261" y="1141.273315" z="94.962715" h="30" resolve_z="true"/>
 		</spawn>
 		<!-- Cursed Book -->
 		<spawn npc_id="702862">
@@ -137,19 +147,19 @@
 		</spawn>
 		<!-- Experimental Lab Passage -->
 		<spawn npc_id="731649">
-			<spot x="821.06775" y="1140.4376" z="54.090305" h="89"/>
+			<spot x="821.175659" y="1140.636841" z="57.505959" h="90" resolve_z="true"/>
 		</spawn>
 		<!-- Celestial Observation Chamber Passage -->
 		<spawn npc_id="731650">
-			<spot x="819.8454" y="1299.9694" z="94.34706" h="91"/>
+			<spot x="820.171814" y="1300.608887" z="97.632362" h="90" resolve_z="true"/>
 		</spawn>
 		<!-- Golem Sculpting Rack Passage -->
 		<spawn npc_id="731658">
-			<spot x="820.6916" y="1079.6685" z="53.671883" h="30"/>
+			<spot x="820.940308" y="1079.512085" z="56.586369" h="30" resolve_z="true"/>
 		</spawn>
 		<!-- Alchemical Lab Passage -->
 		<spawn npc_id="731659">
-			<spot x="821.00543" y="1191.1125" z="94.36081" h="30"/>
+			<spot x="820.953674" y="1190.896729" z="97.632362" h="30" resolve_z="true"/>
 		</spawn>
 		<!-- Sealed Argent Manor Exit -->
 		<spawn npc_id="731665">
@@ -165,6 +175,8 @@
 		<!-- Celestial Control Door -->
 		<spawn npc_id="856542">
 			<spot x="819.8454" y="1299.9694" z="94.34706" h="91"/>
+		  <spot x="994.692932" y="1163.576538" z="69.894028" h="60" random_walk="2" resolve_z="true"/>
+		  <spot x="994.999329" y="1139.766846" z="70.543930" h="60" random_walk="2" resolve_z="true"/>
 		</spawn>
 		<!-- Drained Hetgolem -->
 		<spawn npc_id="856547">
@@ -173,31 +185,31 @@
             <spot x="916.18823" y="1118.3083" z="91.21813" h="90"/>
 		</spawn>
 		<spawn npc_id="237191" respawn_time="1">
-		  <spot x="960.000000" y="1141.000000" z="93.52802" h="60"/>
-		  <spot x="762.942322" y="1055.181152" z="64.86163"/>
-		  <spot x="765.675659" y="1040.289551" z="64.860504" h="30"/>
-		  <spot x="813.317871" y="1062.257690" z="55.33428"/>
-		  <spot x="792.425659" y="1059.539551" z="59.502377"/>
-		  <spot x="947.000000" y="1119.000000" z="93.52824" h="60"/>
-		  <spot x="768.673279" y="1191.134033" z="93.36388" h="60"/>
-		  <spot x="765.673279" y="1197.134033" z="93.36388"/>
+		  <spot x="960.000000" y="1141.000000" z="97.000000" h="60" resolve_z="true"/>
+		  <spot x="762.942322" y="1055.181152" z="65.250000" h="0" resolve_z="true"/>
+		  <spot x="765.675659" y="1040.289551" z="65.250000" h="30" resolve_z="true"/>
+		  <spot x="813.317871" y="1062.257690" z="56.250000" h="0" resolve_z="true"/>
+		  <spot x="792.425659" y="1059.539551" z="60.250000" h="0" resolve_z="true"/>
+		  <spot x="947.000000" y="1119.000000" z="97.000000" h="60" resolve_z="true"/>
+		  <spot x="768.673279" y="1191.134033" z="96.000000" h="60" resolve_z="true"/>
+		  <spot x="765.673279" y="1197.134033" z="96.000000" h="0" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="237192" respawn_time="1">
-		  <spot x="778.425659" y="1040.289551" z="64.87112" h="60"/>
-		  <spot x="767.673279" y="1164.134033" z="93.36386" h="30"/>
-		  <spot x="967.250000" y="1140.000000" z="93.527954" h="60"/>
+		  <spot x="778.425659" y="1040.289551" z="65.250000" h="60" resolve_z="true"/>
+		  <spot x="767.673279" y="1164.134033" z="96.000000" h="30" resolve_z="true"/>
+		  <spot x="967.250000" y="1140.000000" z="97.000000" h="60" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="237199" respawn_time="1">
-		  <spot x="885.000000" y="1106.000000" z="91.294044"/>
+		  <spot x="885.000000" y="1106.000000" z="93.000000" h="0" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="237201" respawn_time="1">
-		  <spot x="831.740112" y="1277.563354" z="95.93688" h="90"/>
+		  <spot x="831.740112" y="1277.563354" z="96.000000" h="90" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="237202" respawn_time="1">
-		  <spot x="808.698853" y="1276.866699" z="95.93696" h="90"/>
+		  <spot x="808.698853" y="1276.866699" z="96.000000" h="90" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="856538" respawn_time="1">
-		  <spot x="994.442932" y="1160.326538" z="69.133545" h="60"/>
+		  <spot x="994.442932" y="1160.326538" z="69.894028" h="60" resolve_z="true"/>
 		</spawn>
 	</spawn_map>
 </spawns>

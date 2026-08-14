@@ -6,11 +6,11 @@
 	<spawn_map map_id="600080000">
 		<!-- Concert Hall Exit Usher -->
 		<spawn npc_id="831668">
-            <spot x="1508.4463" y="1481.5912" z="565.8798" h="16"/>
+            <spot x="1508.753296" y="1482.785889" z="569.213074" h="15" resolve_z="true"/>
 		</spawn>
 		<!-- Concert Hall Exit Usher -->
 		<spawn npc_id="831669">
-            <spot x="1504.3192" y="1486.1263" z="565.8801" h="15"/>
+            <spot x="1505.003296" y="1486.285889" z="569.213074" h="15" resolve_z="true"/>
 		</spawn>
 		<!-- Concert Hall Exit Usher -->
 		<spawn npc_id="831670">
@@ -22,7 +22,7 @@
 		</spawn>
 		<!-- Live Party Concert Operating Helper -->
 		<spawn npc_id="831708">
-            <spot x="1492.5629" y="1511.4586" z="565.99805" h="119"/>
+            <spot x="1492.152710" y="1511.563354" z="568.609436" h="0" resolve_z="true"/>
 		</spawn>
 	</spawn_map>
 </spawns>

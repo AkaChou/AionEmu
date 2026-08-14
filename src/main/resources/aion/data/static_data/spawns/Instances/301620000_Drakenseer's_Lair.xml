@@ -49,10 +49,10 @@
 		</spawn>
 		<!-- IDF6_Dragon_Out_Portal -->
 	    <spawn npc_id="806240">
-		    <spot x="271.35199" y="356.32196" z="335.92697" entity_id="2"/>
+		    <spot x="271.364716" y="356.427368" z="337.028473" entity_id="2" h="0" resolve_z="true"/>
 		</spawn>
 	    <spawn npc_id="703154" respawn_time="1">
-	      <spot x="277.807556" y="344.106842" z="336.38193" h="33"/>
+	      <spot x="277.807556" y="344.106842" z="336.941315" h="33" resolve_z="true"/>
 	    </spawn>
     </spawn_map>
 </spawns>

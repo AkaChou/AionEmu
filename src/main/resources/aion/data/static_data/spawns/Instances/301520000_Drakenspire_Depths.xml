@@ -30,8 +30,8 @@
 		</spawn>
 		<!-- Grotesque Deathchar Illdrudge -->
 		<spawn npc_id="237208">
-			<spot x="449.3055" y="209.5626" z="1682.2167" h="60"/>
-            <spot x="449.4058" y="153.38249" z="1682.348" h="59"/>
+			<spot x="448.500000" y="209.000000" z="1688.122437" h="0" resolve_z="true"/>
+            <spot x="448.500000" y="153.000000" z="1688.122437" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Grotesque Deathchar Necromancer -->
 		<spawn npc_id="237209">
@@ -179,22 +179,22 @@
 		</spawn>
 		<!-- Rapacious Kadena -->
 		<spawn npc_id="237225">
-			<spot x="894.34625" y="287.30704" z="1714.9932" h="75"/>
+			<spot x="894.346252" y="287.307037" z="1715.984497" h="75" resolve_z="true"/>
 		</spawn>
 		<!-- Rapacious Kadena -->
 		<spawn npc_id="237226">
-			<spot x="856.27374" y="362.04288" z="1723.6619" h="90"/>
+			<spot x="856.273743" y="362.042877" z="1724.002319" h="90" resolve_z="true"/>
 		</spawn>
 		<!-- Rapacious Kadena -->
 		<spawn npc_id="237227">
-			<spot x="787.00006" y="379.6728" z="1697.0371" h="90"/>
+			<spot x="787.000061" y="379.672791" z="1698.299561" h="90" resolve_z="true"/>
 		</spawn>
 		<!-- Immortal Orissan -->
 		<spawn npc_id="237230">
-			<spot x="811.85016" y="568.0076" z="1701.0443" h="90"/>
+			<spot x="811.850159" y="568.007629" z="1707.200562" h="90" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="206404" respawn_time="1">
-		  <spot x="635.659302" y="948.801880" z="1614.2697"/>
+		  <spot x="635.659302" y="948.801880" z="1616.684814" h="0" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="206412" respawn_time="1">
 		  <spot x="807.866943" y="610.401978" z="1704.2429"/>
@@ -236,14 +236,23 @@
 		  <spot x="904.629761" y="385.639893" z="1647.3086" h="90"/>
 		</spawn>
 		<spawn npc_id="207130" respawn_time="1">
-		  <spot x="329.295441" y="182.960342" z="1687.2552" h="60"/>
+		  <spot x="329.295441" y="182.960342" z="1688.298462" h="60" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="702827" respawn_time="1">
-		  <spot x="592.024841" y="181.322739" z="1683.7301" h="45"/>
-		  <spot x="635.500122" y="905.020386" z="1600.5023" h="90"/>
+		  <spot x="592.024841" y="181.322739" z="1685.613892" h="45" resolve_z="true" entity_id="603"/>
+		  <spot x="635.500122" y="905.020386" z="1601.910278" h="90" resolve_z="true" entity_id="332"/>
 		</spawn>
 		<spawn npc_id="805377" respawn_time="1">
-		  <spot x="635.500122" y="957.020386" z="1616.2687" h="90"/>
+		  <spot x="635.500122" y="957.020386" z="1617.910278" h="90" resolve_z="true" entity_id="50"/>
+		</spawn>
+		<spawn npc_id="237228" initial_delay="1">
+		  <spot x="531.088501" y="212.438065" z="1683.411621" h="60" random_walk="2" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="237229" initial_delay="1">
+		  <spot x="530.858398" y="151.868103" z="1683.411621" h="60" random_walk="2" resolve_z="true"/>
+		</spawn>
+		<spawn npc_id="731580" initial_delay="1">
+		  <spot x="809.731140" y="598.521606" z="1708.170410" h="90" entity_id="522" random_walk="2" resolve_z="true"/>
 		</spawn>
 	</spawn_map>
 </spawns>

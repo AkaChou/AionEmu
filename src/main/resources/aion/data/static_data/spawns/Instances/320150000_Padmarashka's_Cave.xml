@@ -10,23 +10,24 @@
         </spawn>
 		<!-- Dramata Explorater I -->
 	    <spawn npc_id="207042">
-            <spot x="359.436523" y="534.716064" z="68.047928" h="00"/>
+            <spot x="359.436523" y="534.716064" z="68.047928" h="103" resolve_z="true"/>
         </spawn>
 	    <!-- Dramata Explorater II -->
 	    <spawn npc_id="207043">
-            <spot x="389.307526" y="538.979309" z="69.611954" h="00"/>
+            <spot x="389.307526" y="538.979309" z="69.611954" h="83" resolve_z="true"/>
         </spawn>
 	    <!-- Dramata Explorater III -->
 	    <spawn npc_id="207044">
-            <spot x="359.9495" y="522.9085" z="67.375" h="117"/>
+            <spot x="359.747101" y="522.949585" z="71.030388" h="115" resolve_z="true"/>
         </spawn>
 	    <!-- Piloti -->
 	    <spawn npc_id="207045">
-            <spot x="376.627075" y="532.346130" z="68.051201" h="00"/>
+            <spot x="376.627075" y="532.346130" z="68.051201" h="90" resolve_z="true"/>
         </spawn>
 	    <!-- Ane -->
 	    <spawn npc_id="207046">
             <spot x="391.30087" y="534.5148" z="68.191086" h="68"/>
+	      <spot x="374.244049" y="531.861450" z="68.168442" h="100" random_walk="2" resolve_z="true"/>
         </spawn>
 		<!-- Greater Blessed Relics -->
 		<spawn npc_id="831990">
@@ -46,10 +47,12 @@
 	    <!-- Padmarashka's Elite Commander -->
 	    <spawn npc_id="218670">
 	 	    <spot x="480.7589" y="380.71472" z="66.20257" h="46" walker_id="Padmarashka_Elite_Commander"/>
+	      <spot x="533.106689" y="247.684814" z="71.815346" h="45" random_walk="2" resolve_z="true"/>
         </spawn>
 	    <!-- Padmarashka Sartip -->
 	    <spawn npc_id="218671">
             <spot x="520.3559" y="327.2142" z="64.42411" h="40"/>
+	      <spot x="581.091736" y="265.048798" z="71.397820" h="15" random_walk="2" resolve_z="true"/>
         </spawn>
 	    <!-- Naduka Tribunus -->
 	    <spawn npc_id="218672">
@@ -61,10 +64,12 @@
 	    <!-- Padmarashka's Elite Captain -->
 	    <spawn npc_id="218673">
             <spot x="604.62317" y="221.63605" z="65.91395" h="37"/>
+	      <spot x="547.838257" y="264.624084" z="71.397820" h="45" random_walk="2" resolve_z="true"/>
         </spawn>
 	    <!-- Padmarashka's Chief Medic -->
 	    <spawn npc_id="218674">
             <spot x="526.77" y="333.68237" z="64.5764" h="42"/>
+	      <spot x="595.748230" y="248.044998" z="71.397820" h="15" random_walk="2" resolve_z="true"/>
         </spawn>
 	    <!-- Padmarashka's Elite Hatcher -->
 	    <spawn npc_id="218675">
@@ -72,6 +77,7 @@
             <spot h="18" z="75.15192" y="484.78467" x="328.48145"/>
             <spot h="7" z="77.35474" y="514.41895" x="309.50662"/>
             <spot h="52" z="73.60042" y="507.55017" x="426.92795"/>
+	      <spot x="573.412537" y="179.518005" z="71.397820" h="30" random_walk="2" resolve_z="true"/>
         </spawn>
 	    <!-- Padmarashka's Elite Hatcher -->
 	    <spawn npc_id="218676">
@@ -80,6 +86,7 @@
             <spot h="29" z="75.125" y="424.71368" x="333.69955"/>
             <spot h="71" z="76.69585" y="512.51105" x="473.37756"/>
             <spot h="65" z="72.63535" y="491.56097" x="492.16565"/>
+	      <spot x="581.827209" y="179.586639" z="71.397820" h="30" random_walk="2" resolve_z="true"/>
         </spawn>
 	    <!-- Padmarashka Drakan Destroyer -->
 	    <spawn npc_id="218677">
@@ -87,6 +94,8 @@
             <spot h="24" z="77.160736" y="433.31573" x="376.11255"/>
             <spot h="49" z="72.00021" y="479.50623" x="446.26105"/>
             <spot h="20" z="83.059265" y="411.81616" x="305.68393"/>
+	      <spot x="507.741425" y="353.082489" z="72.939499" h="45" random_walk="2" resolve_z="true"/>
+	      <spot x="446.866791" y="404.465973" z="68.487228" h="45" random_walk="2" resolve_z="true"/>
         </spawn>
 	    <!-- Padmarashka's Elite Rampager -->
 	    <spawn npc_id="218678">
@@ -94,6 +103,7 @@
             <spot h="26" z="75.99961" y="359.95346" x="398.09927"/>
             <spot h="57" z="76.29781" y="459.97202" x="500.37558"/>
             <spot h="47" z="76.51681" y="432.26758" x="497.46622"/>
+	      <spot x="512.524780" y="350.456879" z="72.214836" h="45" random_walk="2" resolve_z="true"/>
         </spawn>
 	    <!-- Dramata Hideout Manager -->
 	    <spawn npc_id="218679">
@@ -110,6 +120,7 @@
             <spot h="28" z="67.20024" y="283.76126" x="508.31863"/>
             <spot h="26" z="68.373055" y="234.24959" x="494.44537"/>
             <spot h="51" z="66.35474" y="286.7921" x="610.2793"/>
+	      <spot x="503.776978" y="343.828003" z="70.111053" h="45" random_walk="2" resolve_z="true"/>
         </spawn>
 	    <!-- Padmarashka's Elite Administrator -->
 	    <spawn npc_id="218681">
@@ -117,9 +128,11 @@
             <spot h="37" z="65.60217" y="483.0093" x="384.78223"/>
             <spot h="39" z="68.95849" y="435.22003" x="406.7568"/>
             <spot h="38" z="66.91116" y="451.30252" x="422.14465"/>
+	      <spot x="503.011780" y="349.257416" z="72.214836" h="45" random_walk="2" resolve_z="true"/>
+	      <spot x="454.204407" y="411.677338" z="69.417397" h="45" random_walk="2" resolve_z="true"/>
         </spawn>
 	    <spawn npc_id="206212" respawn_time="1">
-	      <spot x="510.025055" y="330.408875" z="65.06919"/>
+	      <spot x="510.025055" y="330.408875" z="67.744438" h="0" resolve_z="true"/>
 	    </spawn>
 	</spawn_map>
 </spawns>

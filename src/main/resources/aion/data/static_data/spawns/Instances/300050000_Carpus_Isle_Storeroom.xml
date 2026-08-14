@@ -99,7 +99,7 @@
 		</spawn>
 		<!-- Beautiful Landscape Painting -->
 		<spawn npc_id="700461">
-			<spot x="461.056" y="567.035" z="205.751" entity_id="33"/>
+			<spot x="461.705078" y="567.343567" z="205.748322" entity_id="33" h="0" resolve_z="true"/>
 		</spawn>
 		<!-- Major Blessed Relics -->
 		<spawn npc_id="831989">
@@ -118,14 +118,14 @@
             <spot x="470.7145" y="572.556" z="201.69794" h="90"/>
         </spawn>
         <spawn npc_id="206087" respawn_time="1">
-          <spot x="479.588837" y="567.706665" z="202.10666"/>
+          <spot x="479.588837" y="567.706665" z="205.123642" h="0" resolve_z="true"/>
         </spawn>
         <spawn npc_id="283080" respawn_time="1">
-          <spot x="476.546997" y="567.789612" z="202.03418"/>
-          <spot x="513.576660" y="567.789612" z="197.90146"/>
+          <spot x="476.546997" y="567.789612" z="203.544785" h="0" resolve_z="true"/>
+          <spot x="513.576660" y="567.789612" z="203.544785" h="0" resolve_z="true"/>
         </spawn>
         <spawn npc_id="856595" respawn_time="30">
-          <spot x="472.221039" y="570.810547" z="201.76213" h="90"/>
+          <spot x="472.221039" y="570.810547" z="204.577087" h="90" resolve_z="true"/>
         </spawn>
 	</spawn_map>
 </spawns>

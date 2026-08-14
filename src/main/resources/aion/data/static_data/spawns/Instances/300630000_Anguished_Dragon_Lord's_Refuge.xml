@@ -10,19 +10,19 @@
 		</spawn>
 		<!-- Internal Passage Out 1 -->
 		<spawn npc_id="730633">
-			<spot x="216.92004" y="195.3886" z="246.44954" entity_id="93"/>
+			<spot x="216.919998" y="195.389999" z="248.000000" entity_id="93" h="75" resolve_z="true"/>
 		</spawn>
 		<!-- Internal Passage Out 2 -->
 		<spawn npc_id="730634">
-			<spot x="782.8139" y="194.79366" z="246.54323" entity_id="92"/>
+			<spot x="782.809998" y="194.789993" z="248.000000" entity_id="92" h="105" resolve_z="true"/>
 		</spawn>
 		<!-- Internal Passage Out 3 -->
 		<spawn npc_id="730635">
-			<spot x="217.55214" y="832.35382" z="250.0000" entity_id="90"/>
+			<spot x="217.550003" y="832.340027" z="248.000000" entity_id="90" h="45" resolve_z="true"/>
 		</spawn>
 		<!-- Internal Passage Out 4 -->
 		<spawn npc_id="730636">
-		    <spot x="778.85364" y="832.67804" z="246.07117" entity_id="95"/>
+		    <spot x="779.299988" y="833.200012" z="248.000000" entity_id="95" h="15" resolve_z="true"/>
 		</spawn>
 		<!-- Tiamat Aetheric Field -->
 		<spawn npc_id="730694">
@@ -38,16 +38,16 @@
             <spot x="510.3906" y="516.59485" z="240.26653" h="61"/>
         </spawn>
 		<spawn npc_id="236278" respawn_time="1">
-		  <spot x="200.310577" y="179.133545" z="250.000000" h="15"/>
+		  <spot x="200.310577" y="179.133545" z="250.000000" h="15" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="236279" respawn_time="1">
-		  <spot x="801.047607" y="179.277420" z="250.000000" h="45"/>
+		  <spot x="801.047607" y="179.277420" z="250.000000" h="45" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="236280" respawn_time="1">
-		  <spot x="200.857346" y="848.302795" z="250.000000" h="105"/>
+		  <spot x="200.857346" y="848.302795" z="250.000000" h="105" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="236281" respawn_time="1">
-		  <spot x="797.651611" y="848.708069" z="250.000000" h="75"/>
+		  <spot x="797.651611" y="848.708069" z="250.000000" h="75" resolve_z="true"/>
 		</spawn>
 	</spawn_map>
 </spawns>

@@ -5,419 +5,419 @@
 <spawns>
   <spawn_map map_id="300230000">
     <spawn npc_id="217033">
-      <spot x="494.791443" y="699.930908" z="215.55" h="30"/>
-      <spot x="511.566040" y="611.648193" z="214.99918"/>
-      <spot x="561.229187" y="688.764648" z="215.5286" h="60"/>
-      <spot x="533.195007" y="723.060913" z="215.5286" h="106"/>
-      <spot x="511.463745" y="670.257080" z="214.99918"/>
+      <spot x="494.791443" y="699.930908" z="215.843109" h="30" resolve_z="true"/>
+      <spot x="511.566040" y="611.648193" z="218.843109" h="0" resolve_z="true"/>
+      <spot x="561.229187" y="688.764648" z="215.870361" h="60" resolve_z="true"/>
+      <spot x="533.195007" y="723.060913" z="215.843109" h="106" resolve_z="true"/>
+      <spot x="511.463745" y="670.257080" z="215.843109" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="206154">
-      <spot x="445.943298" y="341.276093" z="172.04875"/>
+      <spot x="445.943298" y="341.276093" z="180.105225" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="282126">
-      <spot x="613.889160" y="793.742798" z="216.09479" h="90"/>
-      <spot x="653.907959" y="793.668762" z="216.09479" h="90"/>
-      <spot x="653.921753" y="754.797424" z="216.09479" h="30"/>
-      <spot x="633.669556" y="793.666260" z="216.09479" h="90"/>
-      <spot x="623.769348" y="793.647949" z="216.09479" h="90"/>
-      <spot x="633.683350" y="754.794922" z="216.09479" h="30"/>
-      <spot x="623.783142" y="754.776611" z="216.09479" h="30"/>
-      <spot x="613.902954" y="754.871460" z="216.09479" h="30"/>
+      <spot x="613.889160" y="793.742798" z="218.969498" h="90" resolve_z="true"/>
+      <spot x="653.907959" y="793.668762" z="218.969498" h="90" resolve_z="true"/>
+      <spot x="653.921753" y="754.797424" z="218.969498" h="30" resolve_z="true"/>
+      <spot x="633.669556" y="793.666260" z="218.969498" h="90" resolve_z="true"/>
+      <spot x="623.769348" y="793.647949" z="218.969498" h="90" resolve_z="true"/>
+      <spot x="633.683350" y="754.794922" z="218.969498" h="30" resolve_z="true"/>
+      <spot x="623.783142" y="754.776611" z="218.969498" h="30" resolve_z="true"/>
+      <spot x="613.902954" y="754.871460" z="218.969498" h="30" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217029">
-      <spot x="694.755615" y="623.906067" z="200.1199" h="45"/>
-      <spot x="689.110413" y="509.839722" z="197.90062" h="30" walker_id="NPCPathIDCromede_Mob4"/>
+      <spot x="694.755615" y="623.906067" z="202.760223" h="45" resolve_z="true"/>
+      <spot x="689.110413" y="509.839722" z="200.516800" h="30" walker_id="NPCPathIDCromede_Mob4" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730335">
-      <spot x="613.669800" y="763.253723" z="216.10057" entity_id="268"/>
+      <spot x="613.669800" y="763.253723" z="219.096542" entity_id="268" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216968" pool="1">
-      <spot x="352.209991" y="170.309998" z="146.22021" h="16"/>
+      <spot x="352.209991" y="170.309998" z="148.000000" h="16" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216981">
-      <spot x="739.617737" y="532.058044" z="199.31773" h="60"/>
+      <spot x="739.617737" y="532.058044" z="199.789322" h="60" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216985">
-      <spot x="593.031311" y="658.459839" z="208.9879" walker_id="NPCPathIDCromede_02Up45"/>
-      <spot x="580.633911" y="634.364624" z="208.13837" h="30"/>
-      <spot x="541.411560" y="659.375122" z="201.5147" h="90" walker_id="NPCPathIDCromede_02Up36"/>
-      <spot x="594.023499" y="618.685913" z="208.98837" walker_id="NPCPathIDCromede_02Up21"/>
+      <spot x="593.031311" y="658.459839" z="209.757309" walker_id="NPCPathIDCromede_02Up45" h="0" resolve_z="true"/>
+      <spot x="580.633911" y="634.364624" z="210.037582" h="30" resolve_z="true"/>
+      <spot x="541.411560" y="659.375122" z="203.017914" h="90" walker_id="NPCPathIDCromede_02Up36" resolve_z="true"/>
+      <spot x="594.023499" y="618.685913" z="209.757309" walker_id="NPCPathIDCromede_02Up21" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217028">
-      <spot x="675.499268" y="606.519165" z="201.19109"/>
-      <spot x="679.164673" y="629.104309" z="201.05258"/>
-      <spot x="638.470520" y="588.055725" z="209.04085" h="90"/>
-      <spot x="693.056091" y="530.607056" z="197.90062" h="60"/>
-      <spot x="673.855774" y="651.035522" z="201.19109" h="60"/>
+      <spot x="675.499268" y="606.519165" z="202.669647" h="0" resolve_z="true"/>
+      <spot x="679.164673" y="629.104309" z="202.760223" h="0" resolve_z="true"/>
+      <spot x="638.470520" y="588.055725" z="210.836044" h="90" resolve_z="true"/>
+      <spot x="693.056091" y="530.607056" z="198.836044" h="60" resolve_z="true"/>
+      <spot x="673.855774" y="651.035522" z="202.843018" h="60" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730308">
-      <spot x="350.283966" y="169.959595" z="146.34906" entity_id="6"/>
+      <spot x="350.283966" y="169.959595" z="147.850479" entity_id="6" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216999">
-      <spot x="585.943176" y="774.209656" z="215.57028"/>
+      <spot x="585.943176" y="774.209656" z="216.876312" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216980">
-      <spot x="688.715210" y="644.315796" z="200.1199" h="90" walker_id="NPCPathIDCromede_Mob3"/>
+      <spot x="688.715210" y="644.315796" z="203.000000" h="90" walker_id="NPCPathIDCromede_Mob3" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730327">
-      <spot x="613.790710" y="784.886597" z="216.10057" entity_id="13"/>
+      <spot x="613.790710" y="784.886597" z="219.062210" entity_id="13" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="282092">
-      <spot x="643.917175" y="753.299011" z="216.15863" h="30"/>
-      <spot x="643.934998" y="795.351257" z="216.15863" h="30"/>
+      <spot x="643.917175" y="753.299011" z="219.285141" h="30" resolve_z="true"/>
+      <spot x="643.934998" y="795.351257" z="219.056458" h="30" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216972">
-      <spot x="642.106873" y="665.264221" z="201.19109"/>
-      <spot x="666.619507" y="596.917603" z="201.19109" h="53"/>
-      <spot x="655.049683" y="656.039001" z="201.19109" h="53"/>
+      <spot x="642.106873" y="665.264221" z="203.922546" h="0" resolve_z="true"/>
+      <spot x="666.619507" y="596.917603" z="203.922546" h="53" resolve_z="true"/>
+      <spot x="655.049683" y="656.039001" z="203.922546" h="53" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216965">
-      <spot x="514.886963" y="237.741257" z="142.42912" h="40"/>
-      <spot x="472.129547" y="353.380463" z="170.9699" h="73"/>
-      <spot x="414.913239" y="246.489471" z="140.60266" h="17"/>
-      <spot x="358.519592" y="190.824356" z="146.71289" h="106"/>
-      <spot x="427.234924" y="234.250610" z="140.60266" h="17"/>
-      <spot x="372.981415" y="176.137344" z="146.71289" h="46"/>
+      <spot x="514.886963" y="237.741257" z="143.139755" h="40" resolve_z="true"/>
+      <spot x="472.129547" y="353.380463" z="175.713394" h="73" resolve_z="true"/>
+      <spot x="414.913239" y="246.489471" z="141.043915" h="17" resolve_z="true"/>
+      <spot x="358.519592" y="190.824356" z="150.866974" h="106" resolve_z="true"/>
+      <spot x="427.234924" y="234.250610" z="140.796036" h="17" resolve_z="true"/>
+      <spot x="372.981415" y="176.137344" z="150.718719" h="46" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217035">
-      <spot x="560.404785" y="616.831543" z="215.3561" h="30"/>
-      <spot x="611.674255" y="640.506287" z="208.988" h="60" walker_id="NPCPathIDCromede_02Up41"/>
-      <spot x="595.977600" y="608.608398" z="208.9933" h="90" walker_id="NPCPathIDCromede_Mob5"/>
-      <spot x="544.873352" y="641.568481" z="215.3561" h="60"/>
-      <spot x="595.130371" y="639.505981" z="208.44667" h="30"/>
-      <spot x="532.043701" y="612.345642" z="201.58784" h="60" walker_id="NPCPathIDCromede_02Up4"/>
-      <spot x="546.372009" y="656.987000" z="215.3561" h="113"/>
-      <spot x="532.070007" y="668.531860" z="201.58728" h="60" walker_id="NPCPathIDCromede_02Up39"/>
+      <spot x="560.404785" y="616.831543" z="215.881714" h="30" resolve_z="true"/>
+      <spot x="611.674255" y="640.506287" z="212.246475" h="60" walker_id="NPCPathIDCromede_02Up41" resolve_z="true"/>
+      <spot x="595.977600" y="608.608398" z="209.650146" h="90" walker_id="NPCPathIDCromede_Mob5" resolve_z="true"/>
+      <spot x="544.873352" y="641.568481" z="216.313599" h="60" resolve_z="true"/>
+      <spot x="595.130371" y="639.505981" z="209.908676" h="30" resolve_z="true"/>
+      <spot x="532.043701" y="612.345642" z="203.928787" h="60" walker_id="NPCPathIDCromede_02Up4" resolve_z="true"/>
+      <spot x="546.372009" y="656.987000" z="215.881714" h="113" resolve_z="true"/>
+      <spot x="532.070007" y="668.531860" z="203.928787" h="60" walker_id="NPCPathIDCromede_02Up39" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216971">
-      <spot x="649.306641" y="594.834595" z="201.19109" h="55"/>
-      <spot x="642.635376" y="600.211548" z="201.19109" h="15"/>
-      <spot x="662.988464" y="597.074768" z="201.19109" h="6"/>
-      <spot x="651.799927" y="653.309082" z="201.19109" h="6"/>
+      <spot x="649.306641" y="594.834595" z="203.922546" h="55" resolve_z="true"/>
+      <spot x="642.635376" y="600.211548" z="203.922546" h="15" resolve_z="true"/>
+      <spot x="662.988464" y="597.074768" z="203.922546" h="6" resolve_z="true"/>
+      <spot x="651.799927" y="653.309082" z="203.922546" h="6" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217036">
-      <spot x="626.311707" y="583.733215" z="208.99329" h="60" walker_id="NPCPathIDCromede_Mob6"/>
-      <spot x="563.566284" y="662.795715" z="215.3561" h="75"/>
-      <spot x="546.252869" y="623.722656" z="215.3561" h="6"/>
-      <spot x="595.122437" y="641.472717" z="208.4467" h="90"/>
-      <spot x="484.684357" y="620.056946" z="201.59451" h="30" walker_id="NPCPathIDCromede_02Up2"/>
+      <spot x="626.311707" y="583.733215" z="209.858810" h="60" walker_id="NPCPathIDCromede_Mob6" resolve_z="true"/>
+      <spot x="563.566284" y="662.795715" z="215.870361" h="75" resolve_z="true"/>
+      <spot x="546.252869" y="623.722656" z="215.870361" h="6" resolve_z="true"/>
+      <spot x="595.122437" y="641.472717" z="209.908676" h="90" resolve_z="true"/>
+      <spot x="484.684357" y="620.056946" z="203.928787" h="30" walker_id="NPCPathIDCromede_02Up2" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217115">
-      <spot x="738.790527" y="623.041077" z="196.77457" h="103"/>
-      <spot x="720.716553" y="627.955261" z="196.77457" h="103" walker_id="NPCPathIDCromede_02Low12"/>
-      <spot x="723.590027" y="633.544983" z="196.77457" h="36"/>
+      <spot x="738.790527" y="623.041077" z="204.745605" h="103" resolve_z="true"/>
+      <spot x="720.716553" y="627.955261" z="201.745605" h="103" walker_id="NPCPathIDCromede_02Low12" resolve_z="true"/>
+      <spot x="723.590027" y="633.544983" z="204.720947" h="36" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217131">
-      <spot x="689.972473" y="505.883789" z="197.90062" h="60"/>
+      <spot x="689.972473" y="505.883789" z="200.516800" h="60" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216962">
-      <spot x="315.251312" y="288.562683" z="192.71242" h="60" random_walk="6"/>
-      <spot x="291.322296" y="254.721466" z="186.85431" h="90" random_walk="6"/>
+      <spot x="315.251312" y="288.562683" z="198.289795" h="60" random_walk="6" resolve_z="true"/>
+      <spot x="291.322296" y="254.721466" z="191.045502" h="90" random_walk="6" resolve_z="true"/>
     </spawn>
     <spawn npc_id="700947">
-      <spot x="752.761047" y="620.355469" z="197.54474" h="30"/>
-      <spot x="754.364624" y="617.890747" z="197.17694" h="43"/>
+      <spot x="752.761047" y="620.355469" z="202.307999" h="30" resolve_z="true"/>
+      <spot x="754.364624" y="617.890747" z="202.307999" h="43" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216966">
-      <spot x="482.812836" y="229.142090" z="142.83469" walker_id="NPCPathIDCromede_9"/>
-      <spot x="475.889557" y="255.299118" z="139.04938" h="50" walker_id="NPCPathIDCromede_World4"/>
-      <spot x="526.255981" y="230.906006" z="143.91792" h="76" walker_id="NPCPathIDCromede_11"/>
-      <spot x="409.317444" y="228.037140" z="145.48969" h="16" walker_id="NPCPathIDCromede_World3"/>
-      <spot x="521.480591" y="255.613754" z="142.67888" h="50" walker_id="NPCPathIDCromede_10"/>
+      <spot x="482.812836" y="229.142090" z="145.028015" walker_id="NPCPathIDCromede_9" h="0" resolve_z="true"/>
+      <spot x="475.889557" y="255.299118" z="145.028015" h="50" walker_id="NPCPathIDCromede_World4" resolve_z="true"/>
+      <spot x="526.255981" y="230.906006" z="146.078812" h="76" walker_id="NPCPathIDCromede_11" resolve_z="true"/>
+      <spot x="409.317444" y="228.037140" z="147.504501" h="16" walker_id="NPCPathIDCromede_World3" resolve_z="true"/>
+      <spot x="521.480591" y="255.613754" z="145.028015" h="50" walker_id="NPCPathIDCromede_10" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730337">
-      <spot x="522.862793" y="755.249390" z="216.63829" entity_id="70"/>
+      <spot x="522.862793" y="755.249390" z="217.167847" entity_id="70" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730775">
-      <spot x="613.879028" y="789.606079" z="216.11526" entity_id="978"/>
+      <spot x="613.879028" y="789.606079" z="219.062210" entity_id="978" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730887">
-      <spot x="623.679260" y="758.856873" z="216.11046" entity_id="984"/>
+      <spot x="623.679260" y="758.856873" z="218.558380" entity_id="984" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217027">
-      <spot x="662.502136" y="611.377869" z="201.19109" walker_id="NPCPathIDCromede_02Low19"/>
-      <spot x="661.159790" y="655.351318" z="201.19109" walker_id="NPCPathIDCromede_02Low18"/>
-      <spot x="645.674194" y="603.367310" z="201.19109"/>
+      <spot x="662.502136" y="611.377869" z="203.922546" walker_id="NPCPathIDCromede_02Low19" h="0" resolve_z="true"/>
+      <spot x="661.159790" y="655.351318" z="203.922546" walker_id="NPCPathIDCromede_02Low18" h="0" resolve_z="true"/>
+      <spot x="645.674194" y="603.367310" z="203.922546" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="282095">
-      <spot x="662.258179" y="782.548950" z="216.23436" entity_id="84"/>
+      <spot x="662.258179" y="782.548950" z="218.708344" entity_id="84" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216989">
-      <spot x="500.900879" y="754.345703" z="215.5286" h="6"/>
-      <spot x="524.242310" y="771.226013" z="215.5286" h="80"/>
-      <spot x="501.833282" y="770.132202" z="215.5286" h="106"/>
-      <spot x="525.248474" y="756.397217" z="215.5286" h="60"/>
+      <spot x="500.900879" y="754.345703" z="217.654373" h="6" resolve_z="true"/>
+      <spot x="524.242310" y="771.226013" z="216.815460" h="80" resolve_z="true"/>
+      <spot x="501.833282" y="770.132202" z="216.815460" h="106" resolve_z="true"/>
+      <spot x="525.248474" y="756.397217" z="216.815460" h="60" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216987">
-      <spot x="494.788116" y="702.252686" z="215.55" h="90"/>
-      <spot x="513.953125" y="611.613037" z="214.99918" h="60"/>
-      <spot x="559.318481" y="688.809265" z="215.5286"/>
-      <spot x="535.154358" y="721.257202" z="215.5286" h="46"/>
-      <spot x="513.850830" y="670.221924" z="214.99918" h="60"/>
+      <spot x="494.788116" y="702.252686" z="215.843109" h="90" resolve_z="true"/>
+      <spot x="513.953125" y="611.613037" z="218.843109" h="60" resolve_z="true"/>
+      <spot x="559.318481" y="688.809265" z="215.870361" h="0" resolve_z="true"/>
+      <spot x="535.154358" y="721.257202" z="215.843109" h="46" resolve_z="true"/>
+      <spot x="513.850830" y="670.221924" z="215.843109" h="60" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216961">
-      <spot x="293.024170" y="282.666992" z="187.68924" h="16" random_walk="7"/>
-      <spot x="276.677521" y="245.358307" z="187.35538" h="16" random_walk="7"/>
-      <spot x="307.760071" y="261.660675" z="187.20868" h="16" random_walk="7"/>
-      <spot x="329.489441" y="269.364929" z="193.28517" h="16" random_walk="7"/>
+      <spot x="293.024170" y="282.666992" z="193.870483" h="16" random_walk="7" resolve_z="true"/>
+      <spot x="276.677521" y="245.358307" z="191.045502" h="16" random_walk="7" resolve_z="true"/>
+      <spot x="307.760071" y="261.660675" z="191.045502" h="16" random_walk="7" resolve_z="true"/>
+      <spot x="329.489441" y="269.364929" z="195.387314" h="16" random_walk="7" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216964">
-      <spot x="346.982788" y="254.899353" z="192.55458" h="16" walker_id="NPCPathIDCromede_5"/>
-      <spot x="549.005432" y="287.729218" z="153.4535" h="106" walker_id="NPCPathIDCromede_8"/>
-      <spot x="422.572479" y="325.975128" z="174.65141" h="80" walker_id="NPCPathIDCromede_6"/>
-      <spot x="516.350891" y="340.705078" z="165.72743" h="113" walker_id="NPCPathIDCromede_7"/>
+      <spot x="346.982788" y="254.899353" z="197.409317" h="16" walker_id="NPCPathIDCromede_5" resolve_z="true"/>
+      <spot x="549.005432" y="287.729218" z="156.506134" h="106" walker_id="NPCPathIDCromede_8" resolve_z="true"/>
+      <spot x="422.572479" y="325.975128" z="187.894821" h="80" walker_id="NPCPathIDCromede_6" resolve_z="true"/>
+      <spot x="516.350891" y="340.705078" z="169.245148" h="113" walker_id="NPCPathIDCromede_7" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216977">
-      <spot x="715.344666" y="515.406555" z="197.8742" h="60" walker_id="NPCPathIDCromede_02Low14"/>
-      <spot x="725.903320" y="548.627136" z="197.8742" h="90" walker_id="NPCPathIDCromede_02Low15"/>
+      <spot x="715.344666" y="515.406555" z="199.343994" h="60" walker_id="NPCPathIDCromede_02Low14" resolve_z="true"/>
+      <spot x="725.903320" y="548.627136" z="199.343994" h="90" walker_id="NPCPathIDCromede_02Low15" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217117">
-      <spot x="512.193176" y="706.124939" z="215.55972" h="90"/>
-      <spot x="512.096802" y="697.064087" z="215.55972" h="30"/>
+      <spot x="512.193176" y="706.124939" z="216.028030" h="90" resolve_z="true"/>
+      <spot x="512.096802" y="697.064087" z="216.028030" h="30" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217002">
-      <spot x="567.989014" y="835.773560" z="225.82628" h="30"/>
+      <spot x="567.989014" y="835.773560" z="226.741776" h="30" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730333">
-      <spot x="623.599060" y="784.950256" z="216.10057" entity_id="193"/>
+      <spot x="623.599060" y="784.950256" z="218.028198" entity_id="193" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216963">
-      <spot x="472.338837" y="338.409027" z="170.48991" h="106" walker_id="NPCPathIDCromede_12"/>
-      <spot x="443.358429" y="339.756989" z="172.30913" h="106" walker_id="NPCPathIDCromede_3"/>
+      <spot x="472.338837" y="338.409027" z="176.913956" h="106" walker_id="NPCPathIDCromede_12" resolve_z="true"/>
+      <spot x="443.358429" y="339.756989" z="176.913956" h="106" walker_id="NPCPathIDCromede_3" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217034">
-      <spot x="559.693420" y="809.393372" z="225.78215" h="25" walker_id="NPCPathIDCromede_02Up34"/>
-      <spot x="579.773926" y="797.621826" z="225.77342" h="90"/>
-      <spot x="585.653931" y="808.628174" z="225.78215" h="60"/>
-      <spot x="571.113281" y="798.051880" z="215.53482" h="90"/>
-      <spot x="556.696411" y="817.422974" z="225.78215" h="46"/>
-      <spot x="581.646301" y="757.733337" z="215.56212" h="90"/>
-      <spot x="558.005371" y="768.489746" z="215.55212" h="30" walker_id="NPCPathIDCromede_02Up44"/>
+      <spot x="559.693420" y="809.393372" z="229.090012" h="25" walker_id="NPCPathIDCromede_02Up34" resolve_z="true"/>
+      <spot x="579.773926" y="797.621826" z="227.920425" h="90" resolve_z="true"/>
+      <spot x="585.653931" y="808.628174" z="229.090012" h="60" resolve_z="true"/>
+      <spot x="571.113281" y="798.051880" z="216.513199" h="90" resolve_z="true"/>
+      <spot x="556.696411" y="817.422974" z="229.090012" h="46" resolve_z="true"/>
+      <spot x="581.646301" y="757.733337" z="216.513199" h="90" resolve_z="true"/>
+      <spot x="558.005371" y="768.489746" z="216.513199" h="30" walker_id="NPCPathIDCromede_02Up44" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730336">
-      <spot x="512.254456" y="640.270020" z="202.50076" entity_id="14"/>
+      <spot x="512.254456" y="640.270020" z="210.171280" entity_id="14" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216978">
-      <spot x="740.660950" y="518.034302" z="198.73691" h="113"/>
+      <spot x="740.660950" y="518.034302" z="199.595322" h="113" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730340">
-      <spot x="741.755127" y="530.597046" z="199.31773" entity_id="319"/>
+      <spot x="741.755127" y="530.597046" z="199.657013" entity_id="319" h="60" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730776">
-      <spot x="623.744812" y="789.600830" z="216.12527" entity_id="979"/>
+      <spot x="623.744812" y="789.600830" z="218.028198" entity_id="979" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="282116">
-      <spot x="677.825317" y="584.140442" z="210.46408" fly="1"/>
+      <spot x="677.825317" y="584.140442" z="210.464081" fly="1" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217030">
-      <spot x="655.153137" y="581.586914" z="198.92435" h="20"/>
+      <spot x="655.153137" y="581.586914" z="200.469940" h="20" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216983">
-      <spot x="507.044128" y="780.743652" z="215.97673" h="81"/>
-      <spot x="507.197021" y="589.254761" z="215.5286"/>
-      <spot x="498.004791" y="696.471924" z="215.55" h="90" walker_id="NPCPathIDCromede_02Up28"/>
-      <spot x="535.163940" y="702.714050" z="215.55" h="75"/>
-      <spot x="551.634277" y="640.289551" z="215.00104" h="30" walker_id="NPCPathIDCromede_02Up31"/>
+      <spot x="507.044128" y="780.743652" z="217.344818" h="81" resolve_z="true"/>
+      <spot x="507.197021" y="589.254761" z="219.091522" h="0" resolve_z="true"/>
+      <spot x="498.004791" y="696.471924" z="216.091522" h="90" walker_id="NPCPathIDCromede_02Up28" resolve_z="true"/>
+      <spot x="535.163940" y="702.714050" z="216.091522" h="75" resolve_z="true"/>
+      <spot x="551.634277" y="640.289551" z="215.698013" h="30" walker_id="NPCPathIDCromede_02Up31" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216988">
-      <spot x="571.524475" y="769.922668" z="215.56647" h="90"/>
-      <spot x="577.417603" y="824.088013" z="225.78215" h="6" walker_id="NPCPathIDCromede_02Up33"/>
-      <spot x="561.106323" y="783.345825" z="215.88855" h="6" walker_id="NPCPathIDCromede_02Up32"/>
-      <spot x="557.710022" y="754.997864" z="225.7734" h="90"/>
+      <spot x="571.524475" y="769.922668" z="217.113312" h="90" resolve_z="true"/>
+      <spot x="577.417603" y="824.088013" z="229.690125" h="6" walker_id="NPCPathIDCromede_02Up33" resolve_z="true"/>
+      <spot x="561.106323" y="783.345825" z="217.113312" h="6" walker_id="NPCPathIDCromede_02Up32" resolve_z="true"/>
+      <spot x="557.710022" y="754.997864" z="227.000000" h="90" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730338">
-      <spot x="503.469666" y="769.131531" z="216.6719" entity_id="69"/>
+      <spot x="503.469666" y="769.131531" z="217.360291" entity_id="69" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730339">
-      <spot x="591.206482" y="640.570496" z="208.67542" entity_id="15"/>
+      <spot x="591.206482" y="640.570496" z="211.845917" entity_id="15" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217130">
-      <spot x="609.304016" y="778.099060" z="215.58362" h="60"/>
-      <spot x="609.293701" y="770.662354" z="215.58362" h="60"/>
+      <spot x="609.304016" y="778.099060" z="215.927307" h="60" resolve_z="true"/>
+      <spot x="609.293701" y="770.662354" z="215.927307" h="60" resolve_z="true"/>
     </spawn>
     <spawn npc_id="700926">
-      <spot x="560.931946" y="614.941284" z="215.6" entity_id="80"/>
+      <spot x="560.931946" y="614.941284" z="216.368134" entity_id="80" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217026">
-      <spot x="663.677185" y="645.437988" z="201.19109"/>
-      <spot x="651.561035" y="644.893433" z="201.19109" walker_id="NPCPathIDCromede_02Low17"/>
-      <spot x="645.380188" y="646.173706" z="201.19109" random_walk="2"/>
-      <spot x="652.286865" y="606.529297" z="201.19109" walker_id="NPCPathIDCromede_02Low16"/>
+      <spot x="663.677185" y="645.437988" z="203.922546" h="0" resolve_z="true"/>
+      <spot x="651.561035" y="644.893433" z="203.922546" walker_id="NPCPathIDCromede_02Low17" h="0" resolve_z="true"/>
+      <spot x="645.380188" y="646.173706" z="203.922546" random_walk="2" h="0" resolve_z="true"/>
+      <spot x="652.286865" y="606.529297" z="203.922546" walker_id="NPCPathIDCromede_02Low16" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="700927">
-      <spot x="576.580322" y="800.753357" z="225.77342" entity_id="66"/>
+      <spot x="576.580322" y="800.753357" z="228.434158" entity_id="66" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216991">
-      <spot x="528.823242" y="653.414001" z="201.73323" h="15"/>
-      <spot x="492.273224" y="631.610596" z="201.50708" h="90"/>
-      <spot x="496.482635" y="657.781250" z="201.7133" h="46"/>
+      <spot x="528.823242" y="653.414001" z="202.696136" h="15" resolve_z="true"/>
+      <spot x="492.273224" y="631.610596" z="202.696136" h="90" resolve_z="true"/>
+      <spot x="496.482635" y="657.781250" z="202.696136" h="46" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216984">
-      <spot x="518.132446" y="589.209412" z="215.5286" h="60"/>
-      <spot x="530.299133" y="701.389099" z="215.55" h="30" walker_id="NPCPathIDCromede_02Up42"/>
-      <spot x="494.256409" y="683.269592" z="215.5286" h="15"/>
-      <spot x="517.932617" y="780.408630" z="215.97673" h="100"/>
+      <spot x="518.132446" y="589.209412" z="219.127686" h="60" resolve_z="true"/>
+      <spot x="530.299133" y="701.389099" z="216.127686" h="30" walker_id="NPCPathIDCromede_02Up42" resolve_z="true"/>
+      <spot x="494.256409" y="683.269592" z="216.127686" h="15" resolve_z="true"/>
+      <spot x="517.932617" y="780.408630" z="217.380981" h="100" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217031">
-      <spot x="606.043091" y="624.088196" z="208.98906" h="73"/>
-      <spot x="576.122803" y="646.451782" z="208.14114" h="90"/>
-      <spot x="591.765930" y="577.934143" z="208.9933" h="15"/>
-      <spot x="605.899719" y="656.405823" z="208.98906" h="73"/>
+      <spot x="606.043091" y="624.088196" z="209.757309" h="73" resolve_z="true"/>
+      <spot x="576.122803" y="646.451782" z="210.073746" h="90" resolve_z="true"/>
+      <spot x="591.765930" y="577.934143" z="209.757309" h="15" resolve_z="true"/>
+      <spot x="605.899719" y="656.405823" z="209.757309" h="73" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216992">
-      <spot x="533.519836" y="627.239319" z="201.62213" h="90"/>
-      <spot x="508.324341" y="655.207642" z="201.58203" walker_id="NPCPathIDCromede_02Up40"/>
-      <spot x="507.208893" y="619.299744" z="201.48712" random_walk="2"/>
+      <spot x="533.519836" y="627.239319" z="202.696136" h="90" resolve_z="true"/>
+      <spot x="508.324341" y="655.207642" z="202.696136" walker_id="NPCPathIDCromede_02Up40" h="0" resolve_z="true"/>
+      <spot x="507.208893" y="619.299744" z="202.696136" random_walk="2" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="700949">
-      <spot x="229.358124" y="252.256927" z="191.1684" h="110"/>
+      <spot x="229.358124" y="252.256927" z="192.176865" h="110" resolve_z="true"/>
     </spawn>
     <spawn npc_id="700835">
-      <spot x="502.409210" y="345.996399" z="168.90405" entity_id="3"/>
+      <spot x="502.409210" y="345.996399" z="172.587433" entity_id="3" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216973">
-      <spot x="730.875793" y="546.466553" z="198.53848" h="80"/>
-      <spot x="687.919739" y="505.863281" z="197.90062"/>
+      <spot x="730.875793" y="546.466553" z="199.010956" h="80" resolve_z="true"/>
+      <spot x="687.919739" y="505.863281" z="200.516800" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="206165">
-      <spot x="597.929749" y="620.435608" z="208.9886"/>
+      <spot x="597.929749" y="620.435608" z="219.093307" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730330">
-      <spot x="634.267456" y="785.091858" z="216.10057" entity_id="195"/>
+      <spot x="634.267456" y="785.091858" z="219.015915" entity_id="195" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="700922">
-      <spot x="711.599121" y="629.358582" z="196.82828" entity_id="320"/>
+      <spot x="711.599121" y="629.358582" z="197.542984" entity_id="320" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730777">
-      <spot x="613.771301" y="758.770630" z="216.11046" entity_id="980"/>
+      <spot x="613.771301" y="758.770630" z="219.096542" entity_id="980" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="282111">
-      <spot x="643.919983" y="753.299988" z="216.15863" h="30"/>
-      <spot x="643.937805" y="795.352234" z="216.15863" h="30"/>
+      <spot x="643.919983" y="753.299988" z="217.024628" h="30" resolve_z="true"/>
+      <spot x="643.937805" y="795.352234" z="216.795944" h="30" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216974">
-      <spot x="729.619568" y="544.490723" z="198.53848" h="20"/>
-      <spot x="723.335938" y="524.702087" z="197.8742" h="96"/>
+      <spot x="729.619568" y="544.490723" z="199.253647" h="20" resolve_z="true"/>
+      <spot x="723.335938" y="524.702087" z="198.522812" h="96" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217114">
-      <spot x="650.280212" y="630.030701" z="201.19109" h="110"/>
-      <spot x="662.308228" y="622.497192" z="201.19109" h="73"/>
+      <spot x="650.280212" y="630.030701" z="203.922546" h="110" resolve_z="true"/>
+      <spot x="662.308228" y="622.497192" z="203.922546" h="73" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730332">
-      <spot x="623.643860" y="763.160156" z="216.10057" entity_id="260"/>
+      <spot x="623.643860" y="763.160156" z="218.734207" entity_id="260" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730331">
-      <spot x="653.249084" y="763.350830" z="216.10057" entity_id="202"/>
+      <spot x="653.249084" y="763.350830" z="218.938538" entity_id="202" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216976">
-      <spot x="710.045715" y="543.248047" z="197.88681" h="80"/>
+      <spot x="710.045715" y="543.248047" z="199.343994" h="80" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216970">
-      <spot x="646.176819" y="615.593933" z="201.19109" h="10"/>
-      <spot x="645.524963" y="656.332886" z="201.19109" h="10"/>
+      <spot x="646.176819" y="615.593933" z="203.922546" h="10" resolve_z="true"/>
+      <spot x="645.524963" y="656.332886" z="203.922546" h="10" resolve_z="true"/>
     </spawn>
     <spawn npc_id="282093">
-      <spot x="661.222412" y="767.659180" z="216.23436" entity_id="87"/>
+      <spot x="661.222412" y="767.659180" z="218.502609" entity_id="87" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216982">
-      <spot x="750.314087" y="625.115906" z="197.54474" h="105"/>
+      <spot x="750.314087" y="625.115906" z="199.600510" h="105" resolve_z="true"/>
     </spawn>
     <spawn npc_id="282087">
-      <spot x="654.749329" y="561.478882" z="205.21884"/>
+      <spot x="654.749329" y="561.478882" z="205.761139" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216967">
-      <spot x="392.146149" y="209.729950" z="145.85693" h="15"/>
+      <spot x="392.146149" y="209.729950" z="150.294708" h="15" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730309">
-      <spot x="465.809998" y="354.239990" z="170.25269"/>
+      <spot x="465.809998" y="354.239990" z="175.000000" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217113">
-      <spot x="659.347961" y="634.124084" z="201.19109" h="10"/>
-      <spot x="668.367859" y="628.765137" z="201.19109"/>
+      <spot x="659.347961" y="634.124084" z="203.922546" h="10" resolve_z="true"/>
+      <spot x="668.367859" y="628.765137" z="203.922546" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216975">
-      <spot x="709.933838" y="523.457031" z="197.88681" h="80"/>
+      <spot x="709.933838" y="523.457031" z="199.343994" h="80" resolve_z="true"/>
     </spawn>
     <spawn npc_id="206163">
-      <spot x="566.783936" y="762.207581" z="215.56647"/>
+      <spot x="566.783936" y="762.207581" z="219.712234" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="700946">
-      <spot x="757.089050" y="621.965088" z="197.54474" h="30"/>
-      <spot x="754.036987" y="622.718567" z="197.54474" h="53"/>
+      <spot x="757.089050" y="621.965088" z="201.823685" h="30" resolve_z="true"/>
+      <spot x="754.036987" y="622.718567" z="201.823685" h="53" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730325">
-      <spot x="492.224518" y="628.733032" z="201.67581" entity_id="79"/>
+      <spot x="492.224518" y="628.733032" z="203.963348" entity_id="79" h="90" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217000">
-      <spot x="512.492493" y="571.459595" z="216.88846" h="30"/>
+      <spot x="512.492493" y="571.459595" z="217.504517" h="30" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217118">
-      <spot x="518.124512" y="701.693359" z="215.55972" h="60"/>
+      <spot x="518.124512" y="701.693359" z="216.028030" h="60" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730334">
-      <spot x="634.113647" y="763.342651" z="216.10057" entity_id="208"/>
+      <spot x="634.113647" y="763.342651" z="219.014191" entity_id="208" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="206164">
-      <spot x="701.836975" y="516.260071" z="197.8742"/>
+      <spot x="701.836975" y="516.260071" z="199.131989" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217134">
-      <spot x="685.169006" y="661.939514" z="200.1199" h="33"/>
+      <spot x="685.169006" y="661.939514" z="202.760223" h="33" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730326">
-      <spot x="644.206421" y="763.198669" z="216.10057" entity_id="206"/>
+      <spot x="644.206421" y="763.198669" z="218.784897" entity_id="206" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216990">
-      <spot x="504.041412" y="765.164673" z="215.5286" h="30"/>
+      <spot x="504.041412" y="765.164673" z="217.271500" h="30" resolve_z="true"/>
     </spawn>
     <spawn npc_id="282091">
-      <spot x="365.451660" y="183.655655" z="146.83829" h="76"/>
+      <spot x="365.451660" y="183.655655" z="147.994568" h="76" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730329">
-      <spot x="653.365601" y="784.778381" z="216.10057" entity_id="200"/>
+      <spot x="653.365601" y="784.778381" z="219.202881" entity_id="200" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216997">
-      <spot x="496.764587" y="649.261780" z="201.64091" h="21" walker_id="NPCPathIDCromede_02Up1"/>
+      <spot x="496.764587" y="649.261780" z="202.696136" h="21" walker_id="NPCPathIDCromede_02Up1" resolve_z="true"/>
     </spawn>
     <spawn npc_id="700924">
-      <spot x="587.671082" y="774.231995" z="215.59996" entity_id="5"/>
+      <spot x="587.671082" y="774.231995" z="217.757614" entity_id="5" h="60" resolve_z="true"/>
     </spawn>
     <spawn npc_id="700939">
     </spawn>
     <spawn npc_id="217135">
-      <spot x="689.836182" y="661.176453" z="200.1199" h="26"/>
+      <spot x="689.836182" y="661.176453" z="202.760223" h="26" resolve_z="true"/>
     </spawn>
     <spawn npc_id="282119">
       <spot x="585.929443" y="774.284424" z="215.57028" h="60"/>
     </spawn>
     <spawn npc_id="700961">
-      <spot x="467.187653" y="351.885925" z="170.3279" entity_id="56"/>
+      <spot x="467.187653" y="351.885925" z="171.465439" entity_id="56" h="66" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216979">
-      <spot x="544.481384" y="639.781311" z="215.3561" h="60"/>
+      <spot x="544.481384" y="639.781311" z="216.938538" h="60" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730328">
-      <spot x="644.249939" y="784.973450" z="216.10057" entity_id="197"/>
+      <spot x="644.249939" y="784.973450" z="219.115250" entity_id="197" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="700928">
-      <spot x="680.778381" y="774.010132" z="216.88036" entity_id="105"/>
+      <spot x="680.778381" y="774.010132" z="218.845337" entity_id="105" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="730341">
-      <spot x="542.481018" y="641.374512" z="217.48947" entity_id="553"/>
+      <spot x="542.481018" y="641.374512" z="217.311401" entity_id="553" h="100" resolve_z="true"/>
     </spawn>
     <spawn npc_id="216996">
-      <spot x="586.752014" y="640.252563" z="208.44672" h="90" walker_id="NPCPathIDCromede_02Up19"/>
+      <spot x="586.752014" y="640.252563" z="210.831314" h="90" walker_id="NPCPathIDCromede_02Up19" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217006" respawn_time="60">
-      <spot x="668.567871" y="774.373657" z="216.88036" h="60"/>
+      <spot x="668.567871" y="774.373657" z="219.489502" h="60" resolve_z="true"/>
     </spawn>
     <spawn npc_id="217119" respawn_time="60">
-      <spot x="669.214172" y="774.387268" z="216.88036" h="60"/>
+      <spot x="669.214172" y="774.387268" z="222.489502" h="60" resolve_z="true"/>
     </spawn>
     <spawn npc_id="700964" respawn_time="60">
-      <spot x="237.684860" y="249.017090" z="189.87248" h="113"/>
+      <spot x="237.684860" y="249.017090" z="191.561996" h="113" resolve_z="true"/>
     </spawn>
     <spawn npc_id="700965" respawn_time="60">
-      <spot x="657.200745" y="585.777771" z="199.04715" h="113"/>
+      <spot x="657.200745" y="585.777771" z="200.362244" h="113" resolve_z="true"/>
     </spawn>
   </spawn_map>
 </spawns>

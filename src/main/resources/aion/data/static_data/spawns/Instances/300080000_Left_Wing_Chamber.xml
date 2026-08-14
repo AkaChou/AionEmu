@@ -13,25 +13,46 @@
 			<spot x="499.275" y="680.579" z="352.699" h="112"/>
 			<spot x="491.338" y="536.709" z="352.946" h="10"/>
 			<spot x="451.367" y="585.771" z="352.698" h="31" random_walk="3"/>
+		  <spot x="449.405548" y="648.229309" z="356.000000" h="81" random_walk="2" resolve_z="true"/>
+		  <spot x="316.575470" y="464.748260" z="364.000000" h="8" random_walk="2" resolve_z="true"/>
+		  <spot x="576.873108" y="578.412292" z="354.000000" h="30" random_walk="2" resolve_z="true"/>
+		  <spot x="411.419250" y="513.259583" z="362.000000" h="10" random_walk="2" resolve_z="true"/>
+		  <spot x="496.617950" y="589.459900" z="357.000000" h="90" random_walk="2" resolve_z="true"/>
+		  <spot x="366.941864" y="567.944702" z="364.000000" h="1" random_walk="2" resolve_z="true"/>
+		  <spot x="394.882721" y="637.473877" z="362.000000" h="6" random_walk="2" resolve_z="true"/>
+		  <spot x="439.578308" y="619.603271" z="356.000000" h="115" random_walk="2" resolve_z="true"/>
+		  <spot x="319.750061" y="520.462402" z="364.000000" h="0" random_walk="2" resolve_z="true"/>
+		  <spot x="496.607758" y="581.854370" z="357.000000" h="30" random_walk="2" resolve_z="true"/>
+		  <spot x="278.094360" y="461.366760" z="368.000000" h="0" random_walk="2" resolve_z="true"/>
+		  <spot x="291.688538" y="610.715210" z="364.000000" h="118" random_walk="2" resolve_z="true"/>
+		  <spot x="351.431580" y="521.567749" z="364.000000" h="20" random_walk="2" resolve_z="true"/>
+		  <spot x="321.236877" y="650.374878" z="364.000000" h="16" random_walk="2" resolve_z="true"/>
+		  <spot x="270.467407" y="680.619141" z="368.000000" h="110" random_walk="2" resolve_z="true"/>
+		  <spot x="260.150543" y="570.529663" z="368.000000" h="3" random_walk="2" resolve_z="true"/>
+		  <spot x="576.873108" y="592.876892" z="354.000000" h="90" random_walk="2" resolve_z="true"/>
+		  <spot x="369.932892" y="641.394836" z="364.000000" h="115" random_walk="2" resolve_z="true"/>
+		  <spot x="280.891022" y="708.252441" z="366.000000" h="118" random_walk="2" resolve_z="true"/>
+		  <spot x="449.452850" y="523.604675" z="356.000000" h="10" random_walk="2" resolve_z="true"/>
+		  <spot x="358.953827" y="683.218567" z="364.000000" h="21" random_walk="2" resolve_z="true"/>
 		</spawn>
 		<!-- Ashikar Ambusher -->
 		<spawn npc_id="214741">
-			<spot x="511.099" y="579.852" z="351.153" h="110"/>
-			<spot x="511.099" y="591.401" z="351.153" h="75"/>
-			<spot x="265.272" y="655.676" z="364.936" h="9"/>
-			<spot x="288.757" y="436.807" z="364.936" h="87"/>
-			<spot x="351.599" y="477.638" z="362.082" h="18"/>
+			<spot x="511.099365" y="579.851929" z="354.000000" h="6" resolve_z="true"/>
+			<spot x="511.099365" y="591.401428" z="354.000000" h="113" resolve_z="true"/>
+			<spot x="265.271515" y="655.676331" z="368.000000" h="5" resolve_z="true"/>
+			<spot x="288.756744" y="436.806732" z="368.000000" h="16" resolve_z="true"/>
+			<spot x="351.598755" y="477.637970" z="364.000000" h="13" resolve_z="true"/>
 			<spot x="289.474" y="508.78543" z="363.30142" h="6"/>
 			<spot x="380.53433" y="602.48663" z="359.94534" h="118"/>
-			<spot x="344.409" y="602.91" z="361.822" h="2"/>
-			<spot x="331.298" y="696.458" z="361.955" h="59"/>
+			<spot x="344.408600" y="602.909912" z="364.000000" h="118" resolve_z="true"/>
+			<spot x="331.297577" y="696.458374" z="364.000000" h="118" resolve_z="true"/>
 			<spot x="280.40384" y="559.58136" z="363.30228" h="119"/>
-			<spot x="262.179" y="514.872" z="364.936" h="98"/>
-			<spot x="299.293" y="659.604" z="361.78" h="25"/>
-			<spot x="257.958" y="600.396" z="364.936" h="75"/>
-			<spot x="344.131" y="651.865" z="361.962" h="51"/>
-			<spot x="439.751" y="551.807" z="353.865" h="110"/>
-			<spot x="335.66" y="474.14" z="362.00903" h="48"/>
+			<spot x="262.178528" y="514.871826" z="368.000000" h="5" resolve_z="true"/>
+			<spot x="299.292877" y="659.604126" z="364.000000" h="115" resolve_z="true"/>
+			<spot x="257.958466" y="600.396240" z="368.000000" h="118" resolve_z="true"/>
+			<spot x="344.130981" y="651.865112" z="364.000000" h="85" resolve_z="true"/>
+			<spot x="439.750641" y="551.806885" z="356.000000" h="95" resolve_z="true"/>
+			<spot x="335.221069" y="473.956573" z="364.000000" h="8" resolve_z="true"/>
 			<spot x="554.106" y="589.223" z="350.907" h="71"/>
 			<spot x="493.257" y="634.208" z="352.946" h="60"/>
 			<spot x="459.075" y="554.46" z="352.698" h="88"/>
@@ -39,46 +60,51 @@
 			<spot x="492.106" y="534.259" z="352.946" h="90"/>
 			<spot x="459.086" y="615.812" z="352.698" h="66"/>
 			<spot x="674.355" y="565.694" z="333.28" h="9"/>
-			<spot x="394.35" y="569.88" z="358.85605" h="25" walker_id="LEFTCIELDRAKANAS35AE000000000000000"/>
-			<spot x="407.86" y="664.08" z="359.11444" h="82" walker_id="LEFTCIELDRAKANAS35AE000000000000001"/>
-			<spot x="312.59" y="608.87" z="362.02255" h="61" walker_id="LEFTCIELDRAKANAS35AE000000000000002"/>
+			<spot x="393.814270" y="569.843018" z="362.000000" h="1" walker_id="LEFTCIELDRAKANAS35AE000000000000000" resolve_z="true"/>
+			<spot x="407.434906" y="664.284180" z="362.000000" h="111" walker_id="LEFTCIELDRAKANAS35AE000000000000001" resolve_z="true"/>
+			<spot x="312.152069" y="608.900818" z="364.000000" h="118" walker_id="LEFTCIELDRAKANAS35AE000000000000002" resolve_z="true"/>
+		  <spot x="526.018372" y="595.374756" z="354.000000" h="90" random_walk="2" resolve_z="true"/>
+		  <spot x="574.900208" y="592.897400" z="354.000000" h="90" random_walk="2" resolve_z="true"/>
+		  <spot x="574.900208" y="578.432800" z="354.000000" h="30" random_walk="2" resolve_z="true"/>
+		  <spot x="300.419647" y="511.781067" z="364.000000" h="5" random_walk="2" resolve_z="true"/>
+		  <spot x="291.336578" y="560.650208" z="364.000000" h="1" random_walk="2" resolve_z="true"/>
 		</spawn>
 		<!-- Ashikar Sniper -->
 		<spawn npc_id="214742">
-			<spot x="529.419" y="578.792" z="351.153" h="98"/>
-			<spot x="429.799" y="594.985" z="354.733" h="93"/>
-			<spot x="317.024" y="706.301" z="361.78" h="48"/>
-			<spot x="269.03" y="490.259" z="364.936" h="67"/>
-			<spot x="372.369" y="531.112" z="360.893" h="56"/>
-			<spot x="384.543" y="675.371" z="360.93" h="82"/>
-			<spot x="399.311" y="574.222" z="358.362" h="45"/>
-			<spot x="333.395" y="561.127" z="362.005" h="103"/>
-			<spot x="365.557" y="492.596" z="361.784" h="72"/>
-			<spot x="290.687" y="733.068" z="364.936" h="73"/>
+			<spot x="529.418945" y="578.792297" z="354.000000" h="30" resolve_z="true"/>
+			<spot x="429.799500" y="594.985107" z="356.000000" h="10" resolve_z="true"/>
+			<spot x="317.023926" y="706.301208" z="364.000000" h="111" resolve_z="true"/>
+			<spot x="269.029663" y="490.259033" z="368.000000" h="5" resolve_z="true"/>
+			<spot x="372.368896" y="531.111572" z="364.000000" h="5" resolve_z="true"/>
+			<spot x="384.543427" y="675.370605" z="364.000000" h="111" resolve_z="true"/>
+			<spot x="399.310516" y="574.222412" z="362.000000" h="113" resolve_z="true"/>
+			<spot x="333.394623" y="561.126709" z="364.000000" h="6" resolve_z="true"/>
+			<spot x="365.557251" y="492.595642" z="364.000000" h="0" resolve_z="true"/>
+			<spot x="290.686951" y="733.067627" z="366.000000" h="105" resolve_z="true"/>
 			<spot x="407.90173" y="604.58856" z="357.4876" h="110"/>
             <spot x="235.18227" y="615.7309" z="366.25406" h="113"/>
-			<spot x="471.61" y="616.93" z="352.9456" h="94" walker_id="LEFTCIELDRAKANRA35AE000000000000000"/>
-			<spot x="471.62" y="553.62" z="352.9456" h="46" walker_id="LEFTCIELDRAKANRA35AE000000000000001"/>
-			<spot x="409.02" y="508.55" z="358.97653" h="92" walker_id="LEFTCIELDRAKANRA35AE000000000000002"/>
-			<spot x="397.24" y="633.24" z="359.0654" h="65" walker_id="LEFTCIELDRAKANRA35AE000000000000003"/>
+			<spot x="471.043121" y="617.504517" z="354.000000" h="106" walker_id="LEFTCIELDRAKANRA35AE000000000000000" resolve_z="true"/>
+			<spot x="471.043121" y="553.089661" z="354.000000" h="13" walker_id="LEFTCIELDRAKANRA35AE000000000000001" resolve_z="true"/>
+			<spot x="408.575195" y="508.370422" z="362.000000" h="8" walker_id="LEFTCIELDRAKANRA35AE000000000000002" resolve_z="true"/>
+			<spot x="396.820923" y="633.329285" z="362.000000" h="115" walker_id="LEFTCIELDRAKANRA35AE000000000000003" resolve_z="true"/>
 			<spot x="335.66" y="474.14" z="362.00903" h="48" walker_id="LEFTCIELDRAKANAS35AE000000000000003"/>
 		</spawn>
 		<!-- Ashikar Healer -->
 		<spawn npc_id="214743">
-			<spot x="482.352" y="602.681" z="352.946" h="61"/>
-			<spot x="482.457" y="567.503" z="352.946" h="50"/>
-			<spot x="261.323" y="545.687" z="364.936" h="109"/>
-			<spot x="405.236" y="668.668" z="359.454" h="104"/>
+			<spot x="482.351898" y="602.681152" z="354.000000" h="60" resolve_z="true"/>
+			<spot x="482.456879" y="567.502502" z="354.000000" h="60" resolve_z="true"/>
+			<spot x="261.322632" y="545.687378" z="368.000000" h="0" resolve_z="true"/>
+			<spot x="405.235901" y="668.668335" z="362.000000" h="111" resolve_z="true"/>
 			<spot x="432.96088" y="572.88806" z="354.32907" h="2"/>
-			<spot x="260.554" y="625.784" z="364.936" h="41"/>
-			<spot x="367.189" y="604.334" z="360.841" h="65"/>
-			<spot x="385.453" y="497.211" z="360.858" h="95"/>
-			<spot x="397.047" y="532.933" z="359.18" h="83"/>
-			<spot x="349.852" y="570.301" z="361.643" h="6"/>
-			<spot x="319.369" y="611.757" z="362.125" h="99"/>
-			<spot x="335.78" y="697.71" z="362.01093" h="35" walker_id="LEFTCIELDRAKANPR35AE000000000000000"/>
-			<spot x="318.26" y="654.56" z="361.98587" h="59" walker_id="LEFTCIELDRAKANPR35AE000000000000001"/>
-			<spot x="321.22" y="517.19" z="362.02667" h="115" walker_id="LEFTCIELDRAKANPR35AE000000000000002"/>
+			<spot x="260.554108" y="625.784302" z="368.000000" h="118" resolve_z="true"/>
+			<spot x="367.189453" y="604.334106" z="364.000000" h="118" resolve_z="true"/>
+			<spot x="385.453369" y="497.210541" z="364.000000" h="8" resolve_z="true"/>
+			<spot x="397.047211" y="532.932861" z="362.000000" h="35" resolve_z="true"/>
+			<spot x="349.851807" y="570.300781" z="364.000000" h="1" resolve_z="true"/>
+			<spot x="319.368561" y="611.756836" z="364.000000" h="3" resolve_z="true"/>
+			<spot x="335.354797" y="697.908508" z="364.000000" h="111" walker_id="LEFTCIELDRAKANPR35AE000000000000000" resolve_z="true"/>
+			<spot x="317.727051" y="654.674927" z="364.000000" h="115" walker_id="LEFTCIELDRAKANPR35AE000000000000001" resolve_z="true"/>
+			<spot x="320.750366" y="517.071777" z="364.000000" h="5" walker_id="LEFTCIELDRAKANPR35AE000000000000002" resolve_z="true"/>
 		</spawn>
 		<!-- Ashikar Serpentguard -->
 		<spawn npc_id="214824">
@@ -94,6 +120,9 @@
             <spot x="447.81638" y="600.8536" z="352.69846" h="115"/>
             <spot x="456.5396" y="631.9568" z="352.69922" h="4" random_walk="3"/>
             <spot x="449.15997" y="565.8656" z="352.69846" h="14" random_walk="3"/>
+		  <spot x="493.257477" y="634.208130" z="354.000000" h="48" random_walk="2" resolve_z="true"/>
+		  <spot x="674.355286" y="565.693787" z="336.000000" h="3" random_walk="2" resolve_z="true"/>
+		  <spot x="492.106049" y="534.259094" z="354.000000" h="66" random_walk="2" resolve_z="true"/>
         </spawn>
 		<!-- Ashikar Shaman -->
 		<spawn npc_id="214825">
@@ -123,6 +152,12 @@
 			<spot x="395.25" y="601.65" z="358.78583" h="3" walker_id="LEFTCIELDRAKANWI35AE000000000000002"/>
 			<spot x="485.0" y="522.43" z="352.94534" h="87" walker_id="LEFTCIELDRAKANWI35AE000000000000003"/>
 			<spot x="312.65" y="562.8" z="362.02374" h="22" walker_id="LEFTCIELDRAKANWI35AE000000000000004"/>
+		  <spot x="499.844788" y="683.295654" z="354.000000" h="76" random_walk="2" resolve_z="true"/>
+		  <spot x="467.421234" y="520.046753" z="354.000000" h="10" random_walk="2" resolve_z="true"/>
+		  <spot x="696.959534" y="580.748230" z="329.000000" h="43" random_walk="2" resolve_z="true"/>
+		  <spot x="485.588715" y="585.420776" z="357.000000" h="0" random_walk="2" resolve_z="true"/>
+		  <spot x="496.780670" y="487.161011" z="354.000000" h="40" random_walk="2" resolve_z="true"/>
+		  <spot x="466.737244" y="654.710266" z="354.000000" h="110" random_walk="2" resolve_z="true"/>
 		</spawn>
 		<!-- Ashikar Fleshmender -->
 		<spawn npc_id="214826">
@@ -134,6 +169,10 @@
 			<spot x="466.737" y="654.71" z="352.699" h="34"/>
 			<spot x="467.421" y="520.047" z="352.705" h="22" random_walk="3"/>
 			<spot x="496.781" y="487.161" z="352.713" h="63"/>
+		  <spot x="671.346436" y="555.024414" z="336.000000" h="10" random_walk="2" resolve_z="true"/>
+		  <spot x="451.367462" y="585.770813" z="354.000000" h="0" random_walk="2" resolve_z="true"/>
+		  <spot x="491.337799" y="536.709351" z="354.000000" h="63" random_walk="2" resolve_z="true"/>
+		  <spot x="492.482422" y="632.712769" z="354.000000" h="51" random_walk="2" resolve_z="true"/>
 		</spawn>
 		<!-- Treasurer Nabatma -->
 		<spawn npc_id="215424">
@@ -168,14 +207,14 @@
 		</spawn>
 		<!-- Shining Magic Ward -->
 		<spawn npc_id="700455">
-			<spot x="672.83002" y="606.21997" z="321.17999" entity_id="1"/>
+			<spot x="672.834290" y="606.225037" z="322.475067" entity_id="1" h="0" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="206089" respawn_time="1">
-		  <spot x="572.717773" y="585.926453" z="350.90677" h="60"/>
+		  <spot x="572.717773" y="585.926453" z="354.000000" h="60" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="283080" respawn_time="1">
-		  <spot x="582.799805" y="585.605957" z="350.90677"/>
-		  <spot x="540.983582" y="585.605957" z="350.90677"/>
+		  <spot x="582.799805" y="585.605957" z="352.511719" h="0" resolve_z="true"/>
+		  <spot x="540.983582" y="585.605957" z="352.511719" h="0" resolve_z="true"/>
 		</spawn>
 	</spawn_map>
 </spawns>
