@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.ai2.manager;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -9,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -45,5 +47,34 @@ class SkillAttackManagerBytecodeTest {
 		assertFalse(SkillAttackManager.canExecuteScheduledSkill(AIState.FIGHT, AISubState.CAST, target, target, 2, 1, 1, 1, 10, 10));
 		assertFalse(SkillAttackManager.canExecuteScheduledSkill(AIState.FIGHT, AISubState.CAST, target, target, 1, 1, 2, 1, 10, 10));
 		assertFalse(SkillAttackManager.canExecuteScheduledSkill(AIState.FIGHT, AISubState.CAST, target, target, 1, 1, 1, 1, 11, 10));
+	}
+
+	@Test
+	void onlyCombatSkillCompletionContinuesTheAttackLoop() {
+		RecordingNpcAI ai = new RecordingNpcAI();
+		ai.setStateIfNot(AIState.IDLE);
+		ai.setSubStateIfNot(AISubState.CAST);
+
+		SkillAttackManager.afterUseSkill(ai);
+
+		assertEquals(AISubState.NONE, ai.getSubState());
+		assertEquals(0, ai.attackCompletions);
+
+		ai.setStateIfNot(AIState.FIGHT);
+		ai.setSubStateIfNot(AISubState.CAST);
+		SkillAttackManager.afterUseSkill(ai);
+
+		assertEquals(AISubState.NONE, ai.getSubState());
+		assertEquals(1, ai.attackCompletions);
+	}
+
+	private static final class RecordingNpcAI extends GeneralNpcAI2 {
+
+		private int attackCompletions;
+
+		@Override
+		protected void handleAttackComplete() {
+			attackCompletions++;
+		}
 	}
 }

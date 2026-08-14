@@ -135,14 +135,16 @@ public class SkillAttackManager {
 	}
 
 	/**
-	 * 技能使用后的处理：清除施法子状态并触发攻击完成事件。
-	 * Post-skill handling: clears CAST sub-state and fires ATTACK_COMPLETE.
+	 * 技能使用后的处理：清除施法子状态，仅在战斗中触发攻击完成事件。
+	 * Post-skill handling: clears CAST sub-state and fires ATTACK_COMPLETE only in combat.
 	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void afterUseSkill(NpcAI2 npcAI) {
 		npcAI.setSubStateIfNot(AISubState.NONE);
-		npcAI.onGeneralEvent(AIEventType.ATTACK_COMPLETE);
+		if (npcAI.isInState(AIState.FIGHT)) {
+			npcAI.onGeneralEvent(AIEventType.ATTACK_COMPLETE);
+		}
 	}
 
 	/**
