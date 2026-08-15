@@ -17,6 +17,8 @@ import com.aionemu.gameserver.utils.MathUtil;
  * @author ATracer
  */
 public class FollowEventHandler {
+	/** 普通满血跟随 NPC 的贴身距离；超过该距离才重新追击。 / Close follow distance for full-health NPCs. */
+	private static final float CLOSE_FOLLOW_RANGE = 3;
 
 	/**
 	 * 开始跟随指定生物：切换到 FOLLOWING 状态并播放跟随表情。
@@ -78,7 +80,7 @@ public class FollowEventHandler {
 		} else if (ai.getOwner().getLifeStats().getHpPercentage() < 100) {
 			return MathUtil.isIn3dRange(ai.getOwner(), object, 30);
 		} else {
-			return MathUtil.isIn3dRange(ai.getOwner(), object, 15);
+			return MathUtil.isIn3dRange(ai.getOwner(), object, CLOSE_FOLLOW_RANGE);
 		}
 	}
 

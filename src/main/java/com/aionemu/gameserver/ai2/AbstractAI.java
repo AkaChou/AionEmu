@@ -7,6 +7,7 @@ import com.aionemu.commons.callbacks.metadata.ObjectCallback;
 import com.aionemu.gameserver.ai2.event.AIEventLog;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.eventcallback.OnHandleAIGeneralEvent;
+import com.aionemu.gameserver.ai2.handler.FollowEventHandler;
 import com.aionemu.gameserver.ai2.handler.FreezeEventHandler;
 import com.aionemu.gameserver.ai2.manager.SimpleAttackManager;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -766,9 +767,7 @@ public abstract class AbstractAI implements AI2 {
 		case RETURNING:
 			return ((Npc) owner).getMoveController().isHomeReturnDestinationReached();
 		case FOLLOWING:
-			// 跟随是持续目标，不是到达 15 米跟随容差后即可结束的一次性移动。
-			// Following is continuous; reaching the follow tolerance must not finish the move task.
-			return getOwner().getTarget() == null;
+			return FollowEventHandler.isInRange(this, getOwner().getTarget());
 		case WALKING:
 			return currentSubState == AISubState.TALK || WalkManager.isArrivedAtPoint((NpcAI2) this);
 		default:

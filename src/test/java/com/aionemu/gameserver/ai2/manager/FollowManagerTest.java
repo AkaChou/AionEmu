@@ -53,18 +53,21 @@ class FollowManagerTest {
 	}
 
 	@Test
-	void followingDoesNotFinishWhenInsideTheFollowTolerance() {
+	void followingStopsAtTheCloseFollowDistance() {
 		TestNpc owner = new ObjenesisStd().newInstance(TestNpc.class);
 		owner.setKnownlist(new KnownList(owner));
 		owner.setGameStats(new TestNpcGameStats(owner));
 		owner.setLifeStats(new TestNpcLifeStats(owner));
 		owner.setPosition(position(0));
 		TestNpc target = new ObjenesisStd().newInstance(TestNpc.class);
-		target.setPosition(position(10));
+		target.setPosition(position(2));
 		owner.setTarget(target);
 		TestNpcAI ai = new TestNpcAI(owner, true);
 		ai.setStateIfNot(AIState.FOLLOWING);
 
+		assertTrue(ai.poll(AIQuestion.DESTINATION_REACHED));
+
+		target.setPosition(position(4));
 		assertFalse(ai.poll(AIQuestion.DESTINATION_REACHED));
 	}
 
@@ -110,6 +113,16 @@ class FollowManagerTest {
 		@Override
 		public Integer getObjectId() {
 			return 1;
+		}
+
+		@Override
+		public boolean isInInstance() {
+			return false;
+		}
+
+		@Override
+		public int getInstanceId() {
+			return 0;
 		}
 
 		@Override
