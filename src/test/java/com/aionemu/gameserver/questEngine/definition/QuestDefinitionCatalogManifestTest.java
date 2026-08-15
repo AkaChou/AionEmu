@@ -41,6 +41,34 @@ class QuestDefinitionCatalogManifestTest {
 	}
 
 	@Test
+	void rewardSelectionTransitionsRespondInTheSameInteraction() {
+		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(
+			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+		int checked = 0;
+		for (CompiledQuestDefinition compiled : catalog.executables()) {
+			QuestDefinition definition = compiled.definition();
+			Map<String, QuestStatus> statuses = definition.nodes().stream().collect(Collectors.toMap(
+				QuestNode::label, node -> node.projection().status()));
+			for (QuestTransition transition : definition.transitions()) {
+				if (statuses.get(transition.sourceNode()) == QuestStatus.REWARD
+						|| statuses.get(transition.targetNode()) != QuestStatus.REWARD
+						|| !(transition.event() instanceof QuestEvent.TalkToNpc talk)
+						|| talk.dialogId() == null
+						|| talk.dialogId() != QuestDialogAction.SELECT_QUEST_REWARD.id()) {
+					continue;
+				}
+				checked++;
+				assertTrue(transition.afterCommit().stream().anyMatch(
+					QuestDefinitionCatalogManifestTest::isDialogResponse),
+					"reward selection must respond immediately: quest=" + compiled.id()
+						+ " source=" + transition.sourceNode() + " target=" + transition.targetNode()
+						+ " npc=" + talk.npcId());
+			}
+		}
+		assertTrue(checked > 0, "reward dialog audit must inspect production routes");
+	}
+
+	@Test
 	void emptyDuplicateAndMigrationAnnotatedCatalogsFailClosed() {
 		assertEquals("INVALID_PRODUCTION_CATALOG", error("<quest-definition-catalog version=\"2\"/>").code());
 		assertEquals("DUPLICATE_CATALOG_OWNER", error("<quest-definition-catalog version=\"2\">"
@@ -119,6 +147,13 @@ class QuestDefinitionCatalogManifestTest {
 
 	private static ByteArrayInputStream bytes(String xml) {
 		return new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+	}
+
+	private static boolean isDialogResponse(AfterCommitAction action) {
+		return action instanceof AfterCommitAction.ShowQuestDialog
+			|| action instanceof AfterCommitAction.ShowQuestSelectionDialog
+			|| action instanceof AfterCommitAction.ShowDialogWindow
+			|| action instanceof AfterCommitAction.CloseDialog;
 	}
 
 	private static void assertRepeatStartDialogs(QuestCatalog catalog) {

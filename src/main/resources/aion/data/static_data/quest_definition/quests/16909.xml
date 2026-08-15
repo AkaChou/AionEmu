@@ -74,6 +74,7 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <!-- 奖励:回到 Hadvart (801203) 领取。 -->

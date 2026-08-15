@@ -31,6 +31,20 @@ class AI2EngineRetailSelectionTest {
 			assertEquals("quest_use_item", AI2Engine.selectNpcAi("quest_use_item", 200000, null));
 			assertEquals("quest_start_use_item", AI2Engine.selectNpcAi("quest_start_use_item", 700004, null));
 			assertEquals("empyrean_blessing", AI2Engine.selectNpcAi("empyrean_blessing", 883959, null));
+			for (String ai : List.of(
+				"Mechaturerk", "anikiki", "bighorn_wendigo", "blood_fungus_skinwalker",
+				"colossal_forest_flavia", "coral_corask", "crimson_crested_slink", "devious_manduri_beacon",
+				"dynamic_iluma_monster", "dynamic_norsvold_monster", "forest_of_life_brohum_changeling",
+				"frostgullet_kirrin", "frosty_petrahulk", "gatorback_skilex", "giant_razorback_frillneck",
+				"hidden_swamp_bufo", "hugehorn_wendigo", "masked_manduri_monkey_king",
+				"masquerading_desert_gehkros", "mine_mage", "molting_honey_klaw", "mysterious_moonlight_brax",
+				"nightbloom_gargonops_shifter", "plateau_gihla_chameleon", "progo_klaw_chameleon",
+				"razor_clawed_forest_cloke", "rejuvinating_wave_wave_tauric", "roughhorn_wendigo",
+				"ruthless_wave_tauric", "skulking_forsaken_zaif", "spirit_forest_worg_morpher",
+				"thickhorn_wendigo", "valley_torr_crumbler", "venerable_sea_giant", "warrior_monument",
+				"whiptail_metamorph", "young_roundshell_spiner")) {
+				assertEquals(ai, AI2Engine.selectNpcAi(ai, 200000, null));
+			}
 		} finally {
 			DataManager.RETAIL_AI_DATA = previous;
 		}
