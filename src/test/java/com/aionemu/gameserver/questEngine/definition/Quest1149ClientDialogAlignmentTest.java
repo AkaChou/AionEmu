@@ -55,7 +55,12 @@ class Quest1149ClientDialogAlignmentTest {
 			.findFirst().orElseThrow();
 
 		assertEquals("v1", escort.targetNode());
-		assertTrue(escort.afterCommit().contains(new AfterCommitAction.StartFollow("poppy")));
+		assertEquals(List.of(
+			new AfterCommitAction.StartFollowCurrentTargetToNpc(203145),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.CloseDialog()), escort.afterCommit());
+		assertFalse(escort.afterCommit().stream().anyMatch(AfterCommitAction.SpawnNpc.class::isInstance));
+		assertFalse(escort.afterCommit().stream().anyMatch(AfterCommitAction.StartFollow.class::isInstance));
 	}
 
 	private static QuestTransition talk(List<QuestTransition> transitions, String source, QuestDialogAction action) {

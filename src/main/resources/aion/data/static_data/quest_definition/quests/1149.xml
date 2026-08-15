@@ -105,9 +105,7 @@
         <dialog type="TALK_TO_NPC" npc-id="203191" action="SETPRO1"/>
       </event>
       <after-commit>
-        <spawn-npc-at-player slot="poppy" template-id="203191" heading="0"/>
-        <start-follow slot="poppy"/>
-        <watch-follow-zone slot="poppy" zone="NORTHERN_TOLBAS_FOREST_210030000"/>
+        <start-follow-current-target-npc npc-id="203145"/>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
@@ -128,7 +126,6 @@
         <npc-lost-target/>
       </event>
       <after-commit>
-        <despawn-npc slot="poppy"/>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
@@ -137,7 +134,6 @@
         <log-out/>
       </event>
       <after-commit>
-        <despawn-npc slot="poppy"/>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
