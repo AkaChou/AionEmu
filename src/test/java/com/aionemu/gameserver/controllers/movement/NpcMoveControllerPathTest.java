@@ -260,6 +260,22 @@ class NpcMoveControllerPathTest {
 	}
 
 	@Test
+	void formationWaypointPauseDoesNotSendStopOrResetTheMoveMask() throws Exception {
+		Player observer = new ObjenesisStd().newInstance(Player.class);
+		observer.setClientConnection(packetConnection());
+		Npc owner = movingNpc(10, 20, 30, observer);
+		NpcMoveController controller = new NpcMoveController(owner);
+		controller.started.set(true);
+		controller.movementMask = MovementMask.NPC_WALK_SLOW;
+
+		controller.pauseAtRoutePoint();
+
+		assertFalse(controller.started.get());
+		assertEquals(MovementMask.NPC_WALK_SLOW, controller.getMovementMask());
+		assertTrue(packetQueue(observer.getClientConnection()).isEmpty());
+	}
+
+	@Test
 	void movingChaseTargetPacketsAreThrottled() {
 		assertFalse(NpcMoveController.shouldBroadcastDestination(true, false, true, 1_199, 1_000));
 		assertTrue(NpcMoveController.shouldBroadcastDestination(true, false, true, 1_200, 1_000));

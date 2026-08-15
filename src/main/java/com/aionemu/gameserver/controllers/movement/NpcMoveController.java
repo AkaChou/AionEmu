@@ -999,6 +999,14 @@ public class NpcMoveController
         resetPath();
     }
 
+    /**
+     * 在编队路点暂停服务端推进，但保留客户端移动掩码和已发送的路点目标。
+     * Pauses server movement at a formation waypoint while preserving the client mask and sent target.
+     */
+    public void pauseAtRoutePoint() {
+        resetMove();
+    }
+
     private void moveAlongPath() {
         if (!usesPath()) {
             moveToLocation(pointX, pointY, pointZ, offset);
