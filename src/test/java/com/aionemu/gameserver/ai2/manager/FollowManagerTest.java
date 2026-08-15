@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.ai2.manager;
 
 import com.aionemu.gameserver.ai2.AIState;
+import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.handler.FollowEventHandler;
 import com.aionemu.gameserver.controllers.movement.NpcMoveController;
@@ -9,7 +10,9 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.stats.calc.AdditionStat;
 import com.aionemu.gameserver.model.stats.calc.Stat2;
 import com.aionemu.gameserver.model.stats.container.NpcGameStats;
+import com.aionemu.gameserver.model.stats.container.NpcLifeStats;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
+import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.KnownList;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
@@ -24,10 +27,13 @@ class FollowManagerTest {
 		TestNpc owner = new ObjenesisStd().newInstance(TestNpc.class);
 		owner.setKnownlist(new KnownList(owner));
 		owner.setGameStats(new TestNpcGameStats(owner));
+		owner.setLifeStats(new TestNpcLifeStats(owner));
+		owner.setPosition(position(0));
 		RecordingMoveController movement = new RecordingMoveController(owner);
 		owner.movement = movement;
 		TestNpcAI ai = new TestNpcAI(owner, true);
 		TestNpc target = new ObjenesisStd().newInstance(TestNpc.class);
+		target.setPosition(position(1));
 
 		FollowEventHandler.follow(ai, target);
 
@@ -44,6 +50,28 @@ class FollowManagerTest {
 
 		assertFalse(FollowManager.startMoving(new TestNpcAI(owner, false)));
 		assertFalse(movement.started);
+	}
+
+	@Test
+	void followingDoesNotFinishWhenInsideTheFollowTolerance() {
+		TestNpc owner = new ObjenesisStd().newInstance(TestNpc.class);
+		owner.setKnownlist(new KnownList(owner));
+		owner.setGameStats(new TestNpcGameStats(owner));
+		owner.setLifeStats(new TestNpcLifeStats(owner));
+		owner.setPosition(position(0));
+		TestNpc target = new ObjenesisStd().newInstance(TestNpc.class);
+		target.setPosition(position(10));
+		owner.setTarget(target);
+		TestNpcAI ai = new TestNpcAI(owner, true);
+		ai.setStateIfNot(AIState.FOLLOWING);
+
+		assertFalse(ai.poll(AIQuestion.DESTINATION_REACHED));
+	}
+
+	private static WorldPosition position(float x) {
+		WorldPosition position = new WorldPosition(110010000);
+		position.setXYZH(x, 0f, 0f, (byte) 0);
+		return position;
 	}
 
 	private static final class TestNpcAI extends NpcAI2 {
@@ -87,6 +115,7 @@ class FollowManagerTest {
 		@Override
 		public void setTarget(VisibleObject target) {
 			this.target = target;
+			super.setTarget(target);
 		}
 	}
 
@@ -112,6 +141,16 @@ class FollowManagerTest {
 		}
 
 		@Override
+		public Stat2 getMaxHp() {
+			return new AdditionStat(StatEnum.MAXHP, 100, owner);
+		}
+
+		@Override
+		public Stat2 getMaxMp() {
+			return new AdditionStat(StatEnum.MAXMP, 100, owner);
+		}
+
+		@Override
 		public Stat2 getAttackSpeed() {
 			return new AdditionStat(StatEnum.ATTACK_SPEED, 0, owner);
 		}
@@ -119,6 +158,12 @@ class FollowManagerTest {
 		@Override
 		public float getMovementSpeedFloat() {
 			return 0;
+		}
+	}
+
+	private static final class TestNpcLifeStats extends NpcLifeStats {
+		private TestNpcLifeStats(Npc owner) {
+			super(owner);
 		}
 	}
 }
