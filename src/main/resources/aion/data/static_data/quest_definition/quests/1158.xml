@@ -47,7 +47,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="700003" action="QUEST_SELECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="700003" action="USE_OBJECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>

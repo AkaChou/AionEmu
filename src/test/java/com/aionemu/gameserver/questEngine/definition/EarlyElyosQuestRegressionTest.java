@@ -95,6 +95,27 @@ class EarlyElyosQuestRegressionTest {
 	}
 
 	@Test
+	void recoveredVillageSealUsesTheItemStackOnlyAfterAcceptance() {
+		CompiledQuestDefinition definition = load(1158);
+
+		assertObjectGate(definition, "started", 700003);
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1352)),
+			route(definition, "started", "started", new QuestEvent.TalkToNpc(700003, -1)).afterCommit());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1353)),
+			route(definition, "started", "started", new QuestEvent.TalkToNpc(700003, 1353)).afterCommit());
+		QuestTransition seal = route(definition, "started", "k1",
+			new QuestEvent.TalkToNpc(700003, 10000));
+		assertTrue(seal.actions().contains(new QuestAction.GiveItem(182200502, 1)));
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.CloseDialog()), seal.afterCommit());
+		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
+			transition.sourceNode().equals("started")
+				&& transition.event().equals(new QuestEvent.TalkToNpc(700003, QuestDialogAction.QUEST_SELECT.id()))));
+		assertNoUnacceptedObjectRoute(definition, 700003);
+	}
+
+	@Test
 	void belbuasWineBarrelUsesTheObjectRouteOnlyAfterAcceptance() {
 		CompiledQuestDefinition definition = load(1141);
 
