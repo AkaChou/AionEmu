@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<HtmlPages>
+
+  <HtmlPage name="select1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>在这里到处都是龙族，我都有点不敢相信。</p>
+          <p> </p>
+          <p>虽然现在有魔法阻挡，但在把龙族全部赶走之前，我们还不能掉以轻心。</p>
+          <p> </p>
+          <p>不知道它们到底在那里策划什么阴谋。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_ASK_QUEST_ACCEPT">继续听。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="ask_quest_accept">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>而且我们不知道他们是从哪里来的，不管杀掉多少，数量都不见减少。</p>
+          <p> </p>
+          <p>所以我们需要经常派守护者过去消灭他们。</p>
+          <p> </p>
+          <p>[%username]大人，您能贡献自己的一份力量吗？</p>
+          <p> </p>
+          <p>尽可能多地消灭敌人就行。</p>
+          <p> </p>
+          <p>另外，请您一定要把守护宝物的[%dic:STR_DIC_M_Crotan_DrakanNamed_45_Ah]一起除掉。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_1">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_1">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_accept_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>我知道您帮我并不是为了私利，但是... </p>
+          <p> </p>
+          <p>听说秘密仓库有很多被龙族藏起来的宝物。</p>
+          <p> </p>
+          <p>但是一旦有人入侵，保护魔法阵就会发动，宝物就会消失。</p>
+          <p> </p>
+          <p>如果您动作够快，就既能消灭龙族，又能获得很多珍贵的战利品。</p>
+          <p></p>
+          <p>请您去把那里的敌人全部除掉。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_refuse_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>我本来为您准备了丰厚的报酬。既然您拒绝，我也无话可说。</p>
+          <p> </p>
+          <p>您真是太不给我面子了。有些守护者帮了我之后，都不愿意从我这里领取报酬... </p>
+          <p> </p>
+          <p>好了，如果您改变了主意，可以随时来找我。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select2">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>我以为一切终于结束了……</p>
+          <p> </p>
+          <p>常言道：一场战斗的胜利意味着另一场战斗的开始。看来这句话是对的。</p>
+          <p> </p>
+          <p>幸运的是，我们不用直接面对他们。</p>
+          <p> </p>
+          <p>我拜托您的事情完成了吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT_QUEST_REWARD">报告结果。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>真是辛苦您了。</p>
+          <p> </p>
+          <p>真不知道该怎么说才好，有[%username]大人这样的守护者在，真是太好了。</p>
+          <p> </p>
+          <p>我一个人没有那么多精力去对付他们。</p>
+          <p> </p>
+          <p>这是极乐世界给您准备的谢礼。希望您有时间再来帮忙。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">消灭[%dic:STR_DIC_W_IDAbRe_Up3_Crotan_SZ_All]的所有龙族</font></p>
+                     <p visible="[%0]"><font color="[%1]">  [%dic:STR_DIC_E_Up3_Crotan]([%2]/80)</font></p>
+                     <p visible="[%0]"><font color="[%1]">  [%dic:STR_DIC_M_Crotan_DrakanNamed_45_Ah]([%5]/1)</font></p></step>
+               <step><p visible="[%15]"><font color="[%16]">和[%dic:STR_DIC_N_Ascalon]%对话</font></p></step>
+    </steps>
+          <p><font font_xml="quest_summary">按照迪尔巴的委托，消灭根之岛秘密仓库的龙族。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>迪尔巴让我去消灭根之岛秘密仓库的龙族。</p>
+          <p> </p>
+          <p>前往根之岛秘密仓库，消灭了那里的龙族。他给了我谢礼，并让我以后再去帮忙。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

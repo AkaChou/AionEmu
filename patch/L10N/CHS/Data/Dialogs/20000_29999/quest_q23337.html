@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="select_none">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>[%username]大人，我想拜托您一件事。</p>
+          <p> </p>
+          <p>布里特拉军的精锐部队——第43军团第1部队开始行动了。</p>
+          <p> </p>
+          <p>他们好像停止了侦察，想要正式向我们发动反击。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_ASK_QUEST_ACCEPT">继续听。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="ask_quest_accept">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>首先，请您进入[%dic:STR_DIC_W_LDF5b_SensoryArea_Q13337]%，侦察他们的情况。</p>
+          <p> </p>
+          <p>侦察完成之后，请您去消灭掉第43军团第1部队的核心[%dic:STR_DIC_E_LDF5b_F2_Vri]%，降低他们的士气。</p>
+          <p> </p>
+          <p>最后去消灭掉[%dic:STR_DIC_M_LDF5B_f3_Vri2_Confuse_El_SN_NmdQ_65_Ae]%，把他们的[%dic:STR_DIC_I_quest_23337a]%回收回来就行。</p>
+          <p> </p>
+          <p>怎么样？您愿意接受这个任务吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_1">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_1">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_accept_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>[%username]大人是最合适的人选，您能答应真是太好了。</p>
+          <p> </p>
+          <p>[%dic:STR_DIC_E_LDF5b_F2_Vri]%和[%dic:STR_DIC_M_LDF5B_f3_Vri2_Confuse_El_SN_NmdQ_65_Ae]%是最精锐的兵力，绝对不能有所松懈。</p>
+          <p> </p>
+          <p>所有的作战成功完成之后，一定可以给他们造成沉重的打击。</p>
+          <p> </p>
+          <p>我们的胜利几乎就是十拿九稳了。</p>
+          <p> </p>
+          <p>祝您好运。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_refuse_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>现在您在急着执行其他任务吗？</p>
+          <p> </p>
+          <p>知道了。</p>
+          <p> </p>
+          <p>这个任务非常重要，您回来之后一定要再来找我。</p>
+          <p> </p>
+          <p>再见。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select3">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>作战进行得怎么样？</p>
+          <p> </p>
+          <p>以[%username]大人的实力，一定成功了吧？</p>
+          <p> </p>
+          <p>快向我报告一下详细的结果吧。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_CHECK_USER_HAS_QUEST_ITEM">报告结果。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="check_user_item_ok">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>布里特拉军需物资目录拿回来啦！</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="check_user_item_fail">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>您好像还没把布里特拉军需物资目录带回来……</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_success">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>成功了！您真了不起！</p>
+          <p> </p>
+          <p>通过这次作战，他们的士气一定遭受了沉重的打击。</p>
+          <p> </p>
+          <p>您带回来的布里特拉军需物资目录我们一定会好好使用。</p>
+          <p> </p>
+          <p>真是辛苦您了。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT_QUEST_REWARD">继续听。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>和[%username]大人立下的功劳相比，这点奖励好像太少了点。</p>
+          <p> </p>
+          <p>但是现在情况不是很好，希望您能理解。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">对[%dic:STR_DIC_W_LDF5b_SensoryArea_Q13337]%进行侦察</font></p></step>
+               <step><p visible="[%3]"><font color="[%4]">消灭[%dic:STR_DIC_E_LDF5b_F2_Vri]%([%5]/9)</font></p></step>
+               <step><p visible="[%6]"><font color="[%7]">搜集[%dic:STR_DIC_I_quest_23337a]%，然后交给[%dic:STR_DIC_N_LDF5_Village_Guard17_D]%</font></p>[%collectitem]</step>
+               <step><p visible="[%9]"><font color="[%10]">和[%dic:STR_DIC_N_LDF5_Village_Guard17_D]%对话</font></p></step>
+    </steps>
+          <p><font font_xml="quest_summary">到布里特拉补给基地去，成功地完成作战。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>赫尔加让我去攻城武器补给基地进行侦察，消灭骑兵部队士兵，然后把军需物资目录带回来。</p>
+          <p> </p>
+          <p>于是来到布里特拉补给基地，完成了既定的作战。回去之后，赫尔加对我表示感谢，并给了我奖励。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

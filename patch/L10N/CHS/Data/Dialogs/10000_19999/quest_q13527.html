@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<HtmlPages>
+
+  <HtmlPage name="select_none" accept="true">
+    <Contents cdata="true">
+        <html>
+        <body>
+		  <p>糟了。根据我获得的情报，卡塔拉姆地下的几处伊德石矿山出现了很多符文族亡灵，正在向伊德原石注入伊德。</p>
+		  <p> </p>
+		  <p>必须阻止符文族亡灵们的阴谋。没时间了，请您马上去把[%dic:STR_DIC_M_LDF5_Under_GhostRune_Q_01]、[%dic:STR_DIC_M_LDF5_Under_GhostRune_Q_02]、[%dic:STR_DIC_M_LDF5_Under_GhostRune_Q_03]和[%dic:STR_DIC_M_LDF5_Under_GhostRune_Q_04]%消灭掉。</p>
+		  <p> </p>
+		  <p>如果卡塔拉姆地下发生伊德大爆炸，那这里的所有人必定无一幸免。</p> 
+		  <p> </p>
+		  <p>我们必须在符文族亡灵的阴谋得逞之前阻止他们。请抓紧时间！</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_SIMPLE">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_SIMPLE">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select2">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>符文族亡灵全部消灭了吗？时间所剩不多了。</p>
+          <p> </p>
+          <p>如果卡塔拉姆地下发生大爆炸，那地面上的天族也难以幸免。</p>
+          <p> </p>
+          <p>为了防止这种不幸事件的发生，必须在限定时间内把[%dic:STR_DIC_M_LDF5_Under_GhostRune_Q_01]、[%dic:STR_DIC_M_LDF5_Under_GhostRune_Q_02]、[%dic:STR_DIC_M_LDF5_Under_GhostRune_Q_03]和[%dic:STR_DIC_M_LDF5_Under_GhostRune_Q_04]%消灭掉。</p>
+          <p> </p>
+          <p>副队长[%dic:STR_DIC_N_LDF5_Under_Kurius_E]大人也急切地想知道情况怎么样了。任务完成之后，请您去向他报告。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SET_SUCCEED">说知道了。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_success">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>我已经听鲁梅拉说了。</p>
+          <p> </p>
+          <p>听说符文族亡灵想策划什么阴谋。</p>
+          <p> </p>
+          <p>情况到底怎么样了？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT_QUEST_REWARD">说完成了任务。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>原来如此。[%username]，我知道任务交给你一定没问题。</p>
+		  <p> </p>
+		  <p>在这么困难的时候，能有[%username]你这样的英雄，真是太好了。</p>
+		  <p> </p>
+		  <p>总司令官大人听到消息之后也很担心，我会向他报告情况的。</p>
+		  <p> </p>
+		  <p>符文族亡灵不会轻易消失，今后可能还得注意。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">消灭符文族亡灵</font></p>
+                     <p visible="[%3]"><font color="[%4]">  [%dic:STR_DIC_M_LDF5_Under_GhostRune_Q_01]([%5]/1)</font></p>
+                     <p visible="[%6]"><font color="[%7]">  [%dic:STR_DIC_M_LDF5_Under_GhostRune_Q_02]([%8]/1)</font></p>
+                     <p visible="[%9]"><font color="[%10]">  [%dic:STR_DIC_M_LDF5_Under_GhostRune_Q_03]([%11]/1)</font></p>
+                     <p visible="[%12]"><font color="[%13]">  [%dic:STR_DIC_M_LDF5_Under_GhostRune_Q_04]([%14]/1)</font></p></step>
+               <step><p visible="[%15]"><font color="[%16]">和[%dic:STR_DIC_N_LDF5_Under_Rumela_E]%对话</font></p></step>
+               <step><p visible="[%18]"><font color="[%19]">向[%dic:STR_DIC_N_LDF5_Under_Kurius_E]%报告</font></p></step>
+    </steps>
+          <p><font font_xml="quest_summary">在限定时间内消灭在伊德矿山出现的符文族亡灵。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>鲁梅拉说符文族亡灵为了复仇，正在策划阴谋，想利用伊德矿山的伊德石制造大爆炸，让我去把他们全部消灭掉。</p>
+          <p> </p>
+          <p>虽然时间很紧，但还是完成了任务。库里乌斯非常高兴，说会向总司令官报告这件事。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

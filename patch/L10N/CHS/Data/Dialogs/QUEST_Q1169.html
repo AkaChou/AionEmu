@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="select1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>"事实上,村子里最麻烦的不是克拉尔而是布洛尼。"</p>
+          <p> </p>
+          <p>只有一桥之隔，说来就来。 </p> 
+          <p> </p>
+          <p>幸运的是自卫团团长是我，换做以前，在布洛尼的袭击下，常常连农活都干不了。 </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT1_1">继续听下去。 </Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select1_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+        <p>那些家伙中，最麻烦的要数头领[%dic:STR_DIC_MLA23]。 </p>          
+          <p> </p>
+          <p>他号称“闪电”，有着恐怖的速度和力量。而且追随那家伙的布洛尼又是成群结队，所以只要那家伙一来，村子里的损失就会非常大。</p>
+          <p> </p>
+          <p>前不久，那家伙袭击了村子，结果把普古斯都抓走了。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_ASK_QUEST_ACCEPT">继续听下去。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="ask_quest_accept">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>要想彻底摆脱布洛尼的骚扰，就只有消灭他们的头领斗喀，只要斗喀被消灭，剩下的就很容易解决...</p>
+          <p> </p>
+          <p>守护者大人要是能出手相助就再好不过了，您能不能帮我们消灭那个家伙呢？</p>
+          <p> </p>
+          <p>虽说我亲自动手也可以，不过那家伙实在是...有点麻烦，而且我手上的事情又这么多...</p>     
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_1">接受。 </Act>
+      <Act href="HACTION_QUEST_REFUSE_1">拒绝。 </Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_accept_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>啊，真是太感谢了，和其他守护者对我们这个小村子的不屑一顾相比，[%username]真是大不一样啊。</p>
+          <p> </p>      
+          <p>经过侦察，我们发现[%dic:STR_DIC_MLA23]就在从村子到[%dic:STR_DIC_FLA13]附近的路上徘徊，到那一定可以找到他。</p>
+          <p> </p>
+          <p>祝您凯旋而归。</p>     
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。 </Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_refuse_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>原来[%username]也和别的守护者一样...</p>
+          <p> </p>
+          <p>我明白了。你也一定是因为克拉尔的事，抽不开身。那么请自便吧。这里的事情我自己会处理的。</p>   
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。 </Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select2">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>这么快就消灭了 [%dic:STR_DIC_MLA23] 吗？</p>
+          <p> </p>
+          <p>布洛尼也不是那么好欺负的啊。</p>       
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="PLAYEMOTION_laugh;HACTION_SELECT_QUEST_REWARD">汇报战果。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>真的消灭了斗喀！</p>
+          <p> </p>
+          <p>这个，虽然我想...我也能做得到，不过既然守护者大人出马，我自然不能抢了您的风头，而且还要代全村对您表示感谢。</p>
+          <p> </p>
+          <p>这是我们村准备的一点谢礼。请收下吧。</p> 
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">消灭袭击村子的 [%dic:STR_DIC_MLA23]。([%2]/1)</font></p></step>
+               <step><p visible="[%15]"><font color="[%16]">[%dic:STR_DIC_LA24]对话。</font></p></step>
+    </steps>
+          <p><font font_xml="quest_summary">接受自卫团团长阿波尔洛斯的委托，消灭布洛尼的头领“闪电”斗喀。在去杜卡基采掘场的路上找到斗喀并消灭他吧。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>托尔巴斯村的自卫团团长阿波罗斯为“闪电”斗喀的事情非常头痛。</p>
+          <p> </p>
+          <p>按照他的请求从去往杜卡基采掘场的路上消灭了“闪电”斗喀。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务： [%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中： [%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="select1" accept="true">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>制作拓本永远是件开心的事情。</p>
+          <p> </p>
+          <p>感觉遗迹仿佛变成了自己的东西。</p>
+          <p> </p>
+          <p>[%username]大人，您也想去试试吗？</p>
+          <p> </p>
+          <p>如果您能到[%dic:STR_DIC_E_LDF5a_FOBJ_RunePiece_1]和[%dic:STR_DIC_E_LDF5a_FOBJ_RunePiece_2]那里去制作拓本，对我会有很大的帮助。</p>
+          <p> </p>
+          <p>在符文族建造的巨大防御壁上，有很多符文族的故事。</p>
+          <p> </p>
+          <p>此外，用拓本对符文族进行研究，也是很快乐的事情。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_SIMPLE">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_SIMPLE">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>希望拓本上有关于曾经支配卡塔拉姆的符文族的故事。</p>
+          <p> </p>
+          <p>符文族为什么会灭亡呢？</p>
+          <p> </p>
+          <p>据推测，符文族应该是利用内比林建造了防御壁。对拓本进行研究的话，应该就能知道真相。</p>
+          <p> </p>
+          <p>您把防御壁的拓本带回来了吗？</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE">拿出拓本。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>谢谢您。</p>
+          <p> </p>
+          <p>拓本的状态非常好。</p>
+          <p> </p>
+          <p>有了这些之后，我们就能确认符文族是否真的是利用内比林建造了防御壁。</p>
+          <p> </p>
+          <p>上面一定有大量的内容。</p>
+          <p> </p>
+          <p>虽然可能会花费一点时间，但那也是值得的。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">从[%dic:STR_DIC_E_LDF5a_FOBJ_RunePiece_1]上获取[%dic:STR_DIC_I_quest_22558a]，从[%dic:STR_DIC_E_LDF5a_FOBJ_RunePiece_2]上获取[%dic:STR_DIC_I_quest_12558b]，然后交给[%dic:STR_DIC_N_LDF5a_Killros_E]</font></p>[%collectitem]</step>
+    </steps>
+          <p><font font_xml="quest_summary">从防御壁上获取拓本，然后交给诺提斯。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>诺提斯说巨大的防御壁上有很多符文族的故事，让我分别到可以制作拓本的防御壁和可以印拓本的防御壁那里去制作拓本。把模糊的拓本和鲜明一些的拓本交给了诺提斯，他说辛苦了，并说他会解读拓本，对符文族和内比林进行研究。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

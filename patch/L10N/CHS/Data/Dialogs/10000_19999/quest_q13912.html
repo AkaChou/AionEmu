@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="ask_quest_accept">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p> - 紧急指令书 - </p>
+          <p></p>
+          <p> 1. 发件人：潘盖亚主管官，极乐世界荣誉殿堂的[%dic:STR_DIC_N_Corridor_L_PangeaQuest_E]</p>
+          <p></p>
+          <p> 2. 收件人：[%username]</p>
+          <p></p>
+          <p> 3. 命令：消灭潘盖亚各领地的[%dic:STR_DIC_E_GAb1_Boss_all]%，占领潘盖亚的要塞。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">执行委托。</Act>
+    </Selects>
+  </HtmlPage>
+
+   <HtmlPage name="select_success">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>潘盖亚分为贝洛斯、阿斯比达、阿塔纳托斯、迪希伦这4个领地。只有拥有资格的人，才有占领要塞的机会。</p>
+          <p></p>
+          <p>为了迎战无数未知的敌人，必须先占领要塞。为了控制整个潘盖亚地区，这个任务非常重要。</p>
+          <p> </p>
+          <p>这个重要的任务一刻都不能耽搁，所以我才会向来到潘盖亚的[%username]大人请求帮助。结果如何？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT_QUEST_REWARD">报告结果。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>您消灭掉了要塞守护神将，占领了要塞，真是太棒了！</p>
+          <p> </p>
+          <p>现在我们天族也在潘盖亚拥有了桥头堡，今后就能更加容易地展开战斗了。</p>
+          <p> </p>
+          <p>这是任何伟大的守护者都无法轻易完成的任务，您却能完成得如此出色，真是让我感到惭愧。</p>
+          <p> </p>
+          <p>[%username]大人才配得上英雄这个称号。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">消灭[%dic:STR_DIC_E_GAb1_Boss_all]%([%2]/1)</font></p></step>
+               <step><p visible="[%3]"><font color="[%4]">向[%dic:STR_DIC_N_Corridor_L_PangeaQuest_E]报告</font></p></step>
+    </steps>
+          <p><font font_xml="quest_summary">消灭潘盖亚4个领地中的1个要塞守护神将。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>潘盖亚主管官佩尔娜发来了紧急指令，让我去消灭潘盖亚4个领地中的1个要塞守护神将，占领要塞。</p>
+          <p> </p>
+          <p>按照她所说，消灭掉了要塞守护神将。回去之后，她说我完成了在潘盖亚建立桥头堡的伟业，足以配得上英雄这个称号。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="ask_quest_accept">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p> - 紧急指令书 - </p>
+          <p> </p>
+          <p> 1. 发件人：卡塔拉姆派遣队，[%dic:STR_DIC_W_LDF5a_A4_2]的[%dic:STR_DIC_N_LDF5_Village_Guard02_L]</p>
+          <p> </p>
+          <p> 2. 收件人：[%username]</p>
+          <p> </p>
+          <p>3. 命令：消灭入侵北部卡塔拉姆[%dic:STR_DIC_W_LDF5A_A4]的1名魔族守护者。</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">执行委托。</Act>
+    </Selects>
+  </HtmlPage>
+
+   <HtmlPage name="select_success">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>经过格拉努森林之后，就是我们天族的城市。</p>
+          <p> </p>
+          <p>因此我们必须防备魔族的攻击。</p>
+          <p> </p>
+          <p>收到我的紧急指令了吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT_QUEST_REWARD">报告结果。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>谢谢您。</p>
+          <p> </p>
+          <p>多亏了[%username]大人，我们的防线得到了巩固。</p>
+          <p> </p>
+          <p>希望您下次再来帮我执行任务。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]"> 消灭入侵北部卡塔拉姆[%dic:STR_DIC_W_LDF5A_A4]的魔族([%2]/1)</font></p></step>
+               <step><p visible="[%3]"><font color="[%4]">向[%dic:STR_DIC_N_LDF5_Village_Guard02_L]报告</font></p></step>
+    </steps>
+          <p><font font_xml="quest_summary">紧急指令：消灭入侵北部卡塔拉姆格拉努森林的魔族，然后向贝尔丹报告。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>收到了贝尔丹的紧急指令，内容是消灭入侵北部卡塔拉姆格拉努森林的魔族，于是去消灭掉了魔族。</p>
+          <p> </p>
+          <p>贝尔丹向我表示感谢，并说希望我下次再去帮他执行任务。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

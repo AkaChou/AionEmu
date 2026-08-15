@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="select1" accept="true">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>请您去消灭掉[%dic:STR_DIC_M_LDF5B_f4_Vri_Confuse_El_SN_NmdQ_65_Ae]%，把他带在身上的情报拿回来。</p>
+          <p> </p>
+          <p>谋士乌巴拉是负责制定布里特拉第1部队作战计划的谋士。</p>
+          <p> </p>
+          <p>差不多相当于是参谋，他身上一定有和第1部队有关的军事机密。</p>
+          <p> </p>
+          <p>那是我们迫切需要的情报。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_SIMPLE">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_SIMPLE">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>如果能事先知道布里特拉军的计划，在今后的战斗中就会非常有利。</p>
+          <p> </p>
+          <p>事实上，[%dic:STR_DIC_M_LDF5B_f4_Vri_Confuse_El_SN_NmdQ_65_Ae]那样的参谋很少露面，这是绝好的机会。</p>
+          <p> </p>
+          <p>这个地方的重要性，您一定很清楚吧？</p>
+          <p> </p>
+          <p>要想守住这里，就必须从他身上获得情报。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE">拿出作战书。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>您找到了非常重要的情报！</p>
+          <p> </p>
+          <p>文件的内容是用暗号写成的，但是应该可以进行分析。</p>
+          <p> </p>
+          <p>稍等一会儿，就能知道布里特拉军的作战内容了。</p>
+          <p> </p>
+          <p>真是辛苦您了。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">搜集[%dic:STR_DIC_I_quest_23345a]%，然后交给[%dic:STR_DIC_N_LDF5_Village_Guard19_D]%</font></p>[%collectitem]</step>
+    </steps>
+          <p><font font_xml="quest_summary">消灭谋士乌巴拉，搜集军事情报。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>罗尔夫说参谋之一的谋士乌巴拉身上一定有和作战有关的军事机密。</p>
+          <p> </p>
+          <p>按照他所说，消灭掉了谋士乌巴拉。把获得的布里特拉军的作战书交给了他，他对我表示感谢。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

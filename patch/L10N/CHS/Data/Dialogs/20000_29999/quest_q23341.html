@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="select1" accept="true">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>听说布里特拉军第43守备队在附近建造了哨所。</p>
+          <p> </p>
+          <p>不知道他们在打什么主意，一定要小心防范才行。</p>
+          <p> </p>
+          <p>请您去消灭掉[%dic:STR_DIC_M_LDF5B_f4_Vri_Poison_As_SN_NmdQ_65_Ae]%，把他们带着的文件拿回来。</p>
+          <p> </p>
+          <p>只要有了那份文件，应该就能知道第43守备队的计划了。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_SIMPLE">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_SIMPLE">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>要想避免失败，必须掌握敌人的计划。</p>
+          <p> </p>
+          <p>只有做好充分的准备，才能赢得胜利。</p>
+          <p> </p>
+          <p>在[%dic:STR_DIC_M_LDF5B_f4_Vri_Poison_As_SN_NmdQ_65_Ae]%身上找到文件了吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE">拿出第1部队作战指示书.</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>上面依次写着布里特拉军想要开展的行动。</p>
+          <p> </p>
+          <p>进行仔细分析的话，应该就能阻止布里特拉军今后的计划。</p>
+          <p> </p>
+          <p>谢谢您。</p>
+          <p> </p>
+          <p>多亏了[%username]大人，才能及时获得这么重要的情报。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">搜集[%dic:STR_DIC_I_quest_23341a]%，然后交给[%dic:STR_DIC_N_LDF5_Village_Guard18_D]%</font></p>[%collectitem]</step>
+    </steps>
+          <p><font font_xml="quest_summary">为了搜集情报，消灭第43刺杀部队队长，把他带着的文件带回来。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>罗利克说为了应对敌人的计划，让我去消灭第43刺杀部队队长，把他带着的文件拿回来。</p>
+          <p> </p>
+          <p>按照罗利克所说，消灭掉了刺杀部队队长，将获得的第1部队作战指示书交给了他，他对我表示感谢。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+</HtmlPages>

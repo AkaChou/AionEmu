@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<HtmlPages>
+
+  <HtmlPage name="select1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>不知道他们到底是从哪里进来的。</p>
+          <p> </p>
+          <p>入口守卫森严</p>
+          <p> </p>
+          <p>怎么都想不明白。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_ASK_QUEST_ACCEPT">询问是什么意思。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="ask_quest_accept">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>可能是因为宝物，龙族不停出现，让人头疼。</p>
+          <p> </p>
+          <p>因为没有找到他们进来的通道，所以没办法斩草除根...现在能做的，就是提供赏金，一旦发现就把他们全部消灭掉。 </p>
+          <p> </p>
+          <p>怎么样。您愿意贡献自己的一份力量吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_1">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_1">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_accept_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>谢谢您。</p>
+          <p> </p>
+          <p>您只要进入[%dic:STR_DIC_W_IDAbRe_Up3_Dkisas_SZ_All]，把龙族全部消灭掉就行。包括[%dic:STR_DIC_M_Dkisas_DrakanNamed_45_Ah]在内，消灭尽可能多的龙族。</p>
+          <p> </p>
+          <p>这件事做起来可没有说的那么容易，所以我们提供的奖赏非常丰厚。</p>
+          <p> </p>
+          <p>而且如果时间允许的话，您还可以获得珍贵的宝物箱。</p>
+          <p></p>
+          <p>好了，请您马上出发吧。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_refuse_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>既然您有别的事情，那就没办法了。</p>
+          <p> </p>
+          <p>不过如果您有时间的话，可以随时来找我。</p>
+          <p> </p>
+          <p>在发现并切断他们的移动通道之前，我们会一直需要你们的帮助。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select2">
+    <Contents cdata="true">
+        <html>
+        <body>        
+          <p>为了找到他们的入侵通道，我们进行了几次搜索，但每次都以失败告终。</p>
+          <p> </p>
+          <p>根本没有找到次元之门之类的痕迹。</p>
+          <p> </p>
+          <p>难道是有什么现在还不知道的移动手段？</p>
+          <p> </p>
+          <p>如果能弄清楚的话，说不定会找到潜入龙界的通道。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT_QUEST_REWARD">报告结果。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>太好了！我就知道您一定可以顺利完成。</p>
+          <p> </p>
+          <p>您没发现什么可疑的地方吗？或者捡到什么奇怪的东西？</p>
+          <p> </p>
+          <p>如果发现了什么可疑的地方，请您一定要告诉我。这将对消灭那些龙族有很大的帮助。</p>
+          <p> </p>
+          <p>这是给您的答谢。我特意多给了您一点，相信您今后一定会再来帮我的。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">消灭[%dic:STR_DIC_W_IDAbRe_Up3_Dkisas_SZ_All]的所有龙族</font></p>
+                     <p visible="[%0]"><font color="[%1]"> [%dic:STR_DIC_E_Up3_Dkisas]([%2]/80)</font></p>
+                     <p visible="[%0]"><font color="[%1]"> [%dic:STR_DIC_M_Dkisas_DrakanNamed_45_Ah]([%5]/1)</font></p></step>
+               <step><p visible="[%15]"><font color="[%16]">和[%dic:STR_DIC_N_Ascalon]%对话</font></p></step>
+    </steps>
+          <p><font font_xml="quest_summary">按照比帕斯的委托，消灭克雷提温纷争地带秘密仓库的龙族。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>按照比帕斯的委托，消灭克雷提温纷争地带秘密仓库的龙族。</p>
+          <p> </p>
+          <p>于是消灭了深渊守护者努库安和龙族，他问了我很多问题，并让我今后继续去帮忙。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

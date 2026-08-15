@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="select1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>真的活不下去了！怎么让我碰到这种事情！</p>
+          <p> </p>
+          <p>在这种兵荒马乱的时候，居然让我做工艺繁琐的最高级的椅子...</p>
+          <p> </p>
+          <p>让我怎么办！我一点办法也没有！</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT1_1">询问是什么事情。 </Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select1_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>我担任手工名人还没有多长时间。但是前任在卸任之前曾经答应要送总司令官一把椅子。</p>
+          <p> </p>
+          <p>在现在这种形势下既没材料又没时间，他就放手不干走了。</p>
+          <p> </p>
+          <p>本来说他会处理的，但是怕担责任就把它甩给我了。</p>
+          <p> </p>
+          <p>但是现在木材都已经用光了，我都担心死了！</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_ASK_QUEST_ACCEPT">询问是否需要帮助。 </Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="ask_quest_accept">
+    <Contents cdata="true">
+        <html>
+        <body>
+          
+<p>您真好。如果您能帮我找一些[%dic:STR_DIC_I_recipe_d_ha_001]来的话，会对我很有帮助的。您去茅斯兰森林的话，会有很多[%dic:STR_DIC_I_GB_SOURCE_TREE_D_10A]。</p>
+          <p> </p>
+          
+<p>虽然得去阿尔特盖德，有点麻烦，但不是什么很困难的事情。
+</p>
+          <p> </p>
+          <p>上贡的时候收到了很多木材，但是已经都用光了。又不能说为了做一把椅子而让他们再上贡一些...</p>
+          <p> </p>
+          <p>您能帮帮我吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_1">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_1">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_accept_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>请您去茅斯兰森林采集泰库玛树，然收在旁边的[%dic:STR_DIC_E_LF3_Work_production]上加工成[%dic:STR_DIC_I_recipe_d_ha_001]。</p>
+          <p> </p>
+          <p>如果有其他人做好了卖的，你也可以买了给我！</p>
+          <p> </p>
+          <p>前任已经走了，总司令官一定会认为椅子马上会给他送过去的。</p>
+          <p> </p>
+          <p>时间已经不多，请您快一点儿。拜托您了！</p>
+          <p> </p>
+          <p>还有，如果您是第一次制作，很有可能会做坏，所以请你多准备些材料。 </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。 </Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_refuse_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>是您先问我需不需要帮忙的，没想到您会拒绝...</p>
+          <p> </p>
+          <p>虽然我也不能强迫您，但是还是很遗憾。</p>
+          <p> </p>
+          <p>哈...这下可怎么办呢...</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。 </Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>我正想用手头的材料做椅子呢。</p>
+          <p> </p>
+          <p>3个[%dic:STR_DIC_I_recipe_d_ha_001]带回来了吗？</p>
+          <p> </p>
+          <p>我现在就需要！</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_CHECK_USER_HAS_QUEST_ITEM">拿出泰库玛木材。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select6">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>您不知道[%dic:STR_DIC_I_GB_SOURCE_TREE_D_10A]在哪儿吗？</p>
+          <p> </p>
+          <p>我不是告诉您了吗？就在茅斯兰森林，茅斯兰森林！</p>
+          <p> </p>
+          <p>我想你怎么回来得这么快。</p>
+          <p> </p>
+          <p>情况很紧急，请您务必快点儿。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>您幸苦了！多亏您帮忙，我现在应该能把椅子做出来了。</p>
+          <p> </p>
+          <p>有很多守护者要教，有好多没做的事情要做，还要为前任的约定而操心...</p>
+          <p> </p>
+          <p>不过又能怎么样呢？也许这就是我的命吧。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">搜集[%dic:STR_DIC_I_GB_SOURCE_TREE_D_10A]，加工后交给[%dic:STR_DIC_N_Lanse]</font></p>[%collectitem]</step>
+    </steps>
+          <p><font font_xml="quest_summary">兰塞因为前任不负责的约定而产生了问题。决定为他去茅斯兰森林搜集泰库玛树，然后加工成泰库玛木材交给他。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>刚成为手工名人的兰塞因为前任的约定遭遇了困境。于是为他搜集了3个泰库玛木材，让他可以为总司令官制造椅子。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

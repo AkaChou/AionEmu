@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<HtmlPages>
+
+  <QuestInfo>
+    <QuestId>Q10086</QuestId>
+    <QuestName>发现卡伦护卫队</QuestName>
+    <QuestType>undefined</QuestType>
+  </QuestInfo>
+
+  <HtmlPage name="select1">
+    <Contents cdata="true">
+        <html>
+        <body>
+	  <p>水……水……</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SETPRO1">看来要把水拿给他。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select2">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>水……</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_CHECK_USER_HAS_QUEST_ITEM">拿出水。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="check_user_item_ok">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>呃……</p>
+          <p> </p>
+          <p>谢谢你。</p>
+          <p> </p>
+          <p>我现在好像清醒多了。</p>
+          <p> </p>
+          <p>帮助我的人……</p>
+          <p> </p>
+          <p>原来是天族啊。</p>
+          <p> </p>
+          <p>我们原本正在保护卡伦大人。</p>
+          <p> </p>
+          <p>……结果发生了爆炸。</p>
+          <p> </p>
+          <p>除了我之外，其他人的情况怎么样了？</p>
+          <p> </p>         
+          <p>卡伦大人呢……卡伦大人现在怎么样了？</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SETPRO3">回答说去察看一下。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="check_user_item_fail">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>水……水……</p>
+          <p> </p>
+          <p>给我点水……</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>刚刚出现的僵尸难道是我的同伴们？</p>
+          <p> </p>
+	  <p>那爆炸……都是因为那爆炸……！</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT5_1">询问爆炸的情况。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>卡伦大人想要……把那样东西用来做好事。</p>
+          <p> </p>
+	  <p>我们正好发现了伊德凝胶，准备进行试验，但龙族却出现了。</p>
+          <p> </p>
+          <p>布里特拉……布里特拉军出现了。</p>
+          <p> </p>
+          <p>然后，那东西突然爆炸。</p>
+          <p> </p>
+	  <p>我们都晕倒了，卡伦大人好像也受了伤。</p>
+          <p> </p>
+          <p>他好像往那个方向去了……</p>
+          <p> </p>
+          <p>请帮我去找卡伦大人！</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SETPRO5">回答说知道了。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select6">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>(看起来好像是鸢族卡伦护卫队的尸体。)</p>
+          <p> </p>
+	  <p>(从伤口来看，死亡原因并不是因为爆炸，而是因为战斗。)</p>
+          <p> </p>
+	  <p>(他好像是为了保护卡伦，与布里特拉士兵战斗而死。)</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SETPRO6">结束察看。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select7">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>(布里特拉军士兵的尸体。)</p>
+          <p> </p>
+	  <p>(发现了被鸢族卡伦护卫队袭击的痕迹。)</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SETPRO7">结束察看。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select9">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>你问我有没有发生什么事情？</p>
+          <p> </p>
+          <p>这个么，什么事情都没有发生啊。</p>
+          <p> </p>
+          <p>也没有过路的行人。</p>
+          <p> </p>
+          <p>至少在我来到这里之后，情况就是这样的。</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT9_1">询问有没有其他人会知道什么情况。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select9_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>其他知道情况的人……</p>
+          <p> </p>
+          <p>请去找防御基地的[%dic:STR_DIC_LDF5a_Gram_E]百夫长吧。</p>
+          <p> </p>
+          <p>在我来这个地方之前，他就在这里了。</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SET_SUCCEED">回答说知道了。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_success">
+    <Contents cdata="true">
+        <html>
+        <body>
+	  <p>你来找我是为何事？</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT_QUEST_REWARD">询问他有没有见到卡伦。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>没想到你会突然问我这个问题，让我有些吃惊。</p>
+          <p> </p>
+          <p>我连卡伦的影子都没有看到。</p>
+          <p> </p>
+          <p>我想这附近肯定有与卡伦相关的东西，我会告诉附近的人，向他们寻求帮助。</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">和[%dic:STR_DIC_LDF5a_Torio_E]对话</font></p></step>
+               <step><p visible="[%3]"><font color="[%4]">搜集水，然后交给[%dic:STR_DIC_LDF5a_Torio_E]</font></p></step>
+               <step><p visible="[%6]"><font color="[%7]">去找被伊德污染的卡伦护卫队</font></p></step>
+               <step><p visible="[%9]"><font color="[%10]">消灭被伊德污染的鸢族卡伦护卫队([%11]/4)</font></p></step>
+               <step><p visible="[%12]"><font color="[%13]">向[%dic:STR_DIC_LDF5a_Torio_E]说明情况</font></p></step>        
+               <step><p visible="[%15]"><font color="[%16]">寻找[%dic:STR_DIC_LDF5a_DieYunL_E]的痕迹</font></p></step>   
+               <step><p visible="[%18]"><font color="[%19]">寻找[%dic:STR_DIC_LDF5a_DieVritraL_E]的痕迹</font></p></step>         
+               <step><p visible="[%21]"><font color="[%22]">察看布里特拉哨所</font></p></step>    
+               <step><p visible="[%24]"><font color="[%25]">向[%dic:STR_DIC_N_LDF5a_Mycenae_E]询问最近有没有奇怪的情况</font></p></step>    
+               <step><p visible="[%27]"><font color="[%28]">向[%dic:STR_DIC_LDF5a_Gram_E]报告</font></p></step>    
+    </steps>
+          <p><font font_xml="quest_summary">寻找卡伦护卫队，并在附近进行搜索。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>在寻找卡伦护卫队的过程中，发现了托里奥，并把水递给了他。在我正准备和恢复精神后的托里奥对话时，僵尸突然出现，并对我们发起了攻击。之前保护卡伦的护卫队好像变成了僵尸。托里奥说由于与伊德凝胶相关的某种东西发生了爆炸，卡伦护卫队才会变成僵尸，卡伦也受了伤，他拜托我去寻找卡伦。往卡伦消失的方向追过去，进行了搜索，但没有发现卡伦，只看到了死去的卡伦护卫队队员和布里特拉军士兵的尸体。询问附近前进基地的米凯雷内有没有发现什么特别的情况，但米凯雷内说自己也不知道，并让我去找防御基地的百夫长格拉姆。不过，格拉姆也没有见到卡伦。</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>使命进行：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

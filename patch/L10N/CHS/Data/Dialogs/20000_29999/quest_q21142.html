@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="select1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>你说母亲被龙族杀死了？</p>
+          <p> </p>
+          <p>作为儿子，有责任为父母报仇。</p>
+          <p> </p>
+          <p>攻击侬术古部落的人，我一个都不会放过，啊呜。</p>
+          <p> </p>
+          <p>对了，你叫什么来着？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_ASK_QUEST_ACCEPT">说出名字。</Act>
+    </Selects>
+  </HtmlPage>
+
+
+  <HtmlPage name="ask_quest_accept">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>[%username]？真是个奇怪的名字。</p>
+          <p> </p>
+          <p>[%username]，你能帮帮我吗？</p>
+          <p> </p>
+          <p>虽然我应该亲自为母亲报仇，但我还有一个年幼的孩子，啊呜。</p>
+          <p> </p>
+          <p>如果我去对付龙族的话，他可能就没人养了。</p>
+          <p> </p>
+          <p>你能帮我去教训一下那些龙族吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_1">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_1">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_accept_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>真是太感谢了。</p>
+          <p> </p>
+          <p>我一定会报答你的恩惠的。</p>
+          <p> </p>
+          <p>留在毁坏的侬术古部落里的龙族是谁？</p>
+          <p> </p>
+          <p>是[%dic:STR_DIC_M_DF4_DrakanFi_Re_B1_53_An]和[%dic:STR_DIC_M_DF4_DrakanPr_Re_B1_53_An]？你去把它们全部杀掉，啊呜。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_refuse_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>没关系，啊呜？</p>
+          <p> </p>
+          <p>我不应该把为父母报仇的事情交给别人。</p>
+          <p> </p>
+          <p>你告诉了我弟弟的消息，就已经很感谢了。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select2">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>这不是[%username]吗？</p>
+          <p> </p>
+          <p>你是从毁坏的侬术古部落那边来的吗？</p>
+          <p> </p>
+          <p>帮我向杀死母亲的龙族复仇了吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT_QUEST_REWARD">讲述结果。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>谢谢你，真的非常感谢。</p>
+          <p> </p>
+          <p>这样我终于有脸去见弟弟了，啊呜。</p>
+          <p> </p>
+          <p>拿着这个。这是我心爱的东西，我把它送给你。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">扫荡毁坏的侬术古部落的龙族</font></p>
+                     <p visible="[%0]"><font color="[%1]">  [%dic:STR_DIC_M_DF4_DrakanFi_Re_B1_53_An]([%2]/5)</font></p>
+                     <p visible="[%0]"><font color="[%1]">  [%dic:STR_DIC_M_DF4_DrakanPr_Re_B1_53_An]([%5]/1)</font></p></step>
+               <step><p visible="[%15]"><font color="[%16]">和[%dic:STR_DIC_N_Owlau_DF4_01]对话</font></p></step>
+    </steps>
+          <p><font font_xml="quest_summary">代替乌拉金，向破坏侬术古部落、杀死他母亲的龙族复仇。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>乌拉金说身为儿子，必须为母亲报仇，但是他还有个年幼的孩子，因此无法亲自报仇，让我帮他为母亲报仇。</p>
+          <p> </p>
+          <p>按照乌拉金的委托，消灭了毁坏的侬术古部落的龙族。回去之后，他对我表示感谢，并把他心爱的东西送给了我。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

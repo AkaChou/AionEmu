@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="select1" accept="true">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>布里特拉军的举动很不寻常。</p>
+          <p> </p>
+          <p>原来他们一直在全力修理德雷得奇安，但是他们最近突然把兵力分散了开来。</p>
+          <p> </p>
+          <p>必须调查一下到底发生了什么事情才行。</p>
+          <p> </p>
+          <p>[%dic:STR_DIC_M_LDF5B_d1_Vri_Poison_As_SN_NmdQ_65_Ae]%一定知道些什么，请您去消灭掉他们，寻找线索。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_SIMPLE">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_SIMPLE">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>布里特拉军把兵力分散开来，一定有什么原因。</p>
+          <p> </p>
+          <p>必须知道原因，才能应对今后发生的事态。</p>
+          <p> </p>
+          <p>因此必须从[%dic:STR_DIC_M_LDF5B_d1_Vri_Poison_As_SN_NmdQ_65_Ae]%身上寻找线索。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE">拿出命令书。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>（仔细阅读命令书。）</p>
+          <p> </p>
+          <p>伊德石？</p>
+          <p> </p>
+          <p>从命令书上看，他们是为了调查伊德石的影响，正在搜集标本。</p>
+          <p> </p>
+          <p>果然有阴谋。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">搜集[%dic:STR_DIC_I_quest_23327a]%，然后交给[%dic:STR_DIC_N_LDF5_Village_Guard15_D]%</font></p>[%collectitem]</step>
+    </steps>
+          <p><font font_xml="quest_summary">为了进行调查，去消灭第43强袭部队高级突击兵，帮乌贝寻找线索。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>乌贝说布里特拉军的动态非常奇怪，第43强袭部队高级突击兵一定知道些什么。</p>
+          <p> </p>
+          <p>消灭掉第43强袭部队高级突击兵之后，把获得的命令书交给了他。乌贝说上面写着有关伊德石的内容。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

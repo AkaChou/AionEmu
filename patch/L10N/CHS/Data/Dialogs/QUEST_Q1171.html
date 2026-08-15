@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="select1">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+          <p>哇，吓了我一跳！</p>
+          <p> </p>
+          <p>哎，请守护者大人别在我心烦意乱的时候开玩笑了...</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT1_1">询问原因。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select1_1">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+          <p>一想到[%dic:STR_DIC_LA30]，我的，我的眼泪就不知不觉流了下来...</p>
+          <p> </p>
+          <p>她那柔弱的身体如何能抵御沼泽里浓密的毒气...</p>
+          <p> </p>
+          <p>对了，您不是有事要去被污染的沼泽吗？那样的话请一定接受我这个请求。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_ASK_QUEST_ACCEPT">继续听下去。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="ask_quest_accept">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+          <p>不会耽误您很多时间的，只要替我送一件东西给[%dic:STR_DIC_LA30]就可以了。</p>
+          <p> </p>
+          <p>我想，就算是守护者，如果每天都呼吸沼泽的毒气，身体也会受不了的。</p>
+          <p> </p>
+          <p>这药可以解毒，麻烦您转交给她。</p>
+          <p> </p>
+          <p>虽然我很想亲自送到她手上...可遗憾的是，我是人类，根本无法活着穿过那布满毒气的沼泽。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_1">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_1">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_accept_1">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+          <p>真是谢谢。有您在，我可以放心了。</p>
+          <p> </p>          
+          <p>这药可以排除体内积累的毒素，请让她尽快服用。</p>
+          <p> </p>
+          <p>希望[%dic:STR_DIC_LA30]不要出什么事情...</p>
+           </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_refuse_1">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+          <p>您有要紧事吗？只是顺路都不可以吗？我已经准备了酬劳啊！难道身份卑微，就不能提出这样的要求吗！喂！...哎，难道守护者都是这样冷酷无情吗？</p>
+          <p> </p>
+          <p>好吧，我亲自给[%dic:STR_DIC_LA30]送去。</p>
+          <p> </p>
+          <p>能用生命保护圣洁的罗塞诺，也是我的荣幸啊。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+          <p>请留步，[%username]大人！</p>
+          <p> </p>
+          <p>被污染的沼泽是毒气盛行的地方。</p>
+          <p> </p>  
+          <p>就算是守护者也可能会中毒，请不要再往前走了。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT_QUEST_REWARD">拿出解毒剂。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+          <p>这是...哦，我知道了。</p>
+          <p> </p>
+          <p>真是个傻瓜...竟然关心起我来了。</p>
+          <p> </p>
+          <p>我是决心为了五位诸神献身的，可他这个人类竟然喜欢这样的守护者...哈哈，有趣吗？你不觉得好笑吗？</p>
+          <p> </p>
+           <p>...看我这个人，又开始废话连篇了。</p>
+          <p> </p>
+          <p>总之非常感谢你到这里来送药。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">将从[%dic:STR_DIC_LA79]那里得到的解毒剂交给在被污染沼泽工作的[%dic:STR_DIC_LA30]。</font></p></step>
+    </steps>
+          <p><font font_xml="quest_summary">麦伦担心在被污染的沼泽工作的罗塞诺。帮助麦伦把解毒剂交给她。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+          <p>平凡的人类麦伦爱慕着守护者[%dic:STR_DIC_LA30]。</p>
+          <p> </p>          
+          <p>被他的诚意感动，代替他把药交给了在被污染的沼泽工作的罗塞诺。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

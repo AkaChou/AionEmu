@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="select_none">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>[%username]，你有在好好磨练技术吧？</p>
+          <p> </p>
+          <p>[%userclass]必须有高度的集中力和耐心。</p>
+          <p> </p>
+          <p>快速地判断目标的判断力，这是所有机甲星必需的技术。</p>
+          <p> </p>
+          <p>虽然你可能还不熟悉技术，但是让身体熟悉技术，累积实战经验，就能轻松完成一般的试炼了。</p>
+          <p> </p>
+          <p>你要不要参加神圣力考试，顺便熟悉一下技术？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_ASK_QUEST_ACCEPT">神圣力考试？</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="ask_quest_accept">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>你果然不知道啊。</p>
+          <p> </p>
+          <p>只有守护者才能使用神圣力技能。</p>
+          <p> </p>
+          <p>但是，和普通技能不同，在使用上有很多局限，所以难以经常使用。因此，偶尔会有一些无法熟练使用神圣力技能的守护者。</p>
+          <p> </p>
+          <p>总司令官为了解决这个问题，准备了神圣力考试。</p>
+          <p> </p>
+          <p>虽然是考试，但是和试炼没什么不同。只要使用10次规定的技能，就能通过了。</p>
+          <p> </p>
+          <p>怎么样？你要参加神圣力考试吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_1">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_1">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_accept_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>既然你是机甲星，那就肯定学会了[%dic:STR_DIC_E_DP_RI]%。</p>
+          <p> </p>
+          <p>这次的神圣力考试任务是使用10次[%dic:STR_DIC_E_DP_RI]%。</p>
+          <p> </p>
+          <p>神圣力在战斗时就可以自然地使用，如果有些困难，那用果酱补充神圣力也可以。</p>
+          <p> </p>
+          <p>请快点出发吧。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_refuse_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>真是意外啊。</p>
+          <p> </p>
+          <p>这并不是件难事，看来你还有其他的事情啊。</p>
+          <p> </p>
+          <p>下次也能参加神圣力考试，如果你改变了想法，随时都能再来。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+    <HtmlPage name="select_success">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>你这么快就来了？</p>
+          <p> </p>
+          <p>看来你已经完成了提高技术的任务啊。</p>
+          <p> </p>
+          <p>让我来确认一下你有没有使用10次[%dic:STR_DIC_E_DP_RI]%吧。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT_QUEST_REWARD">靠近。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>(将手放在头上)你很好地完成了任务呢。</p>
+          <p> </p>
+          <p>(将手放下)你通过了神圣力考试！</p>
+          <p> </p>
+          <p>现在你应该不会忘记[%dic:STR_DIC_E_DP_RI]%了。这次考试应该对你以后有很大的帮助。</p>
+          <p> </p>
+          <p>既然你通过了考试，那就要给你奖励，希望这能在你今后作为机甲星的道路上起到一点帮助。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">使用[%dic:STR_DIC_E_DP_RI]%([%2]/10)</font></p></step>               
+               <step><p visible="[%3]"><font color="[%4]">向[%dic:STR_DIC_N_DC1_Hadubrand_M]报告结果</font></p></step>               
+    </steps>
+          <p><font font_xml="quest_summary">总司令官正在主办神圣力考试。使用10次神圣力技能--完全充能，通过神圣力考试。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>哈度布兰特说，为了无法熟练使用神圣力的守护者们，正在进行神圣力考试，劝我参加。</p>
+          <p> </p>
+          <p>按照哈度布兰特的指示，使用了10次神圣力技能--完全充能，他祝贺了我。</p>
+	</body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

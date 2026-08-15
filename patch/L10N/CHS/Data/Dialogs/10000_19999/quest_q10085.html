@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<HtmlPages>
+
+  <QuestInfo>
+    <QuestId>Q10085</QuestId>
+    <QuestName>卡伦寻找的东西</QuestName>
+    <QuestType>undefined</QuestType>
+  </QuestInfo>
+
+  <HtmlPage name="select1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>退下吧。</p>
+          <p> </p>
+          <p>这里出现了敌人。</p>
+          <p> </p>
+          <p>你帮助了我，我来让你看看我的力量。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT1_1">环顾四周。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select1_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+	     <p>魔族掉下了半本书。</p>
+		 <p> </p>
+		 <p>好像是你和我正在寻找的记录的另外一半。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT1_1_1">点头。</Act>
+    </Selects>
+	<CutScene id="825"/>
+  </HtmlPage>
+
+  <HtmlPage name="select1_1_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+	     <p>快确认一下。</p>
+         <p> </p>
+	     <p>这一定是卡伦留下的[%dic:STR_DIC_I_doc_quest_10085a]。</p>
+         <p> </p>
+         <p>必须弄明白那个孩子到底想干什么。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SETPRO1">点头。</Act>
+    </Selects>
+	<Voice file="Q10085-1.ogg"/>
+  </HtmlPage>  
+  
+  <HtmlPage name="select3">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>那孩子真是机灵。</p>
+          <p> </p>
+          <p>竟然留下了记录……</p>
+          <p> </p>
+          <p>让我……稍微看一下。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT3_1">拿出书。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select3_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>上面没有写那个孩子的行踪。</p>
+          <p> </p>
+          <p>布里特拉一定知道……</p>
+          <p> </p>
+          <p>我把这本[%dic:STR_DIC_I_quest_10085b]交给你。天族应该需要它。</p>
+          <p> </p>
+          <p>南面好像更近。你去把记录交给[%dic:STR_DIC_N_LDF5b_Jin_E]。</p>
+          <p> </p>
+		  <p>把卡伦失踪的事情告诉他，让他去寻找使用伊德的古代兵器。是时候了。</p>
+		  <p> </p>
+          <p>[%dic:STR_DIC_LDF5a_Meib_E]会告诉你怎么走。</p>
+		</body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SETPRO3">说知道了。</Act>
+    </Selects>
+	<Voice file="Q10085-2.ogg"/>
+  </HtmlPage>
+
+  <HtmlPage name="select4">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>这里是北部卡塔拉姆的最后关卡。</p>
+          <p> </p>
+          <p>您是想穿过防御壁，到南部卡塔拉姆去吗？</p> 
+          <p> </p>
+          <p>穿过防御壁到达南部卡塔拉姆之后，请您到[%dic:STR_DIC_N_LDF5b_Jin_E]百夫长大人所在的监视哨所那边去。</p>
+          <p> </p>
+          <p>那一地区我们正在跟魔族和布里特拉军对峙，到监视哨所去应该最安全。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SET_SUCCEED">说知道了。</Act>
+    </Selects>
+	<Voice file="Q10085-3.ogg"/>
+  </HtmlPage>
+
+  <HtmlPage name="select_success">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>您是从北部来的？</p>
+          <p> </p>
+          <p>北部一定很危险，但南部也一样。</p>
+          <p> </p>
+          <p>附近有天族、魔族和龙族的基地。</p>
+          <p> </p>
+          <p>敌人一直在监视天族守护者的人数。</p>
+          <p> </p>
+          <p>在这里我无法保证您的安全，请一定要小心。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT_QUEST_REWARD">拿出卡伦的日志，讲述期间发生的事。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>原来如此。您是特意到这里来的啊。</p>
+          <p> </p>
+          <p>这本日志和[%username]大人讲述的故事，将会帮助天族更好地理解伊德。</p>
+          <p> </p>
+          <p>如果伊德可以用在古代兵器上，而且又非常危险的话，就必须尽快调查清楚。</p>
+          <p> </p>
+		  <p>我会将卡伦和鸢族的情况向上面报告。军部一定会做出相应的决定。</p>
+		  <p> </p>
+          <p>我会尽快把日志和报告书交给卡塔拉姆派遣队大本营。</p>
+          <p> </p>
+          <p>辛苦您了。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">去[%dic:STR_DIC_W_LDF5a_E5]和扎坎对话</font></p></step>
+               <step><p visible="[%3]"><font color="[%4]">阅读魔族掉落的[%dic:STR_DIC_I_doc_quest_10085a]</font></p></step>
+               <step><p visible="[%6]"><font color="[%7]">和扎坎对话</font></p></step>
+               <step><p visible="[%9]"><font color="[%10]">和[%dic:STR_DIC_W_LDF5a_E5]的[%dic:STR_DIC_LDF5a_Meib_E]对话</font></p></step>        
+               <step><p visible="[%12]"><font color="[%13]">把[%dic:STR_DIC_I_quest_10085b]交给南部卡塔拉姆[%dic:STR_DIC_W_LDF5b_SZ_A2]的[%dic:STR_DIC_N_LDF5b_Jin_E]，并向他报告</font></p></step>       
+    </steps>
+          <p><font font_xml="quest_summary">指令：找到卡伦的另外半本日志，把卡伦留下的记录交给卡塔拉姆派遣队。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>扎坎说敌人出现了，之后消灭掉了接近的魔族。</p>
+		  <p> </p>
+		  <p>在消灭掉的魔族身上，找到了日志的另一半。把两个部分合在一起，得到了完整的记录。</p> 
+		  <p> </p>
+		  <p>扎坎说上面没有经历卡伦的行踪，让我把书交给天族，说可能会对天族有所帮助。并让我去把卡伦失踪的事情告诉天族。</p> 
+		  <p> </p>
+		  <p>往南走，在监视哨所见到了梅伊布。梅伊布说这里是北部卡塔拉姆的最后一个基地，让我穿过防御壁，到南部卡塔拉姆的监视哨所去。</p> 
+		  <p> </p>
+		  <p>在监视哨所见到了百夫长真恩，向他讲述了这段时间发生的事情，并把日志交给了他。他说会对天族理解伊德有很大的帮助，并说会把日志和有关卡伦的报告书送到卡塔拉姆派遣队大本营去。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>任务进行：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

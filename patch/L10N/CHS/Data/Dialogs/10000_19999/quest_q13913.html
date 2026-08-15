@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="ask_quest_accept">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p> - 紧急指令书 - </p>
+          <p></p>
+          <p> 1. 发件人：潘盖亚主管官，极乐世界荣誉殿堂的[%dic:STR_DIC_N_Corridor_L_PangeaQuest_E]</p>
+          <p></p>
+          <p> 2. 收件人：[%username]</p>
+          <p></p>
+          <p> 3. 命令：消灭安特里夏觉醒地的正在觉醒的龙族[%dic:STR_DIC_M_Gab1_Sub_Boss_65_Al]%。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">执行委托。</Act>
+    </Selects>
+  </HtmlPage>
+
+   <HtmlPage name="select_success">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>[%dic:STR_DIC_M_Gab1_Sub_Boss_65_Al]%是第4龙帝布里特拉的部下，是被派到安特里夏觉醒地的龙族指挥官。</p>
+          <p> </p>
+          <p>不知道由于什么原因，听说他在那里突然觉醒成了龙。</p>
+          <p> </p>
+          <p>如果安特里夏真的觉醒成了龙，那他就是潘盖亚第一个觉醒的龙族，不知道他会获得什么力量。想想就让人觉得很可怕。</p>
+          <p> </p>
+          <p>消灭安特里夏的事情怎么样了？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT_QUEST_REWARD">报告说消灭掉了安特里夏。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>您消除了安特里夏的威胁。这样的结果足以配得上[%username]大人的名声。</p>
+          <p> </p>
+          <p>因为不知道安特里夏的力量是什么，所以反而比龙帝们更加危险。</p>
+          <p> </p>
+          <p>不过[%username]大人击退了无数的敌人，最终除掉了他，这下终于可以松一口气了。</p>
+          <p> </p>
+          <p>您真的完成了一件了不起的事情。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">消灭安特里夏觉醒地的[%dic:STR_DIC_M_Gab1_Sub_Boss_65_Al]%([%2]/1)</font></p></step>
+               <step><p visible="[%3]"><font color="[%4]">向[%dic:STR_DIC_N_Corridor_L_PangeaQuest_E]报告</font></p></step>
+    </steps>
+          <p><font font_xml="quest_summary">消灭安特里夏觉醒地的安特里夏。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>潘盖亚主管官佩尔娜发来了紧急指令，让我去安特里夏觉醒地消灭正在觉醒的龙族安特里夏。</p>
+          <p> </p>
+          <p>按照她所说，消灭掉了安特里夏。回去之后，她向我表示祝贺，说我完成了一件了不起的事情。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="select1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>过去霜眉部族强大的时候，也曾有过前哨基地，咳。</p>
+          <p> </p>
+          <p>而现在，那个基地已经被巴卡尔马军团夺走，我们只能躲到要塞的一角。</p>
+          <p> </p>
+          <p>我们对龙族俯首帖耳，尽心尽力，没想到最后落得这样的下场。</p>
+          <p> </p>
+          <p>巴卡尔马军团下属的德拉克纽特在进攻时使用了德雷克，咳。</p>
+          <p> </p>
+          <p>它们飞翔在空中，寻找躲藏在暗处的部族成员，并且发动攻击。</p>
+          <p> </p>
+          <p>如果没有德雷克，也不会有那么多的兄弟被杀。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_ASK_QUEST_ACCEPT">继续听。</Act>
+    </Selects>
+  </HtmlPage>
+
+
+  <HtmlPage name="ask_quest_accept">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>下次进攻，巴卡尔马军团肯定还会使用德雷克。</p>
+          <p> </p>
+          <p>我们要先下手为强，趁早除掉[%dic:STR_DIC_M_LizardPet_DrakeD_43_An_Tune]和[%dic:STR_DIC_M_LizardBreederD_43_Ae_tune]。</p>
+          <p> </p>
+          <p>为了不让悲剧重演，你能助我们一臂之力吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_1">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_1">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_accept_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>进攻前哨基地可不是轻而易举的事情，但是也不能因此退缩。</p>
+          <p> </p>
+          <p>你马上到霜眉前哨基地去，把[%dic:STR_DIC_M_LizardPet_DrakeD_43_An_Tune]和[%dic:STR_DIC_M_LizardBreederD_43_Ae_tune]全部消灭掉。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_refuse_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>拒绝的原因，难道是因为霜眉部族曾经追随过龙族？</p>
+          <p> </p>
+          <p>我们的忠心换来的却是背叛，却是族人的惨死和部族的衰败，咳。</p>
+          <p> </p>
+          <p>龙族是我们不共戴天的死敌。</p>
+          <p> </p>
+          <p>敌人的敌人就是我们的朋友。所以，请一定要帮助我们。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select2">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>我正等你回来呢，咳。</p>
+          <p> </p>
+          <p>已经把监视德雷克和第47德拉克纽特精锐饲养师都消灭了吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT_QUEST_REWARD">报告结果。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>真是谢谢了，咳。</p>
+          <p> </p>
+          <p>德雷克和饲养师都被消灭。这下，形势就不会那么被动了。</p>
+          <p> </p>
+          <p>我们要养精蓄锐，然后向巴卡尔马军团复仇。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">消灭德雷克和饲养师</font></p>
+                     <p visible="[%0]"><font color="[%1]">  [%dic:STR_DIC_M_LizardPet_DrakeD_43_An_Tune]([%2]/6)</font></p>
+                     <p visible="[%0]"><font color="[%1]">  [%dic:STR_DIC_M_LizardBreederD_43_Ae_tune]([%5]/4)</font></p></step>
+               <step><p visible="[%15]"><font color="[%16]">和[%dic:STR_DIC_N_DF3_NPC_Hasyaditan]对话</font></p></step>
+    </steps>
+          <p><font font_xml="quest_summary">巴卡尔马军团在攻击霜眉部族的时候曾使用了德雷克，专门寻找隐藏的部族成员，并进行攻击。按照哈夏迪坦的委托，除掉监视德雷克和第47德拉克纽特精锐饲养师。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>族长哈夏迪坦称，在巴卡尔马军团进攻的时候，由于德雷克发现并进攻隐藏的部族成员，因此伤亡很大。</p>
+          <p> </p>
+          <p>为了在今后的战斗中不再出现类似情况，他觉得必须要消灭监视德雷克和第47德拉克纽特精锐饲养师。</p>
+          <p> </p>
+          <p>接受他的委托，在霜眉前哨基地，消灭了德雷克和饲养师。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>执行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

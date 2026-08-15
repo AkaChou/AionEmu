@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="select1" accept="true">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>我们收到了情报，说布里特拉军对渗透到了南部关卡附近。</p>
+          <p> </p>
+          <p>请您去消灭掉[%dic:STR_DIC_M_LDF5B_A4_Vri_Poison_As_SN_NmdQ_65_Ae]%，如果发现和军事有关的文件，就带回来交给我。</p>
+          <p> </p>
+          <p>在和大部队接触之前，他们一定会派出侦察兵，在他们身上一定可以找到什么。</p>
+          <p> </p>
+          <p>必须尽快搜集到和他们的计划有关的情报。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_SIMPLE">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_SIMPLE">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>布里特拉是龙帝中最谨慎、最狡猾的一个。</p>
+          <p> </p>
+          <p>如果能搜集到情报，就能知道布里特拉军的下一步动作。</p>
+          <p> </p>
+          <p>发现和军事有关的文件了吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE">拿出第40军团作战指示书。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+	   <p>[%username]大人，您真是太厉害了！</p>
+	   <p> </p>
+	   <p>谢谢您。</p>
+	   <p> </p>
+	   <p>获得了作战指示书，这会是非常珍贵的情报。</p>
+	   <p> </p>
+	   <p>这样的话，我们就能制定完美的计划了。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">搜集[%dic:STR_DIC_I_quest_23307a]，然后交给[%dic:STR_DIC_N_LDF5_Village_Guard11_D]%</font></p>[%collectitem]</step>
+    </steps>
+          <p><font font_xml="quest_summary">消灭第40德拉坎侦探兵，寻找和军事有关的文件。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+	   <p>托巴尔说如果能知道敌人的计划，会有很大的帮助，让我去消灭布里特拉军侦探兵，寻找和军事有关的文件。</p>
+	   <p> </p>
+	   <p>按照他所说，消灭掉了第40德拉坎侦探兵，把第40军团作战指示书交给了他。他对我表示感谢，说这将会有很大的帮助。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="ask_quest_accept">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p> - 紧急指令书 - </p>
+          <p> </p>
+          <p> 1. 发件人：卡塔拉姆派遣队，[%dic:STR_DIC_W_LDF5a_B9_5]的[%dic:STR_DIC_N_LDF5_Village_Guard05_D]</p>
+          <p> </p>
+          <p> 2. 收件人：[%username]</p>
+          <p> </p>
+          <p> 3. 命令：消灭入侵北部卡塔拉姆[%dic:STR_DIC_W_LDF5A_B6]的1名天族守护者。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">执行委托。</Act>
+    </Selects>
+  </HtmlPage>
+
+   <HtmlPage name="select_success">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>守护什么东西不是件容易的事情。</p>
+          <p> </p>
+          <p>必定会伴随着牺牲。</p>
+          <p> </p>
+          <p>但即使是这样，我们也要尽可能减少友军的牺牲。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT_QUEST_REWARD">报告结果。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>我一直在等着您的好消息。</p>
+          <p> </p>
+          <p>天族的数量减少了，这下防守这里就更容易了。</p>
+          <p> </p>
+          <p>[%username]大人，真是辛苦您了。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">消灭入侵北部卡塔拉姆[%dic:STR_DIC_W_LDF5A_B6]的天族([%2]/1)</font></p></step>
+               <step><p visible="[%3]"><font color="[%4]">向[%dic:STR_DIC_N_LDF5_Village_Guard05_D]报告</font></p></step>
+    </steps>
+          <p><font font_xml="quest_summary">紧急指令：消灭入侵北部卡塔拉姆悲伤遗迹的天族，然后向娜亚特报告。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>接到了娜亚特的紧急指令，内容是消灭入侵北部卡塔拉姆悲伤遗迹的天族，于是去消灭掉了天族。</p>
+          <p> </p>
+          <p>回去向娜亚特报告了结果，她对我表示感谢。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

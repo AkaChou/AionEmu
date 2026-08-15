@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<HtmlPages>
+
+  <QuestInfo>
+    <QuestId>Q41594</QuestId>
+    <QuestName>???</QuestName>
+    <QuestType>未输入</QuestType>
+  </QuestInfo>
+
+  <HtmlPage name="select1" accept="true">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>在陌生的地方执行困难的任务，同伴们的士气好像很低落。</p>
+          <p> </p>
+          <p>这种时候如果能吃到美味的料理，就能提高士气。</p>
+          <p> </p>
+          <p>我想用格里芬蛋为同伴们制作煎蛋饼，但是没有材料。</p>
+          <p> </p>
+          <p>[%username]大人，您能帮我去消灭[%dic:STR_DIC_M_LDF4b_T1_Griffon_Crack_58_An]，搜集一些[%dic:STR_DIC_I_quest_41594a]吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_SIMPLE">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_SIMPLE">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>同伴们吃了美味的料理，士气应该就能恢复一点吧？</p>
+          <p> </p>
+          <p>要是那样的话就好了。</p>
+          <p> </p>
+          <p>格里芬蛋搜集到了吗？</p>
+          <p> </p>
+          <p>有了蛋的话，我就能马上开始制作了。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE">拿出格里芬蛋。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>真大啊。</p>
+          <p> </p>
+          <p>这样的话，我就能制作很多煎蛋饼了。</p>
+          <p> </p>
+          <p>我要马上开始制作。</p>
+          <p> </p>
+          <p>谢谢您帮我搜集到了材料。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">搜集[%dic:STR_DIC_I_quest_41594a]，然后交给[%dic:STR_DIC_N_Naisoi]</font></p>[%collectitem]</step>
+    </steps>
+          <p><font font_xml="quest_summary">奈索依说想为士气低落的同伴们制作料理。去消灭金角格里芬，搜集格里芬蛋吧。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>奈索依说在陌生的地方执行困难的任务，同伴们的士气很低落。</p>
+          <p> </p>
+          <p>因此想为他们制作美味的料理，提高士气。</p>
+          <p> </p>
+          <p>为了让奈索依能够制作煎蛋饼，去消灭金角格里芬，搜集到了格里芬蛋。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="select1" accept="true">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>戈德林公司的研究员们每天都在抱怨普通伊德矿石不好用。</p>
+          <p> </p>
+          <p>不过每次我把净化的伊德矿石之类质量好的伊德矿石送过去的时候，他们都很高兴。</p>
+          <p> </p>
+          <p>如果能搜集到大量这种矿石，就能赚一大笔钱。但是我没什么力量，一个人没办法搜集。我需要[%username]你这样强的守护者的帮助。</p>
+          <p> </p>
+          <p>卡塔拉姆地下的纽特有吃掉伊德矿石，将其净化的习性。净化的伊德矿石的毒性会减少很多。</p>
+          <p> </p>
+          <p>你只要去消灭[%dic:STR_DIC_M_LDF5_Under_Neuth1_Worker_65_An]%和[%dic:STR_DIC_M_LDF5_Under_Neuth2_Abyss_65_An]%，把搜集到的[%dic:STR_DIC_I_quest_13655a]%交给我就行。我会给你出个好价钱。</p>
+          <p> </p>
+          <p>怎么样？你愿意帮我吗？这可是个赚钱的好机会。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_SIMPLE">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_SIMPLE">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>搜集到[%dic:STR_DIC_I_quest_13655a]%了吗？</p>
+          <p> </p>
+          <p>净化的伊德矿石非常稀有，是只有我知道的秘密。</p>
+          <p> </p>
+          <p>所以千万不能把我的商业秘密告诉其他人。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE">拿出净化的伊德矿石。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>非常好！</p>
+          <p> </p>
+          <p>这样的交易才称得上是双赢的交易。</p>
+          <p> </p>
+          <p>高品质伊德矿石的需求量很大，你和我等于说是找到了一座金山。</p>
+          <p> </p>
+          <p>这件事千万不能让其他术古知道！一定要保密！</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">搜集[%dic:STR_DIC_I_quest_13655a]%，然后交给[%dic:STR_DIC_N_LDF5_Under_Broringring_E]%</font></p>[%collectitem]</step>
+    </steps>
+          <p><font font_xml="quest_summary">按照布洛灵灵的提议，搜集净化的伊德矿石，然后交给布洛灵灵。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>布洛灵灵说可以用从卡塔拉姆地下的纽特身上搜集到的净化的伊德矿石赚大钱，让我和她做交易。</p>
+          <p> </p>
+          <p>接受了布洛灵灵的交易，帮他搜集到了矿石。她说这可以赚很多钱，让我一定还要保守这个秘密。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

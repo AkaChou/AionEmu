@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="select1">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+          <p>（一座很古老的石像，带着神秘气息。）</p>
+          <p> </p>
+          <p>（好像里面有什么玄机。）</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT1_1">触摸石像。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select1_1">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+          <p>（用手接触以后，石像开始晃动。）</p>
+          <p> </p>
+          <p>（好像...不是单纯的石像。）</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_ASK_QUEST_ACCEPT">仔细观察。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="ask_quest_accept">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+          <p>（目光挪到石像顶部，发现竟然没有头。）</p>
+          <p> </p>
+          <p>（在观察顶部的时候，石像摇晃得更厉害了。）</p>
+          <p> </p>
+          <p>（感觉石像本身好象因为没有头而觉得难受。）</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_1">找回石像的头。&nbsp;</Act>
+      <Act href="HACTION_QUEST_REFUSE_1">不管这些。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_accept_1">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+          <p>（石像上有温暖的感觉。好像在感谢似的。）</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">停止查看。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_refuse_1">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+          <p>（石像上有寒冷的感觉。好像是很生气。）</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">停止查看。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select2">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+          <p>（石像晃得很激烈，好像是希望把头重新放回去。）</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SETPRO1">把头放到石像上面。</Act>
+    </Selects>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">寻找石像的头。</font></p></step>
+               <step><p visible="[%3]"><font color="[%4]">将找到的石像头放回石像顶部。</font></p></step>
+    </steps>
+          <p><font font_xml="quest_summary">在去往[%dic:STR_DIC_FLA18]的路上发现了一座没有头的石像。设法找到石像的头吧。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+
+        <body>
+          <p>在去往[%dic:STR_DIC_FLA18]的路上发现了一座没有头的石像。</p>
+          <p> </p>
+          <p>感觉有点奇怪，摸了一下，石像突然开始摇晃，好像有什么恳求。</p>
+          <p> </p>
+          <p>于是找回了头，并放到石像上。这时候，石像开始说起话来。</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

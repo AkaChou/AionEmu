@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<HtmlPages>
+
+  <QuestInfo>
+    <QuestId>Q10087</QuestId>
+    <QuestName>决定性线索</QuestName>
+    <QuestType>undefined</QuestType>
+  </QuestInfo>
+
+  <HtmlPage name="select1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>我有个消息，相信你肯定会有兴趣的。</p>
+          <p> </p>
+          <p>据说侦察队员塔乌洛斯发现了布里特拉士兵的尸体。</p>
+          <p> </p>
+          <p>虽然现在还不知道这件事是否与卡伦有关，但据说死去的布里特拉士兵的尸体很不寻常，你还是去看看吧。</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SETPRO1">回答说知道了。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select2">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>你是来察看布里特拉士兵尸体的啊。</p>
+          <p> </p>
+          <p>我在和洛内进行侦察时，偶然发现了布里特拉士兵严重受损的尸体。</p>
+          <p> </p>
+          <p>虽然卡塔拉姆原本是提亚马特之地，但我们过来之后，布里特拉军也随着来到了这里，我想这尸体应该是在那时候死的吧。</p>
+          <p> </p>
+          <p>我记得格拉姆百夫长在不久前问我有没有见过有关卡伦或者布里特拉的东西，所以我就先通知他了。</p>
+          <p> </p>
+          <p>正好洛内应该就在附近。</p>
+          <p> </p>
+          <p>你去他那里看看那是不是你要找的东西吧。</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SETPRO2">回答说知道了。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select4">
+    <Contents cdata="true">
+        <html>
+        <body>
+	  <p>你看过尸体了吗？</p>
+          <p> </p>
+          <p>虽然不知道这是不是你要找的东西，但这家伙显然是受重伤而死。</p>
+          <p> </p>
+          <p>从他的状况来看是那样的。</p>
+          <p> </p>
+          <p>据监视哨所的梅伊布说，这与附近的爆炸痕迹有关。</p>
+          <p> </p>
+	  <p>他说那爆炸痕迹与布里特拉有关。</p>
+          <p> </p>
+          <p>你要不要去见见梅伊布？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SETPRO4">回答说好的。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>啊，你不是有名的[%username]大人嘛！</p>
+          <p> </p>
+          <p>见到你真是我的荣幸。</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT5_1">询问爆炸痕迹。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+	  <p>那个，实际上，那些话并不是我说的。</p>
+          <p> </p>
+          <p>我跟洛内所说的一切都是听我们队长说的。</p>
+          <p> </p>
+          <p>特拉希尔队长好像对布里特拉军进行了很多研究，他一见到爆炸痕迹，就说那是布里特拉的痕迹。</p>
+          <p> </p>
+	  <p>所以我就把那件事告诉了洛内。</p>
+          <p> </p>
+          <p>详细的情况你还是询问特拉希尔队长为好。</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SETPRO5">回答说知道了。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select6">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>这里肯定发生过什么事情！</p>
+          <p> </p>
+	  <p>如若不是那样，是不可能出现那种痕迹的。</p>
+          <p> </p>
+	  <p>问题是没人看到这里究竟发生了什么事。</p>
+          <p> </p>
+          <p>不过，我可以保证。</p>
+          <p> </p>
+          <p>那痕迹即使不与布里特拉有关，也肯定与布里特拉军有关。</p>
+          <p> </p>
+          <p>请你亲自去确认一下吧。</p>
+          <p> </p>
+          <p>那样你就知道我所说的没错了。</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SETPRO6">回答说知道了。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_success">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>[%username]，原来是你啊。</p>
+          <p> </p>
+	  <p>我一直没有忘记你。</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT_QUEST_REWARD">把卡伦的剑拿给扎坎。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>你找到了那孩子的剑啊。</p>
+          <p> </p>
+	  <p>那孩子……在这里与龙帝进行了战斗。</p>
+          <p> </p>
+	  <p>然后就消失了。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">和[%dic:STR_DIC_LDF5a_Gram_E]对话</font></p></step>
+               <step><p visible="[%3]"><font color="[%4]">去找[%dic:STR_DIC_N_LDF5a_Tauros_E]</font></p></step>
+               <step><p visible="[%6]"><font color="[%7]">察看布里特拉哨所</font></p></step>
+               <step><p visible="[%9]"><font color="[%10]">和洛内对话</font></p></step>
+               <step><p visible="[%12]"><font color="[%13]">和[%dic:STR_DIC_LDF5a_Meib_E]对话</font></p></step>        
+               <step><p visible="[%15]"><font color="[%16]">和[%dic:STR_DIC_LDF5a_Thrasir_E]对话</font></p></step>   
+               <step><p visible="[%18]"><font color="[%19]">寻找卡伦的痕迹</font></p></step>         
+               <step><p visible="[%21]"><font color="[%22]">把剑拿给扎坎，并向其报告</font></p></step>        
+    </steps>
+          <p><font font_xml="quest_summary">去寻找卡伦经过防御壁前的痕迹和线索吧。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>格拉姆说有个我会感兴趣的消息，他说侦察队员塔乌洛斯发现了布里特拉士兵的尸体。到了塔乌洛斯那里后，他向我说明了自己见到的布里特拉尸体的情况，并说洛内就在尸体附近，让我去找洛内，然后察看一下尸体。察看尸体后，和洛内对话，洛内说这附近还有爆炸的痕迹，这是他从监视哨所的梅伊布那里得知的情报。去找梅伊布之后，梅伊布说实际上他也不太清楚，这些事情都是他听监视哨所的队长特拉希尔说的。找到特拉希尔之后，特拉希尔跟我说了关于爆炸痕迹的事情，并让我亲自去察看痕迹。亲自察看爆炸痕迹之后，发现了损坏的剑，这把剑看起来是卡伦的，所以就收起了损坏的剑。正好见到了卡伦追踪队的扎坎，把剑给他看后，他说这确实是卡伦的东西。</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>使命进行：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

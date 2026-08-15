@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<HtmlPages>
+
+  <QuestInfo>
+    <QuestId>Q12018</QuestId>
+    <QuestName>???</QuestName>
+    <QuestType>未输入</QuestType>
+  </QuestInfo>
+
+  <HtmlPage name="select1" accept="true">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>要想在战斗中获胜，就必须利用一切。</p>
+          <p> </p>
+          <p>附近有很多变成了不死族的鸢族，虽然很可怜，但只要能在战斗中获胜，不管什么东西都必须利用起来。</p>
+          <p> </p>
+          <p>消灭[%dic:STR_DIC_M_LDF4b_T4_YunWi_Ghost_59_An]，就能获得[%dic:STR_DIC_I_quest_22018a]。</p>
+          <p> </p>
+          <p>据说加工一下的话，就能用来强化武器。请您去搜集一些。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_SIMPLE">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_SIMPLE">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>要想在战斗中获胜，必须利用一切可以利用的东西。</p>
+          <p> </p>
+          <p>必须努力训练，强化武器，制定好的战略。</p>
+          <p> </p>
+          <p>只要一切都准备好，就能获得胜利。</p>
+          <p> </p>
+          <p>对了，我要的东西拿来了吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE">拿出魔力结晶。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>搜集到了这么多结晶，应该就能对武器进行强化了。</p>
+          <p> </p>
+          <p>我得先试验一下。好用的话，再推荐给别的军团士兵。</p>
+          <p> </p>
+          <p>总之辛苦您了。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">搜集[%dic:STR_DIC_I_quest_22018a]，然后交给[%dic:STR_DIC_N_Hindla]</font></p>[%collectitem]</step>
+    </steps>
+          <p><font font_xml="quest_summary">据说从不死族鸢族法师身上获得的魔力结晶可以用来强化武器。去搜集魔力结晶，交给辛德拉吧。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>辛德拉说从不死族鸢族法师身上获得的魔力结晶可以用来强化武器。</p>
+          <p> </p>
+          <p>于是去搜集到了魔力结晶，辛德拉说要先试验一下。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

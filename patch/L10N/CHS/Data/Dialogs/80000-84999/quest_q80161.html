@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<HtmlPages>
+
+  <HtmlPage name="select1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>天气这么好，却只能待在医院里。</p>
+          <p>想起我的女儿，我就伤心。</p>
+		  <p> </p>
+		  <p>给我一点“美味巧克力”吧</p>
+		  <p>虽然我很想帮你，但我现在太忙了……</p>
+		  <p> </p>
+        </body>	
+        </html>
+    </Contents>
+    <Selects>
+     <Act href="HACTION_ASK_QUEST_ACCEPT">继续听。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="ask_quest_accept">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p> </p>
+		  <p>如果你不忙的话</p>
+		  <p>你能帮我去买点“美味巧克力”吗？</p>
+		  <p>在[%shoplink]就有卖的。</p>
+		  <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_QUEST_ACCEPT_1">接受。</Act>
+      <Act href="HACTION_QUEST_REFUSE_1">拒绝。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_accept_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>谢谢你，守护者大人~</p>
+		  <p>只要你带巧克力来，我一定会好好报答你！</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="quest_refuse_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>这样啊……好吧……</p>
+          <p></p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+<HtmlPage name="select5">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p> </p>
+          <p>哇~你这么快就回来了？</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_CHECK_USER_HAS_QUEST_ITEM">打开背包</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select6">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>巧克力融化了以后不见了……？</p>
+          <p>您确定把东西放进背包里了吗？</p>
+          <p>要不要确认一下邮箱呢？</p>
+          <p> </p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>真是谢谢你！</p>
+          <p>这是我的一点小小心意~</p>
+          <p>我下次还能拜托你吧？嘿嘿~</p>
+		  <p> </p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+   <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">为忙碌的妈妈[%dic:STR_DIC_NPC_event_Hinjel]%找来[%dic:STR_DIC_I_junk_world_event_webshop_03a]%。</font></p>[%collectitem]</step>
+    </steps>
+          <p><font font_xml="quest_summary">为兰德里安找来美味巧克力。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>兰德里安拜托我给女儿找来美味巧克力。</p>
+          <p> </p>
+          <p>因为委托很简单，马上找来了巧克力给她。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_acqusitive_quest_desc">
+    <Selects>
+      <Act>新任务：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>进行中：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>

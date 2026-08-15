@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<HtmlPages>
+
+  <QuestInfo>
+    <QuestId>Q20082</QuestId>
+    <QuestName>束缚解开的原因</QuestName>
+    <QuestType>undefined</QuestType>
+  </QuestInfo>
+
+  <HtmlPage name="select1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>鸢族[%dic:STR_DIC_LDF5a_Apolis_E]向我请求帮助，但是我没办法帮助他。</p>
+          <p> </p>
+          <p>[%username]大人，您能去帮帮阿波利斯吗？我必须守卫占领地，没办法离开。</p>
+          <p> </p>
+          <p>虽然不知道具体是什么事情，但他们好像在忙着对付龙信徒。</p>
+          <p> </p>
+		  <p>老实说，我也不太清楚鸢族在卡塔拉姆是什么立场，但是又不能不理他们。请您去帮帮他们。</p> 
+		  <p> </p>
+		  <p>要是他们突然又有了强力的束缚，又和天族勾结在一起的话，对魔族就会很不利，不是吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SETPRO1">说知道了。</Act>
+    </Selects>
+	<Voice file="Q20082-1.ogg"/>
+  </HtmlPage>
+
+  <HtmlPage name="select2">
+    <Contents cdata="true">
+        <html>
+        <body>
+		  <p>您是来帮我修理束缚石像的吗？</p>
+		  <p> </p>
+          <p>啊，不是啊。我们好像是第一次见面吧……</p>
+		  <p> </p>
+		  <p>找我有什么事吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT2_1">说是阿不思派来的。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select2_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+	     <p>啊哈！原来如此！</p>
+	     <p> </p>
+	     <p>阿不思队长每天都很忙，所以就派[%username]大人过来啦。</p>
+	     <p> </p>
+		 <p>我还以为他会嫌麻烦，没想到真派人过来了，真是太好了。</p>
+		 <p> </p>
+	     <p>您的战斗能力怎么样？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT2_1_1">问为什么要问这个。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select2_1_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>因为您必须去消灭[%dic:STR_DIC_LDF5A_A2_Fana_Wi_QN_61_An]%，搜集[%dic:STR_DIC_I_quest_20082a]。</p>
+          <p> </p>
+          <p>这是[%dic:STR_DIC_LDF5a_Gurd_E]大人下的命令，但是我总是失败。其实我只做过修理束缚石像的工作，怎么可能做到？</p>
+          <p> </p>
+          <p>我跟古尔德大人讲了我的难处，他说如果能找到实力很强的魔族，可以让他去做。所以我才找到了阿不思。</p>
+          <p> </p>
+          <p>[%username]大人如果有自信的话，愿意去试试吗？只要把艾洛图姆的腰带交给我，我就会给您报酬。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SETPRO2">说知道了。</Act>
+    </Selects>
+	<Voice file="Q20082-2.ogg"/>
+  </HtmlPage>
+
+  <HtmlPage name="select3">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>好像有点眼熟。</p>
+          <p> </p>
+          <p>我们在哪儿见过吗？</p> 
+          <p> </p>
+          <p>对了！是3个月前我在符文神殿入口处拦住巴尔德司令官的时候出现的那位朋友啊。</p>
+          <p> </p>
+          <p>那时你好像遭到了天族的攻击而倒下了啊？</p>
+		  <p> </p>
+		  <p>嗯，找我有什么事吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_CHECK_USER_HAS_QUEST_ITEM">拿出艾洛图姆的腰带。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="check_user_item_ok">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>你在帮阿波利斯做事吗？</p>
+          <p> </p>
+          <p>看到你3个月前倒下的样子，真是完全没想到，看来你的能力还挺强的。</p> 
+          <p> </p>
+          <p>竟然能消灭掉鸢族的宿敌龙信徒艾洛图姆，真让人吃惊。</p>
+          <p> </p>
+          <p>老实说，从一开始我就没期待阿波利斯能除掉艾洛图姆。</p> 
+          <p> </p>
+          <p>我只是希望他能悄悄地给我派个有能力的魔族过来。在巴尔德和里莫那样的战争狂不知道的情况下。</p>
+          <p> </p>
+          <p>现在我率领着鸢族，我想拜托你一件事。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT3_1">说尽管说。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select3_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>好吧，我就相信你一次。</p>
+          <p> </p>
+          <p>别吃惊。卡伦大人消失了。</p>
+          <p> </p>
+          <p>某一天，卡塔拉姆的束缚力量突然解开了。卡伦大人的束缚力量突然消失了。</p>
+          <p> </p>
+          <p>鸢族全都很吃惊，纷纷寻找卡伦大人的下落，但是怎么都找不到他。我有一种直觉，卡伦大人一定遭遇了某种不幸。</p>
+          <p> </p>
+          <p>联军也发生了不幸的事情。发现束缚力量消失的天族和魔族开始互相残杀，布里特拉军在这时突然出现，好像早就等待着这一刻一样。</p>
+		  <p> </p>
+          <p>没有卡伦大人的话，我们什么也做不了。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT3_1_1">说非常吃惊。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select3_1_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+         <p>可以理解。但这是事实，我们必须接受。</p>
+         <p> </p>
+         <p>现在最重要的事情是找到卡伦大人。要是魔族和天族知道卡伦大人失踪了，情况一定会比现在更混乱。所以我们组成了搜索队，派到了南边。</p>
+         <p> </p>
+         <p>但是光靠我们的力量是不够的。周围魔族和天族正在混战，布里特拉军又出来骚扰，还有很多龙信徒。</p>
+         <p> </p>
+		 <p>所以我利用了阿波利斯，希望他能推荐一个可以帮助鸢族秘密地寻找卡伦大人的英雄。</p>
+		 <p> </p>
+		 <p>[%username]，我可以相信你吗？你愿意帮我们寻找卡伦大人吗？</p>
+		 <p> </p>
+         <p>如果你愿意的话，就去见见[%dic:STR_DIC_LDF5a_Nani_E]。娜娅是最后一个见到卡伦大人的人。</p>
+         <p> </p>
+         <p>你是消灭掉了鸢族的宿敌龙信徒的勇士，我相信你。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SETPRO3">说知道了。</Act>
+    </Selects>
+	<Voice file="Q20082-3.ogg"/>
+  </HtmlPage>
+
+  <HtmlPage name="check_user_item_fail">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>不要小看鸢族。</p>
+          <p> </p>
+          <p>鸢族在杀死提亚马特的过程中发挥了巨大的作用。</p>
+          <p> </p>
+          <p>我们可不是好欺负的。</p>
+          <p> </p>
+          <p>要是魔族抛弃了鸢族，我们就会站在天族一边。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_FINISH_DIALOG">结束对话。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>是古尔德大人派来的魔族啊。</p>
+          <p> </p>
+          <p>我把我看到的全都告诉您，请您不要在鸢族的土地上引起争端。</p>
+		  <p> </p>
+		  <p>实现和平是卡伦大人的意志。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT5_1">点头。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>我最后一次见到卡伦大人，大约是在3个月前。</p>
+          <p> </p>
+          <p>最后一次见到他，是在为了消灭提亚马特军而刚进入卡塔拉姆的时候。</p>
+          <p> </p>
+          <p>大家都在拆开行李，但是他却没有拆开，径直从我面前经过，看上去好像是要去哪里旅行。</p>
+          <p> </p>
+          <p>他去的方向是南边。</p>
+          <p> </p>
+          <p>我看见他非常郑重地和护卫队说了些什么，然后护卫队就静静地离开了。</p>
+          <p> </p>
+          <p>我当时就在护卫队旁边，后来我就没再注意他们，光顾着收拾行李了。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT5_1_1">点头。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5_1_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>后来知道卡伦大人失踪之后，我就把当时看到的情况告诉了古尔德大人。</p>
+          <p> </p>
+          <p>古尔德大人听了我的话之后，组成了鸢族卡伦搜索队，派到南边去了。</p>
+          <p> </p>
+		  <p>为了避开魔族和天族的眼睛，悄悄地派出搜索队，好像还费了不少力气。</p>
+		  <p> </p>
+          <p>我知道的就是这些。</p>
+          <p> </p>
+          <p>[%username]大人，请真心地回答我，您真的愿意帮助鸢族吗？</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT5_1_1_1">说就交给魔族吧。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select5_1_1_1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>那我就相信您。请您到悲伤遗迹去见见[%dic:STR_DIC_LDF5a_Latte_E]大人。</p>
+          <p> </p>
+          <p>我和拉泰在到卡塔拉姆来之前就认识，我已经把卡伦大人失踪的事情告诉他了。</p>
+          <p> </p>
+          <p>为了让鸢族卡伦搜索队能去悲伤遗迹搜索，他还为他们提供了帮助。真的应该谢谢他。</p>
+          <p> </p>
+          <p>他应该知道鸢族搜索队在什么地方。[%username]大人，请您去找到鸢族卡伦搜索队，帮帮他们。</p>
+          <p> </p>
+          <p>他们必须悄悄地寻找卡伦大人，一定会遇到很多困难。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SET_SUCCEED">说会去看看。</Act>
+    </Selects>
+	<Voice file="Q20082-4.ogg"/>
+  </HtmlPage>
+
+  <HtmlPage name="select_success">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>我们是第一次见面吧？</p>
+          <p> </p>
+          <p>很高兴见到你。我是侦察哨所的百夫长拉泰。</p>
+        </body>
+        </html>
+    </Contents>
+    <Selects>
+      <Act href="HACTION_SELECT_QUEST_REWARD">讲述和娜娅见面的事情。</Act>
+    </Selects>
+  </HtmlPage>
+
+  <HtmlPage name="select_quest_reward1">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>你是来帮助娜娅的啊。</p>
+          <p> </p>
+          <p>卡伦大人消失了，这对鸢族来说是非常严重的事件。</p>
+          <p> </p>
+          <p>所以我正在帮助鸢族搜索队。</p>
+          <p> </p>
+          <p>协助鸢族在悲伤遗迹搜索，也不是什么难事。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_summary">
+    <Contents cdata="true">
+        <html>
+        <body>
+    <steps>
+               <step><p visible="[%0]"><font color="[%1]">和占领[%dic:STR_DIC_W_LDF5a_A2_1]后出现的[%dic:STR_DIC_LDF5_Village_Guard01_D]对话</font></p></step>
+               <step><p visible="[%3]"><font color="[%4]">和[%dic:STR_DIC_W_LDF5A_A2]的[%dic:STR_DIC_LDF5a_Apolis_E]对话</font></p></step>
+               <step><p visible="[%6]"><font color="[%7]">把[%dic:STR_DIC_I_quest_20082a]交给[%dic:STR_DIC_LDF5a_Gurd_E]</font></p>[%collectitem]</step>
+               <step><p visible="[%9]"><font color="[%10]">到[%dic:STR_DIC_W_LDF5a_SensoryArea_Q10082]去</font></p></step>
+               <step><p visible="[%12]"><font color="[%13]">和[%dic:STR_DIC_LDF5a_Nani_E]对话</font></p></step>        
+               <step><p visible="[%15]"><font color="[%16]">到[%dic:STR_DIC_W_LDF5A_B6]的[%dic:STR_DIC_LDF5a_Latte_E]那里去</font></p></step>          
+    </steps>
+          <p><font font_xml="quest_summary">指令：了解鸢族的情况。</font></p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="quest_complete">
+    <Contents cdata="true">
+        <html>
+        <body>
+          <p>阿不思说有个名叫阿波利斯的鸢族向他请求帮助，让我去帮助他。</p>
+		  <p> </p>
+		  <p>见到阿波利斯之后，他说有个名叫古尔德的鸢族元老代表让他去消灭艾洛图姆，但是自己实力不行，让我帮帮他。</p>
+		  <p> </p>
+		  <p>消灭掉艾洛图姆之后，把他的腰带交给了古尔德。</p> 
+		  <p> </p>
+		  <p>古尔德说记起来我刚到卡塔拉姆时的情形，看到艾洛图姆的腰带之后，他很吃惊。</p>
+		  <p> </p>
+		  <p>但是很快他说我有知道真相的资格，告诉我卡伦失踪了。</p>
+		  <p> </p>
+		  <p>古尔德让我去见见最后的目击者娜娅，娜娅向我讲述了自己看到的情况。</p>
+		  <p> </p>
+		  <p>跟娜娅说寻找卡伦的事情就交给魔族，她让我去见见悲伤沼泽的拉泰。</p>
+		  <p> </p>
+		  <p>找到了拉泰，告诉他正在寻找鸢族搜索队。</p>
+        </body>
+        </html>
+    </Contents>
+  </HtmlPage>
+
+  <HtmlPage name="select_progressive_quest_desc">
+    <Selects>
+      <Act>任务进行：[%questname]</Act>
+    </Selects>
+  </HtmlPage>
+
+</HtmlPages>
