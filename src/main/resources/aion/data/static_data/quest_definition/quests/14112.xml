@@ -94,9 +94,15 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <counter-grid>
-      <dimension field="var0" required="1" npc-ids="210318"/>
-    </counter-grid>
+    <transition source="started" target="k1">
+      <event>
+        <kill-npc npc-id="210318"/>
+      </event>
+      <after-commit>
+        <spawn-npc-at-player slot="kato" template-id="203195" heading="0"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
     <transition source="k1" target="started">
       <event>
         <die/>
@@ -119,6 +125,7 @@
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="k1" target="k1">
@@ -135,6 +142,23 @@
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="k1" target="k1">
+      <event>
+        <enter-world/>
+      </event>
+      <after-commit>
+        <spawn-npc-at-player slot="kato" template-id="203195" heading="0"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <after-commit>
+        <spawn-npc-at-player slot="kato" template-id="203195" heading="0"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
