@@ -95,6 +95,28 @@ class EarlyElyosQuestRegressionTest {
 	}
 
 	@Test
+	void belbuasWineBarrelUsesTheObjectRouteOnlyAfterAcceptance() {
+		CompiledQuestDefinition definition = load(1141);
+
+		route(definition, "started", "started",
+			new QuestEvent.CanAct(700122, "ACTION_ITEM_USE"));
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)),
+			route(definition, "started", "started", new QuestEvent.TalkToNpc(700122, -1)).afterCommit());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(5)),
+			route(definition, "started", "reward", new QuestEvent.TalkToNpc(700122, 1009)).afterCommit());
+		QuestTransition completion = route(definition, "reward", "complete",
+			new QuestEvent.TalkToNpc(700122, 8));
+		assertEquals(new AfterCommitAction.CloseDialog(), completion.afterCommit().getLast());
+
+		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
+			transition.sourceNode().equals("unaccepted")
+				&& transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == 700122));
+	}
+
+	@Test
 	void fossilCollectionPublishesProgressButFinalNpcStillChecksBothItems() {
 		CompiledQuestDefinition definition = load(1137);
 		QuestTransition collection = definition.definition().transitions().stream()
