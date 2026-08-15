@@ -16,10 +16,13 @@ class ItemCollectingDialogProtocolAlignmentTest {
 	private static final Path QUEST_DIRECTORY = Path.of(
 		"src/main/resources/aion/data/static_data/quest_definition/quests");
 	private static final int[] ITEM_COLLECTING_QUESTS = {
-		13968, 15230, 15231, 15232, 15307, 15323, 15403, 15404, 15405, 15540, 15541,
-		15665, 15666, 15689, 15691, 18742, 18975, 18976, 18977, 18978, 23968, 25012,
-		25020, 25033, 25085, 25091, 25092, 25307, 25323, 25403, 25404, 25405, 25540,
-		25541, 25665, 25666, 25689, 25691, 28742, 28975, 28976, 28977, 28978, 50052,
+		13968, 15011, 15021, 15022, 15044, 15052, 15071, 15102, 15103, 15230, 15231,
+		15232, 15307, 15323, 15403, 15404, 15405, 15502, 15505, 15508, 15511, 15514,
+		15517, 15523, 15526, 15532, 15535, 15538, 15540, 15541, 15665, 15666, 15689,
+		15691, 18742, 18975, 18976, 18977, 18978, 23968, 25012, 25020, 25033, 25085,
+		25091, 25092, 25307, 25323, 25403, 25404, 25405, 25502, 25505, 25508, 25511,
+		25517, 25523, 25540, 25541, 25665, 25666, 25689, 25691, 28742, 28975, 28976,
+		28977, 28978, 50052,
 		50053, 50054, 50055, 50056, 50057, 50088, 50089, 50090, 50094, 80723, 80724,
 		80725, 80726, 80727, 80728, 80729, 80730, 80735, 80736, 80834, 80835, 80836, 80837,
 		80838, 80839, 80840, 80841, 80870, 80871, 80872, 80874, 80877, 80878, 80881,
@@ -27,6 +30,10 @@ class ItemCollectingDialogProtocolAlignmentTest {
 		80908, 80909, 80910, 80911, 80912, 80913, 80914, 80915, 80916, 80917, 80918,
 		80919, 80947, 80948, 80949, 80950, 80951, 80953
 	};
+	private static final List<Integer> DROP_SOURCE_QUESTS = List.of(
+		15011, 15021, 15022, 15044, 15052, 15071, 15102, 15103, 15502, 15505, 15508,
+		15511, 15514, 15517, 15523, 15526, 15532, 15535, 15538, 25502, 25505, 25508,
+		25511, 25517, 25523);
 
 	@Test
 	void retailItemCollectingQuestsUseTheClientItemCheckProtocol() throws Exception {
@@ -74,6 +81,20 @@ class ItemCollectingDialogProtocolAlignmentTest {
 				"quest " + questId + " start NPC must not own item check");
 			assertTrue(talkRoutes(definition, "reward", 833825).isEmpty(),
 				"quest " + questId + " start NPC must not own reward routes");
+		}
+	}
+
+	@Test
+	void collectedItemDropSourcesDoNotOwnQuestDialogs() throws Exception {
+		for (int questId : DROP_SOURCE_QUESTS) {
+			QuestDefinition definition = compile(questId);
+			Set<Integer> dropSources = definition.metadata().drops().stream()
+				.map(QuestDrop::npcId).collect(java.util.stream.Collectors.toSet());
+			assertFalse(dropSources.isEmpty(), "quest " + questId + " drop sources");
+			assertFalse(definition.transitions().stream()
+				.anyMatch(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+					&& dropSources.contains(talk.npcId())),
+				"quest " + questId + " drop source must not own dialog routes");
 		}
 	}
 
@@ -218,10 +239,29 @@ class ItemCollectingDialogProtocolAlignmentTest {
 	private static int singleStartNpc(int questId) {
 		return switch (questId) {
 			case 13968 -> 835217;
+			case 15011 -> 804875;
+			case 15021 -> 804877;
+			case 15022 -> 804878;
+			case 15044 -> 804887;
+			case 15052 -> 804888;
+			case 15071 -> 804709;
+			case 15102 -> 804895;
+			case 15103 -> 804896;
 			case 15230, 15231, 15232 -> 805222;
 			case 15307 -> 805327;
 			case 15323 -> 805330;
 			case 15403, 15404, 15405 -> 805378;
+			case 15502 -> 806089;
+			case 15505 -> 806090;
+			case 15508 -> 806091;
+			case 15511 -> 806092;
+			case 15514 -> 806093;
+			case 15517 -> 806094;
+			case 15523 -> 806096;
+			case 15526 -> 806097;
+			case 15532 -> 806099;
+			case 15535 -> 806100;
+			case 15538 -> 806254;
 			case 15540 -> 806134;
 			case 15541 -> 834136;
 			case 15665 -> 806089;
@@ -240,6 +280,12 @@ class ItemCollectingDialogProtocolAlignmentTest {
 			case 25307 -> 805339;
 			case 25323 -> 805342;
 			case 25403, 25404, 25405 -> 805401;
+			case 25502 -> 806101;
+			case 25505 -> 806102;
+			case 25508 -> 806103;
+			case 25511 -> 806104;
+			case 25517 -> 806106;
+			case 25523 -> 806108;
 			case 25540 -> 806135;
 			case 25541 -> 834138;
 			case 25665 -> 806101;
