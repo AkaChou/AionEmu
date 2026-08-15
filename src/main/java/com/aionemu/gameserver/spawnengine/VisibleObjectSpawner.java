@@ -295,8 +295,7 @@ public class VisibleObjectSpawner {
         try {
             SpawnEngine.bringIntoWorld(npc, spawn, instanceIndex);
         } catch (Exception ex) {
-            log.error(I18n.get("log.25b31202cf98", new Object[] { npcTemplate.getTemplateId(), spawn.getWorldId(), spawn.getX(), spawn.getY() }));
-            log.error(I18n.get("log.0b740221960f", npcTemplate.getTemplateId(), ex));
+            log.error(I18n.get("log.25b31202cf98", new Object[] { npcTemplate.getTemplateId(), spawn.getWorldId(), spawn.getX(), spawn.getY() }), ex);
             com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(npc);
         }
         return npc;
