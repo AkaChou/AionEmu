@@ -13,6 +13,7 @@ import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.questEngine.definition.ProgressLayout;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
@@ -90,6 +91,20 @@ class PlayerQuestEventPortTest {
 		assertEquals(0, snapshot.interactionObjectId());
 		assertTrue(snapshot.targetlessDialog());
 		assertEquals(900008, event.itemObjectId());
+	}
+
+	@Test
+	void attackSnapshotCarriesAuthoritativeNpcForLifecycleButKeepsDialogTargetless() throws Exception {
+		Player player = emptyPlayer();
+		PlayerQuestEventPort port = new PlayerQuestEventPort(playerId -> player);
+		QuestNpcAttackFacts facts = new QuestNpcAttackFacts(
+			PLAYER_ID, 900009, 210319, 1000, 1000, 210030000, 1);
+
+		QuestSnapshot snapshot = port.snapshot(connection(), PLAYER_ID, QUEST_ID,
+			new QuestEvent.AttackNpc(210319, facts));
+
+		assertEquals(900009, snapshot.interactionObjectId());
+		assertTrue(snapshot.targetlessDialog());
 	}
 
 	@Test

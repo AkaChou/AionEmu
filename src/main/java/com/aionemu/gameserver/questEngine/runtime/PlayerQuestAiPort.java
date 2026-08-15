@@ -67,6 +67,11 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 	}
 
 	@FunctionalInterface
+	public interface LuredNpcWatchCall {
+		boolean start(Player player, Npc npc, int questId, float x, float y, float z, float radius);
+	}
+
+	@FunctionalInterface
 	public interface TargetNpcResolver {
 		Npc find(Player player, int templateId);
 	}
@@ -98,6 +103,7 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 	private final FollowCall follow;
 	private final CoordinateFollowCall coordinateFollow;
 	private TargetNpcFollowCall targetNpcFollow;
+	private LuredNpcWatchCall luredNpcWatch;
 	private TargetNpcResolver targetNpcResolver;
 	private final FollowTaskRegistrar taskRegistrar;
 	private final NpcInfoCall npcInfo;
@@ -188,6 +194,18 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 		this.coordinateFollow = Objects.requireNonNull(coordinateFollow, "coordinateFollow");
 		this.targetNpcFollow = (player, npc, target, questId) -> QuestTasks.newFollowingToTargetCheckTask(
 			new QuestEnv(null, player, questId, 0), npc, target);
+		this.luredNpcWatch = (player, npc, questId, x, y, z, radius) -> {
+			if (player.getController().hasScheduledTask(TaskId.QUEST_LURE)) {
+				return true;
+			}
+			Future<?> task = QuestTasks.newLuredNpcToCoordinateCheckTask(
+				new QuestEnv(npc, player, questId, 0), npc, x, y, z, radius);
+			if (task == null) {
+				return false;
+			}
+			player.getController().addTask(TaskId.QUEST_LURE, task);
+			return true;
+		};
 		this.targetNpcResolver = (player, templateId) -> findLivingNpc(player, templateId);
 		this.taskRegistrar = Objects.requireNonNull(taskRegistrar, "taskRegistrar");
 		this.npcInfo = Objects.requireNonNull(npcInfo, "npcInfo");
@@ -199,6 +217,13 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 		FollowTaskRegistrar taskRegistrar, NpcInfoCall npcInfo, WorldNpcResolver worldNpcResolver) {
 		this(players, registry, ai, targets, follow, coordinateFollow, taskRegistrar, npcInfo);
 		this.worldNpcResolver = Objects.requireNonNull(worldNpcResolver, "worldNpcResolver");
+	}
+
+	PlayerQuestAiPort(QuestPlayerPort players, QuestSpawnRegistry registry, AiCall ai,
+		TargetResolver targets, FollowCall follow, CoordinateFollowCall coordinateFollow,
+		FollowTaskRegistrar taskRegistrar, NpcInfoCall npcInfo, LuredNpcWatchCall luredNpcWatch) {
+		this(players, registry, ai, targets, follow, coordinateFollow, taskRegistrar, npcInfo);
+		this.luredNpcWatch = Objects.requireNonNull(luredNpcWatch, "luredNpcWatch");
 	}
 
 	@Override
@@ -367,6 +392,23 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 			return false;
 		}
 		return registry.registerFollowTask(snapshot, slot, task);
+	}
+
+	@Override
+	public boolean watchLuredNpcCoordinate(QuestSnapshot snapshot, QuestMutationPlan plan,
+			float x, float y, float z, float radius) {
+		Objects.requireNonNull(snapshot, "snapshot");
+		if (!Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)
+				|| !Float.isFinite(radius) || radius <= 0) {
+			throw new IllegalArgumentException("lure destination must be finite and radius must be positive");
+		}
+		Player player = players.find(snapshot.playerId());
+		if (player == null || snapshot.interactionObjectId() <= 0) {
+			return false;
+		}
+		VisibleObject visible = targets.find(snapshot.interactionObjectId());
+		return visible instanceof Npc npc
+			&& luredNpcWatch.start(player, npc, snapshot.questId(), x, y, z, radius);
 	}
 
 	private boolean run(QuestSnapshot snapshot, String slot, Command command) {

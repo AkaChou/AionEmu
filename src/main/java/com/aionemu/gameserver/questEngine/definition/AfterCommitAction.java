@@ -18,6 +18,7 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		AfterCommitAction.StartFollowCurrentTargetToPoint, AfterCommitAction.StartFollowCurrentTargetToNpc,
 		AfterCommitAction.BroadcastNpcEmotion, AfterCommitAction.BroadcastInteractionNpcEmotion,
 		AfterCommitAction.WatchFollowZone, AfterCommitAction.WatchFollowCoordinate,
+		AfterCommitAction.WatchLuredNpcCoordinate,
 		AfterCommitAction.StartQuestTimer, AfterCommitAction.StartInvisibleTimer,
 		AfterCommitAction.CancelQuestTimer, AfterCommitAction.SyncQuestState,
 		AfterCommitAction.RefreshPlayerStats, AfterCommitAction.Morph,
@@ -309,6 +310,16 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 			}
 			if (!Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)) {
 				throw new IllegalArgumentException("follow destination coordinates must be finite");
+			}
+		}
+	}
+
+	/** 监视本次攻击的常驻 NPC 被玩家以仇恨移动诱导到指定坐标，不改变其战斗 AI。 */
+	record WatchLuredNpcCoordinate(float x, float y, float z, float radius) implements AfterCommitAction {
+		public WatchLuredNpcCoordinate {
+			if (!Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)
+					|| !Float.isFinite(radius) || radius <= 0) {
+				throw new IllegalArgumentException("lure destination must be finite and radius must be positive");
 			}
 		}
 	}

@@ -55,4 +55,10 @@ public interface QuestAiPort {
 			float x, float y, float z) {
 		return false;
 	}
+
+	/** 监视本次攻击的常驻 NPC 依靠战斗仇恨被诱导到坐标，不切换为跟随 AI。 */
+	default boolean watchLuredNpcCoordinate(QuestSnapshot snapshot, QuestMutationPlan plan,
+			float x, float y, float z, float radius) {
+		return false;
+	}
 }

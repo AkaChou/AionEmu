@@ -665,6 +665,10 @@ public final class QuestDsl {
 		return new AfterCommitAction.WatchFollowCoordinate(slot, x, y, z);
 	}
 
+	public static AfterCommitAction watchLuredNpcCoordinate(float x, float y, float z, float radius) {
+		return new AfterCommitAction.WatchLuredNpcCoordinate(x, y, z, radius);
+	}
+
 	public static AfterCommitAction startQuestTimer(int seconds) {
 		return new AfterCommitAction.StartQuestTimer(seconds);
 	}

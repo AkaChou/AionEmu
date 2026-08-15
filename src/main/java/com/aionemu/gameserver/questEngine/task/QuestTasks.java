@@ -87,6 +87,18 @@ public class QuestTasks {
 	}
 
 	/**
+	 * 监视可攻击常驻 NPC 依靠仇恨追击被诱导到指定坐标，不改变其战斗 AI。
+	 * Watches an attackable resident NPC being lured by combat aggro to a coordinate without changing its AI.
+	 */
+	public static Future<?> newLuredNpcToCoordinateCheckTask(QuestEnv env, Npc npc,
+			float x, float y, float z, float radius) {
+		LuredNpcCheckTask checker = new LuredNpcCheckTask(env, npc, x, y, z, radius);
+		Future<?> task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(checker, 500, 500);
+		checker.bind(task);
+		return task;
+	}
+
+	/**
 	 * 调度跟随至指定区域的周期检查任务。
 	 * Schedules a periodic follow-check task toward the given zone.
 	 *

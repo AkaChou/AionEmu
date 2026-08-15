@@ -928,6 +928,9 @@ public final class QuestDefinitionXmlCompiler {
 			case "watch-follow-coordinate" -> new AfterCommitAction.WatchFollowCoordinate(
 				attribute(action, "slot"), floatValue(action, "x"), floatValue(action, "y"),
 				floatValue(action, "z"));
+			case "watch-lured-npc-coordinate" -> new AfterCommitAction.WatchLuredNpcCoordinate(
+				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
+				floatValue(action, "radius"));
 			case "start-quest-timer" -> new AfterCommitAction.StartQuestTimer(
 				integer(action, "seconds"), parseTimerPolicy(action));
 			case "start-invisible-timer" -> new AfterCommitAction.StartInvisibleTimer(

@@ -111,11 +111,15 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 		snapshot = snapshot.withTeamFacts(new QuestTeamFacts(player.isInGroup2(), player.isInAlliance2()));
 		return switch (event) {
 			case QuestEvent.TalkToNpc talk -> snapshot.withInteractionObjectId(talk.interactionObjectId());
-			// 只有 TalkToNpc 携带权威的对话所有者。其他所有事件必须对对话动作使用对象 0，
-			// 而不是从玩家当前目标或物品/NPC 模板 ID 猜测。
-			// Only TalkToNpc carries an authoritative dialog owner. Every other
-			// event must use object 0 for dialog actions rather than guessing from
-			// the player's current target or an item/NPC template id.
+			case QuestEvent.AttackNpc attack when attack.facts() != null
+					&& attack.facts().attackerId() == playerId -> snapshot
+				.withInteractionObjectId(attack.facts().npcObjectId())
+				.withTargetlessDialog();
+			// 只有 TalkToNpc 携带权威的对话所有者。AttackNpc 可携带权威事件 NPC，供提交后生命周期动作使用，
+			// 但仍必须标记为无对话目标；其他事件也不能从玩家当前目标或模板 ID 猜测对话对象。
+			// Only TalkToNpc carries an authoritative dialog owner. AttackNpc may carry an
+			// authoritative event NPC for post-commit lifecycle actions, but remains dialog-targetless.
+			// Other events must not guess a dialog object from the player's current target or a template id.
 			default -> snapshot.withTargetlessDialog();
 		};
 	}

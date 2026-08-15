@@ -170,6 +170,31 @@ class PlayerQuestAiPortTest {
 	}
 
 	@Test
+	void attackableResidentNpcCanBeWatchedWithoutChangingItsCombatAi() {
+		QuestSpawnRegistry registry = new QuestSpawnRegistry();
+		Npc mimiti = npc(210319);
+		Player player = player();
+		List<String> calls = new ArrayList<>();
+		PlayerQuestAiPort port = new PlayerQuestAiPort(playerId -> player, registry,
+			(npc, p, target, command, argument) -> {
+				calls.add("AI:" + command);
+				return true;
+			}, objectId -> objectId == mimiti.getObjectId() ? mimiti : null,
+			(p, npc, questId, zone) -> CompletableFuture.completedFuture(null),
+			(p, npc, questId, x, y, z) -> CompletableFuture.completedFuture(null),
+			(p, task) -> { }, (p, npc) -> { },
+			(p, npc, questId, x, y, z, radius) -> {
+				assertSame(mimiti, npc);
+				calls.add("LURE:" + questId + ":" + x + ":" + y + ":" + z + ":" + radius);
+				return true;
+			});
+
+		assertTrue(port.watchLuredNpcCoordinate(
+			snapshot().withInteractionObjectId(mimiti.getObjectId()), plan(), 892, 2024, 166, 13));
+		assertEquals(List.of("LURE:1001:892.0:2024.0:166.0:13.0"), calls);
+	}
+
+	@Test
 	void taskOwnedNpcCanWatchFollowCoordinateAndCleanupCancelsWatcher() {
 		QuestSpawnRegistry registry = new QuestSpawnRegistry();
 		Npc survivor = npc(204830);

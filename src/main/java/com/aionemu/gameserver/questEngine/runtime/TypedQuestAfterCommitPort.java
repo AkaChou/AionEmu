@@ -266,6 +266,12 @@ public final class TypedQuestAfterCommitPort implements QuestAfterCommitPort {
 				followCoordinate.x(), followCoordinate.y(), followCoordinate.z()), action, snapshot);
 			return;
 		}
+		if (action instanceof AfterCommitAction.WatchLuredNpcCoordinate lure) {
+			requireAiPort();
+			requireSuccess(aiPort.watchLuredNpcCoordinate(snapshot, plan,
+				lure.x(), lure.y(), lure.z(), lure.radius()), action, snapshot);
+			return;
+		}
 		if (action instanceof AfterCommitAction.StartQuestTimer timer) {
 			requireTimerPort();
 			requireSuccess(timerPort.startQuestTimer(snapshot, plan, timer.seconds(), timer.policy()), action, snapshot);
