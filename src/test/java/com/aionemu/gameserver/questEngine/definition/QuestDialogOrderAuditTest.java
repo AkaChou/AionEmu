@@ -39,6 +39,11 @@ class QuestDialogOrderAuditTest {
 				&& row.unresolvedReason().startsWith("visible client action has no route"))
 			.allMatch(row -> row.candidateCount() == 0 && row.candidate() == null));
 		assertEquals(List.of(), rows.stream()
+			.filter(row -> row.questId() == 1149)
+			.filter(row -> Set.of("EVIDENCE_REQUIRED", "CLIENT_PAGE_UNREACHED").contains(row.auditStatus()))
+			.map(row -> row.actualPath() + "; " + row.unresolvedReason())
+			.toList());
+		assertEquals(List.of(), rows.stream()
 			.filter(row -> row.questId() == 1913)
 			.filter(row -> Set.of("EVIDENCE_REQUIRED", "CLIENT_PAGE_UNREACHED").contains(row.auditStatus()))
 			.map(row -> row.actualPath() + "; " + row.unresolvedReason())

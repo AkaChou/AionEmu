@@ -34,9 +34,9 @@ class QuestProductionAcceptProtocolRegressionTest {
 	private record AcceptRoute(int questId, int npcId) {
 	}
 
-	/** 确认范围：f737cfef1 从 level-up 误改为残缺手写 1002 的任务 + 同一审计批次内同构缺陷。 */
+	/** 确认范围：f737cfef1 从 level-up 误改为残缺手写 1002 的任务、同构审计缺陷及客户端实测失败任务。 */
 	private static final List<Integer> CONFIRMED_QUESTS = List.of(
-		1913, 1914, 1915, 1916, 16802, 16803, 16804, 80028, 80031, 80032);
+		1149, 1913, 1914, 1915, 1916, 16802, 16803, 16804, 80028, 80031, 80032);
 
 	@Test
 	void everyConfirmedQuestHasACompleteNpcAcceptProtocolAtIrcLevel() throws Exception {
