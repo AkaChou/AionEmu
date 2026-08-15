@@ -46,6 +46,18 @@ class Quest1149ClientDialogAlignmentTest {
 				&& page.dialogId() == QuestDialogAction.ASK_QUEST_ACCEPT.id()));
 	}
 
+	@Test
+	void startsPoppyFollowingWhenTheEscortStepBegins() throws Exception {
+		QuestTransition escort = definition().definition().transitions().stream()
+			.filter(transition -> transition.sourceNode().equals("started"))
+			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == 203191 && Integer.valueOf(QuestDialogAction.SETPRO1.id()).equals(talk.dialogId()))
+			.findFirst().orElseThrow();
+
+		assertEquals("v1", escort.targetNode());
+		assertTrue(escort.afterCommit().contains(new AfterCommitAction.StartFollow("poppy")));
+	}
+
 	private static QuestTransition talk(List<QuestTransition> transitions, String source, QuestDialogAction action) {
 		return transitions.stream()
 			.filter(transition -> transition.sourceNode().equals(source))

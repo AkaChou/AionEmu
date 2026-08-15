@@ -19,12 +19,25 @@ public class FollowManager {
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void targetTooFar(NpcAI2 npcAI) {
-		Npc npc = npcAI.getOwner();
 		if (npcAI.isLogging()) {
 			AI2Logger.info(npcAI, "Follow manager - targetTooFar");
 		}
-		if (npcAI.isMoveSupported()) {
-			npc.getMoveController().moveToTargetObject();
+		startMoving(npcAI);
+	}
+
+	/**
+	 * 立即启动朝当前跟随目标的移动；无移动能力的 NPC 保持原地。
+	 * Starts movement toward the current follow target immediately; immobile NPCs remain stationary.
+	 *
+	 * @param npcAI NPC AI 实例 / NPC AI instance
+	 * @return 是否启动移动 / whether movement was started
+	 */
+	public static boolean startMoving(NpcAI2 npcAI) {
+		if (!npcAI.isMoveSupported()) {
+			return false;
 		}
+		Npc npc = npcAI.getOwner();
+		npc.getMoveController().moveToTargetObject();
+		return true;
 	}
 }

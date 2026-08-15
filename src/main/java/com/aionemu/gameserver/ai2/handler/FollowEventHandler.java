@@ -5,6 +5,7 @@ import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.manager.EmoteManager;
+import com.aionemu.gameserver.ai2.manager.FollowManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.utils.MathUtil;
@@ -28,6 +29,7 @@ public class FollowEventHandler {
 		if (npcAI.setStateIfNot(AIState.FOLLOWING)) {
 			npcAI.getOwner().setTarget(creature);
 			EmoteManager.emoteStartFollowing(npcAI.getOwner());
+			FollowManager.startMoving(npcAI);
 		}
 	}
 
