@@ -49,9 +49,29 @@
       </after-commit>
     </transition>
     <!-- 接受接取。 Accept the quest. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799522" action="ASK_QUEST_ACCEPT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799522" actions="QUEST_ACCEPT_1 QUEST_ACCEPT_SIMPLE"/>
+        <dialog type="TALK_TO_NPC" npc-id="799522" action="QUEST_ACCEPT_1"/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799522" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -172,6 +192,22 @@
       <event>
         <can-act template-id="730359" action-type="ACTION_ITEM_USE"/>
       </event>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799522" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799522" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
     </transition>
   </transitions>
 </quest-definition>

@@ -45,6 +45,14 @@
       </after-commit>
     </transition>
     <!-- 接受任务：启动 480 秒计时器并开始任务。 Accept quest: start 480s timer and begin. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799527" action="ASK_QUEST_ACCEPT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799527" action="QUEST_ACCEPT_1"/>
@@ -237,5 +245,13 @@
     <npc-complete npc-id="799503" source="r0" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799527" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

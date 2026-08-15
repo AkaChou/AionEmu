@@ -43,6 +43,14 @@
       </after-commit>
     </transition>
     <!-- 接受任务。 Accept the quest. -->
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799403" action="ASK_QUEST_ACCEPT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799403" action="QUEST_ACCEPT_1"/>
@@ -159,6 +167,22 @@
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799403" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799403" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>

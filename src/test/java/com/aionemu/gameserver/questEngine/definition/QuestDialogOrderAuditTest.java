@@ -16,6 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestDialogOrderAuditTest {
+	private static final Set<Integer> CONFIRMED_ACCEPT_DIALOG_QUESTS = Set.of(
+		1354, 1614, 2284, 2333, 2392, 2436, 2493, 2533, 2611, 3001, 3006, 3020, 3023, 3035, 3050,
+		3092, 3200, 3208, 3721, 3725, 4051, 4082, 4200, 4718, 4721, 4725, 11006, 11033, 11040, 11147,
+		14120, 14123, 14153, 18500, 18511, 19000, 21136, 21467, 28511, 30051, 30151, 30227, 30327,
+		80016, 80018);
+	private static final Set<String> ACCEPT_DIALOG_PAGES = Set.of("4", "1003", "1004");
+
 	@Test
 	void activeClientPagesHaveRoutesInTheCompiledQuestIr() throws Exception {
 		Path pages = Path.of("docs/quest/client-dialog-mapping/quest-dialog-pages.csv");
@@ -34,6 +41,15 @@ class QuestDialogOrderAuditTest {
 		assertTrue(rows.stream().filter(row -> row.auditStatus().equals("PAGE_ACTION_MATCHED"))
 			.allMatch(row -> row.candidateCount() > 0 && row.candidate() != null
 				&& row.candidate().index() >= 1 && row.candidate().index() <= row.candidateCount()));
+		assertEquals(List.of(), rows.stream()
+			.filter(row -> CONFIRMED_ACCEPT_DIALOG_QUESTS.contains(row.questId()))
+			.filter(row -> Set.of("EVIDENCE_REQUIRED", "CLIENT_PAGE_UNREACHED").contains(row.auditStatus()))
+			.filter(row -> (row.serverSourceState().equals("unaccepted")
+					&& (row.clientVisibleAction().equals("1007") || ACCEPT_DIALOG_PAGES.contains(row.shownPage())))
+				|| (row.auditStatus().equals("CLIENT_PAGE_UNREACHED")
+					&& ACCEPT_DIALOG_PAGES.contains(row.shownPage())))
+			.map(row -> row.questId() + ": " + row.actualPath() + "; " + row.unresolvedReason())
+			.toList());
 		assertTrue(rows.stream()
 			.filter(row -> row.auditStatus().equals("EVIDENCE_REQUIRED")
 				&& row.unresolvedReason().startsWith("visible client action has no route"))

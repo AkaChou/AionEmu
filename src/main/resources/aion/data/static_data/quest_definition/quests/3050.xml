@@ -50,13 +50,21 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
       </after-commit>
     </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798211" action="ASK_QUEST_ACCEPT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798211" action="QUEST_ACCEPT_1"/>
       </event>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <close-dialog/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <!-- 开始:有任务物品显示 1011,无物品显示 1097。 -->
@@ -159,7 +167,23 @@
         <dialog type="TALK_TO_NPC" npc-id="798211" actions="QUEST_REFUSE_1"/>
       </event>
       <after-commit>
-        <close-dialog/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798211" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798211" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>
