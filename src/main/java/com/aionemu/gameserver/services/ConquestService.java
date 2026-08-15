@@ -24,7 +24,6 @@ import com.aionemu.gameserver.model.conquest.ConquestLocation;
 import com.aionemu.gameserver.model.conquest.ConquestStateType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.conquestspawns.ConquestSpawnTemplate;
@@ -32,9 +31,6 @@ import com.aionemu.gameserver.services.conquestservice.ConquestOffering;
 import com.aionemu.gameserver.services.conquestservice.ConquestStartRunnable;
 import com.aionemu.gameserver.services.conquestservice.Offering;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
-import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 征服/供奉（Conquest/Offering）世界活动服务：稀有怪与限时副本开启通知。
@@ -150,161 +146,6 @@ public class ConquestService {
 					loc.getSpawned().add(SpawnEngine.spawnObject(conquesttemplate, 1));
 				}
 			}
-		}
-	}
-
-	/**
-	 * 广播征服/供奉稀有怪出现消息。
-	 * Broadcast the conquest/offering rare-monster appearance message.
-	 *
-	 * @param id 活动地点 ID / conquest location id
-	 * @return 是否已处理该 ID / whether the id was handled
-	 */
-	public boolean conquestOfferingMsg(int id) {
-		switch (id) {
-		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					PacketSendUtility.sendSys3Message(player, "\uE00D",
-							"The <Conquest/Offering> a rare monster appeared !!!");
-				}
-			});
-			return true;
-		default:
-			return false;
-		}
-	}
-
-	/**
-	 * 广播舒哥皇帝宝库开启消息。
-	 * Broadcast the Shugo Emperor's Vault open message.
-	 *
-	 * @param id 活动地点 ID / conquest location id
-	 * @return 是否已处理该 ID / whether the id was handled
-	 */
-	public boolean emperorVaultMsg(int id) {
-		switch (id) {
-		case 3:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					PacketSendUtility.sendSys3Message(player, "\uE0BD", "Shugo Emperor's Vault is now open !!!");
-				}
-			});
-			return true;
-		default:
-			return false;
-		}
-	}
-
-	/**
-	 * 广播皇帝特里鲁纳克保险箱开启消息。
-	 * Broadcast Emperor Trillirunerk's Safe open message.
-	 *
-	 * @param id 活动地点 ID / conquest location id
-	 * @return 是否已处理该 ID / whether the id was handled
-	 */
-	public boolean trillirunerkSafeMsg(int id) {
-		switch (id) {
-		case 4:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					PacketSendUtility.sendSys3Message(player, "\uE11C", "Emperor Trillirunerk's Safe is now open !!!");
-				}
-			});
-			return true;
-		default:
-			return false;
-		}
-	}
-
-	/**
-	 * 广播阴燃火神殿开启消息。
-	 * Broadcast the Smoldering Fire Temple open message.
-	 *
-	 * @param id 活动地点 ID / conquest location id
-	 * @return 是否已处理该 ID / whether the id was handled
-	 */
-	public boolean smolderingFireTempleMsg(int id) {
-		switch (id) {
-		case 5:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					PacketSendUtility.sendSys3Message(player, "\uE114", "Smoldering Fire Temple is now open !!!");
-				}
-			});
-			return true;
-		default:
-			return false;
-		}
-	}
-
-	/**
-	 * 广播库姆基洞窟开启消息。
-	 * Broadcast the Kumuki Cave open message.
-	 *
-	 * @param id 活动地点 ID / conquest location id
-	 * @return 是否已处理该 ID / whether the id was handled
-	 */
-	public boolean kumukiCaveMsg(int id) {
-		switch (id) {
-		case 6:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					PacketSendUtility.sendSys3Message(player, "\uE054", "Kumuki Cave is now open !!!");
-				}
-			});
-			return true;
-		default:
-			return false;
-		}
-	}
-
-	/**
-	 * 广播 IDEvent Def UnderPath 开启消息。
-	 * Broadcast the IDEvent Def UnderPath open message.
-	 *
-	 * @param id 活动地点 ID / conquest location id
-	 * @return 是否已处理该 ID / whether the id was handled
-	 */
-	public boolean IDEventDefMsg(int id) {
-		switch (id) {
-		case 11:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					PacketSendUtility.sendSys3Message(player, "\uE079", "IDEvent Def UnderPath is now open !!!");
-				}
-			});
-			return true;
-		default:
-			return false;
-		}
-	}
-
-	/**
-	 * 广播提亚玛兰塔之眼开启消息。
-	 * Broadcast the Tiamaranta's Eye open message.
-	 *
-	 * @param id 活动地点 ID / conquest location id
-	 * @return 是否已处理该 ID / whether the id was handled
-	 */
-	public boolean tiamarantaMsg(int id) {
-		switch (id) {
-		case 13:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					PacketSendUtility.sendSys3Message(player, "\uE04C", "Tiamaranta's Eye is now open !!!");
-				}
-			});
-			return true;
-		default:
-			return false;
 		}
 	}
 
