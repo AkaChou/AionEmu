@@ -4,6 +4,9 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <prerequisites>
+      <quest id="1007"/>
+    </prerequisites>
     <work-items>
       <item id="190080020" count="1"/>
     </work-items>
@@ -11,7 +14,6 @@
       <reward kind="ITEM" id="190080012" amount="1"/>
     </rewards>
     <start-conditions>
-      <condition type="finished" quest-id="1007"/>
       <condition type="noacquired" quest-id="15545"/>
       <condition type="unfinished" quest-id="15545"/>
     </start-conditions>
@@ -42,6 +44,21 @@
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <actions>
+        <give-item item-id="190080020" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 登录时追赶已满足条件但错过升级接取的角色。 -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <enter-world/>
       </event>
       <conditions>
         <start-eligible/>

@@ -2,11 +2,16 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
+import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
+import com.aionemu.gameserver.model.Gender;
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.model.items.storage.PlayerStorage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
@@ -21,6 +26,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
@@ -40,13 +46,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /** Verifies the real XML -> event port -> transaction -> state/packet chain for tutorial contracts. */
 class QuestMinionTutorialProductionFlowTest {
 	private static final int PLAYER_ID = 7;
+	private static int originalQuestLimit;
 
 	@BeforeAll
 	static void configurePacketProcessor() {
+		originalQuestLimit = CustomConfig.BASIC_QUEST_SIZE_LIMIT;
+		CustomConfig.BASIC_QUEST_SIZE_LIMIT = 40;
 		NetworkConfig.PACKET_PROCESSOR_MIN_THREADS = 1;
 		NetworkConfig.PACKET_PROCESSOR_MAX_THREADS = 1;
 		NetworkConfig.PACKET_PROCESSOR_THREAD_SPAWN_THRESHOLD = 1;
 		NetworkConfig.PACKET_PROCESSOR_THREAD_KILL_THRESHOLD = 1;
+	}
+
+	@AfterAll
+	static void restoreQuestLimit() {
+		CustomConfig.BASIC_QUEST_SIZE_LIMIT = originalQuestLimit;
 	}
 
 	@Test
@@ -62,9 +76,34 @@ class QuestMinionTutorialProductionFlowTest {
 			assertEquals(QuestStatus.REWARD, fixture.state().getStatus(), tutorial.toString());
 			assertEquals(1, fixture.state().getQuestVars().getQuestVars(), tutorial.toString());
 			assertEquals(1, fixture.persistedState().getQuestVars().getQuestVars(), tutorial.toString());
-			assertQuestAction(fixture.packets().getLast(), tutorial.questId, QuestStatus.REWARD, 1);
+			assertQuestAction(fixture.packets().getLast(), 2, tutorial.questId, QuestStatus.REWARD, 1);
 			assertTrue(fixture.calls().indexOf("state.persist") < fixture.calls().indexOf("jdbc.commit"));
 			assertTrue(fixture.calls().indexOf("jdbc.commit") < fixture.calls().indexOf("state.publish"));
+		}
+	}
+
+	@Test
+	void nonDefaultAscensionBranchesStartOnLevelUpAndLoginCatchUp() throws Exception {
+		for (Tutorial tutorial : Tutorial.values()) {
+			for (QuestEvent event : List.<QuestEvent>of(new QuestEvent.LevelUp(), new QuestEvent.EnterWorld())) {
+				Fixture fixture = fixture(tutorial, QuestStatus.NONE, 0);
+				QuestStartEligibility eligibility = fixture.startEligibility()
+					.snapshot(PLAYER_ID, tutorial.questId, event);
+				assertTrue(eligibility.eligible(),
+					() -> tutorial + " on " + event + ": " + eligibility.reason());
+
+				QuestEventRouter.DispatchResult result = fixture.dispatch(event, QuestDispatchContract.BROADCAST);
+
+				assertNoFailure(result);
+				assertTrue(result.handled(), () -> tutorial + " on " + event + ": " + result);
+				assertEquals(QuestStatus.START, fixture.state().getStatus(), tutorial.toString());
+				assertEquals(QuestStatus.START, fixture.persistedState().getStatus(), tutorial.toString());
+				assertEquals(List.of(new QuestAction.GiveItem(tutorial.itemId, 1)),
+					fixture.appliedActions().getLast(), tutorial.toString());
+				assertQuestAction(fixture.packets().getLast(), 1, tutorial.questId, QuestStatus.START, 0);
+				assertTrue(fixture.calls().indexOf("state.persist") < fixture.calls().indexOf("jdbc.commit"));
+				assertTrue(fixture.calls().indexOf("jdbc.commit") < fixture.calls().indexOf("state.publish"));
+			}
 		}
 	}
 
@@ -80,7 +119,7 @@ class QuestMinionTutorialProductionFlowTest {
 			assertTrue(result.handled(), () -> tutorial + ": " + result);
 			assertEquals(QuestStatus.REWARD, fixture.state().getStatus(), tutorial.toString());
 			assertEquals(1, fixture.state().getQuestVars().getQuestVars(), tutorial.toString());
-			assertQuestAction(fixture.packets().getLast(), tutorial.questId, QuestStatus.REWARD, 1);
+			assertQuestAction(fixture.packets().getLast(), 2, tutorial.questId, QuestStatus.REWARD, 1);
 		}
 	}
 
@@ -88,7 +127,18 @@ class QuestMinionTutorialProductionFlowTest {
 		CompiledQuestDefinition definition = definition(tutorial.questId);
 		List<String> calls = new ArrayList<>();
 		Player player = player(tutorial.questId, status, packedVariables);
+		PlayerCommonData commonData = new PlayerCommonData(PLAYER_ID);
+		setField(PlayerCommonData.class, commonData, "level", 14);
+		setField(PlayerCommonData.class, commonData, "race", tutorial.race);
+		setField(PlayerCommonData.class, commonData, "playerClass", tutorial.playerClass);
+		setField(PlayerCommonData.class, commonData, "gender", Gender.MALE);
+		setField(Player.class, player, "playerCommonData", commonData);
+		QuestState prerequisite = new QuestState(tutorial.prerequisiteId, QuestStatus.COMPLETE,
+			0, 1, null, tutorial.prerequisiteReward, null);
+		prerequisite.setPersistentState(PersistentState.UPDATED);
+		player.getQuestStateList().addQuest(tutorial.prerequisiteId, prerequisite);
 		RecordingDao dao = new RecordingDao();
+		RecordingActionPort actionPort = new RecordingActionPort();
 		QuestMetadata metadata = definition.definition().metadata();
 		PlayerQuestStatePort stateDelegate = new PlayerQuestStatePort(playerId -> player, dao,
 			questId -> questId == tutorial.questId ? metadata : null);
@@ -117,12 +167,15 @@ class QuestMinionTutorialProductionFlowTest {
 		TypedQuestAfterCommitPort afterCommit = new TypedQuestAfterCommitPort(
 			new PlayerQuestDialogPort(playerId -> player), null, null, null, null, null,
 			stateSync, null, null, null);
+		PlayerQuestStartEligibilityPort startEligibility = new PlayerQuestStartEligibilityPort(
+			playerId -> player, id -> id == tutorial.questId ? metadata : null, (id, value) -> false);
 		QuestProductionDispatcher dispatcher = new QuestProductionDispatcher(
 			new ImmutableQuestCatalog(List.of(definition)),
 			new QuestExecutionCoordinator(new PlayerSerialExecutor()),
-			new PlayerQuestEventPort(playerId -> player), new NoOpActionPort(), statePort,
+			new PlayerQuestEventPort(playerId -> player, startEligibility, ignored -> false),
+			actionPort, statePort,
 			afterCommit, () -> transaction(calls), ignored -> { }, new QuestRuntimeMetricsCollector());
-		return new Fixture(player, dispatcher, dao, calls);
+		return new Fixture(player, dispatcher, startEligibility, dao, actionPort.appliedActions, calls);
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
@@ -139,9 +192,11 @@ class QuestMinionTutorialProductionFlowTest {
 		Player player = new ObjenesisStd().newInstance(Player.class);
 		setField(AionObject.class, player, "objectId", PLAYER_ID);
 		QuestStateList states = new QuestStateList();
-		QuestState state = new QuestState(questId, status, packedVariables, 0, null, null, null);
-		state.setPersistentState(PersistentState.UPDATED);
-		states.addQuest(questId, state);
+		if (status != QuestStatus.NONE) {
+			QuestState state = new QuestState(questId, status, packedVariables, 0, null, null, null);
+			state.setPersistentState(PersistentState.UPDATED);
+			states.addQuest(questId, state);
+		}
 		setField(Player.class, player, "questStateList", states);
 		PlayerStorage inventory = new PlayerStorage(StorageType.CUBE);
 		inventory.setOwner(player);
@@ -182,10 +237,10 @@ class QuestMinionTutorialProductionFlowTest {
 			});
 	}
 
-	private static void assertQuestAction(AionServerPacket packet, int questId,
-		QuestStatus status, int packed) throws Exception {
+	private static void assertQuestAction(AionServerPacket packet, int expectedAction, int questId,
+			QuestStatus status, int packed) throws Exception {
 		SM_QUEST_ACTION action = assertInstanceOf(SM_QUEST_ACTION.class, packet);
-		assertEquals(2, intField(SM_QUEST_ACTION.class, action, "action"));
+		assertEquals(expectedAction, intField(SM_QUEST_ACTION.class, action, "action"));
 		assertEquals(questId, intField(SM_QUEST_ACTION.class, action, "questId"));
 		assertEquals(status.value(), intField(SM_QUEST_ACTION.class, action, "status"));
 		assertEquals(packed, intField(SM_QUEST_ACTION.class, action, "step"));
@@ -236,20 +291,30 @@ class QuestMinionTutorialProductionFlowTest {
 	}
 
 	private enum Tutorial {
-		ELYOS(19900, 190080020),
-		ASMODIANS(29900, 190080021);
+		ELYOS(19900, 190080020, Race.ELYOS, PlayerClass.SORCERER, 1007, 2),
+		ASMODIANS(29900, 190080021, Race.ASMODIANS, PlayerClass.SONGWEAVER, 2009, 5);
 
 		private final int questId;
 		private final int itemId;
+		private final Race race;
+		private final PlayerClass playerClass;
+		private final int prerequisiteId;
+		private final int prerequisiteReward;
 
-		Tutorial(int questId, int itemId) {
+		Tutorial(int questId, int itemId, Race race, PlayerClass playerClass,
+				int prerequisiteId, int prerequisiteReward) {
 			this.questId = questId;
 			this.itemId = itemId;
+			this.race = race;
+			this.playerClass = playerClass;
+			this.prerequisiteId = prerequisiteId;
+			this.prerequisiteReward = prerequisiteReward;
 		}
 	}
 
 	private record Fixture(Player player, QuestProductionDispatcher dispatcher,
-		RecordingDao dao, List<String> calls) {
+		PlayerQuestStartEligibilityPort startEligibility,
+		RecordingDao dao, List<List<QuestAction>> appliedActions, List<String> calls) {
 		private QuestEventRouter.DispatchResult dispatch(QuestEvent event, QuestDispatchContract contract) {
 			return dispatcher.dispatch(event, PLAYER_ID, 0, contract);
 		}
@@ -267,7 +332,9 @@ class QuestMinionTutorialProductionFlowTest {
 		}
 	}
 
-	private static final class NoOpActionPort implements QuestActionPort {
+	private static final class RecordingActionPort implements QuestActionPort {
+		private final List<List<QuestAction>> appliedActions = new ArrayList<>();
+
 		@Override
 		public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
 		}
@@ -275,6 +342,7 @@ class QuestMinionTutorialProductionFlowTest {
 		@Override
 		public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
 				List<QuestAction> actions) {
+			appliedActions.add(List.copyOf(actions));
 			return QuestTransactionParticipant.none();
 		}
 	}

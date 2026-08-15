@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -16,24 +17,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class QuestMinionTutorialRetailAlignmentTest {
 	@Test
 	void tutorialOwnersUseTheRetailQuestWorkItemsAndItemPlayLifecycle() {
-		assertTutorial(19900, 190080020, 836073);
-		assertTutorial(29900, 190080021, 836074);
+		assertTutorial(19900, 1007, 190080020, 836073);
+		assertTutorial(29900, 2009, 190080021, 836074);
 	}
 
-	private static void assertTutorial(int questId, int workItemId, int npcId) {
+	private static void assertTutorial(int questId, int prerequisiteId, int workItemId, int npcId) {
 		CompiledQuestDefinition compiled = load(questId);
 		QuestDefinition definition = compiled.definition();
 
 		assertTrue(definition.metadata().itemRequirements().isEmpty());
+		assertEquals(Set.of(prerequisiteId), definition.metadata().prerequisites());
+		assertTrue(definition.metadata().startConditions().stream()
+			.noneMatch(condition -> condition.questId() == prerequisiteId));
 		assertEquals(List.of(new QuestReward("ITEM", 190080012, 1)), definition.metadata().rewards());
 		assertEquals(List.of(new QuestItemRequirement(workItemId, 1)),
 			definition.metadata().questWorkItems());
 
-		QuestTransition start = definition.transitions().stream()
-			.filter(t -> t.sourceNode().equals("unaccepted") && t.targetNode().equals("started")
-				&& t.event() instanceof QuestEvent.LevelUp)
-			.findFirst().orElseThrow();
-		assertTrue(start.actions().contains(new QuestAction.GiveItem(workItemId, 1)));
+		assertStartTransition(definition, new QuestEvent.LevelUp(), workItemId);
+		assertStartTransition(definition, new QuestEvent.EnterWorld(), workItemId);
 
 		QuestTransition itemPlay = definition.transitions().stream()
 			.filter(t -> t.sourceNode().equals("started") && t.targetNode().equals("reward")
@@ -63,6 +64,14 @@ class QuestMinionTutorialRetailAlignmentTest {
 		assertEquals(QuestStatus.REWARD, definition.nodes().stream()
 			.filter(n -> n.label().equals("reward"))
 			.findFirst().orElseThrow().projection().status());
+	}
+
+	private static void assertStartTransition(QuestDefinition definition, QuestEvent event, int workItemId) {
+		QuestTransition start = definition.transitions().stream()
+			.filter(t -> t.sourceNode().equals("unaccepted") && t.targetNode().equals("started")
+				&& t.event().equals(event))
+			.findFirst().orElseThrow();
+		assertTrue(start.actions().contains(new QuestAction.GiveItem(workItemId, 1)));
 	}
 
 	private static CompiledQuestDefinition load(int questId) {
