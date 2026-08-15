@@ -7,14 +7,14 @@
     <rewards>
       <reward kind="EXP" id="0" amount="2820"/>
     </rewards>
-    <start-conditions>
-      <condition type="finished" quest-id="2009"/>
-      <condition type="finished" quest-id="2009"/>
-      <condition type="finished" quest-id="2009"/>
-      <condition type="finished" quest-id="2009"/>
-      <condition type="finished" quest-id="2009"/>
-      <condition type="finished" quest-id="2009"/>
-    </start-conditions>
+    <start-condition-groups>
+      <group><condition type="finished" quest-id="2009" reward-mode="0"/></group>
+      <group><condition type="finished" quest-id="2009" reward-mode="1"/></group>
+      <group><condition type="finished" quest-id="2009" reward-mode="2"/></group>
+      <group><condition type="finished" quest-id="2009" reward-mode="3"/></group>
+      <group><condition type="finished" quest-id="2009" reward-mode="4"/></group>
+      <group><condition type="finished" quest-id="2009" reward-mode="5"/></group>
+    </start-condition-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>

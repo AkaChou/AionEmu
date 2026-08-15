@@ -61,6 +61,8 @@ class CompletedQuestPrerequisiteRegressionTest {
 
 	@Test
 	void gatesOtherCompletedAutomaticOwnersOnTheirLegacyPrerequisites() throws Exception {
+		assertAutomaticStart(1044, new QuestEvent.LevelUp(), Set.of(1922));
+		assertAutomaticStart(1044, new QuestEvent.EnterWorld(), Set.of(1922));
 		assertAutomaticStart(2007, new QuestEvent.LevelUp(),
 			Set.of(2100, 2001, 2002, 2003, 2004, 2005, 2006));
 		assertAutomaticStart(2007, new QuestEvent.ZoneMissionEnd(),
@@ -72,6 +74,8 @@ class CompletedQuestPrerequisiteRegressionTest {
 		assertAutomaticStart(14016, new QuestEvent.LevelUp(), Set.of(14010, 14011, 14012, 14013, 14014, 14015));
 		assertAutomaticStart(14016, new QuestEvent.ZoneMissionEnd(), Set.of(14010, 14011, 14012, 14013, 14014, 14015));
 		assertAutomaticStart(20032, new QuestEvent.LevelUp(), Set.of(20031));
+		assertAutomaticStart(2042, new QuestEvent.LevelUp(), Set.of(2947));
+		assertAutomaticStart(2042, new QuestEvent.EnterWorld(), Set.of(2947));
 		assertAutomaticStart(2947, new QuestEvent.LevelUp(), Set.of(2946));
 	}
 

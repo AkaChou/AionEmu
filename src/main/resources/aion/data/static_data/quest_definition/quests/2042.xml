@@ -4,14 +4,14 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
+    <prerequisites>
+      <quest id="2947"/>
+    </prerequisites>
     <rewards>
       <reward kind="EXP" id="0" amount="8325278"/>
       <reward kind="ITEM" id="188050927" amount="1"/>
       <reward kind="ITEM" id="164000079" amount="10"/>
     </rewards>
-    <start-conditions>
-      <condition type="finished" quest-id="2947"/>
-    </start-conditions>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="4" min="0" max="9" persistence="PERSISTENT" scope="LOCAL"/>
@@ -62,6 +62,18 @@
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>
+      </event>
+      <conditions>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 登录时追赶已完成前置任务但错过升级接取的角色。 Catch up eligible players on login. -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <enter-world/>
       </event>
       <conditions>
         <start-eligible/>

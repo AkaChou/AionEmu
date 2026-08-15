@@ -196,8 +196,7 @@ public final class PlayerQuestStartEligibilityPort implements QuestStartEligibil
 	}
 
 	private static boolean rewardMatches(QuestStartCondition condition, QuestState state) {
-		return condition.rewardMode() == state.getReward()
-			|| condition.questId() == 2947 || condition.questId() == 1922;
+		return condition.rewardMode() == state.getReward();
 	}
 
 	private static boolean hasRequiredInventoryItems(Player player, List<QuestItemRequirement> required) {

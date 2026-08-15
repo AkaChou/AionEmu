@@ -135,6 +135,62 @@ class PlayerQuestStartEligibilityPortTest {
 		}
 	}
 
+	@Test
+	void abyssEntryFlightTestsAcceptEveryCompletedPrerequisiteRewardBranch() throws Exception {
+		for (FlightTest flight : List.of(
+			new FlightTest(1044, 1922, Race.ELYOS),
+			new FlightTest(2042, 2947, Race.ASMODIANS))) {
+			QuestMetadata target = metadata(flight.questId());
+			QuestMetadata prerequisite = metadata(flight.prerequisiteId());
+			Map<Integer, QuestMetadata> definitions = Map.of(
+				flight.questId(), target, flight.prerequisiteId(), prerequisite);
+
+			for (int rewardMode = 0; rewardMode < 3; rewardMode++) {
+				int completedReward = rewardMode;
+				Player player = player(45, flight.race());
+				player.getQuestStateList().addQuest(flight.prerequisiteId(),
+					new QuestState(flight.prerequisiteId(), QuestStatus.COMPLETE,
+						0, 1, null, completedReward, null));
+				PlayerQuestStartEligibilityPort eligibility = port(player, definitions);
+				assertTrue(eligibility.snapshot(PLAYER_ID, flight.questId(), new QuestEvent.LevelUp()).eligible(),
+					() -> "quest " + flight.questId() + " rejected reward " + completedReward + " on level-up");
+				assertTrue(eligibility.snapshot(PLAYER_ID, flight.questId(), new QuestEvent.EnterWorld()).eligible(),
+					() -> "quest " + flight.questId() + " rejected reward " + completedReward + " on login");
+			}
+		}
+	}
+
+	@Test
+	void songOfBlessingAcceptsEveryAscensionRewardBranch() throws Exception {
+		QuestMetadata songOfBlessing = metadata(2911);
+		for (int rewardMode = 0; rewardMode <= 5; rewardMode++) {
+			assertRewardBranchEligible(2911, songOfBlessing, 2009, rewardMode);
+		}
+		assertRewardBranchRejected(2911, songOfBlessing, 2009, 6);
+	}
+
+	private static void assertRewardBranchEligible(int questId, QuestMetadata metadata,
+			int prerequisiteId, int rewardMode) throws Exception {
+		Player player = player(65, Race.ASMODIANS);
+		player.getQuestStateList().addQuest(prerequisiteId,
+			new QuestState(prerequisiteId, QuestStatus.COMPLETE, 0, 1, null, rewardMode, null));
+		assertTrue(port(player, Map.of(questId, metadata))
+			.snapshot(PLAYER_ID, questId, new QuestEvent.LevelUp()).eligible(),
+			() -> "quest " + questId + " rejected reward " + rewardMode);
+	}
+
+	private static void assertRewardBranchRejected(int questId, QuestMetadata metadata,
+			int prerequisiteId, int rewardMode) throws Exception {
+		Player player = player(65, Race.ASMODIANS);
+		player.getQuestStateList().addQuest(prerequisiteId,
+			new QuestState(prerequisiteId, QuestStatus.COMPLETE, 0, 1, null, rewardMode, null));
+		assertRejected(port(player, Map.of(questId, metadata)), questId,
+			new QuestEvent.LevelUp(), "START_CONDITION_REJECTED");
+	}
+
+	private record FlightTest(int questId, int prerequisiteId, Race race) {
+	}
+
 	private record DispatchBranch(int questId, int npcId, int rewardMode,
 			List<PlayerClass> permittedClasses) {
 	}
