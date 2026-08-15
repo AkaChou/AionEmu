@@ -67,6 +67,34 @@ class EarlyElyosQuestRegressionTest {
 	}
 
 	@Test
+	void stolenVillageSealUsesTheItemStackOnlyAfterAcceptance() {
+		CompiledQuestDefinition definition = load(1156);
+
+		route(definition, "started", "started",
+			new QuestEvent.CanAct(700003, "ACTION_ITEM_USE"));
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1352)),
+			route(definition, "started", "started", new QuestEvent.TalkToNpc(700003, -1)).afterCommit());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1353)),
+			route(definition, "started", "started", new QuestEvent.TalkToNpc(700003, 1353)).afterCommit());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.CloseDialog()),
+			route(definition, "started", "k1", new QuestEvent.TalkToNpc(700003, 10000)).afterCommit());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)),
+			route(definition, "k1", "k1", new QuestEvent.TalkToNpc(798003, 31)).afterCommit());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(5)),
+			route(definition, "k1", "reward", new QuestEvent.TalkToNpc(798003, 1009)).afterCommit());
+		route(definition, "reward", "complete", new QuestEvent.TalkToNpc(798003, 8));
+
+		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
+			transition.sourceNode().equals("unaccepted")
+				&& transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& (talk.npcId() == 700003 || talk.npcId() == 798003)));
+	}
+
+	@Test
 	void fossilCollectionPublishesProgressButFinalNpcStillChecksBothItems() {
 		CompiledQuestDefinition definition = load(1137);
 		QuestTransition collection = definition.definition().transitions().stream()
