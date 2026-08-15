@@ -386,6 +386,11 @@ public class NpcMoveController
         return enhancedHomeReturn && returning || !returning && !spawnDestination;
     }
 
+    static boolean shouldApplyGeoHeightCorrection(boolean enhancedHomeReturn, boolean returning,
+            boolean spawnDestination, boolean hasPathWaypoint) {
+        return !hasPathWaypoint && shouldAdjustGeoHeight(enhancedHomeReturn, returning, spawnDestination);
+    }
+
     static boolean shouldSkipStationaryRandomWalkStep(float ownerX, float ownerY, float ownerZ,
             float newX, float newY, float newZ, int randomWalk) {
         return randomWalk > 0 && ownerX == newX && ownerY == newY && ownerZ == newZ;
@@ -797,7 +802,7 @@ public class NpcMoveController
         SpawnTemplate spawn = owner.getSpawn();
         boolean spawnDestination = spawn.getX() == targetDestX && spawn.getY() == targetDestY
                 && spawn.getEffectiveZ() == targetDestZ;
-        if (shouldAdjustGeoHeight(AIConfig.ENHANCED_HOME_RETURN, returning, spawnDestination)
+        if (shouldApplyGeoHeightCorrection(AIConfig.ENHANCED_HOME_RETURN, returning, spawnDestination, path != null)
                 && GeoDataConfig.GEO_NPC_MOVE && GeoDataConfig.GEO_ENABLE
                 && !GameWorldServices.pathService().usesSpatialPath(owner)
                 && owner.getAi2().getSubState() != AISubState.WALK_PATH) {
