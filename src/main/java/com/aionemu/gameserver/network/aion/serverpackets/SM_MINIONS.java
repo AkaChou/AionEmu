@@ -348,8 +348,7 @@ public class SM_MINIONS extends AionServerPacket {
 			writeD(1);
 			break;
 		}
-		case 10: // Deaktivate Miol funktion Warn
-			writeC(0);
+		case 10: // 停止守护灵功能，无附加参数 / Stop minion functions, no payload
 			break;
 		case 11: {
 			writeD(minionSkillPoints); // Minion SkillPoints

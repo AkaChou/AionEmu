@@ -8,8 +8,15 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.commons.network.packet.BaseClientPacket;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 
 class CMMinionsTest {
 
@@ -44,6 +51,27 @@ class CMMinionsTest {
 		assertEquals(1, value(packet, "subSwitch"));
 		assertEquals(1001, value(packet, "functId"));
 		assertEquals(0, value(packet, "minionObjectId"));
+	}
+
+	@Test
+	void readsStopFunctionWithoutPayloadOrMissingFieldErrors() {
+		ByteBuffer buffer = ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN);
+		buffer.putShort((short) 13).flip();
+		Logger logger = (Logger) LoggerFactory.getLogger(BaseClientPacket.class);
+		ListAppender<ILoggingEvent> appender = new ListAppender<>();
+		appender.start();
+		logger.addAppender(appender);
+		try {
+			CM_MINIONS packet = new CM_MINIONS(0, State.IN_GAME);
+			packet.setBuffer(buffer);
+
+			assertTrue(packet.read());
+			assertEquals(0, packet.getRemainingBytes());
+			assertTrue(appender.list.stream().noneMatch(event -> event.getLevel() == Level.ERROR));
+		} finally {
+			logger.detachAppender(appender);
+			appender.stop();
+		}
 	}
 
 	private static CM_MINIONS readFunctionPacket(int subSwitch, int first, int second, int third, int fourth) {

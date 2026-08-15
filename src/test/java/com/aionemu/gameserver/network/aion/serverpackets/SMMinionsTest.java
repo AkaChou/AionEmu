@@ -13,6 +13,17 @@ import com.aionemu.gameserver.model.gameobjects.player.MinionCommonData;
 import com.aionemu.gameserver.model.templates.minion.MinionDopingBag;
 
 class SMMinionsTest {
+	@Test
+	void stopFunctionPacketHasNoPayload() {
+		ByteBuffer buffer = ByteBuffer.allocate(8);
+		SM_MINIONS packet = new SM_MINIONS(10);
+		packet.setBuf(buffer);
+		packet.writeImpl(null);
+		buffer.flip();
+
+		assertEquals(10, Short.toUnsignedInt(buffer.getShort()));
+		assertEquals(0, buffer.remaining());
+	}
 
 	@Test
 	void fullListWritesAllSixDopingSlots() throws Exception {

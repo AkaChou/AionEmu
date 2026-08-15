@@ -19,6 +19,7 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.MinionController;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
+import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerMinionsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
@@ -60,6 +61,7 @@ public class MinionService {
 	private static final int MAX_SKILL_POINTS = 50000;
 	private static final int KINAH_PER_SKILL_POINT = 20;
 	private static final int MAX_MINIONS = 200;
+	private static final long MINION_FUNCTION_PRICE = 25_000_000;
 	private static final long MINION_FUNCTION_DURATION = TimeUnit.DAYS.toMillis(30);
 	private static volatile ObjectProvider<MinionService> instanceProvider;
 	private MinionBuff minionbuff;
@@ -100,8 +102,8 @@ public class MinionService {
 			player.getMinionList().setLastUsed(lastUsedMinionId);
 		}
 		PacketSendUtility.sendPacket(player, new SM_MINIONS(0, player.getMinionList().getMinions()));
-		PacketSendUtility.sendPacket(player,
-				new SM_MINIONS(9, activeMinionFunctionExpiry(player.getCommonData().getMinionFunctionTime(), System.currentTimeMillis())));
+		int functionExpiry = activeMinionFunctionExpiry(player.getCommonData().getMinionFunctionTime(), System.currentTimeMillis());
+		PacketSendUtility.sendPacket(player, functionExpiry == 0 ? new SM_MINIONS(10) : new SM_MINIONS(9, functionExpiry));
 		PacketSendUtility.sendPacket(player, new SM_MINIONS(11, player.getMinionSkillPoints(),
 				player.getCommonData().isMinionSkillPointsAutoCharge()));
 		PacketSendUtility.sendPacket(player, new SM_MINIONS(12));
@@ -728,11 +730,39 @@ public class MinionService {
 		long now = System.currentTimeMillis();
 		long leftTime = nextMinionFunctionExpiry(player.getCommonData().getMinionFunctionTime(), now);
 		log.debug("Activate minion function. playerId={} expiresAt={}", player.getObjectId(), new Timestamp(leftTime));
-		if (player.getInventory().tryDecreaseKinah(25000000)) {
-			player.getCommonData().setMinionFunctionTime(new Timestamp(leftTime));
-			PacketSendUtility.sendPacket(player, new SM_MINIONS(9, activeMinionFunctionExpiry(new Timestamp(leftTime), now)));
-			PacketSendUtility.sendPacket(player, new SM_MINIONS(12));
+		if (!player.getInventory().tryDecreaseKinah(MINION_FUNCTION_PRICE)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FAMILIAR_MSG_FFUNCTION_USE_FAIL_BY_GOLD);
+			return;
 		}
+		Timestamp expiry = new Timestamp(leftTime);
+		player.getCommonData().setMinionFunctionTime(expiry);
+		DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+		PacketSendUtility.sendPacket(player, new SM_MINIONS(9, activeMinionFunctionExpiry(expiry, now)));
+		PacketSendUtility.sendPacket(player, new SM_MINIONS(12));
+	}
+
+	/**
+	 * 停止守护灵功能，并按剩余使用时间扣除 10% 手续费后退还基纳。
+	 * Stop minion functions and refund the remaining time after a 10% fee.
+	 *
+	 * @param player 玩家 / Player
+	 */
+	public void deactivateMinionFunction(Player player) {
+		Timestamp expiry = player.getCommonData().getMinionFunctionTime();
+		long refund = minionFunctionRefund(expiry, System.currentTimeMillis());
+		if (expiry != null) {
+			player.getCommonData().setMinionFunctionTime(null);
+			DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+		}
+		if (player.getMinion() != null) {
+			player.getMinion().getCommonData().setIsLooting(false);
+			player.getMinion().getCommonData().setIsBuffing(false);
+		}
+		if (refund > 0) {
+			player.getInventory().increaseKinah(refund);
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_REFUND_MONEY_SYSTEM((int) refund));
+		}
+		PacketSendUtility.sendPacket(player, new SM_MINIONS(10));
 	}
 
 	static long nextMinionFunctionExpiry(Timestamp currentExpiry, long now) {
@@ -741,6 +771,15 @@ public class MinionService {
 
 	static int activeMinionFunctionExpiry(Timestamp expiry, long now) {
 		return expiry != null && expiry.getTime() > now ? (int) (expiry.getTime() / 1000) : 0;
+	}
+
+	static long minionFunctionRefund(Timestamp expiry, long now) {
+		long remaining = expiry == null ? 0 : Math.max(0, expiry.getTime() - now);
+		long fullPeriods = remaining / MINION_FUNCTION_DURATION;
+		long partialPeriod = remaining % MINION_FUNCTION_DURATION;
+		long remainingValue = fullPeriods * MINION_FUNCTION_PRICE
+				+ partialPeriod * MINION_FUNCTION_PRICE / MINION_FUNCTION_DURATION;
+		return remainingValue * 90 / 100;
 	}
 
 	public static boolean rejectIfMinionFunctionExpired(Player player) {

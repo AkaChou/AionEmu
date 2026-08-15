@@ -105,10 +105,7 @@ public class CM_MINIONS extends AionClientPacket {
 		case 12:
 			readC(); // 自动功能开关 / Auto Function on/off
 			break;
-		case 13:
-			readD();
-			readC();
-			readH();
+		case 13: // 停止使用守护灵功能，无附加参数 / Stop minion functions, no payload
 			break;
 		case 14: // 增益开启 / BUFF ON
 			readC(); // 20?
@@ -211,6 +208,7 @@ public class CM_MINIONS extends AionClientPacket {
 		case 12:
 			break;
 		case 13:
+			GameEventBootstrapServices.minionService().deactivateMinionFunction(player);
 			break;
 		case 14:
 			break;

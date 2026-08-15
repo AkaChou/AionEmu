@@ -222,6 +222,40 @@ class MinionServiceTest {
 	}
 
 	@Test
+	void refundsRemainingFunctionTimeAfterTenPercentFee() {
+		long now = 1_700_000_000_000L;
+		long thirtyDays = 2_592_000_000L;
+
+		assertEquals(22_500_000, MinionService.minionFunctionRefund(new Timestamp(now + thirtyDays), now));
+		assertEquals(11_250_000, MinionService.minionFunctionRefund(new Timestamp(now + thirtyDays / 2), now));
+		assertEquals(45_000_000, MinionService.minionFunctionRefund(new Timestamp(now + thirtyDays * 2), now));
+		assertEquals(0, MinionService.minionFunctionRefund(new Timestamp(now), now));
+		assertEquals(0, MinionService.minionFunctionRefund(null, now));
+	}
+
+	@Test
+	void syncsInactiveFunctionAsStoppedAndHandlesStopRequests() throws Exception {
+		String service = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/toypet/MinionService.java"));
+		String login = service.substring(service.indexOf("public void onPlayerLogin"), service.indexOf("public void addMinion"));
+		String deactivation = service.substring(service.indexOf("public void deactivateMinionFunction"),
+				service.indexOf("static long nextMinionFunctionExpiry"));
+
+		assertTrue(login.contains("functionExpiry == 0 ? new SM_MINIONS(10) : new SM_MINIONS(9, functionExpiry)"));
+		assertTrue(deactivation.contains("setMinionFunctionTime(null)"));
+		assertTrue(deactivation.contains("new SM_MINIONS(10)"));
+	}
+
+	@Test
+	void reportsActivationPaymentFailureAndPersistsSuccessfulExpiry() throws Exception {
+		String service = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/toypet/MinionService.java"));
+		String activation = service.substring(service.indexOf("public void activateMinionFunction"),
+				service.indexOf("static long nextMinionFunctionExpiry"));
+
+		assertTrue(activation.contains("STR_FAMILIAR_MSG_FFUNCTION_USE_FAIL_BY_GOLD"));
+		assertTrue(activation.contains("DAOManager.getDAO(PlayerDAO.class).storePlayer(player)"));
+	}
+
+	@Test
 	void acknowledgesEveryDopingUseAsABuffOperation() throws Exception {
 		String service = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/toypet/MinionService.java"));
 		String buffPlayer = service.substring(service.indexOf("public void buffPlayer"), service.indexOf("public void relocateDoping"));
