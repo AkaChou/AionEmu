@@ -342,7 +342,7 @@ public class Npc extends Creature {
 	 * @return 到生成点的距离 / distance to spawn location
 	 */
 	public double getDistanceToSpawnLocation() {
-		return MathUtil.getDistance(getSpawn().getX(), getSpawn().getY(), getSpawn().getZ(), getX(), getY(), getZ());
+		return MathUtil.getDistance(getSpawn().getX(), getSpawn().getY(), getSpawn().getEffectiveZ(), getX(), getY(), getZ());
 	}
 
 	/** 是否敌对。 / Whether enemy. */

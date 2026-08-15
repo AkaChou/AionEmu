@@ -379,6 +379,11 @@ public class NpcMoveController
         return enhancedHomeReturn && returning || !returning && !spawnDestination;
     }
 
+    static boolean shouldSkipStationaryRandomWalkStep(float ownerX, float ownerY, float ownerZ,
+            float newX, float newY, float newZ, int randomWalk) {
+        return randomWalk > 0 && ownerX == newX && ownerY == newY && ownerZ == newZ;
+    }
+
     /**
      * 开始向当前目标对象移动。
      * Start moving toward the current target object.
@@ -735,7 +740,7 @@ public class NpcMoveController
         if (targetX == 0.0f && targetY == 0.0f) {
             targetX = ((Npc)this.owner).getSpawn().getX();
             targetY = ((Npc)this.owner).getSpawn().getY();
-            targetZ = ((Npc)this.owner).getSpawn().getZ();
+            targetZ = ((Npc)this.owner).getSpawn().getEffectiveZ();
         }
         this.targetDestX = targetX;
         this.targetDestY = targetY;
@@ -776,12 +781,14 @@ public class NpcMoveController
             pathStopSent = false;
             directionChanged = true;
         }
-        if (ownerX == newX && ownerY == newY && ((Npc)this.owner).getSpawn().getRandomWalk() > 0) {
+        if (shouldSkipStationaryRandomWalkStep(ownerX, ownerY, ownerZ, newX, newY, newZ,
+                ((Npc)this.owner).getSpawn().getRandomWalk())) {
             return;
         }
         boolean returning = owner.getAi2().getState() == AIState.RETURNING;
         SpawnTemplate spawn = owner.getSpawn();
-        boolean spawnDestination = spawn.getX() == targetDestX && spawn.getY() == targetDestY && spawn.getZ() == targetDestZ;
+        boolean spawnDestination = spawn.getX() == targetDestX && spawn.getY() == targetDestY
+                && spawn.getEffectiveZ() == targetDestZ;
         if (shouldAdjustGeoHeight(AIConfig.ENHANCED_HOME_RETURN, returning, spawnDestination)
                 && GeoDataConfig.GEO_NPC_MOVE && GeoDataConfig.GEO_ENABLE
                 && !GameWorldServices.pathService().usesSpatialPath(owner)
@@ -1621,7 +1628,7 @@ public class NpcMoveController
             return new Point3D(homeReturnWaypoint.getX(), homeReturnWaypoint.getY(), resolveRouteStepZ(homeReturnWaypoint));
         }
         SpawnTemplate spawn = owner.getSpawn();
-        return new Point3D(spawn.getX(), spawn.getY(), spawn.getZ());
+        return new Point3D(spawn.getX(), spawn.getY(), spawn.getEffectiveZ());
     }
 
     private float resolveRouteStepZ(RouteStep routeStep) {
@@ -1936,7 +1943,7 @@ public class NpcMoveController
             }
             this.targetDestX = ((Npc)this.owner).getSpawn().getX();
             this.targetDestY = ((Npc)this.owner).getSpawn().getY();
-            this.targetDestZ = ((Npc)this.owner).getSpawn().getZ();
+            this.targetDestZ = ((Npc)this.owner).getSpawn().getEffectiveZ();
             result = new Point3D(this.targetDestX, this.targetDestY, this.targetDestZ);
         } else {
             if (((Npc)this.owner).getAi2().isLogging()) {

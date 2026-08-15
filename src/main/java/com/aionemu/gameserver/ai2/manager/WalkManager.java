@@ -315,7 +315,8 @@ public class WalkManager {
 
 		int randomWalkNr = owner.getSpawn().getRandomWalk();
 		final int walkRange = Math.max(randomWalkNr, WALK_RANDOM_RANGE);
-		final float distToSpawn = (float) owner.getDistanceToSpawnLocation();
+		final boolean outsideWalkRange = isOutsideRandomWalkRange(owner.getX(), owner.getY(),
+			owner.getSpawn().getX(), owner.getSpawn().getY(), walkRange);
 
 		ScheduledFuture<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -330,9 +331,9 @@ public class WalkManager {
 					return;
 				}
 
-				if (distToSpawn > walkRange) {
+				if (outsideWalkRange) {
 					owner.getMoveController().moveToPoint(owner.getSpawn().getX(), owner.getSpawn().getY(),
-						owner.getSpawn().getZ());
+						owner.getSpawn().getEffectiveZ());
 				} else {
 					int maxAttempts = 5;
 					int attempts = 0;
@@ -353,7 +354,7 @@ public class WalkManager {
 							try {
 								targetZ = GameWorldServices.geoService().getZ(owner.getWorldId(), targetX, targetY, owner.getZ(), 0.5F, owner.getInstanceId());
 							} catch (Exception e) {
-								targetZ = owner.getSpawn().getZ();
+								targetZ = owner.getSpawn().getEffectiveZ();
 							}
 						}
 
@@ -378,13 +379,18 @@ public class WalkManager {
 					}
 
 					if (attempts >= maxAttempts) {
-						owner.getMoveController().moveToPoint(owner.getSpawn().getX(), owner.getSpawn().getY(), owner.getSpawn().getZ());
+						owner.getMoveController().moveToPoint(owner.getSpawn().getX(), owner.getSpawn().getY(),
+							owner.getSpawn().getEffectiveZ());
 					}
 				}
 			}
 		}, Rnd.get(AIConfig.MINIMIMUM_DELAY, AIConfig.MAXIMUM_DELAY) * 1000);
 
 		pendingWalkTasks.put(npcObjectId, task);
+	}
+
+	static boolean isOutsideRandomWalkRange(float ownerX, float ownerY, float spawnX, float spawnY, float walkRange) {
+		return MathUtil.getDistance(ownerX, ownerY, spawnX, spawnY) > walkRange;
 	}
 
 	/**
@@ -579,7 +585,7 @@ public class WalkManager {
 
 		float spawnX = npc.getSpawn().getX();
 		float spawnY = npc.getSpawn().getY();
-		float spawnZ = npc.getSpawn().getZ();
+		float spawnZ = npc.getSpawn().getEffectiveZ();
 
 		npc.getMoveController().abortMove();
 		npc.getPosition().setXYZH(spawnX, spawnY, spawnZ, npc.getSpawn().getHeading());

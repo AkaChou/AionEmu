@@ -172,6 +172,11 @@ public class SpawnTemplate {
 		return resolvedZ;
 	}
 
+	/** 返回解析后的实际出生高度，尚未解析时回退到配置高度。 / Returns the resolved spawn height, or the configured height before resolution. */
+	public float getEffectiveZ() {
+		return Float.isFinite(resolvedZ) ? resolvedZ : z;
+	}
+
 	public void setResolvedZ(float resolvedZ) {
 		this.resolvedZ = resolvedZ;
 	}

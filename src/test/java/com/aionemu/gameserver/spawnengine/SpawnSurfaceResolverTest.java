@@ -31,6 +31,7 @@ class SpawnSurfaceResolverTest {
 
 		assertEquals(108.88557f, first);
 		assertEquals(first, second);
+		assertEquals(first, spawn.getEffectiveZ());
 		assertEquals(1, geoCalls.get());
 	}
 

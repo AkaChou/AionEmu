@@ -67,6 +67,7 @@ class NpcMoveControllerPathTest {
 		owner.setAi2(new NpcAI2());
 		SpawnTemplate spawn = new SpawnTemplate(new SpawnGroup2(210010000, 210667),
 				1038.970f, 1127.112f, 118.437f, (byte) 0, 2, null, 0, 0);
+		spawn.setResolvedZ(112.25f);
 		owner.setSpawn(spawn);
 		NpcMoveController controller = new NpcMoveController(owner);
 		Field destination = NpcMoveController.class.getDeclaredField("destination");
@@ -94,7 +95,7 @@ class NpcMoveControllerPathTest {
 			assertEquals("HOME", destination.get(controller).toString());
 			assertEquals(spawn.getX(), pointX.getFloat(controller));
 			assertEquals(spawn.getY(), pointY.getFloat(controller));
-			assertEquals(spawn.getZ(), pointZ.getFloat(controller));
+			assertEquals(spawn.getEffectiveZ(), pointZ.getFloat(controller));
 			assertTrue(controller.started.get());
 			assertFalse(cachedPathValid.getBoolean(controller));
 			assertNull(cachedPath.get(controller));
@@ -309,6 +310,31 @@ class NpcMoveControllerPathTest {
 		assertFalse(NpcMoveController.shouldAdjustGeoHeight(false, true, true));
 		assertTrue(NpcMoveController.shouldAdjustGeoHeight(false, false, false));
 		assertFalse(NpcMoveController.shouldAdjustGeoHeight(false, false, true));
+	}
+
+	@Test
+	void randomWalkAtDestinationContinuesUntilHeightConverges() {
+		assertFalse(NpcMoveController.shouldSkipStationaryRandomWalkStep(
+				10, 20, 105, 10, 20, 100.4f, 6));
+		assertTrue(NpcMoveController.shouldSkipStationaryRandomWalkStep(
+				10, 20, 100.4f, 10, 20, 100.4f, 6));
+		assertFalse(NpcMoveController.shouldSkipStationaryRandomWalkStep(
+				10, 20, 100.4f, 10, 20, 100.4f, 0));
+	}
+
+	@Test
+	void resolvedHeightDefinesTheActualSpawnLocation() {
+		Npc owner = new ObjenesisStd().newInstance(Npc.class);
+		WorldPosition position = new WorldPosition(210030000);
+		position.setXYZH(1532.7224f, 1301.1207f, 101.81964f, (byte) 0);
+		owner.setPosition(position);
+		SpawnTemplate spawn = new SpawnTemplate(new SpawnGroup2(210030000, 210268),
+				1532.7224f, 1301.1207f, 110, (byte) 0, 6, null, 0, 0);
+		spawn.setResolvedZ(101.81964f);
+		owner.setSpawn(spawn);
+
+		assertEquals(0, owner.getDistanceToSpawnLocation());
+		assertTrue(owner.isAtSpawnLocation());
 	}
 
 	@Test
