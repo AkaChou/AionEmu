@@ -4,6 +4,9 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <work-items>
+      <item id="182201788" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="GOLD" id="0" amount="30540"/>
       <reward kind="EXP" id="0" amount="2108696"/>
@@ -24,53 +27,67 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="lit1" status="START"><var name="var0" value="1"/></node>
+    <node label="lit2" status="START"><var name="var0" value="2"/></node>
+    <node label="lit3" status="START"><var name="var0" value="3"/></node>
+    <node label="lit4" status="START"><var name="var0" value="4"/></node>
+    <node label="lit5" status="START"><var name="var0" value="5"/></node>
+    <node label="lit6" status="START"><var name="var0" value="6"/></node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="6"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="204592" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="204592" source="started" target="reward" page="SELECT2"/>
+    <dialog type="NPC_START" npc-id="204592" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
+      <accept-actions><give-item item-id="182201788" count="1"/></accept-actions>
+    </dialog>
     <npc-complete npc-id="204592" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="700221" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="700221" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="700221" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="700222" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="700222" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="700222" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="700223" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="700223" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="700223" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="700224" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="700224" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="700224" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="700225" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="700225" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="700225" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="700226" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="700226" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="700226" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="700227" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="700227" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="700227" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
+    <transition source="started" target="started"><event><can-act template-id="700221" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="started" target="lit1">
+      <event><dialog type="TALK_TO_NPC" npc-id="700221" action="USE_OBJECT"/></event>
+      <conditions><has-item item-id="182201788" count="1"/></conditions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="lit1" target="lit1"><event><can-act template-id="700222" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="lit1" target="lit2">
+      <event><dialog type="TALK_TO_NPC" npc-id="700222" action="USE_OBJECT"/></event>
+      <conditions><has-item item-id="182201788" count="1"/></conditions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="lit2" target="lit2"><event><can-act template-id="700223" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="lit2" target="lit3">
+      <event><dialog type="TALK_TO_NPC" npc-id="700223" action="USE_OBJECT"/></event>
+      <conditions><has-item item-id="182201788" count="1"/></conditions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="lit3" target="lit3"><event><can-act template-id="700224" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="lit3" target="lit4">
+      <event><dialog type="TALK_TO_NPC" npc-id="700224" action="USE_OBJECT"/></event>
+      <conditions><has-item item-id="182201788" count="1"/></conditions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="lit4" target="lit4"><event><can-act template-id="700225" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="lit4" target="lit5">
+      <event><dialog type="TALK_TO_NPC" npc-id="700225" action="USE_OBJECT"/></event>
+      <conditions><has-item item-id="182201788" count="1"/></conditions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="lit5" target="lit5"><event><can-act template-id="700226" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="lit5" target="lit6">
+      <event><dialog type="TALK_TO_NPC" npc-id="700226" action="USE_OBJECT"/></event>
+      <conditions><has-item item-id="182201788" count="1"/></conditions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+    </transition>
+    <transition source="lit6" target="lit6"><event><can-act template-id="700227" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="lit6" target="reward">
+      <event><dialog type="TALK_TO_NPC" npc-id="700227" action="USE_OBJECT"/></event>
+      <conditions><has-item item-id="182201788" count="1"/></conditions>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
+    </transition>
   </transitions>
 </quest-definition>

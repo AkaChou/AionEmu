@@ -4,6 +4,9 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <work-items>
+      <item id="182201305" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="272769"/>
       <reward kind="ITEM" id="162000048" amount="6"/>
@@ -23,22 +26,47 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="203997" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="203997" source="started" target="reward" page="SELECT2"/>
+    <dialog type="NPC_START" npc-id="203997" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+      <accept-actions>
+        <give-item item-id="182201305" count="1"/>
+      </accept-actions>
+    </dialog>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700164" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700164" action="USE_OBJECT"/>
+      </event>
+      <conditions>
+        <has-item item-id="182201305" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182201305" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203997" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="203997" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="700164" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="700164" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="700164" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

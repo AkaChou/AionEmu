@@ -7,12 +7,22 @@
     <items>
       <item id="182200563" count="1"/>
     </items>
-    <rewards>
-      <reward kind="GOLD" id="0" amount="4140"/>
-      <reward kind="EXP" id="0" amount="30600"/>
-      <reward kind="ITEM" id="160000006" amount="3"/>
-      <reward kind="ITEM" id="186000001" amount="1"/>
-    </rewards>
+    <work-items>
+      <item id="182200563" count="1"/>
+    </work-items>
+    <reward-groups>
+      <group>
+        <reward kind="GOLD" id="0" amount="4140"/>
+        <reward kind="EXP" id="0" amount="30600"/>
+        <reward kind="ITEM" id="160000006" amount="3"/>
+        <reward kind="ITEM" id="186000001" amount="1"/>
+      </group>
+      <group>
+        <reward kind="GOLD" id="0" amount="1800"/>
+        <reward kind="EXP" id="0" amount="20250"/>
+        <reward kind="ITEM" id="186000001" amount="1"/>
+      </group>
+    </reward-groups>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
@@ -24,95 +34,69 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
-    </node>
+    <node label="ring-found" status="START"><var name="var0" value="1"/></node>
+    <node label="reward-main" status="REWARD"><var name="var0" value="1"/></node>
+    <node label="reward-alternate" status="REWARD"><var name="var0" value="11"/></node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="203095" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="203095" source="started" target="reward" page="SELECT2"/>
-    <transition source="reward" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203095" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
+    <transition source="started" target="started"><event><can-act template-id="700005" action-type="ACTION_ITEM_USE"/></event></transition>
+    <transition source="started" target="started">
+      <event><dialog type="TALK_TO_NPC" npc-id="700005" action="USE_OBJECT"/></event>
+      <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT9"/></after-commit>
     </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203095" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
-      </event>
-      <actions>
-        <grant-reward kind="GOLD" id="0" amount="1800" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="EXP" id="0" amount="20250" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="186000001" amount="1"/>
-        <complete-quest reward-index="1"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
+    <transition source="started" target="ring-found">
+      <event><dialog type="TALK_TO_NPC" npc-id="700005" action="SETPRO1"/></event>
+      <conditions><has-item item-id="182200563" count="1" expected="false"/></conditions>
+      <actions><give-item item-id="182200563" count="1"/></actions>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
     </transition>
-    <dialog type="NPC_START" npc-id="203093" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="203093" source="started" target="reward" page="SELECT2"/>
-    <transition source="reward" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203093" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
+    <transition source="ring-found" target="ring-found">
+      <event><dialog type="TALK_TO_NPC" npc-id="203095" action="QUEST_SELECT"/></event>
+      <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT2"/></after-commit>
     </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203093" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
-      </event>
-      <actions>
-        <grant-reward kind="GOLD" id="0" amount="4140" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="EXP" id="0" amount="30600" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="160000006" amount="3"/>
-        <grant-reward kind="ITEM" id="186000001" amount="1"/>
-        <grant-reward kind="ITEM" id="186000001" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
+    <transition source="ring-found" target="reward-main" priority="0">
+      <event><dialog type="TALK_TO_NPC" npc-id="203095" action="CHECK_USER_HAS_QUEST_ITEM"/></event>
+      <conditions><has-item item-id="182200563" count="1"/></conditions>
+      <actions><remove-item item-id="182200563" count="1"/></actions>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/></after-commit>
     </transition>
-    <dialog type="NPC_START" npc-id="700005" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="700005" source="started" target="reward" page="SELECT2"/>
-    <transition source="reward" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700005" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
+    <transition source="ring-found" target="ring-found" priority="1">
+      <event><dialog type="TALK_TO_NPC" npc-id="203095" action="CHECK_USER_HAS_QUEST_ITEM"/></event>
+      <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT3"/></after-commit>
     </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="700005" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
-      </event>
-      <actions>
-        <grant-reward kind="GOLD" id="0" amount="4140" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="EXP" id="0" amount="30600" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="160000006" amount="3"/>
-        <grant-reward kind="ITEM" id="186000001" amount="1"/>
-        <grant-reward kind="ITEM" id="186000001" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
+    <transition source="ring-found" target="ring-found">
+      <event><dialog type="TALK_TO_NPC" npc-id="203095" action="SETPRO2"/></event>
+      <after-commit><close-dialog/></after-commit>
     </transition>
+    <transition source="ring-found" target="ring-found">
+      <event><dialog type="TALK_TO_NPC" npc-id="203093" action="QUEST_SELECT"/></event>
+      <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT4"/></after-commit>
+    </transition>
+    <transition source="ring-found" target="reward-alternate" priority="0">
+      <event><dialog type="TALK_TO_NPC" npc-id="203093" action="CHECK_USER_HAS_QUEST_ITEM"/></event>
+      <conditions><has-item item-id="182200563" count="1"/></conditions>
+      <actions><remove-item item-id="182200563" count="1"/></actions>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/></after-commit>
+    </transition>
+    <transition source="ring-found" target="ring-found" priority="1">
+      <event><dialog type="TALK_TO_NPC" npc-id="203093" action="CHECK_USER_HAS_QUEST_ITEM"/></event>
+      <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT5"/></after-commit>
+    </transition>
+    <transition source="ring-found" target="ring-found">
+      <event><dialog type="TALK_TO_NPC" npc-id="203093" action="SETPRO2"/></event>
+      <after-commit><close-dialog/></after-commit>
+    </transition>
+    <npc-complete npc-id="203095" source="reward-main" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <transition source="reward-alternate" target="reward-alternate">
+      <event><dialog type="TALK_TO_NPC" npc-id="203093" action="SELECT_QUEST_REWARD"/></event>
+      <after-commit><dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/></after-commit>
+    </transition>
+    <npc-complete npc-id="203093" source="reward-alternate" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="1" finish="SELECTION_DIALOG"/>
   </transitions>
 </quest-definition>

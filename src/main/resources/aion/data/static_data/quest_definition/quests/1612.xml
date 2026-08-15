@@ -19,8 +19,17 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="used1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="used2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="used3" status="START">
+      <var name="var0" value="3"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -28,14 +37,48 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="204530" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="204530" source="started" target="reward" page="SELECT2"/>
     <npc-complete npc-id="204530" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="700352" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="700352" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="700352" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
+    <transition source="started" target="started">
+      <event><can-act template-id="700352" action-type="ACTION_ITEM_USE"/></event>
+    </transition>
+    <transition source="started" target="used1">
+      <event><dialog type="TALK_TO_NPC" npc-id="700352" action="USE_OBJECT"/></event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <delete-interaction-npc schedule-respawn="true"/>
+      </after-commit>
+    </transition>
+    <transition source="used1" target="used1">
+      <event><can-act template-id="700352" action-type="ACTION_ITEM_USE"/></event>
+    </transition>
+    <transition source="used1" target="used2">
+      <event><dialog type="TALK_TO_NPC" npc-id="700352" action="USE_OBJECT"/></event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <delete-interaction-npc schedule-respawn="true"/>
+      </after-commit>
+    </transition>
+    <transition source="used2" target="used2">
+      <event><can-act template-id="700352" action-type="ACTION_ITEM_USE"/></event>
+    </transition>
+    <transition source="used2" target="used3">
+      <event><dialog type="TALK_TO_NPC" npc-id="700352" action="USE_OBJECT"/></event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <delete-interaction-npc schedule-respawn="true"/>
+      </after-commit>
+    </transition>
+    <transition source="used3" target="used3">
+      <event><can-act template-id="700352" action-type="ACTION_ITEM_USE"/></event>
+    </transition>
+    <transition source="used3" target="reward">
+      <event><dialog type="TALK_TO_NPC" npc-id="700352" action="USE_OBJECT"/></event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <delete-interaction-npc schedule-respawn="true"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

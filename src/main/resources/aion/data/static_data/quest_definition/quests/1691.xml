@@ -4,6 +4,9 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <work-items>
+      <item id="182201826" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="GOLD" id="0" amount="44360"/>
       <reward kind="EXP" id="0" amount="2108696"/>
@@ -23,8 +26,10 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="spoken-to-diana" status="START"><var name="var0" value="1"/></node>
+    <node label="returned-to-sneaker" status="START"><var name="var0" value="2"/></node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -36,27 +41,35 @@
         <give-item item-id="182201826" count="1"/>
       </accept-actions>
     </dialog>
-    <dialog type="NPC_REPORT" npc-id="798386" source="started" target="reward" page="SELECT2"/>
+    <transition source="started" target="started">
+      <event><dialog type="TALK_TO_NPC" npc-id="790005" action="QUEST_SELECT"/></event>
+      <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT2"/></after-commit>
+    </transition>
+    <transition source="started" target="spoken-to-diana">
+      <event><dialog type="TALK_TO_NPC" npc-id="790005" action="SETPRO1"/></event>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="spoken-to-diana" target="spoken-to-diana">
+      <event><dialog type="TALK_TO_NPC" npc-id="798386" action="QUEST_SELECT"/></event>
+      <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT3"/></after-commit>
+    </transition>
+    <transition source="spoken-to-diana" target="returned-to-sneaker">
+      <event><dialog type="TALK_TO_NPC" npc-id="798386" action="SETPRO2"/></event>
+      <after-commit><sync-quest-state mode="PACKET_ONLY"/><close-dialog/></after-commit>
+    </transition>
+    <transition source="returned-to-sneaker" target="returned-to-sneaker">
+      <event><can-act template-id="700563" action-type="ACTION_ITEM_USE"/></event>
+    </transition>
+    <transition source="returned-to-sneaker" target="returned-to-sneaker">
+      <event><dialog type="TALK_TO_NPC" npc-id="700563" action="USE_OBJECT"/></event>
+      <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT4"/></after-commit>
+    </transition>
+    <transition source="returned-to-sneaker" target="reward">
+      <event><dialog type="TALK_TO_NPC" npc-id="700563" action="SETPRO3"/></event>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><close-dialog/></after-commit>
+    </transition>
     <npc-complete npc-id="798386" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="790005" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
-      <accept-actions>
-        <give-item item-id="182201826" count="1"/>
-      </accept-actions>
-    </dialog>
-    <dialog type="NPC_REPORT" npc-id="790005" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="790005" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="700563" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
-      <accept-actions>
-        <give-item item-id="182201826" count="1"/>
-      </accept-actions>
-    </dialog>
-    <dialog type="NPC_REPORT" npc-id="700563" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="700563" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>

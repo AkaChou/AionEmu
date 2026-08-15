@@ -57,6 +57,11 @@
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <can-act template-id="700122" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <npc-complete npc-id="700122" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="CLOSE_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

@@ -67,6 +67,7 @@
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
@@ -74,10 +75,15 @@
         <dialog type="TALK_TO_NPC" npc-id="700188" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="700188" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_REWARD2 SELECTED_QUEST_REWARD3 SELECTED_QUEST_REWARD4 SELECTED_QUEST_REWARD5 SELECTED_QUEST_REWARD6 SELECTED_QUEST_REWARD7 SELECTED_QUEST_REWARD8 SELECTED_QUEST_REWARD9 SELECTED_QUEST_REWARD10 SELECTED_QUEST_REWARD11 SELECTED_QUEST_REWARD12 SELECTED_QUEST_REWARD13 SELECTED_QUEST_REWARD14 SELECTED_QUEST_REWARD15 SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <transition source="reward" target="reward">
+      <event>
+        <can-act template-id="700188" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <npc-complete npc-id="700188" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_REWARD2 SELECTED_QUEST_REWARD3 SELECTED_QUEST_REWARD4 SELECTED_QUEST_REWARD5 SELECTED_QUEST_REWARD6 SELECTED_QUEST_REWARD7 SELECTED_QUEST_REWARD8 SELECTED_QUEST_REWARD9 SELECTED_QUEST_REWARD10 SELECTED_QUEST_REWARD11 SELECTED_QUEST_REWARD12 SELECTED_QUEST_REWARD13 SELECTED_QUEST_REWARD14 SELECTED_QUEST_REWARD15 SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="CLOSE_DIALOG">
       <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
     <transition source="started" target="started">

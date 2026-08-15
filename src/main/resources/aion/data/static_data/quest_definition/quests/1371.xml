@@ -29,8 +29,11 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="flowers-delivered" status="START">
+      <var name="var0" value="2"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -46,16 +49,51 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition source="started" target="started" priority="0">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203949" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="203949" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
         <has-item item-id="152000601" count="5"/>
       </conditions>
       <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203949" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="flowers-delivered">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203949" action="SETPRO1"/>
+      </event>
+      <conditions>
+        <has-item item-id="152000601" count="5"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="152000601" count="5"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="flowers-delivered" target="flowers-delivered">
+      <event>
+        <can-act template-id="730039" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="flowers-delivered" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730039" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="203949" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
@@ -65,41 +103,5 @@
       <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="730039" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="730039" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="730039" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <has-item item-id="152000601" count="5"/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <npc-complete npc-id="730039" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
-      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
-      <choice action="SELECTED_QUEST_REWARD4" reward-index="5"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203949" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
   </transitions>
 </quest-definition>
