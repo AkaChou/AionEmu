@@ -17,6 +17,7 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestActionType;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.model.templates.quest.QuestNpc;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -42,12 +43,24 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 	 */
 	@Override
 	protected void handleDialogStart(Player player) {
-		if (!(GameEngineServices.questEngine().onCanAct(new QuestEnv(getOwner(), player, 0, 0),
-			getObjectTemplate().getTemplateId(), QuestActionType.ACTION_ITEM_USE))) {
+		QuestEngine questEngine = GameEngineServices.questEngine();
+		boolean actionAllowed = questEngine.onCanAct(new QuestEnv(getOwner(), player, 0, 0),
+			getObjectTemplate().getTemplateId(), QuestActionType.ACTION_ITEM_USE);
+		QuestNpc questNpc = questEngine.getQuestNpc(getObjectTemplate().getTemplateId());
+		if (!canStartInteraction(actionAllowed, !questNpc.getOnTalkEvent().isEmpty(),
+				!questNpc.getOnQuestStart().isEmpty())) {
 			return;
 		}
 		RetailPatternAI2.runQuestItemTalkedByUser(getOwner(), player);
 		super.handleDialogStart(player);
+	}
+
+	static boolean canStartInteraction(boolean actionAllowed, boolean hasTalkRoute, boolean hasQuestStartRoute) {
+		return actionAllowed || hasTalkRoute || hasQuestStartRoute;
+	}
+
+	static List<Integer> dialogIds() {
+		return List.of(QuestDialog.USE_OBJECT.id(), QuestDialog.START_DIALOG.id());
 	}
 	
 	/**
@@ -58,8 +71,14 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 	 */
 	@Override
 	protected void handleUseItemFinish(Player player) {
-		SelectDialogResult dialogResult = AI2Actions.selectDialog(this, player, 0, -1);
-		if (!dialogResult.isSuccess()) {
+		SelectDialogResult dialogResult = null;
+		for (int dialogId : dialogIds()) {
+			dialogResult = AI2Actions.selectDialog(this, player, 0, dialogId);
+			if (dialogResult.isSuccess()) {
+				break;
+			}
+		}
+		if (dialogResult == null || !dialogResult.isSuccess()) {
 			if (isDialogNpc()) {
 				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), QuestDialog.SELECT_ACTION_1011.id()));
 			}
