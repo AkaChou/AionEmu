@@ -2,6 +2,7 @@ package com.aionemu.gameserver.ai.walkers;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 
 /**
@@ -16,6 +17,18 @@ public class WalkGeneralRunnerAI2 extends GeneralNpcAI2
 	@Override
 	protected void handleMoveArrived() {
 		super.handleMoveArrived();
-		getOwner().setState(CreatureState.WEAPON_EQUIPPED);
+		setRunMode(getOwner(), true);
+	}
+
+	static void setRunMode(Npc owner, boolean running) {
+		if (owner.isInState(CreatureState.WEAPON_EQUIPPED) == running) {
+			return;
+		}
+		if (running) {
+			owner.setState(CreatureState.WEAPON_EQUIPPED);
+		} else {
+			owner.unsetState(CreatureState.WEAPON_EQUIPPED);
+		}
+		owner.getGameStats().updateSpeedInfo();
 	}
 }

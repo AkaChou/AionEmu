@@ -4,7 +4,6 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.handler.MoveEventHandler;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
-import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.utils.MathUtil;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -34,10 +33,9 @@ public class PolorSerinAI2 extends WalkGeneralRunnerAI2
 			}
 		} if (adultsNear) {
 			MoveEventHandler.onMoveArrived(this);
-			getOwner().unsetState(CreatureState.WEAPON_EQUIPPED);
+			setRunMode(getOwner(), false);
 		} else {
 			super.handleMoveArrived();
-			getOwner().setState(CreatureState.WEAPON_EQUIPPED);
 		}
 	}
 }
