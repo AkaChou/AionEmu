@@ -304,9 +304,14 @@ public class NpcMoveController
         return currentMask != newMask || destinationChanged;
     }
 
-    static boolean shouldRestartMovement(boolean enhancedHomeReturn, boolean chasingTarget, byte currentMask) {
+    static boolean shouldRestartMovement(boolean enhancedHomeReturn, boolean chasingTarget, boolean walkingRoute,
+            byte currentMask) {
         return enhancedHomeReturn ? currentMask == MovementMask.IMMEDIATE
-                : !chasingTarget || currentMask == MovementMask.IMMEDIATE;
+                : (!walkingRoute && !chasingTarget) || currentMask == MovementMask.IMMEDIATE;
+    }
+
+    static boolean shouldUsePath(boolean pathEnabled, boolean walkingRoute) {
+        return pathEnabled && !walkingRoute;
     }
 
     static boolean shouldBroadcastDestination(boolean chasingTarget, boolean pathWaypointTransition,
@@ -732,7 +737,8 @@ public class NpcMoveController
         boolean destinationChanged = targetX != this.targetDestX || targetY != this.targetDestY || targetZ != this.targetDestZ;
         boolean directionChanged = destinationChanged && shouldRestartMovement(
                 AIConfig.ENHANCED_HOME_RETURN && destination == Destination.HOME,
-                destination == Destination.TARGET_OBJECT, movementMask);
+                destination == Destination.TARGET_OBJECT,
+                owner.getAi2().getSubState() == AISubState.WALK_PATH, movementMask);
         if (destinationChanged) {
             this.heading = (byte)(Math.toDegrees(Math.atan2(targetY - ownerY, targetX - ownerX)) / 3.0);
         }
@@ -1043,7 +1049,8 @@ public class NpcMoveController
     }
 
     private boolean usesPath() {
-        return GeoDataConfig.GEO_PATH_ENABLE;
+        return shouldUsePath(GeoDataConfig.GEO_PATH_ENABLE,
+                owner != null && owner.getAi2().getSubState() == AISubState.WALK_PATH);
     }
 
     private boolean usesSpatialArrival() {

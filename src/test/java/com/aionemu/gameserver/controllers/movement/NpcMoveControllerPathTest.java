@@ -243,11 +243,20 @@ class NpcMoveControllerPathTest {
 
 	@Test
 	void movingChaseTargetDoesNotRestartTheMoveAnimation() {
-		assertTrue(NpcMoveController.shouldRestartMovement(false, true, MovementMask.IMMEDIATE));
-		assertFalse(NpcMoveController.shouldRestartMovement(false, true, MovementMask.NPC_STARTMOVE));
-		assertFalse(NpcMoveController.shouldRestartMovement(false, true, MovementMask.NPC_RUN_SLOW));
-		assertTrue(NpcMoveController.shouldRestartMovement(false, false, MovementMask.NPC_RUN_SLOW));
-		assertFalse(NpcMoveController.shouldRestartMovement(true, false, MovementMask.NPC_RUN_SLOW));
+		assertTrue(NpcMoveController.shouldRestartMovement(false, true, false, MovementMask.IMMEDIATE));
+		assertFalse(NpcMoveController.shouldRestartMovement(false, true, false, MovementMask.NPC_STARTMOVE));
+		assertFalse(NpcMoveController.shouldRestartMovement(false, true, false, MovementMask.NPC_RUN_SLOW));
+		assertTrue(NpcMoveController.shouldRestartMovement(false, false, false, MovementMask.NPC_RUN_SLOW));
+		assertFalse(NpcMoveController.shouldRestartMovement(true, false, false, MovementMask.NPC_RUN_SLOW));
+	}
+
+	@Test
+	void walkerRouteKeepsItsMoveAnimationAndUsesItsAuthoritativeSteps() {
+		assertFalse(NpcMoveController.shouldRestartMovement(false, false, true, MovementMask.NPC_WALK_SLOW));
+		assertTrue(NpcMoveController.shouldRestartMovement(false, false, true, MovementMask.IMMEDIATE));
+		assertFalse(NpcMoveController.shouldUsePath(true, true));
+		assertTrue(NpcMoveController.shouldUsePath(true, false));
+		assertFalse(NpcMoveController.shouldUsePath(false, false));
 	}
 
 	@Test
