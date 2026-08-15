@@ -66,14 +66,26 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 	@Override
 	public QuestSnapshot snapshot(Connection connection, int playerId, int questId, QuestEvent event,
 			boolean includeStartEligibility, Set<Integer> eventActivityQuestIds) throws SQLException {
-		Objects.requireNonNull(connection, "connection");
+		return snapshot(playerId, questId, event, includeStartEligibility, eventActivityQuestIds);
+	}
+
+	@Override
+	public QuestSnapshot snapshot(int playerId, int questId, QuestEvent event,
+			boolean includeStartEligibility, Set<Integer> eventActivityQuestIds) throws SQLException {
+		return snapshot(playerId, questId, event, includeStartEligibility, eventActivityQuestIds, true);
+	}
+
+	@Override
+	public QuestSnapshot snapshot(int playerId, int questId, QuestEvent event,
+			boolean includeStartEligibility, Set<Integer> eventActivityQuestIds,
+			boolean includeWorldFacts) throws SQLException {
 		Objects.requireNonNull(event, "event");
 		Objects.requireNonNull(eventActivityQuestIds, "eventActivityQuestIds");
 		Player player = players.find(playerId);
 		if (player == null) {
 			throw new SQLException("player is unavailable: " + playerId);
 		}
-		QuestSnapshot snapshot = snapshotOf(player, questId);
+		QuestSnapshot snapshot = snapshotOf(player, questId, includeWorldFacts);
 		Map<Integer, Boolean> eventActivities = eventActivitiesOf(eventActivityQuestIds);
 		if (eventActivities != null) {
 			snapshot = snapshot.withEventActivities(eventActivities);
@@ -123,7 +135,7 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 	 * 从在线玩家冻结一个任务事件快照，不修改玩家状态。
 	 * Freeze one quest-event snapshot from an online player without mutating player state.
 	 */
-	private QuestSnapshot snapshotOf(Player player, int questId) {
+	private QuestSnapshot snapshotOf(Player player, int questId, boolean includeWorldFacts) {
 		QuestState state = player.getQuestStateList().getQuestState(questId);
 		QuestStatus status = state == null ? QuestStatus.NONE : state.getStatus();
 		int packed = state == null ? 0 : state.getQuestVars().getQuestVars();
@@ -146,7 +158,7 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 			positionCaptured ? player.getY() : 0f,
 			positionCaptured ? player.getZ() : 0f,
 			positionCaptured ? player.getHeading() : (byte) 0,
-			craftFactsOf(player), null).withWorldFacts(worldFactsOf(player))
+			craftFactsOf(player), null).withWorldFacts(includeWorldFacts ? worldFactsOf(player) : null)
 			.withTeamFacts(new QuestTeamFacts(player.isInGroup2(), player.isInAlliance2()))
 			.withCompletedQuestIds(completedQuestIdsOf(player))
 			.withActiveQuestIds(activeQuestIdsOf(player))

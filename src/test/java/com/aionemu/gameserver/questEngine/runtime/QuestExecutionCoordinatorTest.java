@@ -209,7 +209,36 @@ class QuestExecutionCoordinatorTest {
 			(action, snapshot, plan) -> calls.add("after"));
 
 		assertEquals(QuestExecutionStatus.COMMITTED, result.status());
-		assertEquals(List.of("setAutoCommit:false", "commit", "after"), calls);
+		assertEquals(List.of("after"), calls);
+	}
+
+	@Test
+	void noMatchDoesNotInitializeTransaction() throws Exception {
+		List<String> calls = new ArrayList<>();
+		CompiledQuestDefinition definition = definition();
+		QuestExecutionResult result = new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
+			connection(calls), 7, definition, talkToNpc(700001), definition.definition().transitions().get(0),
+			(connection, playerId, questId, event) ->
+				new QuestSnapshot(playerId, questId, QuestStatus.NONE, 0, Map.of()),
+			new RecordingActionPort(calls), new NoOpStatePort(),
+			(action, snapshot, plan) -> calls.add("after"));
+
+		assertEquals(QuestExecutionStatus.NO_MATCH, result.status());
+		assertEquals(List.of(), calls);
+	}
+
+	@Test
+	void expensiveWorldFactsAreRequestedOnlyByWorldConditions() {
+		QuestTransition protocolOnly = protocolOnlyDefinition().definition().transitions().getFirst();
+		CompiledQuestDefinition worldDependent = quest(1006)
+			.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
+			.node("start", project(QuestStatus.START, vars("var1", 0)))
+			.on(talkToNpc(700001)).from("start").when(QuestDsl.worldNpcIs(203700, true)).goTo("start")
+			.compile();
+
+		assertFalse(QuestExecutionCoordinator.requiresWorldFacts(protocolOnly));
+		assertTrue(QuestExecutionCoordinator.requiresWorldFacts(
+			worldDependent.definition().transitions().getFirst()));
 	}
 
 	@Test
@@ -388,7 +417,7 @@ class QuestExecutionCoordinatorTest {
 		assertEquals(QuestFailureStage.SNAPSHOT, failure.stage());
 		assertFalse(failure.committed());
 		assertInstanceOf(IllegalStateException.class, failure.getCause());
-		assertEquals(List.of("setAutoCommit:false", "rollback"), calls);
+		assertEquals(List.of(), calls);
 	}
 
 	@Test

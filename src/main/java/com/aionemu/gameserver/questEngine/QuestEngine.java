@@ -390,6 +390,21 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
+	 * 任务状态提交后只重新评估目录中显式依赖该任务的自动获取路由。
+	 * Re-evaluates only catalog owners explicitly affected by a committed quest-state change.
+	 */
+	public void onQuestStateChanged(QuestEnv env) {
+		if (env == null || env.getPlayer() == null || env.getQuestId() <= 0) {
+			return;
+		}
+		try {
+			productionDispatcher.dispatchQuestStateChanged(env.getPlayer().getObjectId(), env.getQuestId());
+		} catch (RuntimeException ignored) {
+			// Typed dependency refresh is best-effort, matching level-up refresh behavior.
+		}
+	}
+
+	/**
 	 * 分发区域任务结束事件。
 	 * Dispatch a zone-mission-end event.
 	 *

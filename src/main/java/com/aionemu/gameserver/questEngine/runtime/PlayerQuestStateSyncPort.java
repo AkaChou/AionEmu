@@ -35,7 +35,7 @@ public final class PlayerQuestStateSyncPort implements QuestStateSyncPort {
 			objectId -> GameWorldBootstrapServices.world().findVisibleObject(objectId),
 			player -> player.getController().updateZone(),
 			player -> player.getController().updateNearbyQuests(),
-			env -> GameEngineServices.questEngine().onLvlUp(env));
+			env -> GameEngineServices.questEngine().onQuestStateChanged(env));
 	}
 
 	PlayerQuestStateSyncPort(QuestPlayerPort players, IntFunction<QuestMetadata> metadata) {
@@ -43,7 +43,7 @@ public final class PlayerQuestStateSyncPort implements QuestStateSyncPort {
 			objectId -> GameWorldBootstrapServices.world().findVisibleObject(objectId),
 			player -> player.getController().updateZone(),
 			player -> player.getController().updateNearbyQuests(),
-			env -> GameEngineServices.questEngine().onLvlUp(env));
+			env -> GameEngineServices.questEngine().onQuestStateChanged(env));
 	}
 
 	PlayerQuestStateSyncPort(QuestPlayerPort players, IntFunction<QuestMetadata> metadata,

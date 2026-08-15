@@ -17,11 +17,14 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.OptionalInt;
+import java.util.Set;
 
 /**
  * 通过中央路由器和事务协调器执行正式 typed owner。
@@ -36,6 +39,7 @@ public final class QuestProductionDispatcher {
 
 	private final QuestCatalogRegistry catalog;
 	private final QuestEventIndex index;
+	private final QuestDependencyIndex dependencyIndex;
 	private final QuestDropIndex dropIndex;
 	private final QuestEventRouter router;
 	private final QuestExecutionCoordinator coordinator;
@@ -46,10 +50,12 @@ public final class QuestProductionDispatcher {
 	private final ConnectionProvider connections;
 	private final QuestAuditSink auditSink;
 	private final QuestRuntimeMetrics metrics;
+	private final ThreadLocal<StateChangeContext> stateChanges = new ThreadLocal<>();
 
 	private QuestProductionDispatcher(QuestCatalog catalog) {
 		this.catalog = registry(catalog);
 		this.index = new QuestEventIndex(this.catalog);
+		this.dependencyIndex = new QuestDependencyIndex(this.catalog);
 		this.dropIndex = new QuestDropIndex(this.catalog);
 		this.auditSink = new LocalizedQuestAuditSink();
 		this.metrics = new QuestRuntimeMetricsCollector();
@@ -68,6 +74,7 @@ public final class QuestProductionDispatcher {
 			QuestAuditSink auditSink, QuestRuntimeMetrics metrics) {
 		this.catalog = registry(catalog);
 		this.index = new QuestEventIndex(this.catalog);
+		this.dependencyIndex = new QuestDependencyIndex(this.catalog);
 		this.dropIndex = new QuestDropIndex(this.catalog);
 		this.auditSink = Objects.requireNonNull(auditSink, "auditSink");
 		this.metrics = Objects.requireNonNull(metrics, "metrics");
@@ -190,6 +197,41 @@ public final class QuestProductionDispatcher {
 		return success;
 	}
 
+	/**
+	 * 只重新评估显式依赖已变化任务的自动 LEVEL_UP owner。嵌套状态变化进入同一队列，避免递归环重复执行。
+	 * Re-evaluates only automatic LEVEL_UP owners that explicitly depend on the changed quest. Nested state changes
+	 * join the same queue so dependency cycles cannot execute repeatedly.
+	 */
+	public void dispatchQuestStateChanged(int playerId, int changedQuestId) {
+		if (playerId <= 0 || changedQuestId <= 0) {
+			throw new IllegalArgumentException("playerId and changedQuestId must be positive");
+		}
+		StateChangeContext active = stateChanges.get();
+		if (active != null && active.playerId == playerId) {
+			active.enqueue(changedQuestId);
+			return;
+		}
+		StateChangeContext context = new StateChangeContext(playerId, changedQuestId);
+		stateChanges.set(context);
+		try {
+			while (!context.pending.isEmpty()) {
+				int changed = context.pending.removeFirst();
+				if (!context.visited.add(changed)) {
+					continue;
+				}
+				for (int ownerId : dependencyIndex.dependentsOf(changed)) {
+					dispatch(new QuestEvent.LevelUp(), playerId, ownerId, QuestDispatchContract.BROADCAST);
+				}
+			}
+		} finally {
+			if (active == null) {
+				stateChanges.remove();
+			} else {
+				stateChanges.set(active);
+			}
+		}
+	}
+
 	/** 通过 owner 的类型化获取路由执行服务器授权、无目标的共享接受。 / Executes a server-authorized, targetless share acceptance through the owner's typed acquisition route. */
 	public boolean dispatchSharedQuestAccept(int playerId, int questId, int dialogId) {
 		if (playerId <= 0 || questId <= 0 || (dialogId != 1002 && dialogId != 20000)) {
@@ -256,9 +298,9 @@ public final class QuestProductionDispatcher {
 		CompiledQuestDefinition definition = catalog.findExecutable(route.questId()).orElseThrow();
 		try {
 			QuestExecutionResult result = sharedQuestAccept
-				? coordinator.executeSharedQuestAccept(connection.get(), playerId, definition,
+				? coordinator.executeSharedQuestAccept(connection::get, playerId, definition,
 					(QuestEvent.QuestDialog) event, route.transition(), eventPort, actionPort, statePort, afterCommitPort)
-				: coordinator.execute(connection.get(), playerId, definition, event,
+				: coordinator.execute(connection::get, playerId, definition, event,
 					route.transition(), eventPort, actionPort, statePort, afterCommitPort);
 			if (!result.afterCommitFailures().isEmpty()) {
 				log.warn(I18n.get("log.quest_engine.typed_after_commit_failures",
@@ -321,6 +363,24 @@ public final class QuestProductionDispatcher {
 				connection.close();
 			} catch (SQLException failure) {
 				log.warn(I18n.get("log.quest_engine.typed_connection_close_failed"), failure);
+			}
+		}
+	}
+
+	private static final class StateChangeContext {
+		private final int playerId;
+		private final ArrayDeque<Integer> pending = new ArrayDeque<>();
+		private final Set<Integer> queued = new HashSet<>();
+		private final Set<Integer> visited = new HashSet<>();
+
+		private StateChangeContext(int playerId, int changedQuestId) {
+			this.playerId = playerId;
+			enqueue(changedQuestId);
+		}
+
+		private void enqueue(int questId) {
+			if (!visited.contains(questId) && queued.add(questId)) {
+				pending.addLast(questId);
 			}
 		}
 	}

@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
@@ -79,7 +80,7 @@ class QuestProductionDispatcherTest {
 		assertEquals(QuestFailureStage.SNAPSHOT, audit.failureStage());
 		assertFalse(audit.committed());
 		assertEquals(SQLException.class.getName(), audit.failureType());
-		assertEquals(List.of("setAutoCommit:false", "rollback", "close"), calls);
+		assertEquals(List.of(), calls);
 	}
 
 	@Test
@@ -164,6 +165,33 @@ class QuestProductionDispatcherTest {
 	}
 
 	@Test
+	void questStateChangeDispatchesOnlyDependentLevelUpOwners() {
+		List<Integer> snapshots = new ArrayList<>();
+		CompiledQuestDefinition dependent = QuestDsl.quest(1001)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.on(QuestDsl.levelUp()).from("unaccepted").when(QuestDsl.questsFinished(1100)).goTo("started")
+			.compile();
+		CompiledQuestDefinition unrelated = QuestDsl.quest(1002)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("unaccepted", project(QuestStatus.NONE, vars("var0", 0)))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.on(QuestDsl.levelUp()).from("unaccepted").goTo("started")
+			.compile();
+		QuestProductionDispatcher dispatcher = dispatcher(List.of(dependent, unrelated), new ArrayList<>(),
+			(connection, playerId, questId, event) -> {
+				snapshots.add(questId);
+				return new QuestSnapshot(playerId, questId, QuestStatus.NONE, 0, Map.of())
+					.withCompletedQuestIds(Set.of(1100));
+			});
+
+		dispatcher.dispatchQuestStateChanged(7, 1100);
+
+		assertEquals(List.of(1001), snapshots);
+	}
+
+	@Test
 	void unrelatedEventDoesNotAcquireDatabaseConnection() {
 		AtomicInteger connections = new AtomicInteger();
 		CompiledQuestDefinition definition = definition(1101);
@@ -182,6 +210,59 @@ class QuestProductionDispatcherTest {
 
 		assertFalse(result.claimed());
 		assertTrue(result.owners().isEmpty());
+		assertEquals(0, connections.get());
+	}
+
+	@Test
+	void routedConditionMismatchDoesNotAcquireDatabaseConnection() {
+		AtomicInteger connections = new AtomicInteger();
+		CompiledQuestDefinition definition = definition(1101);
+		QuestProductionDispatcher dispatcher = new QuestProductionDispatcher(
+			new ImmutableQuestCatalog(List.of(definition)), new QuestExecutionCoordinator(new PlayerSerialExecutor()),
+			(connection, playerId, questId, event) ->
+				new QuestSnapshot(playerId, questId, QuestStatus.NONE, 0, Map.of()),
+			noOpActions(), noOpState(), (action, snapshot, plan) -> { },
+			() -> {
+				connections.incrementAndGet();
+				return connection(new ArrayList<>());
+			}, ignored -> { }, new QuestRuntimeMetricsCollector());
+
+		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
+			new QuestEvent.TalkToNpc(203057, 1009), 7, 1101, QuestDispatchContract.EXCLUSIVE);
+
+		assertFalse(result.claimed());
+		assertEquals(QuestRouteResult.UNKNOWN, result.owners().getFirst().result());
+		assertEquals(0, connections.get());
+	}
+
+	@Test
+	void protocolOnlyRouteDoesNotAcquireDatabaseConnection() {
+		AtomicInteger connections = new AtomicInteger();
+		CompiledQuestDefinition definition = QuestDsl.quest(1103)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.on(new QuestEvent.TalkToNpc(203057, 31)).from("started").goTo("started")
+			.afterCommit(QuestDsl.showQuestDialog(1011))
+			.compile();
+		List<Integer> pages = new ArrayList<>();
+		QuestProductionDispatcher dispatcher = new QuestProductionDispatcher(
+			new ImmutableQuestCatalog(List.of(definition)), new QuestExecutionCoordinator(new PlayerSerialExecutor()),
+			(connection, playerId, questId, event) ->
+				new QuestSnapshot(playerId, questId, QuestStatus.START, 0, Map.of()),
+			noOpActions(), noOpState(), (action, snapshot, plan) -> {
+				if (action instanceof com.aionemu.gameserver.questEngine.definition.AfterCommitAction.ShowQuestDialog dialog) {
+					pages.add(dialog.dialogId());
+				}
+			}, () -> {
+				connections.incrementAndGet();
+				return connection(new ArrayList<>());
+			}, ignored -> { }, new QuestRuntimeMetricsCollector());
+
+		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
+			new QuestEvent.TalkToNpc(203057, 31), 7, 1103, QuestDispatchContract.EXCLUSIVE);
+
+		assertTrue(result.consumed());
+		assertEquals(List.of(1011), pages);
 		assertEquals(0, connections.get());
 	}
 
@@ -364,7 +445,7 @@ class QuestProductionDispatcherTest {
 		assertTrue(result.claimed());
 		assertEquals(List.of(QuestRouteResult.UNKNOWN, QuestRouteResult.HANDLED),
 			result.owners().stream().map(QuestEventRouter.OwnerResult::result).toList());
-		assertEquals(List.of("setAutoCommit:false", "commit", "close"), calls);
+		assertEquals(List.of(), calls);
 	}
 
 	private static QuestProductionDispatcher dispatcher(List<CompiledQuestDefinition> definitions,
