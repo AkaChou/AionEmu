@@ -22,7 +22,7 @@ class ItemCollectingDialogProtocolAlignmentTest {
 		15691, 18742, 18975, 18976, 18977, 18978, 23968, 25012, 25020, 25033, 25085,
 		25091, 25092, 25307, 25323, 25403, 25404, 25405, 25502, 25505, 25508, 25511,
 		25517, 25523, 25540, 25541, 25665, 25666, 25689, 25691, 28742, 28975, 28976,
-		28977, 28978, 50052,
+		28977, 28978, 29010, 29016, 29022, 29028, 29034, 50052,
 		50053, 50054, 50055, 50056, 50057, 50088, 50089, 50090, 50094, 80723, 80724,
 		80725, 80726, 80727, 80728, 80729, 80730, 80735, 80736, 80834, 80835, 80836, 80837,
 		80838, 80839, 80840, 80841, 80870, 80871, 80872, 80874, 80877, 80878, 80881,
@@ -95,6 +95,22 @@ class ItemCollectingDialogProtocolAlignmentTest {
 				.anyMatch(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 					&& dropSources.contains(talk.npcId())),
 				"quest " + questId + " drop source must not own dialog routes");
+		}
+	}
+
+	@Test
+	void craftingMasterQuestsGrantTheirDesignOnAcceptance() throws Exception {
+		for (MasterItemQuest quest : List.of(
+			new MasterItemQuest(29010, 204104, 152232012),
+			new MasterItemQuest(29016, 204106, 152232013),
+			new MasterItemQuest(29022, 204110, 152232014),
+			new MasterItemQuest(29028, 204108, 152232016),
+			new MasterItemQuest(29034, 204102, 152232015))) {
+			QuestDefinition definition = compile(quest.id());
+			List<QuestTransition> accepts = talkRoutes(definition, "unaccepted", quest.npcId(), 20000);
+			assertEquals(1, accepts.size(), "quest " + quest.id() + " acceptance route");
+			assertTrue(accepts.getFirst().actions().contains(new QuestAction.GiveItem(quest.designItemId(), 1)),
+				"quest " + quest.id() + " design grant");
 		}
 	}
 
@@ -294,6 +310,11 @@ class ItemCollectingDialogProtocolAlignmentTest {
 			case 28975, 28976 -> 805218;
 			case 28977 -> 802353;
 			case 28978 -> 802433;
+			case 29010 -> 204104;
+			case 29016 -> 204106;
+			case 29022 -> 204110;
+			case 29028 -> 204108;
+			case 29034 -> 204102;
 			case 80723, 80725, 80727, 80729 -> 833543;
 			case 80724, 80726, 80728, 80730 -> 833545;
 			case 80735 -> 833544;
@@ -314,5 +335,8 @@ class ItemCollectingDialogProtocolAlignmentTest {
 	}
 
 	private record SimpleItemQuest(int id, int npcId) {
+	}
+
+	private record MasterItemQuest(int id, int npcId, int designItemId) {
 	}
 }
