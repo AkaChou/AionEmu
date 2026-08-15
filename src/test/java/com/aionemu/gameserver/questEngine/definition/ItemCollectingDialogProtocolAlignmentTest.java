@@ -21,8 +21,9 @@ class ItemCollectingDialogProtocolAlignmentTest {
 		25020, 25033, 25085, 25091, 25092, 25307, 25323, 25403, 25404, 25405, 25540,
 		25541, 25665, 25666, 25689, 25691, 28742, 28975, 28976, 28977, 28978, 50052,
 		50053, 50054, 50055, 50056, 50057, 50088, 50089, 50090, 50094, 80723, 80724,
-		80725, 80726, 80727, 80728, 80729, 80730, 80834, 80835, 80836, 80837, 80838, 80839, 80840,
-		80841, 80877, 80881, 80900, 80901, 80902, 80903, 80904, 80905, 80906, 80907,
+		80725, 80726, 80727, 80728, 80729, 80730, 80735, 80736, 80834, 80835, 80836, 80837,
+		80838, 80839, 80840, 80841, 80870, 80871, 80872, 80874, 80877, 80878, 80881,
+		80900, 80901, 80902, 80903, 80904, 80905, 80906, 80907,
 		80908, 80909, 80910, 80911, 80912, 80913, 80914, 80915, 80916, 80917, 80918,
 		80919, 80947, 80948, 80949, 80950, 80951, 80953
 	};
@@ -60,6 +61,19 @@ class ItemCollectingDialogProtocolAlignmentTest {
 				});
 			assertTrue(definition.transitions().stream().anyMatch(transition -> "reward".equals(transition.sourceNode())
 				&& "complete".equals(transition.targetNode())), "quest " + questId + " completion route");
+		}
+	}
+
+	@Test
+	void lunaItemTurnInsKeepStartAndEndNpcOwnershipSeparate() throws Exception {
+		for (int questId : List.of(80870, 80871, 80872, 80874)) {
+			QuestDefinition definition = compile(questId);
+			assertTrue(talkRoutes(definition, "started", 833825, 31).isEmpty(),
+				"quest " + questId + " start NPC must not own started selection");
+			assertTrue(talkRoutes(definition, "started", 833825, 39).isEmpty(),
+				"quest " + questId + " start NPC must not own item check");
+			assertTrue(talkRoutes(definition, "reward", 833825).isEmpty(),
+				"quest " + questId + " start NPC must not own reward routes");
 		}
 	}
 
@@ -160,10 +174,16 @@ class ItemCollectingDialogProtocolAlignmentTest {
 	}
 
 	private static List<QuestTransition> talkRoutes(QuestDefinition definition, String source, int npcId, int dialogId) {
+		return talkRoutes(definition, source, npcId).stream()
+			.filter(transition -> Integer.valueOf(dialogId).equals(((QuestEvent.TalkToNpc) transition.event()).dialogId()))
+			.toList();
+	}
+
+	private static List<QuestTransition> talkRoutes(QuestDefinition definition, String source, int npcId) {
 		return definition.transitions().stream()
 			.filter(transition -> source.equals(transition.sourceNode()))
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.npcId() == npcId && Integer.valueOf(dialogId).equals(talk.dialogId()))
+				&& talk.npcId() == npcId)
 			.toList();
 	}
 
@@ -190,6 +210,7 @@ class ItemCollectingDialogProtocolAlignmentTest {
 			case 50052, 50053, 50054, 50055, 50056, 50057 -> List.of(833982, 833983);
 			case 50088 -> List.of(835542, 835543);
 			case 50089, 50090, 50094 -> List.of(835680, 835681);
+			case 80870, 80871, 80872, 80874 -> List.of(834167);
 			default -> startNpcs(questId);
 		};
 	}
@@ -229,10 +250,13 @@ class ItemCollectingDialogProtocolAlignmentTest {
 			case 28978 -> 802433;
 			case 80723, 80725, 80727, 80729 -> 833543;
 			case 80724, 80726, 80728, 80730 -> 833545;
+			case 80735 -> 833544;
+			case 80736 -> 833546;
 			case 80834, 80836 -> 833742;
 			case 80835, 80837 -> 833743;
 			case 80838, 80839, 80840, 80841 -> 832913;
-			case 80877, 80881 -> 834463;
+			case 80870, 80871, 80872, 80874 -> 833825;
+			case 80877, 80878, 80881 -> 834463;
 			case 80900, 80901, 80902, 80903, 80904, 80905, 80906, 80907, 80908, 80909,
 				80910, 80911, 80912, 80913, 80914, 80915, 80916, 80917, 80918, 80919 -> 834418;
 			case 80947, 80948 -> 835439;
