@@ -105,14 +105,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="k1" target="started">
-      <event>
-        <log-out/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203195" action="QUEST_SELECT"/>
