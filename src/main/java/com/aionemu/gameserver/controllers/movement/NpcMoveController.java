@@ -53,6 +53,8 @@ public class NpcMoveController
     public static final float MOVE_CHECK_OFFSET = 0.1f;
     /** 内部移动偏移 / Internal move offset */
     private static final float MOVE_OFFSET = 0.05f;
+    /** 地面与路径高度来自不同量化层时允许的到点高度误差。 / Arrival Z tolerance for differently quantized ground/path layers. */
+    private static final float GROUND_POINT_Z_TOLERANCE = 0.25f;
     /** 追击目标相对路径终点偏移超过该值则重寻。 / Repath chase when target drifts this far from path end. */
     static final float CHASE_REPATH_DISTANCE = 2.0f;
     private static final long CHASE_REPATH_NEAR_INTERVAL_MS = 500;
@@ -814,7 +816,8 @@ public class NpcMoveController
         com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(this.owner, newX, newY, newZ, this.heading, false);
         sampleStuckShadow(owner.getX(), owner.getY(), owner.getZ(), targetX, targetY, targetZ, currentSpeed, now, path,
                 (float) MathUtil.getDistance(owner.getX(), owner.getY(), owner.getZ(), targetX, targetY, targetZ), offset);
-        boolean reachedWaypoint = reachedWaypoint(targetX, targetY, targetZ, owner.getX(), owner.getY(), owner.getZ());
+        boolean reachedWaypoint = reachedWaypoint(usesSpatialArrival(),
+                targetX, targetY, targetZ, owner.getX(), owner.getY(), owner.getZ());
         if (reachedWaypoint && consumeWaypoint(path) && owner.getAi2().getState() == AIState.RETURNING
                 && shouldCompleteHomeReturn(true, isHomeReturnDestinationReached())) {
             TargetEventHandler.onTargetReached((NpcAI2) owner.getAi2());
@@ -1041,6 +1044,11 @@ public class NpcMoveController
 
     private boolean usesPath() {
         return GeoDataConfig.GEO_PATH_ENABLE;
+    }
+
+    private boolean usesSpatialArrival() {
+        return owner != null && (owner.isFlying()
+                || GeoDataConfig.GEO_ENABLE && GameWorldServices.pathService().usesSpatialPath(owner));
     }
 
     private boolean canReachWaypointCached(float x, float y, float z) {
@@ -1456,7 +1464,7 @@ public class NpcMoveController
                     stuckReplanFound.increment();
                     pendingPathRecovery = false;
                 }
-                clearPathFailureContext();
+                clearPathFailureContext(!recovery);
                 logPathResult("FOUND points=" + cachedPath.length, elapsed, requestId, obstacleVersion);
             }
         } catch (CancellationException ignored) {
@@ -1523,8 +1531,13 @@ public class NpcMoveController
         return spatialPath ? targetZ : groundZ;
     }
 
-    static boolean reachedWaypoint(float targetX, float targetY, float targetZ, float actualX, float actualY, float actualZ) {
-        return MathUtil.getDistance(targetX, targetY, targetZ, actualX, actualY, actualZ) <= MOVE_OFFSET;
+    static boolean reachedWaypoint(boolean spatialPath, float targetX, float targetY, float targetZ,
+            float actualX, float actualY, float actualZ) {
+        if (spatialPath) {
+            return MathUtil.getDistance(targetX, targetY, targetZ, actualX, actualY, actualZ) <= MOVE_OFFSET;
+        }
+        return MathUtil.getDistance(targetX, targetY, actualX, actualY) <= MOVE_OFFSET
+                && Math.abs(targetZ - actualZ) <= GROUND_POINT_Z_TOLERANCE;
     }
 
     static boolean shouldRetryFailedPath(float failedX, float failedY, float failedZ, float targetX, float targetY,
@@ -1641,6 +1654,10 @@ public class NpcMoveController
 
     public boolean isHomeReturnDestinationReached() {
         Point3D target = getHomeReturnDestination();
+        if (homeReturnWaypoint != null && !usesSpatialArrival()) {
+            return reachedWaypoint(false, target.getX(), target.getY(), target.getZ(), owner.getX(), owner.getY(),
+                    owner.getZ());
+        }
         double horizontalDistance = MathUtil.getDistance(owner.getX(), owner.getY(), target.getX(), target.getY());
         double distance = MathUtil.getDistance(owner.getX(), owner.getY(), owner.getZ(), target.getX(), target.getY(), target.getZ());
         return isReturnDestinationReached(homeReturnWaypoint != null, horizontalDistance, distance);
@@ -1661,6 +1678,10 @@ public class NpcMoveController
     }
 
     public synchronized void clearPathFailureContext() {
+        clearPathFailureContext(true);
+    }
+
+    private void clearPathFailureContext(boolean clearStuckRecovery) {
         failedPathX = Float.NaN;
         failedPathY = Float.NaN;
         failedPathZ = Float.NaN;
@@ -1669,7 +1690,9 @@ public class NpcMoveController
         pathFailureHandled = false;
         lastPathAvoidanceAt = 0;
         pathAvoidanceAttempts = 0;
-        clearStuckRecoveryState();
+        if (clearStuckRecovery) {
+            clearStuckRecoveryState();
+        }
         resetStuckShadow();
     }
 
@@ -1810,7 +1833,7 @@ public class NpcMoveController
      * @return 是否已到达 / Whether reached
      */
     public boolean isReachedPoint() {
-        return MathUtil.getDistance(((Npc)this.owner).getX(), ((Npc)this.owner).getY(), ((Npc)this.owner).getZ(), this.pointX, this.pointY, this.pointZ) < (double)0.05f;
+        return reachedWaypoint(usesSpatialArrival(), pointX, pointY, pointZ, owner.getX(), owner.getY(), owner.getZ());
     }
 
     /**

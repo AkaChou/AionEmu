@@ -349,8 +349,20 @@ class NpcMoveControllerPathTest {
 
 		assertSame(path, NpcMoveController.remainingPath(path, false));
 		assertArrayEquals(new float[][] {{2, 2, 2}}, NpcMoveController.remainingPath(path, true));
-		assertTrue(NpcMoveController.reachedWaypoint(1, 1, 1, 1, 1, 1));
-		assertFalse(NpcMoveController.reachedWaypoint(1, 1, 1, 1.1f, 1, 1));
+		assertTrue(NpcMoveController.reachedWaypoint(false, 1, 1, 1, 1, 1, 1));
+		assertFalse(NpcMoveController.reachedWaypoint(false, 1, 1, 1, 1.1f, 1, 1));
+	}
+
+	@Test
+	void groundWaypointAcceptsGeoAndPathHeightQuantizationDifference() {
+		assertTrue(NpcMoveController.reachedWaypoint(false,
+				1464, 1502, 102.078125f, 1464, 1502, 102));
+		assertFalse(NpcMoveController.reachedWaypoint(false,
+				1464, 1502, 102.26f, 1464, 1502, 102));
+		assertFalse(NpcMoveController.reachedWaypoint(false,
+				1464, 1502, 102, 1464.06f, 1502, 102));
+		assertFalse(NpcMoveController.reachedWaypoint(true,
+				1464, 1502, 102.078125f, 1464, 1502, 102));
 	}
 
 	@Test
@@ -406,6 +418,22 @@ class NpcMoveControllerPathTest {
 		float[][] oldPath = {{1, 1, 1}};
 		assertSame(oldPath, NpcMoveController.installPathResult(oldPath, null, true));
 		assertSame(oldPath, NpcMoveController.installPathResult(oldPath, new float[0][], true));
+	}
+
+	@Test
+	void plannedRecoveryKeepsItsAttemptBudgetUntilMovementProgresses() throws ReflectiveOperationException {
+		NpcMoveController controller = new NpcMoveController(null);
+		Field attempts = NpcMoveController.class.getDeclaredField("stuckReplanAttemptCount");
+		attempts.setAccessible(true);
+		attempts.setInt(controller, 1);
+		var clearFailure = NpcMoveController.class.getDeclaredMethod("clearPathFailureContext", boolean.class);
+		clearFailure.setAccessible(true);
+
+		clearFailure.invoke(controller, false);
+		assertEquals(1, attempts.getInt(controller));
+
+		controller.clearPathFailureContext();
+		assertEquals(0, attempts.getInt(controller));
 	}
 
 	@Test
