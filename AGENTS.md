@@ -58,5 +58,6 @@ All detailed rules are in `.agent/rules/`:
 |---|---|---|
 | [i18n.md](.agent/rules/i18n.md) | Entire repository | Bilingual comments, localized logging, and terminology rules / 中英双语注释、日志国际化和术语规范 |
 | [java_general.md](.agent/rules/java_general.md) | `**/*.java` | General Java conventions, error handling, dependency injection, and development workflow / Java 通用约定、错误处理、依赖注入和开发流程 |
+| [formatting.md](.agent/rules/formatting.md) | `**/*.java`, `**/*.xml` | Java and XML formatting, whitespace, wrapping, and generated-file boundaries / Java 与 XML 格式、空白、换行和生成文件边界 |
 | [lombok.md](.agent/rules/lombok.md) | `**/*.java` | Lombok boilerplate reduction and generated-behavior boundaries / Lombok 样板代码简化及生成行为边界 |
 | [quest-repair.md](.agent/rules/quest-repair.md) | Quest XML, quest engine, quest AI, quest tests, and `docs/quest/` | Quest evidence, repair, acceptance, and playbook-update rules / 任务证据、修复、验收和 Playbook 更新规则 |

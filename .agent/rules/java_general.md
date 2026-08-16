@@ -18,8 +18,8 @@ globs: "**/*.java"
 2. Prefer clear immutable designs: declare dependencies and non-changing fields as `final`, and retain mutable state only when it has explicit state-transition semantics.
 3. Use Java 25 features such as records, pattern matching, switch expressions, and try-with-resources when they improve clarity. Do not expand the task merely to adopt newer syntax.
 4. Make parameter, return-value, collection-mutability, and null semantics explicit. Fail fast on invalid input at public boundaries instead of relying on a later `NullPointerException` to express a business error.
-5. Follow existing naming, package boundaries, and formatting. Do not add duplicate `Utils` or `Manager` classes, hidden global state, or shared helpers without clear ownership.
-6. Apply `lombok.md` to beans, DTOs, and data carriers. Apply `i18n.md` to comments, logging, and terminology; do not duplicate those rules here.
+5. Follow existing naming, package boundaries, and [`formatting.md`](formatting.md). Do not add duplicate `Utils` or `Manager` classes, hidden global state, or shared helpers without clear ownership.
+6. Apply [`lombok.md`](lombok.md) to beans, DTOs, and data carriers. Apply [`i18n.md`](i18n.md) to comments, logging, and terminology; do not duplicate those rules here.
 
 ## Error Handling
 
