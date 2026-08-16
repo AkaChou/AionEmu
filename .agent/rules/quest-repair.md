@@ -31,15 +31,15 @@ Before working on a quest issue, read:
 
 ## Acceptance and Playbook Updates
 
-1. Update `docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md` for a repaired quest only after correctness acceptance is complete.
+1. Update `docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md` only when an accepted representative repair establishes a new reusable problem pattern. Do not update the playbook for another quest already covered by an existing pattern.
 2. Acceptance requires a correct XML/IR contract, passing focused tests, and passing production catalog and whitelist checks.
 3. Changes involving client pages, NPC spawning, following, login/logout behavior, or performance also require the corresponding client or runtime validation. Ask the user for missing inputs instead of downgrading acceptance to speculation.
 4. Delivery must explicitly distinguish "implementation complete" from "acceptance complete." If tests, catalog or whitelist checks, Aion 5.8 client validation, or actual runtime evidence remain incomplete, proactively mark the work as "pending acceptance" in the final response, list the outstanding commands or evidence and the responsible party, and do not report only that the issue is fixed.
-5. Deduplicate playbook cases by reusable problem pattern, not by quest ID. The first case for a pattern must record the representative quest, player-visible symptom, root cause, repair layer, changed files, validation commands and results, residual risk, commit, and an "accepted quest IDs" list containing only independently accepted quests.
-6. Treat a subsequent quest as the same problem only when its player-visible symptom, root cause, repair layer, and acceptance contract all match an existing case. After that quest passes independent acceptance, append only its quest ID to the original case's "accepted quest IDs" list; do not copy the case body or create a duplicate case. Create a new case when any of those elements differ.
-7. Do not add a case or append a quest ID to the repaired-case section for work in progress, partial repairs, failed tests, static inference only, or a quest that remains `EVIDENCE_REQUIRED`.
-8. When one shared change affects multiple quests, accept each quest independently and append only those that actually pass.
-9. Deliver a quest repair and its playbook update in the same batch. Because `docs/*` is ignored, add the playbook with an explicit path when committing it:
+5. The playbook is a repair reference, not an acceptance ledger. Deduplicate cases by reusable problem pattern, not by quest ID. Each case must record one representative quest, the player-visible symptom, root cause, repair layer, changed files, validation commands and results, reuse boundaries, and commit.
+6. Treat a subsequent quest as the same problem only when its player-visible symptom, root cause, repair layer, and repair contract all match an existing case. Do not add that quest ID, update the case body, or create a duplicate case. Create a new case only when the problem or repair pattern differs materially.
+7. Do not add a representative case for work in progress, partial repairs, failed tests, static inference only, or a quest that remains `EVIDENCE_REQUIRED`.
+8. When one shared change affects multiple quests, accept each quest independently, but keep only one representative case for the reusable pattern.
+9. When a repair establishes a new representative case, deliver the repair and its playbook update in the same batch. Because `docs/*` is ignored, add the playbook with an explicit path when committing it:
 
    ```bash
    git add -f docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md

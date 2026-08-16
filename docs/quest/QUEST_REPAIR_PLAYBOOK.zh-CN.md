@@ -353,7 +353,7 @@ python3 scripts/quest/generate_quest_dialog_enums.py --check
 
 下面的提交不是互相独立的技巧，而是一条从客户端证据到状态、协议、AI 和性能的排查链。新 agent 遇到相似症状时，先找对应案例，再读取完整 diff 和测试。
 
-本节按可复用的“问题模式”记录案例，不按任务 ID 重复写相同正文。后续任务的玩家可见症状、根因、修复层和验收合同均与已有案例相同时，仍需独立完成验收，但验收通过后只把任务 ID 追加到原案例的“已验收任务 ID”；不得新增重复案例。行为或修复层不同时才建立新案例。
+本节只按可复用的“问题模式”记录一个代表任务，目的是为后续修复提供证据和实现参考，不维护任务清单、验收名单或覆盖数量。后续任务与已有案例的症状、根因、修复层和修复合同相同时，不追加任务 ID、不修改案例正文，也不新增重复案例；问题或修复模式实质不同时才建立新案例。
 
 | 提交 | 案例 | 可复用结论 |
 |---|---|---|
@@ -375,13 +375,12 @@ python3 scripts/quest/generate_quest_dialog_enums.py --check
 
 ### 8.1 升级自动登记弹出不存在的任务页
 
-- 已验收任务 ID：38001、38002。
 - 代表任务：38001「Radiant Ops Recruitment」。
 - 玩家症状：升级自动登记任务时客户端弹出任务 HTML 的 `HtmlPageId 4 / load fail`。
 - 根因：升级入口错误发送 `SHOW_ASK_QUEST_ACCEPT_WINDOW(4)`；NPC `START_DIALOG(31)` 又错误发送 Aion 5.8 客户端不存在的 `SELECT2(1352)`。旧 handler 的升级入口只启动任务并刷新状态，NPC 对话页为 `DEFAULT_SUCCESS(10002)`。
 - 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/38001.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest38001LevelUpDialogTest.java`。
 - 验证命令和结果：`rtk mvn -q -Dtest=Quest38001LevelUpDialogTest,Quest38002LevelUpDialogTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,QuestDialogOrderAuditTest test` 通过；生产 catalog 6200 条编译成功，失败 0，白名单违规 0；顺序审计显示 38001 的 31 -> 10002 为 `PAGE_ACTION_MATCHED`，奖励页 5 为 `TERMINAL_PAGE_REACHED`；玩家实测升级登记不再弹出加载失败页。
-- 残余风险：同型任务在完成各自客户端运行验收前，不得追加到“已验收任务 ID”。
+- 复用边界：仅适用于升级入口不应显示任务页，且 NPC `START_DIALOG(31)` 应显示 `DEFAULT_SUCCESS(10002)` 的同型任务；页面、状态或副作用合同不同的任务必须重新取证。
 - commit：`d3b28d2af3a7a3085da461d96bb9dfe6118d4905`。
 
 ## 9. 提交和交接清单
