@@ -2,7 +2,7 @@
 <!--
   80033 [Event] Averting The Gaze.
   Runtime authority: legacy _80033EventAvertingTheGaze; metadata authority: quest_data.xml and
-  /Users/mc/IdeaProjects/58Server-new/Map/XML/China/quest.xml (Q80033).
+  legacy China quest.xml source (Q80033).
 -->
 <quest-definition id="80033" version="1">
   <metadata name="[Event] Averting The Gaze" display-name-id="1180033" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">

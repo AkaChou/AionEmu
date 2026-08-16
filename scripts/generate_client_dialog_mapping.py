@@ -7,6 +7,7 @@ import csv
 import hashlib
 import html
 import json
+import os
 import re
 import tempfile
 import xml.etree.ElementTree as ET
@@ -23,7 +24,8 @@ except ImportError:
 
 ACTION_PATTERN = re.compile(r"\bHACTION_[A-Z0-9_]+\b", re.IGNORECASE)
 QUEST_FILE_PATTERN = re.compile(r"^quest_q(\d+)\.html$", re.IGNORECASE)
-DEFAULT_CLIENT_ROOT = Path("/Users/mc/IdeaProjects/5.8客户端")
+CLIENT_ROOT_ENV = "AION_CLIENT_ROOT"
+UNPACK_ROOT_ENV = "AION_UNPACK_ROOT"
 OUTPUT_FILES = (
     "client-hyperlinks.csv",
     "client-html-pages.csv",
@@ -99,14 +101,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--definitions-dir",
         type=Path,
-        default=Path("/Users/mc/PycharmProjects/unpak/dialog_unpacked"),
-        help="Directory containing decoded HyperLinks.xml and HtmlPages.xml.",
+        default=None,
+        help=f"Directory containing decoded HyperLinks.xml and HtmlPages.xml (default: ${{{UNPACK_ROOT_ENV}}}/dialog_unpacked).",
     )
     parser.add_argument(
         "--zh-dialogs-dir",
         type=Path,
-        default=Path("/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs"),
-        help="Directory containing decoded Chinese quest HTML files.",
+        default=None,
+        help=f"Directory containing decoded Chinese quest HTML files (default: ${{{UNPACK_ROOT_ENV}}}/data_unpacked/Dialogs).",
     )
     parser.add_argument(
         "--output-dir",
@@ -117,20 +119,20 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--dialogs-pak",
         type=Path,
-        default=DEFAULT_CLIENT_ROOT / "data/Dialogs/Dialogs.pak",
-        help="Authoritative client package containing HyperLinks.xml and HtmlPages.xml.",
+        default=None,
+        help=f"Authoritative client package (default: ${{{CLIENT_ROOT_ENV}}}/data/Dialogs/Dialogs.pak).",
     )
     parser.add_argument(
         "--chs-data-pak",
         type=Path,
-        default=DEFAULT_CLIENT_ROOT / "L10N/CHS/Data/data.pak",
-        help="Authoritative Chinese localization package containing quest HTML.",
+        default=None,
+        help=f"Authoritative Chinese localization package (default: ${{{CLIENT_ROOT_ENV}}}/L10N/CHS/Data/data.pak).",
     )
     parser.add_argument(
         "--quest-pak",
         type=Path,
-        default=DEFAULT_CLIENT_ROOT / "data/Quest/Quest.pak",
-        help="Authoritative client quest-data package recorded with the audit evidence.",
+        default=None,
+        help=f"Authoritative client quest-data package (default: ${{{CLIENT_ROOT_ENV}}}/data/Quest/Quest.pak).",
     )
     parser.add_argument(
         "--check",
@@ -138,6 +140,36 @@ def parse_args() -> argparse.Namespace:
         help="Fail if the generated files differ without modifying the output directory.",
     )
     return parser.parse_args()
+
+
+def configured_input(explicit: Path | None, env_name: str, suffix: str) -> Path:
+    if explicit is not None:
+        return explicit
+    root = os.environ.get(env_name)
+    if not root:
+        raise SystemExit(
+            f"set {env_name} or pass the corresponding input path explicitly"
+        )
+    return Path(root) / suffix
+
+
+def resolve_input_paths(args: argparse.Namespace) -> tuple[Path, Path, Path, Path, Path]:
+    return tuple(
+        path.resolve()
+        for path in (
+            configured_input(args.definitions_dir, UNPACK_ROOT_ENV, "dialog_unpacked"),
+            configured_input(
+                args.zh_dialogs_dir, UNPACK_ROOT_ENV, "data_unpacked/Dialogs"
+            ),
+            configured_input(
+                args.dialogs_pak, CLIENT_ROOT_ENV, "data/Dialogs/Dialogs.pak"
+            ),
+            configured_input(
+                args.chs_data_pak, CLIENT_ROOT_ENV, "L10N/CHS/Data/data.pak"
+            ),
+            configured_input(args.quest_pak, CLIENT_ROOT_ENV, "data/Quest/Quest.pak"),
+        )
+    )
 
 
 def require_text(element: ET.Element, child_name: str, source: Path) -> str:
@@ -382,14 +414,28 @@ def limited_join(values: Iterable[str], limit: int = 5) -> str:
     return " | ".join(unique_values)
 
 
+def portable_source_path(path: Path, env_name: str) -> str:
+    """Keep generated provenance portable without leaking a host filesystem path."""
+    root = os.environ.get(env_name)
+    if not root:
+        return f"${{{env_name}}}/<configured-path>"
+    try:
+        relative = path.resolve().relative_to(Path(root).expanduser().resolve())
+    except ValueError:
+        return f"${{{env_name}}}/<outside-configured-root>"
+    return f"${{{env_name}}}/{relative.as_posix()}"
+
+
 def generate(args: argparse.Namespace, output_dir: Path) -> dict[str, object]:
-    definitions_dir = args.definitions_dir.resolve()
-    zh_dialogs_dir = args.zh_dialogs_dir.resolve()
+    (
+        definitions_dir,
+        zh_dialogs_dir,
+        dialogs_pak,
+        chs_data_pak,
+        quest_pak,
+    ) = resolve_input_paths(args)
     hyperlinks_path = definitions_dir / "HyperLinks.xml"
     html_pages_path = definitions_dir / "HtmlPages.xml"
-    dialogs_pak = args.dialogs_pak.resolve()
-    chs_data_pak = args.chs_data_pak.resolve()
-    quest_pak = args.quest_pak.resolve()
 
     for required_path in (
         hyperlinks_path,
@@ -708,17 +754,17 @@ def generate(args: argparse.Namespace, output_dir: Path) -> dict[str, object]:
 
     summary = {
         "sources": {
-            "dialogs_pak": str(dialogs_pak),
+            "dialogs_pak": portable_source_path(dialogs_pak, CLIENT_ROOT_ENV),
             "dialogs_pak_sha256": sha256(dialogs_pak),
-            "chs_data_pak": str(chs_data_pak),
+            "chs_data_pak": portable_source_path(chs_data_pak, CLIENT_ROOT_ENV),
             "chs_data_pak_sha256": sha256(chs_data_pak),
-            "quest_pak": str(quest_pak),
+            "quest_pak": portable_source_path(quest_pak, CLIENT_ROOT_ENV),
             "quest_pak_sha256": sha256(quest_pak),
-            "hyperlinks_xml": str(hyperlinks_path),
+            "hyperlinks_xml": portable_source_path(hyperlinks_path, UNPACK_ROOT_ENV),
             "hyperlinks_sha256": sha256(hyperlinks_path),
-            "html_pages_xml": str(html_pages_path),
+            "html_pages_xml": portable_source_path(html_pages_path, UNPACK_ROOT_ENV),
             "html_pages_sha256": sha256(html_pages_path),
-            "zh_dialogs_dir": str(zh_dialogs_dir),
+            "zh_dialogs_dir": portable_source_path(zh_dialogs_dir, UNPACK_ROOT_ENV),
             "active_quest_html_files": active_html_files,
             "active_quest_html_manifest_sha256": active_html_manifest_sha256,
         },

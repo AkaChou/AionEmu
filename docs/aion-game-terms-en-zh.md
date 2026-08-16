@@ -1,7 +1,7 @@
 # Aion 游戏专有名词中英对照
 
 > 生成日期：2026-07-11
-> 中文来源：`/Users/mc/PycharmProjects/unpak/data_unpacked/Strings/client_strings_*.xml`
+> 中文来源：Aion 5.8 客户端解包输出中的 `data_unpacked/Strings/client_strings_*.xml`；缺少客户端文件时应向用户请求提供
 > 英文来源：AionEmu 静态模板的 `name`；通过 `name_desc` 与客户端 `STR_*` 资源键精确关联。
 
 ## 使用说明

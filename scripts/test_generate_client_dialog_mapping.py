@@ -20,6 +20,11 @@ class GenerateClientDialogMappingTest(unittest.TestCase):
 
         self.assertTrue(args.check)
         self.assertEqual(Path("docs/quest/client-dialog-mapping"), args.output_dir)
+        self.assertIsNone(args.definitions_dir)
+        self.assertIsNone(args.zh_dialogs_dir)
+        self.assertIsNone(args.dialogs_pak)
+        self.assertIsNone(args.chs_data_pak)
+        self.assertIsNone(args.quest_pak)
 
     def test_stale_outputs_reports_changed_and_missing_files(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

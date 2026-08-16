@@ -8,7 +8,7 @@
 - 完成 110 个剩余 legacy XML Owner 的全面权威证据审计（客户端 unpak 字符串表/quest.xml + 真实 + 5.8 静态文件）。
 - 迁移 34 个任务：24 个 EXECUTABLE（hunt/talk 行为建模，含 80278/80280/80281/80283 monster_hunt、8017x/8020x 事件链）+ 10 个 METADATA_ONLY（无行为任务）。
 - 76 个任务 BLOCKED（客户端/真实/字符串表均无权威证据：90001-90070 Encom 私有 book 任务、80267、39716/49716、50011/50012/51011/51012 收集物品缺失）。
-- 关键证据突破：`/Users/mc/PycharmProjects/unpak/`（Aion PAK 解包工具）提供 client_strings_quest.xml（9546 条权威 nameId）与 Quest_unpacked/quest.xml。
+- 关键证据突破：Aion 5.8 客户端 PAK 解包输出提供 client_strings_quest.xml（9546 条权威 nameId）与 Quest_unpacked/quest.xml；缺少这些证据时应向用户请求提供，不得猜测。
 - 能力缺口记录：EXTEND_INVENTORY 奖励 kind 枚举存在但 PlayerQuestRewardPort.supported() fail-closed（50033 受影响，已记录）。
 - legacy_xml_owners: 110 → 76；catalog_entries: 6477 → 6511；typed_owners: 6032 → 6056。
 - 完整 mvn verify：Tests run: 2371, Failures: 0, Errors: 0, BUILD SUCCESS。

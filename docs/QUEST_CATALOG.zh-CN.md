@@ -3,7 +3,7 @@
 > 生成日期：2026-08-10
 > 数据范围：`quest_definition/quests` 正式任务定义（6246 条）。
 > 英文名称：任务 XML 的 `metadata/@name`。
-> 中文名称：5.8 客户端 `/Users/mc/PycharmProjects/unpak/data_unpacked/Strings/client_strings_quest.xml` 中与 `display-name-id` 精确匹配的 `body`；未匹配项保留 `nameId`，不猜译。
+> 中文名称：Aion 5.8 客户端解包输出中的 `Strings/client_strings_quest.xml` 与 `display-name-id` 精确匹配的 `body`；未匹配项保留 `nameId`，不猜译。排查时缺少该客户端文件，应向用户请求提供。
 > 接取等级：`min-level`；存在有效 `max-level` 时输出区间，否则输出“起始等级+”。
 > 前置任务：`metadata/prerequisites/quest`、`start-conditions` 和 `start-condition-groups` 中 `type=finished` 的任务 ID。其他接取条件保留在“限制条件”。
 

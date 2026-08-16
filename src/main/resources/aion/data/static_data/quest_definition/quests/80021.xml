@@ -2,7 +2,7 @@
 <!--
   80021 [Event] Festive Us.
   Runtime authority: legacy _80021EventFestiveUs; metadata authority: quest_data.xml and
-  /Users/mc/IdeaProjects/58Server-new/Map/XML/China/quest.xml (Q80021).
+  legacy China quest.xml source (Q80021).
 -->
 <quest-definition id="80021" version="1">
   <metadata name="[Event] Festive Us" display-name-id="1180021" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">

@@ -1,16 +1,16 @@
 {
   "sources": {
-    "dialogs_pak": "/Users/mc/IdeaProjects/5.8客户端/data/Dialogs/Dialogs.pak",
+    "dialogs_pak": "${AION_CLIENT_ROOT}/data/Dialogs/Dialogs.pak",
     "dialogs_pak_sha256": "4cbb10f064c0da5bd6843f0bb33b31aceeb7d00e831cd82be4869dc07652c026",
-    "chs_data_pak": "/Users/mc/IdeaProjects/5.8客户端/L10N/CHS/Data/data.pak",
+    "chs_data_pak": "${AION_CLIENT_ROOT}/L10N/CHS/Data/data.pak",
     "chs_data_pak_sha256": "ac54a2ee01aef730500513c05755e32d8c2d4ee2eb9443ecb323a47717f99553",
-    "quest_pak": "/Users/mc/IdeaProjects/5.8客户端/data/Quest/Quest.pak",
+    "quest_pak": "${AION_CLIENT_ROOT}/data/Quest/Quest.pak",
     "quest_pak_sha256": "456eb4625b55215c2a03ba569424f765b0ef27be88b30b7c67ceddf05ced11bb",
-    "hyperlinks_xml": "/Users/mc/PycharmProjects/unpak/dialog_unpacked/HyperLinks.xml",
+    "hyperlinks_xml": "${AION_UNPACK_ROOT}/dialog_unpacked/HyperLinks.xml",
     "hyperlinks_sha256": "b66a747042102623c2d0a177d65c93473809f44d5283875ce7160f7a5dd92aa5",
-    "html_pages_xml": "/Users/mc/PycharmProjects/unpak/dialog_unpacked/HtmlPages.xml",
+    "html_pages_xml": "${AION_UNPACK_ROOT}/dialog_unpacked/HtmlPages.xml",
     "html_pages_sha256": "20d9c07c20e43f37d9cddd2a1a91d17a44e6aeeabbca4edc4c3e6823f9267f60",
-    "zh_dialogs_dir": "/Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs",
+    "zh_dialogs_dir": "${AION_UNPACK_ROOT}/data_unpacked/Dialogs",
     "active_quest_html_files": 9116,
     "active_quest_html_manifest_sha256": "523ac8f62d80e62332b9b8e118f12f2630fa136829683a4ba77b7509cf9379f5"
   },

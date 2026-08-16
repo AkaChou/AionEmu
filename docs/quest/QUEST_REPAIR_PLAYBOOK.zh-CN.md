@@ -2,7 +2,7 @@
 
 本文档面向 Claude Code、Codex 以及其他参与 AionEmu 任务修复的 agent。目标是把“玩家描述的任务不能做”转换为可验证的状态、协议、客户端和运行时证据，再用最小改动修复，并留下可以阻止回归的测试。
 
-适用仓库：`/Users/mc/IdeaProjects/AionEmu-test`
+适用仓库：当前 checkout 根目录，可用 `rtk git rev-parse --show-toplevel` 获取。
 
 相关文档：
 
@@ -169,7 +169,7 @@ rtk git log --all --oneline -- <path/to/legacy-handler.java>
 
 **客户端/零售数据**
 
-本机 5.8 客户端数据根目录：`/Users/mc/IdeaProjects/5.8客户端`。优先使用：
+Aion 5.8 客户端是客户端页面、动作、字典和数据包的权威来源。当前任务缺少所需客户端文件、解包产物或抓包时，明确列出缺失项并向用户请求提供，在取得证据前不要猜测。优先使用：
 
 - `docs/quest/client-dialog-mapping/quest-dialog-action-details.csv`：页面上的实际按钮动作；
 - `quest-dialog-pages.csv`：页面存在性和页面名；
@@ -404,9 +404,9 @@ commit：
 ## 10. 可复制给 Claude Code 的任务提示词
 
 ```text
-你在 /Users/mc/IdeaProjects/AionEmu-test 的 quest 分支工作。
+你在当前 checkout 的 quest 分支工作。
 请先阅读 docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md、docs/quest/WRITING_GUIDE.zh-CN.md、
-当前 AGENTS.md 和 /Users/mc/.codex/RTK.md。所有 shell 命令使用 rtk 前缀。
+当前 checkout 的 AGENTS.md 和 `rtk` 命令规范。所有 shell 命令使用 rtk 前缀。
 
 任务：<quest-id>，症状：<玩家可复现步骤>。
 

@@ -4,7 +4,7 @@
 
 最后更新：2026-08-11
 
-执行仓库：`/Users/mc/IdeaProjects/AionEmu-test`
+执行仓库：当前 checkout 根目录（可用 `git rev-parse --show-toplevel` 获取）
 
 ## 1. 文档用途
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Player Experience Table 5.8
-    Generated from /Users/mc/IdeaProjects/5.8 static XMLdata pcexp_table.xml.
+    Generated from the Aion 5.8 static XML data pcexp_table.xml.
     Source exp_light values are per-level increments; this table stores cumulative start EXP per level.
  -->
 <player_experience_table xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="player_experience_table.xsd">

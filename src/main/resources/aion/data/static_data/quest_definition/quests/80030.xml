@@ -2,7 +2,7 @@
 <!--
   80030 [Event] An Unwelcome Gaze.
   Runtime authority: legacy _80030EventAnUnwelcomeGaze; metadata authority: quest_data.xml and
-  /Users/mc/IdeaProjects/58Server-new/Map/XML/China/quest.xml (Q80030).
+  legacy China quest.xml source (Q80030).
 -->
 <quest-definition id="80030" version="1">
   <metadata name="[Event] An Unwelcome Gaze" display-name-id="1180030" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">

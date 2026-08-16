@@ -2,7 +2,7 @@
 <!--
   80020 [Event] Solorius Joy.
   Runtime authority: legacy _80020EventSoloriusJoy; metadata authority: quest_data.xml and
-  /Users/mc/IdeaProjects/58Server-new/Map/XML/China/quest.xml (Q80020).
+  legacy China quest.xml source (Q80020).
 -->
 <quest-definition id="80020" version="1">
   <metadata name="[Event] Solorius Joy" display-name-id="1180020" min-level="10" max-level="2147483647" category="EVENT" cannot-share="true">
