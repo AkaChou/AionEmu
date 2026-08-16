@@ -83,17 +83,17 @@ HtmlPages  ID 31 = HTML_PAGE_PACKAGE_LIMITATION
 在项目根目录执行：
 
 ```bash
-rtk python3 scripts/generate_client_dialog_mapping.py
-rtk python3 scripts/generate_client_dialog_mapping.py --check
+python3 scripts/generate_client_dialog_mapping.py
+python3 scripts/generate_client_dialog_mapping.py --check
 ```
 
 重新生成旧正式模板合同和客户端生命周期对齐报告：
 
 ```bash
-rtk python3 scripts/extract_legacy_quest_dialog_contracts.py
-rtk python3 scripts/align_client_quest_dialog_lifecycle.py
-rtk python3 scripts/extract_legacy_quest_dialog_contracts.py --check
-rtk python3 scripts/align_client_quest_dialog_lifecycle.py --check
+python3 scripts/extract_legacy_quest_dialog_contracts.py
+python3 scripts/align_client_quest_dialog_lifecycle.py
+python3 scripts/extract_legacy_quest_dialog_contracts.py --check
+python3 scripts/align_client_quest_dialog_lifecycle.py --check
 ```
 
 `align_client_quest_dialog_lifecycle.py --write` 只应用上述强证据门槛下的 `READY` 路由；默认运行只更新报告。
@@ -101,7 +101,7 @@ rtk python3 scripts/align_client_quest_dialog_lifecycle.py --check
 重新生成顺序审计（先完成测试编译）使用：
 
 ```bash
-rtk mvn -q -Dexec.classpathScope=test \
+mvn -q -Dexec.classpathScope=test \
   -Dexec.mainClass=com.aionemu.gameserver.questEngine.definition.QuestDialogOrderAudit \
   -Dexec.args="docs/quest/client-dialog-mapping/quest-dialog-pages.csv docs/quest/client-dialog-mapping/quest-dialog-action-details.csv docs/quest/client-dialog-mapping/quest-order-audit.csv" \
   exec:java
@@ -110,7 +110,7 @@ rtk mvn -q -Dexec.classpathScope=test \
 也可以显式指定来源和输出目录：
 
 ```bash
-rtk python3 scripts/generate_client_dialog_mapping.py \
+python3 scripts/generate_client_dialog_mapping.py \
   --definitions-dir "${AION_UNPACK_ROOT}/dialog_unpacked" \
   --zh-dialogs-dir "${AION_UNPACK_ROOT}/data_unpacked/Dialogs" \
   --output-dir docs/quest/client-dialog-mapping

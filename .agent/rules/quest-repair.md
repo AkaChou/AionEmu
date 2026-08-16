@@ -40,5 +40,5 @@ globs: "src/main/resources/aion/data/static_data/quest_definition/**/*.xml, src/
 7. 任务修复和 Playbook 更新应在同一交付批次中完成。`docs/*` 被忽略时，提交文档使用明确路径：
 
    ```bash
-   rtk git add -f docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md
+   git add -f docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md
    ```

@@ -2,7 +2,7 @@
 
 本文档面向 Claude Code、Codex 以及其他参与 AionEmu 任务修复的 agent。目标是把“玩家描述的任务不能做”转换为可验证的状态、协议、客户端和运行时证据，再用最小改动修复，并留下可以阻止回归的测试。
 
-适用仓库：当前 checkout 根目录，可用 `rtk git rev-parse --show-toplevel` 获取。
+适用仓库：当前 checkout 根目录，可用 `git rev-parse --show-toplevel` 获取。
 
 相关文档：
 
@@ -18,7 +18,7 @@
 2. 旧 handler、`quest_data.xml`、客户端 5.8 数据和真实运行日志是行为证据，不是可以随手复制的生产 owner。缺少权威字段时，先标记为 `EVIDENCE_REQUIRED`，不要从候选 XML 或一次行为反推。
 3. 事件、条件、事务动作和 `after-commit` 副作用职责分离。状态推进正确但页面、关闭、生成 NPC 或跟随动作缺失，仍然是未完成的修复。
 4. 保留用户已有的脏工作区改动。禁止 `git reset --hard`、`git checkout --`、`git restore`、覆盖整文件或无范围的批量替换。
-5. 所有 shell 命令使用 `rtk` 前缀；Maven/Javac writer 串行运行。不要让多个 agent 同时执行 Maven 或清理 `target`。
+5. 项目命令使用标准系统入口；Maven/Javac writer 串行运行。不要让多个 agent 同时执行 Maven 或清理 `target`。
 6. “提交”默认是本地 commit，不是 push。只暂存本次修改的明确路径。
 
 ## 2. 运行链和故障边界
@@ -99,10 +99,10 @@ log:         同一时间窗口的 WARN/ERROR，以及发送前后的任务日�
 ### 5.1 阶段 0：建立基线
 
 ```bash
-rtk git status --short
-rtk git branch --show-current
-rtk git log -20 --oneline --decorate
-rtk git diff --stat
+git status --short
+git branch --show-current
+git log -20 --oneline --decorate
+git diff --stat
 ```
 
 记录当前分支和 dirty 文件。若任务 XML 或相关 Java 已被用户修改，先读 diff，后续只能在其基础上工作。不要为了让工具通过而隐藏、提交或丢弃这些改动。
@@ -112,11 +112,11 @@ rtk git diff --stat
 已知任务 ID、NPC 或动作时，直接精确搜索：
 
 ```bash
-rtk rg -n 'id="14112"|npc-id="203195"|SELECT_QUEST_REWARD' \
+rg -n 'id="14112"|npc-id="203195"|SELECT_QUEST_REWARD' \
   src/main/resources/aion/data/static_data/quest_definition \
   src/test/java src/main/java
-rtk sed -n '1,230p' src/main/resources/aion/data/static_data/quest_definition/quests/14112.xml
-rtk rg -n '14112|203195|Poisonous_Bubblegut' src/main/java src/test/java
+sed -n '1,230p' src/main/resources/aion/data/static_data/quest_definition/quests/14112.xml
+rg -n '14112|203195|Poisonous_Bubblegut' src/main/java src/test/java
 ```
 
 检查 `quest_definition_catalog.xml`：
@@ -161,8 +161,8 @@ source node/status/vars
 如果有 `origin/history` ref，可用：
 
 ```bash
-rtk git show origin/history:<path/to/legacy-handler.java>
-rtk git log --all --oneline -- <path/to/legacy-handler.java>
+git show origin/history:<path/to/legacy-handler.java>
+git log --all --oneline -- <path/to/legacy-handler.java>
 ```
 
 对照旧 handler 的 `setStatus`、`updateQuestStatus`、`sendQuestDialog`、spawn、follow、logout/enter-world 行为。旧 handler 是时序和副作用证据，不是让新代码重新绕过 typed dispatcher 的理由。
@@ -299,13 +299,13 @@ Aion 5.8 客户端是客户端页面、动作、字典和数据包的权威来�
 根据改动范围选择测试；当前任务相关修复可从以下命令开始：
 
 ```bash
-rtk mvn -q -Dtest=AI2EngineRetailSelectionTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,Quest14112LogoutPersistenceTest,Quest1149ClientDialogAlignmentTest,QuestItemNpcAI2Test,FollowManagerTest test
+mvn -q -Dtest=AI2EngineRetailSelectionTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,Quest14112LogoutPersistenceTest,Quest1149ClientDialogAlignmentTest,QuestItemNpcAI2Test,FollowManagerTest test
 ```
 
 涉及早期 Elyos 交互、1156/1158、页面映射时加入：
 
 ```bash
-rtk mvn -q -Dtest=EarlyElyosQuestRegressionTest,Quest1163ClientDialogAlignmentTest,QuestDialogOrderAuditTest test
+mvn -q -Dtest=EarlyElyosQuestRegressionTest,Quest1163ClientDialogAlignmentTest,QuestDialogOrderAuditTest test
 ```
 
 不要把 targeted pass 当成全目录证明。生产 catalog 必须实际编译；上面的 `QuestDefinitionCatalogManifestTest` 会覆盖目录级 owner 和奖励选择审计。
@@ -313,10 +313,10 @@ rtk mvn -q -Dtest=EarlyElyosQuestRegressionTest,Quest1163ClientDialogAlignmentTe
 ### 7.2 结构、目录和 diff 门禁
 
 ```bash
-rtk git diff --check
-rtk mvn -q -Dtest=QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test
-rtk git status --short
-rtk git diff --stat
+git diff --check
+mvn -q -Dtest=QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test
+git status --short
+git diff --stat
 ```
 
 预期至少包含：
@@ -329,7 +329,7 @@ rtk git diff --stat
 如果需要最终全量证明，确认无 Maven/Javac 后串行执行：
 
 ```bash
-rtk mvn clean verify
+mvn clean verify
 ```
 
 增量构建出现匿名类、内部类或 `NoClassDefFoundError` 时，先确认没有并发 writer，再做一次串行 clean verify；不要用被并发构建污染的 `target/classes` 启动服务器。
@@ -339,9 +339,9 @@ rtk mvn clean verify
 只有修改页面/动作合同或需要重新生成报告时才执行：
 
 ```bash
-rtk python3 scripts/generate_client_dialog_mapping.py --check
-rtk python3 scripts/extract_legacy_quest_dialog_contracts.py --check
-rtk python3 scripts/align_client_quest_dialog_lifecycle.py --check
+python3 scripts/generate_client_dialog_mapping.py --check
+python3 scripts/extract_legacy_quest_dialog_contracts.py --check
+python3 scripts/align_client_quest_dialog_lifecycle.py --check
 ```
 
 顺序审计应在测试编译完成后执行，命令和字段说明见 `client-dialog-mapping/README.zh-CN.md`。`EVIDENCE_REQUIRED` 不是“已修复”，不能为了清零报告而猜测 page/action。
@@ -373,19 +373,19 @@ rtk python3 scripts/align_client_quest_dialog_lifecycle.py --check
 修复完成后按顺序执行：
 
 ```bash
-rtk git diff --check
-rtk git status --short
-rtk git diff --stat
+git diff --check
+git status --short
+git diff --stat
 ```
 
 只暂存本次文件。`docs/*` 默认被忽略，提交本文档时要显式指定：
 
 ```bash
-rtk git add -f docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md
-rtk git diff --cached --check
-rtk git diff --cached --stat
-rtk git commit -m "docs(quest): add quest repair playbook"
-rtk git status --short
+git add -f docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md
+git diff --cached --check
+git diff --cached --stat
+git commit -m "docs(quest): add quest repair playbook"
+git status --short
 ```
 
 交接报告至少包含：
@@ -406,7 +406,7 @@ commit：
 ```text
 你在当前 checkout 的 quest 分支工作。
 请先阅读 docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md、docs/quest/WRITING_GUIDE.zh-CN.md、
-当前 checkout 的 AGENTS.md 和 `rtk` 命令规范。所有 shell 命令使用 rtk 前缀。
+当前 checkout 的 AGENTS.md 和 `.agent/rules/` 规则。命令示例使用标准系统命令。
 
 任务：<quest-id>，症状：<玩家可复现步骤>。
 

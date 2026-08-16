@@ -283,7 +283,7 @@ def empty_report(mode: str) -> dict:
 
 def git_head() -> str:
     try:
-        return subprocess.run(["rtk", "git", "rev-parse", "HEAD"], capture_output=True, text=True,
+        return subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True,
                               cwd=REPO_ROOT).stdout.strip()
     except Exception:
         return "unknown"
@@ -296,7 +296,7 @@ def write_report(report: dict) -> None:
 
 def _git_dirty_paths() -> set[str]:
     """Return all tracked and untracked paths reported by Git, without hiding untracked files."""
-    result = subprocess.run(["rtk", "git", "status", "--short", "--untracked-files=all"],
+    result = subprocess.run(["git", "status", "--short", "--untracked-files=all"],
                             capture_output=True, text=True, cwd=REPO_ROOT)
     if result.returncode != 0:
         raise RuntimeError("git status failed: " + (result.stderr.strip() or str(result.returncode)))
@@ -1972,11 +1972,11 @@ def main() -> int:
         return 1
 
     # verifier availability: build test classes first
-    verifier_build = subprocess.run(["rtk", "mvn", "-q", "-o", "test-compile"],
+    verifier_build = subprocess.run(["mvn", "-q", "-o", "test-compile"],
                                     capture_output=True, text=True, cwd=REPO_ROOT)
     if verifier_build.returncode != 0:
         # fall back to online
-        verifier_build = subprocess.run(["rtk", "mvn", "-q", "test-compile"],
+        verifier_build = subprocess.run(["mvn", "-q", "test-compile"],
                                         capture_output=True, text=True, cwd=REPO_ROOT)
     if verifier_build.returncode != 0:
         report["compile_failures"].append({"file": "<verifier>", "reason": "test-compile failed"})
@@ -2013,7 +2013,7 @@ def main() -> int:
                          + " --before-dir " + str(BEFORE_DIR)
                          + " --threads " + str(DEFAULT_WORKERS))
         result = subprocess.run(
-            ["rtk", "mvn", "-q", "-o", "exec:java",
+            ["mvn", "-q", "-o", "exec:java",
              "-Dexec.mainClass=com.aionemu.gameserver.questEngine.definition.QuestXmlMigrationVerifier",
              "-Dexec.classpathScope=test",
              "-Dexec.additionalClasspathElements=target/test-classes",
@@ -2022,7 +2022,7 @@ def main() -> int:
         if result.returncode != 0 and not os.path.exists(output_file):
             # retry online once
             result = subprocess.run(
-                ["rtk", "mvn", "-q", "exec:java",
+                ["mvn", "-q", "exec:java",
                  "-Dexec.mainClass=com.aionemu.gameserver.questEngine.definition.QuestXmlMigrationVerifier",
                  "-Dexec.classpathScope=test",
                  "-Dexec.additionalClasspathElements=target/test-classes",
