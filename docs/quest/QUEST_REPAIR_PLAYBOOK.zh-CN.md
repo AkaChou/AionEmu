@@ -375,7 +375,7 @@ python3 scripts/quest/generate_quest_dialog_enums.py --check
 
 ### 8.1 升级自动登记弹出不存在的任务页
 
-- 已验收任务 ID：38001。
+- 已验收任务 ID：38001、38002。
 - 代表任务：38001「Radiant Ops Recruitment」。
 - 玩家症状：升级自动登记任务时客户端弹出任务 HTML 的 `HtmlPageId 4 / load fail`。
 - 根因：升级入口错误发送 `SHOW_ASK_QUEST_ACCEPT_WINDOW(4)`；NPC `START_DIALOG(31)` 又错误发送 Aion 5.8 客户端不存在的 `SELECT2(1352)`。旧 handler 的升级入口只启动任务并刷新状态，NPC 对话页为 `DEFAULT_SUCCESS(10002)`。
