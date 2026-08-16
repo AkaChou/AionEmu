@@ -4,6 +4,23 @@
 
 Aion 5.8 社区服务端。单 Maven 工程，JDK 25，Spring Boot 启动 login / game / chat。
 
+## 目录
+
+- [核心特性](#核心特性)
+- [技术栈](#技术栈)
+- [快速开始](#快速开始)
+- [客户端设置](#客户端设置)
+- [配置说明](#配置说明)
+- [运行脚本](#运行脚本)
+- [环境变量](#环境变量)
+- [网络端口](#网络端口)
+- [项目结构](#项目结构)
+- [文档](#文档)
+- [开发](#开发)
+- [常见问题排查](#常见问题排查)
+- [致谢](#致谢)
+- [许可证](#许可证)
+
 ## 核心特性
 
 | 领域 | 能力 |
@@ -14,6 +31,19 @@ Aion 5.8 社区服务端。单 Maven 工程，JDK 25，Spring Boot 启动 login 
 | AI 与移动 | 深度优化感知、仇恨、技能选择、巡逻、逃跑、护送、拥挤避让、地形感知移动和有界卡住恢复。 |
 | Geo 与寻路 | 提供地形高度、材质、可见性和碰撞查询；使用原始 PATH `.path/.idx` 多层 A*；长距离 block/portal 分层搜索；保留 PATH Z 的路径平滑与最终 GEO 校验；支持飞行和游泳三维寻路。 |
 | 运维能力 | `aion.home` 外置运行目录，配置与日志分离，支持打包 JAR/脚本以及管理和诊断命令。 |
+
+## 技术栈
+
+| 组件 | 选型 |
+| --- | --- |
+| 语言 | Java 25 |
+| 框架 | Spring Boot 4.1（非 Web 应用，Netty 传输层） |
+| 构建 | Maven，单模块 |
+| 数据库 | MySQL |
+| 网络 | Netty |
+| 调度 | Quartz |
+| XML | Jakarta XML Binding / JAXB |
+| 测试 | JUnit Jupiter |
 
 ## 快速开始
 
@@ -39,7 +69,7 @@ mysql -u root -p < src/main/resources/db/mysql/al_server_gs.sql
 ./package.sh
 ```
 
-该命令生成 `target/AionEmu.jar`，并将 JAR、资源和生命周期脚本部署到 `aion/`（也可以通过 `AION_HOME` 指定其他目录）。
+该命令生成 `target/AionEmu.jar`，并将 JAR、资源和生命周期脚本部署到 `aion/`（也可以通过 `AION_HOME` 指定其他目录）。默认构建会跳过测试；测试与重新打包选项请参考[开发](#开发)。
 
 ### 3. 配置运行环境
 
@@ -64,6 +94,61 @@ tail -f aion/log/aionemu.log
 
 使用 `AION_HOME=/path/to/runtime` 可将服务部署或运行在其他目录。可通过 `AION_HEAP_OPTS` 及其他 `AION_*_OPTS` 环境变量覆盖 JVM 参数。
 
+```bash
+AION_HOME=/path/to/runtime ./aion/start-silent.sh
+```
+
+如需在启动前清理运行数据（保留 JAR 和脚本）：
+
+```bash
+./aion/start-silent.sh -c
+```
+
+## 客户端设置
+
+可选的 Aion 5.8 客户端补丁（任务本地化与 VIP `Game.dll`）请参阅[客户端补丁说明](patch/patch_documentation.md)。
+
+## 配置说明
+
+`aion/config/` 下的主要运行配置文件：
+
+| 文件 | 用途 |
+| --- | --- |
+| `login/database.properties` | login 数据库（`al_server_ls`）连接配置 |
+| `network/database.properties` | game 数据库（`al_server_gs`）连接配置 |
+| `network/network.properties` | 客户端端口、对外地址、服务间内网地址和服务密码 |
+| `main/*.properties` | 玩法、AI、掉落、倍率、副本及其他服务端行为 |
+| `administration/*.properties` | 管理员/GM 命令、面板和限制 |
+| `schedule/*.xml` | 定时活动、副本、攻城和世界事件 |
+
+## 运行脚本
+
+| 脚本 | 说明 |
+| --- | --- |
+| `start-silent.sh` | 后台启动服务端，写入 PID 和日志文件 |
+| `start-silent.sh -c` | 启动前清理运行数据（保留 JAR 和脚本） |
+| `shutdown.sh` | 请求优雅关闭，最多等待 `AION_SHUTDOWN_TIMEOUT` 秒 |
+| `stop-silent.sh` | 停止服务端，超过 `AION_STOP_TIMEOUT` 秒后可选强制结束 |
+
+## 环境变量
+
+| 变量 | 默认值 | 说明 |
+| --- | --- | --- |
+| `AION_HOME` | `aion/` 或脚本所在目录 | JAR、配置、数据和日志的运行目录 |
+| `AION_JAR_FILE` | `$AION_HOME/AionEmu.jar` | 服务端 JAR 路径 |
+| `AION_LOG_DIR` | `$AION_HOME/log` | 日志目录 |
+| `AION_LOG_FILE` | `$AION_LOG_DIR/aionemu.log` | 主日志文件 |
+| `AION_PID_FILE` | `$AION_LOG_DIR/aionemu.pid` | PID 文件 |
+| `AION_HEAP_OPTS` | `-Xms2g -Xmx8g` | JVM 堆内存设置 |
+| `AION_GC_OPTS` | G1GC 和有界暂停目标 | JVM 垃圾回收设置 |
+| `AION_SAFETY_OPTS` | 堆转储和 OOM 退出 | JVM 崩溃安全设置 |
+| `AION_SYSTEM_OPTS` | UTF-8、IPv4、Asia/Shanghai 时区 | JVM 系统属性 |
+| `AION_JVM_OPTS` | 由上述 `AION_*_OPTS` 组合 | 完整 JVM 参数 |
+| `AION_SHUTDOWN_TIMEOUT` | `120` | 优雅关闭超时（秒） |
+| `AION_STOP_TIMEOUT` | `30` | 停止超时（秒），超时后可选强制结束 |
+| `AION_FORCE_STOP` | `true` | 超过 `AION_STOP_TIMEOUT` 后是否强制结束 |
+| `AION_PRESERVE_CONFIG` | `false` | 执行 `package.sh` 时，为 `true` 则保留现有运行配置 |
+
 ## 网络端口
 
 | 服务 | 默认端口 | 用途 |
@@ -81,11 +166,14 @@ tail -f aion/log/aionemu.log
 | 路径 | 用途 |
 | --- | --- |
 | `src/main/java/com/aionemu/` | Boot、公共基础设施、login、game 和 chat 源码 |
+| `src/main/resources/application.yml` | Spring Boot 入口配置 |
 | `src/main/resources/aion/data/` | 版本化静态游戏数据、任务、定义和数据包 |
+| `src/main/resources/aion/definitions/` | 精简数据定义、Schema 和生成输入 |
 | `src/main/resources/aion/geo/` | 地形、碰撞和原始 PATH 资源 |
 | `src/main/resources/aion/config/` | 版本库中的默认配置 |
 | `src/main/resources/db/mysql/` | login 和 game 数据库结构 |
 | `aion/` | JAR、运行配置和日志的本地部署目录 |
+| `scripts/` | 数据生成、审计、运行辅助和维护工具 |
 | `docs/` | 任务、寻路、术语和维护文档 |
 | `patch/` | Aion 5.8 客户端补丁和使用说明 |
 
@@ -95,6 +183,8 @@ tail -f aion/log/aionemu.log
 - [任务目录](docs/QUEST_CATALOG.zh-CN.md)
 - [任务编写指南](docs/quest/WRITING_GUIDE.zh-CN.md) / [English](docs/quest/WRITING_GUIDE.md)
 - [任务排查与修复 Playbook](docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md)
+- [任务客户端对话框映射](docs/quest/client-dialog-mapping/README.zh-CN.md)
+- [游戏术语中英对照](docs/aion-game-terms-en-zh.md)
 - [客户端补丁说明](patch/patch_documentation.md)
 
 ## 开发
@@ -105,7 +195,32 @@ tail -f aion/log/aionemu.log
 mvn test
 ```
 
+构建可运行 JAR：
+
+```bash
+mvn package
+```
+
+也可以使用打包脚本一步完成构建和部署：
+
+```bash
+./package.sh                              # 默认：clean + 跳过测试 + package + 部署
+./package.sh -DskipTests=false package    # 打包时同时运行测试
+./re-package.sh                           # 部署时保留现有运行配置
+```
+
 应用入口为 `com.aionemu.AionBootApplication`。
+
+## 常见问题排查
+
+| 现象 | 常见处理 |
+| --- | --- |
+| `Missing target/AionEmu.jar` | 先运行 `./package.sh`。 |
+| `AionEmu is already running` | 使用 `./aion/shutdown.sh` 或 `./aion/stop-silent.sh`；检查 `aion/log/aionemu.pid`。 |
+| 数据库连接失败 | 确认 MySQL 已启动，检查 `aion/config/login/database.properties` 和 `aion/config/network/database.properties` 中的凭据，并确认已导入两个 SQL 文件。 |
+| 客户端无法连接 | 检查 `aion/config/network/network.properties` 中的对外地址/端口以及防火墙规则。 |
+| 构建后运行配置被覆盖 | 使用 `./re-package.sh`，或在执行 `./package.sh` 时设置 `AION_PRESERVE_CONFIG=true`。 |
+| 需要干净运行环境 | 执行 `./aion/start-silent.sh -c`（保留 JAR 和脚本）。 |
 
 ## 致谢
 
