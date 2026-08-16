@@ -3,17 +3,17 @@ alwaysApply: false
 globs: "**/*.java"
 ---
 
-# Lombok 使用规则
+# Lombok Rules
 
-## Bean 与数据对象
+## Beans and Data Objects
 
-1. 新增或修改 Java Bean、DTO、配置对象、命令、事件及其他数据载体时，优先使用 Lombok 消除无业务逻辑的 getter、setter、构造器、`equals`、`hashCode` 和 `toString` 样板代码。
-2. 所有字段都适合参与 getter、setter、`equals`、`hashCode` 和 `toString` 时使用 `@Data`；只需要部分能力时使用 `@Getter`、`@Setter`、`@EqualsAndHashCode` 或 `@ToString`，不要为方便而扩大生成范围。
-3. 构造逻辑仅为字段赋值时，优先使用 `@NoArgsConstructor`、`@RequiredArgsConstructor` 或 `@AllArgsConstructor`；需要清晰创建语义时可使用 `@Builder`。
-4. 不可变数据对象优先使用 `@Value` 或 Java record；record 已提供的能力不要再用 Lombok 重复生成。
+1. When adding or modifying Java beans, DTOs, configuration objects, commands, events, or other data carriers, prefer Lombok over handwritten getters, setters, constructors, `equals`, `hashCode`, and `toString` methods that contain no business logic.
+2. Use `@Data` only when every field may safely participate in getters, setters, `equals`, `hashCode`, and `toString`. When only some generated behavior is appropriate, use targeted annotations such as `@Getter`, `@Setter`, `@EqualsAndHashCode`, or `@ToString` instead of broadening generation for convenience.
+3. When construction only assigns fields, prefer `@NoArgsConstructor`, `@RequiredArgsConstructor`, or `@AllArgsConstructor`. Use `@Builder` when it provides clearer creation semantics.
+4. Prefer `@Value` or a Java record for immutable data objects. Do not use Lombok to regenerate behavior already provided by a record.
 
-## 使用边界
+## Usage Boundaries
 
-1. 实体关系、延迟加载对象、循环引用、敏感字段或以可变字段标识身份的对象，不得直接使用 `@Data`；应改用定向注解，并通过 `@EqualsAndHashCode.Exclude`、`@ToString.Exclude` 或显式实现控制行为。
-2. getter、setter 或构造器包含校验、转换、缓存、事件、同步、延迟初始化或其他副作用时保留显式实现，不得用 Lombok 改变现有语义。
-3. 删除手写样板代码前，确认方法签名、可见性、注解、序列化约定、反射访问和框架构造要求与 Lombok 生成结果完全一致。
+1. Do not apply `@Data` directly to objects with entity relationships, lazy loading, cyclic references, sensitive fields, or identity based on mutable fields. Use targeted annotations and control generated behavior with `@EqualsAndHashCode.Exclude`, `@ToString.Exclude`, or explicit implementations.
+2. Keep explicit getters, setters, or constructors when they perform validation, conversion, caching, event publication, synchronization, lazy initialization, or other side effects. Lombok must not change existing semantics.
+3. Before removing handwritten boilerplate, verify that signatures, visibility, annotations, serialization contracts, reflective access, and framework construction requirements exactly match Lombok's generated behavior.

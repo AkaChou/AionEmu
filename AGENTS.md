@@ -1,62 +1,62 @@
 # AGENTS.md
 
-本文件为在本仓库中工作的 AI coding agent 提供项目入口说明。
+This file provides project-level guidance for AI coding agents working in this repository.
 
-> **详细规则拆分在 `.agent/rules/` 下。** 根据任务范围读取下方 [Rules Index](#rules-index) 中的适用规则。
+> **Detailed rules are split into focused files under `.agent/rules/`.** Read the applicable files from the [Rules Index](#rules-index) for the task at hand.
 
-## 全局规则
+## Global Rules
 
-1. 未经用户明确要求，不运行 lint 或构建命令。
-2. 不要启动或重启开发服务器；不假设服务器当前已启动，服务器由用户负责启动和管理。
-3. 仓库存在 `.agent/summary/` 时，所有总结文件统一存放在该目录。
+1. Do NOT run build commands unless explicitly requested by the user.
+2. Do NOT start, stop, or restart server processes. Their current state is unknown, and the user manages their lifecycle.
+3. All summary files should be stored in `.agent/summary/` if that directory is available.
 
-## 配置
+## Configuration
 
-- Spring Boot 入口配置：`src/main/resources/application.yml`，应用以非 Web 模式启动 login、game 和 chat 服务，默认使用 Netty transport。
-- 服务端运行配置：`src/main/resources/aion/config/`，按 login、network、main、chat、administration 和 schedule 等领域拆分。
-- 默认网络端口定义在 `src/main/resources/aion/config/network/network.properties`：登录客户端 2106、游戏客户端 7777、登录服与游戏服内部通信 9014。
-- 数据库配置位于 `src/main/resources/aion/config/login/database.properties` 和 `src/main/resources/aion/config/network/database.properties`。
+- Spring Boot entry configuration: `src/main/resources/application.yml`. The application runs in non-web mode, enables the login, game, and chat services by default, and uses the Netty transport.
+- Runtime configuration: `src/main/resources/aion/config/`, split into login, network, main, chat, administration, schedule, and other domains.
+- Default network ports are defined in `src/main/resources/aion/config/network/network.properties`: login client 2106, game client 7777, chat client 10241, game-to-login internal connection 9014, and game-to-chat internal connection 9021.
+- Login and game database settings are stored in `src/main/resources/aion/config/login/database.properties` and `src/main/resources/aion/config/network/database.properties` respectively.
 
-## 项目概览
+## Project Overview
 
-AionEmu 是 Aion 5.8 社区服务端。单个 Spring Boot 应用统一承载 login、game 和 chat 服务，并加载任务、NPC、地图、地形、实例及其他静态游戏数据。
+AionEmu is an Aion 5.8 community server. A single Spring Boot application hosts the login, game, and chat services and loads quests, NPCs, maps, geodata, instances, and other static game data.
 
-## 技术栈
+## Technology Stack
 
-- Java 25、Spring Boot 4.1、Maven。
-- Netty、MySQL Connector/J、Quartz、Jakarta XML Binding。
-- Lombok、SLF4J/Logback、JUnit Jupiter。
+- Java 25, Spring Boot 4.1, Maven
+- Netty, MySQL Connector/J, Quartz, Jakarta XML Binding
+- Lombok, SLF4J/Logback, JUnit Jupiter
 
-## 源码结构
+## Source Structure
 
-- `src/main/java/com/aionemu/boot/`：Spring Boot 生命周期、配置、国际化和传输边界。
-- `src/main/java/com/aionemu/commons/`：数据库、网络、并发和通用基础设施。
-- `src/main/java/com/aionemu/loginserver/`：登录服务。
-- `src/main/java/com/aionemu/chatserver/`：聊天服务。
-- `src/main/java/com/aionemu/gameserver/`：游戏世界、任务、AI、协议和业务服务。
-- `src/main/resources/aion/config/`：运行配置。
-- `src/main/resources/aion/data/`：正式静态数据与任务 XML。
-- `src/main/resources/aion/definitions/`：紧凑定义及生成输入。
-- `src/main/resources/aion/geo/`：Geo、Path 和地形数据。
-- `src/test/java/`：单元测试、生产 catalog 和回归测试。
-- `docs/`：设计、任务修复和维护文档。
-- `scripts/`：数据生成、审计、运行辅助和维护工具。
-- `aion/`：本地部署目录，不作为源码或长期构建输入。
+- `src/main/java/com/aionemu/boot/` — Spring Boot lifecycle, configuration, internationalization, and transport boundaries
+- `src/main/java/com/aionemu/commons/` — Database, networking, concurrency, and shared infrastructure
+- `src/main/java/com/aionemu/loginserver/` — Login service
+- `src/main/java/com/aionemu/chatserver/` — Chat service
+- `src/main/java/com/aionemu/gameserver/` — Game world, quests, AI, protocol, and business services
+- `src/main/resources/aion/config/` — Runtime configuration
+- `src/main/resources/aion/data/` — Production static data and quest XML
+- `src/main/resources/aion/definitions/` — Compact definitions and generation inputs
+- `src/main/resources/aion/geo/` — Geo, Path, and terrain data
+- `src/test/java/` — Unit tests, production catalog checks, and regression tests
+- `docs/` — Design, quest-repair, and maintenance documentation
+- `scripts/` — Data generation, auditing, runtime helpers, and maintenance tools
+- `aion/` — Local deployment directory; it is not source code or a long-lived build input
 
-## Maven 模块
+## Maven Module
 
-- 仓库根目录是唯一 Maven 模块：`com.aionemu:aionemu`。
-- Spring Boot 重打包产物为 `target/AionEmu.jar`。
-- `package.sh` 将 JAR、资源和启停脚本部署到 `aion/` 或 `AION_HOME` 指定目录。
-- 所有 Maven 命令都应从仓库根目录执行。
+- The repository root is the only Maven module: `com.aionemu:aionemu`.
+- The Spring Boot repackaged artifact is `target/AionEmu.jar`.
+- `package.sh` deploys the JAR, resources, and lifecycle scripts to `aion/` or the directory specified by `AION_HOME`.
+- Run all Maven commands from the repository root.
 
 ## Rules Index
 
-所有详细规则位于 `.agent/rules/`：
+All detailed rules are in `.agent/rules/`:
 
-| 文件 | 适用范围 | 说明 |
+| File | Scope | Description |
 |---|---|---|
-| [i18n.md](.agent/rules/i18n.md) | 全仓库 | 中英双语注释、日志国际化和术语规范 |
-| [java_general.md](.agent/rules/java_general.md) | `**/*.java` | Java 通用约定、错误处理、依赖注入和开发命令约束 |
-| [lombok.md](.agent/rules/lombok.md) | `**/*.java` | Lombok 样板代码简化及生成行为边界 |
-| [quest-repair.md](.agent/rules/quest-repair.md) | 任务 XML、任务引擎、任务 AI、任务测试和 `docs/quest/` | 任务证据、修复、验收和 playbook 更新规则 |
+| [i18n.md](.agent/rules/i18n.md) | Entire repository | Bilingual comments, localized logging, and terminology rules / 中英双语注释、日志国际化和术语规范 |
+| [java_general.md](.agent/rules/java_general.md) | `**/*.java` | General Java conventions, error handling, dependency injection, and development workflow / Java 通用约定、错误处理、依赖注入和开发流程 |
+| [lombok.md](.agent/rules/lombok.md) | `**/*.java` | Lombok boilerplate reduction and generated-behavior boundaries / Lombok 样板代码简化及生成行为边界 |
+| [quest-repair.md](.agent/rules/quest-repair.md) | Quest XML, quest engine, quest AI, quest tests, and `docs/quest/` | Quest evidence, repair, acceptance, and playbook-update rules / 任务证据、修复、验收和 Playbook 更新规则 |
