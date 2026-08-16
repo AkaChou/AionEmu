@@ -341,9 +341,10 @@ mvn clean verify
 只有修改页面/动作合同或需要重新生成报告时才执行：
 
 ```bash
-python3 scripts/generate_client_dialog_mapping.py --check
-python3 scripts/extract_legacy_quest_dialog_contracts.py --check
-python3 scripts/align_client_quest_dialog_lifecycle.py --check
+python3 scripts/quest/generate_client_dialog_mapping.py --check
+python3 scripts/quest/extract_legacy_quest_dialog_contracts.py --check
+python3 scripts/quest/align_client_quest_dialog_lifecycle.py --check
+python3 scripts/quest/generate_quest_dialog_enums.py --check
 ```
 
 顺序审计应在测试编译完成后执行，命令和字段说明见 `client-dialog-mapping/README.zh-CN.md`。`EVIDENCE_REQUIRED` 不是“已修复”，不能为了清零报告而猜测 page/action。

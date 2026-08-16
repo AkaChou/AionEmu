@@ -72,7 +72,7 @@ class Alignment:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Align unambiguous quest lifecycle pages with active client HTML.")
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--pages", type=Path,
                         default=Path("docs/quest/client-dialog-mapping/quest-dialog-pages.csv"))
     parser.add_argument("--actions", type=Path,

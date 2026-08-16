@@ -51,7 +51,7 @@ class Contract:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Extract legacy retail quest dialog contracts.")
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--revision", default=DEFAULT_REVISION)
     parser.add_argument("--resource", default=DEFAULT_RESOURCE)
     parser.add_argument("--output", type=Path, default=Path(DEFAULT_OUTPUT))

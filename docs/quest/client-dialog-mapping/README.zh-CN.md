@@ -9,7 +9,7 @@
 - 权威任务数据包：Aion 5.8 客户端 `data/Quest/Quest.pak`。
 - `HyperLinks.xml`、`HtmlPages.xml`：从 Aion 5.8 客户端基础对话包解包获得。
 - 中文任务 HTML：从 Aion 5.8 客户端中文本地化包解包获得。
-- 生成脚本：`scripts/generate_client_dialog_mapping.py`。
+- 生成脚本：`scripts/quest/generate_client_dialog_mapping.py`。
 
 需要重新生成而当前任务缺少上述客户端文件或解包产物时，先向用户请求提供。取得文件后，可通过命令行参数或 `AION_CLIENT_ROOT`、`AION_UNPACK_ROOT` 传入位置；不要把个人机器路径写入文档或生成结果。
 
@@ -83,17 +83,24 @@ HtmlPages  ID 31 = HTML_PAGE_PACKAGE_LIMITATION
 在项目根目录执行：
 
 ```bash
-python3 scripts/generate_client_dialog_mapping.py
-python3 scripts/generate_client_dialog_mapping.py --check
+python3 scripts/quest/generate_client_dialog_mapping.py
+python3 scripts/quest/generate_client_dialog_mapping.py --check
+```
+
+客户端动作/页面映射或活动任务 XML 引用发生变化后，同步并检查类型化 Java 枚举：
+
+```bash
+python3 scripts/quest/generate_quest_dialog_enums.py
+python3 scripts/quest/generate_quest_dialog_enums.py --check
 ```
 
 重新生成旧正式模板合同和客户端生命周期对齐报告：
 
 ```bash
-python3 scripts/extract_legacy_quest_dialog_contracts.py
-python3 scripts/align_client_quest_dialog_lifecycle.py
-python3 scripts/extract_legacy_quest_dialog_contracts.py --check
-python3 scripts/align_client_quest_dialog_lifecycle.py --check
+python3 scripts/quest/extract_legacy_quest_dialog_contracts.py
+python3 scripts/quest/align_client_quest_dialog_lifecycle.py
+python3 scripts/quest/extract_legacy_quest_dialog_contracts.py --check
+python3 scripts/quest/align_client_quest_dialog_lifecycle.py --check
 ```
 
 `align_client_quest_dialog_lifecycle.py --write` 只应用上述强证据门槛下的 `READY` 路由；默认运行只更新报告。
@@ -110,7 +117,7 @@ mvn -q -Dexec.classpathScope=test \
 也可以显式指定来源和输出目录：
 
 ```bash
-python3 scripts/generate_client_dialog_mapping.py \
+python3 scripts/quest/generate_client_dialog_mapping.py \
   --definitions-dir "${AION_UNPACK_ROOT}/dialog_unpacked" \
   --zh-dialogs-dir "${AION_UNPACK_ROOT}/data_unpacked/Dialogs" \
   --output-dir docs/quest/client-dialog-mapping

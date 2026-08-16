@@ -23,7 +23,7 @@ STANDARD_PAGES = {
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate typed quest dialog enums from client data and XML references.")
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--check", action="store_true", help="Fail when generated sources differ; do not write.")
     return parser.parse_args()
 
@@ -120,7 +120,10 @@ def enum_source(package: str, class_name: str, doc: str, symbols: set[str], by_n
 
 import java.util.Arrays;
 
-/** Generated from Aion 5.8 client {doc} and active quest XML references. */
+/**
+ * 由 Aion 5.8 客户端 {doc} 与活动任务 XML 引用生成。
+ * Generated from Aion 5.8 client {doc} and active quest XML references.
+ */
 public enum {class_name} {{
 {rows}
 
