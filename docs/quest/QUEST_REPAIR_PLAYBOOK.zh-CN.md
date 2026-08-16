@@ -1,6 +1,6 @@
 # 任务排查与修复 Playbook
 
-本文档面向 Claude Code、Codex 以及其他参与 AionEmu 任务修复的 agent。目标是把“玩家描述的任务不能做”转换为可验证的状态、协议、客户端和运行时证据，再用最小改动修复，并留下可以阻止回归的测试。
+本文档面向参与 AionEmu 任务修复的 coding agent 和开发者。目标是把“玩家描述的任务不能做”转换为可验证的状态、协议、客户端和运行时证据，再用最小改动修复，并留下可以阻止回归的测试。
 
 适用仓库：当前 checkout 根目录，可用 `git rev-parse --show-toplevel` 获取。
 
@@ -109,7 +109,7 @@ git diff --stat
 
 ### 5.2 阶段 1：找到生产 owner 和实际路由
 
-已知任务 ID、NPC 或动作时，直接精确搜索：
+已知任务 ID、NPC 或动作时直接精确搜索。以下 shell 命令仅为示例，可替换为当前 agent 和执行环境提供的等价搜索与读取能力：
 
 ```bash
 rg -n 'id="14112"|npc-id="203195"|SELECT_QUEST_REWARD' \
@@ -126,7 +126,7 @@ rg -n '14112|203195|Poisonous_Bubblegut' src/main/java src/test/java
 - resource 路径是否指向当前 XML；
 - 是否仍有旧 XML/Java owner 可能抢占执行入口。
 
-不知道代码位置时才使用一次宽泛 `jbcontext search`；得到目录后改用 `rg`、`sed` 和符号附近的局部读取。不要反复对整个仓库做语义搜索。
+不知道代码位置时，使用当前环境可用的语义、符号或结构化搜索定位一次；得到相关目录后改用精确搜索和符号附近的局部读取。不要反复对整个仓库做宽泛搜索。
 
 ### 5.3 阶段 2：画出状态和协议合同
 
@@ -294,6 +294,8 @@ Aion 5.8 客户端是客户端页面、动作、字典和数据包的权威来�
 
 ## 7. 验证门禁
 
+以下 Maven、Javac、测试和脚本命令仅在用户明确授权后执行；未获授权时只记录待执行验收项。不会触发构建的 `git diff --check`、状态和 diff 检查可直接执行。
+
 ### 7.1 先跑 focused tests
 
 根据改动范围选择测试；当前任务相关修复可从以下命令开始：
@@ -401,12 +403,12 @@ commit：
 是否 push：否（除非用户明确要求）
 ```
 
-## 10. 可复制给 Claude Code 的任务提示词
+## 10. 可复制给任意 coding agent 的任务提示词
 
 ```text
 你在当前 checkout 的 quest 分支工作。
 请先阅读 docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md、docs/quest/WRITING_GUIDE.zh-CN.md、
-当前 checkout 的 AGENTS.md 和 `.agent/rules/` 规则。命令示例使用标准系统命令。
+当前 checkout 的 AGENTS.md 和 `.agent/rules/` 规则。使用当前环境可用的搜索、读取和编辑能力。
 
 任务：<quest-id>，症状：<玩家可复现步骤>。
 
@@ -417,8 +419,8 @@ commit：
 4. 判断是 XML 单任务问题、共享 runtime 问题、AI 副作用问题、客户端资源问题还是性能放大问题。
 5. 只做最小修复；不要用候选 XML 或通用 page 猜值，不要删除必要的 visibility refresh。
 6. 同时增加能证明完整行为合同的回归测试；涉及共享逻辑时增加生产目录级审计。
-7. 串行运行 focused tests、生产 catalog/whitelist、git diff --check；必要时 clean verify。
-8. 只暂存本次路径并本地提交，不 push。
+7. 仅在用户明确要求运行构建或测试时，串行执行 focused tests、生产 catalog/whitelist，必要时 clean verify；否则列出未执行的验收项。可执行不触发构建的 diff 检查。
+8. 仅在用户明确要求提交时，暂存本次路径并本地提交；未经明确要求不 push。
 
 最终报告必须列出：根因证据、改动、测试命令和结果、残余风险、commit hash。
 ```
