@@ -434,6 +434,48 @@ class QuestE2eInfrastructureTest {
 	}
 
 	@Test
+	void negativeDialogTransactionActionIsAnObservableResponse() throws Exception {
+		CompiledQuestDefinition definition = definition(1170);
+		QuestTransition transition = definition.definition().transitions().stream()
+			.filter(candidate -> candidate.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.dialogId() != null && talk.dialogId() == -1)
+			.filter(candidate -> candidate.actions().stream().anyMatch(
+				action -> action instanceof com.aionemu.gameserver.questEngine.definition.QuestAction.GiveItem))
+			.findFirst().orElseThrow();
+		ClientResourceOracle oracle = ClientResourceOracle.load(CLIENT_MAPPING);
+		QuestE2eAuditRow row = QuestE2eBatchAudit.auditTransition(definition, transition, oracle);
+		assertEquals(QuestE2eStatus.PASS, row.status(), row::toString);
+		assertEquals("FAST", row.validationMode());
+	}
+
+	@Test
+	void wildcardQuestItemDropRouteRequiresTheAiCompletionPipeline() throws Exception {
+		CompiledQuestDefinition definition = definition(1103);
+		QuestTransition transition = definition.definition().transitions().stream()
+			.filter(candidate -> candidate.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.dialogId() == null)
+			.findFirst().orElseThrow();
+		ClientResourceOracle oracle = ClientResourceOracle.load(CLIENT_MAPPING);
+		QuestE2eAuditRow row = QuestE2eBatchAudit.auditTransition(definition, transition, oracle);
+		assertEquals(QuestE2eStatus.RUNTIME_REQUIRED, row.status(), row::toString);
+		assertEquals("quest item response is completed by QuestItemNpcAI2 outside the dispatcher", row.reason());
+	}
+
+	@Test
+	void negativeQuestItemDropRouteRequiresTheAiCompletionPipeline() throws Exception {
+		CompiledQuestDefinition definition = definition(2213);
+		QuestTransition transition = definition.definition().transitions().stream()
+			.filter(candidate -> candidate.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.dialogId() != null && talk.dialogId() == -1)
+			.filter(candidate -> candidate.actions().isEmpty() && candidate.afterCommit().isEmpty())
+			.findFirst().orElseThrow();
+		ClientResourceOracle oracle = ClientResourceOracle.load(CLIENT_MAPPING);
+		QuestE2eAuditRow row = QuestE2eBatchAudit.auditTransition(definition, transition, oracle);
+		assertEquals(QuestE2eStatus.RUNTIME_REQUIRED, row.status(), row::toString);
+		assertEquals("FAST", row.validationMode());
+	}
+
+	@Test
 	void killNpcSetIsMaterializedAsOneAuthoritativeKillEvent() throws Exception {
 		CompiledQuestDefinition definition = definition(1842);
 		QuestTransition transition = definition.definition().transitions().stream()

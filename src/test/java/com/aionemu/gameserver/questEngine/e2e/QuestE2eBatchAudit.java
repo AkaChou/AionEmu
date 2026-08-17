@@ -93,7 +93,7 @@ public final class QuestE2eBatchAudit {
 					evidenceMismatch, npcId, runtime.expectedDialogTargetObjectId(), dialogId, shownPage);
 			}
 			QuestE2eStatus status = classifyResponse(definition, transition, runtime, outcome, oracle, shownPage);
-			String reason = reason(status, outcome, shownPage, transition);
+			String reason = reason(status, outcome, shownPage, definition, transition);
 			return row(definition, transition, runtime, oracle, status, reason, npcId,
 				runtime.expectedDialogTargetObjectId(), dialogId, shownPage);
 		} catch (Exception failure) {
@@ -184,7 +184,10 @@ public final class QuestE2eBatchAudit {
 			return QuestE2eStatus.STATE_MISMATCH;
 		}
 		if (shownPage > 0 && !oracle.pageExists(definition.id(), shownPage)) return QuestE2eStatus.PAGE_NOT_IN_CLIENT;
-		boolean response = !outcome.packets().isEmpty() || hasObservableNonPacketEffect(transition);
+		boolean response = hasObservableResponse(outcome, transition);
+		if (!outcome.stateChanged() && !response && requiresQuestItemAiCompletion(definition, transition)) {
+			return QuestE2eStatus.RUNTIME_REQUIRED;
+		}
 		if (outcome.handled() && !outcome.stateChanged() && !response && transition.actions().stream()
 				.anyMatch(com.aionemu.gameserver.questEngine.definition.QuestAction.BlockDefaultItemUse.class::isInstance)) {
 			return QuestE2eStatus.PASS;
@@ -252,7 +255,10 @@ public final class QuestE2eBatchAudit {
 		if (requiresInteractionObject(transition) && runtime.state().currentObjectId() <= 0) {
 			return QuestE2eStatus.INVALID_INTERACTION_OBJECT;
 		}
-		boolean response = !outcome.packets().isEmpty() || hasObservableNonPacketEffect(transition);
+		boolean response = hasObservableResponse(outcome, transition);
+		if (!outcome.stateChanged() && !response && requiresQuestItemAiCompletion(definition, transition)) {
+			return QuestE2eStatus.RUNTIME_REQUIRED;
+		}
 		if (outcome.stateChanged() && !response && !transition.afterCommit().isEmpty()) {
 			return QuestE2eStatus.STATE_CHANGED_WITHOUT_RESPONSE;
 		}
@@ -299,11 +305,14 @@ public final class QuestE2eBatchAudit {
 
 	private static String reason(QuestE2eStatus status,
 			com.aionemu.gameserver.questEngine.e2e.client.QuestHeadlessClient.DispatchOutcome outcome,
-			int shownPage, QuestTransition transition) {
+			int shownPage, CompiledQuestDefinition definition, QuestTransition transition) {
 		if (status == QuestE2eStatus.PASS) return "";
 		if (outcome.failure() != null) return outcome.failure().getClass().getSimpleName() + ":" + outcome.failure().getMessage();
 		if (status == QuestE2eStatus.PAGE_NOT_IN_CLIENT) return "server page " + shownPage + " is absent from Aion 5.8 client tables";
 		if (status == QuestE2eStatus.NO_MATCH) return "no transition matched event and prepared source facts";
+		if (status == QuestE2eStatus.RUNTIME_REQUIRED && requiresQuestItemAiCompletion(definition, transition)) {
+			return "quest item response is completed by QuestItemNpcAI2 outside the dispatcher";
+		}
 		return status.name() + " for " + transition.event().type();
 	}
 
@@ -318,6 +327,26 @@ public final class QuestE2eBatchAudit {
 				&& !(action instanceof com.aionemu.gameserver.questEngine.definition.AfterCommitAction.ShowQuestSelectionDialog)
 				&& !(action instanceof com.aionemu.gameserver.questEngine.definition.AfterCommitAction.ShowDialogWindow)
 				&& !(action instanceof com.aionemu.gameserver.questEngine.definition.AfterCommitAction.CloseDialog));
+	}
+
+	/** 将已提交事务动作与包、世界副作用统一视为可观察响应。 / Treats committed actions, packets, and world side effects as observable responses. */
+	private static boolean hasObservableResponse(
+			com.aionemu.gameserver.questEngine.e2e.client.QuestHeadlessClient.DispatchOutcome outcome,
+			QuestTransition transition) {
+		return !outcome.packets().isEmpty() || !transition.actions().isEmpty()
+			|| hasObservableNonPacketEffect(transition);
+	}
+
+	/** 识别由交互物 AI 在 dispatcher 返回后打开掉落列表的路由。 / Identifies routes whose item AI opens the drop list after dispatcher return. */
+	private static boolean requiresQuestItemAiCompletion(CompiledQuestDefinition definition,
+			QuestTransition transition) {
+		if (!(transition.event() instanceof QuestEvent.TalkToNpc talk)
+				|| talk.dialogId() != null && talk.dialogId() != -1
+				|| !transition.actions().isEmpty() || !transition.afterCommit().isEmpty()) {
+			return false;
+		}
+		return definition.definition().metadata().drops().stream()
+			.anyMatch(drop -> drop.npcId() == talk.npcId());
 	}
 
 	private static boolean isClick(QuestEvent event) {
