@@ -18,94 +18,25 @@
       <var name="var0" value="0"/>
     </node>
     <node label="hunting" status="START"/>
+    <node label="hunting-complete" status="START">
+      <var name="var0" value="44"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="44"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <!-- 接取 NPC (271068): 任务介绍。 Quest intro. -->
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="271068" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="hunting">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="271068" action="QUEST_ACCEPT_1"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="hunting">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="271068" action="QUEST_ACCEPT_SIMPLE"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="271068" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <!-- 进行中: 271068 对话静默消费(原 handler return true)。 Silent dialog consume in START state. -->
-    <transition source="hunting" target="hunting">
-      <event>
-        <talk-to-npc npc-id="271068"/>
-      </event>
-    </transition>
-    <!-- Asteria Chamber (300050000) 内击杀计数,44 杀后进入结算。 Kill counting inside Asteria Chamber (300050000), reward after 44 kills. -->
-    <transition source="hunting" target="hunting" priority="1">
+    <dialog type="NPC_START" npc-id="805433" source="unaccepted" target="hunting" selection-sources="unaccepted" start-page="SELECT1"/>
+    <counter source="hunting" target="hunting-complete" field="var0" required="44">
       <event>
         <kill-npc npc-ids="214752 214753 214754 214755 214756 214757 214758 214759 214760 214761 214762 214763 214764 214765 214766 214767 214768 214769 214770 215439 215440 215441 215442 215443 215444"/>
       </event>
-      <conditions>
-        <world-is world-id="300050000"/>
-        <variable-below field="var0" value="43"/>
-      </conditions>
-      <actions>
-        <increment-variable field="var0" delta="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="hunting" target="reward" priority="0">
-      <event>
-        <kill-npc npc-ids="214752 214753 214754 214755 214756 214757 214758 214759 214760 214761 214762 214763 214764 214765 214766 214767 214768 214769 214770 215439 215440 215441 215442 215443 215444"/>
-      </event>
-      <conditions>
-        <world-is world-id="300050000"/>
-        <variable-at-least field="var0" value="43"/>
-      </conditions>
-      <actions>
-        <increment-variable field="var0" delta="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
-    <!-- 结算奖励。 Claim rewards. -->
-    <npc-complete npc-id="271068" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    </counter>
+    <dialog type="NPC_REPORT" npc-id="278003" source="hunting-complete" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="278003" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
