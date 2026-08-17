@@ -247,7 +247,7 @@ Aion 5.8 客户端是客户端页面、动作、字典和数据包的权威来�
 3. 查 pattern 是否有等价的 spawn/变身/任务副作用；只有没有等价动作时才保留自定义 fallback。
 4. 将保留名单作为明确集合和回归测试，不要按“所有自定义 AI”全局禁用 retail pattern。
 
-本次修复使用 `AI2Engine.QUEST_SIDE_EFFECT_AI` 和 `AI2EngineRetailSelectionTest`，把证据明确的 37 个 AI 纳入保护范围。未来发现新任务时，必须补充“生命周期副作用 + 零售 pattern 无等价动作”的证据和测试。
+当前使用 `AI2Engine.QUEST_SIDE_EFFECT_AI` 和 `AI2EngineRetailSelectionTest` 保护 38 个具有任务副作用的 AI；初始代表提交覆盖 37 个，任务 14047 又补充了战斗阶段变身 AI `betrayer_icaronix`。未来发现新任务时，必须补充“生命周期或战斗阶段副作用 + 零售 pattern 无等价动作”的证据和测试。
 
 ### 6.4 护送 NPC 跟错对象、启动不动或距离过远
 
@@ -360,6 +360,7 @@ python3 scripts/quest/generate_quest_dialog_enums.py --check
 
 | 提交 | 案例 | 可复用结论 |
 |---|---|---|
+| `8b058d4b4` | 14047 飞行不可达阶段恢复、伊卡罗尼斯变身和完整客户端链 | 飞行专属地点的持久阶段必须有可重入恢复合同；血量阈值变身必须以幂等死亡路径覆盖直接秒杀；同名 NPC 寻找别名只能按任务阶段限域 |
 | `4a23cf0a0` | 13830 实时奖励选择后点击领取无响应 | 无目标实时奖励使用 110..124 独立动作空间；任务 XML 必须注册实际可见槽位并保留完整完成合同 |
 | `906c08e92` | 24 个奖励选择路由首次点击无响应；37 个任务副作用 AI 被 retail pattern 覆盖 | 用生产目录审计捕获 `SELECT_QUEST_REWARD -> REWARD` 无响应；有生命周期任务副作用的 AI 必须有证据化 fallback 集合 |
 | `7a6ad8eca` | 14112 击杀剧毒斯拉希后生成 Kato、重登恢复、首次奖励对话 | 任务 NPC 生成、登录恢复、页面响应和旧 AI 清理必须作为同一任务合同验证 |
@@ -407,6 +408,17 @@ python3 scripts/quest/generate_quest_dialog_enums.py --check
 - 验证命令和结果：`rtk mvn -Dtest=Quest13830To13834TargetlessRewardTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test` 通过，共 8 个测试，失败 0、错误 0、跳过 0；五个 XML 均通过 XSD；`rtk python3 scripts/quest/generate_quest_dialog_enums.py --check` 返回 `changed=0`；Aion 5.8 客户端实测实时奖励可领取并正常完成任务。
 - 复用边界：仅适用于权威数据允许实时报告、无目标奖励包确实发送 110..124，且普通与实时槽位应共享奖励完成语义的任务。必须按客户端实际可见槽位逐一映射：单一职业奖励通常只需 110；多槽奖励要分别证明 111..124 与奖励索引。动作 108、NPC 目标领奖、不同奖励索引、额外页面或副作用合同必须单独取证，不能套用本案例或做全局 remap。
 - commit：`4a23cf0a0f531182e195bfa0f662513da50d170a`。
+
+### 8.4 飞行不可达阶段恢复与血量阈值变身的秒杀兜底
+
+- 代表任务：14047「Chaining Memories」。
+- 玩家症状：佩托 802052 的电影 421 会重复播放，任务页面不能继续；同一位置同时出现任务佩托 802052 和普通佩托 204653。飞到阿凯斯泰斯或佩托所在的玩家不可自行到达区域后，如果客户端崩溃，重登会停在无法继续的阶段；GM 点击“寻找”又因同名模板传送到普通阿凯斯泰斯 204652，而不是任务 NPC 802051。最后战斗中入口形态 233877 不会可靠生成任务监听的最终形态 214599，直接秒杀还会跳过 75% 血量检查；即使击杀推进，278500 奖励对话也会因服务端发送不存在的 `HtmlPageId 10002` 显示 load fail。
+- 根因：电影 421 后缺少客户端实际存在的 `SELECT5_1(2376)` 页面，且把 `SETPRO10/SETPRO11(10009/10010)` action ID 当成页面 ID；副本静态数据重复生成普通佩托。`s4/s5` 是只有前一步飞行才能进入的临时阶段，却没有 `ENTER_WORLD` 恢复边。Aion 5.8 客户端寻找链接提交同名普通模板 204652，服务端没有结合任务阶段解析为 802051。副本静态出生 233877，而旧 handler 和任务合同只监听 214599；零售空 pattern 又绕过 `betrayer_icaronix` 脚本 AI，原阈值逻辑也没有死亡兜底。奖励预览最后把 `DEFAULT_SUCCESS(10002)` 当作 Q14047 页面发送，而旧 handler 的 `sendQuestEndDialog` 合同是奖励窗口 page 5。
+- 修复层：任务 XML 在提交状态后再关闭、飞行或播放电影，电影 421 后返回 2376 页面，错误阶段点击明确关闭；`s4/s5` 只在 `ENTER_WORLD` 回退到可重新触发第一段飞行的 `s3`，不在 `LOG_OUT` 二次回退。GM 寻找只在 Q14047 `START + var0=3/6` 时把 204652 限域解析为 802051。副本删除重复 204653，保留静态入口形态 233877；AI 选择保护 `betrayer_icaronix`，并用共享 `AtomicBoolean` 让 75% 阈值和 `handleDied()` 最多生成一次 214599。最终击杀只监听 214599，提交后按 `PACKET_ONLY sync -> movie 422` 推进；278500 的 `USE_OBJECT` 显示 `SHOW_SELECT_QUEST_REWARD_WINDOW1`。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/14047.xml`、`src/main/resources/aion/data/static_data/spawns/Instances/310100000_Azoturan_Fortress.xml`、`src/main/java/com/aionemu/gameserver/ai/instance/azoturanFortress/Betrayer_IcaronixAI2.java`、`src/main/java/com/aionemu/gameserver/ai2/AI2Engine.java`、`src/main/java/com/aionemu/gameserver/network/aion/clientpackets/CM_OBJECT_SEARCH.java`，以及 `Betrayer_IcaronixAI2Test`、`AI2EngineRetailSelectionTest`、`CMObjectSearchTest`、`Quest14047ClientDialogAlignmentTest`。
+- 验证命令和结果：索引快照运行 `rtk mvn -q -Dtest=Quest14047ClientDialogAlignmentTest,Betrayer_IcaronixAI2Test,AI2EngineRetailSelectionTest,CMObjectSearchTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test` 通过；生产 catalog 6200 条编译成功，失败 0，白名单违规 0。全量 E2E 生成 396,797 条 transition、390,082 条 PASS，Q14047 为 58/58 PASS，`PAGE_NOT_IN_CLIENT`、`INVALID_PACKET_ORDER`、`STATE_CHANGED_WITHOUT_RESPONSE`、`AFTER_COMMIT_FAILURE`、`RUNTIME_REQUIRED`、`TRANSACTION_FAILURE` 均为 0。用户使用重新打包的服务端完成真实客户端端到端验收，确认页面、两段飞行、断线恢复、唯一佩托、214599 击杀、电影 422 和 278500 奖励完成流程均可继续。
+- 复用边界：只有后续阶段所在位置确实无法由玩家自行返回、且旧 handler/客户端流程证明必须重新执行前置传送时，才能在 `ENTER_WORLD` 回退到最近的可重入阶段；普通持久进度不能借此清零。只有任务目标由入口形态的阈值变身生成时才添加死亡兜底，并必须用同一幂等门覆盖阈值和死亡竞争。NPC 搜索别名必须同时限定任务 ID、状态和阶段，不得全局替换同名模板。页面 ID 与 action ID 仍是独立空间，每条电影后续页和奖励窗口都必须由 Aion 5.8 客户端与旧 handler 分别证明。
+- commit：`8b058d4b4de747d12df9e9af63617619d5eefcf5`。
 
 ## 9. 提交和交接清单
 
