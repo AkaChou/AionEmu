@@ -64,7 +64,7 @@
       <var name="var0" value="0"/>
     </node>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="CLASS">
     <dialog type="NPC_START" npc-id="806148" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
     <transition source="unaccepted" target="started">
       <event>

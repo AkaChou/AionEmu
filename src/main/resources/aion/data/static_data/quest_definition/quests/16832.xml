@@ -29,7 +29,7 @@
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="FIXED">
     <!-- 进入世界 301550000 自动接取。 Auto-start on entering world 301550000. -->
     <transition source="unaccepted" target="started">
       <event>

@@ -34,7 +34,7 @@
       <var name="var0" value="0"/>
     </node>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="FIXED">
     <dialog type="NPC_START" npc-id="804627" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
     <counter-grid>
       <dimension field="var0" required="1" npc-ids="234967"/>

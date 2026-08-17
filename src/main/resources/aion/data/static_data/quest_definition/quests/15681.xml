@@ -42,7 +42,7 @@
       <var name="var0" value="0"/>
     </node>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="FIXED">
     <transition source="unaccepted" target="started">
       <event>
         <at-distance npc-id="806691"/>

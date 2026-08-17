@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -45,7 +46,251 @@ final class QuestXmlBlockExpander {
 						"unsupported transitions child");
 			}
 		}
+		String reportedRewardMode = attribute(transitionsElement, "reported-reward-mode");
+		if (!reportedRewardMode.isBlank()) {
+			transitions.addAll(expandReportedRewards(context, reportedRewardMode, transitions));
+		}
 		return List.copyOf(transitions);
+	}
+
+	/**
+	 * 从已校验的普通 NPC 完成路由派生无目标实时报告路由，保留条件、事务动作和优先级，
+	 * 仅将最终选择窗口替换为关闭窗口。无完整普通合同或槽位映射时拒绝编译。
+	 * Derives targetless reported-reward routes from validated ordinary NPC completion routes,
+	 * preserving conditions, transactional actions, and priority while replacing only the final
+	 * selection response with a dialog close. Compilation fails when the ordinary contract or slot map
+	 * is incomplete.
+	 */
+	private static List<QuestTransition> expandReportedRewards(Context context, String rawMode,
+			List<QuestTransition> transitions) {
+		ReportedRewardMode mode;
+		try {
+			mode = ReportedRewardMode.valueOf(rawMode);
+		} catch (IllegalArgumentException e) {
+			return fail("REPORTED_REWARD_MODE_INVALID", context, "transitions", "reported-reward-mode",
+				"must be FIXED, CHOICE, or CLASS");
+		}
+		return switch (mode) {
+			case FIXED -> expandFixedReportedReward(context, transitions);
+			case CHOICE -> expandChoiceReportedRewards(context, transitions);
+			case CLASS -> expandClassReportedRewards(context, transitions);
+		};
+	}
+
+	private static List<QuestTransition> expandFixedReportedReward(Context context,
+			List<QuestTransition> transitions) {
+		if (context.metadata().useClassReward() == 1 || !context.metadata().classRewards().isEmpty()
+				|| selectableRewards(context).size() != 0) {
+			return fail("REPORTED_REWARD_METADATA_MISMATCH", context, "transitions", "reported-reward-mode",
+				"FIXED requires fixed rewards without single-class or selectable rewards");
+		}
+		List<QuestTransition> contracts = completionContracts(context, transitions,
+			QuestDialogAction.SELECTED_QUEST_REWARD1.id());
+		if (contracts.isEmpty()) {
+			return fail("REPORTED_REWARD_CONTRACT_COUNT", context, "transitions", "reported-reward-mode",
+				"FIXED requires at least one ordinary reward contract for action 8");
+		}
+		int reportedAction = QuestDialogAction.SELECTED_QUEST_AUTO_REWARD.id();
+		requireNoTargetlessRewardRoutes(context, transitions, Set.of(reportedAction));
+		List<QuestTransition> reportedContracts = contracts.stream()
+			.map(contract -> targetlessCompletion(contract, reportedAction)).distinct().toList();
+		if (reportedContracts.size() != 1) {
+			return fail("REPORTED_REWARD_CONTRACT_MISMATCH", context, "transitions", "reported-reward-mode",
+				"FIXED ordinary action 8 contracts must be equivalent after removing the NPC target");
+		}
+		return reportedContracts;
+	}
+
+	private static List<QuestTransition> expandChoiceReportedRewards(Context context,
+			List<QuestTransition> transitions) {
+		if (context.metadata().useClassReward() != 0 || !context.metadata().classRewards().isEmpty()) {
+			return fail("REPORTED_REWARD_METADATA_MISMATCH", context, "transitions", "reported-reward-mode",
+				"CHOICE does not accept class rewards");
+		}
+		List<QuestReward> selectableRewards = selectableRewards(context);
+		if (selectableRewards.size() < 2 || selectableRewards.size() > 15) {
+			return fail("REPORTED_REWARD_METADATA_MISMATCH", context, "transitions", "reported-reward-mode",
+				"CHOICE requires between 2 and 15 selectable rewards, found " + selectableRewards.size());
+		}
+		List<QuestTransition> contracts = new ArrayList<>(selectableRewards.size());
+		Set<Integer> generatedActions = new LinkedHashSet<>();
+		for (int slot = 0; slot < selectableRewards.size(); slot++) {
+			int ordinaryAction = QuestDialogAction.SELECTED_QUEST_REWARD1.id() + slot;
+			List<QuestTransition> slotContracts = completionContracts(context, transitions, ordinaryAction);
+			if (slotContracts.size() != 1) {
+				return fail("REPORTED_REWARD_CONTRACT_COUNT", context, "transitions", "reported-reward-mode",
+					"CHOICE requires exactly one ordinary contract for action " + ordinaryAction
+						+ ", found " + slotContracts.size());
+			}
+			QuestReward reward = selectableRewards.get(slot);
+			QuestAction expectedReward = new QuestAction.GrantReward(QuestRewardKind.ITEM.name(), reward.id(),
+				reward.amount(), QuestRewardAmountMode.EXACT);
+			if (!slotContracts.getFirst().actions().contains(expectedReward)) {
+				return fail("REPORTED_REWARD_CHOICE_ACTION_MISMATCH", context, "transitions",
+					"reported-reward-mode", "ordinary action " + ordinaryAction
+						+ " does not grant selectable reward " + reward.id());
+			}
+			contracts.add(slotContracts.getFirst());
+			generatedActions.add(ordinaryAction);
+			generatedActions.add(QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id() + slot);
+		}
+		for (int ordinaryAction = QuestDialogAction.SELECTED_QUEST_REWARD1.id() + selectableRewards.size();
+				ordinaryAction <= QuestDialogAction.SELECTED_QUEST_REWARD15.id(); ordinaryAction++) {
+			if (!completionContracts(context, transitions, ordinaryAction).isEmpty()) {
+				return fail("REPORTED_REWARD_SLOT_GAP", context, "transitions", "reported-reward-mode",
+					"CHOICE has an ordinary reward contract beyond its " + selectableRewards.size()
+						+ " selectable slots at action " + ordinaryAction);
+			}
+		}
+		requireNoTargetlessRewardRoutes(context, transitions, generatedActions);
+		List<QuestTransition> result = new ArrayList<>(contracts.size() * 2);
+		for (int slot = 0; slot < contracts.size(); slot++) {
+			QuestTransition contract = contracts.get(slot);
+			result.add(targetlessCompletion(contract, QuestDialogAction.SELECTED_QUEST_REWARD1.id() + slot));
+			result.add(targetlessCompletion(contract,
+				QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id() + slot));
+		}
+		return result;
+	}
+
+	private static List<QuestTransition> expandClassReportedRewards(Context context,
+			List<QuestTransition> transitions) {
+		if (context.metadata().useClassReward() != 1 || context.metadata().classRewards().size() != 11
+				|| !selectableRewards(context).isEmpty()) {
+			return fail("REPORTED_REWARD_METADATA_MISMATCH", context, "transitions", "reported-reward-mode",
+				"CLASS requires all 11 class rewards and no ordinary selectable rewards");
+		}
+		List<QuestTransition> contracts = completionContracts(context, transitions,
+			QuestDialogAction.SELECTED_QUEST_REWARD1.id());
+		if (contracts.size() != 11) {
+			return fail("REPORTED_REWARD_CONTRACT_COUNT", context, "transitions", "reported-reward-mode",
+				"CLASS requires 11 ordinary action 8 contracts, found " + contracts.size());
+		}
+		Set<PlayerClass> expectedClasses = Set.of(PlayerClass.GLADIATOR, PlayerClass.TEMPLAR,
+			PlayerClass.RANGER, PlayerClass.ASSASSIN, PlayerClass.SORCERER, PlayerClass.SPIRIT_MASTER,
+			PlayerClass.CLERIC, PlayerClass.CHANTER, PlayerClass.GUNSLINGER, PlayerClass.SONGWEAVER,
+			PlayerClass.AETHERTECH);
+		Set<PlayerClass> actualClasses = new LinkedHashSet<>();
+		for (QuestTransition contract : contracts) {
+			List<PlayerClass> classes = contract.conditions().stream()
+				.filter(QuestCondition.AdvancedClassIs.class::isInstance)
+				.map(QuestCondition.AdvancedClassIs.class::cast)
+				.map(QuestCondition.AdvancedClassIs::playerClass).toList();
+			if (classes.size() != 1 || !actualClasses.add(classes.getFirst())) {
+				return fail("REPORTED_REWARD_CLASS_CONDITIONS", context, "transitions", "reported-reward-mode",
+					"each CLASS contract must select one unique advanced class");
+			}
+			PlayerClass playerClass = classes.getFirst();
+			List<QuestReward> rewards = context.metadata().classRewards().get(classRewardKey(playerClass));
+			if (rewards == null || rewards.size() != 1
+					|| !contract.actions().contains(rewardAction(context, "reported-reward-mode", 0,
+						rewards.getFirst()))) {
+				return fail("REPORTED_REWARD_CLASS_ACTION_MISMATCH", context, "transitions",
+					"reported-reward-mode", "ordinary action 8 does not grant the declared reward for "
+						+ playerClass);
+			}
+		}
+		if (!actualClasses.equals(expectedClasses)) {
+			return fail("REPORTED_REWARD_CLASS_CONDITIONS", context, "transitions", "reported-reward-mode",
+				"CLASS contracts do not cover all 11 advanced classes");
+		}
+		Set<Integer> generatedActions = Set.of(QuestDialogAction.SELECTED_QUEST_REWARD1.id(),
+			QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id());
+		requireNoTargetlessRewardRoutes(context, transitions, generatedActions);
+		List<QuestTransition> result = new ArrayList<>(contracts.size() * 2);
+		for (QuestTransition contract : contracts) {
+			result.add(targetlessCompletion(contract, QuestDialogAction.SELECTED_QUEST_REWARD1.id()));
+			result.add(targetlessCompletion(contract, QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id()));
+		}
+		return result;
+	}
+
+	private static String classRewardKey(PlayerClass playerClass) {
+		return switch (playerClass) {
+			case GLADIATOR -> "FIGHTER";
+			case TEMPLAR -> "KNIGHT";
+			case RANGER -> "RANGER";
+			case ASSASSIN -> "ASSASSIN";
+			case SORCERER -> "WIZARD";
+			case SPIRIT_MASTER -> "ELEMENTALIST";
+			case CLERIC -> "PRIEST";
+			case CHANTER -> "CHANTER";
+			case GUNSLINGER -> "GUNSLINGER";
+			case SONGWEAVER -> "SONGWEAVER";
+			case AETHERTECH -> "AETHERTECH";
+			default -> throw new IllegalArgumentException("unsupported advanced class " + playerClass);
+		};
+	}
+
+	private static List<QuestReward> selectableRewards(Context context) {
+		return context.metadata().rewards().stream()
+			.filter(reward -> QuestRewardKind.fromWire(reward.kind()) == QuestRewardKind.SELECTABLE_ITEM)
+			.toList();
+	}
+
+	private static List<QuestTransition> completionContracts(Context context,
+			List<QuestTransition> transitions, int dialogId) {
+		List<QuestTransition> result = transitions.stream()
+			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.dialogId() != null && talk.dialogId() == dialogId)
+			.toList();
+		for (QuestTransition transition : result) {
+			validateCompletionContract(context, transition, dialogId);
+		}
+		return result;
+	}
+
+	private static void validateCompletionContract(Context context, QuestTransition transition, int dialogId) {
+		QuestNode source = requireNode(context, "transitions", "reported-reward-mode", transition.sourceNode());
+		QuestNode target = requireNode(context, "transitions", "reported-reward-mode", transition.targetNode());
+		if (source.projection().status() != QuestStatus.REWARD) {
+			fail("REPORTED_REWARD_SOURCE_STATUS", context, "transitions", "reported-reward-mode",
+				"ordinary action " + dialogId + " source must project REWARD");
+		}
+		if (target.projection().status() != QuestStatus.COMPLETE) {
+			fail("REPORTED_REWARD_TARGET_STATUS", context, "transitions", "reported-reward-mode",
+				"ordinary action " + dialogId + " target must project COMPLETE");
+		}
+		if (transition.actions().stream().filter(QuestAction.CompleteQuest.class::isInstance).count() != 1) {
+			fail("REPORTED_REWARD_COMPLETE_ACTION", context, "transitions", "reported-reward-mode",
+				"ordinary action " + dialogId + " must contain exactly one complete-quest action");
+		}
+		List<AfterCommitAction> afterCommit = transition.afterCommit();
+		if (afterCommit.size() < 3 || !(afterCommit.get(0) instanceof AfterCommitAction.RefreshPlayerStats)
+				|| !(afterCommit.get(1) instanceof AfterCommitAction.SyncQuestState sync)
+				|| sync.mode() != QuestStateSyncMode.COMPLETION
+				|| !(afterCommit.getLast() instanceof AfterCommitAction.ShowQuestSelectionDialog selection)
+				|| selection.dialogId() != QuestDialogPage.SELECT_QUEST.id()
+				|| afterCommit.subList(2, afterCommit.size() - 1).stream()
+					.anyMatch(QuestXmlBlockExpander::isDialogResponse)) {
+			fail("REPORTED_REWARD_AFTER_COMMIT_ORDER", context, "transitions", "reported-reward-mode",
+				"ordinary action " + dialogId
+					+ " must end refresh-player-stats, COMPLETION sync, then SELECT_QUEST response");
+		}
+	}
+
+	private static boolean isDialogResponse(AfterCommitAction action) {
+		return action instanceof AfterCommitAction.ShowQuestDialog
+			|| action instanceof AfterCommitAction.ShowQuestSelectionDialog
+			|| action instanceof AfterCommitAction.ShowDialogWindow
+			|| action instanceof AfterCommitAction.CloseDialog;
+	}
+
+	private static void requireNoTargetlessRewardRoutes(Context context, List<QuestTransition> transitions,
+			Set<Integer> dialogIds) {
+		for (QuestTransition transition : transitions) {
+			if (transition.event() instanceof QuestEvent.QuestDialog dialog && dialogIds.contains(dialog.dialogId())) {
+				fail("REPORTED_REWARD_ROUTE_CONFLICT", context, "transitions", "reported-reward-mode",
+					"targetless action " + dialog.dialogId() + " is already declared");
+			}
+		}
+	}
+
+	private static QuestTransition targetlessCompletion(QuestTransition contract, int dialogId) {
+		List<AfterCommitAction> afterCommit = new ArrayList<>(contract.afterCommit());
+		afterCommit.set(afterCommit.size() - 1, new AfterCommitAction.CloseDialog());
+		return new QuestTransition(new QuestEvent.QuestDialog(dialogId), contract.conditions(), contract.actions(),
+			contract.targetNode(), afterCommit, contract.priority(), contract.sourceNode());
 	}
 
 	private static Set<DialogRouteKey> explicitDialogRoutes(Element transitionsElement) {
@@ -1210,6 +1455,16 @@ final class QuestXmlBlockExpander {
 		SELECTION_DIALOG,
 		CLOSE_DIALOG,
 		NONE
+	}
+
+	/**
+	 * 实时报告任务的奖励完成合同形态。
+	 * Completion-contract shape for reported quest rewards.
+	 */
+	private enum ReportedRewardMode {
+		FIXED,
+		CHOICE,
+		CLASS
 	}
 
 	private static final class DialogIds {

@@ -549,7 +549,7 @@
       <var name="var0" value="0"/>
     </node>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="FIXED">
     <counter-grid>
       <dimension field="var0" required="40" npc-ids="214740 214741 214742 214743 214824 214825 214826 215424"/>
     </counter-grid>

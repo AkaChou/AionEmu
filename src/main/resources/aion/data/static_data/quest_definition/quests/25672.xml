@@ -34,7 +34,7 @@
       <var name="var1" value="0"/>
     </node>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="FIXED">
     <!-- 未接取时对话显示提示。Unaccepted dialog shows the prompt. -->
     <transition source="unaccepted" target="unaccepted">
       <event>

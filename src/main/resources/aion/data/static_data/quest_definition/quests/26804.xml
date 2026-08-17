@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="26804" version="1">
-  <metadata name="A Long Overdue Battle" display-name-id="1802326" min-level="66" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true">
+  <metadata name="A Long Overdue Battle" display-name-id="1802326" min-level="66" max-level="2147483647" category="MISSION" cannot-share="true" cannot-giveup="true" use-class-reward="1">
     <races>
       <race id="ASMODIANS"/>
     </races>
@@ -8,6 +8,22 @@
       <reward kind="GOLD" id="0" amount="524340"/>
       <reward kind="EXP" id="0" amount="41607965"/>
     </rewards>
+    <start-conditions>
+      <condition type="finished" quest-id="26803"/>
+    </start-conditions>
+    <class-rewards>
+      <class id="FIGHTER"><reward kind="ITEM" id="121001491" amount="1"/></class>
+      <class id="KNIGHT"><reward kind="ITEM" id="121001492" amount="1"/></class>
+      <class id="RANGER"><reward kind="ITEM" id="121001494" amount="1"/></class>
+      <class id="ASSASSIN"><reward kind="ITEM" id="121001493" amount="1"/></class>
+      <class id="WIZARD"><reward kind="ITEM" id="121001497" amount="1"/></class>
+      <class id="ELEMENTALIST"><reward kind="ITEM" id="121001498" amount="1"/></class>
+      <class id="PRIEST"><reward kind="ITEM" id="121001496" amount="1"/></class>
+      <class id="CHANTER"><reward kind="ITEM" id="121001495" amount="1"/></class>
+      <class id="GUNSLINGER"><reward kind="ITEM" id="121001499" amount="1"/></class>
+      <class id="SONGWEAVER"><reward kind="ITEM" id="121001500" amount="1"/></class>
+      <class id="AETHERTECH"><reward kind="ITEM" id="121001501" amount="1"/></class>
+    </class-rewards>
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
@@ -26,7 +42,7 @@
       <var name="var0" value="0"/>
     </node>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="CLASS">
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>
@@ -37,7 +53,6 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
@@ -49,7 +64,6 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
@@ -58,14 +72,6 @@
       </event>
       <after-commit>
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806149" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <!-- 击杀任一元素区域首领进入领奖。Killing any elemental zone boss enters reward. -->
@@ -83,22 +89,128 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806149" action="SELECT_QUEST_REWARD"/>
-      </event>
+    <transition source="reward" target="complete" priority="0">
+      <event><dialog type="TALK_TO_NPC" npc-id="806149" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/></event>
+      <conditions><advanced-class-is class="GLADIATOR"/></conditions>
       <actions>
-        <set-variable field="var0" value="1"/>
+        <grant-reward kind="GOLD" id="0" amount="524340" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="41607965" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="121001491" amount="1"/>
+        <complete-quest reward-index="0"/>
       </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
+      <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit>
     </transition>
-    <npc-complete npc-id="806149" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-        <transition source="reward" target="reward">
+    <transition source="reward" target="complete" priority="1">
+      <event><dialog type="TALK_TO_NPC" npc-id="806149" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/></event>
+      <conditions><advanced-class-is class="TEMPLAR"/></conditions>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="524340" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="41607965" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="121001492" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit>
+    </transition>
+    <transition source="reward" target="complete" priority="2">
+      <event><dialog type="TALK_TO_NPC" npc-id="806149" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/></event>
+      <conditions><advanced-class-is class="RANGER"/></conditions>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="524340" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="41607965" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="121001494" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit>
+    </transition>
+    <transition source="reward" target="complete" priority="3">
+      <event><dialog type="TALK_TO_NPC" npc-id="806149" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/></event>
+      <conditions><advanced-class-is class="ASSASSIN"/></conditions>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="524340" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="41607965" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="121001493" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit>
+    </transition>
+    <transition source="reward" target="complete" priority="4">
+      <event><dialog type="TALK_TO_NPC" npc-id="806149" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/></event>
+      <conditions><advanced-class-is class="SORCERER"/></conditions>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="524340" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="41607965" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="121001497" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit>
+    </transition>
+    <transition source="reward" target="complete" priority="5">
+      <event><dialog type="TALK_TO_NPC" npc-id="806149" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/></event>
+      <conditions><advanced-class-is class="SPIRIT_MASTER"/></conditions>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="524340" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="41607965" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="121001498" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit>
+    </transition>
+    <transition source="reward" target="complete" priority="6">
+      <event><dialog type="TALK_TO_NPC" npc-id="806149" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/></event>
+      <conditions><advanced-class-is class="CLERIC"/></conditions>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="524340" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="41607965" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="121001496" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit>
+    </transition>
+    <transition source="reward" target="complete" priority="7">
+      <event><dialog type="TALK_TO_NPC" npc-id="806149" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/></event>
+      <conditions><advanced-class-is class="CHANTER"/></conditions>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="524340" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="41607965" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="121001495" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit>
+    </transition>
+    <transition source="reward" target="complete" priority="8">
+      <event><dialog type="TALK_TO_NPC" npc-id="806149" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/></event>
+      <conditions><advanced-class-is class="GUNSLINGER"/></conditions>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="524340" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="41607965" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="121001499" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit>
+    </transition>
+    <transition source="reward" target="complete" priority="9">
+      <event><dialog type="TALK_TO_NPC" npc-id="806149" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/></event>
+      <conditions><advanced-class-is class="SONGWEAVER"/></conditions>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="524340" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="41607965" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="121001500" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit>
+    </transition>
+    <transition source="reward" target="complete" priority="10">
+      <event><dialog type="TALK_TO_NPC" npc-id="806149" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/></event>
+      <conditions><advanced-class-is class="AETHERTECH"/></conditions>
+      <actions>
+        <grant-reward kind="GOLD" id="0" amount="524340" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="EXP" id="0" amount="41607965" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="121001501" amount="1"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit>
+    </transition>
+    <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806149" action="QUEST_SELECT"/>
       </event>

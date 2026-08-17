@@ -33,7 +33,7 @@
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="CHOICE">
     <transition source="unaccepted" target="started">
       <event>
         <enter-world/>

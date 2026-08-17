@@ -31,7 +31,7 @@
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="FIXED">
     <transition source="unaccepted" target="started">
       <event>
         <at-distance npc-id="806563"/>

@@ -26,7 +26,7 @@
       <var name="var0" value="0"/>
     </node>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="FIXED">
     <transition source="started" target="reward">
       <event>
         <kill-npc npc-ids="857460 857462 857464"/>

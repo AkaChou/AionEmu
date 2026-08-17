@@ -25,7 +25,7 @@
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="FIXED">
     <!-- 接取:进入任务区域。Start on entering the quest area. -->
     <transition source="unaccepted" target="started">
       <event>

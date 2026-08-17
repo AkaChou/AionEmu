@@ -35,7 +35,7 @@
       <var name="var2" value="0"/>
     </node>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="FIXED">
     <dialog type="NPC_START" npc-id="806114" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
     <transition source="started" target="started">
       <event>

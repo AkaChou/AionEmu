@@ -25,7 +25,7 @@
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="FIXED">
     <transition source="unaccepted" target="started">
       <event>
         <enter-zone zone="EYE_OF_RESHANTA_400010000"/>

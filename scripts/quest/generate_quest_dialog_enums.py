@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from quest_dialog_symbols import LEGACY_ACTION_ALIASES, action_expression, attributes, load_maps
@@ -84,7 +85,42 @@ def collect(
                 actions.add(attrs["action"])
                 if "page" in attrs:
                     pages.add(attrs["page"])
+        add_reported_reward_symbols(source, actions, actions_by_id, actions_by_name)
     return actions, pages
+
+
+def add_reported_reward_symbols(
+    source: str, actions: set[str], actions_by_id: dict[int, str], actions_by_name: dict[str, int]
+) -> None:
+    transitions = ET.fromstring(source).find("transitions")
+    if transitions is None:
+        return
+    mode = transitions.get("reported-reward-mode")
+    if mode is None:
+        return
+    if mode == "FIXED":
+        actions.add(actions_by_id[108])
+        return
+    if mode == "CLASS":
+        actions.add(actions_by_id[8])
+        actions.add(actions_by_id[110])
+        return
+    if mode != "CHOICE":
+        raise ValueError(f"unknown reported reward mode {mode!r}")
+
+    ordinary_ids: set[int] = set()
+    for choice in transitions.findall(".//choice"):
+        symbols: set[str] = set()
+        add_symbol_expression(symbols, choice.get("action") or choice.get("actions", ""),
+                              actions_by_id, actions_by_name)
+        ordinary_ids.update(actions_by_name[symbol] for symbol in symbols
+                            if 8 <= actions_by_name[symbol] <= 22)
+    expected = list(range(8, 8 + len(ordinary_ids)))
+    if sorted(ordinary_ids) != expected or len(ordinary_ids) < 2:
+        raise ValueError(f"CHOICE reported reward slots must be contiguous from action 8: {sorted(ordinary_ids)}")
+    for ordinary_id in expected:
+        actions.add(actions_by_id[ordinary_id])
+        actions.add(actions_by_id[110 + ordinary_id - 8])
 
 
 def add_symbol_expression(

@@ -43,7 +43,7 @@
       <var name="var2" value="0"/>
     </node>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="FIXED">
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806148" action="QUEST_SELECT"/>

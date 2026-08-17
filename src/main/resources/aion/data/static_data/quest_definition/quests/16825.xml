@@ -37,7 +37,7 @@
       <var name="var1" value="0"/>
     </node>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="CHOICE">
     <!-- 进入永恒摇篮副本自动接取。Auto-start on entering the Cradle of Eternity instance. -->
     <transition source="unaccepted" target="started">
       <event>
@@ -75,7 +75,13 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="806283" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="806283" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
+      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
+      <choice action="SELECTED_QUEST_REWARD6" reward-index="6"/>
       <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>

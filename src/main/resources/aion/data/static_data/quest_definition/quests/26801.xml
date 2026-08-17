@@ -67,7 +67,7 @@
       <var name="var1" value="0"/>
     </node>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="CLASS">
     <!-- 接取 NPC (806149):任务介绍。 Quest intro. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
@@ -384,21 +384,6 @@
         <grant-reward kind="EXP" id="0" amount="30583094" amount-mode="QUEST_BASE"/>
         <grant-reward kind="GOLD" id="0" amount="465480" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="123001536" amount="1"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <!-- 回退:无职业可选奖励的职业仅获经验后完成(防卡死)。Fallback: classes without a selectable reward complete with EXP only (anti-stuck). -->
-    <transition source="reward" target="complete" priority="11">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806149" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="30583094" amount-mode="QUEST_BASE"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

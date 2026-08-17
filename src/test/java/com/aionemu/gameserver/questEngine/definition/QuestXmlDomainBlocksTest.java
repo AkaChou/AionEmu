@@ -18,6 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * 验证任务 XML 领域积木降级后的完整编译合同。
+ * Verifies the complete compiled contracts produced by quest XML domain blocks.
+ */
 class QuestXmlDomainBlocksTest {
 	@Test
 	void npcStartEqualsTheStandardExpandedProtocol() {
@@ -222,6 +226,89 @@ class QuestXmlDomainBlocksTest {
 			none.afterCommit().stream().map(Object::getClass).toList());
 		assertEquals(List.of(new QuestAction.GrantReward("EXP", 0, 100, QuestRewardAmountMode.QUEST_BASE),
 			new QuestAction.CompleteQuest(0)), none.actions());
+	}
+
+	@Test
+	void reportedFixedRewardClonesTheOrdinaryContractForAction108() {
+		CompiledQuestDefinition definition = compile(reportedFixedDefinition());
+		QuestTransition ordinary = transition(definition,
+			new QuestEvent.TalkToNpc(203123, QuestDialogAction.SELECTED_QUEST_REWARD1.id()));
+		QuestTransition reported = transition(definition,
+			new QuestEvent.QuestDialog(QuestDialogAction.SELECTED_QUEST_AUTO_REWARD.id()));
+
+		assertEquals(ordinary.sourceNode(), reported.sourceNode());
+		assertEquals(ordinary.targetNode(), reported.targetNode());
+		assertEquals(ordinary.conditions(), reported.conditions());
+		assertEquals(ordinary.actions(), reported.actions());
+		assertEquals(ordinary.priority(), reported.priority());
+		assertEquals(List.of(new AfterCommitAction.RefreshPlayerStats(),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+			new AfterCommitAction.CloseDialog()), reported.afterCommit());
+	}
+
+	@Test
+	void reportedFixedRewardCollapsesEquivalentNpcContractsIntoOneTargetlessRoute() {
+		CompiledQuestDefinition definition = compile(reportedFixedDefinition("""
+			<npc-complete npc-id="203124" source="reward" target="complete" fixed-reward-indices="0 1"
+			    actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0"
+			    finish="SELECTION_DIALOG"/>
+			"""));
+
+		assertEquals(1, definition.definition().transitions().stream().filter(transition ->
+			transition.event().equals(new QuestEvent.QuestDialog(
+				QuestDialogAction.SELECTED_QUEST_AUTO_REWARD.id()))).count());
+	}
+
+	@Test
+	void reportedFixedRewardRejectsMismatchedNpcContracts() {
+		assertCode("REPORTED_REWARD_CONTRACT_MISMATCH", reportedFixedDefinition("""
+			<npc-complete npc-id="203124" source="reward" target="complete" fixed-reward-indices="0"
+			    actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0"
+			    finish="SELECTION_DIALOG"/>
+			"""));
+	}
+
+	@Test
+	void reportedChoiceRewardsCloneEveryOrdinarySlotAndCloseAfterCompletion() {
+		CompiledQuestDefinition definition = compile(reportedChoiceDefinition("SELECTION_DIALOG", ""));
+		for (int slot = 0; slot < 2; slot++) {
+			int ordinaryAction = QuestDialogAction.SELECTED_QUEST_REWARD1.id() + slot;
+			QuestTransition ordinary = transition(definition, new QuestEvent.TalkToNpc(203123, ordinaryAction));
+			for (int targetlessAction : List.of(ordinaryAction,
+					QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id() + slot)) {
+				QuestTransition targetless = transition(definition, new QuestEvent.QuestDialog(targetlessAction));
+				assertEquals(ordinary.sourceNode(), targetless.sourceNode());
+				assertEquals(ordinary.targetNode(), targetless.targetNode());
+				assertEquals(ordinary.conditions(), targetless.conditions());
+				assertEquals(ordinary.actions(), targetless.actions());
+				assertEquals(ordinary.priority(), targetless.priority());
+				assertEquals(List.of(new AfterCommitAction.RefreshPlayerStats(),
+					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+					new AfterCommitAction.CloseDialog()), targetless.afterCommit());
+			}
+		}
+		assertTrue(definition.definition().transitions().stream().noneMatch(transition ->
+			transition.event().equals(new QuestEvent.QuestDialog(
+				QuestDialogAction.SELECTED_QUEST_AUTO_REWARD3.id()))));
+	}
+
+	@Test
+	void reportedChoiceRewardsFailClosedOnIncompleteOrMismatchedContracts() {
+		String missingSlot = "<choice action=\"SELECTED_QUEST_REWARD1\" reward-index=\"2\"/>";
+		assertCode("REPORTED_REWARD_CONTRACT_COUNT",
+			reportedChoiceDefinition("SELECTION_DIALOG", missingSlot));
+
+		String swappedSlots = """
+			<choice action="SELECTED_QUEST_REWARD1" reward-index="3"/>
+			<choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
+			""";
+		assertCode("REPORTED_REWARD_CHOICE_ACTION_MISMATCH",
+			reportedChoiceDefinition("SELECTION_DIALOG", swappedSlots));
+
+		assertCode("REPORTED_REWARD_AFTER_COMMIT_ORDER", reportedChoiceDefinition("NONE", ""));
+		String extraSlot = "<choice action=\"SELECTED_QUEST_REWARD3\" reward-index=\"2\"/>";
+		assertCode("REPORTED_REWARD_SLOT_GAP",
+			reportedChoiceDefinition("SELECTION_DIALOG", defaultChoices() + extraSlot));
 	}
 
 	@Test
@@ -812,6 +899,11 @@ class QuestXmlDomainBlocksTest {
 			.filter(t -> t.targetNode().equals("complete")).findFirst().orElseThrow();
 	}
 
+	private static QuestTransition transition(CompiledQuestDefinition definition, QuestEvent event) {
+		return definition.definition().transitions().stream()
+			.filter(transition -> transition.event().equals(event)).findFirst().orElseThrow();
+	}
+
 	private static Optional<QuestMutationPlan> route(CompiledQuestDefinition definition, QuestSnapshot snapshot,
 			QuestEvent event) {
 		QuestEventIndex index = new QuestEventIndex(new ImmutableQuestCatalog(List.of(definition)));
@@ -919,6 +1011,46 @@ class QuestXmlDomainBlocksTest {
 					</quest-definition>
 
 			""".formatted(transitions);
+	}
+
+	private static String reportedFixedDefinition() {
+		return reportedFixedDefinition("");
+	}
+
+	private static String reportedFixedDefinition(String additionalCompletion) {
+		return """
+			<quest-definition id="990073" version="1">
+			  <metadata name="reported-fixed" display-name-id="1" min-level="0" max-level="99" category="QUEST"
+			      use-class-reward="2">
+			    <rewards><reward kind="EXP" id="0" amount="100"/><reward kind="ITEM" id="188000001" amount="2"/></rewards>
+			  </metadata>
+			  <nodes><node label="reward" status="REWARD"/><node label="complete" status="COMPLETE"/></nodes>
+			  <transitions reported-reward-mode="FIXED">
+			    <npc-complete npc-id="203123" source="reward" target="complete" fixed-reward-indices="0 1"
+			        actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0"
+			        finish="SELECTION_DIALOG"/>
+			    %s
+			  </transitions>
+			</quest-definition>
+			""".formatted(additionalCompletion);
+	}
+
+	private static String reportedChoiceDefinition(String finish, String choices) {
+		String selectedChoices = choices.isBlank() ? defaultChoices() : choices;
+		String definition = completionDefinition("""
+			<npc-complete npc-id="203123" source="reward" target="complete" fixed-reward-indices="0 1"
+			    complete-reward-index="0" finish="%s">
+			  %s
+			</npc-complete>
+			""".formatted(finish, selectedChoices));
+		return definition.replace("<transitions>", "<transitions reported-reward-mode=\"CHOICE\">");
+	}
+
+	private static String defaultChoices() {
+		return """
+			<choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
+			<choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
+			""";
 	}
 
 	private static String equipmentExchangeDefinition(String transitions) {

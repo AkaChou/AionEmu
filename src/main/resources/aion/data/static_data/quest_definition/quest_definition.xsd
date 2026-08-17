@@ -21,6 +21,7 @@
   <xs:simpleType name="recipe-ownership"><xs:restriction base="xs:string"><xs:enumeration value="QUEST_OWNED"/><xs:enumeration value="PERMANENT"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="reward-amount-mode"><xs:restriction base="xs:string"><xs:enumeration value="EXACT"/><xs:enumeration value="QUEST_BASE"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="quest-state-sync-mode"><xs:restriction base="xs:string"><xs:enumeration value="PACKET_ONLY"/><xs:enumeration value="VISIBILITY_REFRESH"/><xs:enumeration value="LEVEL_AND_VISIBILITY_REFRESH"/><xs:enumeration value="COMPLETION"/></xs:restriction></xs:simpleType>
+  <xs:simpleType name="reported-reward-mode"><xs:restriction base="xs:string"><xs:enumeration value="FIXED"/><xs:enumeration value="CHOICE"/><xs:enumeration value="CLASS"/></xs:restriction></xs:simpleType>
   <!-- The compiler owns integer/positive validation so it can report block-specific stable codes. -->
   <xs:simpleType name="positive-integer-list"><xs:restriction base="xs:string"><xs:minLength value="1"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="remove-count"><xs:restriction base="xs:string"><xs:minLength value="1"/></xs:restriction></xs:simpleType>
@@ -407,6 +408,7 @@
               <xs:element name="equipment-exchange" type="equipment-exchange-type"/>
               <xs:element name="npc-dialog" type="npc-dialog-type"/>
             </xs:choice>
+            <xs:attribute name="reported-reward-mode" type="reported-reward-mode"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>

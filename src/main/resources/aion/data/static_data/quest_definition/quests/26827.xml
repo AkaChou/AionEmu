@@ -25,7 +25,7 @@
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="FIXED">
     <!-- 接取:与 Ubepe 对话。Start via talking to Ubepe. -->
     <transition source="unaccepted" target="unaccepted">
       <event>

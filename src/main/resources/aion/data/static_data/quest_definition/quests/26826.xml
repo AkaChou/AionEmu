@@ -30,7 +30,7 @@
       <var name="var0" value="0"/>
     </node>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="FIXED">
     <!-- 进入永恒摇篮副本自动接取。Auto-start on entering the Cradle of Eternity instance. -->
     <transition source="unaccepted" target="started">
       <event>

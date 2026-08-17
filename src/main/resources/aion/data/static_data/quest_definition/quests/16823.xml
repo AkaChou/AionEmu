@@ -48,7 +48,7 @@
       <var name="var1" value="0"/>
     </node>
   </nodes>
-  <transitions>
+  <transitions reported-reward-mode="FIXED">
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>
