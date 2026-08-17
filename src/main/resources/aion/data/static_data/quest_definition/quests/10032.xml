@@ -283,8 +283,8 @@
         <remove-item item-id="182215620" count="1"/>
       </actions>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
       </after-commit>
     </transition>
     <transition source="s7" target="s7" priority="1">
