@@ -70,12 +70,6 @@
       </after-commit>
     </transition>
     <dialog type="NPC_REPORT" npc-id="810022" source="started" target="reward" page="SELECT5"/>
-    <!-- START 状态点"无奖励结束"：旧 handler 调 sendQuestEndDialog 因非 REWARD 无副作用，仅认领事件。 SELECT_NO_REWARD in START: sendQuestEndDialog is a no-op outside REWARD; the event is claimed without side effects. -->
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="810022" action="SELECTED_QUEST_NOREWARD"/>
-      </event>
-    </transition>
     <npc-complete npc-id="810022" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT"/>
     </npc-complete>
@@ -108,11 +102,6 @@
       </after-commit>
     </transition>
     <dialog type="NPC_REPORT" npc-id="810023" source="started" target="reward" page="SELECT5"/>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="810023" action="SELECTED_QUEST_NOREWARD"/>
-      </event>
-    </transition>
     <npc-complete npc-id="810023" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT"/>
     </npc-complete>
@@ -145,11 +134,6 @@
       </after-commit>
     </transition>
     <dialog type="NPC_REPORT" npc-id="810024" source="started" target="reward" page="SELECT5"/>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="810024" action="SELECTED_QUEST_NOREWARD"/>
-      </event>
-    </transition>
     <npc-complete npc-id="810024" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT"/>
     </npc-complete>
@@ -182,11 +166,6 @@
       </after-commit>
     </transition>
     <dialog type="NPC_REPORT" npc-id="810025" source="started" target="reward" page="SELECT5"/>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="810025" action="SELECTED_QUEST_NOREWARD"/>
-      </event>
-    </transition>
     <npc-complete npc-id="810025" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT"/>
     </npc-complete>
@@ -219,11 +198,6 @@
       </after-commit>
     </transition>
     <dialog type="NPC_REPORT" npc-id="810026" source="started" target="reward" page="SELECT5"/>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="810026" action="SELECTED_QUEST_NOREWARD"/>
-      </event>
-    </transition>
     <npc-complete npc-id="810026" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT"/>
     </npc-complete>
