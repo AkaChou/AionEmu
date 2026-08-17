@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.model.templates.item.actions;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -80,7 +78,10 @@ public class IdianAction extends AbstractItemAction {
 			/** 中止 / abort. */
 			@Override
 			public void abort() {
-				player.getController().cancelTask(TaskId.ITEM_USE);
+				if (player.getController().cancelTask(TaskId.ITEM_USE) == null) {
+					player.getObserveController().removeObserver(this);
+					return;
+				}
 				player.removeItemCoolDown(parentItem.getItemTemplate().getUseLimits().getDelayId());
 				// 已取消 %0 的伊迪安镶嵌。 / Canceled %0 Idian socketing.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_POLISH_CANCELED(targetItem.getNameId()));
@@ -90,7 +91,7 @@ public class IdianAction extends AbstractItemAction {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			/** 运行 / run. */
 			@Override
 			public void run() {
@@ -125,7 +126,7 @@ public class IdianAction extends AbstractItemAction {
 				}
 				PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, targetItem));
 			}
-		}, 3000));
+		}, 3000);
 	}
 
 	/** 返回 polish set id / Returns the polish set id */

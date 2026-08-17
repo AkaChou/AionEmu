@@ -22,6 +22,7 @@ import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.GameEngine;
+import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -674,7 +675,7 @@ public class QuestEngine implements GameEngine {
 		int itemObjectId = item.getObjectId();
 		PacketSendUtility.broadcastPacket(player,
 			new SM_ITEM_USAGE_ANIMATION(playerId, itemObjectId, itemId, animationMillis, 0, 0), true);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		player.getController().scheduleTask(TaskId.ITEM_USE, () -> {
 			if (player.isOnline()) {
 				PacketSendUtility.broadcastPacket(player,
 					new SM_ITEM_USAGE_ANIMATION(playerId, itemObjectId, itemId, 0, 1, 0), true);

@@ -145,7 +145,10 @@ public class MinionService {
 
 			@Override
 			public void abort() {
-				player.getController().cancelTask(TaskId.ITEM_USE);
+				if (player.getController().cancelTask(TaskId.ITEM_USE) == null) {
+					player.getObserveController().removeObserver(this);
+					return;
+				}
 				player.removeItemCoolDown(item.getItemTemplate().getUseLimits().getDelayId());
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_CANCELED(new DescriptionId(item.getItemTemplate().getNameId())));
 				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, item.getItemId(), 0, 2), true);
@@ -154,7 +157,7 @@ public class MinionService {
 		};
 
 		player.getObserveController().attach(itemUseObserver);
-		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 
 			@Override
 			public void run() {
@@ -255,7 +258,7 @@ public class MinionService {
 				GameEngineServices.questEngine().onItemPlayCompletedEvent(player, item.getItemId());
 				checkQuest(player, item);
 			}
-		}, 1500));
+		}, 1500);
 	}
 
 	static boolean isSupportedMinionContract(int itemId) {

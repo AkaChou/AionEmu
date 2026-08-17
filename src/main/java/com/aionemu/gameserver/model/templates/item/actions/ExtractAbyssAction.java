@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.model.templates.item.actions;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -74,7 +72,7 @@ public class ExtractAbyssAction extends AbstractItemAction {
 		player.getController().cancelUseItem();
 		PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(),
 				parentItem.getItemTemplate().getTemplateId(), 3000, 0, 0));
-		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			/** 运行 / run. */
 			@Override
 			public void run() {
@@ -88,6 +86,6 @@ public class ExtractAbyssAction extends AbstractItemAction {
 				PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
 						parentItem.getObjectId(), parentItem.getItemId(), 0, 1, 0));
 			}
-		}, 3000));
+		}, 3000);
 	}
 }

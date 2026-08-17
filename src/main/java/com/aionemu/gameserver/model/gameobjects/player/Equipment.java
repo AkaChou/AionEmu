@@ -7,8 +7,6 @@ import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -1311,14 +1309,17 @@ public class Equipment {
 					/** 已移动 / moved. */
 					@Override
 					public void moved() {
-						player.getController().cancelTask(TaskId.ITEM_USE);
+						if (player.getController().cancelTask(TaskId.ITEM_USE) == null) {
+							player.getObserveController().removeObserver(this);
+							return;
+						}
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SOUL_BOUND_ITEM_CANCELED(item.getNameId()));
 						PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), item.getObjectId(), item.getItemId(), 0, 8), true);
+						player.getObserveController().removeObserver(this);
 					}
 				};
 				player.getObserveController().attach(moveObserver);
-				player.getController().addTask(TaskId.ITEM_USE,
-						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 							/** 运行 / run. */
 							@Override
 							public void run() {
@@ -1330,7 +1331,7 @@ public class Equipment {
 								equip(slot, item);
 								PacketSendUtility.broadcastPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(), getEquippedForApparence()), true);
 							}
-						}, 5000));
+						}, 5000);
 			}
 
 			/** 拒绝请求 / Deny Request */

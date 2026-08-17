@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.model.templates.item.actions;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -62,7 +60,10 @@ public class PurifierExpAction extends AbstractItemAction {
 		final ItemUseObserver observer = new ItemUseObserver() {
 			/** 中止 / abort. */
 			public void abort() {
-				player.getController().cancelTask(TaskId.ITEM_USE);
+				if (player.getController().cancelTask(TaskId.ITEM_USE) == null) {
+					player.getObserveController().removeObserver(this);
+					return;
+				}
 				PacketSendUtility.sendPacket(player,
 						SM_SYSTEM_MESSAGE.STR_DECOMPOSE_ITEM_CANCELED(parentItem.getNameId()));
 				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(),
@@ -71,7 +72,7 @@ public class PurifierExpAction extends AbstractItemAction {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			/** 运行 / run. */
 			public void run() {
 				player.getObserveController().removeObserver(observer);
@@ -87,7 +88,7 @@ public class PurifierExpAction extends AbstractItemAction {
 				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(),
 						parentItem.getObjectId().intValue(), parentItem.getItemTemplate().getTemplateId(), 0, 1, 0));
 			}
-		}, 3000));
+		}, 3000);
 		PacketSendUtility.sendPacket(player,
 				new SM_STATUPDATE_EXP(player.getCommonData().getExpShown(), player.getCommonData().getExpRecoverable(),
 						player.getCommonData().getExpNeed(), player.getCommonData().getCurrentReposteEnergy(),

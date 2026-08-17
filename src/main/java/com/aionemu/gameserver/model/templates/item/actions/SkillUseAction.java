@@ -2,8 +2,6 @@ package com.aionemu.gameserver.model.templates.item.actions;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -130,8 +128,7 @@ public class SkillUseAction extends AbstractItemAction {
 							}
 						};
 						player.getObserveController().attach(moveObserver);
-						player.getController().addTask(TaskId.ITEM_USE,
-								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+						player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 
 									/** 运行 / run. */
 									@Override
@@ -139,7 +136,7 @@ public class SkillUseAction extends AbstractItemAction {
 										player.getObserveController().removeObserver(moveObserver);
 										sendTeleportBack(player);
 									}
-								}, 6000));
+								}, 6000);
 
 						skill.setItemObjectId(parentItem.getObjectId());
 						skill.useSkill();

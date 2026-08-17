@@ -11,8 +11,10 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AI2;
@@ -180,7 +182,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 */
 	public void onDie(Creature lastAttacker) {
 		this.getOwner().getMoveController().abortMove();
-		this.getOwner().setCasting(null);
+		abortCast();
 		this.getOwner().getEffectController().removeAllEffects();
 
 		if (getOwner() instanceof Player && ((Player) getOwner()).getIsFlyingBeforeDeath()) {
@@ -526,6 +528,42 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
+	 * 调度一个在执行前必须原子认领的任务；取消与执行只有一方可以成功。
+	 * Schedules a task that must be atomically claimed before execution; only cancellation or execution can succeed.
+	 *
+	 * @param taskId 任务标识 / task id
+	 * @param action 成功认领后执行的动作 / action executed after a successful claim
+	 * @param delay 延迟毫秒 / delay in milliseconds
+	 * @return 可用于观察或取消的受控任务 / controlled task for observation or cancellation
+	 */
+	public Future<?> scheduleTask(TaskId taskId, Runnable action, long delay) {
+		TrackedTask task = new TrackedTask(taskId, action);
+		Future<?> previous = tasks.put(taskId.ordinal(), task);
+		if (previous != null) {
+			previous.cancel(false);
+		}
+		try {
+			scheduleTaskExecution(task, delay);
+		} catch (RuntimeException | Error e) {
+			tasks.remove(taskId.ordinal(), task);
+			task.cancel(false);
+			throw e;
+		}
+		return task;
+	}
+
+	/**
+	 * 将受控任务提交到线程池；测试控制器可覆盖此调度边界。
+	 * Submits a controlled task to the thread pool; test controllers may override this scheduling boundary.
+	 *
+	 * @param task 待调度任务 / task to schedule
+	 * @param delay 延迟毫秒 / delay in milliseconds
+	 */
+	protected void scheduleTaskExecution(Runnable task, long delay) {
+		GameThreadPoolServices.threadPoolManager().schedule(task, delay);
+	}
+
+	/**
 	 * 仅当当前任务仍为预期任务时替换它，否则取消替换任务。
 	 * Replaces a task only if it is still the expected task; otherwise cancels the replacement.
 	 */
@@ -638,13 +676,15 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 */
 	public void abortCast() {
 		Creature creature = getOwner();
-		Skill skill = creature.getCastingSkill();
-		if (skill == null) {
-			return;
-		}
-		creature.setCasting(null);
-		if (creature.getSkillNumber() > 0) {
-			creature.setSkillNumber(creature.getSkillNumber() - 1);
+		synchronized (creature) {
+			Skill skill = creature.getCastingSkill();
+			if (skill == null || !skill.tryCancelCast()) {
+				return;
+			}
+			creature.clearCasting(skill);
+			if (creature.getSkillNumber() > 0) {
+				creature.setSkillNumber(creature.getSkillNumber() - 1);
+			}
 		}
 	}
 
@@ -654,17 +694,30 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 *
 	 */
 	public void cancelCurrentSkill() {
-		if (getOwner().getCastingSkill() == null) {
-			return;
-		}
+		cancelCurrentSkill(getOwner().getCastingSkill());
+	}
 
+	/**
+	 * 仅取消仍为当前施法的预期技能，并在成功取得取消权后通知客户端。
+	 * Cancels only the expected current cast and notifies clients after cancellation ownership is acquired.
+	 *
+	 * @param expectedSkill 预期的当前技能 / expected current skill
+	 * @return 是否成功取消 / whether cancellation succeeded
+	 */
+	public boolean cancelCurrentSkill(Skill expectedSkill) {
+		if (expectedSkill == null) {
+			return false;
+		}
 		Creature creature = getOwner();
-		Skill castingSkill = creature.getCastingSkill();
-		castingSkill.cancelCast();
-		creature.removeSkillCoolDown(castingSkill.getSkillTemplate().getDelayId());
-		creature.setCasting(null);
+		synchronized (creature) {
+			if (creature.getCastingSkill() != expectedSkill || !expectedSkill.tryCancelCast()) {
+				return false;
+			}
+			creature.removeSkillCoolDown(expectedSkill.getSkillTemplate().getDelayId());
+			creature.clearCasting(expectedSkill);
+		}
 		PacketSendUtility.broadcastPacketAndReceive(creature,
-				new SM_SKILL_CANCEL(creature, castingSkill.getSkillTemplate().getSkillId()));
+				new SM_SKILL_CANCEL(creature, expectedSkill.getSkillTemplate().getSkillId()));
 		if (getOwner().getAi2() instanceof NpcAI2) {
 			NpcAI2 npcAI = (NpcAI2) getOwner().getAi2();
 			npcAI.setSubStateIfNot(AISubState.NONE);
@@ -673,6 +726,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 				creature.setSkillNumber(creature.getSkillNumber() - 1);
 			}
 		}
+		return true;
 	}
 
 	/**
@@ -759,6 +813,56 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		if (terrainMaterialActor == null && GameWorldServices.geoService().worldHasTerrainMaterials(getOwner().getWorldId())) {
 			terrainMaterialActor = new TerrainZoneCollisionMaterialActor(getOwner());
 			getOwner().getObserveController().addObserver(terrainMaterialActor);
+		}
+	}
+
+	/**
+	 * 受控任务的原子生命周期。
+	 * Atomic lifecycle for controlled tasks.
+	 */
+	private enum TrackedTaskState {
+		WAITING, RUNNING, CANCELLED, DONE
+	}
+
+	/**
+	 * 在从控制器任务表中成功移除自身后才执行的任务。
+	 * Task that runs only after successfully removing itself from the controller task map.
+	 */
+	private final class TrackedTask extends CompletableFuture<Void> implements Runnable {
+		private final int taskId;
+		private final Runnable action;
+		private final AtomicReference<TrackedTaskState> state = new AtomicReference<>(TrackedTaskState.WAITING);
+
+		private TrackedTask(TaskId taskId, Runnable action) {
+			this.taskId = taskId.ordinal();
+			this.action = action;
+		}
+
+		@Override
+		public void run() {
+			if (!tasks.remove(taskId, this)
+					|| !state.compareAndSet(TrackedTaskState.WAITING, TrackedTaskState.RUNNING)) {
+				cancel(false);
+				return;
+			}
+			try {
+				action.run();
+				complete(null);
+			} catch (RuntimeException | Error e) {
+				completeExceptionally(e);
+				throw e;
+			} finally {
+				state.set(TrackedTaskState.DONE);
+			}
+		}
+
+		@Override
+		public boolean cancel(boolean mayInterruptIfRunning) {
+			if (!state.compareAndSet(TrackedTaskState.WAITING, TrackedTaskState.CANCELLED)) {
+				return false;
+			}
+			tasks.remove(taskId, this);
+			return super.cancel(false);
 		}
 	}
 }

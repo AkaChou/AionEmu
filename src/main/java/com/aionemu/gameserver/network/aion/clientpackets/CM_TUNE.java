@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
 import com.aionemu.gameserver.model.DescriptionId;
@@ -87,7 +85,10 @@ public class CM_TUNE extends AionClientPacket {
 		final ItemUseObserver observer = new ItemUseObserver() {
 			@Override
 			public void abort() {
-				player.getController().cancelTask(TaskId.ITEM_USE);
+				if (player.getController().cancelTask(TaskId.ITEM_USE) == null) {
+					player.getObserveController().removeObserver(this);
+					return;
+				}
 				player.removeItemCoolDown(template.getUseLimits().getDelayId());
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_CANCELED(new DescriptionId(nameId)));
 				// 修复：取消时使用 endState = 3（取消）而不是 2（失败）
@@ -98,7 +99,7 @@ public class CM_TUNE extends AionClientPacket {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			@Override
 			public void run() {
 				if (item.getOptionalSocket() != -1) {
@@ -118,6 +119,6 @@ public class CM_TUNE extends AionClientPacket {
 				PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item));
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1401626, new DescriptionId(nameId)));
 			}
-		}, 3000));
+		}, 3000);
 	}
 }

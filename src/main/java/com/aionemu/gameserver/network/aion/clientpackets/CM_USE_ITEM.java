@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import java.util.ArrayList;
 
 import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.HouseObject;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -22,6 +21,8 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
+import com.aionemu.gameserver.skillengine.model.Skill;
+import com.aionemu.gameserver.skillengine.model.Skill.SkillMethod;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -61,13 +62,15 @@ public class CM_USE_ITEM extends AionClientPacket {
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
 		/**
-	 * 5.0 物品使用取消系统 / 5.0 ITEM_USE Cancel System
-	 */
+		 * 5.0 物品使用取消系统 / 5.0 ITEM_USE Cancel System
+		 */
 		if (type == 0) {
-			if (player.getController().hasTask(TaskId.ITEM_USE)) {
-				player.getController().cancelUseItem();
-				return;
+			player.getController().cancelUseItem();
+			Skill castingSkill = player.getCastingSkill();
+			if (castingSkill != null && castingSkill.getSkillMethod() == SkillMethod.ITEM) {
+				player.getController().cancelCurrentSkill(castingSkill);
 			}
+			return;
 		}
 		if (player.isProtectionActive()) {
 			player.getController().stopProtectionActiveTask();

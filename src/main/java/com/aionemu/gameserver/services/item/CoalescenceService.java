@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.services.item;
 
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,7 +63,10 @@ public class CoalescenceService {
 		final ItemUseObserver observer = new ItemUseObserver() {
 			@Override
 			public void abort() {
-				player.getController().cancelTask(TaskId.ITEM_USE);
+				if (player.getController().cancelTask(TaskId.ITEM_USE) == null) {
+					player.getObserveController().removeObserver(this);
+					return;
+				}
 				player.removeItemCoolDown(core_item.getItemTemplate().getUseLimits().getDelayId());
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_CANCELED(new DescriptionId(core_item.getItemTemplate().getNameId())));
 				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), core_item.getObjectId(), core_item.getItemId(), 0, 2, 0), true);
@@ -73,7 +74,7 @@ public class CoalescenceService {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			@Override
 			public void run() {
 				player.getObserveController().removeObserver(observer);
@@ -136,7 +137,7 @@ public class CoalescenceService {
 				PacketSendUtility.sendPacket(player, new SM_COALESCENCE_RESULT(core_item.getItemId(), core_item.getObjectId(), bonus_item_id_taken, bonus_item_count, result_of_random));
 				updateQuestsOnCoalescenceComplete(player, core_item, result_of_random);
 			}
-		}, 4000));
+		}, 4000);
 	}
 
 	/**

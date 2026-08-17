@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
 import com.aionemu.gameserver.model.DescriptionId;
@@ -63,7 +61,10 @@ public class CM_UNPACK_ITEM extends AionClientPacket {
 		final ItemUseObserver observer = new ItemUseObserver() {
 			@Override
 			public void abort() {
-				player.getController().cancelTask(TaskId.ITEM_USE);
+				if (player.getController().cancelTask(TaskId.ITEM_USE) == null) {
+					player.getObserveController().removeObserver(this);
+					return;
+				}
 				player.removeItemCoolDown(item.getItemTemplate().getUseLimits().getDelayId());
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300427));
 				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
@@ -72,7 +73,7 @@ public class CM_UNPACK_ITEM extends AionClientPacket {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			@Override
 			public void run() {
 				item.setPacked(false);
@@ -84,6 +85,6 @@ public class CM_UNPACK_ITEM extends AionClientPacket {
 				PacketSendUtility.sendPacket(player,
 						new SM_SYSTEM_MESSAGE(1402968, new DescriptionId(item.getItemTemplate().getNameId())));
 			}
-		}, 5000));
+		}, 5000);
 	}
 }

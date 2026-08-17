@@ -103,16 +103,20 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 			/** 中止 / abort. */
 			@Override
 			public void abort() {
-				player.getController().cancelTask(TaskId.ITEM_USE);
+				if (player.getController().cancelTask(TaskId.ITEM_USE) == null) {
+					player.getObserveController().removeObserver(this);
+					return;
+				}
 				player.removeItemCoolDown(parentItem.getItemTemplate().getUseLimits().getDelayId());
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE
 						.STR_ITEM_CANCELED(new DescriptionId(parentItem.getItemTemplate().getNameId())));
 				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
 						parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 0, 2, 0), true);
+				player.getObserveController().removeObserver(this);
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			/** 运行 / run. */
 			@Override
 			public void run() {
@@ -148,6 +152,6 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 					GameFeatureServices.kiskService().onBind(kisk, player);
 				}
 			}
-		}, 3000));
+		}, 3000);
 	}
 }

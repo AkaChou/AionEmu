@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.model.templates.item.actions;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlType;
@@ -75,7 +73,10 @@ public class TemperingAction extends AbstractItemAction {
 			/** 中止 / abort. */
 			@Override
 			public void abort() {
-				player.getController().cancelTask(TaskId.ITEM_USE);
+				if (player.getController().cancelTask(TaskId.ITEM_USE) == null) {
+					player.getObserveController().removeObserver(this);
+					return;
+				}
 				player.getObserveController().removeObserver(this);
 				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), parentItem.getObjectId().intValue(), parentItem.getItemTemplate().getTemplateId(), 0, 3, 0));
 				ItemPacketService.updateItemAfterInfoChange(player, targetItem);
@@ -87,7 +88,7 @@ public class TemperingAction extends AbstractItemAction {
 		player.getObserveController().attach(observer);
 		final boolean isTemperingSuccess = isTemperingSuccess(player, targetItem);
 		
-		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			/** 运行 / run. */
 			@Override
 			public void run() {
@@ -159,7 +160,7 @@ public class TemperingAction extends AbstractItemAction {
 					}
 				}
 			}
-		}, player.isAuthorizeBoost() ? 1500 : 3000));
+		}, player.isAuthorizeBoost() ? 1500 : 3000);
 	}
 
 	/**

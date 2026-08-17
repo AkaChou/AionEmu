@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.model.templates.item.actions;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -77,7 +75,10 @@ public class RideAction extends AbstractItemAction {
 			/** 中止 / abort. */
 			@Override
 			public void abort() {
-				player.getController().cancelTask(TaskId.ITEM_USE);
+				if (player.getController().cancelTask(TaskId.ITEM_USE) == null) {
+					player.getObserveController().removeObserver(this);
+					return;
+				}
 				player.removeItemCoolDown(parentItem.getItemTemplate().getUseLimits().getDelayId());
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE
 						.STR_ITEM_CANCELED(new DescriptionId(parentItem.getItemTemplate().getNameId())));
@@ -87,7 +88,7 @@ public class RideAction extends AbstractItemAction {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			/** 运行 / run. */
 			@Override
 			public void run() {
@@ -105,7 +106,7 @@ public class RideAction extends AbstractItemAction {
 						parentItem.getObjectId(), parentItem.getItemId(), 0, 1, 1), true);
 				player.getController().cancelTask(TaskId.ITEM_USE);
 			}
-		}, 3000));
+		}, 3000);
 		ActionObserver rideObserver = new ActionObserver(ObserverType.ABNORMALSETTED) {
 			/** 异常状态已设置 / abnormalsetted. */
 			@Override

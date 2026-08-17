@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.model.templates.item.actions;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import jakarta.xml.bind.annotation.XmlAttribute;
 
 import com.aionemu.gameserver.model.DescriptionId;
@@ -40,7 +38,7 @@ public class LunaChestAction extends AbstractItemAction {
 	public void act(final Player player, final Item parentItem, Item targetItem) {
 		player.getController().cancelUseItem();
 		PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), 0, parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 1000, 0, 0));
-		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 
 			/** 运行 / run. */
 			@Override
@@ -56,7 +54,7 @@ public class LunaChestAction extends AbstractItemAction {
 					PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(0, player.getLunaAccount()));
 				}
 			}
-		}, 1000));
+		}, 1000);
 	}
 
 	static int getOpenCount(long itemCount) {

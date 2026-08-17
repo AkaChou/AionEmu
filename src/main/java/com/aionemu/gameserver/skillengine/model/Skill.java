@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AISubState;
@@ -99,8 +100,8 @@ public class Skill {
 	private int skillskinHitTIme = 0;
 	private ChargeSkillTemplate chargeTemplate = null;
 	private float chargeTimeMultiplier = 1;
-	private Future<?> castingTask = null;
-	private volatile boolean castCancelled;
+	private volatile Future<?> castingTask = null;
+	private final AtomicReference<CastState> castState = new AtomicReference<>(CastState.CASTING);
 	private long castStart = 0;
 	/**
 	 * 依赖 BOOST_CASTING_TIME 的持续时间。
@@ -116,6 +117,14 @@ public class Skill {
 
 	public enum SkillMethod {
 		CAST, ITEM, PASSIVE, PROVOKED;
+	}
+
+	/**
+	 * 施法生命周期状态；取消与完成只能有一方取得所有权。
+	 * Cast lifecycle state; only cancellation or completion may acquire ownership.
+	 */
+	private enum CastState {
+		CASTING, CANCELLED, COMPLETING
 	}
 	/**
 	 * 构造运行时技能实例。
@@ -1304,14 +1313,26 @@ public class Skill {
 	/**
 	 * 取消施法。
 	 * Cancels casting.
-	 *
 	 */
 	public void cancelCast() {
-		castCancelled = true;
+		tryCancelCast();
+	}
+
+	/**
+	 * 原子尝试取得施法取消权。
+	 * Atomically attempts to acquire cancellation ownership for this cast.
+	 *
+	 * @return 是否成功取得取消权 / whether cancellation ownership was acquired
+	 */
+	public boolean tryCancelCast() {
+		if (!castState.compareAndSet(CastState.CASTING, CastState.CANCELLED)) {
+			return false;
+		}
 		if (castingTask != null) {
 			castingTask.cancel(true);
 			castingTask = null;
 		}
+		return true;
 	}
 
 	/**
@@ -1319,7 +1340,7 @@ public class Skill {
 	 * Apply effects and perform actions specified in skill template.
 	 */
 	private void endCast() {
-		if (castCancelled || !effector.isCasting()) {
+		if (castState.get() != CastState.CASTING || effector.getCastingSkill() != this) {
 			return;
 		}
 
@@ -1357,18 +1378,24 @@ public class Skill {
 		Properties properties = skillTemplate.getProperties();
 		if (properties != null && !(preselectedTargets == null
 				? properties.endCastValidate(this) : properties.validatePreselectedTargets(this))) {
-			effector.getController().cancelCurrentSkill();
+			effector.getController().cancelCurrentSkill(this);
 			return;
 		}
 
 		if (!validateEffectedList()) {
-			effector.getController().cancelCurrentSkill();
+			effector.getController().cancelCurrentSkill(this);
 			return;
 		}
 
 		if (!preUsageCheck()) {
-			effector.getController().cancelCurrentSkill();
+			effector.getController().cancelCurrentSkill(this);
 			return;
+		}
+		synchronized (effector) {
+			if (effector.getCastingSkill() != this
+					|| !castState.compareAndSet(CastState.CASTING, CastState.COMPLETING)) {
+				return;
+			}
 		}
 		for (Creature effected : effectedList) {
 			if (effected instanceof Npc npc) {
@@ -1377,10 +1404,10 @@ public class Skill {
 		}
 		if (skillMethod == SkillMethod.CAST && effector instanceof Player
 				&& !GameEventBootstrapServices.minionService().consumeMinionSkillPoints((Player) effector, skillTemplate.getSkillId())) {
-			effector.setCasting(null);
+			effector.clearCasting(this);
 			return;
 		}
-		effector.setCasting(null);
+		effector.clearCasting(this);
 
 		if (this.getSkillTemplate().isBroadcastUseMessage() && effector instanceof Player) {
 			AbyssService.rankerSkillAnnounce((Player) effector, this.getSkillTemplate().getNameId());

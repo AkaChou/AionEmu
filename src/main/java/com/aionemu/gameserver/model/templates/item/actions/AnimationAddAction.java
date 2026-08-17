@@ -3,8 +3,6 @@ package com.aionemu.gameserver.model.templates.item.actions;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -84,7 +82,7 @@ public class AnimationAddAction extends AbstractItemAction {
 			PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 1000, 0, 0));
 		}
 
-		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			/** 运行 / run. */
 			@Override
 			public void run() {
@@ -156,7 +154,7 @@ public class AnimationAddAction extends AbstractItemAction {
 						return;
 				}
 			}
-		}, 1000));
+		}, 1000);
 	}
 
 	private void addMotion(Player player, int motionId) {

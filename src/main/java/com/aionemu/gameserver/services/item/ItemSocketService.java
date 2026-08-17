@@ -3,8 +3,6 @@ package com.aionemu.gameserver.services.item;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -452,7 +450,10 @@ public class ItemSocketService {
 		final ItemUseObserver Enchant = new ItemUseObserver() {
 			@Override
 			public void abort() {
-				player.getController().cancelTask(TaskId.ITEM_USE);
+				if (player.getController().cancelTask(TaskId.ITEM_USE) == null) {
+					player.getObserveController().removeObserver(this);
+					return;
+				}
 				player.getObserveController().removeObserver(this);
 				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(),
 						weaponItem.getObjectId().intValue(), weaponItem.getItemTemplate().getTemplateId(), 0, 3, 0));
@@ -462,7 +463,7 @@ public class ItemSocketService {
 			}
 		};
 		player.getObserveController().attach(Enchant);
-		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			@Override
 			public void run() {
 				player.getController().cancelTask(TaskId.ITEM_USE);
@@ -474,7 +475,7 @@ public class ItemSocketService {
 				PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
 						godstone.getObjectId(), godstone.getItemTemplate().getTemplateId(), 0, 1, 384));
 			}
-		}, 5000));
+		}, 5000);
 	}
 
 	/**
@@ -572,7 +573,10 @@ public class ItemSocketService {
 		final ItemUseObserver observer = new ItemUseObserver() {
 			@Override
 			public void abort() {
-				player.getController().cancelTask(TaskId.ITEM_USE);
+				if (player.getController().cancelTask(TaskId.ITEM_USE) == null) {
+					player.getObserveController().removeObserver(this);
+					return;
+				}
 				player.removeItemCoolDown(toolItem.getItemTemplate().getUseLimits().getDelayId());
 				PacketSendUtility.broadcastPacket(player,
 						new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), toolObjectId, toolItemId, 0, 2, 0),
@@ -581,7 +585,7 @@ public class ItemSocketService {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			@Override
 			public void run() {
 				player.getObserveController().removeObserver(observer);
@@ -599,6 +603,6 @@ public class ItemSocketService {
 				PacketSendUtility.sendPacket(player,
 						SM_SYSTEM_MESSAGE.STR_MSG_EXCEED_SUCCEED(new DescriptionId(currentItem.getNameId())));
 			}
-		}, 5000));
+		}, 5000);
 	}
 }

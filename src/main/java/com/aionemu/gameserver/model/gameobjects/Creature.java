@@ -54,7 +54,7 @@ public abstract class Creature extends VisibleObject {
 	private int state = CreatureState.ACTIVE.getId();
 	private int visualState = CreatureVisualState.VISIBLE.getId();
 	private int seeState = CreatureSeeState.NORMAL.getId();
-	private Skill castingSkill;
+	private volatile Skill castingSkill;
 	private Map<Integer, Long> skillCoolDowns;
 	private Map<Integer, Long> skillCoolDownsBase;
 	private ObserveController observeController;
@@ -222,11 +222,27 @@ public abstract class Creature extends VisibleObject {
 	 *
 	 * @param castingSkill 当前施放技能 / current casting skill
 	 */
-	public void setCasting(Skill castingSkill) {
+	public synchronized void setCasting(Skill castingSkill) {
 		if (castingSkill != null) {
 			skillNumber++;
 		}
 		this.castingSkill = castingSkill;
+	}
+
+	/**
+	 * 仅当当前施法仍是预期实例时清除它，避免并发完成覆盖后续施法。
+	 * Clears the cast only when it is still the expected instance, preventing concurrent completion from overwriting a later
+	 * cast.
+	 *
+	 * @param expected 预期的施法实例 / expected cast instance
+	 * @return 是否已清除 / whether the cast was cleared
+	 */
+	public synchronized boolean clearCasting(Skill expected) {
+		if (castingSkill != expected) {
+			return false;
+		}
+		castingSkill = null;
+		return true;
 	}
 
 	/**

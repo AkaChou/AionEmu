@@ -9,7 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
@@ -58,6 +63,48 @@ class SkillCancellationTest {
 
 		skill.cancelCast();
 		invokeEndCast(skill);
+
+		assertSame(skill, caster.getCastingSkill());
+	}
+
+	@Test
+	void cancellationWinsAfterEndCastHasEnteredButBeforeCompletionIsClaimed() throws Exception {
+		TestCreature caster = new ObjenesisStd().newInstance(TestCreature.class);
+		SkillTemplate template = new SkillTemplate();
+		template.activationAttribute = ActivationAttribute.PASSIVE;
+		CountDownLatch validationEntered = new CountDownLatch(1);
+		CountDownLatch continueValidation = new CountDownLatch(1);
+		Conditions conditions = new Conditions();
+		conditions.getConditions().add(new Condition() {
+			@Override
+			public boolean validate(Skill skill) {
+				validationEntered.countDown();
+				try {
+					return continueValidation.await(5, TimeUnit.SECONDS);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					return false;
+				}
+			}
+		});
+		setField(template, "useconditions", conditions);
+		Skill skill = new Skill(template, caster, 1, caster, null);
+		skill.setFirstTargetAttribute(FirstTargetAttribute.ME);
+		caster.setCasting(skill);
+
+		try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
+			Future<?> completion = executor.submit(() -> {
+				try {
+					invokeEndCast(skill);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			});
+			assertTrue(validationEntered.await(5, TimeUnit.SECONDS));
+			assertTrue(skill.tryCancelCast());
+			continueValidation.countDown();
+			completion.get(5, TimeUnit.SECONDS);
+		}
 
 		assertSame(skill, caster.getCastingSkill());
 	}
@@ -212,9 +259,11 @@ class SkillCancellationTest {
 		private boolean cancelled;
 
 		@Override
-		public void cancelCurrentSkill() {
+		public boolean cancelCurrentSkill(Skill expectedSkill) {
 			cancelled = true;
-			getOwner().setCasting(null);
+			expectedSkill.tryCancelCast();
+			getOwner().clearCasting(expectedSkill);
+			return true;
 		}
 	}
 }

@@ -909,24 +909,37 @@ public class PlayerController extends CreatureController<Player> {
 	 */
 	@Override
 	public void cancelCurrentSkill() {
-		if (getOwner().getCastingSkill() == null) {
-			return;
-		}
+		cancelCurrentSkill(getOwner().getCastingSkill());
+	}
 
-		Player player = getOwner();
-		Skill castingSkill = player.getCastingSkill();
-		castingSkill.cancelCast();
-		player.removeSkillCoolDown(castingSkill.getSkillTemplate().getDelayId());
-		player.setCasting(null);
-		player.setNextSkillUse(0);
-		if (castingSkill.getSkillMethod() == SkillMethod.CAST) {
-			PacketSendUtility.broadcastPacket(player, new SM_SKILL_CANCEL(player, castingSkill.getSkillTemplate().getSkillId()), true);
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_CANCELED);
-		} else if (castingSkill.getSkillMethod() == SkillMethod.ITEM) {
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_CANCELED(new DescriptionId(castingSkill.getItemTemplate().getNameId())));
-			player.removeItemCoolDown(castingSkill.getItemTemplate().getUseLimits().getDelayId());
-			PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), castingSkill.getFirstTarget().getObjectId(), castingSkill.getItemObjectId(), castingSkill.getItemTemplate().getTemplateId(), 0, 3, 0), true);
+	@Override
+	public boolean cancelCurrentSkill(Skill expectedSkill) {
+		if (expectedSkill == null) {
+			return false;
 		}
+		Player player = getOwner();
+		synchronized (player) {
+			if (player.getCastingSkill() != expectedSkill || !expectedSkill.tryCancelCast()) {
+				return false;
+			}
+			player.removeSkillCoolDown(expectedSkill.getSkillTemplate().getDelayId());
+			player.clearCasting(expectedSkill);
+			player.setNextSkillUse(0);
+		}
+		if (expectedSkill.getSkillMethod() == SkillMethod.CAST) {
+			PacketSendUtility.broadcastPacket(player,
+					new SM_SKILL_CANCEL(player, expectedSkill.getSkillTemplate().getSkillId()), true);
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_CANCELED);
+		} else if (expectedSkill.getSkillMethod() == SkillMethod.ITEM) {
+			PacketSendUtility.sendPacket(player,
+					SM_SYSTEM_MESSAGE.STR_ITEM_CANCELED(new DescriptionId(expectedSkill.getItemTemplate().getNameId())));
+			player.removeItemCoolDown(expectedSkill.getItemTemplate().getUseLimits().getDelayId());
+			PacketSendUtility.broadcastPacket(player,
+					new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), expectedSkill.getFirstTarget().getObjectId(),
+							expectedSkill.getItemObjectId(), expectedSkill.getItemTemplate().getTemplateId(), 0, 3, 0),
+					true);
+		}
+		return true;
 	}
 
 	/**
@@ -939,8 +952,7 @@ public class PlayerController extends CreatureController<Player> {
 		Player player = getOwner();
 		Item usingItem = player.getUsingItem();
 		player.setUsingItem(null);
-		if (hasTask(TaskId.ITEM_USE)) {
-			cancelTask(TaskId.ITEM_USE);
+		if (cancelTask(TaskId.ITEM_USE) != null) {
 			PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), usingItem == null ? 0 : usingItem.getObjectId(), usingItem == null ? 0 : usingItem.getItemTemplate().getTemplateId(), 0, 3, 0), true);
 		}
 	}

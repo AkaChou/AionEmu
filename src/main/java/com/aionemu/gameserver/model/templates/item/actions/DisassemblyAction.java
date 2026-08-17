@@ -2,8 +2,6 @@ package com.aionemu.gameserver.model.templates.item.actions;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.administration.DeveloperConfig;
 import com.aionemu.gameserver.configs.main.EnchantsConfig;
@@ -131,7 +129,10 @@ public class DisassemblyAction extends AbstractItemAction
 				@Override
 				public void abort()
 				{
-					player.getController().cancelTask(TaskId.ITEM_USE);
+					if (player.getController().cancelTask(TaskId.ITEM_USE) == null) {
+						player.getObserveController().removeObserver(this);
+						return;
+					}
 					player.removeItemCoolDown(parentItem.getItemTemplate().getUseLimits().getDelayId());
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_CANCELED(new DescriptionId(parentItem.getItemTemplate().getNameId())));
 					PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
@@ -140,7 +141,7 @@ public class DisassemblyAction extends AbstractItemAction
 				}
 			};
 			player.getObserveController().attach(observer);
-			player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable()
+			player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable()
 			{
 				// 玩家提交动作 / player submit the action
 				/** 运行 / run. */
@@ -200,7 +201,7 @@ public class DisassemblyAction extends AbstractItemAction
 					}
 					return true;
 				}
-			}, USAGE_DELAY));
+			}, USAGE_DELAY);
 		}
 	}
 
