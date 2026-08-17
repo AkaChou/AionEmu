@@ -2,23 +2,12 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.ObjectProvider;
-
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.ConquestSchedule;
 import com.aionemu.gameserver.configs.schedule.ConquestSchedule.Conquest;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.conquest.ConquestLocation;
 import com.aionemu.gameserver.model.conquest.ConquestStateType;
@@ -31,6 +20,15 @@ import com.aionemu.gameserver.services.conquestservice.ConquestOffering;
 import com.aionemu.gameserver.services.conquestservice.ConquestStartRunnable;
 import com.aionemu.gameserver.services.conquestservice.Offering;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * 征服/供奉（Conquest/Offering）世界活动服务：稀有怪与限时副本开启通知。
@@ -133,7 +131,7 @@ public class ConquestService {
 	 * Spawn conquest-event NPCs for the given location and state.
 	 *
 	 * @param loc 活动地点 / conquest location
-	 * spawn state
+	 *            spawn state
 	 */
 	public void spawn(ConquestLocation loc, ConquestStateType ostate) {
 		if (ostate.equals(ConquestStateType.CONQUEST)) {
@@ -175,7 +173,7 @@ public class ConquestService {
 	 * Whether a conquest/offering is in progress at the given location.
 	 *
 	 * @param id 活动地点 ID / conquest location id
-	 * 若 in progress 则为 true / true if in progress
+	 *           若 in progress 则为 true / true if in progress
 	 */
 	public boolean isConquestInProgress(int id) {
 		return activeConquest.containsKey(id);
@@ -206,7 +204,7 @@ public class ConquestService {
 	 * Get a conquest location by id.
 	 *
 	 * @param id 活动地点 ID / conquest location id
-	 * conquest location
+	 *           conquest location
 	 */
 	public ConquestLocation getConquestLocation(int id) {
 		return conquest.get(id);
@@ -215,7 +213,7 @@ public class ConquestService {
 	/**
 	 * 返回全部征服活动地点。
 	 * Return all conquest locations.
-	 *
+	 * <p>
 	 * location map
 	 */
 	public Map<Integer, ConquestLocation> getConquestLocations() {
@@ -225,7 +223,7 @@ public class ConquestService {
 	/**
 	 * 获取 ConquestService 单例（Spring 提供者优先，否则 holder）。
 	 * Return the ConquestService singleton (Spring provider first, else holder).
-	 *
+	 * <p>
 	 * service instance
 	 */
 	public static ConquestService getInstance() {
@@ -239,7 +237,7 @@ public class ConquestService {
 	/**
 	 * 注入 Spring ObjectProvider，供 getInstance 使用。
 	 * Inject the Spring ObjectProvider used by getInstance().
-	 *
+	 * <p>
 	 * Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<ConquestService> instanceProvider) {
