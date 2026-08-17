@@ -131,6 +131,7 @@
 	<xs:element name="set-currency"><xs:complexType><xs:attribute name="kind" type="xs:string" use="required"/><xs:attribute name="amount" type="xs:long" use="required"/></xs:complexType></xs:element>
 	<xs:element name="reset-currency"><xs:complexType><xs:attribute name="kind" type="xs:string" use="required"/></xs:complexType></xs:element>
 	<xs:element name="complete-quest"><xs:complexType><xs:attribute name="reward-index" type="xs:int" use="required"/></xs:complexType></xs:element>
+    <xs:element name="promote-archdaeva" type="empty-type"/>
     <xs:element name="learn-recipe"><xs:complexType><xs:attribute name="recipe-id" type="xs:int" use="required"/><xs:attribute name="ownership" type="recipe-ownership" use="required"/></xs:complexType></xs:element>
     <xs:element name="forget-recipe"><xs:complexType><xs:attribute name="recipe-id" type="xs:int" use="required"/></xs:complexType></xs:element>
     <xs:element name="grant-craft-skill"><xs:complexType><xs:attribute name="skill-id" type="xs:int" use="required"/><xs:attribute name="target-level" type="xs:int" use="required"/><xs:attribute name="auto-learn-recipes" type="xs:boolean" use="required"/></xs:complexType></xs:element>

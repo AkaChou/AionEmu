@@ -476,6 +476,16 @@ public final class QuestDsl {
 		return new QuestAction.CompleteQuest(rewardIndex);
 	}
 
+	/**
+	 * 创建任务完成事务使用的高阶守护者晋升动作。
+	 * Creates an ArchDaeva promotion action for a quest-completion transaction.
+	 *
+	 * @return 高阶守护者晋升动作 / ArchDaeva promotion action
+	 */
+	public static QuestAction promoteArchDaeva() {
+		return new QuestAction.PromoteArchDaeva();
+	}
+
 	public static QuestAction learnRecipe(int recipeId, QuestRecipeOwnership ownership) {
 		return new QuestAction.LearnRecipe(recipeId, ownership);
 	}

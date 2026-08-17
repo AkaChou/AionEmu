@@ -841,6 +841,7 @@ public final class QuestDefinitionXmlCompiler {
 			case "reset-currency" -> new QuestAction.SetCurrency(
 				QuestRewardKind.fromWire(attribute(element, "kind")), 0);
 			case "complete-quest" -> new QuestAction.CompleteQuest(integer(element, "reward-index"));
+			case "promote-archdaeva" -> new QuestAction.PromoteArchDaeva();
 			case "learn-recipe" -> new QuestAction.LearnRecipe(integer(element, "recipe-id"),
 				enumValue(QuestRecipeOwnership.class, element, "ownership"));
 			case "forget-recipe" -> new QuestAction.ForgetRecipe(integer(element, "recipe-id"));

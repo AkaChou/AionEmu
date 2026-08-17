@@ -24,24 +24,32 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 	private final QuestRewardPort rewards;
 	private final QuestCraftPort craft;
 	private final QuestEquipmentPort equipment;
+	private final QuestProgressionPort progression;
 
 	public CompositeQuestActionPort(QuestInventoryPort inventory, QuestCurrencyPort currency,
 			QuestRewardPort rewards) {
-		this(inventory, currency, rewards, null, null);
+		this(inventory, currency, rewards, null, null, null);
 	}
 
 	public CompositeQuestActionPort(QuestInventoryPort inventory, QuestCurrencyPort currency,
 			QuestRewardPort rewards, QuestCraftPort craft) {
-		this(inventory, currency, rewards, craft, null);
+		this(inventory, currency, rewards, craft, null, null);
 	}
 
 	public CompositeQuestActionPort(QuestInventoryPort inventory, QuestCurrencyPort currency,
 			QuestRewardPort rewards, QuestCraftPort craft, QuestEquipmentPort equipment) {
+		this(inventory, currency, rewards, craft, equipment, null);
+	}
+
+	public CompositeQuestActionPort(QuestInventoryPort inventory, QuestCurrencyPort currency,
+			QuestRewardPort rewards, QuestCraftPort craft, QuestEquipmentPort equipment,
+			QuestProgressionPort progression) {
 		this.inventory = Objects.requireNonNull(inventory, "inventory");
 		this.currency = Objects.requireNonNull(currency, "currency");
 		this.rewards = Objects.requireNonNull(rewards, "rewards");
 		this.craft = craft;
 		this.equipment = equipment;
+		this.progression = progression;
 	}
 
 	@Override
@@ -60,6 +68,12 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 		currency.preflightDebits(connection, snapshot, buckets.currencyDebits());
 		currency.preflightSets(connection, snapshot, buckets.currencySets());
 		rewards.preflight(connection, snapshot, buckets.durableRewards());
+		if (!buckets.archDaevaPromotions().isEmpty()) {
+			if (progression == null) {
+				throw new SQLException("player progression actions require a progression port");
+			}
+			progression.preflight(connection, snapshot, buckets.archDaevaPromotions());
+		}
 		if (!buckets.craftActions().isEmpty()) {
 			if (craft == null) {
 				throw new SQLException("craft actions require a craft port");
@@ -88,6 +102,12 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 			participants.add(currency.applyDebits(connection, snapshot, buckets.currencyDebits()));
 			participants.add(currency.applySets(connection, snapshot, buckets.currencySets()));
 			participants.add(rewards.apply(connection, snapshot, buckets.durableRewards()));
+			if (!buckets.archDaevaPromotions().isEmpty()) {
+				if (progression == null) {
+					throw new SQLException("player progression actions require a progression port");
+				}
+				participants.add(progression.apply(connection, snapshot, buckets.archDaevaPromotions()));
+			}
 			if (!buckets.craftActions().isEmpty()) {
 				if (craft == null) {
 					throw new SQLException("craft actions require a craft port");
@@ -143,7 +163,8 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 			List<QuestAction.GrantReward> currencyRewards,
 			List<QuestAction.GrantReward> durableRewards,
 			List<QuestAction.DecreaseCurrency> currencyDebits, List<QuestAction.SetCurrency> currencySets,
-			List<QuestAction> craftActions) {
+			List<QuestAction> craftActions,
+			List<QuestAction.PromoteArchDaeva> archDaevaPromotions) {
 		private static Buckets from(List<QuestAction> actions) {
 			Objects.requireNonNull(actions, "actions");
 			List<QuestAction.RemoveItem> removals = new ArrayList<>();
@@ -154,6 +175,7 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 			List<QuestAction.DecreaseCurrency> debits = new ArrayList<>();
 			List<QuestAction.SetCurrency> sets = new ArrayList<>();
 			List<QuestAction> craft = new ArrayList<>();
+			List<QuestAction.PromoteArchDaeva> promotions = new ArrayList<>();
 			for (QuestAction action : actions) {
 				if (action instanceof QuestAction.RemoveItem removal) {
 					removals.add(removal);
@@ -174,6 +196,8 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 						|| action instanceof QuestAction.ForgetRecipe
 						|| action instanceof QuestAction.GrantCraftSkill) {
 					craft.add(action);
+				} else if (action instanceof QuestAction.PromoteArchDaeva promotion) {
+					promotions.add(promotion);
 				} else if (!(action instanceof QuestAction.SetVariable)
 						&& !(action instanceof QuestAction.IncrementVariable)
 					&& !(action instanceof QuestAction.SetStatus)
@@ -187,7 +211,7 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 			}
 			return new Buckets(List.copyOf(removals), List.copyOf(gives), List.copyOf(unequips),
 				List.copyOf(currency), List.copyOf(durable),
-				List.copyOf(debits), List.copyOf(sets), List.copyOf(craft));
+				List.copyOf(debits), List.copyOf(sets), List.copyOf(craft), List.copyOf(promotions));
 		}
 	}
 }

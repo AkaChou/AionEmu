@@ -60,6 +60,19 @@ public abstract class PlayerDAO implements IDFactoryAwareDAO {
 	}
 
 	/**
+	 * 在调用方任务事务中保证角色至少拥有 66 级起始经验，并持久化高阶守护者标记。
+	 * Ensures at least level-66 start EXP and persists the ArchDaeva flag in the caller-owned quest transaction.
+	 *
+	 * @param connection 调用方事务连接 / caller-owned transaction connection
+	 * @param playerId 玩家对象 ID / player object ID
+	 * @param minimumExp 66 级起始经验 / level-66 start EXP
+	 * @throws SQLException 晋升结果无法持久化 / if the promotion result cannot be persisted
+	 */
+	public void promoteArchDaevaInTransaction(Connection connection, int playerId, long minimumExp) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * 保存新创建的角色。
 	 * Saves a newly created character.
 	 *

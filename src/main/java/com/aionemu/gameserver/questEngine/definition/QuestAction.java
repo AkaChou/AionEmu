@@ -11,7 +11,7 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 		QuestAction.SetCurrency,
 		QuestAction.LearnRecipe, QuestAction.ForgetRecipe, QuestAction.GrantCraftSkill,
 		QuestAction.CompleteQuest, QuestAction.GiveItem, QuestAction.UnequipItem,
-		QuestAction.BlockDefaultItemUse, QuestAction.AbandonQuest {
+		QuestAction.PromoteArchDaeva, QuestAction.BlockDefaultItemUse, QuestAction.AbandonQuest {
 	record RemoveItem(int itemId, int count) implements QuestAction {
 		/**
 		 * transition 需要移除当前完整堆叠时使用的哨兵数量。
@@ -176,6 +176,14 @@ public sealed interface QuestAction permits QuestAction.RemoveItem, QuestAction.
 				throw new IllegalArgumentException("rewardIndex must be non-negative");
 			}
 		}
+	}
+
+	/**
+	 * 在任务完成事务中持久化高阶守护者晋升，并在提交后将在线角色直接提升到 66 级。
+	 * Persists ArchDaeva promotion in the quest-completion transaction and advances the live player to level 66
+	 * after commit.
+	 */
+	record PromoteArchDaeva() implements QuestAction {
 	}
 
 	/**

@@ -250,6 +250,9 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
 
     /** 更新玩家任务奖励列（含 durable 奖励的 exp/aura_of_growth）/ Update player quest-reward columns */
     private static final String UPDATE_QUEST_CURRENCIES_QUERY = "UPDATE players SET exp = ?, dp = ?, creativity_point = ?, abyss_favor = ?, aura_of_growth = ? WHERE id = ?";
+	/** 在任务事务中持久化高阶守护者晋升 / Persist ArchDaeva promotion in the quest transaction */
+	private static final String PROMOTE_ARCHDAEVA_QUERY =
+		"UPDATE players SET exp = GREATEST(exp, ?), is_archdaeva = TRUE WHERE id = ?";
 
     @Override
     public void storeInTransaction(Connection con, int playerId, PlayerCommonData pcd) throws SQLException {
@@ -265,6 +268,17 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
             }
         }
     }
+
+	@Override
+	public void promoteArchDaevaInTransaction(Connection connection, int playerId, long minimumExp) throws SQLException {
+		try (PreparedStatement statement = connection.prepareStatement(PROMOTE_ARCHDAEVA_QUERY)) {
+			statement.setLong(1, minimumExp);
+			statement.setInt(2, playerId);
+			if (statement.executeUpdate() != 1) {
+				throw new SQLException("No player row changed for player " + playerId);
+			}
+		}
+	}
 
     /**
      * 插入新创建的角色记录，并按配置写入缓存。

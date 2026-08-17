@@ -1028,7 +1028,12 @@ public double getExpMultiplier() {
 		return percent;
 	}
 
-	/** Captures fields changed by quest EXP, aura and DP rewards. */
+	/**
+	 * 捕获任务经验、成长光环、DP 与晋升可能修改的字段。
+	 * Captures fields changed by quest EXP, aura, DP, and promotion.
+	 *
+	 * @return 可恢复一次的事务快照 / transaction snapshot that can restore once
+	 */
 	public TransactionSnapshot transactionSnapshot() {
 		return new TransactionSnapshot();
 	}
@@ -1045,6 +1050,7 @@ public double getExpMultiplier() {
 		private final long savedAuraOfGrowthMax = auraOfGrowthMax;
 		private final long savedBerdinStar = berdinStar;
 		private final long savedAbyssFavor = abyssFavor;
+		private final boolean savedArchDaeva = isArchDaeva;
 		private boolean restored;
 
 		private TransactionSnapshot() {
@@ -1066,6 +1072,7 @@ public double getExpMultiplier() {
 			auraOfGrowthMax = savedAuraOfGrowthMax;
 			berdinStar = savedBerdinStar;
 			abyssFavor = savedAbyssFavor;
+			isArchDaeva = savedArchDaeva;
 		}
 	}
 

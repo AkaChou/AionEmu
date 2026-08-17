@@ -176,6 +176,25 @@ class CompositeQuestActionPortTest {
 	}
 
 	@Test
+	void routesArchDaevaPromotionAfterDurableRewardsOnTheSameTransaction() throws Exception {
+		Connection connection = connection();
+		List<String> calls = new ArrayList<>();
+		CompositeQuestActionPort port = new CompositeQuestActionPort(
+			new RecordingInventory(connection, calls), new RecordingCurrency(connection, calls),
+			new RecordingRewards(connection, calls), null, null, new RecordingProgression(connection, calls));
+		QuestSnapshot snapshot = new QuestSnapshot(7, 10520, QuestStatus.REWARD, 6, Map.of(), Map.of());
+		List<QuestAction> actions = List.of(new QuestAction.GrantReward("EXP", 0, 25849149),
+			new QuestAction.PromoteArchDaeva());
+
+		port.preflight(connection, snapshot, actions);
+		QuestTransactionParticipant participant = port.apply(connection, snapshot, actions);
+		participant.afterCommit();
+
+		assertEquals(List.of("reward.preflight", "progression.preflight", "reward.apply", "progression.apply",
+			"reward.commit", "progression.commit"), calls);
+	}
+
+	@Test
 	void unknownRewardKindFailsClosed() {
 		assertThrows(IllegalArgumentException.class, () -> new QuestAction.GrantReward("teleport", 1, 1));
 	}
@@ -292,6 +311,34 @@ class CompositeQuestActionPortTest {
 			calls.add("equipment.apply");
 			return QuestTransactionParticipant.of(() -> calls.add("equipment.commit"),
 				() -> calls.add("equipment.rollback"));
+		}
+	}
+
+	private static final class RecordingProgression implements QuestProgressionPort {
+		private final Connection expected;
+		private final List<String> calls;
+
+		private RecordingProgression(Connection expected, List<String> calls) {
+			this.expected = expected;
+			this.calls = calls;
+		}
+
+		@Override
+		public void preflight(Connection connection, QuestSnapshot snapshot,
+				List<QuestAction.PromoteArchDaeva> promotions) {
+			assertSame(expected, connection);
+			assertEquals(List.of(new QuestAction.PromoteArchDaeva()), promotions);
+			calls.add("progression.preflight");
+		}
+
+		@Override
+		public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
+				List<QuestAction.PromoteArchDaeva> promotions) {
+			assertSame(expected, connection);
+			assertEquals(List.of(new QuestAction.PromoteArchDaeva()), promotions);
+			calls.add("progression.apply");
+			return QuestTransactionParticipant.of(() -> calls.add("progression.commit"),
+				() -> calls.add("progression.rollback"));
 		}
 	}
 }

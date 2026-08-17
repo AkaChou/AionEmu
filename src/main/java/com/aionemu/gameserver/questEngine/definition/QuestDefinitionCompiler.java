@@ -121,6 +121,8 @@ public final class QuestDefinitionCompiler {
 			}
 			long completions = transition.actions().stream()
 				.filter(QuestAction.CompleteQuest.class::isInstance).count();
+			long archDaevaPromotions = transition.actions().stream()
+				.filter(QuestAction.PromoteArchDaeva.class::isInstance).count();
 			boolean blockOnly = transition.actions().size() == 1
 				&& transition.actions().get(0) instanceof QuestAction.BlockDefaultItemUse;
 			if (blockOnly && !(transition.event() instanceof QuestEvent.UseItem)) {
@@ -139,6 +141,11 @@ public final class QuestDefinitionCompiler {
 			if (effectiveStatus != QuestStatus.COMPLETE && completions != 0) {
 				fail("COMPLETE_QUEST_STATUS_MISMATCH",
 					"complete-quest action requires a COMPLETE projection");
+			}
+			if (archDaevaPromotions > 1 || (archDaevaPromotions == 1
+					&& (effectiveStatus != QuestStatus.COMPLETE || completions != 1))) {
+				fail("ARCHDAEVA_PROMOTION_COMPLETION_REQUIRED",
+					"promote-archdaeva requires exactly one complete-quest action and a COMPLETE projection");
 			}
 			boolean abandons = transition.actions().stream()
 				.anyMatch(QuestAction.AbandonQuest.class::isInstance);

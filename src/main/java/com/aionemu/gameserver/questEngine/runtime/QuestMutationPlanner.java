@@ -160,6 +160,8 @@ public final class QuestMutationPlanner {
 				}
 				case QuestAction.CompleteQuest ignored -> {
 				}
+				case QuestAction.PromoteArchDaeva ignored -> {
+				}
 				case QuestAction.BlockDefaultItemUse ignored -> {
 				}
 				case QuestAction.AbandonQuest ignored -> {
