@@ -86,6 +86,7 @@ log:         同一时间窗口的 WARN/ERROR，以及发送前后的任务日�
 | 玩家症状 | 第一检查点 | 常见根因 | 推荐证明 |
 |---|---|---|---|
 | 点击奖励/“一堆物品”第一次没有反应 | `SELECT_QUEST_REWARD` 路由的 target 和 after-commit | 进入 `REWARD` 但只同步状态，没有页面/关闭响应 | `QuestDefinitionCatalogManifestTest.rewardSelectionTransitionsRespondInTheSameInteraction` |
+| 实时奖励选择物品后点击领取无响应 | 无目标 `CM_DIALOG_SELECT` 的原始 action，以及 `QuestEvent.QuestDialog` 生产索引 | 客户端发送实时奖励动作 110..124，XML 却只注册普通奖励动作 8..22 | Aion 5.8 客户端 `client-hyperlinks.csv`、旧 `finishReportedQuest` 映射和任务专用 targetless reward 测试 |
 | 杀怪后任务回到前一步 | progress 位域的 persistence、`LOG_OUT`/`ENTER_WORLD` 路由、是否有 reset action | 用临时状态覆盖了持久变量，或登出边把状态写回 START | `Quest14112LogoutPersistenceTest`，检查 `PERSISTENT` 和无回退边 |
 | 杀怪后目标 NPC 没生成 | `after-commit` 的 spawn 动作、模板 ID、AI 选择 | 自定义 AI 的 `handleDied`/`handleSpawned` 被 `retail_pattern` 覆盖 | `AI2EngineRetailSelectionTest`，再做实际 NPC/任务路径测试 |
 | 护送 NPC 不动、跟错 NPC、离玩家很远才追 | 对话时的 interaction object、follow action、跟随距离判断 | 重新生成同模板 NPC、跟随 slot 不对应交互对象，或 follow state 使用 15m 容差 | `Quest1149ClientDialogAlignmentTest`、`FollowManagerTest` |
@@ -220,6 +221,8 @@ Aion 5.8 客户端是客户端页面、动作、字典和数据包的权威来�
 ```
 
 如果 `source=reward,target=reward` 的重复选择路由存在，通常只需按旧协议显示选择窗口，不要无证据增加额外刷新。修改后用生产目录审计确保所有“进入 `REWARD` 的 `SELECT_QUEST_REWARD`”都有页面、选择窗口或关闭响应；不能只测一个任务。
+
+实时奖励确认是另一类协议问题。无目标奖励包会保留客户端原始 action，并由 typed owner 构造成 `QuestEvent.QuestDialog`；普通奖励槽使用 8..22，实时奖励槽使用 110..124。任务已在 `REWARD`、页面也正常显示，但 XML 只注册普通动作时，点击“领取”不会命中任何完成迁移。修复时必须根据客户端可见奖励槽注册对应的实时动作，并锁定职业条件、奖励索引、事务动作及 `after-commit` 关闭顺序；不能把所有 110..124 全局改写成 8..22。
 
 ### 6.2 击杀后、重登后任务状态回退或目标 NPC 消失
 
@@ -357,6 +360,7 @@ python3 scripts/quest/generate_quest_dialog_enums.py --check
 
 | 提交 | 案例 | 可复用结论 |
 |---|---|---|
+| `4a23cf0a0` | 13830 实时奖励选择后点击领取无响应 | 无目标实时奖励使用 110..124 独立动作空间；任务 XML 必须注册实际可见槽位并保留完整完成合同 |
 | `906c08e92` | 24 个奖励选择路由首次点击无响应；37 个任务副作用 AI 被 retail pattern 覆盖 | 用生产目录审计捕获 `SELECT_QUEST_REWARD -> REWARD` 无响应；有生命周期任务副作用的 AI 必须有证据化 fallback 集合 |
 | `7a6ad8eca` | 14112 击杀剧毒斯拉希后生成 Kato、重登恢复、首次奖励对话 | 任务 NPC 生成、登录恢复、页面响应和旧 AI 清理必须作为同一任务合同验证 |
 | `c25db02d5` | 14112 下线后击杀进度回退 | 持久位域不能被登出/恢复流程写回 START；用专用测试锁定 logout/enter-world |
@@ -392,6 +396,17 @@ python3 scripts/quest/generate_quest_dialog_enums.py --check
 - 验证命令和结果：`rtk mvn -q -Dtest=Quest1920And2945ClientDialogAlignmentTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,QuestDialogOrderAuditTest test` 通过；生产 catalog 6200 条编译成功，失败 0，白名单违规 0；两个 XML 均通过 XSD；客户端实测升级登记及双 NPC 对话流程通过。
 - 复用边界：仅适用于升级入口不应显示 page 4，且任务存在由客户端页面动作驱动的双 NPC 或多阶段状态链的同型任务；单 NPC `DEFAULT_SUCCESS(10002)` 合同复用 8.1，页面、状态或奖励归属不同的任务必须重新取证。
 - commit：`76b0894`。
+
+### 8.3 实时奖励确认使用独立动作导致领取无响应
+
+- 代表任务：13830「Stigma 101」。同批修复的 13831..13834 共享同一问题模式，不重复建案例。
+- 玩家症状：任务进入实时奖励界面并可选择职业奖励，但点击“领取”没有反应，任务不完成、奖励不到背包、界面也不关闭。
+- 根因：Aion 5.8 客户端对第一个普通奖励槽发送 `HACTION_SELECTED_QUEST_REWARD1(8)`，对第一个实时奖励槽发送 `HACTION_SELECTED_QUEST_AUTO_REWARD1(110)`。无目标 `CM_DIALOG_SELECT` 会把原始 action 交给 typed dispatcher，后者按 `QuestEvent.QuestDialog(110)` 查询生产索引；原 XML 只有普通奖励动作 8 的完成路由，因此实时奖励确认没有候选迁移。旧 `finishReportedQuest` 将 110..124 映射到普通奖励槽 8..22，且正式任务数据将这五个任务标记为 `can_report=true`，共同证明两个动作空间应落到等价的奖励完成合同。
+- 修复层：任务 XML + 由客户端字典和活动 XML 引用生成的 typed dialog action 枚举。五个任务的 11 个互斥职业分支同时注册普通动作 8 和实际可见的实时动作 110；事务内发放职业物品与经验、回收工作物品并完成任务，提交后按 `refresh-player-stats -> COMPLETION sync -> close-dialog` 执行。不在共享 runtime 中全局重写动作。
+- 修改文件：`src/main/java/com/aionemu/gameserver/questEngine/definition/QuestDialogAction.java`、`src/main/resources/aion/data/static_data/quest_definition/quests/13830.xml`、`13831.xml`、`13832.xml`、`13833.xml`、`13834.xml`，以及 `src/test/java/com/aionemu/gameserver/questEngine/definition/Quest13830To13834TargetlessRewardTest.java`。
+- 验证命令和结果：`rtk mvn -Dtest=Quest13830To13834TargetlessRewardTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test` 通过，共 8 个测试，失败 0、错误 0、跳过 0；五个 XML 均通过 XSD；`rtk python3 scripts/quest/generate_quest_dialog_enums.py --check` 返回 `changed=0`；Aion 5.8 客户端实测实时奖励可领取并正常完成任务。
+- 复用边界：仅适用于权威数据允许实时报告、无目标奖励包确实发送 110..124，且普通与实时槽位应共享奖励完成语义的任务。必须按客户端实际可见槽位逐一映射：单一职业奖励通常只需 110；多槽奖励要分别证明 111..124 与奖励索引。动作 108、NPC 目标领奖、不同奖励索引、额外页面或副作用合同必须单独取证，不能套用本案例或做全局 remap。
+- commit：`4a23cf0a0f531182e195bfa0f662513da50d170a`。
 
 ## 9. 提交和交接清单
 
