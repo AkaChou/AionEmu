@@ -19,7 +19,6 @@ import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
-import java.sql.Timestamp;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -164,7 +163,7 @@ public class Quest extends AdminCommand {
 
         QuestState qs = target.getQuestStateList().getQuestState(questId);
         if (qs == null) {
-            qs = new QuestState(questId, questStatus, 0, 0, new Timestamp(0), 0, new Timestamp(0));
+            qs = new QuestState(questId, questStatus, 0, 0, null, 0, null);
             target.getQuestStateList().addQuest(questId, qs);
             PacketSendUtility.sendMessage(admin, "<QuestState has been newly initialized.>");
         }
