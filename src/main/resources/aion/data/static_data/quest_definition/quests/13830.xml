@@ -144,6 +144,218 @@
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
+    <!-- 无 NPC 目标的普通奖励 8 与实时奖励 110 都必须直接完成任务；提交后按旧 handler 关闭窗口。 -->
+    <!-- Targetless normal reward 8 and real-time reward 110 both complete the quest and close the legacy dialog. -->
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="QUEST_ACTION" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_AUTO_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GLADIATOR"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001109" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="QUEST_ACTION" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_AUTO_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="TEMPLAR"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001130" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="QUEST_ACTION" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_AUTO_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="RANGER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001168" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="QUEST_ACTION" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_AUTO_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="ASSASSIN"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001145" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="QUEST_ACTION" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_AUTO_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SORCERER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001189" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="QUEST_ACTION" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_AUTO_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SPIRIT_MASTER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001202" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="QUEST_ACTION" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_AUTO_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CLERIC"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001236" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="QUEST_ACTION" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_AUTO_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="CHANTER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001221" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="QUEST_ACTION" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_AUTO_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="GUNSLINGER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001253" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="QUEST_ACTION" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_AUTO_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="SONGWEAVER"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001289" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="complete">
+      <event>
+        <dialog type="QUEST_ACTION" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_AUTO_REWARD1"/>
+      </event>
+      <conditions>
+        <advanced-class-is class="AETHERTECH"/>
+      </conditions>
+      <actions>
+        <grant-reward kind="ITEM" id="140001271" amount="1"/>
+        <grant-reward kind="EXP" id="0" amount="46544" amount-mode="QUEST_BASE"/>
+        <remove-item item-id="182216118" count="ALL"/>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <refresh-player-stats/>
+        <sync-quest-state mode="COMPLETION"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
     <!-- 完成并发放职业奖励武器（每职业一件，条件互斥）。Complete and grant the class reward weapon (one per class, mutually exclusive). -->
     <transition source="reward" target="complete">
       <event>
