@@ -121,6 +121,8 @@ The main runtime configuration files under `aion/config/` are:
 | `administration/*.properties` | Admin/GM commands, panels, and restrictions |
 | `schedule/*.xml` | Scheduled events, instances, sieges, and world activities |
 
+Service enablement is configured in `src/main/resources/application.yml` (bundled inside the JAR): which of the login, game, and chat services start, and the Netty transport mode.
+
 ## Runtime Scripts
 
 | Script | Description |
@@ -143,6 +145,7 @@ The main runtime configuration files under `aion/config/` are:
 | `AION_GC_OPTS` | G1GC with bounded pause targets | JVM garbage-collection settings |
 | `AION_SAFETY_OPTS` | Heap dump and exit-on-OOM | JVM crash-safety settings |
 | `AION_SYSTEM_OPTS` | UTF-8, IPv4, Asia/Shanghai timezone | JVM system properties |
+| `AION_PATH_OPTS` | `-Daion.home=$AION_HOME -Daion.log.dir=$AION_LOG_DIR` | Path system properties pointing to the runtime and log directories |
 | `AION_JVM_OPTS` | Composed from the `AION_*_OPTS` above | Full JVM option line |
 | `AION_SHUTDOWN_TIMEOUT` | `120` | Graceful shutdown timeout in seconds |
 | `AION_STOP_TIMEOUT` | `30` | Stop timeout before force-kill in seconds |

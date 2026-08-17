@@ -121,6 +121,8 @@ AION_HOME=/path/to/runtime ./aion/start-silent.sh
 | `administration/*.properties` | 管理员/GM 命令、面板和限制 |
 | `schedule/*.xml` | 定时活动、副本、攻城和世界事件 |
 
+服务开关在 `src/main/resources/application.yml` 中配置（已打包进 JAR）：login、game、chat 三个服务是否启动，以及 Netty 传输模式。
+
 ## 运行脚本
 
 | 脚本 | 说明 |
@@ -143,6 +145,7 @@ AION_HOME=/path/to/runtime ./aion/start-silent.sh
 | `AION_GC_OPTS` | G1GC 和有界暂停目标 | JVM 垃圾回收设置 |
 | `AION_SAFETY_OPTS` | 堆转储和 OOM 退出 | JVM 崩溃安全设置 |
 | `AION_SYSTEM_OPTS` | UTF-8、IPv4、Asia/Shanghai 时区 | JVM 系统属性 |
+| `AION_PATH_OPTS` | `-Daion.home=$AION_HOME -Daion.log.dir=$AION_LOG_DIR` | 指向运行目录和日志目录的路径系统属性 |
 | `AION_JVM_OPTS` | 由上述 `AION_*_OPTS` 组合 | 完整 JVM 参数 |
 | `AION_SHUTDOWN_TIMEOUT` | `120` | 优雅关闭超时（秒） |
 | `AION_STOP_TIMEOUT` | `30` | 停止超时（秒），超时后可选强制结束 |
