@@ -4,9 +4,9 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <items>
+    <work-items>
       <item id="182215974" count="1"/>
-    </items>
+    </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="25849149"/>
     </rewards>
@@ -78,7 +78,6 @@
         <give-item item-id="182215974" count="1"/>
       </actions>
       <after-commit>
-        <teleport-player-current-or-default world-id="220110000" x="1757.3667" y="2008.911" z="196.59653" heading="0"/>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
@@ -154,6 +153,7 @@
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
+        <teleport-player-current-or-default world-id="220110000" x="1757.3667" y="2008.911" z="196.59653" heading="0"/>
       </after-commit>
     </transition>
     <transition source="s4" target="s4">

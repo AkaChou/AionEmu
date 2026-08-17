@@ -27,6 +27,11 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 	private static final int LEGACY_ACESTES = 204652;
 	private static final int FIRST_ACESTES_STAGE = 3;
 	private static final int REPORT_ACESTES_STAGE = 6;
+	private static final int QUEST_COVERT_COMMUNIQUES = 10520;
+	private static final int CLIENT_ASTERA_NPC = 800327;
+	private static final int MOVE_TO_ASTERA_STAGE = 4;
+	private static final int ELYOS_SANCTUARY_SENSOR = 206485;
+	private static final int ASMODIAN_SANCTUARY_SENSOR = 206486;
 
 	private int npcId;
 	/**
@@ -52,8 +57,14 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 		Player player = getConnection().getActivePlayer();
 		boolean gm = player != null && player.isGM();
 		int preferredWorldId = player == null ? 0 : player.getWorldId();
-		int searchNpcId = gm ? resolveQuestSearchNpcId(player, npcId) : npcId;
-		SearchTarget target = findSearchTarget(searchNpcId, preferredWorldId, gm);
+		int searchNpcId = resolveAsteraSearchNpcId(player, npcId);
+		if (gm) {
+			searchNpcId = resolveQuestSearchNpcId(player, searchNpcId);
+		}
+		SearchTarget target = resolveQuestSensorTarget(searchNpcId);
+		if (target == null) {
+			target = findSearchTarget(searchNpcId, preferredWorldId, gm);
+		}
 		if (target == null) {
 			return;
 		}
@@ -74,12 +85,45 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 	}
 
 	/**
+	 * 将 10520“移动到阿斯泰拉”阶段的客户端同名 NPC 请求解析为任务感知目标。
+	 * Resolves the client NPC-name collision during quest 10520's "Move to Astera" stage to its quest sensor.
+	 *
+	 * <p>Aion 5.8 客户端会将该区域链接提交为 NPC 800327；该 ID 实际属于厄夏勒的魔族 NPC
+	 * Astella。只有任务状态明确处于 var0=4 时才改写为 206485，避免影响其他任务对 800327
+	 * 的合法搜索。</p>
+	 * <p>The Aion 5.8 client submits this zone link as NPC 800327, which belongs to the Asmodian NPC Astella
+	 * in Enshar. The alias is rewritten to 206485 only while the quest is explicitly at var0=4, preserving
+	 * legitimate searches for NPC 800327 from other quests.</p>
+	 *
+	 * @param player 搜索玩家 / searching player
+	 * @param requestedNpcId 客户端请求的 NPC ID / NPC ID requested by the client
+	 * @return 实际用于搜索的 NPC ID / NPC ID used for the search
+	 */
+	private static int resolveAsteraSearchNpcId(Player player, int requestedNpcId) {
+		if (player == null || requestedNpcId != CLIENT_ASTERA_NPC) {
+			return requestedNpcId;
+		}
+		QuestState state = player.getQuestStateList().getQuestState(QUEST_COVERT_COMMUNIQUES);
+		return resolveAsteraSearchNpcId(requestedNpcId, state);
+	}
+
+	static int resolveAsteraSearchNpcId(int requestedNpcId, QuestState state) {
+		if (requestedNpcId != CLIENT_ASTERA_NPC || state == null
+				|| state.getQuestId() != QUEST_COVERT_COMMUNIQUES || state.getStatus() != QuestStatus.START
+				|| state.getQuestVarById(0) != MOVE_TO_ASTERA_STAGE) {
+			return requestedNpcId;
+		}
+		return ELYOS_SANCTUARY_SENSOR;
+	}
+
+	/**
 	 * 将 14047 的旧客户端 NPC 别名解析为实例中的任务 NPC。
 	 * Resolves the legacy client NPC alias for quest 14047 to the instance quest NPC.
 	 *
 	 * <p>204652 与任务专用的 802051 使用相同的“阿凯斯泰斯”名称。客户端寻找请求只携带
-	 * NPC ID，因此 GM 在 14047 的阿凯斯泰斯阶段会错误地命中普通模板；只有任务状态明确
-	 * 指向 802051 时才做别名解析，避免影响其他任务使用 204652。</p>
+	 * NPC ID，
+	 * 因此 GM 在 14047 的阿凯斯泰斯阶段会错误地命中普通模板；只有任务状态明确指向 802051
+	 * 时才做别名解析，避免影响其他任务使用 204652。</p>
 	 * <p>NPC 204652 shares the Acestes name with quest-only NPC 802051. Because the client search request
 	 * carries only an NPC ID, a GM at the Acestes stages of quest 14047 otherwise reaches the ordinary
 	 * template. The alias is applied only when the quest state explicitly targets 802051, preserving other
@@ -113,6 +157,27 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 		int stage = state.getQuestVarById(0);
 		return stage == FIRST_ACESTES_STAGE || stage == REPORT_ACESTES_STAGE
 				? QUEST_ACESTES : requestedNpcId;
+	}
+
+	/**
+	 * 将无静态刷新点的任务感知目标解析到其权威区域坐标。
+	 * Resolves quest sensor targets without static spawns to their authoritative zone coordinates.
+	 *
+	 * @param requestedNpcId 客户端请求的感知 NPC ID / sensory NPC ID requested by the client
+	 * @return 固定任务区域目标；不是已知感知目标时返回 null /
+	 * fixed quest-zone target, or null when not recognized
+	 */
+	static SearchTarget resolveQuestSensorTarget(int requestedNpcId) {
+		return switch (requestedNpcId) {
+			case ELYOS_SANCTUARY_SENSOR -> fixedSearchTarget(210100000, 1456.6283f, 1299.3306f, 336.49023f);
+			case ASMODIAN_SANCTUARY_SENSOR -> fixedSearchTarget(220110000, 1757.3667f, 2008.911f, 196.59653f);
+			default -> null;
+		};
+	}
+
+	private static SearchTarget fixedSearchTarget(int worldId, float x, float y, float z) {
+		SpawnSpotTemplate spot = new SpawnSpotTemplate(x, y, z, (byte) 0, 0, null, null);
+		return new SearchTarget(new SpawnSearchResult(worldId, spot), null);
 	}
 
 	private static SearchTarget findSearchTarget(int npcId, int preferredWorldId, boolean allowStaticFallback) {

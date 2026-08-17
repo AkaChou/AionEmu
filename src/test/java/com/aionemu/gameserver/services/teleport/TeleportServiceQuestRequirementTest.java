@@ -26,20 +26,20 @@ class TeleportServiceQuestRequirementTest {
 
 	@Test
 	void configuredProgressStepAllowsActiveAndRewardQuest() {
-		assertTrue(TeleportService2.meetsQuestRequirement(questState(QuestStatus.START, 5), 5));
-		assertTrue(TeleportService2.meetsQuestRequirement(questState(QuestStatus.REWARD, 5), 5));
-		assertFalse(TeleportService2.meetsQuestRequirement(questState(QuestStatus.START, 4), 5));
-		assertFalse(TeleportService2.meetsQuestRequirement(questState(QuestStatus.START, 5), 0));
-		assertFalse(TeleportService2.meetsQuestRequirement(null, 5));
+		assertTrue(TeleportService2.meetsQuestRequirement(questState(QuestStatus.START, 4), 4));
+		assertTrue(TeleportService2.meetsQuestRequirement(questState(QuestStatus.REWARD, 6), 4));
+		assertFalse(TeleportService2.meetsQuestRequirement(questState(QuestStatus.START, 3), 4));
+		assertFalse(TeleportService2.meetsQuestRequirement(questState(QuestStatus.START, 4), 0));
+		assertFalse(TeleportService2.meetsQuestRequirement(null, 4));
 	}
 
 	@Test
-	void capitalTeleportersAllowSanctuaryReturnOnlyAtFinalQuestStep() throws Exception {
+	void capitalTeleportersAllowSanctuaryReturnFromInstanceRollbackStep() throws Exception {
 		TeleporterData data = (TeleporterData) JAXBContext.newInstance(TeleporterData.class)
 				.createUnmarshaller().unmarshal(TELEPORTER_XML.toFile());
 
-		assertQuestGate(data, 203726, 444, 10520, 5);
-		assertQuestGate(data, 204191, 438, 20520, 5);
+		assertQuestGate(data, 203726, 444, 10520, 4);
+		assertQuestGate(data, 204191, 438, 20520, 4);
 		assertEquals(0, data.getTeleporterTemplateByNpcId(804561).getTeleLocIdData()
 				.getTeleportLocation(444).getRequiredQuestStep());
 	}

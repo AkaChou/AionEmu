@@ -4,9 +4,9 @@
     <races>
       <race id="ELYOS"/>
     </races>
-    <items>
+    <work-items>
       <item id="182215973" count="1"/>
-    </items>
+    </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="25849149"/>
     </rewards>
@@ -79,7 +79,6 @@
         <give-item item-id="182215973" count="1"/>
       </actions>
       <after-commit>
-        <teleport-player-current-or-default world-id="210100000" x="1456.6283" y="1299.3306" z="336.49023" heading="8"/>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
@@ -130,7 +129,7 @@
     </transition>
     <transition source="s3" target="s3">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203752" action="QUEST_SELECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="203726" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
@@ -138,7 +137,7 @@
     </transition>
     <transition source="s3" target="s3">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT4_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="203726" action="SELECT4_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
@@ -146,7 +145,7 @@
     </transition>
     <transition source="s3" target="s4">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203752" action="SETPRO4"/>
+        <dialog type="TALK_TO_NPC" npc-id="203726" action="SETPRO4"/>
       </event>
       <actions>
         <set-variable field="var0" value="4"/>
@@ -155,6 +154,7 @@
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
+        <teleport-player-current-or-default world-id="210100000" x="1456.6283" y="1299.3306" z="336.49023" heading="8"/>
       </after-commit>
     </transition>
     <transition source="s4" target="s4">

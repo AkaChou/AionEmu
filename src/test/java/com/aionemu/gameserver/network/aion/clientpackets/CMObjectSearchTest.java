@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -84,8 +85,54 @@ class CMObjectSearchTest {
 			questState(14047, QuestStatus.START, 3)));
 	}
 
+	@Test
+	void resolvesTheClientAsteraNpcCollisionDuringTheMoveStage() {
+		int searchNpcId = CM_OBJECT_SEARCH.resolveAsteraSearchNpcId(800327,
+				questState(10520, QuestStatus.START, 4));
+
+		assertEquals(206485, searchNpcId);
+		CM_OBJECT_SEARCH.SearchTarget target = CM_OBJECT_SEARCH.resolveQuestSensorTarget(searchNpcId);
+		assertLocation(target, 210100000, 1456.6283f, 1299.3306f, 336.49023f);
+		assertNotEquals(220080000, target.location().getWorldId());
+	}
+
+	@Test
+	void keepsTheRealAstellaNpcOutsideTheMoveStage() {
+		assertEquals(800327, CM_OBJECT_SEARCH.resolveAsteraSearchNpcId(800327,
+				questState(10520, QuestStatus.START, 3)));
+		assertEquals(800327, CM_OBJECT_SEARCH.resolveAsteraSearchNpcId(800327,
+				questState(10520, QuestStatus.START, 5)));
+		assertEquals(800327, CM_OBJECT_SEARCH.resolveAsteraSearchNpcId(800327,
+				questState(10520, QuestStatus.COMPLETE, 4)));
+		assertEquals(800327, CM_OBJECT_SEARCH.resolveAsteraSearchNpcId(800327,
+				questState(30613, QuestStatus.START, 4)));
+		assertEquals(800327, CM_OBJECT_SEARCH.resolveAsteraSearchNpcId(800327, null));
+		assertEquals(206485, CM_OBJECT_SEARCH.resolveAsteraSearchNpcId(206485,
+				questState(10520, QuestStatus.START, 4)));
+	}
+
+	@Test
+	void resolvesSanctuarySensorsToTheirFactionSpecificQuestZones() {
+		CM_OBJECT_SEARCH.SearchTarget elyos = CM_OBJECT_SEARCH.resolveQuestSensorTarget(206485);
+		assertLocation(elyos, 210100000, 1456.6283f, 1299.3306f, 336.49023f);
+		assertNotEquals(220080000, elyos.location().getWorldId());
+
+		CM_OBJECT_SEARCH.SearchTarget asmodian = CM_OBJECT_SEARCH.resolveQuestSensorTarget(206486);
+		assertLocation(asmodian, 220110000, 1757.3667f, 2008.911f, 196.59653f);
+
+		assertNull(CM_OBJECT_SEARCH.resolveQuestSensorTarget(NPC_ID));
+	}
+
 	private static QuestState questState(int questId, QuestStatus status, int questVar0) {
 		return new QuestState(questId, status, questVar0, 0, null, null, null);
+	}
+
+	private static void assertLocation(CM_OBJECT_SEARCH.SearchTarget target, int worldId, float x, float y, float z) {
+		assertEquals(worldId, target.location().getWorldId());
+		assertEquals(x, target.location().getSpot().getX());
+		assertEquals(y, target.location().getSpot().getY());
+		assertEquals(z, target.location().getSpot().getZ());
+		assertNull(target.npc());
 	}
 
 	private static SpawnSearchResult location(float x) {
