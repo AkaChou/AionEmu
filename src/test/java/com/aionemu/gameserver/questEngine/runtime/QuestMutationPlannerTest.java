@@ -288,6 +288,45 @@ class QuestMutationPlannerTest {
 	}
 
 	@Test
+	void equippedMetadataStartConditionUsesCapturedEquipmentFactsAndFailsClosedWhenUnknown() {
+		String xml = """
+
+						<quest-definition id="1308" version="1">
+						  <metadata name="equipped-start" display-name-id="0" min-level="1" max-level="55"
+						      category="QUEST">
+						    <start-condition-groups>
+						      <group><condition type="equipped" quest-id="182400004"/></group>
+						    </start-condition-groups>
+						  </metadata>
+						  <nodes>
+						    <node label="none" status="NONE"/>
+						    <node label="started" status="START"/>
+						  </nodes>
+						  <transitions>
+						    <transition source="none" target="started">
+						      <event><talk-to-npc npc-id="700001"/></event>
+						    </transition>
+						  </transitions>
+						</quest-definition>
+
+				""";
+		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(
+			new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+		var transition = definition.definition().transitions().getFirst();
+		QuestEvent event = new QuestEvent.TalkToNpc(700001);
+		QuestSnapshot base = new QuestSnapshot(7, 1308, QuestStatus.NONE, 0, Map.of())
+			.withStartEligibility(QuestStartEligibility.allowed());
+
+		assertTrue(QuestMutationPlanner.plan(definition,
+			base.withEquipmentFacts(new QuestEquipmentFacts(Map.of(), Map.of(182400004, 1))),
+			event, transition).isPresent());
+		assertTrue(QuestMutationPlanner.plan(definition,
+			base.withEquipmentFacts(new QuestEquipmentFacts(Map.of(), Map.of())),
+			event, transition).isEmpty());
+		assertTrue(QuestMutationPlanner.plan(definition, base, event, transition).isEmpty());
+	}
+
+	@Test
 	void unequipRemoveCountIsConsumedBeforeASeparateInventoryRemoval() {
 		CompiledQuestDefinition definition = QuestDsl.quest(1304)
 			.node("started", project(QuestStatus.START, Map.of()))

@@ -159,6 +159,23 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	}
 	/** 让下一次事务 commit 失败，用于验证原子回滚。 / Makes the next transaction commit fail to verify atomic rollback. */
 	public void failNextCommit() { failCommit = true; }
+	/**
+	 * 用指定计数替换场景中已捕获的装备物品事实。
+	 * Replaces the scenario's captured equipped-item facts with the supplied counts.
+	 *
+	 * @param equippedItems 物品模板 ID 到已装备数量 / item-template ids to equipped counts
+	 */
+	public void replaceEquippedItemFacts(Map<Integer, Integer> equippedItems) {
+		facts.equipmentCaptured = true;
+		facts.equippedItems.clear();
+		facts.equippedItems.putAll(java.util.Objects.requireNonNull(equippedItems, "equippedItems"));
+	}
+	/** 清除装备事实捕获状态，用于验证生产条件求值 fail closed。 / Clears captured equipment facts to verify fail-closed production evaluation. */
+	public void clearCapturedEquipmentFacts() {
+		facts.equipmentCaptured = false;
+		facts.equippedItems.clear();
+		facts.itemSetParts.clear();
+	}
 
 	/** 准备一个以指定 transition 为目标的最小满足/不满足事实场景。 / Prepares the minimal satisfying/non-satisfying fact scenario for one transition. */
 	public void prepare(QuestTransition transition) {

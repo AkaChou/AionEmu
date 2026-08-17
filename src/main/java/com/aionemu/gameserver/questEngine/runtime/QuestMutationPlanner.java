@@ -369,6 +369,7 @@ public final class QuestMutationPlanner {
 					case "unfinished" -> new QuestCondition.UnfinishedQuest(Set.of(startCondition.questId()));
 					case "noacquired" -> new QuestCondition.NoAcquiredQuest(Set.of(startCondition.questId()));
 					case "acquired" -> new QuestCondition.AcquiredQuest(Set.of(startCondition.questId()));
+					case "equipped" -> new QuestCondition.EquippedItem(startCondition.questId());
 					default -> throw new IllegalArgumentException(
 						"unsupported start condition type: " + startCondition.type());
 				}).toList()));
