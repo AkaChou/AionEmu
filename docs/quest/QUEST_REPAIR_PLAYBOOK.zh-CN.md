@@ -434,6 +434,17 @@ python3 scripts/quest/generate_quest_dialog_enums.py --check
 - 复用边界：仅适用于任务完成本身代表高阶守护者晋升，且必须原子持久化身份标记、最低经验和任务完成状态的任务。普通经验奖励、普通等级奖励或仅更新客户端等级显示的任务不得复用该动作；晋升动作必须与恰好一个 `complete-quest` 和 `COMPLETE` 投影绑定。
 - commit：`7cd670ffb22ddd080b550f6100b09932efe2c7d8`。
 
+### 8.6 状态变化后先发页面、后同步任务状态
+
+- 代表任务：1573「Some Tasty Mushrooms」。1607、2392、2533、10032、24153 为同一协议顺序问题，不重复建立案例。
+- 玩家可见症状：一次交互已经把任务推进到奖励或新进度，但服务端先发送新页面、后发送新任务状态；客户端可能用旧 `status/step` 解释新页面，表现为成功页、奖励页或物品确认页与任务进度不同步，或需要重复交互。协议回环可稳定观察到错误的 `SM_DIALOG_WINDOW -> SM_QUEST_ACTION` 顺序。
+- 根因：这些 transition 的事务状态和物品动作本身正确，`after-commit` 却把 `SHOW_QUEST_PAGE` 声明在 `sync-quest-state` 之前。两者都在 commit 后执行不代表顺序可以交换；页面消费的是刚提交的状态，必须先让客户端收到对应的 `SM_QUEST_ACTION`。
+- 修复层：仅调整六个任务 XML 的 `after-commit` 顺序为 `sync-quest-state -> SHOW_QUEST_PAGE`，不改变 source、target、条件、priority、事务动作、页面 ID 或奖励。`QuestPacketOrderRegressionTest` 同时锁定完整 IR 合同，并通过真实 `CM_DIALOG_SELECT -> QuestEngine -> QuestProductionDispatcher -> SM_QUEST_ACTION/SM_DIALOG_WINDOW` 回环校验 objectId、questId 和包顺序。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/1573.xml`、`1607.xml`、`2392.xml`、`2533.xml`、`10032.xml`、`24153.xml`，以及 `src/test/java/com/aionemu/gameserver/questEngine/definition/QuestPacketOrderRegressionTest.java`。
+- 验证命令和结果：`rtk mvn -q -Dtest=QuestPacketOrderRegressionTest test` 为 7/7 通过；`rtk mvn -q -Dtest=QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,QuestE2eInfrastructureTest test` 通过，生产 catalog 6200 条编译成功、失败 0、白名单违规 0，通用 E2E infrastructure 为 37/37 通过。Aion 5.8 客户端资源确认六个任务引用的成功页、奖励页、报告页和物品确认页存在且 action 可继续；全量 E2E 快照中 `INVALID_PACKET_ORDER=0`。本案例的客户端验收来自资源与真实协议包回环，不声称已逐任务完成人工客户端点击。
+- 复用边界：仅适用于同一次已提交状态变化后立即显示依赖新状态页面的 transition。事务内状态或物品动作仍保持原顺序；没有状态同步、页面必须展示旧状态、关闭/电影/传送等副作用合同不同，或客户端页面本身不存在时，不能只交换两行掩盖根因。任何 `sync -> page` 修复都必须同时证明页面/action 存在、目标 objectId 权威、questId 正确且 commit 失败时两种包都不会发送。
+- commit：`6a77337dbfd8cfec60f9daeb1125e51b976d56a3`。
+
 ## 9. 提交和交接清单
 
 ### 9.1 验收状态和代表案例门禁
