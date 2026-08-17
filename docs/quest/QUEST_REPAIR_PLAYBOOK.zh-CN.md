@@ -410,23 +410,51 @@ python3 scripts/quest/generate_quest_dialog_enums.py --check
 
 ## 9. 提交和交接清单
 
-修复完成后按顺序执行：
+### 9.1 验收状态和代表案例门禁
+
+任何 focused test、生产 catalog/whitelist、客户端实测或 runtime 证据到达后，之前的 `pending acceptance` 或案例去重判断立即失效。每次验收状态变化后，以及任何任务修复执行 `git add` 前，都必须重新完成以下检查：
+
+- [ ] 当前是“实现完成，待验收”还是“验收完成”？缺少的证据及负责人是否已列出？
+- [ ] 是否按玩家症状、根因、修复层、修复合同四项与第 8 节已有案例逐一比较？
+- [ ] 判断结果是否明确记录为 `PENDING`、`ACCEPTED_EXISTING_PATTERN` 或 `ACCEPTED_NEW_PATTERN`？
+- [ ] 若为 `ACCEPTED_EXISTING_PATTERN`，是否指出复用的代表案例，且没有重复追加任务 ID？
+- [ ] 若为 `ACCEPTED_NEW_PATTERN`，Playbook 是否已准备记录代表任务、症状、根因、修复层、修改文件、验证结果、复用边界和稳定的修复 commit？
+
+`PENDING` 可以在用户明确要求时提交实现，但不得添加代表案例或报告“验收完成”；最后一项证据到达后，必须在下一次提交/完整交接前重新运行本门禁。`ACCEPTED_NEW_PATTERN` 必须继续执行 9.2 的两提交批次，不能直接做单个源码提交后结束交付。
+
+### 9.2 稳定哈希的两提交批次
+
+新代表案例使用两个连续的本地提交。第一提交只包含修复源码、数据和测试；取得稳定哈希后写入 Playbook，第二提交只包含 Playbook。两者共同构成同一交付批次：中间不得夹入无关提交、push，或发送“验收完成”的最终交接。
+
+先提交修复：
 
 ```bash
 git diff --check
 git status --short
 git diff --stat
+git add -- path/to/changed-quest.xml path/to/regression-test.java
+git diff --cached --name-status
+git diff --cached --check
+git diff --cached --stat
+git commit -m "fix(quest): describe repaired behavior"
+git rev-parse HEAD
 ```
 
-只暂存本次文件。`docs/*` 默认被忽略，提交本文档时要显式指定：
+将上一步稳定哈希写入第 8 节代表案例后，再单独提交 Playbook。不要把文档 amend 进它所记录的修复提交，否则 commit 哈希变化后会形成失效的自引用：
 
 ```bash
 git add -f docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md
+git diff --cached --name-status
 git diff --cached --check
 git diff --cached --stat
-git commit -m "docs(quest): add quest repair playbook"
+git commit -m "docs(quest): record representative repair"
+git log -2 --oneline
 git status --short
 ```
+
+如果实现是在 `PENDING` 状态下先提交，最终客户端/runtime 证据稍后才到达，保留原修复 commit 的稳定哈希，并把 Playbook 作为验收完成后的第一个提交；验收等待期间若已有其他历史，不为追求拓扑相邻而重写。只有修复提交、Playbook 提交及其验收结果都交接后，才算新代表案例交付完成。
+
+### 9.3 交接内容
 
 交接报告至少包含：
 
@@ -458,7 +486,8 @@ commit：
 5. 只做最小修复；不要用候选 XML 或通用 page 猜值，不要删除必要的 visibility refresh。
 6. 同时增加能证明完整行为合同的回归测试；涉及共享逻辑时增加生产目录级审计。
 7. 仅在用户明确要求运行构建或测试时，串行执行 focused tests、生产 catalog/whitelist，必要时 clean verify；否则列出未执行的验收项。可执行不触发构建的 diff 检查。
-8. 仅在用户明确要求提交时，暂存本次路径并本地提交；未经明确要求不 push。
+8. 每次验收证据变化后以及提交前，重新执行 Playbook 代表案例门禁；旧的 `pending acceptance` 或去重判断不得沿用。
+9. 仅在用户明确要求提交时，暂存本次路径并本地提交；若形成新代表案例，按“修复 commit -> 引用其稳定哈希的 Playbook commit”连续提交，期间不得夹入无关提交或 push。
 
 最终报告必须列出：根因证据、改动、测试命令和结果、残余风险、commit hash。
 ```

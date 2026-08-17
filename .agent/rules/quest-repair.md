@@ -39,7 +39,11 @@ Before working on a quest issue, read:
 6. Treat a subsequent quest as the same problem only when its player-visible symptom, root cause, repair layer, and repair contract all match an existing case. Do not add that quest ID, update the case body, or create a duplicate case. Create a new case only when the problem or repair pattern differs materially.
 7. Do not add a representative case for work in progress, partial repairs, failed tests, static inference only, or a quest that remains `EVIDENCE_REQUIRED`.
 8. When one shared change affects multiple quests, accept each quest independently, but keep only one representative case for the reusable pattern.
-9. When a repair establishes a new representative case, deliver the repair and its playbook update in the same batch. Because `docs/*` is ignored, add the playbook with an explicit path when committing it:
+9. Re-run the Playbook eligibility decision whenever acceptance evidence changes and immediately before staging a quest repair. Compare the player-visible symptom, root cause, repair layer, and repair contract with existing cases. A previous `pending acceptance` or deduplication decision expires when focused tests, catalog/whitelist checks, client validation, or runtime evidence changes the acceptance state.
+10. When an already accepted repair establishes a new representative case, use two consecutive local commits so the Playbook can reference a stable repair hash: first commit only the repair sources/tests, then update and commit the Playbook with that repair commit hash. Do not amend the Playbook into a commit whose hash it records.
+11. If the repair was committed while still pending acceptance, preserve its stable hash and make the Playbook follow-up the first commit after the final acceptance evidence arrives. Do not rewrite unrelated history that accumulated while acceptance was pending.
+12. In either sequence, once the case is accepted, do not insert an unrelated commit, push, or issue an acceptance-complete handoff before the Playbook commit. The repair and Playbook commits form one completed delivery batch even when acceptance was obtained later.
+13. Because `docs/*` is ignored, add the Playbook with an explicit path in the documentation commit:
 
    ```bash
    git add -f docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md
