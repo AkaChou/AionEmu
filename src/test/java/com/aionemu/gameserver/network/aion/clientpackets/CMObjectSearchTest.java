@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -16,6 +17,8 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSearchResult;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import com.aionemu.gameserver.questEngine.model.QuestState;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 class CMObjectSearchTest {
 
@@ -58,6 +61,31 @@ class CMObjectSearchTest {
 
 		assertNull(result.location());
 		assertSame(livingNpc, result.npc());
+	}
+
+	@Test
+	void resolvesTheQuestAcestesAliasAtTheFirstAndReportStages() {
+		assertEquals(802051, CM_OBJECT_SEARCH.resolveQuestSearchNpcId(204652,
+			questState(14047, QuestStatus.START, 3)));
+		assertEquals(802051, CM_OBJECT_SEARCH.resolveQuestSearchNpcId(204652,
+			questState(14047, QuestStatus.START, 6)));
+	}
+
+	@Test
+	void keepsTheLegacyAcestesIdOutsideTheQuestStages() {
+		assertEquals(204652, CM_OBJECT_SEARCH.resolveQuestSearchNpcId(204652,
+			questState(14047, QuestStatus.START, 4)));
+		assertEquals(204652, CM_OBJECT_SEARCH.resolveQuestSearchNpcId(204652,
+			questState(2696, QuestStatus.START, 0)));
+		assertEquals(204652, CM_OBJECT_SEARCH.resolveQuestSearchNpcId(204652,
+			questState(14047, QuestStatus.COMPLETE, 3)));
+		assertEquals(204652, CM_OBJECT_SEARCH.resolveQuestSearchNpcId(204652, null));
+		assertEquals(802051, CM_OBJECT_SEARCH.resolveQuestSearchNpcId(802051,
+			questState(14047, QuestStatus.START, 3)));
+	}
+
+	private static QuestState questState(int questId, QuestStatus status, int questVar0) {
+		return new QuestState(questId, status, questVar0, 0, null, null, null);
 	}
 
 	private static SpawnSearchResult location(float x) {

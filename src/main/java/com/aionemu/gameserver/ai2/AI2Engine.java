@@ -38,11 +38,11 @@ public class AI2Engine implements GameEngine {
 	private static volatile ObjectProvider<AI2Engine> instanceProvider;
 	private final Map<String, Class<? extends AbstractAI>> aiMap = new HashMap<String, Class<? extends AbstractAI>>();
 	/**
-	 * 这些自定义 AI 的生命周期副作用会生成可被任务引用的 NPC；零售 pattern 没有等价生成动作时，必须保留脚本 AI。
-	 * Quest-referenced lifecycle spawns owned by these scripted AIs must not be bypassed by an incomplete retail pattern.
+	 * 这些自定义 AI 的生命周期或战斗阶段副作用会生成可被任务引用的 NPC；零售 pattern 没有等价生成动作时，必须保留脚本 AI。
+	 * Quest-referenced lifecycle or combat-phase spawns owned by these scripted AIs must not be bypassed by an incomplete retail pattern.
 	 */
 	private static final Set<String> QUEST_SIDE_EFFECT_AI = Set.of(
-		"Mechaturerk", "anikiki", "bighorn_wendigo", "blood_fungus_skinwalker",
+		"Mechaturerk", "anikiki", "betrayer_icaronix", "bighorn_wendigo", "blood_fungus_skinwalker",
 		"colossal_forest_flavia", "coral_corask", "crimson_crested_slink", "devious_manduri_beacon",
 		"dynamic_iluma_monster", "dynamic_norsvold_monster", "forest_of_life_brohum_changeling",
 		"frostgullet_kirrin", "frosty_petrahulk", "gatorback_skilex", "giant_razorback_frillneck",

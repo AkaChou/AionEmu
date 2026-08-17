@@ -32,7 +32,7 @@ class AI2EngineRetailSelectionTest {
 			assertEquals("quest_start_use_item", AI2Engine.selectNpcAi("quest_start_use_item", 700004, null));
 			assertEquals("empyrean_blessing", AI2Engine.selectNpcAi("empyrean_blessing", 883959, null));
 			for (String ai : List.of(
-				"Mechaturerk", "anikiki", "bighorn_wendigo", "blood_fungus_skinwalker",
+				"Mechaturerk", "anikiki", "betrayer_icaronix", "bighorn_wendigo", "blood_fungus_skinwalker",
 				"colossal_forest_flavia", "coral_corask", "crimson_crested_slink", "devious_manduri_beacon",
 				"dynamic_iluma_monster", "dynamic_norsvold_monster", "forest_of_life_brohum_changeling",
 				"frostgullet_kirrin", "frosty_petrahulk", "gatorback_skilex", "giant_razorback_frillneck",

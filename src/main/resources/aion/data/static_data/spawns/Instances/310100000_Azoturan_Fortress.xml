@@ -297,8 +297,5 @@
     <spawn npc_id="214801">
       <spot x="494.241028" y="372.229279" z="1021.344971" h="36" resolve_z="true"/>
     </spawn>
-    <spawn npc_id="204653" respawn_time="900">
-      <spot x="584.746399" y="508.813904" z="1188.181030" h="70" resolve_z="true"/>
-    </spawn>
   </spawn_map>
 </spawns>

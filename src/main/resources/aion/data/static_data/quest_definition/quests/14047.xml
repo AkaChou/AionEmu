@@ -189,9 +189,9 @@
         <set-variable field="var0" value="4"/>
       </actions>
       <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
         <flight-teleport flight-teleport-id="71001"/>
-        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
     <transition source="s6" target="s6">
@@ -225,7 +225,7 @@
         <dialog type="TALK_TO_NPC" npc-id="802051" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-dialog-window dialog-id="10009"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="s1" target="s1">
@@ -233,7 +233,7 @@
         <dialog type="TALK_TO_NPC" npc-id="802051" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-dialog-window dialog-id="10009"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="s2" target="s2">
@@ -241,7 +241,7 @@
         <dialog type="TALK_TO_NPC" npc-id="802051" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-dialog-window dialog-id="10009"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="s4" target="s4">
@@ -249,7 +249,7 @@
         <dialog type="TALK_TO_NPC" npc-id="802051" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-dialog-window dialog-id="10009"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="s5" target="s5">
@@ -257,7 +257,7 @@
         <dialog type="TALK_TO_NPC" npc-id="802051" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-dialog-window dialog-id="10009"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="s4" target="s4">
@@ -280,6 +280,7 @@
       </conditions>
       <after-commit>
         <play-movie movie-id="421"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
       </after-commit>
     </transition>
     <transition source="s4" target="s5">
@@ -293,8 +294,24 @@
         <set-variable field="var0" value="5"/>
       </actions>
       <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
         <flight-teleport flight-teleport-id="72001"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s3">
+      <event>
+        <enter-world/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s3">
+      <event>
+        <enter-world/>
+      </event>
+      <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
@@ -303,7 +320,7 @@
         <dialog type="TALK_TO_NPC" npc-id="802052" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-dialog-window dialog-id="10010"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="s1" target="s1">
@@ -311,7 +328,7 @@
         <dialog type="TALK_TO_NPC" npc-id="802052" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-dialog-window dialog-id="10010"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="s2" target="s2">
@@ -319,7 +336,7 @@
         <dialog type="TALK_TO_NPC" npc-id="802052" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-dialog-window dialog-id="10010"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="s3" target="s3">
@@ -327,7 +344,7 @@
         <dialog type="TALK_TO_NPC" npc-id="802052" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-dialog-window dialog-id="10010"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="s5" target="s5">
@@ -335,7 +352,7 @@
         <dialog type="TALK_TO_NPC" npc-id="802052" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-dialog-window dialog-id="10010"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="s6" target="s6">
@@ -343,7 +360,7 @@
         <dialog type="TALK_TO_NPC" npc-id="802052" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-dialog-window dialog-id="10010"/>
+        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
@@ -397,8 +414,8 @@
         <set-variable field="var0" value="6"/>
       </actions>
       <after-commit>
-        <play-movie movie-id="422"/>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <play-movie movie-id="422"/>
       </after-commit>
     </transition>
     <transition source="s6" target="s6">
@@ -414,7 +431,7 @@
         <dialog type="TALK_TO_NPC" npc-id="278500" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="278500" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
@@ -428,33 +445,33 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="s1" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203704" action="SELECT2_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="798154" action="SELECT2_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="s2" target="s2">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203704" action="SELECT3_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="204574" action="SELECT3_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="s3" target="s3">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203704" action="SELECT4_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="802051" action="SELECT4_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="s6" target="s6">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203704" action="SELECT7_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="802051" action="SELECT7_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT7_1"/>
