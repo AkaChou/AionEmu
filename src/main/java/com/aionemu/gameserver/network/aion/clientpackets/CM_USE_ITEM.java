@@ -5,6 +5,7 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import java.util.ArrayList;
 
 import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.HouseObject;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -65,12 +66,22 @@ public class CM_USE_ITEM extends AionClientPacket {
 		 * 5.0 物品使用取消系统 / 5.0 ITEM_USE Cancel System
 		 */
 		if (type == 0) {
-			player.getController().cancelUseItem();
+			// Aion 5.8 客户端也会以 type 0 发起独立物品使用；
+			// 只有存在活动物品动作时才解释为取消。
+			// The Aion 5.8 client also starts standalone items with type 0; treat it as cancellation only while
+			// an item action is active.
 			Skill castingSkill = player.getCastingSkill();
-			if (castingSkill != null && castingSkill.getSkillMethod() == SkillMethod.ITEM) {
+			boolean hasScheduledItemUse = player.getController().hasTask(TaskId.ITEM_USE);
+			boolean hasItemSkillCast = castingSkill != null && castingSkill.getSkillMethod() == SkillMethod.ITEM;
+			if (hasScheduledItemUse) {
+				player.getController().cancelUseItem();
+			}
+			if (hasItemSkillCast) {
 				player.getController().cancelCurrentSkill(castingSkill);
 			}
-			return;
+			if (hasScheduledItemUse || hasItemSkillCast) {
+				return;
+			}
 		}
 		if (player.isProtectionActive()) {
 			player.getController().stopProtectionActiveTask();
