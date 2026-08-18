@@ -8,6 +8,9 @@
 
 - [任务 XML 编写指南](WRITING_GUIDE.zh-CN.md)：XML 状态图、领域积木和字段顺序。
 - [客户端任务对话映射说明](client-dialog-mapping/README.zh-CN.md)：客户端 HTML、页面、动作和旧模板合同。
+- [Pattern 指纹与提交索引](repair-playbook/PATTERNS.zh-CN.md)：可检索故障指纹、第一检查点和具体代表测试方法。
+- [已验收代表案例](repair-playbook/CASES.zh-CN.md)：完整症状、根因、修复层、验证结果和复用边界。
+- [客户端与运行时验收记录模板](../../.agent/summary/quest-acceptance/README.zh-CN.md)：人工验收证据字段和附件哈希要求。
 - [任务 XML 紧凑语法迁移规范](../QUEST_XML_COMPACT_MIGRATION_PLAN.zh-CN.md)：迁移时的 IR 等价、脏工作树和全量门禁。
 
 ## 1. Agent 合同
@@ -19,7 +22,7 @@
 3. 事件、条件、事务动作和 `after-commit` 副作用职责分离。状态推进正确但页面、关闭、生成 NPC 或跟随动作缺失，仍然是未完成的修复。
 4. 保留用户已有的脏工作区改动。禁止 `git reset --hard`、`git checkout --`、`git restore`、覆盖整文件或无范围的批量替换。
 5. 项目命令使用标准系统入口；Maven/Javac writer 串行运行。不要让多个 agent 同时执行 Maven 或清理 `target`。
-6. “提交”默认是本地 commit，不是 push。只暂存本次修改的明确路径。
+6. “提交”默认是本地 commit，不是 push。只暂存本次修改的明确路径。用户明确表示当前任务“客户端验证通过”“客户端验证完成”“客户端验收通过”或“客户端验收完成”时，该回复同时构成本任务修复的本地提交授权，不再等待额外的“提交”指令。
 
 ## 2. 运行链和故障边界
 
@@ -92,6 +95,8 @@ log:         同一时间窗口的 WARN/ERROR，以及发送前后的任务日�
 | 护送 NPC 不动、跟错 NPC、离玩家很远才追 | 对话时的 interaction object、follow action、跟随距离判断 | 重新生成同模板 NPC、跟随 slot 不对应交互对象，或 follow state 使用 15m 容差 | `Quest1149ClientDialogAlignmentTest`、`FollowManagerTest` |
 | 交互物/物品点击没有页面 | client action、`can-act`、`QuestItemNpcAI2` 的 fallback | 只允许 `ACTION_ITEM_USE`，但任务实际注册的是 talk/start 路由；或只尝试错误 dialog | `QuestItemNpcAI2Test`、对应任务 XML 回归测试 |
 | 对话下一页明显卡顿 | 一次请求产生的状态同步、页面和依赖重评估次数 | refresh amplification、重复遍历全部任务、重复发送相同页面 | `QuestDependencyIndexTest`、`QuestExecutionCoordinatorTest`、`QuestProductionDispatcherTest`；结合包/日志计数 |
+| 中间 NPC 点击“结束对话”后 load fail、不能继续或跑到错误 NPC 领奖 | 当前状态下各 NPC 的 start/report/complete owner，以及完整 page/action 链 | 通用迁移把多个 NPC 都展开成接取、报告和领奖 owner，丢失中间交付与最终领奖的独占归属 | Pattern 索引中的 `MULTI_NPC_HANDOFF_REWARD_OWNER`、`598deb98f` 和 `Quest1163ClientDialogAlignmentTest#followsTheRetailPotionHandoffAndRewardOwner` |
+| 电影结束后仍显示原按钮，再次点击重复播放电影 | 触发电影的 transition 在 `play-movie` 后是否显示后续页、关闭窗口或推进状态 | 电影 self-loop 只有播放副作用，没有给客户端新的响应合同 | Pattern 索引中的 `MOVIE_CONTINUATION_RESPONSE`、`8b058d4b4` 和 `Quest14047ClientDialogAlignmentTest#returnsFromMovie421ToTheStep11PageAndThenAdvancesToStep5` |
 | 页面编号或按钮不对 | 客户端 HTML/CSV、旧 handler 的页面顺序 | 把不同任务的 page/action 当成通用模板 | `QuestDialogOrderAuditTest`、任务专用 alignment test |
 | 任务头顶标记没有出现 | `SM_NEARBY_QUESTS` 是否包含任务，客户端设置和数据包 | 服务端已正确发送，但 `show_acquirable_normal_quest` 关闭或客户端资源异常 | 先证明服务端包，再检查客户端设置/数据包 |
 
@@ -108,7 +113,35 @@ git diff --stat
 
 记录当前分支和 dirty 文件。若任务 XML 或相关 Java 已被用户修改，先读 diff，后续只能在其基础上工作。不要为了让工具通过而隐藏、提交或丢弃这些改动。
 
-### 5.2 阶段 1：找到生产 owner 和实际路由
+### 5.2 阶段 1：先匹配 Playbook 模式指纹
+
+设计修复前，必须先用玩家症状和当前 IR 合同匹配
+[Pattern 指纹与提交索引](repair-playbook/PATTERNS.zh-CN.md)。不能只按任务 ID 或 NPC ID 搜索，也不能只扫一行案例标题。至少比较以下四类特征：
+
+1. 症状关键词：load fail、重复电影、第一次点击无响应、中间 NPC 卡住、错误 NPC 领奖等。
+2. IR 指纹：`source/status/vars + event/action + target + after-commit`。
+3. owner 形状：接取、交付、报告和领奖分别由哪个 NPC 或交互物独占。
+4. 副作用合同：物品 give/has/remove、sync/page/close、电影、传送、生成和跟随的完整顺序。
+
+找到候选模式后，必须读取代表提交的完整 diff 和代表测试，不能只引用 Playbook 摘要：
+
+```bash
+git show --stat <representative-commit>
+git show --no-ext-diff <representative-commit> -- <quest-xml> <representative-test>
+```
+
+开始编辑前记录一次匹配结论：
+
+```text
+pattern:    <pattern-id 或 NONE>
+matched:    <症状 / IR / owner / 副作用中实际匹配的项>
+different:  <与代表案例不同、仍需重新取证的项>
+evidence:   <代表 commit 和 test，或新模式所需证据>
+```
+
+四类特征全部相同才属于已有模式；存在实质差异时仍要继续取证。没有完成这一步，不得用“类似某任务”代替合同分析。
+
+### 5.3 阶段 2：找到生产 owner 和实际路由
 
 已知任务 ID、NPC 或动作时直接精确搜索。以下 shell 命令仅为示例，可替换为当前 agent 和执行环境提供的等价搜索与读取能力：
 
@@ -129,7 +162,7 @@ rg -n '14112|203195|Poisonous_Bubblegut' src/main/java src/test/java
 
 不知道代码位置时，使用当前环境可用的语义、符号或结构化搜索定位一次；得到相关目录后改用精确搜索和符号附近的局部读取。不要反复对整个仓库做宽泛搜索。
 
-### 5.3 阶段 2：画出状态和协议合同
+### 5.4 阶段 3：画出状态和协议合同
 
 对失败动作至少写出一条完整合同：
 
@@ -150,7 +183,7 @@ source node/status/vars
 4. `after-commit` 是否有且只有客户端/世界需要的副作用；顺序通常是 `sync` 后再发页面，完成时使用正确的 `COMPLETION` 同步。
 5. 非 `TalkToNpc` 事件不要猜 dialog target；只有带权威 interaction object 的对话事件可以驱动对象相关副作用。
 
-### 5.4 阶段 3：交叉验证三类权威
+### 5.5 阶段 4：交叉验证三类权威
 
 **当前 XML/编译 IR**
 
@@ -179,7 +212,7 @@ Aion 5.8 客户端是客户端页面、动作、字典和数据包的权威来�
 
 客户端页面只证明客户端可见合同，不能单独证明服务端状态和奖励副作用；服务端 IR 也不能单独证明页面按钮真的可达。
 
-### 5.5 阶段 4：选择最小修复层
+### 5.6 阶段 5：选择最小修复层
 
 - **单个任务的页面/状态错配**：优先修 XML transition，并新增任务专用回归测试。
 - **多个任务共享同一协议缺陷**：修 dispatcher/after-commit/runtime，再增加生产目录级审计测试。
@@ -187,7 +220,7 @@ Aion 5.8 客户端是客户端页面、动作、字典和数据包的权威来�
 - **数据包/客户端字典问题**：修生成/打包流程或客户端资源；不要用服务器 XML 掩盖客户端资源错误。
 - **静态数据缺失**：确认调用路径确实使用静态 spawn 后再补配置；玩家位置生成、任务 slot 生成和地图静态生成是不同机制。
 
-### 5.6 阶段 5：修复后立即添加回归
+### 5.7 阶段 6：修复后立即添加回归
 
 测试至少锁定以下合同：
 
@@ -297,7 +330,7 @@ Aion 5.8 客户端是客户端页面、动作、字典和数据包的权威来�
 
 ## 7. 验证门禁
 
-以下 Maven、Javac、测试和脚本命令仅在用户明确授权后执行；未获授权时只记录待执行验收项。不会触发构建的 `git diff --check`、状态和 diff 检查可直接执行。
+以下 Maven、Javac、测试和脚本命令仅在用户明确授权后执行；未获授权时只记录待执行验收项，并保持“实现完成，待验收”，不得请用户进入客户端复测。不会触发构建的 `git diff --check`、状态和 diff 检查可直接执行。
 
 ### 7.1 先跑 focused tests
 
@@ -329,6 +362,9 @@ git diff --stat
 - `PRODUCTION_COMPILE_FAILURES=0`；
 - `PRODUCTION_WHITELIST_VIOLATIONS=0`；
 - 没有 XML 编译异常、路径重复或 ambiguous transition；
+- 展开后的 IR 不存在同一 source/NPC/action 下 `NPC_REPORT` 与 `npc-complete` preview 重叠；
+- `play-movie` self-loop 后存在由客户端和旧 handler 证明的后续页面、关闭响应或状态推进；
+- 多 NPC 任务的接取、交付、报告和领奖 owner 没有被通用 block 重复展开；
 - 没有将无关 dirty 文件带入 diff。
 
 如果需要最终全量证明，确认无 Maven/Javac 后串行执行：
@@ -339,7 +375,28 @@ mvn clean verify
 
 增量构建出现匿名类、内部类或 `NoClassDefFoundError` 时，先确认没有并发 writer，再做一次串行 clean verify；不要用被并发构建污染的 `target/classes` 启动服务器。
 
-### 7.3 客户端映射和顺序审计
+### 7.3 客户端复测前编译和启动健康门禁
+
+任何任务 XML 修改在交给用户做客户端复测前，必须同时满足：
+
+1. 任务专用 focused test 直接调用 `QuestDefinitionXmlCompiler`，并锁定修改路径的完整 IR 合同。
+2. `QuestDefinitionCatalogManifestTest` 和 `ProductionCatalogWhitelistVerificationTest` 通过，确认 production catalog 全量可编译且 owner 合法。
+3. XSD、枚举生成检查和 `git diff --check` 只能作为补充，不能替代上述编译门禁；它们发现不了 block 展开后的 `AMBIGUOUS_TRANSITION`。
+
+可按当前任务替换测试名后执行：
+
+```bash
+mvn -q -Dtest=Quest<id>RetailFlowAlignmentTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test
+```
+
+若用户没有授权运行构建，交接必须明确列出该命令并保持 `PENDING`，不能把客户端点击当作编译器。用户通过 IDEA 启动服务端时，agent 不代替用户启动、停止或重启进程，但客户端复测前必须确认启动日志满足以下健康条件：
+
+- typed quest engine 初始化完成；
+- 没有 `Can't initialize typed quest engine`、`QuestCompilationException`、`AMBIGUOUS_TRANSITION` 或 production catalog compile failure。
+
+只要出现上述任一错误，立即停止客户端页面、NPC 或状态层排查，先回到 XML 展开 IR 和 catalog 编译修复。此时客户端没有可用的 typed quest owner，继续点击不能提供有效的任务行为证据。
+
+### 7.4 客户端映射和顺序审计
 
 只有修改页面/动作合同或需要重新生成报告时才执行：
 
@@ -352,140 +409,58 @@ python3 scripts/quest/generate_quest_dialog_enums.py --check
 
 顺序审计应在测试编译完成后执行，命令和字段说明见 `client-dialog-mapping/README.zh-CN.md`。`EVIDENCE_REQUIRED` 不是“已修复”，不能为了清零报告而猜测 page/action。
 
-## 8. 近期修复提交索引
+### 7.5 Playbook 结构和引用自检
 
-下面的提交不是互相独立的技巧，而是一条从客户端证据到状态、协议、AI 和性能的排查链。新 agent 遇到相似症状时，先找对应案例，再读取完整 diff 和测试。
+修改 Pattern 指纹、提交索引或代表案例后必须运行：
 
-本节只按可复用的“问题模式”记录一个代表任务，目的是为后续修复提供证据和实现参考，不维护任务清单、验收名单或覆盖数量。后续任务与已有案例的症状、根因、修复层和修复合同相同时，不追加任务 ID、不修改案例正文，也不新增重复案例；问题或修复模式实质不同时才建立新案例。
+```bash
+python3 scripts/quest/check_quest_repair_playbook.py
+```
 
-| 提交 | 案例 | 可复用结论 |
-|---|---|---|
-| `8b058d4b4` | 14047 两段飞行传送、不可达副本恢复、伊卡罗尼斯变身和完整客户端链 | 状态必须先提交并同步再传送；飞行专属地点必须覆盖崩溃、断线和实例重建后的可重入恢复；血量阈值变身必须以幂等死亡路径覆盖直接秒杀；同名 NPC 的 GM 寻找传送只能按任务阶段限域 |
-| `4a23cf0a0` | 13830 实时奖励选择后点击领取无响应 | 无目标实时奖励使用 110..124 独立动作空间；任务 XML 必须注册实际可见槽位并保留完整完成合同 |
-| `906c08e92` | 24 个奖励选择路由首次点击无响应；37 个任务副作用 AI 被 retail pattern 覆盖 | 用生产目录审计捕获 `SELECT_QUEST_REWARD -> REWARD` 无响应；有生命周期任务副作用的 AI 必须有证据化 fallback 集合 |
-| `7a6ad8eca` | 14112 击杀剧毒斯拉希后生成 Kato、重登恢复、首次奖励对话 | 任务 NPC 生成、登录恢复、页面响应和旧 AI 清理必须作为同一任务合同验证 |
-| `c25db02d5` | 14112 下线后击杀进度回退 | 持久位域不能被登出/恢复流程写回 START；用专用测试锁定 logout/enter-world |
-| `598deb98f` | 1163 对话页面和状态时序对齐 | 页面 ID、动作顺序和状态迁移要结合客户端/旧 handler 验证，不能套通用 page |
-| `56009f7f5` | 1149 跟随与玩家对话的 Poppy，而非另一只同模板 NPC | 保留 interaction object 身份，使用 `start-follow-current-target-npc`，不要重复 spawn |
-| `de7e6ebe1` | 护送开始后 follower 不立即移动 | 进入 FOLLOWING 状态时立即启动移动，并用 FollowManager 测试证明 |
-| `138e5c57e` | 护送 NPC 超过 15 米才追、追到 15 米停 | 跟随容差属于 AI 状态判定；当前普通满血贴身距离为 3 米，必须测试边界而不是只改一个常量 |
-| `c02c8722e` | 1156 消失的村落印章 object flow | `USE_OBJECT`、`can-act`、中间变量和完成 NPC 必须按客户端动作链分段验证 |
-| `0786d4126` | 1158 村落印章对象交互 | object action 与 `QUEST_SELECT` 是两个 ID 空间，接取前不能开放 object route |
-| `9abdf9433` | 交互物 dialog fallback | action gate 失败不代表没有任务 talk/start 路由；按 `USE_OBJECT -> START_DIALOG` 顺序尝试 |
-| `5c7a2eb68` | 1157 Mimiti 到达目标后才继续 | 护送/诱导要用周期检查任务和 `NpcReachTarget`，不能在攻击事件里提前播放下一段电影 |
-| `a5e7fba5a` | 对话刷新放大导致卡顿 | 用依赖反向索引限制重评估；不要删除必要的状态可见性刷新 |
-| `1f4139b56` | 早期 Elyos 多个交互物任务 | 多任务共享协议缺陷应在 runtime/回归测试层修复，并保留各任务的页面/动作差异 |
-| `15a20225c` | 多 NPC 顺序报告流 | 先画完整 state/var 时序，再实现显式 route；不要将 report self-loop 和完成路由合并 |
-| `e5a25fd9b` | Belbua 酒桶交互 | 从客户端 object action 和接取状态证明 route，避免未接取时误触发任务副作用 |
-| `cc7aabea5` | 9550 装备事件物品后仍无法接取任务 | 元数据 `equipped` 起始条件必须下沉为正式 `EquippedItem` 条件并使用已捕获装备事实求值；装备事实未知时必须 fail closed |
-| `8769210fd` | 2008 魔族转职任务的客户端动作链整体错位 | 转职页面的稀疏 action ID、起始职业分支和进阶职业映射必须逐项取自客户端证据，不能按页面序号或职业顺序推导 |
+脚本聚合主 Playbook、Pattern 索引和代表案例文档，验证 Pattern ID 唯一、五列指纹完整、所有索引和详细案例的代表提交至少被一个 Pattern 覆盖、Git commit 可解析、代表测试类和方法存在，以及详细案例包含 Pattern ID、症状、根因、修复层、修改文件、验证结果、复用边界和 commit。该检查只验证 Playbook 的结构与引用闭环，不替代任务 focused test、production catalog/whitelist 或客户端/runtime 验收。
 
-### 8.1 升级自动登记弹出不存在的任务页
+## 8. 模式指纹与代表案例
 
-- 代表任务：38001「Radiant Ops Recruitment」。
-- 玩家症状：升级自动登记任务时客户端弹出任务 HTML 的 `HtmlPageId 4 / load fail`。
-- 根因：升级入口错误发送 `SHOW_ASK_QUEST_ACCEPT_WINDOW(4)`；NPC `START_DIALOG(31)` 又错误发送 Aion 5.8 客户端不存在的 `SELECT2(1352)`。旧 handler 的升级入口只启动任务并刷新状态，NPC 对话页为 `DEFAULT_SUCCESS(10002)`。
-- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/38001.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest38001LevelUpDialogTest.java`。
-- 验证命令和结果：`rtk mvn -q -Dtest=Quest38001LevelUpDialogTest,Quest38002LevelUpDialogTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,QuestDialogOrderAuditTest test` 通过；生产 catalog 6200 条编译成功，失败 0，白名单违规 0；顺序审计显示 38001 的 31 -> 10002 为 `PAGE_ACTION_MATCHED`，奖励页 5 为 `TERMINAL_PAGE_REACHED`；玩家实测升级登记不再弹出加载失败页。
-- 复用边界：仅适用于升级入口不应显示任务页，且 NPC `START_DIALOG(31)` 应显示 `DEFAULT_SUCCESS(10002)` 的同型任务；页面、状态或副作用合同不同的任务必须重新取证。
-- commit：`d3b28d2af3a7a3085da461d96bb9dfe6118d4905`。
+增长型证据已从主 Playbook 拆分，方法论、验证门禁和交付规则继续保留在本文档：
 
-### 8.2 升级自动登记与双 NPC 阶段对话链错配
+- [结构化 Pattern 指纹与提交索引](repair-playbook/PATTERNS.zh-CN.md)：用于按症状、IR / owner、第一检查点和具体测试方法检索。
+- [已验收代表案例](repair-playbook/CASES.zh-CN.md)：用于读取完整症状、根因、修复层、验证结果和复用边界。
 
-- 代表任务：1920「Testing Your Mettle」。
-- 玩家症状：升级自动登记任务时客户端弹出任务 HTML 的 `HtmlPageId 4 / load fail`；修复升级提示后，还必须保证第一个 NPC 的 `1011 -> 1012 -> 1013 -> 10000`、第二个 NPC 的 `1352 -> 1353 -> 10255` 和最终领奖页链可达。
-- 根因：升级入口错误发送 `SHOW_ASK_QUEST_ACCEPT_WINDOW(4)`；原 XML 将两个 NPC 的多阶段客户端动作压缩成通用 `FINISH_DIALOG`、`SELECT_QUEST` 和错误的奖励入口，丢失了 `var0=1` 中间状态以及客户端页面/动作顺序。旧 handler 与 Aion 5.8 客户端页面证据共同证明：第一个 NPC 完成第一段后关闭对话，第二个 NPC 才能进入成功状态，最终只由第一个 NPC 领奖。
-- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/1920.xml`、`src/main/resources/aion/data/static_data/quest_definition/quests/2945.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1920And2945ClientDialogAlignmentTest.java`。
-- 验证命令和结果：`rtk mvn -q -Dtest=Quest1920And2945ClientDialogAlignmentTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,QuestDialogOrderAuditTest test` 通过；生产 catalog 6200 条编译成功，失败 0，白名单违规 0；两个 XML 均通过 XSD；客户端实测升级登记及双 NPC 对话流程通过。
-- 复用边界：仅适用于升级入口不应显示 page 4，且任务存在由客户端页面动作驱动的双 NPC 或多阶段状态链的同型任务；单 NPC `DEFAULT_SUCCESS(10002)` 合同复用 8.1，页面、状态或奖励归属不同的任务必须重新取证。
-- commit：`76b0894`。
-
-### 8.3 实时奖励确认使用独立动作导致领取无响应
-
-- 代表任务：13830「Stigma 101」。同批修复的 13831..13834 共享同一问题模式，不重复建案例。
-- 玩家症状：任务进入实时奖励界面并可选择职业奖励，但点击“领取”没有反应，任务不完成、奖励不到背包、界面也不关闭。
-- 根因：Aion 5.8 客户端对第一个普通奖励槽发送 `HACTION_SELECTED_QUEST_REWARD1(8)`，对第一个实时奖励槽发送 `HACTION_SELECTED_QUEST_AUTO_REWARD1(110)`。无目标 `CM_DIALOG_SELECT` 会把原始 action 交给 typed dispatcher，后者按 `QuestEvent.QuestDialog(110)` 查询生产索引；原 XML 只有普通奖励动作 8 的完成路由，因此实时奖励确认没有候选迁移。旧 `finishReportedQuest` 将 110..124 映射到普通奖励槽 8..22，且正式任务数据将这五个任务标记为 `can_report=true`，共同证明两个动作空间应落到等价的奖励完成合同。
-- 修复层：任务 XML + 由客户端字典和活动 XML 引用生成的 typed dialog action 枚举。五个任务的 11 个互斥职业分支同时注册普通动作 8 和实际可见的实时动作 110；事务内发放职业物品与经验、回收工作物品并完成任务，提交后按 `refresh-player-stats -> COMPLETION sync -> close-dialog` 执行。不在共享 runtime 中全局重写动作。
-- 修改文件：`src/main/java/com/aionemu/gameserver/questEngine/definition/QuestDialogAction.java`、`src/main/resources/aion/data/static_data/quest_definition/quests/13830.xml`、`13831.xml`、`13832.xml`、`13833.xml`、`13834.xml`，以及 `src/test/java/com/aionemu/gameserver/questEngine/definition/Quest13830To13834TargetlessRewardTest.java`。
-- 验证命令和结果：`rtk mvn -Dtest=Quest13830To13834TargetlessRewardTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test` 通过，共 8 个测试，失败 0、错误 0、跳过 0；五个 XML 均通过 XSD；`rtk python3 scripts/quest/generate_quest_dialog_enums.py --check` 返回 `changed=0`；Aion 5.8 客户端实测实时奖励可领取并正常完成任务。
-- 复用边界：仅适用于权威数据允许实时报告、无目标奖励包确实发送 110..124，且普通与实时槽位应共享奖励完成语义的任务。必须按客户端实际可见槽位逐一映射：单一职业奖励通常只需 110；多槽奖励要分别证明 111..124 与奖励索引。动作 108、NPC 目标领奖、不同奖励索引、额外页面或副作用合同必须单独取证，不能套用本案例或做全局 remap。
-- commit：`4a23cf0a0f531182e195bfa0f662513da50d170a`。
-
-### 8.4 两段飞行传送、不可达副本恢复与血量阈值变身兜底
-
-- 代表任务：14047「Chaining Memories」。
-- 玩家症状：佩托 802052 的电影 421 会重复播放，任务页面不能继续；同一位置同时出现任务佩托 802052 和普通佩托 204653。任务先通过飞行 71001 到达第一处玩家无法自行返回的副本区域，再通过飞行 72001 进入下一处区域；如果客户端崩溃、断线，或服务端重启导致副本实例重建，持久化的 `s4/s5` 会把玩家留在无法重新执行任务动作的位置。GM 点击“寻找”还会因同名模板传送到普通阿凯斯泰斯 204652，而不是任务 NPC 802051。最后战斗中入口形态 233877 不会可靠生成任务监听的最终形态 214599，直接秒杀还会跳过 75% 血量检查；即使击杀推进，278500 奖励对话也会因服务端发送不存在的 `HtmlPageId 10002` 显示 load fail。
-- 根因：电影 421 后缺少客户端实际存在的 `SELECT5_1(2376)` 页面，且把 `SETPRO10/SETPRO11(10009/10010)` action ID 当成页面 ID；副本静态数据重复生成普通佩托。原迁移先执行飞行副作用、后同步已提交状态，传送过程发生断线时客户端和任务进度可能不同步。`s4(var0=4)` 是飞行 71001 后的阶段，`s5(var0=5)` 是飞行 72001 后的阶段，两者都只能由前置飞行进入，却没有 `ENTER_WORLD` 恢复边；单纯回到上一个 `s4` 仍然无法从普通世界重新到达 802052。Aion 5.8 客户端寻找链接提交同名普通模板 204652，服务端没有结合任务阶段解析为 802051。副本静态出生 233877，而旧 handler 和任务合同只监听 214599；零售空 pattern 又绕过 `betrayer_icaronix` 脚本 AI，原阈值逻辑也没有死亡兜底。奖励预览最后把 `DEFAULT_SUCCESS(10002)` 当作 Q14047 页面发送，而旧 handler 的 `sendQuestEndDialog` 合同是奖励窗口 page 5。
-- 修复层：任务 XML 将两段飞行都固定为 `commit -> PACKET_ONLY sync -> close-dialog -> flight-teleport`，分别使用 71001 和 72001；电影 421 后返回 2376 页面，错误阶段点击明确关闭。`s4/s5` 在 `ENTER_WORLD` 统一回退到 `s3(var0=3)`，让玩家重新与 802051 对话并再次触发飞行 71001；不在 `LOG_OUT` 回退，避免正常登出和重登各执行一次，也不回退已经可继续的 `s6`、`REWARD` 或 `COMPLETE`。GM 寻找只在 Q14047 `START + var0=3/6` 时把 204652 限域解析为 802051。副本删除重复 204653，保留静态入口形态 233877；AI 选择保护 `betrayer_icaronix`，并用共享 `AtomicBoolean` 让 75% 阈值和 `handleDied()` 最多生成一次 214599。最终击杀只监听 214599，提交后按 `PACKET_ONLY sync -> movie 422` 推进；278500 的 `USE_OBJECT` 显示 `SHOW_SELECT_QUEST_REWARD_WINDOW1`。
-- 传送合同：`s3 + 802051 + SETPRO10 -> s4` 必须先同步 `var0=4` 再关闭窗口并执行 71001；`s4 + 802052 + SETPRO11 -> s5` 必须先同步 `var0=5` 再关闭窗口并执行 72001。传送是 commit 后副作用，事务失败时不得启动飞行，客户端也不能在旧任务状态下进入新区域。
-- 副本崩溃回退合同：无论玩家在 71001 后尚未完成 802052 对话，还是在 72001 后尚未击杀 214599，只要重新进入世界时仍为 `s4/s5`，都回到 `s3`。恢复目标不是机械地减一阶段，而是回到普通世界中仍可交互、且能重建整段副本路径的最近节点；该合同同时覆盖客户端崩溃重连、网络断线重登、服务端重启和副本实例丢失后的重新进入。
-- GM 寻找传送合同：客户端同名链接请求 204652 时，只有 GM 且 Q14047 为 `START + var0=3` 或 `START + var0=6` 才解析到任务 NPC 802051 并直接传送；其他任务、其他状态、其他阶段、空任务状态以及已经请求 802051 的情况均保持原 ID，不能全局改写同名 NPC。
-- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/14047.xml`、`src/main/resources/aion/data/static_data/spawns/Instances/310100000_Azoturan_Fortress.xml`、`src/main/java/com/aionemu/gameserver/ai/instance/azoturanFortress/Betrayer_IcaronixAI2.java`、`src/main/java/com/aionemu/gameserver/ai2/AI2Engine.java`、`src/main/java/com/aionemu/gameserver/network/aion/clientpackets/CM_OBJECT_SEARCH.java`，以及 `Betrayer_IcaronixAI2Test`、`AI2EngineRetailSelectionTest`、`CMObjectSearchTest`、`Quest14047ClientDialogAlignmentTest`。
-- 验证命令和结果：索引快照运行 `rtk mvn -q -Dtest=Quest14047ClientDialogAlignmentTest,Betrayer_IcaronixAI2Test,AI2EngineRetailSelectionTest,CMObjectSearchTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test` 通过；生产 catalog 6200 条编译成功，失败 0，白名单违规 0。全量 E2E 生成 396,797 条 transition、390,082 条 PASS，Q14047 为 58/58 PASS，`PAGE_NOT_IN_CLIENT`、`INVALID_PACKET_ORDER`、`STATE_CHANGED_WITHOUT_RESPONSE`、`AFTER_COMMIT_FAILURE`、`RUNTIME_REQUIRED`、`TRANSACTION_FAILURE` 均为 0。用户使用重新打包的服务端完成真实客户端端到端验收，确认页面、两段飞行、断线恢复、唯一佩托、214599 击杀、电影 422 和 278500 奖励完成流程均可继续。
-- 复用边界：传送前必须证明目标状态已经事务提交，状态同步、关闭窗口和飞行的先后顺序不能照搬旧 handler 中先改内存再发包的实现。只有后续阶段所在位置确实无法由玩家自行返回、实例重建也不能恢复交互对象，且旧 handler/客户端流程证明必须重新执行前置传送时，才能在 `ENTER_WORLD` 回退到最近的可重入阶段；普通持久进度不能借此清零，也不能把 `LOG_OUT` 和 `ENTER_WORLD` 同时作为回退入口。只有任务目标由入口形态的阈值变身生成时才添加死亡兜底，并必须用同一幂等门覆盖阈值和死亡竞争。GM 搜索别名必须同时限定任务 ID、状态和阶段，不得影响普通玩家地图标记或全局替换同名模板。页面 ID 与 action ID 仍是独立空间，每条电影后续页和奖励窗口都必须由 Aion 5.8 客户端与旧 handler 分别证明。
-- commit：`8b058d4b4de747d12df9e9af63617619d5eefcf5`。
-
-### 8.5 高阶守护者任务完成后未直接升到 66 级
-
-- 代表任务：10520「遗失的记忆」。20520「Lost Destiny」为同一合同的魔族任务，不重复建立案例。
-- 玩家症状：任务领奖后经验奖励和任务完成状态可以提交，但角色没有稳定地持久化高阶守护者身份，也不会在提交成功后立即升到 66 级；重试或重登还可能暴露数据库与在线角色状态不一致。
-- 根因：标准 `npc-complete` 只覆盖普通奖励结算，任务 XML 没有声明高阶守护者晋升；经验奖励本身受当前经验和 65 级上限影响，不能替代 `is_archdaeva` 持久化及在线角色升级。
-- 修复层：新增 `QuestAction.PromoteArchDaeva` 与 `promote-archdaeva` XML/XSD/DSL 合同；`PlayerQuestProgressionPort` 在奖励和任务状态相同的 JDBC 事务中执行 `GREATEST(exp, level-66-start-exp)` 与 `is_archdaeva=true`，提交后才调用在线角色 `setArchDaeva()`；事务快照同时恢复晋升标记。10520/20520 使用显式 `reward -> complete` 路由，顺序固定为经验奖励、晋升、完成任务，再刷新属性和完成状态。
-- 修改文件：`src/main/java/com/aionemu/gameserver/dao/PlayerDAO.java`、`src/main/java/com/aionemu/gameserver/dao/impl/PlayerDAO.java`、`src/main/java/com/aionemu/gameserver/model/gameobjects/player/PlayerCommonData.java`、`src/main/java/com/aionemu/gameserver/questEngine/definition/QuestAction.java`、`QuestDefinitionCompiler.java`、`QuestDefinitionXmlCompiler.java`、`QuestDsl.java`、`src/main/java/com/aionemu/gameserver/questEngine/runtime/CompositeQuestActionPort.java`、`PlayerQuestProgressionPort.java`、`QuestProgressionPort.java`、`QuestMutationPlanner.java`、`QuestRuntimeComposition.java`、`quest_definition.xsd`、`quests/10520.xml`、`quests/20520.xml`，以及对应晋升、事务顺序和快照回归测试。
-- 验证命令和结果：两个任务 XML 均通过 `xmllint --noout --schema .../quest_definition.xsd`；`git diff --check` 通过；生产 catalog/whitelist 报告为 6200 条任务编译成功、失败 0、白名单违规 0；用户确认真实客户端领奖后角色直接升到 66 级并完成验收。
-- 复用边界：仅适用于任务完成本身代表高阶守护者晋升，且必须原子持久化身份标记、最低经验和任务完成状态的任务。普通经验奖励、普通等级奖励或仅更新客户端等级显示的任务不得复用该动作；晋升动作必须与恰好一个 `complete-quest` 和 `COMPLETE` 投影绑定。
-- commit：`7cd670ffb22ddd080b550f6100b09932efe2c7d8`。
-
-### 8.6 状态变化后先发页面、后同步任务状态
-
-- 代表任务：1573「Some Tasty Mushrooms」。1607、2392、2533、10032、24153 为同一协议顺序问题，不重复建立案例。
-- 玩家可见症状：一次交互已经把任务推进到奖励或新进度，但服务端先发送新页面、后发送新任务状态；客户端可能用旧 `status/step` 解释新页面，表现为成功页、奖励页或物品确认页与任务进度不同步，或需要重复交互。协议回环可稳定观察到错误的 `SM_DIALOG_WINDOW -> SM_QUEST_ACTION` 顺序。
-- 根因：这些 transition 的事务状态和物品动作本身正确，`after-commit` 却把 `SHOW_QUEST_PAGE` 声明在 `sync-quest-state` 之前。两者都在 commit 后执行不代表顺序可以交换；页面消费的是刚提交的状态，必须先让客户端收到对应的 `SM_QUEST_ACTION`。
-- 修复层：仅调整六个任务 XML 的 `after-commit` 顺序为 `sync-quest-state -> SHOW_QUEST_PAGE`，不改变 source、target、条件、priority、事务动作、页面 ID 或奖励。`QuestPacketOrderRegressionTest` 同时锁定完整 IR 合同，并通过真实 `CM_DIALOG_SELECT -> QuestEngine -> QuestProductionDispatcher -> SM_QUEST_ACTION/SM_DIALOG_WINDOW` 回环校验 objectId、questId 和包顺序。
-- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/1573.xml`、`1607.xml`、`2392.xml`、`2533.xml`、`10032.xml`、`24153.xml`，以及 `src/test/java/com/aionemu/gameserver/questEngine/definition/QuestPacketOrderRegressionTest.java`。
-- 验证命令和结果：`rtk mvn -q -Dtest=QuestPacketOrderRegressionTest test` 为 7/7 通过；`rtk mvn -q -Dtest=QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,QuestE2eInfrastructureTest test` 通过，生产 catalog 6200 条编译成功、失败 0、白名单违规 0，通用 E2E infrastructure 为 37/37 通过。Aion 5.8 客户端资源确认六个任务引用的成功页、奖励页、报告页和物品确认页存在且 action 可继续；全量 E2E 快照中 `INVALID_PACKET_ORDER=0`。本案例的客户端验收来自资源与真实协议包回环，不声称已逐任务完成人工客户端点击。
-- 复用边界：仅适用于同一次已提交状态变化后立即显示依赖新状态页面的 transition。事务内状态或物品动作仍保持原顺序；没有状态同步、页面必须展示旧状态、关闭/电影/传送等副作用合同不同，或客户端页面本身不存在时，不能只交换两行掩盖根因。任何 `sync -> page` 修复都必须同时证明页面/action 存在、目标 objectId 权威、questId 正确且 commit 失败时两种包都不会发送。
-- commit：`6a77337dbfd8cfec60f9daeb1125e51b976d56a3`。
-
-### 8.7 装备物品起始条件未进入生产求值
-
-- 代表任务：9550「[Event] Solorius Donations」。9553「[Event] Solorius Romance」使用同一装备物品和接取合同，不重复建立案例。
-- 玩家可见症状：任务元数据要求装备物品 125040015；Aion 5.8 客户端页面和接取按钮均存在，但玩家即使已装备该物品，点击接受也无法由生产 dispatcher 完成 `NONE -> START`，任务状态和页面不推进。
-- 根因：XML 编译器已把 `<condition type="equipped" quest-id="125040015"/>` 保留到 `QuestMetadata.startConditionGroups`，E2E 场景也能捕获装备事实；`QuestMutationPlanner` 将元数据起始条件转换为正式条件时却只支持 `finished`、`unfinished`、`acquired` 和 `noacquired`，遗漏 `equipped`，因此实际接受路由不能完成生产求值。
-- 修复层：共享 production planner 将 `equipped` 映射为 `QuestCondition.EquippedItem`，继续复用 `QuestConditionEvaluator` 和 `QuestEquipmentFacts`，不修改任务 XML。装备物品数量满足时允许接取；明确未装备或装备事实未捕获时都不匹配，不用背包事实代替装备事实。独立生产流测试让 9550/9553 的 `QUEST_ACCEPT_1` 经过真实 `CM_DIALOG_SELECT -> QuestEngine -> QuestProductionDispatcher -> QuestExecutionCoordinator -> after-commit`，并校验状态包先于接取页面、objectId/questId/page 字段正确。
-- 修改文件：`src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestMutationPlanner.java`、`src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestMutationPlannerTest.java`、`QuestE2eRuntime.java`，以及 `src/test/java/com/aionemu/gameserver/questEngine/e2e/QuestEquippedStartProductionFlowTest.java`。
-- 验证命令和结果：`rtk mvn -q -Dtest=QuestMutationPlannerTest,QuestEquippedStartProductionFlowTest test` 通过，共 22 个测试；正向场景证明两族任务均进入 `START`，反向场景证明未装备和装备事实未知时状态保持 `NONE` 且不发送任务状态/页面包。`rtk mvn -q -Dtest=QuestE2eInfrastructureTest,QuestPacketOrderRegressionTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test` 通过，生产 catalog 6200 条编译成功、失败 0、白名单违规 0。Aion 5.8 客户端资源确认 9550/9553 的接受路径页面和 action 存在；真实 CM 回环确认协议字段和包顺序，本案例不声称已完成人工客户端点击。
-- 复用边界：仅适用于元数据起始条件的 `equipped` 类型，其中 `quest-id` 字段按旧数据合同承载物品模板 ID。装备套装、背包持有、任务工作物品或 transition 自身的装备条件已有独立合同，不能改写为本规则；任何新元数据条件都必须显式映射并在事实未知时 fail closed，不能用默认通过掩盖未支持类型。
-- commit：`cc7aabea521af6b27bab129dc4be5ed63c0f3e07`。
-
-### 8.8 转职任务的客户端动作链与职业映射整体错位
-
-- 代表任务：2008「Ascension / 成为守护者」。
-- 玩家可见症状：与 203550 对话时，点击“是，我想体验未来。”后出现 load fail；进入后续阶段再点击“说相信他”仍然 load fail，职业选择流程无法继续。
-- 根因：原 XML 按连续序号推导客户端动作，把进入未来体验注册为 `SETPRO3`，把相信与起始职业分支压缩为 `SETPRO4`，并将进阶职业选择依次错配到 `SETPRO5..15`。Aion 5.8 客户端页面实际使用稀疏且有阶段含义的动作链：`SETPRO5` 进入体验副本，`SELECT6_1` 打开相信后的继续页，`SETPRO6` 按起始职业显示分支页面，进阶职业按钮再使用 `SETPRO7..17`；牧师、技师和艺术家分支的动作顺序也不能从职业枚举顺序推导。缺失的 typed action/page 枚举进一步使这些客户端路径无法完整表达。
-- 修复层：任务 XML 与由 Aion 5.8 客户端字典生成的 typed dialog action/page 枚举。`s4 + 203550 + SETPRO5` 固定执行 `close-dialog -> teleport-next-available 320020000 -> PACKET_ONLY sync`；`s6 + SELECT6_1` 显示 `SELECT6_1`；`s6 + SETPRO6` 按六种起始职业显示对应页面；`SETPRO7..17` 分别绑定 11 个进阶职业，提交后执行 `set-player-class -> teleport -> LEVEL_AND_VISIBILITY_REFRESH sync`。不在共享 runtime 中做 action 偏移或职业序号换算。
-- 修改文件：`src/main/java/com/aionemu/gameserver/questEngine/definition/QuestDialogAction.java`、`QuestDialogPage.java`、`src/main/resources/aion/data/static_data/quest_definition/quests/2008.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest2008RetailAlignmentTest.java`。
-- 验证命令和结果：`rtk mvn -q -Dtest=Quest2008RetailAlignmentTest,Quest2009MovieDialogTest,Quest2953RetailFlowAlignmentTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test` 通过，共 14 个测试，失败 0、错误 0、跳过 0；生产 catalog 6200 条编译成功、失败 0，白名单违规 0。2008/2009 XML 均通过 XSD，`generate_quest_dialog_enums.py --check` 返回 `changed=0`。用户使用 Aion 5.8 客户端完成 2008 端到端验收，确认未来体验、相信、职业选择及任务完成流程均可继续。
-- 复用边界：仅适用于客户端页面证明同一转职任务使用稀疏、多阶段或与职业枚举顺序不同的 action 映射。必须逐按钮证明 action、页面、起始职业条件、目标进阶职业以及职业变更后的传送和同步顺序；其他阵营转职任务、页面编号相似但动作不同的任务、普通职业奖励选择或只缺少单个继续页的电影流程不能直接套用。action ID 与 page ID 始终是独立空间，禁止全局加减偏移或按职业 ordinal 生成映射。
-- commit：`8769210fdb5a8b6b31201c64aab29e56b9379195`。
+新增或修改 Pattern、提交索引和代表案例时必须同时维护这两个文档，并运行 7.5 的结构和引用自检。主文档只维护稳定流程，不追加案例正文。
 
 ## 9. 提交和交接清单
+
+### 9.0 客户端验收完成的自动触发器
+
+用户明确点名当前任务并回复“客户端验证通过”“客户端验证完成”“客户端验收通过”“客户端验收完成”或语义完全等价的确认时，按以下规则立即执行，不再追问是否提交：
+
+1. 未限定某一分支或步骤时，该确认表示整个任务的客户端游玩验收完成；记录为 `CLIENT_ACCEPTED`。若用户明确只验收某个职业、奖励分支或中间步骤，则只记录该范围，任务整体仍保持待验收。
+2. 该确认同时授权当前任务修复的本地 commit，但不授权 push、启动/停止/重启服务端、运行未获授权的构建，或处理无关 dirty 文件。
+3. 立即检查 `git status` 和 scoped diff。修复尚未提交时，只暂存任务 XML、任务专用测试以及本次修复必需的共享文件并提交；修复已在 `PENDING` 状态提交时，复用原稳定 hash，不创建空提交或重复修复 commit。
+4. 用验收模板记录用户确认、任务、已知启动方式、测试状态和可用证据。用户确认本身是客户端游玩验收的权威证据；没有额外截图、录屏或抓包时写 `not captured`，不要求用户重走流程。
+5. 验收状态变化后立即重跑 Pattern 门禁。匹配已有模式时标记 `ACCEPTED_EXISTING_PATTERN`，不修改 Pattern 或案例正文，并在修复 commit 后单独提交验收记录；建立新模式时标记 `ACCEPTED_NEW_PATTERN`，在修复 commit 后连续完成 Pattern、案例和验收记录的同一个文档 commit。
+6. 已知 focused/catalog/whitelist 或启动健康失败不能被客户端确认覆盖，必须先修复失败；若这些门禁已通过，则直接完成交接，不再停留在 `PENDING`。
 
 ### 9.1 验收状态和代表案例门禁
 
 任何 focused test、生产 catalog/whitelist、客户端实测或 runtime 证据到达后，之前的 `pending acceptance` 或案例去重判断立即失效。每次验收状态变化后，以及任何任务修复执行 `git add` 前，都必须重新完成以下检查：
 
 - [ ] 当前是“实现完成，待验收”还是“验收完成”？缺少的证据及负责人是否已列出？
-- [ ] 是否按玩家症状、根因、修复层、修复合同四项与第 8 节已有案例逐一比较？
+- [ ] 是否按症状、IR、owner 和副作用匹配 Pattern 索引，并读取最佳代表提交的完整 diff 和具体测试方法？
+- [ ] 客户端复测前，任务专用编译测试、production catalog 和 whitelist 是否全部通过？启动日志是否无 typed quest engine 初始化错误？
+- [ ] 修改 Pattern 索引或代表案例后，`check_quest_repair_playbook.py` 是否通过且所有代表提交均有 Pattern 覆盖？
+- [ ] 是否按玩家症状、根因、修复层、修复合同四项与已有代表案例逐一比较？
 - [ ] 判断结果是否明确记录为 `PENDING`、`ACCEPTED_EXISTING_PATTERN` 或 `ACCEPTED_NEW_PATTERN`？
 - [ ] 若为 `ACCEPTED_EXISTING_PATTERN`，是否指出复用的代表案例，且没有重复追加任务 ID？
-- [ ] 若为 `ACCEPTED_NEW_PATTERN`，Playbook 是否已准备记录代表任务、症状、根因、修复层、修改文件、验证结果、复用边界和稳定的修复 commit？
+- [ ] 若为 `ACCEPTED_NEW_PATTERN`，Playbook 是否已准备记录 Pattern ID、症状关键词、抽象 IR/owner 指纹、第一检查点、代表任务和测试、根因、修复层、修改文件、验证结果、复用边界和稳定的修复 commit？
 
-`PENDING` 可以在用户明确要求时提交实现，但不得添加代表案例或报告“验收完成”；最后一项证据到达后，必须在下一次提交/完整交接前重新运行本门禁。`ACCEPTED_NEW_PATTERN` 必须继续执行 9.2 的两提交批次，不能直接做单个源码提交后结束交付。
+`PENDING` 可以在用户明确要求时提交实现，但不得添加代表案例或报告“验收完成”；最后一项证据到达后，必须在下一次提交/完整交接前重新运行本门禁。9.0 的客户端验收确认属于明确提交授权。`ACCEPTED_NEW_PATTERN` 必须继续执行 9.2 的两提交批次，不能直接做单个源码提交后结束交付。
 
 ### 9.2 稳定哈希的两提交批次
 
 新代表案例使用两个连续的本地提交。第一提交只包含修复源码、数据和测试；取得稳定哈希后写入 Playbook，第二提交只包含 Playbook。两者共同构成同一交付批次：中间不得夹入无关提交、push，或发送“验收完成”的最终交接。
+
+若任务复用已有 Pattern，仍先产生或复用修复 commit，再创建并提交 `.agent/summary/quest-acceptance/<quest-id>-<yyyy-mm-dd>-client-accepted.md`；该证据 commit 不修改 Pattern 索引或代表案例。若任务建立新 Pattern，则把验收记录与 Pattern/案例文档放入同一个第二提交。
 
 先提交修复：
 
@@ -501,13 +476,15 @@ git commit -m "fix(quest): describe repaired behavior"
 git rev-parse HEAD
 ```
 
-将上一步稳定哈希写入第 8 节代表案例后，再单独提交 Playbook。不要把文档 amend 进它所记录的修复提交，否则 commit 哈希变化后会形成失效的自引用：
+将上一步稳定哈希写入 Pattern 索引和代表案例后，再单独提交 Playbook 文档。不要把文档 amend 进它所记录的修复提交，否则 commit 哈希变化后会形成失效的自引用：
 
 ```bash
-git add -f docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md
+git add -f docs/quest/repair-playbook/PATTERNS.zh-CN.md
+git add -f docs/quest/repair-playbook/CASES.zh-CN.md
 git diff --cached --name-status
 git diff --cached --check
 git diff --cached --stat
+python3 scripts/quest/check_quest_repair_playbook.py
 git commit -m "docs(quest): record representative repair"
 git log -2 --oneline
 git status --short
@@ -521,6 +498,7 @@ git status --short
 
 ```text
 症状和任务：
+Pattern 匹配：<pattern-id / NONE；matched；different；代表 commit/test>
 根因分类：状态 / 协议 / 客户端 / AI / 性能
 权威证据：当前 XML/IR、旧 handler、客户端、runtime 日志
 修改文件：
@@ -534,21 +512,25 @@ commit：
 
 ```text
 你在当前 checkout 的 quest 分支工作。
-请先阅读 docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md、docs/quest/WRITING_GUIDE.zh-CN.md、
-当前 checkout 的 AGENTS.md 和 `.agent/rules/` 规则。使用当前环境可用的搜索、读取和编辑能力。
+请先阅读 docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md、docs/quest/repair-playbook/PATTERNS.zh-CN.md、
+docs/quest/repair-playbook/CASES.zh-CN.md、docs/quest/WRITING_GUIDE.zh-CN.md、
+docs/quest/client-dialog-mapping/README.zh-CN.md、当前 checkout 的 AGENTS.md 和 `.agent/rules/` 规则。
+使用当前环境可用的搜索、读取和编辑能力。
 
 任务：<quest-id>，症状：<玩家可复现步骤>。
 
 按以下顺序工作：
 1. 记录 git status/branch，并保留已有 dirty 改动。
-2. 找到 catalog owner、当前 XML、编译后的 transition、旧 handler/正式模板和客户端 page/action 证据。
-3. 明确 source/target/status/vars、条件、事务动作和 after-commit 顺序。
-4. 判断是 XML 单任务问题、共享 runtime 问题、AI 副作用问题、客户端资源问题还是性能放大问题。
-5. 只做最小修复；不要用候选 XML 或通用 page 猜值，不要删除必要的 visibility refresh。
-6. 同时增加能证明完整行为合同的回归测试；涉及共享逻辑时增加生产目录级审计。
-7. 仅在用户明确要求运行构建或测试时，串行执行 focused tests、生产 catalog/whitelist，必要时 clean verify；否则列出未执行的验收项。可执行不触发构建的 diff 检查。
-8. 每次验收证据变化后以及提交前，重新执行 Playbook 代表案例门禁；旧的 `pending acceptance` 或去重判断不得沿用。
-9. 仅在用户明确要求提交时，暂存本次路径并本地提交；若形成新代表案例，按“修复 commit -> 引用其稳定哈希的 Playbook commit”连续提交，期间不得夹入无关提交或 push。
+2. 按症状、IR、owner 和副作用匹配 Pattern 索引；读取最佳代表提交的完整 diff 和具体测试方法，记录 matched/different，不得只扫案例标题。
+3. 找到 catalog owner、当前 XML、编译后的 transition、旧 handler/正式模板和客户端 page/action 证据。
+4. 明确 source/target/status/vars、条件、事务动作和 after-commit 顺序。
+5. 判断是 XML 单任务问题、共享 runtime 问题、AI 副作用问题、客户端资源问题还是性能放大问题。
+6. 只做最小修复；不要用候选 XML 或通用 page 猜值，不要删除必要的 visibility refresh。
+7. 同时增加能证明完整行为合同的回归测试；涉及共享逻辑时增加生产目录级审计。
+8. 仅在用户明确要求运行构建或测试时，串行执行任务专用编译测试、生产 catalog/whitelist，必要时 clean verify；否则列出未执行项并保持 `PENDING`，不得请用户进入客户端复测。可执行不触发构建的 diff 检查。
+9. 客户端复测前确认启动日志没有 typed quest engine 初始化、quest compilation、ambiguous transition 或 production catalog compile failure；命中任一项时停止客户端层排查。
+10. 每次验收证据变化后以及提交前，重新执行 Playbook 代表案例门禁；旧的 `pending acceptance` 或去重判断不得沿用。修改 Pattern 索引或代表案例时运行 `python3 scripts/quest/check_quest_repair_playbook.py`。
+11. 用户明确要求提交，或明确回复当前任务客户端验证/验收完成时，暂存本次路径并本地提交；后一种情况按 9.0 自动继续，不再请求一次提交确认。若形成新代表案例，按“修复 commit -> 引用其稳定哈希的 Playbook commit”连续提交，期间不得夹入无关提交或 push。
 
 最终报告必须列出：根因证据、改动、测试命令和结果、残余风险、commit hash。
 ```
