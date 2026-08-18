@@ -193,7 +193,7 @@
     </transition>
     <transition source="s4" target="s99">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO3"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO5"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -212,7 +212,15 @@
     </transition>
     <transition source="s6" target="s6">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO4"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SELECT6_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s6" target="s6">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO6"/>
       </event>
       <conditions>
         <player-class-is starting-class="WARRIOR"/>
@@ -223,7 +231,7 @@
     </transition>
     <transition source="s6" target="s6">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO4"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO6"/>
       </event>
       <conditions>
         <player-class-is starting-class="SCOUT"/>
@@ -234,7 +242,7 @@
     </transition>
     <transition source="s6" target="s6">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO4"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO6"/>
       </event>
       <conditions>
         <player-class-is starting-class="MAGE"/>
@@ -245,7 +253,7 @@
     </transition>
     <transition source="s6" target="s6">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO4"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO6"/>
       </event>
       <conditions>
         <player-class-is starting-class="PRIEST"/>
@@ -256,7 +264,7 @@
     </transition>
     <transition source="s6" target="s6">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO4"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO6"/>
       </event>
       <conditions>
         <player-class-is starting-class="TECHNIST"/>
@@ -267,7 +275,7 @@
     </transition>
     <transition source="s6" target="s6">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO4"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO6"/>
       </event>
       <conditions>
         <player-class-is starting-class="MUSE"/>
@@ -278,7 +286,7 @@
     </transition>
     <transition source="s6" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO5"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO7"/>
       </event>
       <conditions>
         <player-class-is starting-class="WARRIOR"/>
@@ -291,7 +299,7 @@
     </transition>
     <transition source="s6" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO6"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO8"/>
       </event>
       <conditions>
         <player-class-is starting-class="WARRIOR"/>
@@ -304,7 +312,7 @@
     </transition>
     <transition source="s6" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO7"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO9"/>
       </event>
       <conditions>
         <player-class-is starting-class="SCOUT"/>
@@ -317,7 +325,7 @@
     </transition>
     <transition source="s6" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO8"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO10"/>
       </event>
       <conditions>
         <player-class-is starting-class="SCOUT"/>
@@ -330,7 +338,7 @@
     </transition>
     <transition source="s6" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO9"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO11"/>
       </event>
       <conditions>
         <player-class-is starting-class="MAGE"/>
@@ -343,7 +351,7 @@
     </transition>
     <transition source="s6" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO10"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO12"/>
       </event>
       <conditions>
         <player-class-is starting-class="MAGE"/>
@@ -356,7 +364,7 @@
     </transition>
     <transition source="s6" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO11"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO14"/>
       </event>
       <conditions>
         <player-class-is starting-class="PRIEST"/>
@@ -369,7 +377,7 @@
     </transition>
     <transition source="s6" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO12"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO13"/>
       </event>
       <conditions>
         <player-class-is starting-class="PRIEST"/>
@@ -382,7 +390,7 @@
     </transition>
     <transition source="s6" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO13"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO15"/>
       </event>
       <conditions>
         <player-class-is starting-class="TECHNIST"/>
@@ -395,7 +403,7 @@
     </transition>
     <transition source="s6" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO14"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO16"/>
       </event>
       <conditions>
         <player-class-is starting-class="MUSE"/>
@@ -408,7 +416,7 @@
     </transition>
     <transition source="s6" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO15"/>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SETPRO17"/>
       </event>
       <conditions>
         <player-class-is starting-class="TECHNIST"/>

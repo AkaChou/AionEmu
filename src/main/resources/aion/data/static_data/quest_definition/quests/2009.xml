@@ -96,6 +96,7 @@
       </event>
       <after-commit>
         <play-movie movie-id="121"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s2">
@@ -122,6 +123,7 @@
       </event>
       <after-commit>
         <play-movie movie-id="122"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
       </after-commit>
     </transition>
     <transition source="s2" target="reward10" priority="1">
