@@ -58,7 +58,7 @@ public class Mighty_HeroAI2 extends GeneralNpcAI2
 					skillId = 21797; //Mighty 的活力助威 I / Mighty's Energetic Cheer I.
 				break;
 			}
-			GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 1, player).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 1, player).useWithoutPropSkill();
 		} else if (dialogId == 1011 && questId != 0) {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));
 		}

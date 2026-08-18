@@ -32,7 +32,7 @@ public class ShademenderAI2 extends AggressiveNpcAI2
 			final Player player = (Player) creature;
 		if (!creature.getEffectController().hasAbnormalEffect(20664)) { // 征服者之热情 / Conqueror's Passion.
 				if (player.getCommonData().getRace() == Race.ASMODIANS) {
-		        GameEngineServices.skillEngine().getSkill(getOwner(), 20664, 1, (Player) creature).useNoAnimationSkill(); // 征服者之热情 / Conqueror's Passion.
+		        GameEngineServices.skillEngine().getSkill(getOwner(), 20664, 1, (Player) creature).useWithoutPropSkill(); // 征服者之热情 / Conqueror's Passion.
 				}
 			}
 	}

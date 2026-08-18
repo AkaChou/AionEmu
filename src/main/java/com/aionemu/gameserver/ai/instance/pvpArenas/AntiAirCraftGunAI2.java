@@ -46,7 +46,7 @@ public class AntiAirCraftGunAI2 extends ActionItemNpcAI2
 				morphSkill = 0x4E5238;
 			break;
 		}
-		GameEngineServices.skillEngine().getSkill(getOwner(), morphSkill >> 8, morphSkill & 0xFF, player).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), morphSkill >> 8, morphSkill & 0xFF, player).useWithoutPropSkill();
 		AI2Actions.scheduleRespawn(this);
 		AI2Actions.deleteOwner(this);
 	}

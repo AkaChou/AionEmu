@@ -30,7 +30,7 @@ public class Rideable_Antiaircraft_GunAI2 extends ActionItemNpcAI2
 	protected void handleUseItemFinish(Player player) {
 		if (canUse.compareAndSet(true, false)) {
 			int morphSkill = getMorphSkill();
-			GameEngineServices.skillEngine().getSkill(getOwner(), morphSkill >> 8, morphSkill & 0xFF, player).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), morphSkill >> 8, morphSkill & 0xFF, player).useWithoutPropSkill();
 			AI2Actions.deleteOwner(this);
 		}
 	}

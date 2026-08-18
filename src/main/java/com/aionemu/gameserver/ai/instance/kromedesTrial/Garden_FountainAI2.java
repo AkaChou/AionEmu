@@ -28,7 +28,7 @@ public class Garden_FountainAI2 extends NpcAI2
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
         if (dialogId == 1012) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400655));
-			GameEngineServices.skillEngine().getSkill(getOwner(), 19216, 1, player).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), 19216, 1, player).useWithoutPropSkill();
         }
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
         return true;
