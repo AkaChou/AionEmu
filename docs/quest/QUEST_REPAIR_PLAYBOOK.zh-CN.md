@@ -378,6 +378,7 @@ python3 scripts/quest/generate_quest_dialog_enums.py --check
 | `15a20225c` | 多 NPC 顺序报告流 | 先画完整 state/var 时序，再实现显式 route；不要将 report self-loop 和完成路由合并 |
 | `e5a25fd9b` | Belbua 酒桶交互 | 从客户端 object action 和接取状态证明 route，避免未接取时误触发任务副作用 |
 | `cc7aabea5` | 9550 装备事件物品后仍无法接取任务 | 元数据 `equipped` 起始条件必须下沉为正式 `EquippedItem` 条件并使用已捕获装备事实求值；装备事实未知时必须 fail closed |
+| `8769210fd` | 2008 魔族转职任务的客户端动作链整体错位 | 转职页面的稀疏 action ID、起始职业分支和进阶职业映射必须逐项取自客户端证据，不能按页面序号或职业顺序推导 |
 
 ### 8.1 升级自动登记弹出不存在的任务页
 
@@ -456,6 +457,17 @@ python3 scripts/quest/generate_quest_dialog_enums.py --check
 - 验证命令和结果：`rtk mvn -q -Dtest=QuestMutationPlannerTest,QuestEquippedStartProductionFlowTest test` 通过，共 22 个测试；正向场景证明两族任务均进入 `START`，反向场景证明未装备和装备事实未知时状态保持 `NONE` 且不发送任务状态/页面包。`rtk mvn -q -Dtest=QuestE2eInfrastructureTest,QuestPacketOrderRegressionTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test` 通过，生产 catalog 6200 条编译成功、失败 0、白名单违规 0。Aion 5.8 客户端资源确认 9550/9553 的接受路径页面和 action 存在；真实 CM 回环确认协议字段和包顺序，本案例不声称已完成人工客户端点击。
 - 复用边界：仅适用于元数据起始条件的 `equipped` 类型，其中 `quest-id` 字段按旧数据合同承载物品模板 ID。装备套装、背包持有、任务工作物品或 transition 自身的装备条件已有独立合同，不能改写为本规则；任何新元数据条件都必须显式映射并在事实未知时 fail closed，不能用默认通过掩盖未支持类型。
 - commit：`cc7aabea521af6b27bab129dc4be5ed63c0f3e07`。
+
+### 8.8 转职任务的客户端动作链与职业映射整体错位
+
+- 代表任务：2008「Ascension / 成为守护者」。
+- 玩家可见症状：与 203550 对话时，点击“是，我想体验未来。”后出现 load fail；进入后续阶段再点击“说相信他”仍然 load fail，职业选择流程无法继续。
+- 根因：原 XML 按连续序号推导客户端动作，把进入未来体验注册为 `SETPRO3`，把相信与起始职业分支压缩为 `SETPRO4`，并将进阶职业选择依次错配到 `SETPRO5..15`。Aion 5.8 客户端页面实际使用稀疏且有阶段含义的动作链：`SETPRO5` 进入体验副本，`SELECT6_1` 打开相信后的继续页，`SETPRO6` 按起始职业显示分支页面，进阶职业按钮再使用 `SETPRO7..17`；牧师、技师和艺术家分支的动作顺序也不能从职业枚举顺序推导。缺失的 typed action/page 枚举进一步使这些客户端路径无法完整表达。
+- 修复层：任务 XML 与由 Aion 5.8 客户端字典生成的 typed dialog action/page 枚举。`s4 + 203550 + SETPRO5` 固定执行 `close-dialog -> teleport-next-available 320020000 -> PACKET_ONLY sync`；`s6 + SELECT6_1` 显示 `SELECT6_1`；`s6 + SETPRO6` 按六种起始职业显示对应页面；`SETPRO7..17` 分别绑定 11 个进阶职业，提交后执行 `set-player-class -> teleport -> LEVEL_AND_VISIBILITY_REFRESH sync`。不在共享 runtime 中做 action 偏移或职业序号换算。
+- 修改文件：`src/main/java/com/aionemu/gameserver/questEngine/definition/QuestDialogAction.java`、`QuestDialogPage.java`、`src/main/resources/aion/data/static_data/quest_definition/quests/2008.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest2008RetailAlignmentTest.java`。
+- 验证命令和结果：`rtk mvn -q -Dtest=Quest2008RetailAlignmentTest,Quest2009MovieDialogTest,Quest2953RetailFlowAlignmentTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test` 通过，共 14 个测试，失败 0、错误 0、跳过 0；生产 catalog 6200 条编译成功、失败 0，白名单违规 0。2008/2009 XML 均通过 XSD，`generate_quest_dialog_enums.py --check` 返回 `changed=0`。用户使用 Aion 5.8 客户端完成 2008 端到端验收，确认未来体验、相信、职业选择及任务完成流程均可继续。
+- 复用边界：仅适用于客户端页面证明同一转职任务使用稀疏、多阶段或与职业枚举顺序不同的 action 映射。必须逐按钮证明 action、页面、起始职业条件、目标进阶职业以及职业变更后的传送和同步顺序；其他阵营转职任务、页面编号相似但动作不同的任务、普通职业奖励选择或只缺少单个继续页的电影流程不能直接套用。action ID 与 page ID 始终是独立空间，禁止全局加减偏移或按职业 ordinal 生成映射。
+- commit：`8769210fdb5a8b6b31201c64aab29e56b9379195`。
 
 ## 9. 提交和交接清单
 
