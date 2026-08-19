@@ -71,7 +71,7 @@ class QuestSteelRakeCounterProductionFlowTest {
 
 		QuestTransition advance = talk(definition, "started", "s16", contract.counterNpcId(),
 			QuestDialogAction.SETPRO2);
-		assertEquals(List.of(new QuestCondition.VariableIs("var0", 15)), advance.conditions());
+		assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 15)), advance.conditions());
 		assertEquals(List.of(new QuestAction.SetVariable("var0", 16)), advance.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
