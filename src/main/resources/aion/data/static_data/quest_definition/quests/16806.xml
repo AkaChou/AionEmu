@@ -29,8 +29,6 @@
     </node>
     <node label="started" status="START">
       <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="0"/>
     </node>
     <node label="reward" status="REWARD">
       <var name="var0" value="1"/>
@@ -97,13 +95,13 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 击杀士兵累积计数。Killing soldiers accumulates the count. -->
-    <transition source="started" target="started" priority="1">
+    <!-- 前 29 名士兵继续累计。 / Continue counting the first 29 soldiers. -->
+    <transition source="started" target="started" priority="2">
       <event>
         <kill-npc npc-ids="220306 220309 220312 220315 220318 220324 220327 220330"/>
       </event>
       <conditions>
-        <variable-below field="var1" value="30"/>
+        <variable-below field="var1" value="29"/>
       </conditions>
       <actions>
         <increment-variable field="var1" delta="1"/>
@@ -112,30 +110,46 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 士兵与队长计数达标后进入领奖。Both counts met enters reward. -->
+    <!-- 第 30 名士兵在首领未完成时封顶计数。 / Cap the soldier count when the bosses are incomplete. -->
+    <transition source="started" target="started" priority="1">
+      <event>
+        <kill-npc npc-ids="220306 220309 220312 220315 220318 220324 220327 220330"/>
+      </event>
+      <conditions>
+        <variable-is field="var1" value="29"/>
+        <variable-below field="var2" value="2"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 首领已完成时，第 30 名士兵直接进入领奖。 / The 30th soldier enters reward when the bosses are complete. -->
     <transition source="started" target="reward" priority="0">
       <event>
         <kill-npc npc-ids="220306 220309 220312 220315 220318 220324 220327 220330"/>
       </event>
       <conditions>
-        <variable-at-least field="var1" value="29"/>
+        <variable-is field="var1" value="29"/>
         <variable-at-least field="var2" value="2"/>
       </conditions>
       <actions>
-        <set-variable field="var1" value="30"/>
+        <increment-variable field="var1" delta="1"/>
         <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 击杀队长累积计数。Killing captains accumulates the count. -->
-    <transition source="started" target="started" priority="1">
+    <!-- 第一名首领继续累计。 / Count the first boss. -->
+    <transition source="started" target="started" priority="2">
       <event>
         <kill-npc npc-ids="857450 857452 857454 857456 857458 857459"/>
       </event>
       <conditions>
-        <variable-below field="var2" value="2"/>
+        <variable-below field="var2" value="1"/>
       </conditions>
       <actions>
         <increment-variable field="var2" delta="1"/>
@@ -144,17 +158,33 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 队长与士兵计数达标后进入领奖。Both counts met enters reward. -->
+    <!-- 第二名首领在士兵未完成时封顶计数。 / Cap the boss count when the soldiers are incomplete. -->
+    <transition source="started" target="started" priority="1">
+      <event>
+        <kill-npc npc-ids="857450 857452 857454 857456 857458 857459"/>
+      </event>
+      <conditions>
+        <variable-is field="var2" value="1"/>
+        <variable-below field="var1" value="30"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var2" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 士兵已完成时，第二名首领直接进入领奖。 / The second boss enters reward when the soldiers are complete. -->
     <transition source="started" target="reward" priority="0">
       <event>
         <kill-npc npc-ids="857450 857452 857454 857456 857458 857459"/>
       </event>
       <conditions>
         <variable-at-least field="var1" value="30"/>
-        <variable-at-least field="var2" value="1"/>
+        <variable-is field="var2" value="1"/>
       </conditions>
       <actions>
-        <set-variable field="var2" value="2"/>
+        <increment-variable field="var2" delta="1"/>
         <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>

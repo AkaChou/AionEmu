@@ -29,8 +29,6 @@
     </node>
     <node label="started" status="START">
       <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="0"/>
     </node>
     <node label="reward" status="REWARD">
       <var name="var0" value="1"/>
@@ -106,13 +104,13 @@
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 击杀普通守卫累积计数。Killing regular guardians accumulates the count. -->
-    <transition source="started" target="started" priority="1">
+    <!-- 前 29 名普通守卫继续累计。 / Continue counting the first 29 regular guardians. -->
+    <transition source="started" target="started" priority="2">
       <event>
         <kill-npc npc-ids="220306 220309 220312 220315 220318 220324 220327 220330"/>
       </event>
       <conditions>
-        <variable-below field="var1" value="30"/>
+        <variable-below field="var1" value="29"/>
       </conditions>
       <actions>
         <increment-variable field="var1" delta="1"/>
@@ -121,13 +119,46 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 击杀首领累积计数。Killing bosses accumulates the boss count. -->
+    <!-- 第 30 名守卫在首领未完成时封顶计数。 / Cap the guardian count when the bosses are incomplete. -->
     <transition source="started" target="started" priority="1">
+      <event>
+        <kill-npc npc-ids="220306 220309 220312 220315 220318 220324 220327 220330"/>
+      </event>
+      <conditions>
+        <variable-is field="var1" value="29"/>
+        <variable-below field="var2" value="2"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 首领已完成时，第 30 名守卫直接进入领奖。 / The 30th guardian enters reward when the bosses are complete. -->
+    <transition source="started" target="reward" priority="0">
+      <event>
+        <kill-npc npc-ids="220306 220309 220312 220315 220318 220324 220327 220330"/>
+      </event>
+      <conditions>
+        <variable-is field="var1" value="29"/>
+        <variable-at-least field="var2" value="2"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 第一名首领继续累计。 / Count the first boss. -->
+    <transition source="started" target="started" priority="2">
       <event>
         <kill-npc npc-ids="857450 857452 857454 857456 857458 857459"/>
       </event>
       <conditions>
-        <variable-below field="var2" value="2"/>
+        <variable-below field="var2" value="1"/>
       </conditions>
       <actions>
         <increment-variable field="var2" delta="1"/>
@@ -136,16 +167,33 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 30 个守卫与 2 个首领全部击杀后进入领奖。Enter reward after 30 guardians and 2 bosses are killed. -->
+    <!-- 第二名首领在守卫未完成时封顶计数。 / Cap the boss count when the guardians are incomplete. -->
+    <transition source="started" target="started" priority="1">
+      <event>
+        <kill-npc npc-ids="857450 857452 857454 857456 857458 857459"/>
+      </event>
+      <conditions>
+        <variable-is field="var2" value="1"/>
+        <variable-below field="var1" value="30"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var2" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 守卫已完成时，第二名首领直接进入领奖。 / The second boss enters reward when the guardians are complete. -->
     <transition source="started" target="reward" priority="0">
       <event>
-        <kill-npc npc-ids="220306 220309 220312 220315 220318 220324 220327 220330 857450 857452 857454 857456 857458 857459"/>
+        <kill-npc npc-ids="857450 857452 857454 857456 857458 857459"/>
       </event>
       <conditions>
         <variable-at-least field="var1" value="30"/>
-        <variable-at-least field="var2" value="2"/>
+        <variable-is field="var2" value="1"/>
       </conditions>
       <actions>
+        <increment-variable field="var2" delta="1"/>
         <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
