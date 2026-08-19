@@ -174,6 +174,17 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 	}
 
 	@Test
+	void quests25090And25093UseTheClientSuccessPageWhileObjectivesAreIncomplete() throws Exception {
+		for (int questId : List.of(25090, 25093)) {
+			QuestDefinition definition = load(questId).definition();
+			QuestTransition progressPage = transition(definition, "started", "started",
+				new QuestEvent.TalkToNpc(804928, QuestDialogAction.QUEST_SELECT.id()));
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
+				progressPage.afterCommit());
+		}
+	}
+
+	@Test
 	void challengeMonsterHuntsUseTheRetailClientAcceptAndReportPages() throws Exception {
 		for (int questId : List.of(27160, 27161)) {
 			QuestDefinition definition = load(questId).definition();
