@@ -13,13 +13,18 @@ import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -39,6 +44,20 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 		215293, 215294, 215295, 215296, 215297, 215298, 215299, 215300, 215301, 215302,
 		215303, 215304, 215305, 215306, 215307, 215308, 215309, 215310, 215311, 215312,
 		215313, 215314, 215315, 215316);
+	private static final Set<Integer> QUEST_18951_TARGETS = IntStream.rangeClosed(236100, 236220)
+		.boxed().collect(Collectors.toUnmodifiableSet());
+	private static final List<MonsterHuntContract> SIMPLE_HUNTS = List.of(
+		new MonsterHuntContract(18314, Set.of(702656, 730373), 730373, 7),
+		new MonsterHuntContract(18951, QUEST_18951_TARGETS, 236100, 25),
+		new MonsterHuntContract(18972, Set.of(235824, 235825), 235824, 6),
+		new MonsterHuntContract(18973, Set.of(235867, 235868), 235867, 6),
+		new MonsterHuntContract(18974, Set.of(235881), 235881, 6));
+
+	@TestFactory
+	Stream<DynamicTest> simpleMonsterHuntsReachRewardOnTheRetailFinalKill() {
+		return SIMPLE_HUNTS.stream().map(contract -> DynamicTest.dynamicTest(
+			"quest " + contract.questId(), () -> assertSimpleMonsterHunt(contract)));
+	}
 
 	@Test
 	void quest1842PreservesIndependentObjectivesAndReportsToTheRetailEndNpc() throws Exception {
@@ -79,6 +98,50 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			new QuestEvent.TalkToNpc(799291, QuestDialogAction.SELECT_QUEST_REWARD.id()));
 		assertEquals(QuestStatus.REWARD, report.nextStatus());
 		assertEquals(Map.of("var0", 10), definition.progressLayout().unpack(report.nextPackedVariables()));
+	}
+
+	private static void assertSimpleMonsterHunt(MonsterHuntContract contract) throws Exception {
+		CompiledQuestDefinition compiled = load(contract.questId());
+		QuestDefinition definition = compiled.definition();
+		assertNode(definition, "started", QuestStatus.START, Map.of());
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", contract.requiredKills()));
+
+		QuestEvent configuredEvent = new QuestEvent.KillNpcSet(contract.targetNpcIds());
+		QuestTransition continuing = transition(definition, "started", "started", configuredEvent);
+		assertEquals(1, continuing.priority());
+		assertEquals(List.of(new QuestCondition.VariableBelow("var0", contract.requiredKills() - 1)),
+			continuing.conditions());
+		assertEquals(List.of(new QuestAction.IncrementVariable("var0", 1)), continuing.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
+			continuing.afterCommit());
+
+		QuestTransition completion = transition(definition, "started", "reward", configuredEvent);
+		assertEquals(0, completion.priority());
+		assertEquals(List.of(new QuestCondition.VariableAtLeast("var0", contract.requiredKills() - 1)),
+			completion.conditions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", contract.requiredKills())),
+			completion.actions());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
+			completion.afterCommit());
+
+		QuestSnapshot snapshot = snapshot(contract.questId(), QuestStatus.START,
+			Map.of("var0", 0), definition);
+		for (int count = 1; count < contract.requiredKills(); count++) {
+			QuestMutationPlan plan = dispatch(compiled, snapshot,
+				new QuestEvent.KillNpc(contract.sampleTargetNpcId()));
+			snapshot = nextSnapshot(snapshot, plan);
+			assertEquals(QuestStatus.START, snapshot.status());
+			assertEquals(Map.of("var0", count),
+				definition.progressLayout().unpack(snapshot.packedVariables()));
+		}
+
+		QuestMutationPlan finalKill = dispatch(compiled, snapshot,
+			new QuestEvent.KillNpc(contract.sampleTargetNpcId()));
+		assertEquals(QuestStatus.REWARD, finalKill.nextStatus());
+		assertEquals(Map.of("var0", contract.requiredKills()),
+			definition.progressLayout().unpack(finalKill.nextPackedVariables()));
+		assertEquals(completion.actions(), finalKill.requiredActions());
 	}
 
 	private static void assertQuest1842Routes(QuestDefinition definition) {
@@ -222,5 +285,13 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			}
 			return QuestDefinitionXmlCompiler.compile(input);
 		}
+	}
+
+	/**
+	 * 保存简单 monster-hunt 的目标和阈值差异。
+	 * Holds target and threshold differences for simple monster hunts.
+	 */
+	private record MonsterHuntContract(int questId, Set<Integer> targetNpcIds, int sampleTargetNpcId,
+			int requiredKills) {
 	}
 }

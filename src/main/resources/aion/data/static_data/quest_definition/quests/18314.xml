@@ -19,9 +19,7 @@
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
     </node>
-    <node label="started" status="START">
-      <var name="var0" value="0"/>
-    </node>
+    <node label="started" status="START"/>
     <node label="reward" status="REWARD">
       <var name="var0" value="7"/>
     </node>
@@ -45,7 +43,7 @@
         <kill-npc npc-ids="702656 730373"/>
       </event>
       <conditions>
-        <variable-below field="var0" value="7"/>
+        <variable-below field="var0" value="6"/>
       </conditions>
       <actions>
         <increment-variable field="var0" delta="1"/>
@@ -59,7 +57,7 @@
         <kill-npc npc-ids="702656 730373"/>
       </event>
       <conditions>
-        <variable-at-least field="var0" value="7"/>
+        <variable-at-least field="var0" value="6"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="7"/>
