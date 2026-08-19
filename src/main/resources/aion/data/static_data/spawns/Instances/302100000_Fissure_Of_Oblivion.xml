@@ -213,7 +213,6 @@
 		</spawn>
 		<!-- IDTransform_TransRoom_01 -->
 		<spawn npc_id="245396">
-            <spot x="761.2168" y="513.7664" z="339.85913" h="60"/>
 		  <spot x="745.604980" y="513.935608" z="340.437042" h="0" resolve_z="true"/>
         </spawn>
 		<!-- IDTransform_TransRoom_02 -->
@@ -364,9 +363,6 @@
 		</spawn>
 		<spawn npc_id="245418" respawn_time="0">
 		  <spot x="409.983856" y="513.133484" z="343.579285" h="30" resolve_z="true"/>
-		</spawn>
-		<spawn npc_id="834195" respawn_time="0">
-		  <spot x="923.752808" y="463.109985" z="353.995056" h="75" resolve_z="true" entity_id="278"/>
 		</spawn>
 		<spawn npc_id="245206">
 		  <spot x="721.988037" y="513.997559" z="342.472839" h="30" random_walk="2" resolve_z="true"/>

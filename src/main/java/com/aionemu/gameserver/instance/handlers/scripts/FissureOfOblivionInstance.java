@@ -664,7 +664,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
                                  case 3: IDTransformTiamatWarp(monsterLevel); break;
                             }
 							killNpc(getNpcs(245402));
-                            deleteNpc(245402);
+                            deleteNpcs(245402);
                             spawn(245416, 855.54144f, 465.55255f, 351.57367f, (byte)0, 54);
                        }
                   }, 5000);
@@ -678,7 +678,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
                        @Override
                        public void run() {
 							killNpc(getNpcs(245403));
-                            deleteNpc(245403);
+                            deleteNpcs(245403);
                             spawn(245417, 594.41882f, 564.05542f, 352.56454f, (byte)0, 58);
                             spawn(245418, 522.48053f, 573.51971f, 321.80389f, (byte)0, 55);
                        }
@@ -693,7 +693,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
                        @Override
                        public void run() {
 							killNpc(getNpcs(245404));
-                            deleteNpc(245404);
+                            deleteNpcs(245404);
                        }
                   }, 5000);
              }
@@ -738,7 +738,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
              (npcId >= 244818 && npcId <= 244822) || (npcId >= 244859 && npcId <= 244863)) {
              points = 1500;
              despawnNpc(npc);
-             deleteNpc(245405);
+             deleteNpcs(245405);
              GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                   /**
                    * 处理 run。
@@ -1097,9 +1097,18 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         }
     }
     
-    private void deleteNpc(int npcId) {
-        if (getNpc(npcId) != null) {
-            getNpc(npcId).getController().onDelete();
+    /**
+     * 删除当前实例中指定模板的全部 NPC，包括同模板的成对空气墙控制实体。
+     * Deletes every NPC with the given template, including paired air-wall controllers.
+     *
+     * @param npcId NPC 模板 ID / NPC template id
+     */
+    private void deleteNpcs(int npcId) {
+        List<Npc> npcs = getNpcs(npcId);
+        if (npcs != null) {
+            for (Npc npc : npcs) {
+                npc.getController().onDelete();
+            }
         }
     }
     
