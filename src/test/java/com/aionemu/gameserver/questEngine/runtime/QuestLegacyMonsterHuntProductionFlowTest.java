@@ -218,7 +218,18 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			Map.entry(25431, 805409),
 			Map.entry(25432, 805410),
 			Map.entry(25433, 805411),
-			Map.entry(25434, 805412)).entrySet()) {
+			Map.entry(25434, 805412),
+			Map.entry(25435, 805413),
+			Map.entry(25436, 805414),
+			Map.entry(25437, 805415),
+			Map.entry(25438, 805416),
+			Map.entry(25439, 805417),
+			Map.entry(25440, 805418),
+			Map.entry(25441, 805419),
+			Map.entry(25442, 805420),
+			Map.entry(25443, 805421),
+			Map.entry(25444, 805422),
+			Map.entry(25445, 805423)).entrySet()) {
 			QuestDefinition definition = load(entry.getKey()).definition();
 			QuestTransition progressPage = transition(definition, "started", "started",
 				new QuestEvent.TalkToNpc(entry.getValue(), QuestDialogAction.QUEST_SELECT.id()));
