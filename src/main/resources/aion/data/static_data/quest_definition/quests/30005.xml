@@ -21,8 +21,9 @@
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
     </node>
-    <node label="started" status="START">
-      <var name="var0" value="0"/>
+    <node label="started" status="START"/>
+    <node label="ready" status="START">
+      <var name="var0" value="25"/>
     </node>
     <node label="reward" status="REWARD">
       <var name="var0" value="25"/>
@@ -38,7 +39,7 @@
         <kill-npc npc-ids="215857 215858 215809 216343 216344 216336 216327 216328 215808 215814"/>
       </event>
       <conditions>
-        <variable-below field="var0" value="25"/>
+        <variable-below field="var0" value="24"/>
       </conditions>
       <actions>
         <increment-variable field="var0" delta="1"/>
@@ -47,7 +48,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
+    <transition source="started" target="ready" priority="0">
       <event>
         <kill-npc npc-ids="215857 215858 215809 216343 216344 216336 216327 216328 215808 215814"/>
       </event>
@@ -55,30 +56,19 @@
         <variable-is field="var0" value="24"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="25"/>
+        <increment-variable field="var0" delta="1"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <dialog type="NPC_REPORT" npc-id="799029" source="ready" target="reward" page="SELECT2"/>
+    <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799029" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="799029" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <variable-is field="var0" value="25"/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="799029" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
