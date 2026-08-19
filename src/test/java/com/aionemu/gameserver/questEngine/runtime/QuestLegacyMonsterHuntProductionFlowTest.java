@@ -78,6 +78,8 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			799248, 799297, 6937236, 112101625),
 		new ReportedMonsterHuntContract(29642, Set.of(215888, 215889, 216009, 216010),
 			799297, 799225, 6937236, 100001773),
+		new ReportedMonsterHuntContract(30516, Set.of(236300),
+			805156, 799670, 1, 3568486, 186000236, 5),
 		new ReportedMonsterHuntContract(30708, Set.of(800425, 800426, 800427),
 			800369, 800438, 5, 7086913, 186000201),
 		new ReportedMonsterHuntContract(30758, Set.of(800425, 800426, 800427),
@@ -458,17 +460,24 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", contract.requiredKills()));
 
 		QuestEvent targets = new QuestEvent.KillNpcSet(contract.targetNpcIds());
-		QuestTransition continuing = transition(definition, "started", "started", targets);
-		assertEquals(1, continuing.priority());
-		assertEquals(List.of(new QuestCondition.VariableBelow("var0", contract.requiredKills() - 1)),
-			continuing.conditions());
-		assertEquals(List.of(new QuestAction.IncrementVariable("var0", 1)), continuing.actions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-			continuing.afterCommit());
-		QuestTransition finalKill = transition(definition, "started", "ready", targets);
-		assertEquals(0, finalKill.priority());
-		assertEquals(List.of(new QuestCondition.VariableAtLeast("var0", contract.requiredKills() - 1)),
-			finalKill.conditions());
+		QuestTransition finalKill;
+		if (contract.requiredKills() == 1) {
+			finalKill = transition(definition, "started", "ready", targets);
+			assertEquals(1, finalKill.priority());
+			assertEquals(List.of(new QuestCondition.VariableBelow("var0", 1)), finalKill.conditions());
+		} else {
+			QuestTransition continuing = transition(definition, "started", "started", targets);
+			assertEquals(1, continuing.priority());
+			assertEquals(List.of(new QuestCondition.VariableBelow("var0", contract.requiredKills() - 1)),
+				continuing.conditions());
+			assertEquals(List.of(new QuestAction.IncrementVariable("var0", 1)), continuing.actions());
+			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
+				continuing.afterCommit());
+			finalKill = transition(definition, "started", "ready", targets);
+			assertEquals(0, finalKill.priority());
+			assertEquals(List.of(new QuestCondition.VariableAtLeast("var0", contract.requiredKills() - 1)),
+				finalKill.conditions());
+		}
 		assertEquals(List.of(new QuestAction.IncrementVariable("var0", 1)), finalKill.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			finalKill.afterCommit());
@@ -519,7 +528,7 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			new QuestEvent.TalkToNpc(contract.endNpcId(), QuestDialogAction.SELECTED_QUEST_REWARD1.id()));
 		assertEquals(List.of(
 			new QuestAction.GrantReward("EXP", 0, contract.exp(), QuestRewardAmountMode.QUEST_BASE),
-			new QuestAction.GrantReward("ITEM", contract.firstRewardItemId(), 1,
+			new QuestAction.GrantReward("ITEM", contract.firstRewardItemId(), contract.firstRewardItemAmount(),
 				QuestRewardAmountMode.EXACT),
 			new QuestAction.CompleteQuest(0)), completion.actions());
 		assertEquals(List.of(
@@ -538,7 +547,7 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 				.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc)
 				.map(transition -> ((QuestEvent.TalkToNpc) transition.event()).npcId())
 				.collect(Collectors.toUnmodifiableSet()));
-		assertEquals(2, definition.transitions().stream()
+		assertEquals(contract.requiredKills() == 1 ? 1 : 2, definition.transitions().stream()
 			.filter(transition -> transition.event() instanceof QuestEvent.KillNpcSet)
 			.count());
 		assertTrue(definition.transitions().stream().allMatch(transition ->
@@ -754,11 +763,16 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 	 * Holds target, owner, and reward differences for monster hunts reported to an end NPC.
 	 */
 	private record ReportedMonsterHuntContract(int questId, Set<Integer> targetNpcIds, int startNpcId,
-			int endNpcId, int requiredKills, long exp, int firstRewardItemId) {
+			int endNpcId, int requiredKills, long exp, int firstRewardItemId, long firstRewardItemAmount) {
 
 		private ReportedMonsterHuntContract(int questId, Set<Integer> targetNpcIds, int startNpcId,
 				int endNpcId, long exp, int firstRewardItemId) {
-			this(questId, targetNpcIds, startNpcId, endNpcId, 10, exp, firstRewardItemId);
+			this(questId, targetNpcIds, startNpcId, endNpcId, 10, exp, firstRewardItemId, 1);
+		}
+
+		private ReportedMonsterHuntContract(int questId, Set<Integer> targetNpcIds, int startNpcId,
+				int endNpcId, int requiredKills, long exp, int firstRewardItemId) {
+			this(questId, targetNpcIds, startNpcId, endNpcId, requiredKills, exp, firstRewardItemId, 1);
 		}
 	}
 }
