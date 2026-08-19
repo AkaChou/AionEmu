@@ -21,27 +21,26 @@
     </node>
     <node label="started" status="START">
       <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
     </node>
     <node label="s1" status="START">
       <var name="var0" value="1"/>
-      <var name="var1" value="5"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="s2" status="START">
       <var name="var0" value="2"/>
-      <var name="var1" value="5"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="s3" status="START">
       <var name="var0" value="3"/>
-      <var name="var1" value="5"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="s4" status="START">
       <var name="var0" value="4"/>
-      <var name="var1" value="5"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="reward" status="REWARD">
       <var name="var0" value="5"/>
-      <var name="var1" value="5"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -59,7 +58,6 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
@@ -71,7 +69,6 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <!-- 击杀 Event_Guard 累积计数(共 5 个)。Killing Event Guards accumulates the kill count (5 total). -->
@@ -81,7 +78,7 @@
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
-        <variable-below field="var1" value="5"/>
+        <variable-below field="var1" value="4"/>
       </conditions>
       <actions>
         <increment-variable field="var1" delta="1"/>
@@ -99,7 +96,7 @@
         <variable-at-least field="var1" value="4"/>
       </conditions>
       <actions>
-        <set-variable field="var1" value="5"/>
+        <set-variable field="var1" value="0"/>
         <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
@@ -125,7 +122,7 @@
     <!-- 第 3 步:与 Feregran01 对话。Step 3: talk to Feregran01. -->
     <transition source="s2" target="s3">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806289" action="SETPRO1"/>
+        <dialog type="TALK_TO_NPC" npc-id="806289" action="SETPRO3"/>
       </event>
       <conditions>
         <variable-is field="var0" value="2"/>
