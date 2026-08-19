@@ -101,6 +101,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204029" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
     <transition source="started" target="v1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204029" action="SETPRO1"/>
@@ -229,14 +237,6 @@
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204028" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
   </transitions>
