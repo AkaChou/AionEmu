@@ -115,6 +115,14 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799527" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
     <!-- 女王倒计时推进：0→1→2 各重启 240 秒；var0==2/3 时计时结束无实际推进（忠实旧分支）。 Queen countdown advances 0→1→2 with 240s restarts; var0==2/3 timer-end does nothing (faithful). -->
     <transition source="started" target="s1">
       <event>
