@@ -17,9 +17,7 @@
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
     </node>
-    <node label="started" status="START">
-      <var name="var0" value="0"/>
-    </node>
+    <node label="started" status="START"/>
     <node label="m1" status="START">
       <var name="var0" value="10"/>
     </node>
@@ -33,35 +31,12 @@
   <transitions>
     <!-- 接取:Aquila (799291) 提供任务。 -->
     <dialog type="NPC_START" npc-id="799291" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
-    <!-- 击杀 第56德拉坎管理兵 (216102/216103) 累计 10 只:var0 0→10,priority 1 计数、0 完成。 -->
-    <transition source="started" target="started" priority="1">
+    <!-- 第 10 次击杀立即进入可报告状态。 / The tenth kill immediately reaches turn-in readiness. -->
+    <counter source="started" target="m1" field="var0" required="10">
       <event>
         <kill-npc npc-ids="216102 216103"/>
       </event>
-      <conditions>
-        <variable-below field="var0" value="10"/>
-      </conditions>
-      <actions>
-        <increment-variable field="var0" delta="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="m1" priority="0">
-      <event>
-        <kill-npc npc-ids="216102 216103"/>
-      </event>
-      <conditions>
-        <variable-at-least field="var0" value="10"/>
-      </conditions>
-      <actions>
-        <set-variable field="var0" value="10"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
+    </counter>
     <!-- 报告:Aquila (799291) 提交完成,进入奖励。 -->
     <dialog type="NPC_REPORT" npc-id="799291" source="m1" target="reward" page="SELECT2"/>
     <!-- 奖励:Aquila (799291) 领取固定奖励 (exp/gold)。 -->
