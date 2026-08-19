@@ -33,11 +33,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class QuestDataDrivenHuntProductionFlowTest {
 	private static final int KILL_COUNT = 30;
-	private static final Set<Integer> TARGET_NPC_IDS = Set.of(
+	private static final Set<Integer> LIBRARIAN_NPC_IDS = Set.of(
 		220305, 220308, 220311, 220314, 220317, 220323, 220326, 220329);
+	private static final Set<Integer> RELIQUARIAN_NPC_IDS = Set.of(
+		220307, 220310, 220313, 220316, 220319, 220325, 220328, 220331, 220411);
 	private static final List<QuestContract> CONTRACTS = List.of(
-		new QuestContract(16805, 806148),
-		new QuestContract(26805, 806149));
+		new QuestContract(16805, 806148, LIBRARIAN_NPC_IDS, 220305, 220327, 69327360),
+		new QuestContract(26805, 806149, LIBRARIAN_NPC_IDS, 220305, 220327, 69327360),
+		new QuestContract(16807, 806148, RELIQUARIAN_NPC_IDS, 220307, 220306, 80304192),
+		new QuestContract(26807, 806149, RELIQUARIAN_NPC_IDS, 220307, 220306, 80304192));
 
 	@TestFactory
 	Stream<DynamicTest> preservesRetailHuntAndRewardFlow() {
@@ -53,7 +57,7 @@ class QuestDataDrivenHuntProductionFlowTest {
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1, "var1", 0));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0, "var1", 0));
 
-		QuestEvent configuredTargets = new QuestEvent.KillNpcSet(TARGET_NPC_IDS);
+		QuestEvent configuredTargets = new QuestEvent.KillNpcSet(contract.targetNpcIds());
 		QuestTransition count = transition(definition, "started", "started", configuredTargets);
 		assertEquals(1, count.priority());
 		assertEquals(List.of(new QuestCondition.VariableBelow("var1", KILL_COUNT - 1)), count.conditions());
@@ -74,16 +78,18 @@ class QuestDataDrivenHuntProductionFlowTest {
 
 		QuestSnapshot snapshot = snapshot(contract.questId(), QuestStatus.START,
 			Map.of("var0", 0, "var1", 0), definition);
-		assertNoMatch(compiled, snapshot, new QuestEvent.KillNpc(220327));
+		assertNoMatch(compiled, snapshot, new QuestEvent.KillNpc(contract.excludedTargetNpcId()));
 		for (int kills = 1; kills < KILL_COUNT; kills++) {
-			QuestMutationPlan plan = dispatch(compiled, snapshot, new QuestEvent.KillNpc(220305));
+			QuestMutationPlan plan = dispatch(compiled, snapshot,
+				new QuestEvent.KillNpc(contract.sampleTargetNpcId()));
 			assertEquals(QuestStatus.START, plan.nextStatus());
 			snapshot = nextSnapshot(snapshot, plan);
 			assertEquals(Map.of("var0", 0, "var1", kills),
 				definition.progressLayout().unpack(snapshot.packedVariables()));
 		}
 
-		QuestMutationPlan completedHunt = dispatch(compiled, snapshot, new QuestEvent.KillNpc(220305));
+		QuestMutationPlan completedHunt = dispatch(compiled, snapshot,
+			new QuestEvent.KillNpc(contract.sampleTargetNpcId()));
 		assertEquals(QuestStatus.REWARD, completedHunt.nextStatus());
 		assertEquals(Map.of("var0", 1, "var1", 0),
 			definition.progressLayout().unpack(completedHunt.nextPackedVariables()));
@@ -113,7 +119,7 @@ class QuestDataDrivenHuntProductionFlowTest {
 			contract.reportNpcId(), QuestDialogAction.SELECTED_QUEST_REWARD1.id());
 		QuestTransition completion = transition(definition, "reward", "complete", completionEvent);
 		List<QuestAction> expectedActions = List.of(
-			new QuestAction.GrantReward("EXP", 0, 69327360, QuestRewardAmountMode.QUEST_BASE),
+			new QuestAction.GrantReward("EXP", 0, contract.expReward(), QuestRewardAmountMode.QUEST_BASE),
 			new QuestAction.GrantReward("ITEM", 166100009, 10),
 			new QuestAction.CompleteQuest(0));
 		assertEquals(expectedActions, completion.actions());
@@ -190,6 +196,7 @@ class QuestDataDrivenHuntProductionFlowTest {
 		}
 	}
 
-	private record QuestContract(int questId, int reportNpcId) {
+	private record QuestContract(int questId, int reportNpcId, Set<Integer> targetNpcIds,
+			int sampleTargetNpcId, int excludedTargetNpcId, long expReward) {
 	}
 }
