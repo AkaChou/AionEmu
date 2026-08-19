@@ -12,58 +12,75 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="6" width="4" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE">
-      <var name="var0" value="0"/>
-    </node>
-    <node label="started" status="START">
-      <var name="var0" value="0"/>
+    <node label="unaccepted" status="NONE"/>
+    <node label="started" status="START"/>
+    <node label="ready" status="START">
+      <var name="var0" value="4"/>
+      <var name="var1" value="4"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="2"/>
+      <var name="var0" value="4"/>
+      <var name="var1" value="4"/>
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="0"/>
-    </node>
-    <node label="h1" status="START">
-      <var name="var0" value="1"/>
-      <var name="var1" value="0"/>
-    </node>
-    <node label="h2" status="START">
-      <var name="var0" value="2"/>
-      <var name="var1" value="0"/>
+      <var name="var0" value="4"/>
+      <var name="var1" value="4"/>
     </node>
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="805401" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <transition source="started" target="started">
+    <!-- 两组目标独立累计；任一组最后完成时进入可报告状态。 -->
+    <!-- Count both groups independently; whichever group finishes last reaches turn-in readiness. -->
+    <transition source="started" target="started" priority="2">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="805401" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
-      </after-commit>
-    </transition>
-    <transition source="h2" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="805401" action="SELECT_QUEST_REWARD"/>
+        <kill-npc npc-id="883644"/>
       </event>
       <conditions>
-        <variable-at-least field="var1" value="4"/>
+        <variable-below field="var0" value="3"/>
       </conditions>
+      <actions>
+        <increment-variable field="var0" delta="1"/>
+      </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="805401" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
     <transition source="started" target="started" priority="1">
       <event>
-        <kill-npc npc-ids="883644"/>
+        <kill-npc npc-id="883644"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+        <variable-below field="var1" value="4"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var0" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="ready" priority="0">
+      <event>
+        <kill-npc npc-id="883644"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+        <variable-at-least field="var1" value="4"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var0" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started" priority="2">
+      <event>
+        <kill-npc npc-id="883645"/>
       </event>
       <conditions>
         <variable-below field="var1" value="3"/>
@@ -75,27 +92,13 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="h1" priority="0">
+    <transition source="started" target="started" priority="1">
       <event>
-        <kill-npc npc-ids="883644"/>
+        <kill-npc npc-id="883645"/>
       </event>
       <conditions>
-        <variable-at-least field="var1" value="3"/>
-      </conditions>
-      <actions>
-        <set-variable field="var0" value="1"/>
-        <set-variable field="var1" value="0"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="h1" target="h1" priority="1">
-      <event>
-        <kill-npc npc-ids="883645"/>
-      </event>
-      <conditions>
-        <variable-below field="var1" value="3"/>
+        <variable-is field="var1" value="3"/>
+        <variable-below field="var0" value="4"/>
       </conditions>
       <actions>
         <increment-variable field="var1" delta="1"/>
@@ -104,22 +107,23 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="h1" target="h2" priority="0">
+    <transition source="started" target="ready" priority="0">
       <event>
-        <kill-npc npc-ids="883645"/>
+        <kill-npc npc-id="883645"/>
       </event>
       <conditions>
-        <variable-at-least field="var1" value="3"/>
+        <variable-is field="var1" value="3"/>
+        <variable-at-least field="var0" value="4"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="2"/>
-        <set-variable field="var1" value="4"/>
+        <increment-variable field="var1" delta="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-        <transition source="reward" target="reward">
+    <dialog type="NPC_REPORT" npc-id="805401" source="ready" target="reward" page="DEFAULT_SUCCESS"/>
+    <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805401" action="QUEST_SELECT"/>
       </event>
@@ -127,5 +131,8 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
+    <npc-complete npc-id="805401" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>
