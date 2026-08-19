@@ -129,7 +129,7 @@
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
-        <variable-below field="var1" value="30"/>
+        <variable-below field="var1" value="29"/>
       </conditions>
       <actions>
         <increment-variable field="var1" delta="1"/>

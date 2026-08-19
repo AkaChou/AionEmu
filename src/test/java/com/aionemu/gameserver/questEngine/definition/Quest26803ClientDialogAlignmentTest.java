@@ -25,7 +25,7 @@ class Quest26803ClientDialogAlignmentTest {
 	void keepsAreaAcquisitionSeparateFromTheRewardDialog() throws Exception {
 		QuestDefinition definition = definition().definition();
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0, "var1", 0));
-		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0, "var1", 0));
+		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1, "var1", 30));
 		assertEquals(List.of(List.of("finished:26802")), startConditionGroups(definition));
 
@@ -64,8 +64,18 @@ class Quest26803ClientDialogAlignmentTest {
 
 	@Test
 	void finalKillEntersRewardBeforeTheNpcReport() throws Exception {
-		QuestTransition completion = transition(definition().definition(), "started", "reward",
-			new QuestEvent.KillNpcSet(LIBRARIANS));
+		QuestDefinition definition = definition().definition();
+		QuestEvent librarians = new QuestEvent.KillNpcSet(LIBRARIANS);
+		QuestTransition continuing = transition(definition, "started", "started", librarians);
+		assertEquals(Integer.valueOf(1), continuing.priority());
+		assertEquals(List.of(
+			new QuestCondition.QuestVariableIs("var0", 0),
+			new QuestCondition.VariableBelow("var1", 29)), continuing.conditions());
+		assertEquals(List.of(new QuestAction.IncrementVariable("var1", 1)), continuing.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
+			continuing.afterCommit());
+
+		QuestTransition completion = transition(definition, "started", "reward", librarians);
 
 		assertEquals(Integer.valueOf(0), completion.priority());
 		assertEquals(List.of(
