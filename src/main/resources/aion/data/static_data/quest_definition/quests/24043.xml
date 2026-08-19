@@ -115,6 +115,17 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="278086" action="SELECT2_1"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
     <!-- NPC 278086 推进 / NPC 278086 advance -->
     <transition source="s1" target="s2">
       <event>
@@ -131,10 +142,21 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 攻击懒惰语言怪 253610 推进 / Attacking the lazy language monster 253610 advances -->
-    <transition source="s2" target="s3">
+    <!-- 攻击懒惰语言怪后诱导至 Sinjah 坐标 / Lure the attacked lazy-language monster to Sinjah's coordinate -->
+    <transition source="s2" target="s2">
       <event>
         <attack-npc npc-id="253610"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <after-commit>
+        <watch-lured-npc-coordinate x="675.524475" y="1541.412354" z="1610.466553" radius="30" completion="KILL"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s3">
+      <event>
+        <npc-reach-target/>
       </event>
       <conditions>
         <variable-is field="var0" value="2"/>
@@ -156,6 +178,17 @@
       </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="278039" action="SELECT4_1"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
       </after-commit>
     </transition>
     <!-- NPC 278039 推进 / NPC 278039 advance -->
@@ -186,20 +219,16 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-    <!-- NPC 279027 过场 293 / NPC 279027 movie 293 -->
+    <!-- NPC 279027 继续对话 / NPC 279027 continuation dialog -->
     <transition source="s4" target="s4">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="279027" action="SELECT7_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="279027" action="SELECT5_1"/>
       </event>
       <conditions>
         <variable-is field="var0" value="4"/>
       </conditions>
-      <actions>
-        <remove-item item-id="182215373" count="1"/>
-      </actions>
       <after-commit>
-        <play-movie movie-id="293"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT7_1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
       </after-commit>
     </transition>
     <!-- NPC 279027 推进 / NPC 279027 advance -->
@@ -230,6 +259,17 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
       </after-commit>
     </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204210" action="SELECT6_1"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="5"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1"/>
+      </after-commit>
+    </transition>
     <!-- NPC 204210 推进并给 182215373 / NPC 204210 advance and give 182215373 -->
     <transition source="s5" target="s6">
       <event>
@@ -257,6 +297,22 @@
       </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT7"/>
+      </after-commit>
+    </transition>
+    <!-- NPC 279027 过场 293 / NPC 279027 movie 293 -->
+    <transition source="s6" target="s6">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="279027" action="SELECT7_1"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="6"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215373" count="1"/>
+      </actions>
+      <after-commit>
+        <play-movie movie-id="293"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT7_1"/>
       </after-commit>
     </transition>
     <!-- NPC 279027 设置为领奖状态 / NPC 279027 sets reward state -->
@@ -314,38 +370,6 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="278003" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="278003" action="SELECT4_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="278003" action="SELECT5_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="278003" action="SELECT6_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1"/>
       </after-commit>
     </transition>
   </transitions>
