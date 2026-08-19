@@ -21,7 +21,9 @@
     </node>
     <node label="started" status="START">
       <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
+    </node>
+    <node label="k1" status="START">
+      <var name="var0" value="1"/>
     </node>
     <node label="reward" status="REWARD">
       <var name="var0" value="1"/>
@@ -41,7 +43,7 @@
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
-        <variable-below field="var1" value="5"/>
+        <variable-below field="var1" value="4"/>
       </conditions>
       <actions>
         <increment-variable field="var1" delta="1"/>
@@ -50,7 +52,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
+    <transition source="started" target="k1" priority="0">
       <event>
         <kill-npc npc-ids="233126 233127 233128"/>
       </event>
@@ -59,25 +61,24 @@
         <variable-at-least field="var1" value="4"/>
       </conditions>
       <actions>
-        <set-variable field="var1" value="5"/>
+        <increment-variable field="var1" delta="1"/>
         <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 804865:REWARD 状态,1352 显示 5,其余走完成流程。 -->
+    <dialog type="NPC_REPORT" npc-id="804867" source="k1" target="reward" page="DEFAULT_SUCCESS"/>
     <transition source="reward" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="804865" action="SELECT2"/>
+        <dialog type="TALK_TO_NPC" npc-id="804867" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="804865" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="804867" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_REPORT" npc-id="804867" source="reward" target="reward" page="DEFAULT_SUCCESS"/>
   </transitions>
 </quest-definition>

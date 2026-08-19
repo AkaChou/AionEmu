@@ -9,6 +9,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -98,6 +99,97 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			new QuestEvent.TalkToNpc(799291, QuestDialogAction.SELECT_QUEST_REWARD.id()));
 		assertEquals(QuestStatus.REWARD, report.nextStatus());
 		assertEquals(Map.of("var0", 10), definition.progressLayout().unpack(report.nextPackedVariables()));
+	}
+
+	@Test
+	void quest26988CountsFiveKillsBeforeRetailReportAndRewardsAt804867() throws Exception {
+		CompiledQuestDefinition compiled = load(26988);
+		QuestDefinition definition = compiled.definition();
+		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
+		assertNode(definition, "k1", QuestStatus.START, Map.of("var0", 1));
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1, "var1", 5));
+
+		QuestEvent targets = new QuestEvent.KillNpcSet(Set.of(233126, 233127, 233128));
+		QuestTransition continuing = transition(definition, "started", "started", targets);
+		assertEquals(1, continuing.priority());
+		assertEquals(List.of(
+			new QuestCondition.QuestVariableIs("var0", 0),
+			new QuestCondition.VariableBelow("var1", 4)), continuing.conditions());
+		assertEquals(List.of(new QuestAction.IncrementVariable("var1", 1)), continuing.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
+			continuing.afterCommit());
+
+		QuestTransition finalKill = transition(definition, "started", "k1", targets);
+		assertEquals(0, finalKill.priority());
+		assertEquals(List.of(
+			new QuestCondition.QuestVariableIs("var0", 0),
+			new QuestCondition.VariableAtLeast("var1", 4)), finalKill.conditions());
+		assertEquals(List.of(
+			new QuestAction.IncrementVariable("var1", 1),
+			new QuestAction.SetVariable("var0", 1)), finalKill.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
+			finalKill.afterCommit());
+
+		QuestSnapshot snapshot = snapshot(26988, QuestStatus.START,
+			Map.of("var0", 0, "var1", 0), definition);
+		for (int count = 1; count <= 5; count++) {
+			QuestMutationPlan plan = dispatch(compiled, snapshot, new QuestEvent.KillNpc(233126));
+			snapshot = nextSnapshot(snapshot, plan);
+			assertEquals(QuestStatus.START, snapshot.status());
+			assertEquals(Map.of("var0", count == 5 ? 1 : 0, "var1", count),
+				definition.progressLayout().unpack(snapshot.packedVariables()));
+		}
+		assertNoMatch(compiled, snapshot, new QuestEvent.KillNpc(233126));
+
+		QuestTransition reportPage = transition(definition, "k1", "k1",
+			new QuestEvent.TalkToNpc(804867, QuestDialogAction.QUEST_SELECT.id()));
+		assertEquals(List.of(), reportPage.conditions());
+		assertEquals(List.of(), reportPage.actions());
+		assertNull(reportPage.priority());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
+			reportPage.afterCommit());
+
+		QuestEvent reportEvent = new QuestEvent.TalkToNpc(804867,
+			QuestDialogAction.SELECT_QUEST_REWARD.id());
+		QuestTransition report = transition(definition, "k1", "reward", reportEvent);
+		assertEquals(List.of(), report.conditions());
+		assertEquals(List.of(), report.actions());
+		assertNull(report.priority());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
+			report.afterCommit());
+		QuestMutationPlan reportPlan = dispatch(compiled, snapshot, reportEvent);
+		snapshot = nextSnapshot(snapshot, reportPlan);
+		assertEquals(QuestStatus.REWARD, snapshot.status());
+		assertEquals(Map.of("var0", 1, "var1", 5),
+			definition.progressLayout().unpack(snapshot.packedVariables()));
+
+		QuestTransition reopen = transition(definition, "reward", "reward",
+			new QuestEvent.TalkToNpc(804867, QuestDialogAction.QUEST_SELECT.id()));
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
+			reopen.afterCommit());
+		for (QuestDialogAction action : List.of(QuestDialogAction.USE_OBJECT,
+				QuestDialogAction.SELECT_QUEST_REWARD)) {
+			QuestTransition preview = transition(definition, "reward", "reward",
+				new QuestEvent.TalkToNpc(804867, action.id()));
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
+				QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())), preview.afterCommit());
+		}
+
+		QuestTransition completion = transition(definition, "reward", "complete",
+			new QuestEvent.TalkToNpc(804867, QuestDialogAction.SELECTED_QUEST_REWARD1.id()));
+		assertEquals(List.of(
+			new QuestAction.GrantReward("EXP", 0, 3618881, QuestRewardAmountMode.QUEST_BASE),
+			new QuestAction.GrantReward("ITEM", 186000236, 5, QuestRewardAmountMode.EXACT),
+			new QuestAction.CompleteQuest(0)), completion.actions());
+		assertEquals(List.of(
+			new AfterCommitAction.RefreshPlayerStats(),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+			new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+			completion.afterCommit());
+		assertTrue(definition.transitions().stream().noneMatch(transition ->
+			transition.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 804865));
 	}
 
 	private static void assertSimpleMonsterHunt(MonsterHuntContract contract) throws Exception {
