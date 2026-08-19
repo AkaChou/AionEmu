@@ -186,18 +186,18 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 
 	@Test
 	void simpleMonsterHuntsUseTheClientSuccessPageWhileObjectivesAreIncomplete() throws Exception {
-		for (Map.Entry<Integer, Integer> entry : Map.of(
-			25002, 804903,
-			25010, 804721,
-			25201, 804914,
-			25202, 804914,
-			25203, 804914,
-			25325, 805343,
-			25409, 805402,
-			25410, 805402,
-			25411, 805402,
-			25412, 805402,
-			25413, 805402).entrySet()) {
+		for (Map.Entry<Integer, Integer> entry : Map.ofEntries(
+			Map.entry(25002, 804903),
+			Map.entry(25010, 804721),
+			Map.entry(25201, 804914),
+			Map.entry(25202, 804914),
+			Map.entry(25203, 804914),
+			Map.entry(25325, 805343),
+			Map.entry(25409, 805402),
+			Map.entry(25410, 805402),
+			Map.entry(25411, 805402),
+			Map.entry(25412, 805402),
+			Map.entry(25413, 805402)).entrySet()) {
 			QuestDefinition definition = load(entry.getKey()).definition();
 			QuestTransition progressPage = transition(definition, "started", "started",
 				new QuestEvent.TalkToNpc(entry.getValue(), QuestDialogAction.QUEST_SELECT.id()));
