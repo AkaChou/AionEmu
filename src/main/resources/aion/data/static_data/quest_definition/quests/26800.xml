@@ -10,7 +10,7 @@
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -19,21 +19,35 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="reward" status="REWARD">
+    <node label="s1" status="START">
       <var name="var0" value="1"/>
+    </node>
+    <node label="s2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <!-- 接取:DF6_Feregran_E (806079) 对话接取。Start via talking to DF6_Feregran_E. -->
+    <!-- 费雷甘 (806079) 使用 Aion 5.8 客户端的简易接取页面链。 / Feregan (806079) uses the Aion 5.8 client simple-accept page chain. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806079" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806079" action="SELECT_NONE_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE_1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
@@ -96,55 +110,22 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <!-- 第 3 步:进入 IDEternity_01_SensoryArea 播放过场 932。Step 3: entering the sensory area plays cutscene 932. -->
-    <transition source="started" target="started">
+    <!-- 进入永恒之塔后推进到恩菲坦塔阶段。 / Entering the Tower of Eternity advances to the Enfitenta stage. -->
+    <transition source="started" target="s1">
       <event>
-        <enter-zone zone="IDETERNITY_01_Q16800_301540000"/>
+        <enter-zone zone="DF_TOWER_SENSORY_AREA_Q26800_220120000"/>
       </event>
-      <after-commit>
-        <play-movie movie-id="932"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806079" action="FINISH_DIALOG"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806079" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806079" action="SELECT_QUEST_REWARD"/>
-      </event>
+      <conditions>
+        <variable-is field="var0" value="0"/>
+      </conditions>
       <actions>
         <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="806079" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806233" action="FINISH_DIALOG"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
+    <transition source="s1" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806233" action="QUEST_SELECT"/>
       </event>
@@ -152,47 +133,51 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition source="s1" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806233" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="806233" action="SELECT2_1"/>
       </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806233" action="SET_SUCCEED"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
       <actions>
-        <set-variable field="var0" value="1"/>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 进入知识书库后提交奖励状态，再播放电影 932。 / Entering the Archives commits reward state before playing movie 932. -->
+    <transition source="s2" target="reward">
+      <event>
+        <enter-zone zone="IDETERNITY_01_Q16800_301540000"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <play-movie movie-id="932"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="806233" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806149" action="FINISH_DIALOG"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
+    <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806149" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="806149" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <actions>
-        <set-variable field="var0" value="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="806149" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
