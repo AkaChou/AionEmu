@@ -155,6 +155,25 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 	}
 
 	@Test
+	void quest25060UsesTheClientSuccessPageWhileObjectivesAreIncomplete() throws Exception {
+		QuestDefinition definition = load(25060).definition();
+		QuestTransition progressPage = transition(definition, "started", "started",
+			new QuestEvent.TalkToNpc(804730, QuestDialogAction.QUEST_SELECT.id()));
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
+			progressPage.afterCommit());
+		QuestTransition rewardPage = transition(definition, "started", "reward",
+			new QuestEvent.TalkToNpc(804730, QuestDialogAction.SELECT_QUEST_REWARD.id()));
+		assertEquals(List.of(
+			new QuestCondition.QuestVariableIs("var1", 1),
+			new QuestCondition.QuestVariableIs("var2", 1),
+			new QuestCondition.QuestVariableIs("var3", 1)), rewardPage.conditions());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
+			rewardPage.afterCommit());
+	}
+
+	@Test
 	void challengeMonsterHuntsUseTheRetailClientAcceptAndReportPages() throws Exception {
 		for (int questId : List.of(27160, 27161)) {
 			QuestDefinition definition = load(questId).definition();
