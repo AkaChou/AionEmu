@@ -27,11 +27,10 @@
     </node>
     <node label="started" status="START">
       <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
     </node>
     <node label="reward" status="REWARD">
       <var name="var0" value="1"/>
-      <var name="var1" value="30"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -95,7 +94,7 @@
     <!-- 击杀图书馆管理员累积计数。Killing librarians accumulates the kill count. -->
     <transition source="started" target="started" priority="1">
       <event>
-        <kill-npc npc-ids="220305 220308 220311 220314 220317 220323 220326 220327 220329"/>
+        <kill-npc npc-ids="220305 220308 220311 220314 220317 220323 220326 220329"/>
       </event>
       <conditions>
         <variable-below field="var1" value="29"/>
@@ -110,13 +109,13 @@
     <!-- 击杀满 30 个后进入领奖。Reaching 30 kills enters reward. -->
     <transition source="started" target="reward" priority="0">
       <event>
-        <kill-npc npc-ids="220305 220308 220311 220314 220317 220323 220326 220327 220329"/>
+        <kill-npc npc-ids="220305 220308 220311 220314 220317 220323 220326 220329"/>
       </event>
       <conditions>
         <variable-at-least field="var1" value="29"/>
       </conditions>
       <actions>
-        <set-variable field="var1" value="30"/>
+        <set-variable field="var1" value="0"/>
         <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
