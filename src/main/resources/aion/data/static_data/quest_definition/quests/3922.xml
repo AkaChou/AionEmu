@@ -20,15 +20,9 @@
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
     </node>
-    <node label="started" status="START">
-      <var name="var0" value="0"/>
-    </node>
-    <node label="reward" status="REWARD">
-      <var name="var0" value="10"/>
-    </node>
-    <node label="complete" status="COMPLETE">
-      <var name="var0" value="10"/>
-    </node>
+    <node label="started" status="START"/>
+    <node label="reward" status="REWARD"/>
+    <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
     <!-- 接取：剑星职业技能导师 (203704) 提供任务。 -->
@@ -124,9 +118,9 @@
       </after-commit>
     </transition>
     <!-- 报告：203704 验收 var0=10 后进入领奖。 -->
-    <transition source="started" target="reward">
+    <transition source="started" target="reward" priority="0">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203704" action="SETPRO3"/>
+        <dialog type="TALK_TO_NPC" npc-id="203704" action="SELECT_QUEST_REWARD"/>
       </event>
       <conditions>
         <variable-at-least field="var0" value="10"/>
@@ -138,13 +132,29 @@
     </transition>
     <transition source="started" target="started">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="203704" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="203704" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <!-- 领奖：203704 发放固定奖励 (exp)。 -->
+    <transition source="started" target="started" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203704" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖：203704 发放固定奖励 (exp)。 / Reward: 203704 grants fixed exp. -->
     <npc-complete npc-id="203704" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
