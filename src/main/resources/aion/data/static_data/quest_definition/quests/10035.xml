@@ -57,19 +57,18 @@
     </node>
     <node label="s5" status="START">
       <var name="var0" value="5"/>
-      <var name="var1" value="0"/>
     </node>
     <node label="s6" status="START">
       <var name="var0" value="6"/>
-      <var name="var1" value="9"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="s7" status="START">
       <var name="var0" value="7"/>
-      <var name="var1" value="9"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="reward" status="REWARD">
       <var name="var0" value="8"/>
-      <var name="var1" value="9"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
