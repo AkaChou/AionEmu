@@ -99,7 +99,7 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 		new IndependentGroupedCountedMonsterHuntContract(25580,
 			Set.of(241246, 241480, 241484, 241488),
 			Set.of(241247, 241481, 241485, 241489)));
-	private static final List<List<Integer>> QUEST_27541_KILL_ORDERS = List.of(
+	private static final List<List<Integer>> INDEPENDENT_TRIPLE_KILL_ORDERS = List.of(
 		List.of(217185, 217195, 217204),
 		List.of(217185, 217204, 217195),
 		List.of(217195, 217185, 217204),
@@ -139,7 +139,19 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 
 	@Test
 	void quest27541RequiresThreeIndependentKillsBeforeTheRetailReport() throws Exception {
-		assertIndependentTripleCountedMonsterHunt();
+		assertIndependentTripleCountedMonsterHunt(27541, 799558, List.of(
+			new QuestAction.GrantReward("EXP", 0, 2814541, QuestRewardAmountMode.QUEST_BASE),
+			new QuestAction.GrantReward("ITEM", 162000050, 10, QuestRewardAmountMode.EXACT),
+			new QuestAction.GrantReward("ITEM", 164000070, 10, QuestRewardAmountMode.EXACT)));
+	}
+
+	@Test
+	void quest17541RequiresThreeIndependentKillsBeforeTheRetailReport() throws Exception {
+		assertIndependentTripleCountedMonsterHunt(17541, 799553, List.of(
+			new QuestAction.GrantReward("EXP", 0, 2814541, QuestRewardAmountMode.QUEST_BASE),
+			new QuestAction.GrantReward("AP", 0, 450, QuestRewardAmountMode.QUEST_BASE),
+			new QuestAction.GrantReward("ITEM", 162000050, 10, QuestRewardAmountMode.EXACT),
+			new QuestAction.GrantReward("ITEM", 164000070, 10, QuestRewardAmountMode.EXACT)));
 	}
 
 	@Test
@@ -905,8 +917,9 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			definition.progressLayout().unpack(report.nextPackedVariables()));
 	}
 
-	private static void assertIndependentTripleCountedMonsterHunt() throws Exception {
-		CompiledQuestDefinition compiled = load(27541);
+	private static void assertIndependentTripleCountedMonsterHunt(int questId, int reportNpcId,
+			List<QuestAction.GrantReward> rewards) throws Exception {
+		CompiledQuestDefinition compiled = load(questId);
 		QuestDefinition definition = compiled.definition();
 		Map<String, Integer> ready = Map.of("var0", 1, "var1", 1, "var2", 1);
 		Map<String, Integer> complete = Map.of("var0", 0, "var1", 0, "var2", 0);
@@ -922,10 +935,10 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 		QuestEvent thirdTargets = new QuestEvent.KillNpcSet(Set.of(217204, 217206));
 		assertIndependentTripleCountedKillRoutes(definition, thirdTargets, "var2", "var0", "var1");
 
-		QuestEvent reportEvent = new QuestEvent.TalkToNpc(799558,
+		QuestEvent reportEvent = new QuestEvent.TalkToNpc(reportNpcId,
 			QuestDialogAction.SELECT_QUEST_REWARD.id());
-		for (List<Integer> order : QUEST_27541_KILL_ORDERS) {
-			QuestSnapshot snapshot = snapshot(27541, QuestStatus.START,
+		for (List<Integer> order : INDEPENDENT_TRIPLE_KILL_ORDERS) {
+			QuestSnapshot snapshot = snapshot(questId, QuestStatus.START,
 				Map.of("var0", 0, "var1", 0, "var2", 0), definition);
 			assertNoMatch(compiled, snapshot, reportEvent);
 			for (int index = 0; index < order.size(); index++) {
@@ -950,7 +963,7 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			assertEquals(ready, definition.progressLayout().unpack(report.nextPackedVariables()));
 		}
 
-		QuestSnapshot alternate = snapshot(27541, QuestStatus.START,
+		QuestSnapshot alternate = snapshot(questId, QuestStatus.START,
 			Map.of("var0", 0, "var1", 0, "var2", 0), definition);
 		for (int target : List.of(217185, 217195, 217206)) {
 			alternate = nextSnapshot(alternate,
@@ -958,20 +971,20 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 		}
 		assertEquals(ready, definition.progressLayout().unpack(alternate.packedVariables()));
 
-		for (int target : List.of(246160, 246161, 217205, 246261)) {
-			assertNoMatch(compiled, snapshot(27541, QuestStatus.START,
+		for (int target : List.of(246160, 246161, 246196, 217205, 246261)) {
+			assertNoMatch(compiled, snapshot(questId, QuestStatus.START,
 				Map.of("var0", 0, "var1", 0, "var2", 0), definition),
 				new QuestEvent.KillNpc(target));
 		}
 
 		QuestTransition accept = transition(definition, "unaccepted", "started",
-			new QuestEvent.TalkToNpc(799558, QuestDialogAction.QUEST_ACCEPT_SIMPLE.id()));
+			new QuestEvent.TalkToNpc(reportNpcId, QuestDialogAction.QUEST_ACCEPT_SIMPLE.id()));
 		assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), accept.afterCommit());
 		QuestTransition reportPage = transition(definition, "ready", "ready",
-			new QuestEvent.TalkToNpc(799558, QuestDialogAction.QUEST_SELECT.id()));
+			new QuestEvent.TalkToNpc(reportNpcId, QuestDialogAction.QUEST_SELECT.id()));
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
 			reportPage.afterCommit());
 		QuestTransition report = transition(definition, "ready", "reward", reportEvent);
@@ -980,12 +993,10 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
 			report.afterCommit());
 		QuestTransition completion = transition(definition, "reward", "complete",
-			new QuestEvent.TalkToNpc(799558, QuestDialogAction.SELECTED_QUEST_REWARD1.id()));
-		assertEquals(List.of(
-			new QuestAction.GrantReward("EXP", 0, 2814541, QuestRewardAmountMode.QUEST_BASE),
-			new QuestAction.GrantReward("ITEM", 162000050, 10, QuestRewardAmountMode.EXACT),
-			new QuestAction.GrantReward("ITEM", 164000070, 10, QuestRewardAmountMode.EXACT),
-			new QuestAction.CompleteQuest(0)), completion.actions());
+			new QuestEvent.TalkToNpc(reportNpcId, QuestDialogAction.SELECTED_QUEST_REWARD1.id()));
+		List<QuestAction> expectedCompletionActions = new java.util.ArrayList<>(rewards);
+		expectedCompletionActions.add(new QuestAction.CompleteQuest(0));
+		assertEquals(expectedCompletionActions, completion.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.RefreshPlayerStats(),
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
@@ -995,7 +1006,7 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			.filter(transition -> transition.event() instanceof QuestEvent.KillNpc
 				|| transition.event() instanceof QuestEvent.KillNpcSet)
 			.count());
-		assertEquals(Set.of(799558), definition.transitions().stream()
+		assertEquals(Set.of(reportNpcId), definition.transitions().stream()
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc)
 			.map(transition -> ((QuestEvent.TalkToNpc) transition.event()).npcId())
 			.collect(Collectors.toUnmodifiableSet()));
