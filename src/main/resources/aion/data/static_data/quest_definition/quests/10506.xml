@@ -260,15 +260,15 @@
         <dialog type="TALK_TO_NPC" npc-id="804710" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT8_1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT8"/>
       </after-commit>
     </transition>
     <transition source="s7" target="s7">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="804710" action="SELECT8_1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="804710" action="SELECT8_1"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT8_1_1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT8_1"/>
       </after-commit>
     </transition>
     <transition source="s7" target="reward">
