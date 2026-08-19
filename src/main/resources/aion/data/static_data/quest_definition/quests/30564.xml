@@ -15,38 +15,34 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
-    <node label="unaccepted" status="NONE">
-      <var name="var0" value="0"/>
-    </node>
-    <node label="started" status="START">
-      <var name="var0" value="0"/>
+    <node label="unaccepted" status="NONE"/>
+    <node label="started" status="START"/>
+    <node label="ready" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="2"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="2"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
     </node>
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="799592" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="799592" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
-      </after-commit>
-    </transition>
-    <!-- 阶段 1:击杀 4Named 指挥官 217310/236526 任一 1 个(var0 0→1)。Stage 1: kill a 4Named captain 217310/236526 (var0 0→1). -->
+    <!-- 独立目标一：击杀 217310。Independent objective one: kill 217310. -->
     <transition source="started" target="started" priority="1">
       <event>
-        <kill-npc npc-ids="217310 236526"/>
+        <kill-npc npc-id="217310"/>
       </event>
       <conditions>
         <variable-below field="var0" value="1"/>
+        <variable-below field="var1" value="1"/>
       </conditions>
       <actions>
         <increment-variable field="var0" delta="1"/>
@@ -55,61 +51,54 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 阶段 2:击杀传送守卫 217317 完成(var0 1→2)。Stage 2: kill the portal guard 217317 (var0 1→2). -->
-    <transition source="started" target="started" priority="0">
+    <transition source="started" target="ready" priority="0">
       <event>
-        <kill-npc npc-id="217317"/>
+        <kill-npc npc-id="217310"/>
       </event>
       <conditions>
-        <variable-at-least field="var0" value="1"/>
+        <variable-below field="var0" value="1"/>
+        <variable-at-least field="var1" value="1"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="2"/>
+        <increment-variable field="var0" delta="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <!-- 独立目标二：击杀 217317。Independent objective two: kill 217317. -->
+    <transition source="started" target="started" priority="1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799592" action="SELECT_QUEST_REWARD"/>
+        <kill-npc npc-id="217317"/>
       </event>
       <conditions>
-        <variable-at-least field="var0" value="2"/>
+        <variable-below field="var1" value="1"/>
+        <variable-below field="var0" value="1"/>
       </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="799592" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="799670" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <transition source="started" target="started">
+    <transition source="started" target="ready" priority="0">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799670" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="799670" action="SELECT_QUEST_REWARD"/>
+        <kill-npc npc-id="217317"/>
       </event>
       <conditions>
-        <variable-at-least field="var0" value="2"/>
+        <variable-below field="var1" value="1"/>
+        <variable-at-least field="var0" value="1"/>
       </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="799670" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-        <transition source="reward" target="reward">
+    <dialog type="NPC_REPORT" npc-id="799670" source="ready" target="reward" page="DEFAULT_SUCCESS"/>
+    <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799670" action="QUEST_SELECT"/>
       </event>
@@ -117,5 +106,8 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
+    <npc-complete npc-id="799670" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>
