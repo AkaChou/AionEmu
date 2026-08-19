@@ -22,7 +22,6 @@
     </node>
     <node label="started" status="START">
       <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
     </node>
     <node label="reward" status="REWARD">
       <var name="var0" value="1"/>
