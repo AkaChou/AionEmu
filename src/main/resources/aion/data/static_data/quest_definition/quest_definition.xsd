@@ -13,6 +13,7 @@
   <xs:simpleType name="timer-delivery"><xs:restriction base="xs:string"><xs:enumeration value="AT_MOST_ONCE"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="npc-emotion"><xs:restriction base="xs:string"><xs:enumeration value="START_EMOTE2"/><xs:enumeration value="NO"/><xs:enumeration value="PANIC"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="interaction-npc-emotion"><xs:restriction base="xs:string"><xs:enumeration value="NO"/><xs:enumeration value="PANIC"/></xs:restriction></xs:simpleType>
+  <xs:simpleType name="lured-npc-completion"><xs:restriction base="xs:string"><xs:enumeration value="DELETE"/><xs:enumeration value="KILL"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="player-emotion"><xs:restriction base="xs:string"><xs:enumeration value="STAND"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="quest-system-message"><xs:restriction base="xs:string"><xs:enumeration value="QUEST_FAILED"/><xs:enumeration value="WAREHOUSE_FULL_INVENTORY"/></xs:restriction></xs:simpleType>
   <xs:simpleType name="quest-system-message-target"><xs:restriction base="xs:string"><xs:enumeration value="NONE"/><xs:enumeration value="PLAYER"/></xs:restriction></xs:simpleType>
@@ -175,7 +176,7 @@
     <xs:element name="broadcast-interaction-npc-emotion"><xs:complexType><xs:attribute name="emotion" type="interaction-npc-emotion" use="required"/></xs:complexType></xs:element>
     <xs:element name="watch-follow-zone"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="zone" type="xs:string" use="required"/></xs:complexType></xs:element>
     <xs:element name="watch-follow-coordinate"><xs:complexType><xs:attribute name="slot" type="xs:string" use="required"/><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/></xs:complexType></xs:element>
-    <xs:element name="watch-lured-npc-coordinate"><xs:complexType><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="radius" type="xs:float" use="required"/></xs:complexType></xs:element>
+    <xs:element name="watch-lured-npc-coordinate"><xs:complexType><xs:attribute name="x" type="xs:float" use="required"/><xs:attribute name="y" type="xs:float" use="required"/><xs:attribute name="z" type="xs:float" use="required"/><xs:attribute name="radius" type="xs:float" use="required"/><xs:attribute name="completion" type="lured-npc-completion" default="DELETE"/></xs:complexType></xs:element>
     <xs:element name="start-quest-timer"><xs:complexType><xs:attribute name="seconds" type="xs:int" use="required"/><xs:attributeGroup ref="timer-policy-attributes"/></xs:complexType></xs:element>
     <xs:element name="start-invisible-timer"><xs:complexType><xs:attribute name="seconds" type="xs:int" use="required"/><xs:attributeGroup ref="timer-policy-attributes"/></xs:complexType></xs:element>
     <xs:element name="cancel-quest-timer"><xs:complexType><xs:attribute name="timer-id" type="xs:string" use="required"/><xs:attribute name="scope" type="timer-scope" use="required"/></xs:complexType></xs:element>

@@ -4,6 +4,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
+import com.aionemu.gameserver.questEngine.definition.QuestLureCompletion;
 import com.aionemu.gameserver.questEngine.definition.QuestNpcEmotion;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.world.WorldPosition;
@@ -183,14 +184,16 @@ class PlayerQuestAiPortTest {
 			(p, npc, questId, zone) -> CompletableFuture.completedFuture(null),
 			(p, npc, questId, x, y, z) -> CompletableFuture.completedFuture(null),
 			(p, task) -> { }, (p, npc) -> { },
-			(p, npc, questId, x, y, z, radius) -> {
+			(p, npc, questId, x, y, z, radius, completion) -> {
 				assertSame(mimiti, npc);
+				assertEquals(QuestLureCompletion.KILL, completion);
 				calls.add("LURE:" + questId + ":" + x + ":" + y + ":" + z + ":" + radius);
 				return true;
 			});
 
 		assertTrue(port.watchLuredNpcCoordinate(
-			snapshot().withInteractionObjectId(mimiti.getObjectId()), plan(), 892, 2024, 166, 13));
+			snapshot().withInteractionObjectId(mimiti.getObjectId()), plan(), 892, 2024, 166, 13,
+			QuestLureCompletion.KILL));
 		assertEquals(List.of("LURE:1001:892.0:2024.0:166.0:13.0"), calls);
 	}
 

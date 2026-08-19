@@ -146,8 +146,9 @@ public final class QuestE2eWorldFixture implements AutoCloseable {
 			(PlayerQuestAiPort.TargetNpcFollowCall) (ignoredPlayer, npc, target, questId) ->
 				followFuture(npc, "npc:" + target.getObjectId()));
 		setField(PlayerQuestAiPort.class, aiPort, "luredNpcWatch",
-			(PlayerQuestAiPort.LuredNpcWatchCall) (ignoredPlayer, npc, questId, x, y, z, radius) -> {
-				trace.add("AI", "lure:" + npc.getObjectId() + ":" + x + ":" + y + ":" + z + ":" + radius);
+			(PlayerQuestAiPort.LuredNpcWatchCall) (ignoredPlayer, npc, questId, x, y, z, radius, completion) -> {
+				trace.add("AI", "lure:" + npc.getObjectId() + ":" + x + ":" + y + ":" + z + ":" + radius
+					+ ":" + completion);
 				clock.schedule(1, () -> trace.add("AI", "lure-tick:" + npc.getObjectId()));
 				return true;
 			});

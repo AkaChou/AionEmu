@@ -314,9 +314,18 @@ public sealed interface AfterCommitAction permits AfterCommitAction.CloseDialog,
 		}
 	}
 
-	/** 监视本次攻击的常驻 NPC 被玩家以仇恨移动诱导到指定坐标，不改变其战斗 AI。 */
-	record WatchLuredNpcCoordinate(float x, float y, float z, float radius) implements AfterCommitAction {
+	/**
+	 * 监视本次攻击的常驻 NPC 被玩家以仇恨移动诱导到指定坐标，不改变其战斗 AI。
+	 * Watches the attacked resident NPC being lured to a coordinate by combat aggro without changing its AI.
+	 */
+	record WatchLuredNpcCoordinate(float x, float y, float z, float radius,
+		QuestLureCompletion completion) implements AfterCommitAction {
+		public WatchLuredNpcCoordinate(float x, float y, float z, float radius) {
+			this(x, y, z, radius, QuestLureCompletion.DELETE);
+		}
+
 		public WatchLuredNpcCoordinate {
+			Objects.requireNonNull(completion, "completion");
 			if (!Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)
 					|| !Float.isFinite(radius) || radius <= 0) {
 				throw new IllegalArgumentException("lure destination must be finite and radius must be positive");

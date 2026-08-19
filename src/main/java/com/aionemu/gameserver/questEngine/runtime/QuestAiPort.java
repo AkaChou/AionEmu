@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.QuestNpcEmotion;
+import com.aionemu.gameserver.questEngine.definition.QuestLureCompletion;
 
 /** 提交后向任务刷出的 NPC 发出 AI 命令的类型化边界。 / Typed boundary for AI commands issued to a quest-spawned NPC after commit. */
 public interface QuestAiPort {
@@ -56,9 +57,13 @@ public interface QuestAiPort {
 		return false;
 	}
 
-	/** 监视本次攻击的常驻 NPC 依靠战斗仇恨被诱导到坐标，不切换为跟随 AI。 */
+	/**
+	 * 监视本次攻击的常驻 NPC 依靠战斗仇恨被诱导到坐标，不切换为跟随 AI，并保留显式完成副作用。
+	 * Watches the attacked resident NPC being lured to a coordinate by combat aggro without changing its AI,
+	 * while preserving the explicit completion effect.
+	 */
 	default boolean watchLuredNpcCoordinate(QuestSnapshot snapshot, QuestMutationPlan plan,
-			float x, float y, float z, float radius) {
+			float x, float y, float z, float radius, QuestLureCompletion completion) {
 		return false;
 	}
 }

@@ -25,6 +25,8 @@ class Quest1157EscortRegressionTest {
 		assertTrue(attack.conditions().isEmpty());
 		assertEquals(List.of(new AfterCommitAction.WatchLuredNpcCoordinate(892, 2024, 166, 13)),
 			attack.afterCommit());
+		assertEquals(QuestLureCompletion.DELETE,
+			((AfterCommitAction.WatchLuredNpcCoordinate) attack.afterCommit().getFirst()).completion());
 
 		QuestSnapshot started = new QuestSnapshot(7, 1157, QuestStatus.START, 0, Map.of());
 		var attackPlan = QuestMutationPlanner.plan(definition, started, attack(), attack).orElseThrow();

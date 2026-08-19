@@ -931,7 +931,8 @@ public final class QuestDefinitionXmlCompiler {
 				floatValue(action, "z"));
 			case "watch-lured-npc-coordinate" -> new AfterCommitAction.WatchLuredNpcCoordinate(
 				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
-				floatValue(action, "radius"));
+				floatValue(action, "radius"), enumValueOrDefault(QuestLureCompletion.class, action,
+					"completion", QuestLureCompletion.DELETE));
 			case "start-quest-timer" -> new AfterCommitAction.StartQuestTimer(
 				integer(action, "seconds"), parseTimerPolicy(action));
 			case "start-invisible-timer" -> new AfterCommitAction.StartInvisibleTimer(

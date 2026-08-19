@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
+import com.aionemu.gameserver.questEngine.definition.QuestLureCompletion;
 import com.aionemu.gameserver.questEngine.definition.QuestNpcEmotion;
 import com.aionemu.gameserver.questEngine.definition.QuestPlayerEmotion;
 import com.aionemu.gameserver.questEngine.definition.QuestSpawnLocation;
@@ -376,6 +377,13 @@ class TypedQuestAfterCommitPortTest {
 				commands.add("zone:" + slot + ":" + zone);
 				return true;
 			}
+
+			@Override
+			public boolean watchLuredNpcCoordinate(QuestSnapshot snapshot, QuestMutationPlan plan,
+					float x, float y, float z, float radius, QuestLureCompletion completion) {
+				commands.add("lure:" + completion + ":" + x + ":" + y + ":" + z + ":" + radius);
+				return true;
+			}
 		};
 		TypedQuestAfterCommitPort port = new TypedQuestAfterCommitPort(dialogPort(), null, null, null, ai, null);
 		QuestSnapshot snapshot = new QuestSnapshot(7, 1001, QuestStatus.START, 0, Map.of())
@@ -385,9 +393,11 @@ class TypedQuestAfterCommitPortTest {
 		port.execute(new AfterCommitAction.BroadcastNpcEmotion("escort", QuestNpcEmotion.START_EMOTE2), snapshot, plan);
 		port.execute(new AfterCommitAction.BroadcastInteractionNpcEmotion(QuestNpcEmotion.NO), snapshot, plan);
 		port.execute(new AfterCommitAction.WatchFollowZone("escort", "DF2_ITEMUSEAREA_Q2333"), snapshot, plan);
+		port.execute(new AfterCommitAction.WatchLuredNpcCoordinate(1691.41f, 219.09f, 72.62f, 30,
+			QuestLureCompletion.KILL), snapshot, plan);
 
 		assertEquals(List.of("emotion:escort:START_EMOTE2", "interaction-emotion:900009:NO",
-			"zone:escort:DF2_ITEMUSEAREA_Q2333"), commands);
+			"zone:escort:DF2_ITEMUSEAREA_Q2333", "lure:KILL:1691.41:219.09:72.62:30.0"), commands);
 	}
 
 	@Test

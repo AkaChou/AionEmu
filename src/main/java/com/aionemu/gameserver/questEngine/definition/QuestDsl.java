@@ -675,8 +675,21 @@ public final class QuestDsl {
 		return new AfterCommitAction.WatchFollowCoordinate(slot, x, y, z);
 	}
 
+	/**
+	 * 监视诱导 NPC 到达坐标，默认到点后删除并安排重生。
+	 * Watches a lured NPC reaching a coordinate and defaults to deleting it with respawn scheduling.
+	 */
 	public static AfterCommitAction watchLuredNpcCoordinate(float x, float y, float z, float radius) {
 		return new AfterCommitAction.WatchLuredNpcCoordinate(x, y, z, radius);
+	}
+
+	/**
+	 * 监视诱导 NPC 到达坐标并应用显式完成副作用。
+	 * Watches a lured NPC reaching a coordinate with an explicit completion effect.
+	 */
+	public static AfterCommitAction watchLuredNpcCoordinate(float x, float y, float z, float radius,
+		QuestLureCompletion completion) {
+		return new AfterCommitAction.WatchLuredNpcCoordinate(x, y, z, radius, completion);
 	}
 
 	public static AfterCommitAction startQuestTimer(int seconds) {

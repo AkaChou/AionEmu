@@ -14,6 +14,7 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_NPC_INFO;
+import com.aionemu.gameserver.questEngine.definition.QuestLureCompletion;
 import com.aionemu.gameserver.questEngine.definition.QuestNpcEmotion;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.task.QuestTasks;
@@ -66,9 +67,14 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 		Future<?> start(Player player, Npc npc, Npc target, int questId);
 	}
 
+	/**
+	 * 任务诱导坐标检查器启动委托，保留 NPC 到达后的显式完成策略。
+	 * Delegate that starts a lure-coordinate watcher while preserving the explicit NPC completion effect.
+	 */
 	@FunctionalInterface
 	public interface LuredNpcWatchCall {
-		boolean start(Player player, Npc npc, int questId, float x, float y, float z, float radius);
+		boolean start(Player player, Npc npc, int questId, float x, float y, float z, float radius,
+			QuestLureCompletion completion);
 	}
 
 	@FunctionalInterface
@@ -194,12 +200,12 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 		this.coordinateFollow = Objects.requireNonNull(coordinateFollow, "coordinateFollow");
 		this.targetNpcFollow = (player, npc, target, questId) -> QuestTasks.newFollowingToTargetCheckTask(
 			new QuestEnv(null, player, questId, 0), npc, target);
-		this.luredNpcWatch = (player, npc, questId, x, y, z, radius) -> {
+		this.luredNpcWatch = (player, npc, questId, x, y, z, radius, completion) -> {
 			if (player.getController().hasScheduledTask(TaskId.QUEST_LURE)) {
 				return true;
 			}
 			Future<?> task = QuestTasks.newLuredNpcToCoordinateCheckTask(
-				new QuestEnv(npc, player, questId, 0), npc, x, y, z, radius);
+				new QuestEnv(npc, player, questId, 0), npc, x, y, z, radius, completion);
 			if (task == null) {
 				return false;
 			}
@@ -396,8 +402,9 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 
 	@Override
 	public boolean watchLuredNpcCoordinate(QuestSnapshot snapshot, QuestMutationPlan plan,
-			float x, float y, float z, float radius) {
+			float x, float y, float z, float radius, QuestLureCompletion completion) {
 		Objects.requireNonNull(snapshot, "snapshot");
+		Objects.requireNonNull(completion, "completion");
 		if (!Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(z)
 				|| !Float.isFinite(radius) || radius <= 0) {
 			throw new IllegalArgumentException("lure destination must be finite and radius must be positive");
@@ -408,7 +415,7 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 		}
 		VisibleObject visible = targets.find(snapshot.interactionObjectId());
 		return visible instanceof Npc npc
-			&& luredNpcWatch.start(player, npc, snapshot.questId(), x, y, z, radius);
+			&& luredNpcWatch.start(player, npc, snapshot.questId(), x, y, z, radius, completion);
 	}
 
 	private boolean run(QuestSnapshot snapshot, String slot, Command command) {

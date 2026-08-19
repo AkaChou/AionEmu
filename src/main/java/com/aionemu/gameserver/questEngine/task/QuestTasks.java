@@ -7,6 +7,7 @@ import java.util.concurrent.Future;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSearchResult;
+import com.aionemu.gameserver.questEngine.definition.QuestLureCompletion;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
@@ -92,7 +93,25 @@ public class QuestTasks {
 	 */
 	public static Future<?> newLuredNpcToCoordinateCheckTask(QuestEnv env, Npc npc,
 			float x, float y, float z, float radius) {
-		LuredNpcCheckTask checker = new LuredNpcCheckTask(env, npc, x, y, z, radius);
+		return newLuredNpcToCoordinateCheckTask(env, npc, x, y, z, radius, QuestLureCompletion.DELETE);
+	}
+
+	/**
+	 * 监视诱导 NPC 到达指定坐标，并按显式策略完成 NPC 世界副作用。
+	 * Watches a lured NPC reach a coordinate and applies the explicit NPC world-side completion effect.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @param npc 被诱导的 NPC / lured NPC
+	 * @param x 目标 X / target X
+	 * @param y 目标 Y / target Y
+	 * @param z 目标 Z / target Z
+	 * @param radius 到达半径 / arrival radius
+	 * @param completion 到达后的完成策略 / completion effect after arrival
+	 * @return 定时任务句柄 / scheduled task handle
+	 */
+	public static Future<?> newLuredNpcToCoordinateCheckTask(QuestEnv env, Npc npc,
+			float x, float y, float z, float radius, QuestLureCompletion completion) {
+		LuredNpcCheckTask checker = new LuredNpcCheckTask(env, npc, x, y, z, radius, completion);
 		Future<?> task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(checker, 500, 500);
 		checker.bind(task);
 		return task;
