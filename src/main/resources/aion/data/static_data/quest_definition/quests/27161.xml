@@ -12,153 +12,55 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var2" offset="12" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var3" offset="18" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="0"/>
-      <var name="var3" value="0"/>
     </node>
-    <node label="started" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="0"/>
-      <var name="var3" value="0"/>
+    <node label="started" status="START"/>
+    <node label="ready" status="START">
+      <var name="var0" value="10"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
-      <var name="var1" value="10"/>
-      <var name="var2" value="10"/>
-      <var name="var3" value="10"/>
+      <var name="var0" value="10"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="0"/>
-      <var name="var3" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="804719" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <transition source="started" target="started">
+    <dialog type="NPC_START" npc-id="804719" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <!-- 三种 LF5 突变怪共享一个击杀计数，总计 10 只后才能报告。 Three LF5 mutants share one kill counter; report after 10 total kills. -->
+    <transition source="started" target="started" priority="1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="804719" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
-      </after-commit>
-    </transition>
-    <!-- 击杀 LF5 三种突变怪各 10 只：xipetorage(235832)/kuillusm(235918)/lizardmanranger(235914)，三计数满进入领奖。 Kill 10 of each LF5 mutant (235832/235918/235914). -->
-    <transition source="started" target="started">
-      <event>
-        <kill-npc npc-id="235832"/>
+        <kill-npc npc-ids="235832 235914 235918"/>
       </event>
       <conditions>
-        <variable-below field="var1" value="9"/>
+        <variable-below field="var0" value="9"/>
       </conditions>
       <actions>
-        <increment-variable field="var1" delta="1"/>
+        <increment-variable field="var0" delta="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="ready" priority="0">
       <event>
-        <kill-npc npc-id="235918"/>
+        <kill-npc npc-ids="235832 235914 235918"/>
       </event>
       <conditions>
-        <variable-below field="var2" value="9"/>
+        <variable-at-least field="var0" value="9"/>
       </conditions>
       <actions>
-        <increment-variable field="var2" delta="1"/>
+        <increment-variable field="var0" delta="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
-      <event>
-        <kill-npc npc-id="235914"/>
-      </event>
-      <conditions>
-        <variable-below field="var3" value="9"/>
-      </conditions>
-      <actions>
-        <increment-variable field="var3" delta="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <kill-npc npc-id="235832"/>
-      </event>
-      <conditions>
-        <variable-is field="var1" value="9"/>
-        <variable-is field="var2" value="10"/>
-        <variable-is field="var3" value="10"/>
-      </conditions>
-      <actions>
-        <set-variable field="var1" value="10"/>
-        <set-status status="REWARD"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <kill-npc npc-id="235918"/>
-      </event>
-      <conditions>
-        <variable-is field="var1" value="10"/>
-        <variable-is field="var2" value="9"/>
-        <variable-is field="var3" value="10"/>
-      </conditions>
-      <actions>
-        <set-variable field="var2" value="10"/>
-        <set-status status="REWARD"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <kill-npc npc-id="235914"/>
-      </event>
-      <conditions>
-        <variable-is field="var1" value="10"/>
-        <variable-is field="var2" value="10"/>
-        <variable-is field="var3" value="9"/>
-      </conditions>
-      <actions>
-        <set-variable field="var3" value="10"/>
-        <set-status status="REWARD"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="804719" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <npc-complete npc-id="804719" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-        <transition source="reward" target="reward">
+    <dialog type="NPC_REPORT" npc-id="804719" source="ready" target="reward" page="DEFAULT_SUCCESS"/>
+    <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="804719" action="QUEST_SELECT"/>
       </event>
@@ -166,5 +68,8 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
+    <npc-complete npc-id="804719" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

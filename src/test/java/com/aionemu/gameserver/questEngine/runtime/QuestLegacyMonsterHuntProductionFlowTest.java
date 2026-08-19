@@ -80,6 +80,10 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			799297, 799225, 6937236, 100001773),
 		new ReportedMonsterHuntContract(30516, Set.of(236300),
 			805156, 799670, 1, 3568486, 186000236, 5),
+		new ReportedMonsterHuntContract(27160, Set.of(219700, 219777, 219788),
+			804719, 804719, 10, 4825175, 186000199),
+		new ReportedMonsterHuntContract(27161, Set.of(235832, 235914, 235918),
+			804719, 804719, 10, 4825175, 186000199),
 		new ReportedMonsterHuntContract(30708, Set.of(800425, 800426, 800427),
 			800369, 800438, 5, 7086913, 186000201),
 		new ReportedMonsterHuntContract(30758, Set.of(800425, 800426, 800427),
@@ -114,6 +118,30 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 	Stream<DynamicTest> independentCountedMonsterHuntsAcceptEitherRetailKillOrder() {
 		return INDEPENDENT_COUNTED_HUNTS.stream().map(contract -> DynamicTest.dynamicTest(
 			"quest " + contract.questId(), () -> assertIndependentCountedMonsterHunt(contract)));
+	}
+
+	@Test
+	void challengeMonsterHuntsUseTheRetailClientAcceptAndReportPages() throws Exception {
+		for (int questId : List.of(27160, 27161)) {
+			QuestDefinition definition = load(questId).definition();
+			Set<Integer> targets = questId == 27160
+				? Set.of(219700, 219777, 219788)
+				: Set.of(235832, 235914, 235918);
+			assertEquals(new QuestEvent.KillNpcSet(targets),
+				transition(definition, "started", "started", new QuestEvent.KillNpcSet(targets), 1).event());
+			assertEquals(new QuestEvent.KillNpcSet(targets),
+				transition(definition, "started", "ready", new QuestEvent.KillNpcSet(targets), 0).event());
+			QuestTransition accept = transition(definition, "unaccepted", "started",
+				new QuestEvent.TalkToNpc(804719, QuestDialogAction.QUEST_ACCEPT_SIMPLE.id()));
+			assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions());
+			assertEquals(List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
+				new AfterCommitAction.CloseDialog()), accept.afterCommit());
+			QuestTransition reportPage = transition(definition, "ready", "ready",
+				new QuestEvent.TalkToNpc(804719, QuestDialogAction.QUEST_SELECT.id()));
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
+				reportPage.afterCommit());
+		}
 	}
 
 	@Test
@@ -504,9 +532,10 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 		QuestEvent reportEvent = new QuestEvent.TalkToNpc(contract.endNpcId(),
 			QuestDialogAction.SELECT_QUEST_REWARD.id());
 		QuestSnapshot snapshot = snapshot(contract.questId(), QuestStatus.START, Map.of("var0", 0), definition);
+		List<Integer> targetNpcIds = contract.targetNpcIds().stream().toList();
 		for (int count = 1; count <= contract.requiredKills(); count++) {
 			QuestMutationPlan plan = dispatch(compiled, snapshot,
-				new QuestEvent.KillNpc(contract.targetNpcIds().iterator().next()));
+				new QuestEvent.KillNpc(targetNpcIds.get((count - 1) % targetNpcIds.size())));
 			snapshot = nextSnapshot(snapshot, plan);
 			assertEquals(QuestStatus.START, snapshot.status());
 			assertEquals(Map.of("var0", count),
