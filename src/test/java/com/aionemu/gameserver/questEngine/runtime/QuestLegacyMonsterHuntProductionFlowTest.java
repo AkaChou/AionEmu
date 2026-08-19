@@ -191,7 +191,8 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			25010, 804721,
 			25201, 804914,
 			25202, 804914,
-			25203, 804914).entrySet()) {
+			25203, 804914,
+			25325, 805343).entrySet()) {
 			QuestDefinition definition = load(entry.getKey()).definition();
 			QuestTransition progressPage = transition(definition, "started", "started",
 				new QuestEvent.TalkToNpc(entry.getValue(), QuestDialogAction.QUEST_SELECT.id()));
