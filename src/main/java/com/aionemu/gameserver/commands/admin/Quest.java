@@ -120,77 +120,98 @@ public class Quest extends AdminCommand {
         }
     }
 
-    private void handleSet(Player admin, Player target, String... params) {
-        int questId, var;
-        int varNum = 0;
-        QuestStatus questStatus;
+	/**
+	 * 应用 GM 指定的任务状态与变量，并按任务此前是否在客户端可见选择插入或更新包。
+	 * Applies the GM-specified quest state and variables, then selects an insert or update packet based on prior client
+	 * visibility.
+	 */
+	private void handleSet(Player admin, Player target, String... params) {
+		int questId, var;
+		int varNum = 0;
+		QuestStatus questStatus;
 
-        try {
-            String quest = params[1];
-            Pattern id = Pattern.compile("\\[quest:([^%]+)]");
-            Matcher result = id.matcher(quest);
-            if (result.find())
-                questId = Integer.parseInt(result.group(1));
-            else
-                questId = Integer.parseInt(params[1]);
+		try {
+			String quest = params[1];
+			Pattern id = Pattern.compile("\\[quest:([^%]+)]");
+			Matcher result = id.matcher(quest);
+			if (result.find())
+				questId = Integer.parseInt(result.group(1));
+			else
+				questId = Integer.parseInt(params[1]);
 
-            String statusValue = params[2];
-            if ("START".equals(statusValue)) {
-                questStatus = QuestStatus.START;
-            }
-            else if ("NONE".equals(statusValue)) {
-                questStatus = QuestStatus.NONE;
-            }
-            else if ("COMPLETE".equals(statusValue)) {
-                questStatus = QuestStatus.COMPLETE;
-            }
-            else if ("REWARD".equals(statusValue)) {
-                questStatus = QuestStatus.REWARD;
-            }
-            else {
-                PacketSendUtility.sendMessage(admin, "<status is one of START, NONE, REWARD, COMPLETE>");
-                return;
-            }
-            var = Integer.valueOf(params[3]);
-            if (params.length == 5 && params[4] != null && !params[4].isEmpty()) {
-                varNum = Integer.valueOf(params[4]);
-            }
-        }
-        catch (NumberFormatException e) {
-            PacketSendUtility.sendMessage(admin, "syntax //quest set <questId status var [varNum]>");
-            return;
-        }
+			String statusValue = params[2];
+			if ("START".equals(statusValue)) {
+				questStatus = QuestStatus.START;
+			}
+			else if ("NONE".equals(statusValue)) {
+				questStatus = QuestStatus.NONE;
+			}
+			else if ("COMPLETE".equals(statusValue)) {
+				questStatus = QuestStatus.COMPLETE;
+			}
+			else if ("REWARD".equals(statusValue)) {
+				questStatus = QuestStatus.REWARD;
+			}
+			else {
+				PacketSendUtility.sendMessage(admin, "<status is one of START, NONE, REWARD, COMPLETE>");
+				return;
+			}
+			var = Integer.valueOf(params[3]);
+			if (params.length == 5 && params[4] != null && !params[4].isEmpty()) {
+				varNum = Integer.valueOf(params[4]);
+			}
+		}
+		catch (NumberFormatException e) {
+			PacketSendUtility.sendMessage(admin, "syntax //quest set <questId status var [varNum]>");
+			return;
+		}
 
-        QuestState qs = target.getQuestStateList().getQuestState(questId);
-        if (qs == null) {
-            qs = new QuestState(questId, questStatus, 0, 0, null, 0, null);
-            target.getQuestStateList().addQuest(questId, qs);
-            PacketSendUtility.sendMessage(admin, "<QuestState has been newly initialized.>");
-        }
+		QuestState qs = target.getQuestStateList().getQuestState(questId);
+		QuestStatus previousStatus = qs == null ? null : qs.getStatus();
+		if (qs == null) {
+			qs = new QuestState(questId, questStatus, 0, 0, null, 0, null);
+			target.getQuestStateList().addQuest(questId, qs);
+			PacketSendUtility.sendMessage(admin, "<QuestState has been newly initialized.>");
+		}
 
-        qs.setStatus(questStatus);
-        if (varNum != 0) {
-            qs.setQuestVarById(varNum, var);
-        }
-        else {
-            qs.setQuestVar(var);
-        }
+		qs.setStatus(questStatus);
+		if (varNum != 0) {
+			qs.setQuestVarById(varNum, var);
+		}
+		else {
+			qs.setQuestVar(var);
+		}
 
-        PacketSendUtility.sendPacket(target, new SM_QUEST_ACTION(questId, qs.getStatus(), qs.getQuestVars().getQuestVars()));
+		SM_QUEST_ACTION statePacket = addsQuestToClientList(previousStatus, qs.getStatus())
+			? SM_QUEST_ACTION.addQuest(questId, qs.getStatus(), qs.getQuestVars().getQuestVars())
+			: SM_QUEST_ACTION.updateQuest(questId, qs.getStatus(), qs.getQuestVars().getQuestVars());
+		PacketSendUtility.sendPacket(target, statePacket);
 
-        QuestEnv env = new QuestEnv(null, target, questId, 0);
-        if (questStatus == QuestStatus.COMPLETE) {
-            GameEngineServices.questEngine().onLvlUp(env);
-            target.getController().updateNearbyQuests();
-            qs.setCompleteCount(qs.getCompleteCount() + 1);
-            PacketSendUtility.sendPacket(target, new SM_QUEST_COMPLETED_LIST(target.getQuestStateList().getAllFinishedQuests()));
-        }
+		QuestEnv env = new QuestEnv(null, target, questId, 0);
+		if (questStatus == QuestStatus.COMPLETE) {
+			GameEngineServices.questEngine().onLvlUp(env);
+			target.getController().updateNearbyQuests();
+			qs.setCompleteCount(qs.getCompleteCount() + 1);
+			PacketSendUtility.sendPacket(target, new SM_QUEST_COMPLETED_LIST(target.getQuestStateList().getAllFinishedQuests()));
+		}
 
-        target.getController().updateZone();
-        target.getController().updateNearbyQuests();
+		target.getController().updateZone();
+		target.getController().updateNearbyQuests();
 
-        PacketSendUtility.sendMessage(admin, "Quest status updated successfully.");
-    }
+		PacketSendUtility.sendMessage(admin, "Quest status updated successfully.");
+	}
+
+	/**
+	 * 判断状态变化是否首次让任务进入客户端活动列表。
+	 * Tests whether the state change first exposes the quest in the client list.
+	 */
+	static boolean addsQuestToClientList(QuestStatus previousStatus, QuestStatus nextStatus) {
+		return !isVisibleInClientQuestList(previousStatus) && isVisibleInClientQuestList(nextStatus);
+	}
+
+	private static boolean isVisibleInClientQuestList(QuestStatus status) {
+		return status != null && status != QuestStatus.NONE && status != QuestStatus.COMPLETE;
+	}
 
     private void handleDelete(Player admin, Player target, String... params) {
         if (params.length != 2) {

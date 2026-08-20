@@ -193,7 +193,7 @@ class Quest49713RetailFlowAlignmentTest {
 			QuestEvent complete = new QuestEvent.TalkToNpc(npcId, QuestDialogAction.SELECTED_QUEST_REWARD1.id());
 			QuestTransition completion = route(definition.definition(), "reward", "complete", complete);
 			assertEquals(List.of(
-				new QuestAction.GrantReward("EXP", 0, 3251515, QuestRewardAmountMode.QUEST_BASE),
+				new QuestAction.GrantReward("EXP", 0, 3251515, QuestRewardAmountMode.EXACT),
 				new QuestAction.GrantReward("ITEM", 186000234, 3, QuestRewardAmountMode.EXACT),
 				new QuestAction.GrantReward("ITEM", 188052288, 1, QuestRewardAmountMode.EXACT),
 				new QuestAction.CompleteQuest(0)), completion.actions());

@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.e2e;
 
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 对生产 catalog 的全量、快速、隔离内存任务流进行 transition 级审计；不将客户端顺序报告当作期望值。
@@ -37,13 +39,25 @@ public final class QuestE2eBatchAudit {
 	/** 使用客户端和旧正式模板两类独立证据生成全量结果。 / Produces full results with client and legacy-template evidence. */
 	public static List<QuestE2eAuditRow> audit(QuestCatalog catalog, ClientResourceOracle oracle,
 			LegacyQuestEvidenceOracle evidence) {
+		return audit(catalog, oracle, evidence, Optional.empty());
+	}
+
+	/** 使用静态世界可达性证据生成全量结果。 / Produces full results with static-world reachability evidence. */
+	static List<QuestE2eAuditRow> audit(QuestCatalog catalog, ClientResourceOracle oracle,
+			LegacyQuestEvidenceOracle evidence, QuestWorldReachabilityOracle worldReachability) {
+		return audit(catalog, oracle, evidence, Optional.of(worldReachability));
+	}
+
+	private static List<QuestE2eAuditRow> audit(QuestCatalog catalog, ClientResourceOracle oracle,
+			LegacyQuestEvidenceOracle evidence, Optional<QuestWorldReachabilityOracle> worldReachability) {
 		java.util.Objects.requireNonNull(catalog, "catalog");
 		java.util.Objects.requireNonNull(oracle, "oracle");
 		java.util.Objects.requireNonNull(evidence, "evidence");
+		java.util.Objects.requireNonNull(worldReachability, "worldReachability");
 		List<QuestE2eAuditRow> rows = new ArrayList<>();
 		for (CompiledQuestDefinition definition : catalog.executables()) {
 			for (QuestTransition transition : definition.definition().transitions()) {
-				rows.add(auditTransition(definition, transition, oracle, evidence));
+				rows.add(auditTransition(definition, transition, oracle, evidence, worldReachability));
 			}
 		}
 		return List.copyOf(rows);
@@ -58,8 +72,41 @@ public final class QuestE2eBatchAudit {
 	/** 审计单个 transition，并对照旧正式模板合同。 / Audits one transition against the legacy retail-template contract. */
 	public static QuestE2eAuditRow auditTransition(CompiledQuestDefinition definition,
 			QuestTransition transition, ClientResourceOracle oracle, LegacyQuestEvidenceOracle evidence) {
+		return auditTransition(definition, transition, oracle, evidence, Optional.empty());
+	}
+
+	/** 显式应用静态世界可达性门禁审计单条 transition。 / Audits one transition with the explicit static-world gate. */
+	static QuestE2eAuditRow auditTransition(CompiledQuestDefinition definition,
+			QuestTransition transition, ClientResourceOracle oracle, LegacyQuestEvidenceOracle evidence,
+			QuestWorldReachabilityOracle worldReachability) {
+		return auditTransition(definition, transition, oracle, evidence, Optional.of(worldReachability));
+	}
+
+	private static QuestE2eAuditRow auditTransition(CompiledQuestDefinition definition,
+			QuestTransition transition, ClientResourceOracle oracle, LegacyQuestEvidenceOracle evidence,
+			Optional<QuestWorldReachabilityOracle> worldReachability) {
+		String runtimeReason = worldReachability.map(candidate ->
+			candidate.runtimeRequiredReason(definition, transition)).orElse("");
+		if (!runtimeReason.isEmpty()) {
+			return worldRequiredRow(definition, transition, runtimeReason);
+		}
 		QuestE2eAuditRow fast = auditTransitionFast(definition, transition, oracle, evidence);
 		return shouldEscalate(fast, transition) ? auditProtocol(definition, transition, oracle, fast) : fast;
+	}
+
+	private static QuestE2eAuditRow worldRequiredRow(CompiledQuestDefinition definition,
+			QuestTransition transition, String reason) {
+		QuestNode source = definition.definition().nodes().stream()
+			.filter(node -> node.label().equals(transition.sourceNode())).findFirst().orElse(null);
+		QuestNode target = definition.definition().nodes().stream()
+			.filter(node -> node.label().equals(transition.targetNode())).findFirst().orElse(null);
+		return new QuestE2eAuditRow(definition.id(), transition.event().type(), transition.sourceNode(),
+			transition.targetNode(), "", "", QuestE2eTransitionMatch.UNSUPPORTED_SCENARIO_FACTS, "STATIC_WORLD",
+			target == null ? "" : target.projection().status().name(),
+			source == null ? "" : source.projection().status().name(),
+			source == null ? 0 : definition.definition().progressLayout().pack(source.projection().variables()),
+			npcId(transition.event()), 0, dialogId(transition.event()), 0, QuestE2eStatus.RUNTIME_REQUIRED, reason,
+			"STATIC_WORLD_DATA", List.of());
 	}
 
 	private static QuestE2eAuditRow auditTransitionFast(CompiledQuestDefinition definition,
@@ -114,7 +161,7 @@ public final class QuestE2eBatchAudit {
 			return false;
 		}
 		if (transition.event() instanceof QuestEvent.UseItem && transition.actions().stream()
-				.anyMatch(com.aionemu.gameserver.questEngine.definition.QuestAction.BlockDefaultItemUse.class::isInstance)) {
+				.anyMatch(QuestE2eBatchAudit::requiresItemProtocol)) {
 			return true;
 		}
 		return switch (row.status()) {
@@ -122,6 +169,16 @@ public final class QuestE2eBatchAudit {
 				INVALID_PACKET_ORDER, STATE_CHANGED_WITHOUT_RESPONSE, AFTER_COMMIT_FAILURE, RUNTIME_REQUIRED -> true;
 			default -> false;
 		};
+	}
+
+	private static boolean requiresItemProtocol(QuestAction action) {
+		return action instanceof QuestAction.BlockDefaultItemUse
+			|| action instanceof QuestAction.GiveItem
+			|| action instanceof QuestAction.RemoveItem
+			|| action instanceof QuestAction.UnequipItem
+			|| action instanceof QuestAction.GrantReward
+			|| action instanceof QuestAction.GrantSelectedReward
+			|| action instanceof QuestAction.CompleteQuest;
 	}
 
 	private static QuestE2eAuditRow auditProtocol(CompiledQuestDefinition definition, QuestTransition transition,

@@ -200,8 +200,8 @@ class QuestDataDrivenRetailFlowAlignmentTest {
 	private static void assertSingleKillStep(QuestDefinition definition, String source, String target,
 			Set<Integer> npcIds) {
 		QuestTransition transition = definition.transitions().stream()
-			.filter(transition -> source.equals(transition.sourceNode()) && target.equals(transition.targetNode()))
-			.filter(transition -> transition.event() instanceof QuestEvent.KillNpcSet)
+			.filter(candidate -> source.equals(candidate.sourceNode()) && target.equals(candidate.targetNode()))
+			.filter(candidate -> candidate.event() instanceof QuestEvent.KillNpcSet)
 			.findFirst().orElseThrow();
 		assertEquals(new QuestEvent.KillNpcSet(npcIds), transition.event());
 		assertEquals(List.of(), transition.conditions());

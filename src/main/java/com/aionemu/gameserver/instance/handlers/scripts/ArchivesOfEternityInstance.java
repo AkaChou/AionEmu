@@ -12,10 +12,12 @@ import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,6 +35,25 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	private Race spawnRace;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
+	/**
+	 * 永恒档案库秘密房间的密码背包位置。
+	 * Cryptograph Cube positions in the Archives Of Eternity secret rooms.
+	 *
+	 * <p>这些坐标与零售 condition-spawn 数据一致；每次副本只生成其中一个密码背包。
+	 * These coordinates match the retail condition-spawn data; one cube is spawned per instance.</p>
+	 */
+	private static final List<SecretCubeSpot> SECRET_CUBE_SPOTS = List.of(
+		new SecretCubeSpot(345.740784f, 392.683441f, 469.52179f, 120),
+		new SecretCubeSpot(345.266724f, 631.750732f, 469.52179f, 240),
+		new SecretCubeSpot(668.620728f, 630.289856f, 469.52179f, 300),
+		new SecretCubeSpot(414.774414f, 352.004883f, 469.52179f, 0),
+		new SecretCubeSpot(599.046082f, 352.676544f, 469.52179f, 180),
+		new SecretCubeSpot(414.852631f, 671.289978f, 469.52179f, 0),
+		new SecretCubeSpot(668.367615f, 392.107056f, 469.52179f, 60),
+		new SecretCubeSpot(598.984558f, 672.073608f, 469.52179f, 180));
+
+	private record SecretCubeSpot(float x, float y, float z, float heading) {
+	}
 	
 	/**
 	 * NPC 掉落表注册时处理。
@@ -283,7 +304,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onEnterInstance(Player player) {
-		super.onInstanceCreate(instance);
+		super.onEnterInstance(player);
 		player.getController().updateNearbyQuests();
 		// 与代理人交谈。 / Talk with the Agent.
 		sendMsgByRace(1403340, Race.PC_ALL, 5000);
@@ -372,73 +393,9 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 			case 3:
 				spawn(857464, 255.67651f, 512.3747f, 468.84964f, (byte) 0); //Mountainous Shardgolem.
 			break;
-		} switch (Rnd.get(1, 8)) {
-			case 1:
-			    deleteNpc(220334); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
-				spawn(806139, 345.74078f, 392.68344f, 469.52179f, (byte) 0); //密码背包。 / Cryptograph Cube.
-			break;
-			case 2:
-			    deleteNpc(220334); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
-				spawn(806139, 345.26672f, 631.75073f, 469.52179f, (byte) 0); //密码背包。 / Cryptograph Cube.
-			break;
-			case 3:
-			    deleteNpc(220334); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
-				spawn(806139, 668.62073f, 630.28986f, 469.52179f, (byte) 0); //密码背包。 / Cryptograph Cube.
-			break;
-			case 4:
-			    deleteNpc(220334); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
-			    spawn(806139, 414.77441f, 352.00488f, 469.52179f, (byte) 0); //密码背包。 / Cryptograph Cube.
-			break;
-			case 5:
-			    deleteNpc(220334); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
-			    spawn(806139, 599.04608f, 352.67654f, 469.52179f, (byte) 0); //密码背包。 / Cryptograph Cube.
-			break;
-			case 6:
-			    deleteNpc(220334); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
-			    spawn(806139, 414.85263f, 671.28998f, 469.52179f, (byte) 0); //密码背包。 / Cryptograph Cube.
-			break;
-			case 7:
-			    deleteNpc(220334); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
-			    spawn(806139, 668.36761f, 392.10706f, 469.52179f, (byte) 0); //密码背包。 / Cryptograph Cube.
-			break;
-			case 8:
-			    deleteNpc(220334); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
-			    spawn(806139, 598.98456f, 672.07361f, 469.52179f, (byte) 0); //密码背包。 / Cryptograph Cube.
-			break;
-		} switch (Rnd.get(1, 8)) {
-			case 1:
-			    deleteNpc(806139); //密码背包。 / Cryptograph Cube.
-				spawn(220334, 345.74078f, 392.68344f, 469.52179f, (byte) 0); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
-			break;
-			case 2:
-			    deleteNpc(806139); //密码背包。 / Cryptograph Cube.
-				spawn(220334, 345.26672f, 631.75073f, 469.52179f, (byte) 0); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
-			break;
-			case 3:
-			    deleteNpc(806139); //密码背包。 / Cryptograph Cube.
-				spawn(220334, 668.62073f, 630.28986f, 469.52179f, (byte) 0); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
-			break;
-			case 4:
-			    deleteNpc(806139); //密码背包。 / Cryptograph Cube.
-			    spawn(220334, 414.77441f, 352.00488f, 469.52179f, (byte) 0); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
-			break;
-			case 5:
-			    deleteNpc(806139); //密码背包。 / Cryptograph Cube.
-			    spawn(220334, 599.04608f, 352.67654f, 469.52179f, (byte) 0); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
-			break;
-			case 6:
-			    deleteNpc(806139); //密码背包。 / Cryptograph Cube.
-			    spawn(220334, 414.85263f, 671.28998f, 469.52179f, (byte) 0); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
-			break;
-			case 7:
-			    deleteNpc(806139); //密码背包。 / Cryptograph Cube.
-			    spawn(220334, 668.36761f, 392.10706f, 469.52179f, (byte) 0); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
-			break;
-			case 8:
-			    deleteNpc(806139); //密码背包。 / Cryptograph Cube.
-			    spawn(220334, 598.98456f, 672.07361f, 469.52179f, (byte) 0); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
-			break;
 		}
+		SecretCubeSpot cubeSpot = SECRET_CUBE_SPOTS.get(Rnd.get(1, SECRET_CUBE_SPOTS.size()) - 1);
+		spawn(806139, cubeSpot.x(), cubeSpot.y(), cubeSpot.z(), MathUtil.convertDegreeToHeading(cubeSpot.heading()));
     }
 	
 	/**
@@ -449,54 +406,9 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onDie(Npc npc) {
-		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 701432: //IDEternity_01_Secret_Door_01.
 			    despawnNpc(npc);
-			break;
-			case 703009: //Shedim Eternity Relic.
-			    despawnNpc(npc);
-				// 谢迪姆封印已被摧毁。 / Shedim Seal has been destroyed.
-				sendMsgByRace(1403269, Race.PC_ALL, 0);
-			break;
-			case 703010: //Seraphim Eternity Relic.
-			    despawnNpc(npc);
-				// 炽天使封印已被摧毁。 / Seraphim Seal has been destroyed.
-				sendMsgByRace(1403270, Race.PC_ALL, 0);
-				deleteNpc(703017);
-			break;
-			case 703011: //Shedim Eternity Relic.
-			    despawnNpc(npc);
-				// 谢迪姆封印已被摧毁。 / Shedim Seal has been destroyed.
-				sendMsgByRace(1403269, Race.PC_ALL, 0);
-			break;
-			case 703012: //Seraphim Eternity Relic.
-			    despawnNpc(npc);
-				// 炽天使封印已被摧毁。 / Seraphim Seal has been destroyed.
-				sendMsgByRace(1403270, Race.PC_ALL, 0);
-				deleteNpc(703018);
-			break;
-			case 703013: //Shedim Eternity Relic.
-			    despawnNpc(npc);
-				// 谢迪姆封印已被摧毁。 / Shedim Seal has been destroyed.
-				sendMsgByRace(1403269, Race.PC_ALL, 0);
-			break;
-			case 703014: //Seraphim Eternity Relic.
-				despawnNpc(npc);
-				// 炽天使封印已被摧毁。 / Seraphim Seal has been destroyed.
-				sendMsgByRace(1403270, Race.PC_ALL, 0);
-				deleteNpc(703019);
-			break;
-			case 703015: //Shedim Eternity Relic.
-			    despawnNpc(npc);
-				// 谢迪姆封印已被摧毁。 / Shedim Seal has been destroyed.
-				sendMsgByRace(1403269, Race.PC_ALL, 0);
-			break;
-			case 703016: //Seraphim Eternity Relic.
-			    despawnNpc(npc);
-				// 炽天使封印已被摧毁。 / Seraphim Seal has been destroyed.
-				sendMsgByRace(1403270, Race.PC_ALL, 0);
-				deleteNpc(703020);
 			break;
 			case 857460: //Ancient Relic Techgolem.
 			case 857462: //Fleshgolem Captain.
@@ -561,12 +473,6 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 				});
 			}
 		}, time);
-	}
-	
-	private void deleteNpc(int npcId) {
-		if (getNpc(npcId) != null) {
-			getNpc(npcId).getController().onDelete();
-		}
 	}
 	
 	private void despawnNpc(Npc npc) {

@@ -2,25 +2,107 @@
 
 ## 统计口径
 
-`396,797` 是全量 production catalog 在不同状态、事件、条件分支和协议模式下生成的 **transition 场景记录数**，不是任务数量，也不是已确认正确的任务数量。
+`396,787` 是全量 production catalog 在不同状态、事件、条件分支和协议模式下生成的 **transition 场景记录数**，不是任务数量，也不是已确认正确的任务数量。
 
 最终审计结果为：
 
 | 状态 | transition 数 | 含义 |
 |---|---:|---|
-| `PASS` | 390,082 | 当前场景匹配到预期分支，事务、状态和已支持的 after-commit/协议不变量未发现确定性错误 |
+| `PASS` | 333,121 | 当前场景匹配到预期分支，事务、状态和已支持的 after-commit/协议不变量未发现确定性错误 |
 | `AFTER_COMMIT_FAILURE` | 0 | targetless 事件快照修正后已清零；此前 106 条是 fixture 误报 |
 | `PAGE_NOT_IN_CLIENT` | 0 | 任务 14047 的 11 条 action-id-as-page 错误已改为明确关闭窗口 |
-| `CLICK_NO_RESPONSE` | 57 | 点击后无页面或包响应；其中 52 条无法按标准 `CM_DIALOG_SELECT` 重放，5 条是 28821 的兼容 no-op 候选 |
-| `NO_MATCH` | 652 | 场景没有匹配 transition，尚不能直接判定 XML 错误 |
-| `AMBIGUOUS_ROUTE` | 236 | 最小条件投影命中了 sibling transition；其中新增 47 条是 `required=1` counter 的不可执行 continuing 分支 |
+| `CLICK_NO_RESPONSE` | 0 | 原 57 条交互物 AI 外部响应已从点击错误改为明确的 `RUNTIME_REQUIRED` 边界 |
+| `NO_MATCH` | 269 | 场景没有匹配 transition，尚不能直接判定 XML 错误 |
+| `AMBIGUOUS_ROUTE` | 157 | 最小条件投影命中了 sibling transition，需结合条件和事件事实逐条分诊 |
 | `TRANSACTION_FAILURE` | 0 | production planner 已支持装备起始条件，已确认的 commit 前失败清零 |
-| `RUNTIME_REQUIRED` | 0 | 已支持的确定性事实和内存端口缺口全部清零 |
-| `EVIDENCE_REQUIRED` | 5,770 | 当前 IR 不足以独立证明零售行为，需要旧 handler、客户端或运行时证据 |
+| `RUNTIME_REQUIRED` | 59,265 | 59,208 条缺少可用静态世界出生证据，另有 57 条由 `QuestItemNpcAI2` 完成交互物掉落响应 |
+| `EVIDENCE_REQUIRED` | 3,975 | 当前 IR 不足以独立证明零售行为，需要旧 handler、客户端或运行时证据 |
 
 `PASS` 只表示本审计覆盖的不变量通过，不等于已经证明任务与零售端到端完全等价。此前的 `342,838 PASS` 是审计器能力和分类修正前的中间结果，不再作为最终基线。
 
 ## 已修复的确定性错误
+
+### NO_MATCH：任务 2878–2887 的 20 条接取记录
+
+修改前报告中，任务 2878–2887 的 `QUEST_ACCEPT_1` 和 `QUEST_ACCEPT_SIMPLE` 各有一条
+`unaccepted -> started` 场景无法匹配，共 20 条 `NO_MATCH`。这些记录已经由三类独立证据确认是
+确定性迁移错误，而不是 fixture 缺少运行时事实：
+
+- 当前 XML 同时要求上一军衔任务已完成，又把同一前序任务放入 `noacquired` 起始条件；正式条件求值中，
+  已完成任务不满足 `noacquired`，两组条件互相否定。
+- `origin/history` 的任务 2877–2887 handler 都在进入 `PRIMUM_LANDING_400010000` 时调用
+  `QuestService.startQuest(env)`，没有 NPC 接受按钮；击杀完成后才允许对应 NPC 报告和领奖。
+- Aion 5.8 客户端 Q2877–Q2887 的 `SELECT_NONE(4762)` 只有
+  `FINISH_DIALOG(1008)`“履行委托”，奖励报告页 `DEFAULT_SUCCESS(10002)` 才提供
+  `SELECT_QUEST_REWARD(1009)`；客户端不存在这批 XML 生成的 NPC 接受链。
+
+当前实现已删除 11 个任务互相否定的 `noacquired` 条件和未接取 NPC 接受/拒绝路由，恢复唯一的
+`ENTER_ZONE(PRIMUM_LANDING_400010000) + start-eligible` 自动接取；提交后只执行
+`VISIBILITY_REFRESH`。军衔击杀链、报告 NPC 和奖励保持各任务的正式合同，并补回
+`REWARD + QUEST_SELECT -> DEFAULT_SUCCESS` 报告页。
+
+Q2877 没有出现在这 20 条 `NO_MATCH` 中，但旧 handler 证明它与后续任务共享相同的区域自动接取
+owner；删除它的 NPC 接受链和跨任务 `noacquired` 网，是恢复整条 2877–2887 连续任务合同的一部分。
+专项 `Quest2877To2887UrgentOrdersFlowTest` 锁定 11 个任务的前置集合、区域入口、三段军衔击杀、
+NPC/page/action、奖励和完整 after-commit 顺序。
+
+状态：`PENDING`（自动化门禁已通过，尚缺人工客户端/运行时验收）。专项测试 11/11、
+`QuestDefinitionCatalogManifestTest` 6/6、production whitelist 门禁通过；全量 E2E 已重新生成
+`396,787` 条记录，`PASS=333,121`、`NO_MATCH=269`。相较修改前，2878–2887 的 20 条接取
+`NO_MATCH` 已清除；Q2877–Q2887 的 264 条当前 transition 均为 `PASS`。这不替代真实客户端
+对区域自动接取、军衔击杀和奖励领取的运行时验收，因此不新增代表案例，也不标记为 `CLIENT_ACCEPTED`。
+
+#### 同型对称链：任务 1877–1887
+
+按相同 owner 指纹反查 `origin/history` 后，Elyos 阵营的任务 1877–1887 也存在同源迁移错误：
+
+- 11 个旧 handler 都在进入 `TEMINON_LANDING_400010000` 时调用 `QuestService.startQuest(env)`，
+  NPC 只在任务已经进入 `REWARD` 后显示 `DEFAULT_SUCCESS(10002)` 并打开奖励窗口。
+- 生产 `quest_data.xml` 要求 Q1877 完成 Q1876，Q1878–Q1887 依次同时完成 Q1876 与上一军衔任务；
+  当前任务 XML 却只在 NPC 接受 transition 内检查 Q1876，丢失了连续前置 owner。
+- Aion 5.8 客户端 Q1877–Q1887 的 `SELECT_NONE(4762)` 同样只有
+  `FINISH_DIALOG(1008)`“履行委托”，`DEFAULT_SUCCESS(10002)` 才提供
+  `SELECT_QUEST_REWARD(1009)`；不存在当前 XML 注册的 NPC 接受链。
+
+当前实现已为 Q1877–Q1887 补回连续前置集合，将唯一的 `unaccepted -> started` 入口恢复为
+`ENTER_ZONE(TEMINON_LANDING_400010000) + start-eligible`，提交后只执行 `VISIBILITY_REFRESH`；
+未接取阶段的 NPC 接受/拒绝路由已移除，`REWARD + QUEST_SELECT -> DEFAULT_SUCCESS` 报告页已补回。
+原 `Quest2877To2887UrgentOrdersFlowTest` 已扩展为 22 个双阵营动态合同。
+
+状态：`PENDING`。11 份 XML 的结构化解析、前置集合、唯一自动接取 owner 和奖励报告页静态断言已通过；
+扩展后的专项 JUnit、production catalog、whitelist 与全量 E2E 尚未重跑，因为本轮没有构建授权。
+真实客户端仍需分别验证 Teminon 区域自动接取、三次军衔击杀、报告页与奖励完成。
+
+本轮 owner 盘点也核对了 `origin/history` 中全部 22 个 `registerOnKillRanked` handler；除这两条
+区域自动接取链外，没有第三组同型旧入口。Q3735–Q3745/Q4735–Q4745 的 XML 虽使用
+`kill-ranked`，旧 handler 明确注册 `addOnQuestStart` 的 NPC 接取合同，属于不同模式，保留不动。
+
+### NO_MATCH：任务 26802/30603/30613 的 15 条计数和报告记录
+
+修改前，Q26802 有 5 条、Q30603/Q30613 各有 5 条 `NO_MATCH`。这些记录都来自共享
+`started/START` 节点把实时计数字段固定投影为零：`QuestMutationPlanner.matchesSourceNode` 会先精确匹配
+source 投影，再检查 transition 条件，因此第一次击杀改变变量后，后续击杀、完成分支和报告动作都不再可达。
+
+独立证据确认这不是审计 fixture 误报：
+
+- `origin/history` 的 Q26802 Java handler 允许图书管理员和元素首领两组计数按任意顺序推进，并在最后一次
+  击杀后立即进入 `REWARD`；当前 transition 的完成条件和动作已表达该合同，错误只在 source 投影锁死计数。
+- `origin/history` 的 Q30603/Q30613 `monster_hunt` 各声明四个独立 6 位计数器，目标分别是
+  `var0=9,var1=9,var2=1,var3=1`；旧 `MonsterHunt` 每次只递增命中的维度，不要求依次完成。
+- Aion 5.8 客户端 Q30603/Q30613 的 `SELECT2(1352)` 都只有
+  `SELECT_QUEST_REWARD(1009)`，旧正式模板同样在四个计数全部完成后才允许报告并显示奖励页 `5`。
+
+当前实现将 Q26802 的 `started` 节点改为只约束 `START` 状态，保留原有两组计数的最后击杀完成分支；
+Q30603/Q30613 恢复四个独立 6 位字段，移除错误的串行前置和第三次吉守护者击杀，将报告条件恢复为四个
+计数全部完成。NPC `243852` 作为已确认的同模板替代目标保留，不回退为单一旧模板 ID。
+
+`QuestCounterSourceProjectionProductionFlowTest` 通过正式 dispatcher 连续执行 Q26802 的 `30+2` 两种顺序，
+以及 Q30603/Q30613 的 `9+9+1+1` 乱序击杀；专项测试 4/4、production catalog/whitelist 均通过。
+最终全量 E2E 中 Q26802 为 `214/214 PASS`，Q30603/Q30613 各为 `41/41 PASS`，15 条 `NO_MATCH`
+全部清除。状态：`PENDING`（自动化门禁完成，尚未进行真实客户端击杀和报告验收）。
+
+Q49715 也存在相同 source 投影和差一完成问题，但属于用户明确暂缓的 `600060000`（丹纳利亚）任务，
+本轮不修改，继续保留 6 条 `NO_MATCH` 及静态世界 `RUNTIME_REQUIRED` 记录。
 
 协议模式曾确认 6 个任务的 8 条 transition 在页面包之前同步状态，顺序相反会让客户端用旧状态加载新页面。现已统一为：
 
@@ -117,15 +199,46 @@ STATE_CHANGED_WITHOUT_RESPONSE=0
 
 这次复现也证明此前任务 14047 的 `58/58 PASS` 只验证了“由当前 XML 自己生成事件后能命中当前 XML”的自洽性，没有覆盖 `233877 -> 214599` 的实际 AI 形态切换。用户随后已在真实客户端完成击杀验收，确认 `214599` 出现、击杀后播放电影 422 并推进任务；新增聚焦测试、catalog/whitelist 和全量 E2E 已补跑通过，当前 Q14047 仍为 58/58 PASS。
 
+## 任务 26800：永恒之塔入口对象与迁移状态链
+
+真实客户端复现为使用 `731711`“发光的永恒之塔碎片”读条后没有进入永恒之塔。该对象属于任务
+`20527`：其生产定义只接收 `USE_OBJECT/ACTION_ITEM_USE` 并推进任务事件，不执行传送，也不属于任务
+`26800`。任务 26800 的正式世界入口是 portal NPC `806082`，`dialog=104 -> loc=2201200 -> world=220120000`；
+到达永恒之塔并完成 `806233` 对话后，再使用 `806029`，通过
+`dialog=10000 -> loc=3015400 -> world=301540000` 进入知识书库副本。
+
+静态核对同时发现当前 `26800.xml` 存在独立迁移错误：原定义把进度压缩为 `var0=0/1`，丢失旧 handler
+的 `0 -> 1 -> 2 -> REWARD(3)` 阶段；缺少客户端可见的 `4763` 接取动作、永恒之塔区域推进和
+`806233 + SET_SUCCEED(10255)` 路由；电影 932 未限定在 `var0=2` 的知识书库区域入口；并错误地让
+`806079`、`806233`、`806149` 三个 NPC 都能报告和领奖。
+
+当前工作区已恢复显式阶段、客户端页面/action、区域推进和电影顺序，并将最终报告/领奖 owner 限定为
+`806149`。`Quest26800ClientDialogAlignmentTest` 锁定完整状态、事务动作、after-commit 顺序、错误对象归属及
+两段 portal/world 映射。专项测试 `4/4`、生产 catalog `6/6` 和 whitelist `1/1` 已通过；生产 catalog
+共编译 `6200` 条任务，失败 `0`、whitelist 违规 `0`。尚未执行真实客户端复测，当前状态为
+`IMPLEMENTATION_COMPLETE / PENDING_CLIENT_ACCEPTANCE`。
+
 ## 尚不能判为任务错误
 
-### CLICK_NO_RESPONSE
+### CLICK_NO_RESPONSE 已清零
 
-- 41 条使用 `dialogId=0`，不属于标准客户端选择动作。
-- 11 条使用 `dialogId=-1`，是关闭/兼容路由，不能直接按正常页面点击解释。
-- 5 条全部来自任务 28821 的 action 23；真实 `CM_DIALOG_SELECT` 确认静默，但旧 handler 表明它是 `START` 状态下的兼容 no-op，需先证明真实客户端路径可达。
+当前报告不再把 dispatcher 之外的交互物 AI 收尾误分类为普通点击无响应。原 57 条记录均明确保留为
+`RUNTIME_REQUIRED`，不能据此批量修改任务 XML。
 
-### RUNTIME_REQUIRED 已清零
+### RUNTIME_REQUIRED：世界可达性与交互物 AI 边界
+
+本轮新增静态世界 oracle 后，`RUNTIME_REQUIRED=59,265` 拆分为 `STATIC_WORLD=59,208` 和交互物 AI 收尾 `57` 条。
+`STATIC_WORLD` 只表示 `TalkToNpc` 没有已加载地图上的常驻 `<spot>`，且任务定义没有 `SpawnNpc/SpawnNpcRandom`；它是运行时/静态数据队列，不是可以直接修改 XML 的错误结论。
+
+任务 49713 共 73 条编译 transition：7 条仍通过（6 条 `FAST`、1 条 `CM_USE_ITEM`），其余 66 条对话 transition 因 800936、800937、800938 没有静态出生点而标记为 `RUNTIME_REQUIRED`，每个 NPC 各 22 条。当前 `world_maps.xml` 也没有丹纳利亚 `600060000`，因此不能通过猜坐标或固定传送把它们伪装成 PASS。
+
+地图 `600060000`（丹纳利亚）相关任务按用户决定暂时跳过：继续保持
+`STATIC_WORLD/RUNTIME_REQUIRED`，不补地图、不猜 NPC 坐标、不将这些记录升级为确定性 XML 错误。
+只有后续取得该地图、出生点或真实运行时证据后才恢复分诊。
+
+其中剩余 57 条记录都是无事务动作、无 after-commit 的交互物路由；任务 metadata 声明了对应掉落，正式运行时由
+`QuestItemNpcAI2` 在 dispatcher 返回后打开掉落列表。批量 fixture 尚未执行这段 AI 收尾，因此保留
+`RUNTIME_REQUIRED`，不把它们判为任务错误或 PASS。
 
 原 1,766 条按以下顺序重新执行并归因：
 
@@ -142,7 +255,8 @@ STATE_CHANGED_WITHOUT_RESPONSE=0
 - 47 条 compact counter 在 `required=1` 时生成严格低于字段最小值的 continuing 分支；正式 dispatcher 必然命中 completion sibling，透明归为 `AMBIGUOUS_ROUTE`，不是缺少运行时事实。
 - 任务 9550/9553 的 4 条记录在 planner 支持 `equipped` 后全部转为 `PASS`。
 
-最终 `RUNTIME_REQUIRED=0`、`UNSUPPORTED_SCENARIO_FACTS=0`。
+本轮 `UNSUPPORTED_SCENARIO_FACTS=59,208` 与 `STATIC_WORLD=59,208` 对齐，表示这些 transition 在缺少静态世界事实时没有进入内存 dispatcher；剩余 57 条才来自上述
+`QuestItemNpcAI2` 外部收尾边界。
 
 `NO_MATCH`、`AMBIGUOUS_ROUTE` 和 `EVIDENCE_REQUIRED` 同样保留为证据队列，不因报告清零目标而修改任务 XML。
 
@@ -150,18 +264,18 @@ STATE_CHANGED_WITHOUT_RESPONSE=0
 
 1. 保留 6 个任务、8 条 transition 的协议顺序回归和全量核心门禁。
 2. 任务 14047 的客户端流程、聚焦测试、catalog/whitelist 和全量 E2E 均已通过，并已按“修复提交 -> Playbook 提交”完成交付。
-3. 调查 `NO_MATCH`、`AMBIGUOUS_ROUTE`、`CLICK_NO_RESPONSE` 和 `EVIDENCE_REQUIRED`，只把具有独立证据的记录升级为错误队列。
+3. 调查 `NO_MATCH`、`AMBIGUOUS_ROUTE`、`RUNTIME_REQUIRED` 和 `EVIDENCE_REQUIRED`，只把具有独立证据的记录升级为错误队列。
 
 ## 验证基线
 
-本次 Q14047 门禁与全量审计已通过：
+最新聚焦门禁、catalog/whitelist 和全量审计结果：
 
 ```text
-QuestPacketOrderRegressionTest
-Quest14047ClientDialogAlignmentTest
-Betrayer_IcaronixAI2Test
-AI2EngineRetailSelectionTest
-CMObjectSearchTest
+Quest49713RetailFlowAlignmentTest
+Quest26802ClientDialogAlignmentTest
+QuestCounterSourceProjectionProductionFlowTest
+QuestDialogOrderAuditTest
+QuestE2eInfrastructureTest
 QuestDefinitionCatalogManifestTest
 ProductionCatalogWhitelistVerificationTest
 
@@ -169,20 +283,28 @@ PRODUCTION_COMPILE_OK=6200
 PRODUCTION_COMPILE_FAILURES=0
 PRODUCTION_WHITELIST_VIOLATIONS=0
 
-FULL_E2E_ROWS=396797
-FULL_E2E_PASS=390082
+FULL_E2E_ROWS=396787
+FULL_E2E_PASS=333121
 AFTER_COMMIT_FAILURE=0
 PAGE_NOT_IN_CLIENT=0
-RUNTIME_REQUIRED=0
+RUNTIME_REQUIRED=59265
+STATIC_WORLD=59208
+EVIDENCE_REQUIRED=3975
+NO_MATCH=269
+AMBIGUOUS_ROUTE=157
 TRANSACTION_FAILURE=0
+CM_USE_ITEM=90
+Q49713=7/73 PASS (FAST=6, CM_USE_ITEM=1; 66 STATIC_WORLD/RUNTIME_REQUIRED)
+Q26802=214/214 PASS
+Q30603=41/41 PASS
+Q30613=41/41 PASS
 ```
 
 `QuestE2eInfrastructureTest` 的过期 1920 自动弹页断言已经修正：任务 10110 的
 `LEVEL_UP`/`ZONE_MISSION_END` 锁定 `QUEST_ACTION -> DIALOG_WINDOW` 及无目标
 `objectId=0`；任务 1920 单独锁定进入 `START`、仅发送 `QUEST_ACTION` 且不发送
-`DIALOG_WINDOW`。通用 E2E 门禁在当前工作区和仅含提交基线加 E2E 新文件的隔离工作树中
-均为 37/37 通过，`QuestPacketOrderRegressionTest` 为 7/7 通过。依赖任务专用 XML 的
-包顺序专项合同和依赖 `equipped` planner 修复的专项合同不混入通用 E2E 门禁。
+`DIALOG_WINDOW`。通用 E2E 门禁当前为 40/40 通过。依赖任务专用 XML 的包顺序专项合同和依赖
+`equipped` planner 修复的专项合同不混入通用 E2E 门禁。
 
 最终产物：
 

@@ -31,8 +31,9 @@ public final class QuestE2eAudit {
 			Path summary = args.length > 2 ? Path.of(args[2]) : Path.of(".agent/summary/quest-e2e/summary.md");
 			ClientResourceOracle oracle = ClientResourceOracle.load(mapping);
 			LegacyQuestEvidenceOracle legacyEvidence = LegacyQuestEvidenceOracle.load(mapping);
+			QuestWorldReachabilityOracle worldReachability = QuestWorldReachabilityOracle.loadProductionData();
 			QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(QuestE2eAudit.class.getClassLoader());
-			List<QuestE2eAuditRow> rows = QuestE2eBatchAudit.audit(catalog, oracle, legacyEvidence);
+			List<QuestE2eAuditRow> rows = QuestE2eBatchAudit.audit(catalog, oracle, legacyEvidence, worldReachability);
 			QuestE2eReportWriter.write(rows, reportDirectory, summary);
 			long pass = rows.stream().filter(row -> row.status() == QuestE2eStatus.PASS).count();
 			System.out.println("quest-e2e rows=" + rows.size() + " pass=" + pass + " report=" + reportDirectory);
