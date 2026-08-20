@@ -42,7 +42,7 @@ class Quest29003ClientDialogAlignmentTest {
 			QuestDialogAction.QUEST_ACCEPT_SIMPLE);
 		assertEquals("started", accept.targetNode());
 		assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions());
-		assertEquals(List.of(), accept.actions());
+		assertEquals(List.of(new QuestAction.GiveItem(182207142, 1)), accept.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), accept.afterCommit());

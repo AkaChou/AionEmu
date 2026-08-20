@@ -4,9 +4,9 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <items>
+    <work-items>
       <item id="182207142" count="1"/>
-    </items>
+    </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="1347585"/>
       <reward kind="ITEM" id="125020014" amount="1"/>
@@ -34,7 +34,11 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="204257" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="204257" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+      <accept-actions>
+        <give-item item-id="182207142" count="1"/>
+      </accept-actions>
+    </dialog>
     <dialog type="NPC_REPORT" npc-id="204052" source="started" target="reward" page="SELECT5"/>
     <npc-complete npc-id="204052" source="reward" target="complete" fixed-reward-indices="0 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
