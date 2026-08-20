@@ -121,3 +121,17 @@
 - 验证命令和结果：修复提交前的 `Quest26800ClientDialogAlignmentTest` 为 4/4 通过；生产 catalog 6200 条任务编译成功、失败 0，白名单违规 0。2026-08-20 用户使用 Aion 5.8 客户端完成 `806079 -> 806082 -> 220120000 -> 806233 -> 806029 -> 301540000 -> movie 932 -> 806149` 全流程，并明确确认任务 26800 已完成。
 - 复用边界：仅适用于任务进度由多个权威 world portal、区域进入事件和中间 NPC 共同推进的跨地图流程。必须分别证明任务交互物、portal、区域名、loc/world 映射、每段 source/target/status/vars、电影 after-commit 顺序和最终领奖 owner；同一模板名、相近坐标或能播放电影都不能替代这些证据。普通多 NPC 报告仍使用 `MULTI_NPC_HANDOFF_REWARD_OWNER`；飞行后不可重入和崩溃恢复仍使用 `COMMIT_SYNC_BEFORE_FLIGHT_TELEPORT`、`UNREACHABLE_INSTANCE_REENTRY_RECOVERY`，不能从本案例推导回滚规则。
 - commit：`5511223b0e0363514a960beaf02577f1659541ce`。
+
+## 8.10 实时计数的 START 源节点被零值投影锁死
+
+- Pattern ID：`COUNTER_SOURCE_PROJECTION_NO_LOCK`。
+- 代表任务：26802「They Don't Make 'em Like They Used To」。26801、30603、30613 属于同一计数源投影合同，不重复建立案例。
+- 搜索症状：第一组击杀可以计数，但后续击杀、最后一击或报告动作没有响应；全量审计的后续 transition 出现 `NO_MATCH`。
+- 玩家可见症状：任务 26802 要求图书管理员 30 个、元素首领 2 个，两个计数可以任意顺序完成。迁移后的任务在第一次击杀后可能仍显示任务已接取，但后续计数、最后一击进入奖励或报告动作无法继续。任务 26801 的 30 个图书管理员计数也使用相同的共享 `START` 源节点形状。
+- 根因：`QuestMutationPlanner.matchesSourceNode` 先精确匹配 source node 的状态和投影变量，再检查 transition 条件。若 `started/START` 节点同时固定投影 `var0=0、var1=0、var2=0`，第一次计数改变 packed variables 后，后续 source route 不再匹配；这不是客户端动作或计数条件本身的错误，而是节点投影错误地把实时字段当成静态状态字段。
+- 修复层：任务 XML 的共享 `START` 节点只声明 `status="START"`，不投影实时计数变量；`REWARD` 节点仍保留完成计数投影。任务专用测试继续锁定最后一击、报告 action、奖励页和完整 after-commit；生产 dispatcher 流验证两组计数的两种击杀顺序。
+- 修改文件：代表任务为 `src/main/resources/aion/data/static_data/quest_definition/quests/26802.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest26802ClientDialogAlignmentTest.java`。同型批次另含 26801、30603、30613，但本案例只记录 26802 代表修复。
+- 第一检查点：读取 compiled IR 的 `started` node projection 和 `packedVariables`，确认 source 节点是否包含实时字段；随后分别从两组计数的非完成 route 和完成 route 验证 priority、变量条件与目标状态，不要只看最终 `REWARD`。
+- 验证命令和结果：此前专项任务/生产门禁已证明 26802 的两种 `30+2` 计数顺序均进入 `REWARD`，Q26802 全量 E2E 为 `214/214 PASS`，原有 5 条 `NO_MATCH` 已清除；用户于 2026-08-20 使用 Aion 5.8 客户端完成 26802 全流程验收。当前客户端验收未重新运行 Maven，运行时 packet/log 附件未捕获。
+- 复用边界：仅适用于 source 节点的实时计数字段由 transition action 增量维护、且节点不需要静态重置这些字段的任务。若 source 投影确实代表阶段重置、任务拥有多个互斥计数网格、或计数条件依赖节点标签而非 packed variables，必须重新证明；不能全局删除所有 START 节点变量投影。26801、30603、30613 的同型修复仍应分别验证客户端击杀顺序和报告 owner。
+- commit：`4a3be57`。
