@@ -38,8 +38,8 @@ public class AI2Engine implements GameEngine {
 	private static volatile ObjectProvider<AI2Engine> instanceProvider;
 	private final Map<String, Class<? extends AbstractAI>> aiMap = new HashMap<String, Class<? extends AbstractAI>>();
 	/**
-	 * 这些自定义 AI 的生命周期或战斗阶段副作用会生成可被任务引用的 NPC；零售 pattern 没有等价生成动作时，必须保留脚本 AI。
-	 * Quest-referenced lifecycle or combat-phase spawns owned by these scripted AIs must not be bypassed by an incomplete retail pattern.
+	 * 这些自定义 AI 的交互协议、生命周期或战斗阶段副作用会生成可被任务引用的 NPC；零售 pattern 没有等价行为时，必须保留脚本 AI。
+	 * Scripted interaction protocols, lifecycle or combat-phase spawns must not be bypassed by an incomplete retail pattern.
 	 */
 	private static final Set<String> QUEST_SIDE_EFFECT_AI = Set.of(
 		"Mechaturerk", "anikiki", "betrayer_icaronix", "bighorn_wendigo", "blood_fungus_skinwalker",
@@ -52,7 +52,9 @@ public class AI2Engine implements GameEngine {
 		"razor_clawed_forest_cloke", "rejuvinating_wave_wave_tauric", "roughhorn_wendigo",
 		"ruthless_wave_tauric", "skulking_forsaken_zaif", "spirit_forest_worg_morpher",
 		"thickhorn_wendigo", "valley_torr_crumbler", "venerable_sea_giant", "warrior_monument",
-		"whiptail_metamorph", "young_roundshell_spiner");
+		"whiptail_metamorph", "young_roundshell_spiner", "IDEternity_01_Boss_Summon",
+		"IDTransform_TransRoom_01",
+		"IDTransform_TransRoom_02", "IDTransform_TransRoom_03", "IDTransform_TransRoom_04");
 
 	/**
 	 * 加载 AI 脚本并注册所有 AI 处理器。

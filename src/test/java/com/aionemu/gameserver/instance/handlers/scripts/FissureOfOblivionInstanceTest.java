@@ -108,11 +108,25 @@ class FissureOfOblivionInstanceTest {
 	@Test
 	void entranceKeepsOnlyTheQuestAndPortalOwnedExit() throws Exception {
 		assertEquals(1, nodes(INSTANCE_SPAWNS,
-				"/spawns/spawn_map[@map_id='302100000']/spawn[@npc_id='834194']").getLength());
+				"/spawns/spawn_map[@map_id='302100000']/spawn[@npc_id='834194']/spot"
+						+ "[@entity_id='29' and @x='272.26187']").getLength());
+		assertEquals(1, nodes(INSTANCE_SPAWNS,
+				"/spawns/spawn_map[@map_id='302100000']/spawn[@npc_id='834194']/spot"
+						+ "[@entity_id='278' and @x='924.38348']").getLength());
 		assertEquals(0, nodes(INSTANCE_SPAWNS,
 				"/spawns/spawn_map[@map_id='302100000']/spawn[@npc_id='834195']").getLength());
 		assertTrue(nodes(PORTAL_TEMPLATES, "//portal_dialog[@npc_id='834194']/portal_path").getLength() > 0);
-		assertTrue(nodes(QUEST_DEFINITION, "//dialog[@npc-id='834194']").getLength() > 0);
+		assertEquals(1, nodes(QUEST_DEFINITION,
+				"//transition[@source='s4']/event/dialog[@npc-id='834194' and @action='QUEST_SELECT']").getLength());
+		assertEquals(1, nodes(QUEST_DEFINITION,
+				"//transition[@source='s4']/after-commit/dialog[@page='SELECT5_1_1']").getLength());
+		assertEquals(1, nodes(QUEST_DEFINITION,
+				"//transition[@source='s4']/event/dialog[@npc-id='834194' and @action='SELECT5_1']").getLength());
+		assertEquals(1, nodes(QUEST_DEFINITION,
+				"//transition[@source='s4']/after-commit/dialog[@page='SELECT5_1']").getLength());
+		assertEquals(1, nodes(QUEST_DEFINITION,
+				"//transition[@source='s4' and @target='reward']/event/dialog"
+						+ "[@npc-id='834194' and @action='SET_SUCCEED']").getLength());
 		assertEquals(0, nodes(QUEST_DEFINITION, "//dialog[@npc-id='834195']").getLength());
 	}
 

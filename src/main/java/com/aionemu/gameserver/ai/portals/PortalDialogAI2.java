@@ -17,6 +17,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FIND_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -36,6 +37,9 @@ import java.util.List;
  */
 @AIName("portal_dialog")
 public class PortalDialogAI2 extends PortalAI2 {
+
+	private static final int FISSURE_OF_OBLIVION_EXIT = 834194;
+	private static final int FISSURE_OF_OBLIVION_FINAL_ORB_ENTITY = 29;
 
 	protected int rewardDialogId = 5;
 	protected int startingDialogId = 10;
@@ -117,6 +121,12 @@ public class PortalDialogAI2 extends PortalAI2 {
 	
 	private void checkDialog(Player player) {
 		int npcId = getNpcId();
+		int entityId = getOwner().getSpawn() == null ? 0 : getOwner().getSpawn().getEntityId();
+		for (int dialogId : questFirstDialogIds(npcId, entityId)) {
+			if (AI2Actions.selectDialog(this, player, 0, dialogId).isSuccess()) {
+				return;
+			}
+		}
 		int teleportationDialogId = DataManager.PORTAL2_DATA.getTeleportDialogId(npcId);
 		List<Integer> relatedQuests = GameEngineServices.questEngine().getQuestNpc(npcId).getOnTalkEvent();
 		boolean playerHasQuest = false;
@@ -257,6 +267,12 @@ public class PortalDialogAI2 extends PortalAI2 {
 				break;
 			}
 		}
+	}
+
+	static List<Integer> questFirstDialogIds(int npcId, int entityId) {
+		return npcId == FISSURE_OF_OBLIVION_EXIT && entityId == FISSURE_OF_OBLIVION_FINAL_ORB_ENTITY
+				? List.of(QuestDialog.START_DIALOG.id())
+				: List.of();
 	}
 	
 	private void announceIlluminaryObeliskOpen() {

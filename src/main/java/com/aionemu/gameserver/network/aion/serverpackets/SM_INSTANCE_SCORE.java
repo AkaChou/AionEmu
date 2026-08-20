@@ -1253,7 +1253,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(oblivion.getRank());
 				writeD(0);
 				writeD(0);
-				writeD(instanceScoreType.isEndProgress() ? playerReward.getFrozenMarbleOfMemory() : 0);
+				writeD(instanceScoreType.isEndProgress() ? 186000448 : 0);
 				writeD(instanceScoreType.isEndProgress() ? playerReward.getFrozenMarbleOfMemory() : 0);
 				writeD(0);
 				writeD(0);
