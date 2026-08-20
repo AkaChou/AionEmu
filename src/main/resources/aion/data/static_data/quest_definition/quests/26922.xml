@@ -28,11 +28,6 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="802433" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="802433" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="802433" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="804628" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
     <dialog type="NPC_REPORT" npc-id="804628" source="started" target="reward" page="SELECT5"/>
     <npc-complete npc-id="804628" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
