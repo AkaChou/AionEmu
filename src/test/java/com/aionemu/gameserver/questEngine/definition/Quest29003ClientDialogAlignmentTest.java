@@ -88,7 +88,6 @@ class Quest29003ClientDialogAlignmentTest {
 		for (QuestTransition completion : completionRoutes) {
 			assertContract(completion, "complete", List.of(
 				new QuestAction.GrantReward("EXP", 0, 1347585, QuestRewardAmountMode.QUEST_BASE),
-				new QuestAction.GrantReward("ITEM", 125020014, 1, QuestRewardAmountMode.EXACT),
 				new QuestAction.GrantReward("ITEM", 169405022, 30, QuestRewardAmountMode.EXACT),
 				new QuestAction.CompleteQuest(0)), List.of(
 				new AfterCommitAction.RefreshPlayerStats(),

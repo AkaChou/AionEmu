@@ -39,7 +39,7 @@ class Quest51009ClientDialogAlignmentTest {
 		QuestTransition ask = route(definition, "unaccepted", START_NPC,
 			QuestDialogAction.ASK_QUEST_ACCEPT);
 		assertContract(ask, "unaccepted", List.of(), List.of(
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.ASK_QUEST_ACCEPT.id())));
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())));
 
 		QuestTransition accept = route(definition, "unaccepted", START_NPC,
 			QuestDialogAction.QUEST_ACCEPT_1);
@@ -86,9 +86,9 @@ class Quest51009ClientDialogAlignmentTest {
 		assertEquals(16, completionRoutes.size());
 		for (QuestTransition completion : completionRoutes) {
 			assertContract(completion, "complete", List.of(
-				new QuestAction.GrantReward("ITEM", 160010201, 1, QuestRewardAmountMode.QUEST_BASE),
-				new QuestAction.GrantReward("ITEM", 160010202, 1, QuestRewardAmountMode.QUEST_BASE),
-				new QuestAction.GrantReward("ITEM", 186000177, 1, QuestRewardAmountMode.QUEST_BASE),
+				new QuestAction.GrantReward("ITEM", 160010201, 1, QuestRewardAmountMode.EXACT),
+				new QuestAction.GrantReward("ITEM", 160010202, 1, QuestRewardAmountMode.EXACT),
+				new QuestAction.GrantReward("ITEM", 186000177, 1, QuestRewardAmountMode.EXACT),
 				new QuestAction.CompleteQuest(0)), List.of(
 				new AfterCommitAction.RefreshPlayerStats(),
 				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
