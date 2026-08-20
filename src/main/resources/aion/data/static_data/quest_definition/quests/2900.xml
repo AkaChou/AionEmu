@@ -1162,8 +1162,8 @@
         <set-variable field="step" value="9"/>
       </actions>
       <after-commit>
-        <teleport-player-current-or-default world-id="220010000" x="1103.5642" y="1708.5078" z="270.05505" heading="112"/>
         <sync-quest-state mode="PACKET_ONLY"/>
+        <teleport-player-current-or-default world-id="220010000" x="1103.5642" y="1708.5078" z="270.05505" heading="112"/>
       </after-commit>
     </transition>
     <transition source="fight98" target="started4">
