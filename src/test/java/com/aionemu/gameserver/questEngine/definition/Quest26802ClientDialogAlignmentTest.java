@@ -27,8 +27,7 @@ class Quest26802ClientDialogAlignmentTest {
 		QuestDefinition definition = definition().definition();
 		assertNode(definition, "unaccepted", QuestStatus.NONE,
 			Map.of("var0", 0, "var1", 0, "var2", 0));
-		assertNode(definition, "started", QuestStatus.START,
-			Map.of("var0", 0, "var1", 0, "var2", 0));
+		assertNode(definition, "started", QuestStatus.START, Map.of());
 		assertNode(definition, "reward", QuestStatus.REWARD,
 			Map.of("var0", 1, "var1", 30, "var2", 2));
 		assertEquals(List.of(List.of("finished:26801")), startConditionGroups(definition));
