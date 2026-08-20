@@ -13,28 +13,28 @@
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
     <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var2" offset="12" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="12" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var3" offset="18" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
       <var name="var1" value="0"/>
       <var name="var2" value="0"/>
+      <var name="var3" value="0"/>
     </node>
-    <node label="started" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="0"/>
-    </node>
+    <node label="started" status="START"/>
     <node label="reward" status="REWARD">
       <var name="var0" value="9"/>
       <var name="var1" value="9"/>
-      <var name="var2" value="3"/>
+      <var name="var2" value="1"/>
+      <var name="var3" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="9"/>
       <var name="var1" value="9"/>
-      <var name="var2" value="3"/>
+      <var name="var2" value="1"/>
+      <var name="var3" value="1"/>
     </node>
   </nodes>
   <transitions>
@@ -62,13 +62,12 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- b 阶段:击杀 5 种 Named 副官组 9 个(var1 0→9,需 a 完成)。Stage b: kill 5 Named adjutant groups x9 (var1 0→9, after a). -->
+    <!-- b 计数:击杀 5 种 Named 副官组 9 个(var1 0→9)。Counter b: kill 5 Named adjutant groups x9 (var1 0→9). -->
     <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-ids="219257 219258 219268 219260 219262"/>
       </event>
       <conditions>
-        <variable-at-least field="var0" value="9"/>
         <variable-below field="var1" value="9"/>
       </conditions>
       <actions>
@@ -78,13 +77,12 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- c 阶段:击杀 拉守护者 219255 1 个(var2 0→1,需 b 完成)。Stage c: kill Ra guardian 219255 (var2 0→1, after b). -->
+    <!-- c 计数:击杀拉守护者 219255 1 个(var2 0→1)。Counter c: kill Ra guardian 219255 once (var2 0→1). -->
     <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-ids="219255"/>
       </event>
       <conditions>
-        <variable-at-least field="var1" value="9"/>
         <variable-below field="var2" value="1"/>
       </conditions>
       <actions>
@@ -94,32 +92,16 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- d 阶段:击杀 吉守护者 219286/243852 任一 1 个(var2 1→2,需 c 完成)。Stage d: kill Gi guardians 219286/243852 (var2 1→2, after c). -->
+    <!-- d 计数:击杀吉守护者 219286/243852 任一 1 个(var3 0→1)。Counter d: kill either Gi guardian once (var3 0→1). -->
     <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-ids="219286 243852"/>
       </event>
       <conditions>
-        <variable-at-least field="var2" value="1"/>
-        <variable-below field="var2" value="2"/>
+        <variable-below field="var3" value="1"/>
       </conditions>
       <actions>
-        <increment-variable field="var2" delta="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <!-- 全部完成(var2=2)进入奖励。All done (var2=2) reaches reward. -->
-    <transition source="started" target="started" priority="0">
-      <event>
-        <kill-npc npc-ids="219286 243852"/>
-      </event>
-      <conditions>
-        <variable-at-least field="var2" value="2"/>
-      </conditions>
-      <actions>
-        <set-variable field="var2" value="3"/>
+        <increment-variable field="var3" delta="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -130,7 +112,10 @@
         <dialog type="TALK_TO_NPC" npc-id="800325" action="SELECT_QUEST_REWARD"/>
       </event>
       <conditions>
-        <variable-at-least field="var2" value="3"/>
+        <variable-at-least field="var0" value="9"/>
+        <variable-at-least field="var1" value="9"/>
+        <variable-at-least field="var2" value="1"/>
+        <variable-at-least field="var3" value="1"/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
