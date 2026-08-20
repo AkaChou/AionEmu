@@ -24,9 +24,7 @@
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
     </node>
-    <node label="hunting" status="START">
-      <var name="var0" value="0"/>
-    </node>
+    <node label="hunting" status="START"/>
     <node label="reward" status="REWARD">
       <var name="var0" value="65"/>
     </node>

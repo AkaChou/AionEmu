@@ -43,28 +43,31 @@ public class PeregrineAI2 extends GeneralNpcAI2
 		} if (dialogId == 10000) {
 		    switch (getNpcId()) {
 			    case 806149: //Peregrine.
-				    switch (Rnd.get(1, 3)) {
-					    case 1:
-						    getPosition().getWorldMapInstance().getDoors().get(349).setOpen(true);
-							// 通往永恒档案的门已打开。 / The door to the Archives of Eternity has opened.
-							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_01_Road_Set, 0);
-						break;
-						case 2:
-						    getPosition().getWorldMapInstance().getDoors().get(352).setOpen(true);
-							// 通往永恒档案的门已打开。 / The door to the Archives of Eternity has opened.
-							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_01_Road_Set, 0);
-						break;
-						case 3:
-						    getPosition().getWorldMapInstance().getDoors().get(359).setOpen(true);
-							// 通往永恒档案的门已打开。 / The door to the Archives of Eternity has opened.
-							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_01_Road_Set, 0);
-						break;
-					}
+					openRandomRoadDoor();
 				break;
 			}
 		} else if (dialogId == 1011 && questId != 0) {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));
 		}
 		return true;
+	}
+
+	private void openRandomRoadDoor() {
+		if (getPosition() == null || getPosition().getWorldMapInstance() == null
+			|| getPosition().getWorldMapInstance().getDoors() == null) {
+			return;
+		}
+		int doorId = switch (Rnd.get(1, 3)) {
+			case 1 -> 349;
+			case 2 -> 352;
+			default -> 359;
+		};
+		var door = getPosition().getWorldMapInstance().getDoors().get(doorId);
+		if (door == null) {
+			return;
+		}
+		door.setOpen(true);
+		// 通往永恒档案的门已打开。 / The door to the Archives of Eternity has opened.
+		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_01_Road_Set, 0);
 	}
 }

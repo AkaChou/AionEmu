@@ -48,7 +48,7 @@ class AI2EngineRetailSelectionTest {
 			assertEquals("quest_start_use_item", AI2Engine.selectNpcAi("quest_start_use_item", 700004, null));
 			assertEquals("empyrean_blessing", AI2Engine.selectNpcAi("empyrean_blessing", 883959, null));
 			for (int npcId : bossSummonNpcIds) {
-				assertEquals("IDEternity_01_Boss_Summon", AI2Engine.selectNpcAi("IDEternity_01_Boss_Summon", npcId, null));
+				assertEquals("retail_pattern", AI2Engine.selectNpcAi("IDEternity_01_Boss_Summon", npcId, null));
 			}
 			for (String ai : List.of(
 				"Mechaturerk", "anikiki", "betrayer_icaronix", "bighorn_wendigo", "blood_fungus_skinwalker",
@@ -61,7 +61,7 @@ class AI2EngineRetailSelectionTest {
 				"razor_clawed_forest_cloke", "rejuvinating_wave_wave_tauric", "roughhorn_wendigo",
 				"ruthless_wave_tauric", "skulking_forsaken_zaif", "spirit_forest_worg_morpher",
 				"thickhorn_wendigo", "valley_torr_crumbler", "venerable_sea_giant", "warrior_monument",
-				"whiptail_metamorph", "young_roundshell_spiner", "IDEternity_01_Boss_Summon")) {
+				"whiptail_metamorph", "young_roundshell_spiner")) {
 				assertEquals(ai, AI2Engine.selectNpcAi(ai, 200000, null));
 			}
 		} finally {

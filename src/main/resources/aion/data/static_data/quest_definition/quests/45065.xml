@@ -17,9 +17,7 @@
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
     </node>
-    <node label="started" status="START">
-      <var name="var0" value="0"/>
-    </node>
+    <node label="started" status="START"/>
     <node label="reward" status="REWARD">
       <var name="var0" value="10"/>
     </node>

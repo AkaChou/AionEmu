@@ -35,6 +35,10 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	private Race spawnRace;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
+	/** 进入提示是否已为本副本安排 / whether entry messages were scheduled for this instance */
+	private boolean entryMessagesScheduled;
+	/** 最终 Boss 出口是否已生成 / whether final-boss exits were spawned */
+	private boolean finalBossRewardSpawned;
 	/**
 	 * 永恒档案库秘密房间的密码背包位置。
 	 * Cryptograph Cube positions in the Archives Of Eternity secret rooms.
@@ -62,239 +66,48 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	 * @param npc NPC / npc
 	 */
 	@Override
-    public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
-		int npcId = npc.getNpcId();
-		int index = dropItems.size() + 1;
-		switch (npcId) {
-			case 857452: //Relic Techgolem.
-			case 857456: //Augmented Fleshgolem.
-			case 857459: //Crystalized Shardgolem.
-			case 857460: //Ancient Relic Techgolem.
-			case 857462: //Fleshgolem Captain.
-			case 857464: //Mountainous Shardgolem.
-			    for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058413, 1)); //? ?  ??.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 166040001, 1)); //Essence Core Solution.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100344, 1)); //Ruby Starlight Particle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100345, 1)); //Sapphire Starlight Particle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100346, 1)); //Emerald Starlight Crystal Dust.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100347, 1)); //Amethyst Starlight Crystal Dust.
-				    } switch (Rnd.get(1, 5)) {
-						case 1:
-						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 3)); //低级随从契约。 / Lesser Minion Contract.
-						break;
-						case 2:
-				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 3)); //高级随从契约。 / Greater Minion Contract.
-						break;
-						case 3:
-						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 3)); //大型随从契约。 / Major Minion Contract.
-						break;
-						case 4:
-						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 3)); //可爱随从契约。 / Cute Minion Contract.
-						break;
-						case 5:
-					        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
-					    break;
-					}
-				}
-			break;
-			/**
-	 * “守护者套装”外观变更物品可从永恒档案获得，可用于任意类型物品。 / Chosen "Guardian's Set" Appearance change items obtainable from "Archives Of Eternity" Can be used on any type of item. Headgear can be obtained from "?? ??" Pants, Shoes, Pauldrons and Gloves can be obtained from "Cryptograph Cube"
-	 */
-			case 806139: //密码背包。 / Cryptograph Cube.
-                for (Player player: instance.getPlayersInside()) {
-                    if (player.isOnline()) {
-                        switch (Rnd.get(1, 5)) {
-				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 110000047, 1)); //Library Guardian's Tunic.
-				            break;
-					        case 2:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 111000092, 1)); //Library Guardian's Gloves.
-				            break;
-							case 3:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 112000051, 1)); //Library Guardian's Pauldrons.
-				            break;
-							case 4:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 113000059, 1)); //Library Guardian's Leggings.
-				            break;
-							case 5:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 114000097, 1)); //Library Guardian's Shoes.
-				            break;
-						}
-					}
-                }
-            break;
-			/**
-			 * 天族 / Elyos
-			 */
-			case 703131: //Histories Of Atreia.
-			    for (Player player: instance.getPlayersInside()) {
-                    if (player.isOnline()) {
-                        switch (Rnd.get(1, 5)) {
-				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100300, 1)); //History Of Southern Atreia Chapter 1.
-				            break;
-					        case 2:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100301, 1)); //History Of Southern Atreia Chapter 2.
-				            break;
-							case 3:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100302, 1)); //History Of Southern Atreia Chapter 3.
-				            break;
-							case 4:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100303, 1)); //History Of Southern Atreia Chapter 4.
-				            break;
-							case 5:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100304, 1)); //History Of Southern Atreia Chapter 5.
-				            break;
-						}
-					}
-                }
-			break;
-			case 703132: //Records From The Era Of Men.
-			    for (Player player: instance.getPlayersInside()) {
-                    if (player.isOnline()) {
-                        switch (Rnd.get(1, 5)) {
-				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100310, 1)); //Records Of The Human Races Chapter 1.
-				            break;
-					        case 2:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100311, 1)); //Records Of The Human Races Chapter 2.
-				            break;
-							case 3:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100312, 1)); //Records Of The Human Races Chapter 3.
-				            break;
-							case 4:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100313, 1)); //Records Of The Human Races Chapter 4.
-				            break;
-							case 5:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100314, 1)); //Records Of The Human Races Chapter 5.
-				            break;
-						}
-					}
-                }
-			break;
-			case 703133: //Empyrean Histories.
-			    for (Player player: instance.getPlayersInside()) {
-                    if (player.isOnline()) {
-                        switch (Rnd.get(1, 5)) {
-				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100320, 1)); //History Of The Empyrean Lords Chapter 1.
-				            break;
-					        case 2:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100321, 1)); //History Of The Empyrean Lords Chapter 2.
-				            break;
-							case 3:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100322, 1)); //History Of The Empyrean Lords Chapter 3.
-				            break;
-							case 4:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100323, 1)); //History Of The Empyrean Lords Chapter 4.
-				            break;
-							case 5:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100324, 1)); //History Of The Empyrean Lords Chapter 5.
-				            break;
-						}
-					}
-                }
-			break;
-			/**
-			 * 魔族 / Asmodians
-			 */
-			case 703149: //Histories Of Atreia.
-			    for (Player player: instance.getPlayersInside()) {
-                    if (player.isOnline()) {
-                        switch (Rnd.get(1, 5)) {
-				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100305, 1)); //History Of Northern Atreia Chapter 1.
-				            break;
-					        case 2:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100306, 1)); //History Of Northern Atreia Chapter 2.
-				            break;
-							case 3:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100307, 1)); //History Of Northern Atreia Chapter 3.
-				            break;
-							case 4:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100308, 1)); //History Of Northern Atreia Chapter 4.
-				            break;
-							case 5:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100309, 1)); //History Of Northern Atreia Chapter 5.
-				            break;
-						}
-					}
-                }
-			break;
-			case 703150: //Records From The Era Of Men.
-			    for (Player player: instance.getPlayersInside()) {
-                    if (player.isOnline()) {
-                        switch (Rnd.get(1, 5)) {
-				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100315, 1)); //Records Of The Human Races Chapter 1.
-				            break;
-					        case 2:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100316, 1)); //Records Of The Human Races Chapter 2.
-				            break;
-							case 3:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100317, 1)); //Records Of The Human Races Chapter 3.
-				            break;
-							case 4:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100318, 1)); //Records Of The Human Races Chapter 4.
-				            break;
-							case 5:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100319, 1)); //Records Of The Human Races Chapter 5.
-				            break;
-						}
-					}
-                }
-			break;
-			case 703151: //Empyrean Histories.
-			    for (Player player: instance.getPlayersInside()) {
-                    if (player.isOnline()) {
-                        switch (Rnd.get(1, 5)) {
-				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100325, 1)); //History Of The Empyrean Lords Chapter 1.
-				            break;
-					        case 2:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100326, 1)); //History Of The Empyrean Lords Chapter 2.
-				            break;
-							case 3:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100327, 1)); //History Of The Empyrean Lords Chapter 3.
-				            break;
-							case 4:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100328, 1)); //History Of The Empyrean Lords Chapter 4.
-				            break;
-							case 5:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100329, 1)); //History Of The Empyrean Lords Chapter 5.
-				            break;
-						}
-					}
-                }
-			break;
-			case 703134: //Annals Of Life [Q18627/Q28627].
-			    for (Player player: instance.getPlayersInside()) {
-                    if (player.isOnline()) {
-                        switch (Rnd.get(1, 5)) {
-				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100330, 1)); //Records Of Life Chapter 1.
-				            break;
-					        case 2:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100331, 1)); //Records Of Life Chapter 2.
-				            break;
-							case 3:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100332, 1)); //Records Of Life Chapter 3.
-				            break;
-							case 4:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100333, 1)); //Records Of Life Chapter 4.
-				            break;
-							case 5:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100334, 1)); //Records Of Life Chapter 5.
-				            break;
-						}
-					}
-                }
-			break;
-        }
-    }
+	public void onDropRegistered(Npc npc) {
+		if (npc == null || instance == null) {
+			return;
+		}
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		if (dropItems == null) {
+			return;
+		}
+		int npcObjectId = npc.getObjectId();
+		switch (npc.getNpcId()) {
+			case 857452, 857456, 857459, 857460, 857462, 857464 -> registerNamedBossDrops(dropItems, npcObjectId);
+		}
+	}
+
+	private void registerNamedBossDrops(Set<DropItem> dropItems, int npcObjectId) {
+		addDrop(dropItems, 0, npcObjectId, 188058413, 1);
+		for (Player player : instance.getPlayersInside()) {
+			if (!player.isOnline()) {
+				continue;
+			}
+			int playerObjectId = player.getObjectId();
+			addDrop(dropItems, playerObjectId, npcObjectId, 166040001, 1);
+			addDrop(dropItems, playerObjectId, npcObjectId, 188100344, 1);
+			addDrop(dropItems, playerObjectId, npcObjectId, 188100345, 1);
+			addDrop(dropItems, playerObjectId, npcObjectId, 188100346, 1);
+			addDrop(dropItems, playerObjectId, npcObjectId, 188100347, 1);
+		}
+		int randomReward = switch (Rnd.get(1, 5)) {
+			case 1 -> 190080005;
+			case 2 -> 190080006;
+			case 3 -> 190080007;
+			case 4 -> 190080008;
+			default -> 190200000;
+		};
+		addDrop(dropItems, 0, npcObjectId, randomReward, randomReward == 190200000 ? 50 : 3);
+	}
+
+	private void addDrop(Set<DropItem> dropItems, int playerObjectId, int npcObjectId, int itemId, long count) {
+		int nextIndex = dropItems.stream().mapToInt(DropItem::getIndex).max().orElse(0) + 1;
+		dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(
+			nextIndex, playerObjectId, npcObjectId, itemId, count));
+	}
 	
 	/**
 	 * 玩家进入副本时处理。
@@ -306,14 +119,17 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	public void onEnterInstance(Player player) {
 		super.onEnterInstance(player);
 		player.getController().updateNearbyQuests();
-		// 与代理人交谈。 / Talk with the Agent.
-		sendMsgByRace(1403340, Race.PC_ALL, 5000);
-		// 须摧毁奥德封印才能进入。 / You must destroy the Aether seals to enter.
-		sendMsgByRace(1403210, Race.PC_ALL, 30000);
-		// 古物学家已开始激活永恒遗物。 / The Antiquarian has begun activating the Eternity Relics.
-		sendMsgByRace(1403212, Race.PC_ALL, 60000);
-		// 阿特雷亚古物学家已激活全部永恒遗物。 / The Antiquarian of Atreia has activated all Eternity Relics.
-		sendMsgByRace(1403213, Race.PC_ALL, 120000);
+		if (!entryMessagesScheduled) {
+			entryMessagesScheduled = true;
+			// 与代理人交谈。 / Talk with the Agent.
+			sendMsgByRace(1403340, Race.PC_ALL, 5000);
+			// 须摧毁奥德封印才能进入。 / You must destroy the Aether seals to enter.
+			sendMsgByRace(1403210, Race.PC_ALL, 30000);
+			// 古物学家已开始激活永恒遗物。 / The Antiquarian has begun activating the Eternity Relics.
+			sendMsgByRace(1403212, Race.PC_ALL, 60000);
+			// 阿特雷亚古物学家已激活全部永恒遗物。 / The Antiquarian of Atreia has activated all Eternity Relics.
+			sendMsgByRace(1403213, Race.PC_ALL, 120000);
+		}
 		if (spawnRace == null) {
 			spawnRace = player.getRace();
 			spawnHistoriesOfAtreia();
@@ -367,6 +183,9 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
         doors = instance.getDoors();
+		entryMessagesScheduled = false;
+		finalBossRewardSpawned = false;
+		spawnRace = null;
 		switch (Rnd.get(1, 3)) {
 			case 1:
 				spawn(857452, 552.1911f, 511.7292f, 468.97675f, (byte) 0); //Relic Techgolem.
@@ -406,14 +225,20 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onDie(Npc npc) {
-		switch (npc.getObjectTemplate().getTemplateId()) {
+			switch (npc.getObjectTemplate().getTemplateId()) {
 			case 701432: //IDEternity_01_Secret_Door_01.
 			    despawnNpc(npc);
 			break;
 			case 857460: //Ancient Relic Techgolem.
 			case 857462: //Fleshgolem Captain.
 			case 857464: //Mountainous Shardgolem.
-			    doors.get(33).setOpen(true);
+				if (finalBossRewardSpawned) {
+					break;
+				}
+				finalBossRewardSpawned = true;
+				if (doors != null && doors.get(33) != null) {
+					doors.get(33).setOpen(true);
+				}
 				// 阿特雷亚古物学家被击败，永恒遗物停止运作。 / The Antiquarian of Atreia is defeated and the Eternity Relics ceased functioning.
 				sendMsgByRace(1403214, Race.PC_ALL, 0);
 				final int ArchivesExit = spawnRace == Race.ASMODIANS ? 806192 : 806191;
@@ -487,6 +312,12 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	 */
 	@Override
     public void onInstanceDestroy() {
-        doors.clear();
+		if (doors != null) {
+			doors.clear();
+		}
+		doors = null;
+		spawnRace = null;
+		entryMessagesScheduled = false;
+		finalBossRewardSpawned = false;
     }
 }

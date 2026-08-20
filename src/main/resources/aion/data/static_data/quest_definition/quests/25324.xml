@@ -33,11 +33,9 @@
     </node>
     <node label="h1" status="START">
       <var name="var0" value="1"/>
-      <var name="var1" value="0"/>
     </node>
     <node label="h2" status="START">
       <var name="var0" value="2"/>
-      <var name="var1" value="0"/>
     </node>
     <node label="h3" status="START">
       <var name="var0" value="3"/>

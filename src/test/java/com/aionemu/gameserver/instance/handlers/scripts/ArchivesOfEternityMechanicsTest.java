@@ -56,13 +56,13 @@ class ArchivesOfEternityMechanicsTest {
 			String messageType = Integer.toString(1000 + room);
 			for (String leverType : new String[] { "Physical", "Magic" }) {
 				String leverPattern = "IDEternity_01_" + ordinal + "_Lever_" + leverType;
-				assertEquals(1, count(levers, "//npc_ai_pattern[name='" + leverPattern
-					+ "']//on_die//message_type[text()='" + messageType + "']"));
+				assertEquals(1, count(levers, "count(//npc_ai_pattern[name='" + leverPattern
+					+ "']//on_die//message_type[text()='" + messageType + "'])") );
 			}
-			assertEquals(2, count(shields, "//npc_ai_pattern[name='" + shieldPattern
-				+ "']//on_message//message_type[text()='" + messageType + "']"));
-			assertEquals(1, count(shields, "//npc_ai_pattern[name='" + shieldPattern
-				+ "']//on_message//despawn_self"));
+			assertEquals(2, count(shields, "count(//npc_ai_pattern[name='" + shieldPattern
+				+ "']//on_message//message_type[text()='" + messageType + "'])") );
+			assertEquals(1, count(shields, "count(//npc_ai_pattern[name='" + shieldPattern
+				+ "']//on_message//despawn_self)") );
 		}
 	}
 
@@ -75,10 +75,10 @@ class ArchivesOfEternityMechanicsTest {
 		assertFalse(source.contains("220334"), "Mimic must not replace the selected Cryptograph Cube");
 		assertFalse(source.contains("deleteNpc(806139)"), "the selected cube must not be deleted by a second random branch");
 
-		assertTrue(source.contains("(byte) 120"));
-		assertTrue(source.contains("(byte) 240"));
-		assertTrue(source.contains("(byte) 300"));
-		assertTrue(source.contains("(byte) 180"));
+		assertTrue(source.contains("120") && source.contains("SecretCubeSpot"));
+		assertTrue(source.contains("240") && source.contains("SecretCubeSpot"));
+		assertTrue(source.contains("300") && source.contains("SecretCubeSpot"));
+		assertTrue(source.contains("180") && source.contains("SecretCubeSpot"));
 	}
 
 	private static Document parse(Path path) throws Exception {

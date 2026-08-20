@@ -52,7 +52,7 @@ public class AI2Engine implements GameEngine {
 		"razor_clawed_forest_cloke", "rejuvinating_wave_wave_tauric", "roughhorn_wendigo",
 		"ruthless_wave_tauric", "skulking_forsaken_zaif", "spirit_forest_worg_morpher",
 		"thickhorn_wendigo", "valley_torr_crumbler", "venerable_sea_giant", "warrior_monument",
-		"whiptail_metamorph", "young_roundshell_spiner", "IDEternity_01_Boss_Summon",
+		"whiptail_metamorph", "young_roundshell_spiner",
 		"IDTransform_TransRoom_01",
 		"IDTransform_TransRoom_02", "IDTransform_TransRoom_03", "IDTransform_TransRoom_04");
 

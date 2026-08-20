@@ -12,6 +12,8 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Archives Of Eternity 副本 NPC AI：ID Eternity 01 A Save Point（@AIName "IDEternity01Teleporter"），继承 NpcAI2。
  * Archives Of Eternity instance NPC AI: ID Eternity 01 A Save Point (@AIName "IDEternity01Teleporter"), extends NpcAI2.
@@ -21,6 +23,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 @AIName("IDEternity01Teleporter")
 public class IDEternity_01_A_Save_PointAI2 extends NpcAI2
 {
+	/** 传送点只允许一个玩家触发一次 / the save point may be activated only once */
+	private final AtomicBoolean activated = new AtomicBoolean();
+
 	@Override
     protected void handleCreatureSee(Creature creature) {
         checkDistance(this, creature);
@@ -59,6 +64,9 @@ public class IDEternity_01_A_Save_PointAI2 extends NpcAI2
 	}
 	
 	private void IDEternity01ASavePoint() {
+		if (!activated.compareAndSet(false, true)) {
+			return;
+		}
 		AI2Actions.deleteOwner(IDEternity_01_A_Save_PointAI2.this);
 		switch (Rnd.get(1, 4)) {
 			case 1:
