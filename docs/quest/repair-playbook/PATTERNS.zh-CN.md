@@ -44,6 +44,7 @@
 | `ASCENSION_SPARSE_ACTION_MAPPING` | 体验未来 load fail、相信后 load fail、职业按钮错位 | 稀疏 `SETPRO`/`SELECT` action、起始职业条件和进阶职业映射逐按钮绑定；action ID 与 page ID 独立 | Aion 5.8 客户端 action/page、职业条件、转职后的传送和 sync 顺序 | `8769210fd`、`Quest2008RetailAlignmentTest#followsClientBeliefAndAdvancedClassActions` |
 | `ARCHDAEVA_ATOMIC_COMPLETION_PROMOTION` | 任务完成但未升 66、身份标记与在线等级不一致 | 身份、最低经验和任务完成在同一事务持久化；在线角色更新只在 commit 后执行 | promotion action、JDBC 事务、快照恢复、after-commit 和唯一 complete route | `7cd670ffb`、`QuestArchDaevaPromotionDefinitionTest#asmodianCompletionPromotesArchDaevaAfterTheExpReward` |
 | `STATE_SYNC_BEFORE_DEPENDENT_PAGE` | 页面与任务状态不同步、需要重复交互、包顺序反了 | 同一次已提交状态变化后先发送 quest state，再显示依赖新状态的页面 | 完整 after-commit、objectId/questId/page 和真实包顺序 | `6a77337db`、`QuestPacketOrderRegressionTest#protocolLoopSendsCommittedStateBeforeEveryRepairedPage` |
+| `CROSS_MAP_ENTER_ZONE_PHASED_FLOW` | 任务物品读条后没有传送、进入目标地图后不推进、中间 NPC 或最终领奖 owner 错位 | 任务对象与 world portal owner 分离；每次权威 `ENTER_ZONE` 和 NPC handoff 都推进独立持久阶段；电影只在最终地图阶段播放；最终 reward owner 独占完成路由 | 交互对象的 portal/quest owner、portal loc/world、区域名、进入前后 status/vars、电影与领奖 owner | `5511223b0`、`Quest26800ClientDialogAlignmentTest#advancesThroughTheTowerAndEnfitentaOnlyAtTheAuthoritativeStages` |
 
 指纹表至少维护以上五列。一个代表提交可以支撑多个独立 Pattern；这属于对复合修复的检索拆分，不是新增重复案例。新增代表模式时，案例正文记录完整验收证据，指纹表只提炼可搜索的症状别名和抽象 IR/owner 特征，具体 action/page 仅作为代表实例；后续同型任务不把任务 ID 追加进表中。
 
@@ -70,3 +71,4 @@
 | `e5a25fd9b` | Belbua 酒桶交互 | 从客户端 object action 和接取状态证明 route，避免未接取时误触发任务副作用 |
 | `cc7aabea5` | 9550 装备事件物品后仍无法接取任务 | 元数据 `equipped` 起始条件必须下沉为正式 `EquippedItem` 条件并使用已捕获装备事实求值；装备事实未知时必须 fail closed |
 | `8769210fd` | 2008 魔族转职任务的客户端动作链整体错位 | 转职页面的稀疏 action ID、起始职业分支和进阶职业映射必须逐项取自客户端证据，不能按页面序号或职业顺序推导 |
+| `5511223b0` | 26800 永恒之塔到知识书库的跨地图阶段流 | 先区分任务交互物与实际 portal owner，再用每段 `ENTER_ZONE`、NPC handoff、电影和唯一 reward owner 锁定完整状态链；不能把跨地图阶段压缩为通用接取/领奖模板 |

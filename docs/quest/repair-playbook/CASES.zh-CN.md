@@ -107,3 +107,17 @@
 - 验证命令和结果：`rtk mvn -q -Dtest=Quest2008RetailAlignmentTest,Quest2009MovieDialogTest,Quest2953RetailFlowAlignmentTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest test` 通过，共 14 个测试，失败 0、错误 0、跳过 0；生产 catalog 6200 条编译成功、失败 0，白名单违规 0。2008/2009 XML 均通过 XSD，`generate_quest_dialog_enums.py --check` 返回 `changed=0`。用户使用 Aion 5.8 客户端完成 2008 端到端验收，确认未来体验、相信、职业选择及任务完成流程均可继续。
 - 复用边界：仅适用于客户端页面证明同一转职任务使用稀疏、多阶段或与职业枚举顺序不同的 action 映射。必须逐按钮证明 action、页面、起始职业条件、目标进阶职业以及职业变更后的传送和同步顺序；其他阵营转职任务、页面编号相似但动作不同的任务、普通职业奖励选择或只缺少单个继续页的电影流程不能直接套用。action ID 与 page ID 始终是独立空间，禁止全局加减偏移或按职业 ordinal 生成映射。
 - commit：`8769210fdb5a8b6b31201c64aab29e56b9379195`。
+
+## 8.9 跨地图区域阶段被压缩且 portal owner 混淆
+
+- Pattern ID：`CROSS_MAP_ENTER_ZONE_PHASED_FLOW`。
+- 代表任务：26800「[Instance/Group] A Call for Champions」。
+- 搜索症状：永恒之塔碎片读条后没有进入、抵达 `220120000` 后任务不推进、中间 NPC 对话阶段错位、电影时机错误、多个 NPC 都能领奖。
+- 玩家可见症状：玩家最初使用 `731711`“发光的永恒之塔碎片”后没有进入永恒之塔；该对象实际属于任务 20527，不是任务 26800 的传送入口。任务 26800 的正式路径需要使用诺斯珀德活动入口 `806082` 进入 `220120000`，完成 `806233` 对话后再使用 `806029` 进入 `301540000`。原迁移定义还会丢失这两段地图之间的阶段，使区域推进、电影 932 和最终领奖 owner 无法按真实顺序表达。
+- 根因：迁移把旧 handler 的 `START var0=0 -> 1 -> 2 -> REWARD var0=3` 压缩成 `var0=0/1`，遗漏永恒之塔区域 `DF_TOWER_SENSORY_AREA_Q26800_220120000`、`806233 + SET_SUCCEED(10255)` 和知识书库区域 `IDETERNITY_01_Q16800_301540000` 的权威阶段边；电影 932 没有限定在 `var0=2` 的知识书库入口；`806079`、`806233`、`806149` 又被错误展开为并列报告/领奖 owner。排查入口时还把任务 20527 的交互物 `731711` 与 world portal `806082/806029` 混为同一类对象。
+- 修复层：仅修改任务 26800 XML 并增加任务专用回归测试。保留 `START var0=0/1/2` 三个阶段：进入 `220120000` 后 `0 -> 1`；`806233 + SET_SUCCEED` 后 `1 -> 2`；进入 `301540000` 后先提交 `REWARD var0=3`、执行 `LEVEL_AND_VISIBILITY_REFRESH`，再播放电影 932。最终只有 `806149` 提供奖励预览和完成路由。portal 数据不伪装成任务 transition：`806082 + dialog 104 -> loc 2201200`，`806029 + dialog 10000 -> loc 3015400`，`731711` 继续只归任务 20527。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/26800.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest26800ClientDialogAlignmentTest.java`。
+- 第一检查点：先用 NPC/object template ID 区分任务交互物和 portal owner，并核对 `portal_template2.xml` 与 `portal_loc.xml`；再读取玩家当前 `status/vars`。已经为 `START var0=2` 时不会再次命中第一段区域事件，应继续使用 `806029`，不能把重复传送到第一感应区无响应判为任务故障。
+- 验证命令和结果：修复提交前的 `Quest26800ClientDialogAlignmentTest` 为 4/4 通过；生产 catalog 6200 条任务编译成功、失败 0，白名单违规 0。2026-08-20 用户使用 Aion 5.8 客户端完成 `806079 -> 806082 -> 220120000 -> 806233 -> 806029 -> 301540000 -> movie 932 -> 806149` 全流程，并明确确认任务 26800 已完成。
+- 复用边界：仅适用于任务进度由多个权威 world portal、区域进入事件和中间 NPC 共同推进的跨地图流程。必须分别证明任务交互物、portal、区域名、loc/world 映射、每段 source/target/status/vars、电影 after-commit 顺序和最终领奖 owner；同一模板名、相近坐标或能播放电影都不能替代这些证据。普通多 NPC 报告仍使用 `MULTI_NPC_HANDOFF_REWARD_OWNER`；飞行后不可重入和崩溃恢复仍使用 `COMMIT_SYNC_BEFORE_FLIGHT_TELEPORT`、`UNREACHABLE_INSTANCE_REENTRY_RECOVERY`，不能从本案例推导回滚规则。
+- commit：`5511223b0e0363514a960beaf02577f1659541ce`。
