@@ -108,6 +108,14 @@
     </transition>
     <transition source="s2" target="s2">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="806073" action="SELECT3_2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="806073" action="SELECT3_1"/>
       </event>
       <after-commit>

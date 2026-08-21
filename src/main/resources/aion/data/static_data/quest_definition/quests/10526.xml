@@ -211,6 +211,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
       </after-commit>
     </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806292" action="SELECT6_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1"/>
+      </after-commit>
+    </transition>
     <transition source="s5" target="s6">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806292" action="SETPRO6"/>
@@ -291,6 +299,14 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT10"/>
+      </after-commit>
+    </transition>
+    <transition source="s9" target="s9">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806292" action="SELECT10_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT10_1"/>
       </after-commit>
     </transition>
     <transition source="s9" target="s10">
@@ -389,6 +405,14 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT8_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806075" action="SELECT8_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT8_1_1"/>
       </after-commit>
     </transition>
   </transitions>

@@ -135,6 +135,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
+    <transition source="v0" target="v0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203071" action="SELECT1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
+      </after-commit>
+    </transition>
     <transition source="v7" target="v7" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203071" action="CHECK_USER_HAS_QUEST_ITEM"/>

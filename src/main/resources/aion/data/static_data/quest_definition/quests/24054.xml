@@ -174,6 +174,14 @@
     </transition>
     <transition source="s0" target="s0">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="204702" action="SELECT1_2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
+      </after-commit>
+    </transition>
+    <transition source="s0" target="s0">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="204702" action="SELECT2_1"/>
       </event>
       <after-commit>

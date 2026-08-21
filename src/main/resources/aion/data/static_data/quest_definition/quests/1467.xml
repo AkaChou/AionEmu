@@ -93,6 +93,30 @@
     </transition>
     <transition source="active" target="active">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="204045" action="SELECT1_2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
+      </after-commit>
+    </transition>
+    <transition source="active" target="active">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204045" action="SELECT1_3"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_3"/>
+      </after-commit>
+    </transition>
+    <transition source="active" target="active">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204045" action="SELECT1_4"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_4"/>
+      </after-commit>
+    </transition>
+    <transition source="active" target="active">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="204045" action="SETPRO1"/>
       </event>
       <conditions>

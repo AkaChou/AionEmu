@@ -363,6 +363,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1"/>
       </after-commit>
     </transition>
+    <transition source="s8" target="s8">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203550" action="SELECT9_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT9_1_1"/>
+      </after-commit>
+    </transition>
     <!-- NPC 203550 设置为领奖状态 / NPC 203550 sets reward state -->
     <transition source="s8" target="reward">
       <event>
@@ -512,6 +520,14 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204206" action="SELECT3_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1_1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">

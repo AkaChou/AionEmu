@@ -245,6 +245,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
       </after-commit>
     </transition>
+    <transition source="started0" target="started0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203771" action="SELECT2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
     <transition source="started0" target="started0" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203771" action="CHECK_USER_HAS_QUEST_ITEM"/>

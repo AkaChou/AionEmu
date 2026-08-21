@@ -157,6 +157,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
       </after-commit>
     </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806584" action="SELECT3"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
     <transition source="s2" target="s2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806584" action="USE_OBJECT"/>

@@ -94,6 +94,14 @@
     </transition>
     <transition source="s4" target="s4">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="204053" action="SELECT1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="204053" action="SETPRO12"/>
       </event>
       <conditions>
@@ -486,6 +494,14 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s0" target="s0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204053" action="SELECT1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
       </after-commit>
     </transition>
     <transition source="s0" target="s0">

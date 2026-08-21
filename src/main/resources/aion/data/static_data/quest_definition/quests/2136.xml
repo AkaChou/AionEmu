@@ -75,6 +75,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
+    <transition source="v1" target="v1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790009" action="SELECT2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
     <transition source="v1" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="790009" action="SETPRO1"/>

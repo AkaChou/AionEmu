@@ -120,6 +120,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203840" action="SELECT2_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
+      </after-commit>
+    </transition>
     <!-- 召唤灵魂并推进。Spawn the soul and advance. -->
     <transition source="s1" target="s2">
       <event>
@@ -172,6 +180,14 @@
       </conditions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203840" action="SELECT4_2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_2"/>
       </after-commit>
     </transition>
     <transition source="s3" target="s3">

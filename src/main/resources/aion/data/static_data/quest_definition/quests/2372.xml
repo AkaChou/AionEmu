@@ -57,6 +57,14 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="798056" action="SELECT_NONE_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="798056" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>

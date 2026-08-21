@@ -112,6 +112,22 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805328" action="SELECT2_2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805328" action="SELECT2_3"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_3"/>
+      </after-commit>
+    </transition>
     <transition source="s1" target="s2" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805328" action="CHECK_USER_HAS_QUEST_ITEM"/>
@@ -128,6 +144,14 @@
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805328" action="SELECT3"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
     <transition source="s1" target="s1" priority="1">

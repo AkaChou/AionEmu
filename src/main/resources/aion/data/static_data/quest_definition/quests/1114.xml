@@ -85,6 +85,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
+    <transition source="v0" target="v0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203075" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
     <transition source="v0" target="v1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203075" action="SETPRO1"/>

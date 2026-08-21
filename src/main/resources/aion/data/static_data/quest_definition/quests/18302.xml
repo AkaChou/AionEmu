@@ -53,6 +53,14 @@
     </transition>
     <transition source="started" target="started">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="730375" action="SELECT6"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
         <can-act template-id="730375" action-type="ACTION_ITEM_USE"/>
       </event>
       <conditions>

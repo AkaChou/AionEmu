@@ -223,6 +223,14 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="798138" action="SELECT3_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="798138" action="SELECT4_1"/>
       </event>
       <after-commit>
