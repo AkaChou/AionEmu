@@ -195,6 +195,14 @@
     </transition>
     <transition source="s2" target="s2">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="204628" action="SELECT3_1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="204627" action="QUEST_SELECT"/>
       </event>
       <conditions>
@@ -409,6 +417,14 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204629" action="SELECT2_1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1_1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">

@@ -183,6 +183,14 @@
     </transition>
     <transition source="started" target="started">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="804719" action="SELECT1_1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="804719" action="SELECT3_1"/>
       </event>
       <after-commit>
@@ -203,6 +211,14 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804719" action="SELECT4_1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1_1_1"/>
       </after-commit>
     </transition>
   </transitions>

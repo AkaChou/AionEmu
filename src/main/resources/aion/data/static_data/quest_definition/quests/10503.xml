@@ -212,6 +212,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804705" action="SELECT4_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1"/>
+      </after-commit>
+    </transition>
     <transition source="s3" target="s3" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="804705" action="CHECK_USER_HAS_QUEST_ITEM"/>
