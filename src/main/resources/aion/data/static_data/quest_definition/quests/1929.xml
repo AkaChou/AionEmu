@@ -1629,10 +1629,26 @@
     </transition>
     <transition source="started0" target="started0">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT4_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="started0">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT5_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started0" target="started0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT5_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1_1"/>
       </after-commit>
     </transition>
     <transition source="started0" target="started0">
@@ -1643,12 +1659,28 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1"/>
       </after-commit>
     </transition>
+    <transition source="started0" target="started0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT6_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1_1"/>
+      </after-commit>
+    </transition>
     <transition source="equipped96" target="equipped96">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT6_1"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1"/>
+      </after-commit>
+    </transition>
+    <transition source="equipped96" target="equipped96">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205111" action="SELECT6_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1_1"/>
       </after-commit>
     </transition>
     <transition source="started0" target="started0">

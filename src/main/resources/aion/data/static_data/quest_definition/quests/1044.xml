@@ -130,6 +130,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
       </after-commit>
     </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203930" action="SELECT2_1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1_1"/>
+      </after-commit>
+    </transition>
     <!-- 开始 300 秒飞行计时。 Start the 300 second flight countdown. -->
     <transition source="s1" target="s2">
       <event>
@@ -360,6 +368,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
       </after-commit>
     </transition>
+    <transition source="s8" target="s8">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203930" action="SELECT2_1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1_1"/>
+      </after-commit>
+    </transition>
     <transition source="s8" target="s2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203930" action="SETPRO2"/>
@@ -416,6 +432,14 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203901" action="SELECT1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">

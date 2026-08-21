@@ -99,6 +99,22 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
+    <transition source="v1" target="v1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790009" action="SELECT4"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
+      </after-commit>
+    </transition>
+    <transition source="v1" target="v1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790009" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
     <transition source="v1" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="790009" action="SETPRO1"/>

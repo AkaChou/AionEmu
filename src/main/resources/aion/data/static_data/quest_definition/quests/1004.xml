@@ -154,6 +154,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
       </after-commit>
     </transition>
+    <transition source="v3" target="v3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="SELECT3_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1_1"/>
+      </after-commit>
+    </transition>
     <transition source="v3" target="v3" priority="10">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="790001" action="CHECK_USER_HAS_QUEST_ITEM"/>
@@ -176,6 +184,14 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="v11" target="v11">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="SELECT3_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1_1"/>
       </after-commit>
     </transition>
     <transition source="v11" target="v4">
@@ -246,6 +262,14 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="v0" target="v0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203082" action="SELECT2_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
       </after-commit>
     </transition>
   </transitions>
