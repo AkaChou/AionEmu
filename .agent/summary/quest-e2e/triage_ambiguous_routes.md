@@ -31,11 +31,19 @@
    `exclusiveSibling` 判定——同组源 status 下，条件相同（双协议注册）、条件互斥（职业分支）、
    或显式优先级兄弟归入新信息性状态 `EXCLUSIVE_SIBLING`。
 3. 刷新后分布：AMBIGUOUS_ROUTE 160 → **4**，EXCLUSIVE_SIBLING=156。
-   剩余 4 行为真实待取证项：
-   - 19900/29900：`reward↔legacy-reward` 登入摆动边（遗留奖励节点兼容结构），需单任务核对；
-   - 80030/80033：`EVENT_QUEST_REFRESH` complete→complete 与 unaccepted→started 的活动刷新归因，
-     需单任务核对活动任务机制。
-   回归测试：`QuestExclusiveSiblingAttributionTest`。
+   剩余 4 行已逐行取证（2026-08-21），确认为 fixture 人造混合事实的假阳性，任务 XML 正确：
+   - **19900/29900** `reward↔legacy-reward` 登入摆动边：`reward` 投影 var0=1、`legacy-reward`
+     投影 var0=0 是新旧数据兼容对。canonical 角色（var0=1）恒不满足摆动边条件 var0=0；
+     var0=0 的旧数据角色按投影归 legacy-reward 节点走规范化边。两条边各司其职、无死循环。
+     假阳性根源：prepare(expected) 的 applyCondition 把 var0 强制为 0，人为构造了
+     "挂在 reward 节点的 legacy 投影状态"。
+   - **80030/80033** `EVENT_QUEST_REFRESH` complete→complete vs unaccepted→started：
+     `QuestMutationPlanner.matchesSourceStatus` 允许 `COMPLETE + StartEligible` 跨越生命周期
+     边界（可重复活动任务在新一期从 NONE 节点重接取，retail 正确语义）。COMPLETE+票券角色
+     刷新时自动重接取是预期行为；complete→complete 边服务于无接取资格时的可见性刷新。
+     假阳性根源：prepare(expected) 的 applyCondition 设置票券事实，使重接取边同时满足。
+   回归测试：`QuestExclusiveSiblingAttributionTest`（含 19900 摆动边保持 AMBIGUOUS_ROUTE 的合同，
+   防止未来误放宽判定掩盖真实问题）。
 
 ## 与 Playbook 的关系
 
