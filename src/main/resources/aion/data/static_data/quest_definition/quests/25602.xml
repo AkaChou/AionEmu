@@ -192,6 +192,16 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
       </after-commit>
     </transition>
+    <transition source="s3" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806171" action="SETPRO3"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
     <transition source="s4" target="s4">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806171" action="USE_OBJECT"/>

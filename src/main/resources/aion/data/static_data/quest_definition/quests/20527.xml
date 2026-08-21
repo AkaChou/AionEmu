@@ -188,6 +188,16 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1_1"/>
       </after-commit>
     </transition>
+    <transition source="s2" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806079" action="SETPRO3"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
     <transition source="s2" target="s2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806079" action="SELECT3_1_1_1"/>

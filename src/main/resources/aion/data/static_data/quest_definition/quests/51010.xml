@@ -232,6 +232,16 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
       </after-commit>
     </transition>
+    <transition source="unaccepted" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="202549" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
 
   </transitions>
 </quest-definition>

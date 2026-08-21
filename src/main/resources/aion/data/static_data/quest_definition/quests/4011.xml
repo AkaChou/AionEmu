@@ -42,6 +42,16 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
+    <transition source="unaccepted" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730139" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="730139" action="FINISH_DIALOG"/>

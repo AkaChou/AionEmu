@@ -121,6 +121,16 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203788" action="SETPRO7"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203786" action="SELECT2_1"/>

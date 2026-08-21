@@ -34,6 +34,16 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800424" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
     <!-- 交互 FOBJ 模型 730702 查看出航记录(var0 0→1)。Interact with FOBJ model 730702 (var0 0→1). -->
     <transition source="started" target="started">
       <event>

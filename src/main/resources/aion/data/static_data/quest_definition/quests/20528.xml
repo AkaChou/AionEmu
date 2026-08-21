@@ -342,6 +342,16 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT7"/>
       </after-commit>
     </transition>
+    <transition source="s6" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731714" action="SETPRO7"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
     <transition source="s6" target="s7">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="731714" action="SETPRO6"/>

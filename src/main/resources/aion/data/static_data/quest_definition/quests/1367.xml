@@ -58,6 +58,36 @@
     </transition>
     <transition source="started" target="reward">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="204023" action="SETPRO3"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204023" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204023" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="started" target="reward">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="204023" action="SELECT_QUEST_REWARD"/>
       </event>
       <conditions>

@@ -160,6 +160,16 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1_1"/>
       </after-commit>
     </transition>
+    <transition source="unaccepted" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203933" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
     <transition source="report" target="report">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203933" action="SELECT2_1"/>

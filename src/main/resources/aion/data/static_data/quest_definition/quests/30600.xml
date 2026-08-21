@@ -36,6 +36,16 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205842" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
     <!-- 阶段 1:击杀萨德哈 Named 指挥官 219256/219257 任一 1 个(var0 0→1)。Stage 1: kill a Named commander 219256/219257 (var0 0→1). -->
     <transition source="started" target="started" priority="1">
       <event>
