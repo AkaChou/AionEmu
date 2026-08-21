@@ -42,6 +42,15 @@
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="QUEST_ACTION" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="830656" actions="USE_OBJECT SELECT_QUEST_REWARD"/>

@@ -45,6 +45,15 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
+        <dialog type="QUEST_ACTION" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="unaccepted" target="unaccepted">
+      <event>
         <dialog type="QUEST_ACTION" action="QUEST_REFUSE_1"/>
       </event>
       <after-commit>
