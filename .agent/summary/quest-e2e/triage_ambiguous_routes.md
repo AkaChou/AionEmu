@@ -84,8 +84,12 @@
 | FINISH_DIALOG 缺失(冲突/无显式边) | 159 | 批 1 回滚者需改挂载点;其余找实际显示机制 |
 
 批 4(多显示边拆分,20 任务,`675c81e75`)后 display=1/2 家族已消化;剩余以 display=0
-(NPC_START/NPC_REPORT 块显示页面)为主。该家族的翻页边与 SETPRO 推进必须成对补全才有
-玩家价值,而推进语义普遍缺 legacy 证据,归入 EVIDENCE_REQUIRED 待逐任务取证。
+(NPC_START/NPC_REPORT 块显示页面)为主。
+
+该家族的推进语义证据源已确认:zz_retail_simple_quests.xml 的 data_driven step 定义
+(TALK/ACTION/HUNT + give/remove item)。参照实现 1218(`9ea0dc23c`):step NPC 按 retail
+对话流重建(QUEST_SELECT→翻页链→SETPRO 完成+give-item),契约外 start/end NPC 换无按钮
+反馈页,按钮缺口清零。后续按此形状逐任务推广,需解析 data_driven 定义生成边,工程量中等。
 
 ## 与 Playbook 的关系
 
