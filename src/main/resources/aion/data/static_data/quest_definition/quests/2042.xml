@@ -386,6 +386,14 @@
     </transition>
     <transition source="s9" target="s9">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="204319" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="s9" target="s9">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="204319" action="SELECT2_1_1"/>
       </event>
       <conditions>

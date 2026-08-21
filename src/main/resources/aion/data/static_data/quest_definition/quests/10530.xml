@@ -327,6 +327,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>
     </transition>
+    <transition source="s8" target="s8">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
     <!-- SELECT_REWARD：直接播放动画并移除收集物后进入奖励结算。 SELECT_REWARD: play movie and remove collectibles before reward settlement. -->
     <transition source="s8" target="reward">
       <event>

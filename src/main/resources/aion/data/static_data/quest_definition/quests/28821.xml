@@ -63,6 +63,14 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="810022" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="810022" actions="QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>

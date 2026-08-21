@@ -162,6 +162,14 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
       </after-commit>
     </transition>
+    <transition source="v3" target="v3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790001" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
     <transition source="v11" target="v11">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="790001" action="QUEST_SELECT"/>

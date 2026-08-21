@@ -192,6 +192,14 @@
     </transition>
     <transition source="s2" target="s2">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="804708" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="702672" action="USE_OBJECT"/>
       </event>
       <after-commit>
