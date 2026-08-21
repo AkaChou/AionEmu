@@ -4,6 +4,7 @@ import com.aionemu.gameserver.controllers.NpcController;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.world.World;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
@@ -16,6 +17,7 @@ import java.util.Objects;
  * slots), this addresses a world static NPC (legacy
  * {@code scheduleRespawn() + onDelete()}).
  */
+@Slf4j(topic = "QUEST_RUNTIME")
 public final class PlayerQuestNpcPort implements QuestNpcPort {
 	@FunctionalInterface
 	public interface WorldProvider {
@@ -84,6 +86,15 @@ public final class PlayerQuestNpcPort implements QuestNpcPort {
 			npc.getAggroList().addDamage(player, damage);
 			applied = true;
 		}
-		return applied;
+		if (!applied) {
+			// 目标不在视野（死亡重生中/距离外/跨实例）属正常并发状态：best-effort 跳过，
+			// 与 deleteInteractionNpc 的容错语义一致；任务状态已提交，不得抛异常中断。
+			// Target outside knownlist (respawning / out of range / other instance) is a
+			// normal concurrent state: best-effort skip, matching the tolerant
+			// deleteInteractionNpc semantics; quest state is already committed.
+			log.debug("addNpcAggro: template {} not in knownlist for player {} quest {} -- skipped",
+					npcTemplateId, snapshot.playerId(), snapshot.questId());
+		}
+		return true;
 	}
 }
