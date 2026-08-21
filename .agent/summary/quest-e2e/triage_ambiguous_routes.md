@@ -74,6 +74,10 @@
 | 5 | 单步链重构(data_driven 定义驱动) | 38 | `7ba652380` | 行数 940→901,EVIDENCE_REQUIRED -39 |
 | 6 | 多步 TALK 链(stage 中间节点) | 38 | `319c0e5ec` | 行数 901→863,EVIDENCE_REQUIRED -33 |
 | 7 | 混合形状(REPORT NPC 锚定) | 20 | `a55d46b06` | 行数 863→847 |
+| 8 | 物品窗口关闭(QUEST_ACTION) | 76 | `6eb481fa8` | 行数 847→695(含批7后 FINISH_DIALOG 批次 -76) |
+
+另:runtime 套件 20 个基线失败已全部清零(`595aea784`,431 全绿),涉及
+狩猎超杀上界、1842 重启清零、80487 page-4 合同、25050 can-act 声明。
 
 每批流程:数据驱动定位 → 插入标准边 → 逐任务编译验证 → 回滚冲突者 → 全门禁 → 审计对比。
 回滚记录:批 1 排除 26 个(NPC_START 展开冲突),批 2 排除 13 个、批 3 排除 24 个(AMBIGUOUS_TRANSITION)。
