@@ -29,6 +29,8 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="stage1" status="START"><var name="var0" value="1"/></node>
+    <node label="stage2" status="START"><var name="var0" value="2"/></node>
     <node label="reward" status="REWARD">
       <var name="var0" value="0"/>
     </node>
@@ -38,7 +40,16 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="790015" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="790015" source="started" target="reward" page="SELECT2"/>
+    <!-- 契约外报告页换无按钮反馈。 -->
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="790015" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+
     <npc-complete npc-id="790015" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
@@ -48,7 +59,35 @@
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <dialog type="NPC_START" npc-id="204192" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="204192" source="started" target="reward" page="SELECT2"/>
+    <!-- retail 步骤0(zz_retail_simple_quests.xml):type="TALK" ids="204192" remove_item_id="182204412" remove_item_count="1";对话链按客户端按钮图重建。 -->
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204192" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204192" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="stage1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204192" action="SETPRO1"/>
+      </event>
+      <actions>
+        <remove-item item-id="182204412" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="204192" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
@@ -58,7 +97,35 @@
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <dialog type="NPC_START" npc-id="204205" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="204205" source="started" target="reward" page="SELECT2"/>
+    <!-- retail 步骤1(zz_retail_simple_quests.xml):type="TALK" ids="204205" give_item_id="182204414" give_item_count="1";对话链按客户端按钮图重建。 -->
+    <transition source="stage1" target="stage1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204205" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="stage1" target="stage1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204205" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="stage1" target="stage2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204205" action="SETPRO1"/>
+      </event>
+      <actions>
+        <give-item item-id="182204414" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="204205" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
@@ -68,7 +135,35 @@
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <dialog type="NPC_START" npc-id="798081" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="798081" source="started" target="reward" page="SELECT2"/>
+    <!-- retail 步骤2(zz_retail_simple_quests.xml):type="TALK" ids="798081" give_item_id="182204416" give_item_count="1";对话链按客户端按钮图重建。 -->
+    <transition source="stage2" target="stage2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798081" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="stage2" target="stage2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798081" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="stage2" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798081" action="SETPRO1"/>
+      </event>
+      <actions>
+        <give-item item-id="182204416" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="798081" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>

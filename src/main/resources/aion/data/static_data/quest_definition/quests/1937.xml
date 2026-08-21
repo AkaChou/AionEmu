@@ -21,6 +21,8 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="stage1" status="START"><var name="var0" value="1"/></node>
+    <node label="stage2" status="START"><var name="var0" value="2"/></node>
     <node label="reward" status="REWARD">
       <var name="var0" value="0"/>
     </node>
@@ -34,7 +36,35 @@
         <give-item item-id="182206047" count="1"/>
       </accept-actions>
     </dialog>
-    <dialog type="NPC_REPORT" npc-id="203833" source="started" target="reward" page="SELECT2"/>
+    <!-- retail 步骤2(zz_retail_simple_quests.xml):type="TALK" ids="203833";对话链按客户端按钮图重建。 -->
+    <transition source="stage2" target="stage2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203833" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="stage2" target="stage2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203833" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="stage2" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203833" action="SETPRO1"/>
+      </event>
+      <actions>
+        <!-- 无物品变更 -->
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="203833" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
@@ -43,7 +73,35 @@
         <give-item item-id="182206047" count="1"/>
       </accept-actions>
     </dialog>
-    <dialog type="NPC_REPORT" npc-id="203837" source="started" target="reward" page="SELECT2"/>
+    <!-- retail 步骤0(zz_retail_simple_quests.xml):type="TALK" ids="203837";对话链按客户端按钮图重建。 -->
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203837" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203837" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="stage1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203837" action="SETPRO1"/>
+      </event>
+      <actions>
+        <!-- 无物品变更 -->
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="203837" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
@@ -52,7 +110,35 @@
         <give-item item-id="182206047" count="1"/>
       </accept-actions>
     </dialog>
-    <dialog type="NPC_REPORT" npc-id="203761" source="started" target="reward" page="SELECT2"/>
+    <!-- retail 步骤1(zz_retail_simple_quests.xml):type="TALK" ids="203761" remove_item_id="182206047" remove_item_count="1";对话链按客户端按钮图重建。 -->
+    <transition source="stage1" target="stage1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203761" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="stage1" target="stage1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203761" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="stage1" target="stage2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203761" action="SETPRO1"/>
+      </event>
+      <actions>
+        <remove-item item-id="182206047" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="203761" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
@@ -61,7 +147,16 @@
         <give-item item-id="182206047" count="1"/>
       </accept-actions>
     </dialog>
-    <dialog type="NPC_REPORT" npc-id="204573" source="started" target="reward" page="SELECT2"/>
+    <!-- 契约外报告页换无按钮反馈。 -->
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204573" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+
     <npc-complete npc-id="204573" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
