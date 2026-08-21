@@ -73,7 +73,6 @@
         <variable-at-least field="var1" value="9"/>
       </conditions>
       <actions>
-        <increment-variable field="var1" delta="1"/>
         <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
@@ -110,7 +109,6 @@
         <variable-at-least field="var1" value="9"/>
       </conditions>
       <actions>
-        <increment-variable field="var1" delta="1"/>
         <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
@@ -147,7 +145,6 @@
         <variable-at-least field="var1" value="9"/>
       </conditions>
       <actions>
-        <increment-variable field="var1" delta="1"/>
         <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
@@ -184,7 +181,6 @@
         <variable-at-least field="var1" value="9"/>
       </conditions>
       <actions>
-        <increment-variable field="var1" delta="1"/>
         <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>

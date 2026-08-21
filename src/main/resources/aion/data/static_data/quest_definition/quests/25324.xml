@@ -39,7 +39,6 @@
     </node>
     <node label="h3" status="START">
       <var name="var0" value="3"/>
-      <var name="var1" value="0"/>
     </node>
   </nodes>
   <transitions>

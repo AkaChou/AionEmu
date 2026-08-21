@@ -58,7 +58,7 @@
         <variable-at-least field="var0" value="65"/>
       </conditions>
       <actions>
-        <increment-variable field="var0" delta="1"/>
+        <set-variable field="var0" value="65"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
