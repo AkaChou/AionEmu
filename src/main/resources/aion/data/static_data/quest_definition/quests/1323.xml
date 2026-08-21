@@ -64,6 +64,15 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
+        <dialog type="QUEST_ACTION" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <transition source="unaccepted" target="unaccepted">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="730032" action="USE_OBJECT"/>
       </event>
       <actions>

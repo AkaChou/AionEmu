@@ -24,13 +24,12 @@ class QuestPageButtonAuditTest {
 	private static final Path CLIENT_MAPPING = Path.of("docs/quest/client-dialog-mapping");
 
 	@Test
-	void quest2122FlagsFinishDialogButtonWithoutRoute() throws Exception {
-		CompiledQuestDefinition definition = definition(2122);
+	void quest1464FlagsUnroutedButtonWithoutRoute() throws Exception {
+		CompiledQuestDefinition definition = definition(1464);
 		ClientResourceOracle oracle = ClientResourceOracle.load(CLIENT_MAPPING);
 		List<QuestE2eAuditRow> rows = QuestE2eBatchAudit.auditPageButtons(definition, oracle);
-		assertTrue(rows.stream().anyMatch(row -> row.status() == QuestE2eStatus.BUTTON_WITHOUT_ROUTE
-				&& row.dialogId() == 1008),
-			"FINISH_DIALOG (1008) button shown on displayed pages must be flagged: " + rows);
+		assertTrue(rows.stream().anyMatch(row -> row.status() == QuestE2eStatus.BUTTON_WITHOUT_ROUTE),
+			"unrouted buttons shown on displayed pages must be flagged: " + rows);
 	}
 
 	@Test

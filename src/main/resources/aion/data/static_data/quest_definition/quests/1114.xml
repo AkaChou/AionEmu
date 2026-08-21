@@ -246,5 +246,40 @@
         <can-act template-id="700008" action-type="ACTION_ITEM_USE"/>
       </event>
     </transition>
-  </transitions>
+      <transition source="v0" target="v0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203075" action="SELECT2_2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2_1"/>
+      </after-commit>
+    </transition>
+
+    <transition source="v0" target="v0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203075" action="SELECT2_3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_3_1"/>
+      </after-commit>
+    </transition>
+
+    <transition source="v0" target="v0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203075" action="SELECT2_2_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2_1_1"/>
+      </after-commit>
+    </transition>
+
+    <transition source="v0" target="v0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203075" action="SELECT2_3_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_3_1_1"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

@@ -53,5 +53,13 @@
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-  </transitions>
+      <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204326" action="ASK_QUEST_ACCEPT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_4"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

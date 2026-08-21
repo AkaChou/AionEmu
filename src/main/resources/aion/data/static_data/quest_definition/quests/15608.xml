@@ -155,6 +155,15 @@
     </transition>
     <transition source="s1" target="s1">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="806165" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+
+    <transition source="s1" target="s1">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="703139" action="USE_OBJECT"/>
       </event>
       <conditions>
