@@ -70,6 +70,8 @@
 | 1 | FINISH_DIALOG 缺失(唯一显示边) | 66 | `7037ecb49` | 缺口任务 178→112 |
 | 2 | 翻页边缺失(action=有效页面,唯一显示边) | 156 | `cfc2fa048` | 行数 1148→980 |
 | 3 | 同上(dup 检查精确化到 npc+action) | 26 | `3426314d9` | 行数 980→957 |
+| 4 | 翻页边(多显示边拆分) | 20 | `675c81e75` | 行数 957→940 |
+| 5 | 单步链重构(data_driven 定义驱动) | 38 | `7ba652380` | 行数 940→901,EVIDENCE_REQUIRED -39 |
 
 每批流程:数据驱动定位 → 插入标准边 → 逐任务编译验证 → 回滚冲突者 → 全门禁 → 审计对比。
 回滚记录:批 1 排除 26 个(NPC_START 展开冲突),批 2 排除 13 个、批 3 排除 24 个(AMBIGUOUS_TRANSITION)。
@@ -83,13 +85,18 @@
 | 其他(CHECK_ITEMS/接取拒绝等) | 162 | 个案对照 legacy handler |
 | FINISH_DIALOG 缺失(冲突/无显式边) | 159 | 批 1 回滚者需改挂载点;其余找实际显示机制 |
 
-批 4(多显示边拆分,20 任务,`675c81e75`)后 display=1/2 家族已消化;剩余以 display=0
-(NPC_START/NPC_REPORT 块显示页面)为主。
+批 4(多显示边拆分,20 任务,`675c81e75`)后 display=1/2 家族已消化。
 
 该家族的推进语义证据源已确认:zz_retail_simple_quests.xml 的 data_driven step 定义
-(TALK/ACTION/HUNT + give/remove item)。参照实现 1218(`9ea0dc23c`):step NPC 按 retail
-对话流重建(QUEST_SELECT→翻页链→SETPRO 完成+give-item),契约外 start/end NPC 换无按钮
-反馈页,按钮缺口清零。后续按此形状逐任务推广,需解析 data_driven 定义生成边,工程量中等。
+(TALK/ACTION/HUNT + give/remove item)。参照实现 1218(`9ea0dc23c`)后批 5 将生成器批量化
+(`7ba652380`,38 任务):解析单步 TALK/ACTION 定义,沿客户端按钮图走单链生成对话流,
+step NPC 重建 + 契约外 NPC 换无按钮反馈页。
+
+**关键教训**:动作 id 与页面 id 共享数字空间(页面表 10000=CHECK_USER_ITEM_OK,动作表
+10000=SETPRO1),生成器必须维护双符号表并校验动作 id,否则产出非法 action 引用。
+
+剩余 ~900 行:多步任务(需顺序语义)、无 data_driven 定义任务(433 个,需其他证据源)、
+SETPRO/CHECK_ITEMS 个案。
 
 ## 与 Playbook 的关系
 
