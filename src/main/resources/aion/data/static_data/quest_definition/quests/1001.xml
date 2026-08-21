@@ -162,6 +162,15 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
       </after-commit>
     </transition>
+    <transition source="v7" target="v7">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203071" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+
     <transition source="v7" target="reward" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203071" action="SETPRO3"/>

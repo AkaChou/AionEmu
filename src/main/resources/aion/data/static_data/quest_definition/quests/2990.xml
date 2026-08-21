@@ -194,6 +194,15 @@
         <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
+    <transition source="unaccepted" target="unaccepted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+
     <transition source="unaccepted" target="started0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204146" action="QUEST_ACCEPT_SIMPLE"/>
@@ -261,6 +270,15 @@
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>
     </transition>
+    <transition source="started0" target="started0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+
     <transition source="started1" target="started2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204146" action="SETPRO2"/>
@@ -464,6 +482,15 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4_2"/>
       </after-commit>
     </transition>
+    <transition source="started3" target="started3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204146" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+
     <npc-complete npc-id="204146" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

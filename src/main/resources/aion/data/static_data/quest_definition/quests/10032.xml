@@ -164,6 +164,15 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT3_3"/>
       </after-commit>
     </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799022" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+
     <transition source="s2" target="s3" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799022" action="SETPRO3"/>
@@ -287,6 +296,15 @@
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
       </after-commit>
     </transition>
+    <transition source="s7" target="s7">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799503" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+
     <transition source="s7" target="s7" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799503" action="CHECK_USER_HAS_QUEST_ITEM"/>
