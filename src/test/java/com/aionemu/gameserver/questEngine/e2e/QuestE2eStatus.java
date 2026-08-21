@@ -8,6 +8,7 @@ package com.aionemu.gameserver.questEngine.e2e;
 public enum QuestE2eStatus {
 	PASS,
 	CLICK_NO_RESPONSE,
+	BUTTON_WITHOUT_ROUTE,
 	NO_ROUTE,
 	NO_MATCH,
 	AMBIGUOUS_ROUTE,

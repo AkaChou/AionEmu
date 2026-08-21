@@ -114,7 +114,7 @@ class QuestCounterProjectionLockFollowUpTest {
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
 			new AfterCommitAction.CloseDialog()), firstHandoff.afterCommit());
 
-		QuestTransition secondHandoff = dialogRoute(definition, 730196, QuestDialogAction.SETPRO1);
+		QuestTransition secondHandoff = dialogRoute(definition, 730196, QuestDialogAction.SETPRO2);
 		assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 1)), secondHandoff.conditions());
 		assertEquals(List.of(new QuestAction.SetVariable("var0", 2)), secondHandoff.actions());
 

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.e2e;
 
+import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * 对生产 catalog 的全量、快速、隔离内存任务流进行 transition 级审计；不将客户端顺序报告当作期望值。
@@ -61,8 +63,58 @@ public final class QuestE2eBatchAudit {
 			for (QuestTransition transition : definition.definition().transitions()) {
 				rows.add(auditTransition(definition, transition, oracle, evidence, worldReachability));
 			}
+			rows.addAll(auditPageButtons(definition, oracle));
 		}
 		return List.copyOf(rows);
+	}
+
+	/**
+	 * 页面-按钮可达性审计：服务端显示的每个客户端页面上的可见按钮都必须有已注册的任务路由，
+	 * 否则玩家点击该按钮将无任何响应。这是把"按钮真实可达性"从人工客户端验收前移到无头审计。
+	 * Page-button reachability audit: every visible button on each client page the server displays
+	 * must have a registered quest route, otherwise clicking it yields no response. This moves
+	 * button reachability from manual client acceptance into the headless audit.
+	 */
+	static List<QuestE2eAuditRow> auditPageButtons(CompiledQuestDefinition definition,
+			ClientResourceOracle oracle) {
+		Set<Integer> routedDialogIds = new java.util.HashSet<>();
+		Set<Integer> displayedPages = new java.util.TreeSet<>();
+		for (QuestTransition transition : definition.definition().transitions()) {
+			if (transition.event() instanceof QuestEvent.TalkToNpc talk && talk.dialogId() != null) {
+				routedDialogIds.add(talk.dialogId());
+			}
+			if (transition.event() instanceof QuestEvent.QuestDialog dialog) {
+				routedDialogIds.add(dialog.dialogId());
+			}
+			for (AfterCommitAction action : transition.afterCommit()) {
+				if (action instanceof AfterCommitAction.ShowQuestDialog show) {
+					displayedPages.add(show.dialogId());
+				} else if (action instanceof AfterCommitAction.ShowQuestSelectionDialog show) {
+					displayedPages.add(show.dialogId());
+				} else if (action instanceof AfterCommitAction.ShowDialogWindow show) {
+					displayedPages.add(show.dialogId());
+				}
+			}
+		}
+		List<QuestE2eAuditRow> rows = new ArrayList<>();
+		for (Integer page : displayedPages) {
+			if (page <= 0 || !oracle.pageExists(definition.id(), page)) {
+				continue;
+			}
+			for (ClientResourceOracle.ClientAction button : oracle.visibleActions(definition.id(), page)) {
+				if (button.actionId() <= 0 || routedDialogIds.contains(button.actionId())) {
+					continue;
+				}
+				rows.add(new QuestE2eAuditRow(definition.id(), "PAGE_BUTTON", "-", "-", "-", "-",
+					QuestE2eTransitionMatch.NO_TRANSITION_MATCHED, "BUTTON_AUDIT",
+					"", "", 0, 0, 0, button.actionId(), page,
+					QuestE2eStatus.BUTTON_WITHOUT_ROUTE,
+					"client page " + page + " shows button " + button.actionConstant()
+						+ " (" + button.buttonTextZh() + ") without a registered route",
+					"AION_5_8_CLIENT", List.of()));
+			}
+		}
+		return rows;
 	}
 
 	/** 审计单个 transition，便于重点任务门禁和单元测试。 / Audits one transition for focused gates and unit tests. */

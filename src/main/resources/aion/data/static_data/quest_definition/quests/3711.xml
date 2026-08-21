@@ -56,9 +56,37 @@
         <close-dialog/>
       </after-commit>
     </transition>
-<transition source="started" target="started">
+    <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="730196" action="SETPRO1"/>
+        <dialog type="TALK_TO_NPC" npc-id="279045" action="SELECT1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
+      </after-commit>
+    </transition>
+    <!-- retail 对话流:730196 页面链 select2(1352)→select2_1(1353)→SETPRO2 按钮,推进 var0=1→2。 -->
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730196" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730196" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730196" action="SETPRO2"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
@@ -90,28 +118,19 @@
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <dialog type="NPC_START" npc-id="203844" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <!-- 仅保留进行中页面入口;NPC_REPORT 展开的无条件 SELECT_QUEST_REWARD 会绕过击杀目标跳步进奖励。 -->
+    <!-- 契约外 NPC 仅提供无按钮的进行中反馈,避免页面按钮断链。 -->
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203844" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="203844" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4 5" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <dialog type="NPC_START" npc-id="730196" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <!-- 仅保留进行中页面入口;SELECT2 页承载 SETPRO1 按钮,跳步的 SELECT_QUEST_REWARD 边不注册。 -->
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="730196" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
-      </after-commit>
-    </transition>
     <npc-complete npc-id="730196" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4 5" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

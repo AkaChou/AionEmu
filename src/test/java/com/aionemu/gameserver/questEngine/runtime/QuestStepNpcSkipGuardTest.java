@@ -55,11 +55,11 @@ class QuestStepNpcSkipGuardTest {
 			.findFirst().isEmpty(), "unconditional skip edge must not exist");
 
 		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {
-			// 走到步骤链末端:talk 步骤 SETPRO1 -> action 步骤 SETPRO1(var0=finalStepValue)。
+			// 走到步骤链末端:talk 步骤 SETPRO1 -> action 步骤 SETPRO2(var0=finalStepValue)。
 			QuestTransition firstHandoff = dialogRoute(definition, talkStepNpc, QuestDialogAction.SETPRO1);
 			runtime.prepare(firstHandoff);
 			assertTrue(runtime.dispatchPrepared().handled());
-			QuestTransition secondHandoff = dialogRoute(definition, actionStepNpc, QuestDialogAction.SETPRO1);
+			QuestTransition secondHandoff = dialogRoute(definition, actionStepNpc, QuestDialogAction.SETPRO2);
 			runtime.prepare(secondHandoff);
 			assertTrue(runtime.dispatchPrepared().handled());
 			assertEquals(Map.of("var0", finalStepValue), unpack(definition, runtime));
