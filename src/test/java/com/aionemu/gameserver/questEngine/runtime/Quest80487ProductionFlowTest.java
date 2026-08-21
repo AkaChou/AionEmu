@@ -80,12 +80,13 @@ class Quest80487ProductionFlowTest {
 		assertTrue(result.handled(), result::toString);
 		assertEquals(QuestStatus.START,
 			player.getQuestStateList().getQuestState(questId).getStatus());
+		// 案例 8.1 (LEVEL_UP_AUTO_START_NO_DIALOG)：客户端不存在 page 4，升级自动接取
+		// 只提交状态并刷新可见性，不得发送会 load fail 的接取对话框。
+		// Case 8.1: the client has no page 4; level-up auto-start only commits the
+		// state and refreshes visibility, never sending a load-fail accept dialog.
 		List<SM_DIALOG_WINDOW> dialogs = packetQueue(player.getClientConnection()).stream()
 			.filter(SM_DIALOG_WINDOW.class::isInstance).map(SM_DIALOG_WINDOW.class::cast).toList();
-		assertEquals(1, dialogs.size());
-		assertEquals(0, intField(SM_DIALOG_WINDOW.class, dialogs.getFirst(), "targetObjectId"));
-		assertEquals(4, intField(SM_DIALOG_WINDOW.class, dialogs.getFirst(), "dialogID"));
-		assertEquals(questId, intField(SM_DIALOG_WINDOW.class, dialogs.getFirst(), "questId"));
+		assertEquals(List.of(), dialogs, () -> dialogs.toString());
 	}
 
 	@Test

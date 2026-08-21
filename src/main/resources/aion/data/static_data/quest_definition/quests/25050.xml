@@ -88,6 +88,12 @@
       </after-commit>
     </transition>
 
+    <!-- 交互物使用资格声明：AI gate 依赖它判定任务物品可点击。
+         Interaction-object use eligibility: the AI gate relies on it to make the
+         quest item clickable. -->
+    <transition source="s2" target="s2">
+      <event><can-act template-id="731553" action-type="ACTION_ITEM_USE"/></event>
+    </transition>
     <transition source="s2" target="s2">
       <event><dialog type="TALK_TO_NPC" npc-id="731553" action="USE_OBJECT"/></event>
       <conditions><has-item item-id="182215719" count="1"/></conditions>

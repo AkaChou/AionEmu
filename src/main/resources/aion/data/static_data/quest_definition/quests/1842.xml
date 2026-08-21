@@ -32,7 +32,17 @@
   </nodes>
   <transitions>
     <!-- 接取:Reshanta 的 Vasha (805430) 提供任务。 -->
-    <dialog type="NPC_START" npc-id="805430" source="unaccepted" target="started" start-page="SELECT1"/>
+    <!-- 可重复任务重接必须清零计数：started 节点无投影（案例 8.10 防锁死），
+         否则 COMPLETE 的 var0=80/var1=1 会带入新循环并锁死报告路由。
+         Repeatable re-acquisition must reset counters: the started node has no
+         projection (case 8.10 anti-lock), so COMPLETE vars would otherwise leak
+         into the new cycle and lock reporting. -->
+    <dialog type="NPC_START" npc-id="805430" source="unaccepted" target="started" start-page="SELECT1">
+      <accept-actions>
+        <set-variable field="var0" value="0"/>
+        <set-variable field="var1" value="0"/>
+      </accept-actions>
+    </dialog>
     <!-- 普通目标未达 79 只时继续累计。 / Continue counting regular targets below 79 kills. -->
     <transition source="started" target="started" priority="2">
       <event>

@@ -36,7 +36,7 @@
     </node>
   </nodes>
   <transitions>
-    <transition source="started" target="started">
+    <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-ids="216045 216046 215942"/>
       </event>
@@ -50,12 +50,13 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="ready">
+    <transition source="started" target="ready" priority="0">
       <event>
         <kill-npc npc-ids="216045 216046 215942"/>
       </event>
       <conditions>
         <variable-at-least field="var0" value="9"/>
+          <variable-below field="var0" value="10"/>
       </conditions>
       <actions>
         <increment-variable field="var0" delta="1"/>

@@ -56,6 +56,7 @@
       </event>
       <conditions>
         <variable-at-least field="var0" value="9"/>
+          <variable-below field="var0" value="10"/>
       </conditions>
       <actions>
         <increment-variable field="var0" delta="1"/>

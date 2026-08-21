@@ -424,7 +424,11 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			continuing.afterCommit());
 
 		QuestTransition finalKill = transition(definition, "started", "ready", targets);
-		assertEquals(List.of(new QuestCondition.VariableAtLeast("var0", 2)), finalKill.conditions());
+		// 上界把末杀限定在恰好 2：超杀会越过 ready 投影锁死报告路由。
+		// The upper bound pins the final kill to exactly 2: overkill would pass the
+		// ready projection and lock reporting.
+		assertEquals(List.of(new QuestCondition.VariableAtLeast("var0", 2),
+				new QuestCondition.VariableBelow("var0", 3)), finalKill.conditions());
 		assertEquals(List.of(new QuestAction.IncrementVariable("var0", 1)), finalKill.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			finalKill.afterCommit());
@@ -645,7 +649,12 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 				continuing.afterCommit());
 			finalKill = transition(definition, "started", "ready", targets);
 			assertEquals(0, finalKill.priority());
-			assertEquals(List.of(new QuestCondition.VariableAtLeast("var0", contract.requiredKills() - 1)),
+			// 上界与 at-least 一起把末杀限定在恰好 requiredKills-1：超杀会继续 increment，
+			// 使 var0 越过 ready 投影并锁死报告路由。
+			// The upper bound pins the final kill to exactly requiredKills-1: overkill
+			// would keep incrementing var0 past the ready projection and lock reporting.
+			assertEquals(List.of(new QuestCondition.VariableAtLeast("var0", contract.requiredKills() - 1),
+					new QuestCondition.VariableBelow("var0", contract.requiredKills())),
 				finalKill.conditions());
 		}
 		assertEquals(List.of(new QuestAction.IncrementVariable("var0", 1)), finalKill.actions());
@@ -713,7 +722,11 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			assertTrue(routes(definition, "ready", contract.startNpcId()).isEmpty());
 			assertTrue(routes(definition, "reward", contract.startNpcId()).isEmpty());
 		}
-		assertEquals(Set.of(contract.startNpcId(), contract.endNpcId()),
+		// start 与 end 可能是同一 NPC；Set.of 不接受重复元素。
+		// Start and end may be the same NPC; Set.of rejects duplicates.
+		assertEquals(contract.startNpcId() == contract.endNpcId()
+				? Set.of(contract.startNpcId())
+				: Set.of(contract.startNpcId(), contract.endNpcId()),
 			definition.transitions().stream()
 				.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc)
 				.map(transition -> ((QuestEvent.TalkToNpc) transition.event()).npcId())
