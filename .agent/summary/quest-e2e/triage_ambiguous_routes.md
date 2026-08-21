@@ -78,10 +78,14 @@
 
 | 模式 | 行数 | 后续方法 |
 |---|---:|---|
-| 翻页边缺失(多显示边/dup 场景) | 449 | 按 source 节点分支拆边或核对 NPC 归属 |
+| 翻页边缺失(display=0:NPC_REPORT 块显示) | ~300 | 补翻页边需同时补 SETPRO 推进,否则半断链;纯对话任务(如 1218)无 legacy handler,推进语义 EVIDENCE_REQUIRED |
 | SETPRO 推进缺失 | 210 | 需 var 推进语义取证(var0 目标值/前置条件) |
 | 其他(CHECK_ITEMS/接取拒绝等) | 162 | 个案对照 legacy handler |
 | FINISH_DIALOG 缺失(冲突/无显式边) | 159 | 批 1 回滚者需改挂载点;其余找实际显示机制 |
+
+批 4(多显示边拆分,20 任务,`675c81e75`)后 display=1/2 家族已消化;剩余以 display=0
+(NPC_START/NPC_REPORT 块显示页面)为主。该家族的翻页边与 SETPRO 推进必须成对补全才有
+玩家价值,而推进语义普遍缺 legacy 证据,归入 EVIDENCE_REQUIRED 待逐任务取证。
 
 ## 与 Playbook 的关系
 
