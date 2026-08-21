@@ -9,8 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
+import java.util.function.Supplier;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -122,6 +126,8 @@ public class QuestEngine implements GameEngine {
 	private final QuestRuntimeComposition runtimeComposition = QuestRuntimeComposition.production();
 	/** Live typed owner catalog and central Router/Coordinator execution chain. */
 	private volatile QuestProductionDispatcher productionDispatcher = QuestProductionDispatcher.disabled();
+	/** Raw catalog compiled in parallel with other startup work; cleared once consumed. */
+	private volatile Future<QuestCatalog> productionCatalogPreload;
 
 	/** Fully validated immutable typed runtime waiting to be published. */
 	public record PreparedProductionDefinitions(QuestCatalogRegistry catalog,
@@ -1815,6 +1821,63 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
+	 * 在配置就绪后尽早编译 raw catalog，使其解析时间与静态数据加载重叠。
+	 * Compile the raw catalog as soon as configuration is ready so parsing overlaps static-data loading.
+	 */
+	public synchronized void preloadProductionCatalog() {
+		preloadProductionCatalog(this::loadProductionCatalogForPreload);
+	}
+
+	synchronized void preloadProductionCatalog(Supplier<QuestCatalog> catalogSupplier) {
+		if (productionCatalogPreload != null) {
+			return;
+		}
+		CompletableFuture<QuestCatalog> future = new CompletableFuture<>();
+		productionCatalogPreload = future;
+		CompletableFuture.runAsync(() -> {
+			try {
+				future.complete(catalogSupplier.get());
+			} catch (Throwable t) {
+				future.completeExceptionally(t);
+			}
+		});
+	}
+
+	private QuestCatalog loadProductionCatalogForPreload() {
+		try {
+			return loadProductionCatalog();
+		} catch (RuntimeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new IllegalStateException("Can't compile typed quest catalog.", e);
+		}
+	}
+
+	/**
+	 * 等待预编译结果；未启用预加载时保持原有同步编译路径。
+	 * Await the precompiled result; fall back to synchronous compilation when preload was not armed.
+	 */
+	synchronized QuestCatalog awaitProductionCatalogPreload() throws Exception {
+		Future<QuestCatalog> future = productionCatalogPreload;
+		productionCatalogPreload = null;
+		if (future == null) {
+			return loadProductionCatalog();
+		}
+		try {
+			return future.get();
+		} catch (ExecutionException e) {
+			Throwable cause = e.getCause();
+			if (cause instanceof Exception exception) {
+				throw exception;
+			}
+			if (cause instanceof Error error) {
+				throw error;
+			}
+			throw e;
+		}
+	}
+
+	/**
 	 * 在 legacy Handler 注册前校验并安装全部正式 typed owner。
 	 * Validate and install all production typed owners before legacy handlers register.
 	 *
@@ -2028,7 +2091,8 @@ public class QuestEngine implements GameEngine {
 	public void load(CountDownLatch progressLatch, PreparedProductionDefinitions prepared) {
 		log.info(I18n.get("log.5359e35f8f99"));
 		try {
-			installProductionDefinitions(prepared == null ? prepareProductionDefinitions(loadProductionCatalog()) : prepared);
+			installProductionDefinitions(prepared == null
+					? prepareProductionDefinitions(awaitProductionCatalogPreload()) : prepared);
 			log.info(I18n.get("log.quest_engine.typed_owners_loaded", productionDispatcher.owners().size()));
 		} catch (Exception e) {
 			throw new GameServerError("Can't initialize typed quest engine.", e);
@@ -2099,6 +2163,7 @@ public class QuestEngine implements GameEngine {
 	public void clear() {
 		runtimeComposition.cleanupAll();
 		productionDispatcher = QuestProductionDispatcher.disabled();
+		productionCatalogPreload = null;
 		if (messageSendingTask != null) {
 			messageSendingTask.cancel(false);
 			messageSendingTask = null;

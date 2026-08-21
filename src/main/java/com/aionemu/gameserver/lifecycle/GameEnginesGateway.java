@@ -126,6 +126,14 @@ public class GameEnginesGateway {
     }
 
     /**
+     * 提前启动 raw 任务目录编译，供引擎加载阶段消费。
+     * Start raw quest-catalog compilation early for consumption by engine loading.
+     */
+    public void preloadProductionCatalog() {
+        questEngine().preloadProductionCatalog();
+    }
+
+    /**
      * 返回待加载的游戏引擎列表。
      * Return the list of game engines to load.
      *

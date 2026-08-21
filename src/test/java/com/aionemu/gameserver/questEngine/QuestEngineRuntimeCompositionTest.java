@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
@@ -31,6 +32,7 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -83,6 +85,30 @@ class QuestEngineRuntimeCompositionTest {
 		new QuestEngine().clear();
 
 		assertFalse(registry.contains(snapshot, "escort"));
+	}
+
+	@Test
+	void productionCatalogPreloadIsIdempotentAndConsumedOnce() throws Exception {
+		QuestEngine engine = new QuestEngine();
+		AtomicInteger compileCount = new AtomicInteger();
+		var catalog = new ImmutableQuestCatalog(java.util.List.of());
+
+		engine.preloadProductionCatalog(() -> {
+			compileCount.incrementAndGet();
+			return catalog;
+		});
+		engine.preloadProductionCatalog(() -> catalog);
+
+		assertSame(catalog, engine.awaitProductionCatalogPreload());
+		assertEquals(1, compileCount.get());
+
+		engine.preloadProductionCatalog(() -> {
+			compileCount.incrementAndGet();
+			return catalog;
+		});
+
+		assertSame(catalog, engine.awaitProductionCatalogPreload());
+		assertEquals(2, compileCount.get());
 	}
 
 	@Test

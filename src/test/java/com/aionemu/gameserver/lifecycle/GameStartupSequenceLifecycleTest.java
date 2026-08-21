@@ -60,6 +60,7 @@ class GameStartupSequenceLifecycleTest {
             "utilityServices:start",
             "chatOverride:start:true",
             "adminPanel:start",
+            "engines:preload",
             "staticData:start",
             "geoPath:start",
             "worldBootstrap:start",
@@ -182,6 +183,11 @@ class GameStartupSequenceLifecycleTest {
         private RecordingGameEnginesLifecycle(List<String> events) {
             super(new GameEnginesGateway());
             this.events = events;
+        }
+
+        @Override
+        public synchronized void preloadProductionCatalog() {
+            events.add("engines:preload");
         }
 
         @Override

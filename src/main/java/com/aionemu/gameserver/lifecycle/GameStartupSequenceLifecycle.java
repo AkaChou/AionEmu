@@ -260,6 +260,9 @@ public class GameStartupSequenceLifecycle {
         chatServerOverrideLifecycle.start(chatServerEnabledOverride);
         adminPanelLifecycle.start();
 
+        // Raw quest XML compilation has no static-data dependency; only NPC validation does.
+        // Raw quest XML 编译不依赖静态数据；只有 NPC 校验依赖静态数据。
+        enginesLifecycle.preloadProductionCatalog();
         staticDataLifecycle.start();
         geoPathLifecycle.start();
         worldBootstrapLifecycle.start();

@@ -62,6 +62,20 @@ class GameEnginesLifecycleTest {
     }
 
     @Test
+    void preloadProductionCatalogStartsOnceWithoutMarkingEnginesLoaded() {
+        List<String> events = new ArrayList<>();
+        RecordingGameEnginesGateway gateway = new RecordingGameEnginesGateway(List.of(), Runnable::run);
+        GameEnginesLifecycle lifecycle = new GameEnginesLifecycle(gateway);
+
+        lifecycle.preloadProductionCatalog();
+        lifecycle.preloadProductionCatalog();
+
+        assertEquals(1, gateway.preloadCount);
+        assertFalse(lifecycle.isLoaded());
+        assertTrue(events.isEmpty());
+    }
+
+    @Test
     void startSubmitsEngineLoadsInParallelBeforeWaitingForCompletion() throws Exception {
         int engineCount = 4;
         CountDownLatch allStarted = new CountDownLatch(engineCount);
@@ -151,6 +165,7 @@ class GameEnginesLifecycleTest {
 
         private final List<GameEngine> engines;
         private final Consumer<Runnable> taskExecutor;
+        private int preloadCount;
 
         private RecordingGameEnginesGateway(
             List<GameEngine> engines,
@@ -172,6 +187,11 @@ class GameEnginesLifecycleTest {
         @Override
         public void execute(Runnable runnable) {
             taskExecutor.accept(runnable);
+        }
+
+        @Override
+        public void preloadProductionCatalog() {
+            preloadCount++;
         }
     }
 

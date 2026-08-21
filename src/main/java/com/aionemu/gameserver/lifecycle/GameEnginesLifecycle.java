@@ -28,6 +28,11 @@ public class GameEnginesLifecycle {
      */
     private boolean loaded;
     /**
+     * 是否已启动 raw 任务目录预加载。
+     * Whether raw quest-catalog preload has started.
+     */
+    private boolean productionCatalogPreloadStarted;
+    /**
      * 最近一次加载耗时（毫秒）；未启动为 -1。
      * Last load duration in milliseconds; -1 if never started.
      */
@@ -65,6 +70,18 @@ public class GameEnginesLifecycle {
         } finally {
             loadTimeMillis = System.currentTimeMillis() - start;
         }
+    }
+
+    /**
+     * 在长耗时静态数据加载前预编译任务目录（幂等）。
+     * Precompile the quest catalog before long-running static-data loading (idempotent).
+     */
+    public synchronized void preloadProductionCatalog() {
+        if (loaded || productionCatalogPreloadStarted) {
+            return;
+        }
+        enginesGateway.preloadProductionCatalog();
+        productionCatalogPreloadStarted = true;
     }
 
     /**
