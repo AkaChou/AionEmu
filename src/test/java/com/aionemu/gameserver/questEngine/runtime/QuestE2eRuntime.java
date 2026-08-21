@@ -145,6 +145,8 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	public int expectedDialogTargetObjectId() { return facts.targetless ? 0 : facts.interactionObjectId(); }
 	/** 返回最后一次分发实际命中的 transition；没有结论性 route 时返回 null。 / Returns the transition conclusively selected by the last dispatch, or null when no route concluded. */
 	public QuestTransition matchedTransition() { return matchedTransition; }
+	/** 返回当前准备的目标 transition；未调用 prepare 时返回 null。 / Returns the currently prepared target transition, or null before prepare. */
+	public QuestTransition preparedTransition() { return preparedTransition; }
 	/** 返回实际命中 route 的结论。 / Returns the conclusive result of the selected route. */
 	public QuestRouteResult matchedRouteResult() { return matchedRouteResult; }
 	/** 返回最后一次分发的候选 route 数。 / Returns the number of route candidates in the last dispatch. */

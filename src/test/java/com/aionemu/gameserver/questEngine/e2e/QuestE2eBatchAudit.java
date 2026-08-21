@@ -3,9 +3,11 @@ package com.aionemu.gameserver.questEngine.e2e;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
+import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientResourceOracle;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientActionRequest;
 import com.aionemu.gameserver.questEngine.e2e.client.QuestHeadlessClient;
@@ -123,7 +125,7 @@ public final class QuestE2eBatchAudit {
 			}
 			var outcome = runtime.dispatchPrepared();
 			int shownPage = firstPage(outcome.packets());
-			QuestE2eStatus routeStatus = classifyRoute(runtime, outcome);
+			QuestE2eStatus routeStatus = classifyRoute(definition, runtime, outcome);
 			if (routeStatus != QuestE2eStatus.PASS) {
 				return row(definition, transition, runtime, oracle, routeStatus,
 					routeReason(routeStatus, runtime, outcome), npcId, runtime.expectedDialogTargetObjectId(), dialogId, shownPage);
@@ -278,7 +280,7 @@ public final class QuestE2eBatchAudit {
 		return event instanceof QuestEvent.UseItem ? "CM_USE_ITEM" : "CM_DIALOG_SELECT";
 	}
 
-	private static QuestE2eStatus classifyRoute(QuestE2eRuntime runtime,
+	private static QuestE2eStatus classifyRoute(CompiledQuestDefinition definition, QuestE2eRuntime runtime,
 			com.aionemu.gameserver.questEngine.e2e.client.QuestHeadlessClient.DispatchOutcome outcome) {
 		if (outcome.failure() != null) {
 			Throwable failure = outcome.failure();
@@ -295,11 +297,52 @@ public final class QuestE2eBatchAudit {
 		}
 		return switch (runtime.transitionMatch()) {
 			case EXPECTED_TRANSITION_MATCHED -> QuestE2eStatus.PASS;
-			case ALTERNATE_TRANSITION_MATCHED -> QuestE2eStatus.AMBIGUOUS_ROUTE;
+			case ALTERNATE_TRANSITION_MATCHED -> exclusiveSibling(definition, runtime)
+				? QuestE2eStatus.EXCLUSIVE_SIBLING : QuestE2eStatus.AMBIGUOUS_ROUTE;
 			case NO_TRANSITION_MATCHED -> runtime.routeCandidateCount() == 0
 				? QuestE2eStatus.NO_ROUTE : QuestE2eStatus.NO_MATCH;
 			case UNSUPPORTED_SCENARIO_FACTS -> QuestE2eStatus.RUNTIME_REQUIRED;
 		};
+	}
+
+	/**
+	 * 实际命中的兄弟 route 与期望 transition 属于同一确定性路由组时，归因差异是事实选择或
+	 * 协议形态的结果而非路由歧义：条件完全相同（如双协议注册）、条件互斥（如按职业分支）、
+	 * 或双方持有不同的显式优先级（编译器已保证唯一顺序）。
+	 * When the actually selected sibling route and the prepared transition belong to the same
+	 * deterministic routing group, the attribution difference reflects fact selection or protocol
+	 * shape rather than a routing ambiguity: identical conditions (dual-protocol registration),
+	 * mutually exclusive conditions (e.g. class branches), or distinct explicit priorities whose
+	 * unique order the compiler already guarantees.
+	 */
+	private static boolean exclusiveSibling(CompiledQuestDefinition definition, QuestE2eRuntime runtime) {
+		QuestTransition expected = runtime.preparedTransition();
+		QuestTransition matched = runtime.matchedTransition();
+		if (expected == null || matched == null) return false;
+		if (!sameSourceStatus(definition, expected, matched)) return false;
+		if (expected.conditions().equals(matched.conditions())) return true;
+		if (QuestCondition.listsAreMutuallyExclusive(expected.conditions(), matched.conditions())) return true;
+		return expected.priority() != null && matched.priority() != null
+			&& expected.priority().intValue() != matched.priority().intValue();
+	}
+
+	/**
+	 * 两侧源节点投影同一任务 status 即视为同组（如无投影 started 与步骤节点 ready 并存时，
+	 * 同一对话可能由任一节点的等价边响应）。
+	 * Sides belong to the same group when both source nodes project the same quest status (e.g. an
+	 * unprojected started coexisting with step node ready: either node's equivalent edge may serve
+	 * the same dialog).
+	 */
+	private static boolean sameSourceStatus(CompiledQuestDefinition definition, QuestTransition expected,
+			QuestTransition matched) {
+		return statusOf(definition, expected.sourceNode()) == statusOf(definition, matched.sourceNode());
+	}
+
+	private static QuestStatus statusOf(CompiledQuestDefinition definition, String nodeLabel) {
+		return definition.definition().nodes().stream()
+			.filter(node -> node.label().equals(nodeLabel))
+			.map(node -> node.projection().status())
+			.findFirst().orElseThrow();
 	}
 
 	private static QuestE2eStatus classifyResponse(CompiledQuestDefinition definition, QuestTransition transition,

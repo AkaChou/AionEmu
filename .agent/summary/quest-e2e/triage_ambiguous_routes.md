@@ -23,14 +23,19 @@
 | 提交条件边 sibling | 21030/24123 | 4 | `CHECK_USER_HAS_QUEST_ITEM`(39)/20002 提交边与进行中提示边的归因差异 | 集齐物品提交进 REWARD 正确 |
 | 其他孤例 | — | 余量 | 同上各类变体 | 同上 |
 
-## 处置建议
+## 处置结果（2026-08-21 实施）
 
 1. **不修改任务 XML**——无缺陷可修，批量改动反而会破坏职业奖励分支等正确形状。
-2. 可选的 fixture 改进（独立小批次）：在 `QuestE2eBatchAudit` 归因处区分两类：
-   - alternate 与 expected 的条件集互斥（如 advanced-class-is 不同值）→ 归类 `EXCLUSIVE_SIBLING`（信息性，不计问题）；
-   - alternate 与 expected 条件重叠且优先级不同 → 保持 `AMBIGUOUS_ROUTE`。
-   改进后 AMBIGUOUS_ROUTE 应大幅下降，剩余才是需要人工核对的真歧义。
-3. 若追求零噪声，也可将 `ALTERNATE_TRANSITION_MATCHED` 整体降级为信息性状态——但这会掩盖真歧义，不推荐。
+2. **fixture 归因改进已实施**：`QuestCondition.listsAreMutuallyExclusive/areMutuallyExclusive`
+   提取为公共 API（编译器委托同一实现）；`QuestE2eBatchAudit` 对 ALTERNATE 归因增加
+   `exclusiveSibling` 判定——同组源 status 下，条件相同（双协议注册）、条件互斥（职业分支）、
+   或显式优先级兄弟归入新信息性状态 `EXCLUSIVE_SIBLING`。
+3. 刷新后分布：AMBIGUOUS_ROUTE 160 → **4**，EXCLUSIVE_SIBLING=156。
+   剩余 4 行为真实待取证项：
+   - 19900/29900：`reward↔legacy-reward` 登入摆动边（遗留奖励节点兼容结构），需单任务核对；
+   - 80030/80033：`EVENT_QUEST_REFRESH` complete→complete 与 unaccepted→started 的活动刷新归因，
+     需单任务核对活动任务机制。
+   回归测试：`QuestExclusiveSiblingAttributionTest`。
 
 ## 与 Playbook 的关系
 

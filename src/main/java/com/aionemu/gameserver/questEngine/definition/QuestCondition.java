@@ -27,6 +27,116 @@ public sealed interface QuestCondition permits QuestCondition.StatusIs, QuestCon
 		QuestCondition.AcquiredQuest, QuestCondition.EquipmentSetEquipped, QuestCondition.EquippedItem,
 		QuestCondition.MembershipPermission, QuestCondition.DpAtMax, QuestCondition.CompleteCountIs,
 		QuestCondition.EventActive {
+
+	/**
+	 * 判断两组条件是否互斥：任意一对条件不可能同时成立即互斥。
+	 * Determines whether two condition lists are mutually exclusive: any pair that can never
+	 * both hold makes the lists exclusive.
+	 */
+	static boolean listsAreMutuallyExclusive(List<QuestCondition> left, List<QuestCondition> right) {
+		for (QuestCondition a : left) {
+			for (QuestCondition b : right) {
+				if (areMutuallyExclusive(a, b)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 判断两个条件是否不可能同时成立；无法判定时返回 false（保守）。
+	 * Determines whether two conditions can never both hold; returns false (conservatively) when undecidable.
+	 */
+	static boolean areMutuallyExclusive(QuestCondition left, QuestCondition right) {
+		if (left instanceof StatusIs leftStatus && right instanceof StatusIs rightStatus) {
+			return leftStatus.status() != rightStatus.status();
+		}
+		if (factConditionsAreMutuallyExclusive(left, right)) {
+			return true;
+		}
+		return variableConditionsAreMutuallyExclusive(left, right);
+	}
+
+	/**
+	 * 判断依赖玩家实时事实的条件对是否互斥。
+	 * Determines exclusivity for condition pairs that depend on live player facts.
+	 */
+	private static boolean factConditionsAreMutuallyExclusive(QuestCondition left, QuestCondition right) {
+		if (left instanceof PlayerInGroup a && right instanceof PlayerInGroup b) {
+			return a.expected() != b.expected();
+		}
+		if (left instanceof HasItem a && right instanceof HasItem b) {
+			return a.itemId() == b.itemId() && a.count() == b.count() && a.expected() != b.expected();
+		}
+		if (left instanceof GenderIs a && right instanceof GenderIs b) {
+			return a.gender() != b.gender();
+		}
+		if (left instanceof PlayerRaceIs a && right instanceof PlayerRaceIs b) {
+			return a.race() != b.race();
+		}
+		if (left instanceof PlayerClassIs a && right instanceof PlayerClassIs b) {
+			return a.startingClass() != b.startingClass();
+		}
+		if (left instanceof AdvancedClassIs a && right instanceof AdvancedClassIs b) {
+			return a.playerClass() != b.playerClass();
+		}
+		if (left instanceof WorldIs a && right instanceof WorldIs b) {
+			return a.worldId() == b.worldId() && a.expected() != b.expected();
+		}
+		if (left instanceof WorldNpcIs a && right instanceof WorldNpcIs b) {
+			return a.npcId() == b.npcId() && a.expected() != b.expected();
+		}
+		if (left instanceof ZoneIs a && right instanceof ZoneIs b) {
+			return a.zone().equals(b.zone()) && a.expected() != b.expected();
+		}
+		if (left instanceof EquipmentSetEquipped a && right instanceof EquipmentSetEquipped b) {
+			return a.count() == b.count() && a.setIds().equals(b.setIds()) && a.expected() != b.expected();
+		}
+		if (left instanceof EquippedItem a && right instanceof EquippedItem b) {
+			return a.itemId() == b.itemId() && a.count() == b.count() && a.expected() != b.expected();
+		}
+		if (left instanceof MembershipPermission a && right instanceof MembershipPermission b) {
+			return a.permission() == b.permission() && a.expected() != b.expected();
+		}
+		if (left instanceof CompleteCountIs a && right instanceof CompleteCountIs b) {
+			return a.value() == b.value() && a.expected() != b.expected();
+		}
+		if (left instanceof EventActive a && right instanceof EventActive b) {
+			return a.questId() == b.questId() && a.expected() != b.expected();
+		}
+		return false;
+	}
+
+	/**
+	 * 判断任务变量条件对在数值区间上是否互斥。
+	 * Determines exclusivity for quest-variable condition pairs by value range.
+	 */
+	private static boolean variableConditionsAreMutuallyExclusive(QuestCondition left, QuestCondition right) {
+		if (left instanceof QuestVariableIs a && right instanceof QuestVariableIs b) {
+			return a.field().equals(b.field()) && a.value() != b.value();
+		}
+		if (left instanceof QuestVariableIs a && right instanceof VariableAtLeast b) {
+			return a.field().equals(b.field()) && a.value() < b.value();
+		}
+		if (left instanceof VariableAtLeast a && right instanceof QuestVariableIs b) {
+			return a.field().equals(b.field()) && b.value() < a.value();
+		}
+		if (left instanceof QuestVariableIs a && right instanceof VariableBelow b) {
+			return a.field().equals(b.field()) && a.value() >= b.value();
+		}
+		if (left instanceof VariableBelow a && right instanceof QuestVariableIs b) {
+			return a.field().equals(b.field()) && b.value() >= a.value();
+		}
+		if (left instanceof VariableAtLeast a && right instanceof VariableBelow b) {
+			return a.field().equals(b.field()) && a.value() >= b.value();
+		}
+		if (left instanceof VariableBelow a && right instanceof VariableAtLeast b) {
+			return a.field().equals(b.field()) && b.value() >= a.value();
+		}
+		return false;
+	}
+
 	/**
 	 * 匹配从活跃账户捕获的类型化成员权限。
 	 * Matches a typed membership capability captured from the live account.
