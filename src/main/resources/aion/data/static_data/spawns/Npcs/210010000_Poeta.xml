@@ -1067,7 +1067,12 @@
       <spot x="869.659363" y="1197.746216" z="116.044098" h="93" resolve_z="true"/>
     </spawn>
     <spawn npc_id="700008" respawn_time="120">
-		<temporary_spawn spawn_time="19.*.*" despawn_time="8.*.*"/>
+		<!-- 夜行窗口与任务目标 203175(21:00-04:00, Poeta_Fixes)对齐：
+		     否则 19-21/4-8 时段机关单独在场，使用后 add-npc-aggro 找不到目标。
+		     Night window aligned with quest target 203175 (21:00-04:00, Poeta_Fixes):
+		     otherwise the device is present alone during 19-21/4-8 and its use
+		     finds no aggro target. -->
+		<temporary_spawn spawn_time="21.*.*" despawn_time="4.*.*"/>
 		<spot x="483.675537" y="1544.752441" z="114.441620" h="0" resolve_z="true"/>
     </spawn>
     <spawn npc_id="203194" respawn_time="60">

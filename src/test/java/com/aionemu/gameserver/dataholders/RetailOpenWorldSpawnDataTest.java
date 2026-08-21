@@ -112,8 +112,13 @@ class RetailOpenWorldSpawnDataTest {
 			}
 			Element window = (Element) spawn.getElementsByTagName("temporary_spawn").item(0);
 			Element spot = (Element) spawn.getElementsByTagName("spot").item(0);
-			assertEquals("19.*.*", window.getAttribute("spawn_time"));
-			assertEquals("8.*.*", window.getAttribute("despawn_time"));
+			// 夜行窗口与任务目标 203175(21:00-04:00)对齐：机关单独在场会让
+			// 任务 1114 的 add-npc-aggro 找不到目标。
+			// Night window aligned with quest target 203175 (21:00-04:00): the
+			// device being present alone leaves quest 1114's add-npc-aggro
+			// without a target.
+			assertEquals("21.*.*", window.getAttribute("spawn_time"));
+			assertEquals("4.*.*", window.getAttribute("despawn_time"));
 			assertEquals(x, Double.parseDouble(spot.getAttribute("x")), 0.000001);
 			assertEquals(y, Double.parseDouble(spot.getAttribute("y")), 0.000001);
 			assertEquals(z, Double.parseDouble(spot.getAttribute("z")), 0.000001);
