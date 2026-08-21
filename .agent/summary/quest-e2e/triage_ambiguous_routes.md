@@ -75,6 +75,12 @@
 | 6 | 多步 TALK 链(stage 中间节点) | 38 | `319c0e5ec` | 行数 901→863,EVIDENCE_REQUIRED -33 |
 | 7 | 混合形状(REPORT NPC 锚定) | 20 | `a55d46b06` | 行数 863→847 |
 | 8 | 物品窗口关闭(QUEST_ACTION) | 76 | `6eb481fa8` | 行数 847→695(含批7后 FINISH_DIALOG 批次 -76) |
+| 9 | 翻页链 BFS 全量补全 | 155 | `2c32ae1ac` | 行数 695→624;FINISH_DIALOG 类清零 |
+
+批 9 要点:锚定 NPC_START start-page 后沿客户端按钮图 BFS,修复链式缺口
+(深层页因父页无路由而不可达);SELECT1_1_2 等深层页为真实客户端资源但超出
+typed 枚举,按"先写 XML 符号→再跑 generate_quest_dialog_enums.py 从客户端
+字典重生成(+8 动作/+10 页面)"的顺序保持引用驱动契约。
 
 另:runtime 套件 20 个基线失败已全部清零(`595aea784`,431 全绿),涉及
 狩猎超杀上界、1842 重启清零、80487 page-4 合同、25050 can-act 声明。
