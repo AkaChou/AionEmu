@@ -73,6 +73,7 @@
 | 4 | 翻页边(多显示边拆分) | 20 | `675c81e75` | 行数 957→940 |
 | 5 | 单步链重构(data_driven 定义驱动) | 38 | `7ba652380` | 行数 940→901,EVIDENCE_REQUIRED -39 |
 | 6 | 多步 TALK 链(stage 中间节点) | 38 | `319c0e5ec` | 行数 901→863,EVIDENCE_REQUIRED -33 |
+| 7 | 混合形状(REPORT NPC 锚定) | 20 | `a55d46b06` | 行数 863→847 |
 
 每批流程:数据驱动定位 → 插入标准边 → 逐任务编译验证 → 回滚冲突者 → 全门禁 → 审计对比。
 回滚记录:批 1 排除 26 个(NPC_START 展开冲突),批 2 排除 13 个、批 3 排除 24 个(AMBIGUOUS_TRANSITION)。
@@ -101,8 +102,12 @@ step NPC 重建 + 契约外 NPC 换无按钮反馈页。
 38 任务落地;22 个多步任务跳过(step NPC 无 NPC_REPORT 块 ~12,页面链分叉 ~10),
 COLLECT_ITEM/HUNT/ENTER_* 形状待后续专项。
 
-剩余 ~860 行:无 data_driven 定义任务(433 个,需其他证据源)、含 COLLECT_ITEM/HUNT
-步骤任务、SETPRO/CHECK_ITEMS 个案。
+批 7(`a55d46b06`)处理混合形状(TALK+COLLECT_ITEM/HUNT/ENTER_*):只为拥有 NPC_REPORT
+块的步骤锚定对话链(狩猎目标/区域 id 无报告页自然跳过),同 NPC 多阶段任务(3547)去重后
+合并单链,保证 stage target 引用已插入节点(否则 BAD_NODE_REFERENCE)。
+
+剩余 ~847 行:无 data_driven 定义任务(433 个,需其他证据源)、无 REPORT 块步骤任务、
+页面链分叉个案(~10)、SETPRO/CHECK_ITEMS 个案。
 
 ## 与 Playbook 的关系
 
