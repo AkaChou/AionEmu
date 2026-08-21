@@ -74,3 +74,4 @@
 | `8769210fd` | 2008 魔族转职任务的客户端动作链整体错位 | 转职页面的稀疏 action ID、起始职业分支和进阶职业映射必须逐项取自客户端证据，不能按页面序号或职业顺序推导 |
 | `5511223b0` | 26800 永恒之塔到知识书库的跨地图阶段流 | 先区分任务交互物与实际 portal owner，再用每段 `ENTER_ZONE`、NPC handoff、电影和唯一 reward owner 锁定完整状态链；不能把跨地图阶段压缩为通用接取/领奖模板 |
 | `4a3be57` | 26802 Archives mission live counters | `START` 节点不固定投影 `var0/var1/var2=0`；图书管理员与元素首领两组计数可按任意顺序推进，最后一次击杀进入 `REWARD`；代表测试为 `Quest26802ClientDialogAlignmentTest#finalKillInEitherCounterEntersRewardBeforeReporting` |
+| `2d2d22dfd` | 1114 机关与激怒目标的夜间出现窗口不一致 | 任务机关 `temporary_spawn` 窗口必须覆盖或等于副作用目标 NPC 的窗口（700008 对齐 203175 的 21:00-04:00）；`addNpcAggro` 对 knownlist 缺席目标按 best-effort 跳过，玩家不可用仍为硬失败；代表测试为 `RetailOpenWorldSpawnDataTest#keepsNymphGownRetailReferenceHeightAndNightWindow` |

@@ -135,3 +135,17 @@
 - 验证命令和结果：此前专项任务/生产门禁已证明 26802 的两种 `30+2` 计数顺序均进入 `REWARD`，Q26802 全量 E2E 为 `214/214 PASS`，原有 5 条 `NO_MATCH` 已清除；用户于 2026-08-20 使用 Aion 5.8 客户端完成 26802 全流程验收。当前客户端验收未重新运行 Maven，运行时 packet/log 附件未捕获。
 - 复用边界：仅适用于 source 节点的实时计数字段由 transition action 增量维护、且节点不需要静态重置这些字段的任务。若 source 投影确实代表阶段重置、任务拥有多个互斥计数网格、或计数条件依赖节点标签而非 packed variables，必须重新证明；不能全局删除所有 START 节点变量投影。26801、30603、30613 的同型修复仍应分别验证客户端击杀顺序和报告 owner。
 - commit：`4a3be57`。
+
+## 8.11 任务机关与激怒目标的夜间出现窗口不一致
+
+- Pattern ID：`DEVICE_TARGET_SPAWN_WINDOW_MISMATCH`。
+- 代表任务：1114（贝尔特伦/珀伊塔夜间任务，使用机关 700008 激怒夜行 NPC 203175）。
+- 搜索症状：运行时日志 `QUEST_RUNTIME` WARN「typed 任务 1114 已提交，但有 1 个提交后动作失败」，`QUEST_AUDIT` 记录 `QuestAfterCommitException: after-commit action AddNpcAggro failed`；调用栈顶为 `TypedQuestAfterCommitPort.requireSuccess` 与 `PlayerQuestNpcPort.addNpcAggro`。
+- 玩家可见症状：玩家在夜间窗口之外（或目标重生空窗）使用任务机关 700008 后，任务阶段正常推进到 v2 并获得任务物品，但激怒 203175 的副作用没有发生，服务端抛出提交后动作异常并污染审计日志。
+- 根因：spawn 数据中机关与目标的出现时间窗口不一致——700008 的 `temporary_spawn` 为 `19.*.* - 8.*.*`，而任务目标 203175（`210010000_Poeta_Fixes.xml`）为 `21.*.* - 4.*.*`。在 19-21 点和 4-8 点两个时段，机关单独在场而目标不在场；玩家此时使用机关会命中 `v1 -> v2` 的 `add-npc-aggro npc-id="203175" damage="50"` 边。`PlayerQuestNpcPort.addNpcAggro` 在玩家 knownlist 中找不到该模板 NPC 时返回 false，被 `TypedQuestAfterCommitPort.requireSuccess` 按硬失败抛出 `QuestAfterCommitException`。这是 spawn 时间条件缺陷叠加运行时容错缺失的双重问题，不是任务 XML 路由错误。
+- 修复层：两层防御。第一层修根因——把 700008 的夜间窗口对齐任务目标 203175 的 `21:00-04:00`，使机关与目标同进同退，正常流程中不再出现"机关在场、目标缺席"；第二层做运行时容错——`PlayerQuestNpcAggro` 目标不在 knownlist（被其他玩家击杀后的 `respawn_time=295` 秒空窗、整点切换竞态、跨实例）属正常并发状态，改为记 DEBUG 日志并返回 true，与 `deleteInteractionNpc` 的 best-effort 容错语义一致；任务状态在该阶段已提交，不得按失败上报。
+- 修改文件：`src/main/resources/aion/data/static_data/spawns/Npcs/210010000_Poeta.xml`、`src/test/java/com/aionemu/gameserver/dataholders/RetailOpenWorldSpawnDataTest.java`（快照断言同步更新为 `21.*.* / 4.*.*` 并注明对齐依据）、`src/main/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestNpcPort.java`。
+- 第一检查点：先比对任务链中所有 `temporary_spawn` 的 `spawn_time/despawn_time` 是否覆盖彼此（机关窗口必须包含或等于目标窗口），再查目标 NPC 的 `respawn_time` 空窗；不要先改 runtime 容错掩盖窗口缺陷，也不要只看任务 XML 的 transition 路由。
+- 验证命令和结果：`mvn -q -Dtest=RetailOpenWorldSpawnDataTest test` 通过；`mvn -q -Dtest=QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,QuestPageButtonAuditTest test` 通过，生产 catalog 6200 条编译成功、失败 0、白名单违规 0。runtime 套件在本修复前后失败集合完全一致（20 个基线失败，stash 对比验证），确认无新增回归。
+- 复用边界：仅适用于"使用任务机关 A 触发对 NPC B 的副作用（aggro/spawn/despawn 等）且 A、B 均有 `temporary_spawn` 时间条件"的形状。必须逐对象证明两者窗口一致且副作用动作具备 best-effort 容错；不能推广到无时间条件的普通 spawn，也不能据此把所有 after-commit 动作的 false 都改成成功——玩家不可用（null/未刷出）仍保持硬失败。窗口对齐后仍需保留运行时容错作为纵深防御。
+- commit：`2d2d22dfd`（窗口对齐 + 快照断言）、`c250efaf6`（AddNpcAggro best-effort 容错）。
