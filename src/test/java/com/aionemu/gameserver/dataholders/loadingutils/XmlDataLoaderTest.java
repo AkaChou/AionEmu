@@ -27,9 +27,13 @@ import jakarta.xml.bind.Unmarshaller;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.AIData;
+import com.aionemu.gameserver.dataholders.BindPointData;
 import com.aionemu.gameserver.dataholders.ChargeSkillData;
+import com.aionemu.gameserver.dataholders.HouseBuildingData;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.ItemRestrictionCleanupData;
 import com.aionemu.gameserver.dataholders.MotionData;
+import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.PetDopingData;
 import com.aionemu.gameserver.dataholders.PetMerchandData;
 import com.aionemu.gameserver.dataholders.StaticData;
@@ -87,17 +91,15 @@ class XmlDataLoaderTest {
 	}
 
 	@Test
-	void loadSectionEntryCountsSkipsXmlScanByDefault() throws Exception {
-		Path staticData = tempDir.resolve("static_data.xml");
-		Files.writeString(staticData, "<not xml", StandardCharsets.UTF_8);
+	void loadSectionEntryCountsUsesDefaultsWhenEntryCountsAreDisabled() throws Exception {
+		byte[] staticData = "<not xml".getBytes(StandardCharsets.UTF_8);
 
 		boolean previous = GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE;
 		GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = false;
 		try {
-			Map<String, Integer> counts = new XmlDataLoader().loadSectionEntryCounts(staticData.toFile());
+			Map<String, Integer> counts = new XmlDataLoader().loadSectionEntryCounts(staticData);
 
 			assertEquals(XmlDataLoader.staticDataSectionCount(), counts.size());
-			assertFalse(Files.exists(tempDir.resolve("static_data.counts")));
 		} finally {
 			GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = previous;
 		}
@@ -169,6 +171,22 @@ class XmlDataLoaderTest {
 	}
 
 	@Test
+	void independentSourceRootsUnmarshalIntoTheirDataHolders() throws Exception {
+		assertEquals(BindPointData.class, JAXBContext.newInstance(BindPointData.class)
+			.createUnmarshaller()
+			.unmarshal(Path.of("src/main/resources/aion/data/static_data/bind_points/bind_points.xml").toFile())
+			.getClass());
+		assertEquals(ItemRestrictionCleanupData.class, JAXBContext.newInstance(ItemRestrictionCleanupData.class)
+			.createUnmarshaller()
+			.unmarshal(Path.of("src/main/resources/aion/data/static_data/items/item_restriction_cleanups.xml").toFile())
+			.getClass());
+		assertEquals(HouseBuildingData.class, JAXBContext.newInstance(HouseBuildingData.class)
+			.createUnmarshaller()
+			.unmarshal(Path.of("src/main/resources/aion/data/static_data/housing/house_buildings.xml").toFile())
+			.getClass());
+	}
+
+	@Test
 	void staticDataSchemaCompiles() {
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
@@ -208,19 +226,7 @@ class XmlDataLoaderTest {
 	}
 
 	@Test
-	void xmlMergerReportsWhetherCacheWasRebuilt() throws Exception {
-		Path source = tempDir.resolve("static_data.xml");
-		Path cache = tempDir.resolve("cache/static_data.xml");
-		Files.createDirectories(cache.getParent());
-		Files.writeString(source, "<ae_static_data><global_rules/></ae_static_data>", StandardCharsets.UTF_8);
-		XmlMerger merger = new XmlMerger(source.toFile(), cache.toFile(), tempDir.toFile());
-
-		assertTrue(merger.process());
-		assertFalse(merger.process());
-	}
-
-	@Test
-	void mainStaticDataLeavesNpcDropsOutOfSharedCache() throws Exception {
+	void mainStaticDataKeepsIndependentSourcesOutOfEntryPoint() throws Exception {
 		String staticData = Files.readString(Path.of("src/main/resources/aion/data/static_data/static_data.xml"), StandardCharsets.UTF_8);
 
 		assertTrue(!staticData.contains("<npc_drops>"));
@@ -229,6 +235,9 @@ class XmlDataLoaderTest {
 		assertTrue(!staticData.contains("file=\"items/item\""));
 		assertTrue(!staticData.contains("<ai_templates>"));
 		assertTrue(!staticData.contains("file=\"ai"));
+		// NPC 模板同样走源分片直读 / NPC templates also load directly from source shards
+		assertTrue(!staticData.contains("<npc_templates>"));
+		assertTrue(!staticData.contains("file=\"npcs\""));
 	}
 
 	@Test
@@ -316,32 +325,57 @@ class XmlDataLoaderTest {
 	}
 
 	@Test
-	void itemDataCanBeLoadedFromSeparateMergedCache() throws Exception {
+	void itemDataLoadsFromParallelShardsWithCustomOverrides() throws Exception {
 		Path itemDir = tempDir.resolve("item");
-		Path cache = tempDir.resolve("cache/item_templates.xml");
 		Files.createDirectories(itemDir);
-		Files.createDirectories(cache.getParent());
-		Files.writeString(itemDir.resolve("item_misc_templates.xml"), """
+		Files.writeString(itemDir.resolve("item_template_100000001_100000002.xml"), """
 			<item_templates>
 				<item_template id="100000001" name="Display reward item" name_desc="retail_reward_item" restrict="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"/>
+				<item_template id="100000002" name="Second item" restrict="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"/>
+			</item_templates>
+			""", StandardCharsets.UTF_8);
+		Path custom = tempDir.resolve("item_template_custom.xml");
+		Files.writeString(custom, """
+			<item_templates>
+				<item_template id="100000001" name="Customized reward item" name_desc="retail_reward_item" restrict="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"/>
+				<item_template id="100000099" name="Brand new item" restrict="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"/>
 			</item_templates>
 			""", StandardCharsets.UTF_8);
 
-		ItemData itemData = new XmlDataLoader().loadItemData(cache.toFile(), tempDir.toFile());
+		ItemData itemData = new XmlDataLoader().loadItemData(itemDir.toFile(), custom.toFile());
 
-		assertEquals(1, itemData.size());
-		assertEquals(100000001, itemData.getItemTemplate("RETAIL_REWARD_ITEM").getTemplateId());
-		assertEquals(100000001, itemData.getItemTemplate("display reward item").getTemplateId());
-		assertTrue(Files.readString(cache, StandardCharsets.UTF_8).contains("<item_template"));
+		assertEquals(3, itemData.size());
+		assertEquals(100000001, itemData.getItemTemplate("CUSTOMIZED REWARD ITEM").getTemplateId());
+		assertEquals(100000099, itemData.getItemTemplate("brand new item").getTemplateId());
+		assertNull(itemData.getItemTemplate("display reward item"), "overridden template names must not survive");
+		Path shard = itemDir.resolve("item_template_100000001_100000002.xml");
+		assertTrue(Files.readString(shard, StandardCharsets.UTF_8).contains("<item_template"));
+		assertFalse(Files.exists(tempDir.resolve("cache")), "direct shard loading must not create a cache directory");
+	}
+
+	@Test
+	void npcDataLoadsFromParallelShards() throws Exception {
+		Path shardDir = tempDir.resolve("npc_shards");
+		Files.createDirectories(shardDir);
+		Files.writeString(shardDir.resolve("npc_template_250001_250002.xml"), """
+			<npc_templates>
+				<npc_template npc_id="250001" name="first"/>
+				<npc_template npc_id="250002" name="second"/>
+			</npc_templates>
+			""", StandardCharsets.UTF_8);
+		NpcData data = new XmlDataLoader().loadNpcDataSharded(shardDir.toFile());
+
+		assertEquals(2, data.size());
+		assertNotNull(data.getNpcTemplate(250001));
+		assertNotNull(data.getNpcTemplate(250002));
+		assertFalse(Files.exists(tempDir.resolve("cache")), "direct shard loading must not create a cache directory");
 	}
 
 	@Test
 	void itemDataCreatesJaxbContextWhenThreadContextClassLoaderCannotSeeJaxbRuntime() throws Exception {
 		Path itemDir = tempDir.resolve("item");
-		Path cache = tempDir.resolve("cache/item_templates.xml");
 		Files.createDirectories(itemDir);
-		Files.createDirectories(cache.getParent());
-		Files.writeString(itemDir.resolve("item_misc_templates.xml"), """
+		Files.writeString(itemDir.resolve("item_template_100000001_100000001.xml"), """
 			<item_templates>
 				<item_template id="100000001" restrict="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"/>
 			</item_templates>
@@ -350,7 +384,7 @@ class XmlDataLoaderTest {
 		ClassLoader originalClassLoader = thread.getContextClassLoader();
 		thread.setContextClassLoader(ClassLoader.getPlatformClassLoader());
 		try {
-			ItemData itemData = new XmlDataLoader().loadItemData(cache.toFile(), tempDir.toFile());
+			ItemData itemData = new XmlDataLoader().loadItemData(itemDir.toFile(), null);
 
 			assertEquals(1, itemData.size());
 		} finally {

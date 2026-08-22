@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.io.UncheckedIOException;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.nio.ByteBuffer;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
+import java.util.stream.IntStream;
 import javax.imageio.ImageIO;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -238,6 +240,12 @@ public class GeoWorldLoader {
 	 * 从 geo 目录 PNG 加载各地图高度图与材质图。
 	 * Loads height and material PNGs from the geo directory into maps.
 	 *
+	 * <p>PNG 解码彼此独立且是 CPU 密集操作，先并行解码再按原排序串行回填，
+	 * 保证 direct PNG 覆盖合并 PNG 的语义与串行实现完全一致。
+	 * PNG decoding steps are independent and CPU-bound; decode in parallel, then apply
+	 * sequentially in the original sort order so the direct-PNG-overrides-combined-PNG
+	 * semantics stay identical to the former sequential implementation.
+	 *
 	 * @param maps 地图集合 / geo maps
 	 * @throws IOException 读文件失败 / on I/O failure
 	 */
@@ -248,17 +256,14 @@ public class GeoWorldLoader {
 			return;
 		}
 		Arrays.sort(files, (a, b) -> Boolean.compare(isDirectTerrainFile(a.getName()), isDirectTerrainFile(b.getName())));
-		for (File file : files) {
-			BufferedImage image = ImageIO.read(file);
-			if (image == null) {
-				throw new IOException("Unsupported terrain PNG: " + file);
-			}
-			int width = image.getWidth();
-			int height = image.getHeight();
-			Raster raster = image.getRaster();
-			boolean material = file.getName().endsWith("_materials.png");
-			String stem = file.getName().substring(0, file.getName().length() - (material ? "_materials.png".length() : ".png".length()));
-			for (String token : stem.split(",")) {
+		DecodedTerrain[] decoded = new DecodedTerrain[files.length];
+		try {
+			IntStream.range(0, files.length).parallel().forEach(i -> decoded[i] = decodeTerrain(files[i]));
+		} catch (UncheckedIOException e) {
+			throw e.getCause();
+		}
+		for (DecodedTerrain terrain : decoded) {
+			for (String token : terrain.stem().split(",")) {
 				int mapId;
 				try {
 					mapId = Integer.parseInt(token);
@@ -270,16 +275,57 @@ public class GeoWorldLoader {
 				}
 				for (GeoMap map : maps) {
 					if (map.getMapId() == mapId) {
-						if (material) {
-							map.setTerrainMaterialData(readMaterialData(raster, width, height), width, height);
+						if (terrain.material()) {
+							map.setTerrainMaterialData(terrain.materials(), terrain.width(), terrain.height());
 						} else {
-							map.setTerrainData(readHeightData(raster, width, height), width, height);
+							map.setTerrainData(terrain.heights(), terrain.width(), terrain.height());
 						}
 						break;
 					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * 单张地形 PNG 的解码结果（高度或材质二选一）。
+	 * Decode result of a single terrain PNG (either heights or materials).
+	 *
+	 * @param stem 去掉后缀后的文件名词干 / file-name stem without suffix
+	 * @param material 是否为材质图 / whether this is a materials image
+	 * @param width 图宽 / image width
+	 * @param height 图高 / image height
+	 * @param heights 高度数据（材质图为 null） / height data ({@code null} for materials images)
+	 * @param materials 材质数据（高度图为 null） / material data ({@code null} for height images)
+	 */
+	private record DecodedTerrain(String stem, boolean material, int width, int height, short[] heights, byte[] materials) {
+	}
+
+	/**
+	 * 解码单张地形 PNG；I/O 失败包装为 {@link UncheckedIOException} 以便在并行流中传播。
+	 * Decodes one terrain PNG; wraps I/O failures in {@link UncheckedIOException} for parallel-stream propagation.
+	 *
+	 * @param file 地形 PNG / terrain PNG
+	 * @return 解码结果 / decoded result
+	 */
+	private static DecodedTerrain decodeTerrain(File file) {
+		BufferedImage image;
+		try {
+			image = ImageIO.read(file);
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
+		if (image == null) {
+			throw new UncheckedIOException(new IOException("Unsupported terrain PNG: " + file));
+		}
+		int width = image.getWidth();
+		int height = image.getHeight();
+		Raster raster = image.getRaster();
+		boolean material = file.getName().endsWith("_materials.png");
+		String stem = file.getName().substring(0, file.getName().length() - (material ? "_materials.png".length() : ".png".length()));
+		return material
+			? new DecodedTerrain(stem, true, width, height, null, readMaterialData(raster, width, height))
+			: new DecodedTerrain(stem, false, width, height, readHeightData(raster, width, height), null);
 	}
 
 	/**

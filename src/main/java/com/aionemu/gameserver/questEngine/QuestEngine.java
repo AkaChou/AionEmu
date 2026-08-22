@@ -1834,13 +1834,20 @@ public class QuestEngine implements GameEngine {
 		}
 		CompletableFuture<QuestCatalog> future = new CompletableFuture<>();
 		productionCatalogPreload = future;
-		CompletableFuture.runAsync(() -> {
+		// 使用专用守护线程而非 commonPool：预加载与静态数据阶段并行，commonPool 调度是
+		// 启动期静默卡住的疑点之一；独立线程不占静态数据加载池，也不依赖 commonPool。
+		// Uses a dedicated daemon thread instead of the commonPool: the preload overlaps the
+		// static-data phase and commonPool scheduling was a suspect in silent startup stalls;
+		// a dedicated thread neither occupies the static-data pool nor depends on commonPool.
+		Thread preloadThread = new Thread(() -> {
 			try {
 				future.complete(catalogSupplier.get());
 			} catch (Throwable t) {
 				future.completeExceptionally(t);
 			}
-		});
+		}, "quest-catalog-preload");
+		preloadThread.setDaemon(true);
+		preloadThread.start();
 	}
 
 	private QuestCatalog loadProductionCatalogForPreload() {

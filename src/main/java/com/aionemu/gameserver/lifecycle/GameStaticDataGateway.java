@@ -47,11 +47,17 @@ public class GameStaticDataGateway {
     }
 
     /**
-     * 加载静态数据（解析 DataManager 以触发初始化）。
-     * Load static data (resolve DataManager to trigger initialization).
+     * 加载静态数据：解析 DataManager Bean（轻量构造）后显式触发加载。
+     * Load static data: resolve the DataManager bean (cheap construction), then trigger loading explicitly.
+     *
+     * <p>加载必须发生在 Bean 创建回调之外：Spring 创建单例期间持有全局 singletonLock，
+     * 若加载在构造中进行，并行加载线程解析任何懒加载 Bean 都会与主线程互相等待形成死锁。
+     * Loading must happen outside bean-creation callbacks: Spring holds its global singleton lock
+     * while creating a singleton, so loading inside the constructor deadlocks against parallel
+     * loader threads resolving lazy beans.
      */
     public void load() {
-        dataManager();
+        dataManager().load();
     }
 
     /**

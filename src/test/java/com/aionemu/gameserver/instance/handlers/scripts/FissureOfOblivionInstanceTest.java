@@ -31,7 +31,7 @@ class FissureOfOblivionInstanceTest {
 	private static final Path INSTANCE_SPAWNS = Path.of(
 			"src/main/resources/aion/data/static_data/spawns/Instances/302100000_Fissure_Of_Oblivion.xml");
 	private static final Path NPC_TEMPLATES = Path.of(
-			"src/main/resources/aion/data/static_data/npcs/npc_template.xml");
+		"src/main/resources/aion/data/static_data/npcs");
 	private static final Path PORTAL_TEMPLATES = Path.of(
 			"src/main/resources/aion/data/static_data/portals/portal_template2.xml");
 	private static final Path QUEST_DEFINITION = Path.of(
@@ -81,15 +81,13 @@ class FissureOfOblivionInstanceTest {
 	@Test
 	void hiddenRoomControllersCannotInterceptBossAttacks() throws Exception {
 		for (int npcId = 245402; npcId <= 245405; npcId++) {
-			Element controller = (Element) nodes(NPC_TEMPLATES,
-					"/npc_templates/npc_template[@npc_id='" + npcId + "']").item(0);
+			Element controller = npcTemplate(npcId);
 			assertEquals("NON_ATTACKABLE", controller.getAttribute("npc_type"),
 					"hidden room controller " + npcId + " must not become a hostile client target");
 		}
 
 		for (int npcId = 244490; npcId <= 244494; npcId++) {
-			Element boss = (Element) nodes(NPC_TEMPLATES,
-					"/npc_templates/npc_template[@npc_id='" + npcId + "']").item(0);
+			Element boss = npcTemplate(npcId);
 			assertEquals("ATTACKABLE", boss.getAttribute("npc_type"),
 					"Shadow of Oblivion form " + npcId + " must remain attackable");
 		}
@@ -136,6 +134,19 @@ class FissureOfOblivionInstanceTest {
 			return (NodeList) XPathFactory.newInstance().newXPath().evaluate(expression,
 					factory.newDocumentBuilder().parse(input), XPathConstants.NODESET);
 		}
+	}
+
+	private static Element npcTemplate(int npcId) throws Exception {
+		try (var paths = Files.list(NPC_TEMPLATES)) {
+			for (Path path : paths.filter(file -> file.getFileName().toString()
+				.matches("npc_template_\\d+_\\d+\\.xml")).sorted().toList()) {
+				NodeList templates = nodes(path, "/npc_templates/npc_template[@npc_id='" + npcId + "']");
+				if (templates.getLength() > 0) {
+					return (Element) templates.item(0);
+				}
+			}
+		}
+		return null;
 	}
 
 	private static String methodBody(String source, String signature) {

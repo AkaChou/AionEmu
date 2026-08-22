@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.aionemu.gameserver.GameServer;
-import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -241,17 +240,15 @@ public class GameStartupSequenceLifecycle {
     private final GameChatServerOverrideLifecycle chatServerOverrideLifecycle;
 
     /**
-     * 按阶段顺序执行完整启动：预热 JAXB、系统属性与日志、静态数据与世界、
-     * 引擎/刷怪/功能服务、网络与钩子，最后汇总耗时。
-     * Run the full startup in phase order: JAXB warm-up, system properties and logging,
+	 * 按阶段顺序执行完整启动：系统属性与日志、静态数据与世界、引擎/刷怪/功能服务、
+	 * 网络与钩子，最后汇总耗时。
+	 * Run the full startup in phase order: system properties and logging,
      * static data and world, engines/spawns/feature services, network and hooks, then timing summary.
      *
      * @param chatServerEnabledOverride 聊天服启用覆盖（可为 null 表示沿用配置） /
      *                                  chat-server enable override (null keeps config)
      */
     public void start(Boolean chatServerEnabledOverride) {
-        XmlDataLoader.preloadContextAsync(); // 尽早异步预热 StaticData JAXBContext，与后续启动步骤并行（借鉴 aion-server GameServer:93）
-        // Warm up the StaticData JAXBContext asynchronously as early as possible, in parallel with later startup steps (based on aion-server GameServer:93).
         systemPropertiesLifecycle.start();
         long start = startupLogLifecycle.start();
 

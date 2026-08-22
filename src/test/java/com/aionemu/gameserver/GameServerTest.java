@@ -55,8 +55,8 @@ class GameServerTest {
 				Config.dataFile("data/static_data/items/item_templates.xml").getCanonicalFile());
 			assertEquals(new File("AL-Game/definitions/compact/world/fly_path.xml").getCanonicalFile(),
 				Config.definitionFile("definitions/compact/world/fly_path.xml").getCanonicalFile());
-			assertEquals(new File("AL-Game/cache/static_data.xml").getCanonicalFile(),
-				Config.cacheFile("./cache/static_data.xml").getCanonicalFile());
+			assertEquals(new File("AL-Game/cache/runtime-index.xml").getCanonicalFile(),
+				Config.cacheFile("./cache/runtime-index.xml").getCanonicalFile());
 		} finally {
 			restoreProperty("aion.config.dir", oldConfigDir);
 			restoreProperty("aion.game.data.dir", oldDataDir);

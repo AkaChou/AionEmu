@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	自定义物品模板：本文件中的 item_template 按 ID 覆盖或新增分片数据中的同名物品。
+	Custom item templates: entries here override or append shard templates by id.
+
+	说明 / Notes:
+	- 覆盖为整体替换：自定义条目必须携带完整的物品属性（可从 item/item_*.xml 复制后修改）。
+	  Overrides replace the whole template: custom entries must carry complete attributes
+	  (copy one from item/item_*.xml and edit it).
+	- 本文件由分片器之外的加载路径在每次启动时应用，不会被自动改写或删除。
+	  This file is applied by the loader on every start, outside the shard writer; it is never
+	  rewritten or deleted automatically.
+	- 示例（使用时去掉注释）/ Example (uncomment to use):
+	<item_templates>
+		<item_template id="187000023" name="Blessed Godstone Box" name_desc="custom_godstone_box"
+			level="50" mask="12414" category="NONE" max_stack_count="1" item_type="NORMAL"
+			quality="RARE" price="0" race="PC_ALL" restrict="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"
+			desc="1" name_desc2="custom_godstone_box"/>
+	</item_templates>
+-->
+<item_templates xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="item/item_templates.xsd">
+</item_templates>

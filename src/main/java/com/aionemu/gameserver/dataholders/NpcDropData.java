@@ -25,6 +25,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import jakarta.xml.bind.annotation.XmlTransient;
 
+import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.model.drop.Drop;
 import com.aionemu.gameserver.model.drop.DropGroup;
 import com.aionemu.gameserver.model.drop.NpcDrop;
@@ -254,18 +255,10 @@ public class NpcDropData {
 	}
 
 	private static JAXBContext createNpcDropContext() {
-		Thread thread = Thread.currentThread();
-		ClassLoader originalClassLoader = thread.getContextClassLoader();
-		ClassLoader npcDropClassLoader = NpcDrop.class.getClassLoader();
 		try {
-			if (npcDropClassLoader != null) {
-				thread.setContextClassLoader(npcDropClassLoader);
-			}
-			return JAXBContext.newInstance(NpcDropData.class);
+			return XmlDataLoader.createJaxbContext(NpcDropData.class);
 		} catch (JAXBException e) {
 			throw new IllegalStateException("Failed to create NPC drop JAXB context", e);
-		} finally {
-			thread.setContextClassLoader(originalClassLoader);
 		}
 	}
 
@@ -275,7 +268,10 @@ public class NpcDropData {
 			return Collections.emptyMap();
 		}
 		try (FileInputStream stream = new FileInputStream(file)) {
-			CommonDropGroups data = (CommonDropGroups) JAXBContext.newInstance(CommonDropGroups.class)
+			// 必须经由 createJaxbContext：本方法可能运行在 commonPool 线程，裸调用会因线程上下文
+			// 类加载器找不到 JAXB runtime 而失败。Must go through createJaxbContext: this can run on
+			// commonPool threads where a raw call fails because the thread CCL cannot see the JAXB runtime.
+			CommonDropGroups data = (CommonDropGroups) XmlDataLoader.createJaxbContext(CommonDropGroups.class)
 				.createUnmarshaller()
 				.unmarshal(stream);
 			return commonDropGroups(data.getGroups());

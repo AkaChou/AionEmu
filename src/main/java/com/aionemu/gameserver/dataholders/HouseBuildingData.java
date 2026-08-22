@@ -8,6 +8,7 @@ import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 
@@ -21,6 +22,7 @@ import com.aionemu.gameserver.model.templates.housing.Building;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "buildings" })
+@XmlRootElement(name = "buildings")
 public class HouseBuildingData {
 
 	@XmlElement(name = "building")

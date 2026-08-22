@@ -38,6 +38,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuestInteractionObjectCatalogTest {
+	private static final List<String> NPC_SHARDS = List.of(
+		"npc_template_200000_216188.xml", "npc_template_216189_235748.xml",
+		"npc_template_235749_247606.xml", "npc_template_247607_270057.xml",
+		"npc_template_270058_286320.xml", "npc_template_286321_800030.xml",
+		"npc_template_800031_834289.xml", "npc_template_834290_885645.xml");
+
 	@Test
 	void productionQuestUseItemTalkRoutesDeclareActionEligibility() throws Exception {
 		QuestCatalog catalog;
@@ -165,13 +171,15 @@ class QuestInteractionObjectCatalogTest {
 
 	private static String npcAi(int npcId) throws Exception {
 		XMLInputFactory factory = XMLInputFactory.newFactory();
-		try (InputStream input = resource("aion/data/static_data/npcs/npc_template.xml")) {
-			var reader = factory.createXMLStreamReader(input);
-			while (reader.hasNext()) {
-				if (reader.next() == XMLStreamConstants.START_ELEMENT
-						&& "npc_template".equals(reader.getLocalName())
-						&& Integer.toString(npcId).equals(reader.getAttributeValue(null, "npc_id"))) {
-					return reader.getAttributeValue(null, "ai");
+		for (String shard : NPC_SHARDS) {
+			try (InputStream input = resource("aion/data/static_data/npcs/" + shard)) {
+				var reader = factory.createXMLStreamReader(input);
+				while (reader.hasNext()) {
+					if (reader.next() == XMLStreamConstants.START_ELEMENT
+							&& "npc_template".equals(reader.getLocalName())
+							&& Integer.toString(npcId).equals(reader.getAttributeValue(null, "npc_id"))) {
+						return reader.getAttributeValue(null, "ai");
+					}
 				}
 			}
 		}
@@ -181,13 +189,15 @@ class QuestInteractionObjectCatalogTest {
 	private static Set<Integer> questUseItemNpcIds() throws Exception {
 		Set<Integer> result = new HashSet<>();
 		XMLInputFactory factory = XMLInputFactory.newFactory();
-		try (InputStream input = resource("aion/data/static_data/npcs/npc_template.xml")) {
-			var reader = factory.createXMLStreamReader(input);
-			while (reader.hasNext()) {
-				if (reader.next() == XMLStreamConstants.START_ELEMENT
-						&& "npc_template".equals(reader.getLocalName())
-						&& "quest_use_item".equals(reader.getAttributeValue(null, "ai"))) {
-					result.add(Integer.parseInt(reader.getAttributeValue(null, "npc_id")));
+		for (String shard : NPC_SHARDS) {
+			try (InputStream input = resource("aion/data/static_data/npcs/" + shard)) {
+				var reader = factory.createXMLStreamReader(input);
+				while (reader.hasNext()) {
+					if (reader.next() == XMLStreamConstants.START_ELEMENT
+							&& "npc_template".equals(reader.getLocalName())
+							&& "quest_use_item".equals(reader.getAttributeValue(null, "ai"))) {
+						result.add(Integer.parseInt(reader.getAttributeValue(null, "npc_id")));
+					}
 				}
 			}
 		}

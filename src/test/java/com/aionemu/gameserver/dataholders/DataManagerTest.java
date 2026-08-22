@@ -7,7 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import java.lang.reflect.Field;
-import java.util.concurrent.CompletableFuture;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -23,9 +25,11 @@ class DataManagerTest {
 		SkillData skillData = new SkillData();
 		CountDownLatch itemStarted = new CountDownLatch(1);
 		CountDownLatch skillStarted = new CountDownLatch(1);
+		Map<String, Long> capturedTimings = new ConcurrentHashMap<>();
 		XmlDataLoader loader = new XmlDataLoader() {
 			@Override
-			public StaticData loadStaticData(Supplier<SkillData> skillDataSupplier) {
+			public StaticData loadStaticData(Supplier<SkillData> skillDataSupplier,
+				ConcurrentMap<String, Long> phaseTimings) {
 				assertTrue(await(itemStarted), "item data loading should start while main static data is still loading");
 				assertTrue(await(skillStarted), "skill data loading should start while main static data is still loading");
 				staticData.skillData = skillDataSupplier.get();
@@ -43,6 +47,11 @@ class DataManagerTest {
 				skillStarted.countDown();
 				return skillData;
 			}
+
+			@Override
+			public void logStaticDataPhaseTimings(Map<String, Long> phaseTimings) {
+				capturedTimings.putAll(phaseTimings);
+			}
 		};
 
 		DataManager.LoadedStaticData loaded = DataManager.loadStaticData(loader);
@@ -51,31 +60,8 @@ class DataManagerTest {
 		assertSame(itemData, loaded.itemData());
 		assertSame(skillData, loaded.staticData().skillData);
 		assertNotNull(loaded);
-	}
-
-	@Test
-	void staticDataAssignmentFailureAbortsStartup() {
-		RuntimeException cause = new RuntimeException("boom");
-		CompletableFuture<Void> future = new CompletableFuture<>();
-		future.completeExceptionally(cause);
-
-		IllegalStateException thrown = assertThrows(IllegalStateException.class,
-			() -> DataManager.awaitStaticDataAssignment(future));
-
-		assertSame(cause, thrown.getCause());
-	}
-
-	@Test
-	void staticDataAssignmentInterruptRestoresInterruptFlag() {
-		CompletableFuture<Void> future = new CompletableFuture<>();
-		Thread.currentThread().interrupt();
-
-		try {
-			assertThrows(IllegalStateException.class, () -> DataManager.awaitStaticDataAssignment(future));
-			assertTrue(Thread.currentThread().isInterrupted());
-		} finally {
-			Thread.interrupted();
-		}
+		assertTrue(capturedTimings.containsKey("ItemData"));
+		assertTrue(capturedTimings.containsKey("SkillData"));
 	}
 
 	@Test

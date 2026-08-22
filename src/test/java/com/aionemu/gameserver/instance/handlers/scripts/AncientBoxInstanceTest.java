@@ -20,7 +20,7 @@ class AncientBoxInstanceTest {
 
 	private static final Set<Integer> ANCIENT_BOX_IDS = Set.of(702700, 702701);
 	private static final Path NPC_TEMPLATES = Path.of(
-		"src/main/resources/aion/data/static_data/npcs/npc_template.xml");
+		"src/main/resources/aion/data/static_data/npcs");
 	private static final Path CHEST_TEMPLATES = Path.of(
 		"src/main/resources/aion/data/static_data/chests/chest_templates.xml");
 	private static final Path ACTION_ITEM_AI = Path.of(
@@ -90,26 +90,31 @@ class AncientBoxInstanceTest {
 	private static Map<Integer, NpcInteraction> readNpcInteractions() throws Exception {
 		Map<Integer, NpcInteraction> interactions = new HashMap<>();
 		XMLInputFactory factory = XMLInputFactory.newFactory();
-		try (InputStream input = Files.newInputStream(NPC_TEMPLATES)) {
-			XMLStreamReader reader = factory.createXMLStreamReader(input);
-			int npcId = 0;
-			String ai = null;
-			int delay = 0;
-			while (reader.hasNext() && interactions.size() < ANCIENT_BOX_IDS.size()) {
-				int event = reader.next();
-				if (event == XMLStreamConstants.START_ELEMENT && reader.getLocalName().equals("npc_template")) {
-					npcId = Integer.parseInt(reader.getAttributeValue(null, "npc_id"));
-					ai = reader.getAttributeValue(null, "ai");
-					delay = 0;
-				} else if (event == XMLStreamConstants.START_ELEMENT && reader.getLocalName().equals("talk_info")
-						&& ANCIENT_BOX_IDS.contains(npcId)) {
-					delay = Integer.parseInt(reader.getAttributeValue(null, "delay"));
-				} else if (event == XMLStreamConstants.END_ELEMENT && reader.getLocalName().equals("npc_template")
-						&& ANCIENT_BOX_IDS.contains(npcId)) {
-					interactions.put(npcId, new NpcInteraction(ai, delay));
+		try (var paths = Files.list(NPC_TEMPLATES)) {
+			for (Path path : paths.filter(file -> file.getFileName().toString()
+				.matches("npc_template_\\d+_\\d+\\.xml")).sorted().toList()) {
+				try (InputStream input = Files.newInputStream(path)) {
+					XMLStreamReader reader = factory.createXMLStreamReader(input);
+					int npcId = 0;
+					String ai = null;
+					int delay = 0;
+					while (reader.hasNext() && interactions.size() < ANCIENT_BOX_IDS.size()) {
+						int event = reader.next();
+						if (event == XMLStreamConstants.START_ELEMENT && reader.getLocalName().equals("npc_template")) {
+							npcId = Integer.parseInt(reader.getAttributeValue(null, "npc_id"));
+							ai = reader.getAttributeValue(null, "ai");
+							delay = 0;
+						} else if (event == XMLStreamConstants.START_ELEMENT && reader.getLocalName().equals("talk_info")
+								&& ANCIENT_BOX_IDS.contains(npcId)) {
+							delay = Integer.parseInt(reader.getAttributeValue(null, "delay"));
+						} else if (event == XMLStreamConstants.END_ELEMENT && reader.getLocalName().equals("npc_template")
+								&& ANCIENT_BOX_IDS.contains(npcId)) {
+							interactions.put(npcId, new NpcInteraction(ai, delay));
+						}
+					}
+					reader.close();
 				}
 			}
-			reader.close();
 		}
 		return interactions;
 	}

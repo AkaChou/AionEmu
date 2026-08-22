@@ -8,6 +8,7 @@ import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.xml.stream.XMLInputFactory;
@@ -70,7 +71,7 @@ class NpcCombatDefinitionLoaderTest {
 	@Test
 	void retailCombatDataMatchesNpcTemplates() throws Exception {
 		Set<Integer> templateIds = readIds(
-				Path.of("src/main/resources/aion/data/static_data/npcs/npc_template.xml"), "npc_template", "npc_id", false);
+			Path.of("src/main/resources/aion/data/static_data/npcs"), "npc_template", "npc_id", false);
 		Set<Integer> combatIds = readUniqueIds(
 				Path.of("src/main/resources/aion/definitions/compact/npc-combat.xml"), "npc", "id");
 
@@ -86,21 +87,32 @@ class NpcCombatDefinitionLoaderTest {
 
 	private static Set<Integer> readIds(Path file, String elementName, String attributeName, boolean requireUnique)
 			throws Exception {
+		List<Path> files;
+		if (Files.isDirectory(file)) {
+			try (var paths = Files.list(file)) {
+				files = paths.filter(path -> path.getFileName().toString().matches("npc_template_\\d+_\\d+\\.xml"))
+					.sorted().toList();
+			}
+		} else {
+			files = List.of(file);
+		}
 		XMLInputFactory factory = XMLInputFactory.newFactory();
 		factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
 		factory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
 		Set<Integer> ids = new HashSet<>();
-		try (InputStream stream = Files.newInputStream(file)) {
-			XMLStreamReader reader = factory.createXMLStreamReader(stream);
-			while (reader.hasNext()) {
-				if (reader.next() != XMLStreamConstants.START_ELEMENT || !reader.getLocalName().equals(elementName)) {
-					continue;
+		for (Path shard : files) {
+			try (InputStream stream = Files.newInputStream(shard)) {
+				XMLStreamReader reader = factory.createXMLStreamReader(stream);
+				while (reader.hasNext()) {
+					if (reader.next() != XMLStreamConstants.START_ELEMENT || !reader.getLocalName().equals(elementName)) {
+						continue;
+					}
+					int id = Integer.parseInt(reader.getAttributeValue(null, attributeName));
+					boolean added = ids.add(id);
+					assertTrue(added || !requireUnique, () -> shard + " has duplicate NPC id " + id);
 				}
-				int id = Integer.parseInt(reader.getAttributeValue(null, attributeName));
-				boolean added = ids.add(id);
-				assertTrue(added || !requireUnique, () -> file + " has duplicate NPC id " + id);
+				reader.close();
 			}
-			reader.close();
 		}
 		return ids;
 	}

@@ -278,13 +278,18 @@ class RetailAiDefinitionLoaderTest {
 		RetailAiData data = RetailAiDefinitionLoader.load(
 			aiDirectory.toFile(), aiDirectory.resolve("npc-ai.xml").toFile(),
 			aiDirectory.resolve("ai-strings.xml").toFile(), aiDirectory.resolve("ai-areas.xml").toFile());
-		Matcher matcher = java.util.regex.Pattern.compile(
-			"<npc_template\\b[^>]*\\bnpc_id=\"(\\d+)\"[^>]*\\bai=\"(?:bomb|summoner)\"")
-			.matcher(Files.readString(Path.of("src/main/resources/aion/data/static_data/npcs/npc_template.xml")));
+		var templatePattern = java.util.regex.Pattern.compile(
+			"<npc_template\\b[^>]*\\bnpc_id=\"(\\d+)\"[^>]*\\bai=\"(?:bomb|summoner)\"");
 		int supported = 0;
-		while (matcher.find()) {
-			if (RetailPatternAI2.supports(data.getPattern(Integer.parseInt(matcher.group(1))))) {
-				supported++;
+		try (var paths = Files.list(Path.of("src/main/resources/aion/data/static_data/npcs"))) {
+			for (Path path : paths.filter(file -> file.getFileName().toString()
+				.matches("npc_template_\\d+_\\d+\\.xml")).sorted().toList()) {
+				Matcher matcher = templatePattern.matcher(Files.readString(path));
+				while (matcher.find()) {
+					if (RetailPatternAI2.supports(data.getPattern(Integer.parseInt(matcher.group(1))))) {
+						supported++;
+					}
+				}
 			}
 		}
 

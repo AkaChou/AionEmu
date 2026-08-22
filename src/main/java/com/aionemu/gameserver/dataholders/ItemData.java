@@ -2,14 +2,13 @@ package com.aionemu.gameserver.dataholders;
 
 
 import com.aionemu.boot.i18n.I18n;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -17,7 +16,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
-import com.aionemu.gameserver.configs.Config;
+import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.ItemMask;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
@@ -61,27 +60,58 @@ public class ItemData extends ReloadableData {
 		items = new IntObjectHashMap<ItemTemplate>();
 		itemsByName = new HashMap<>();
 		allItems = new HashMap<Integer, ItemTemplate>();
-		for (ItemTemplate it : its) {
-			items.put(it.getTemplateId(), it);
-			if (it.getNamedesc() != null && !it.getNamedesc().isBlank()) {
-				itemsByName.putIfAbsent(it.getNamedesc().toLowerCase(Locale.ROOT), it);
-			}
-			if (!it.getName().isBlank()) {
-				itemsByName.putIfAbsent(it.getName().toLowerCase(Locale.ROOT), it);
-			}
-			allItems.put(it.getTemplateId(), it);
-			// if (it.getCategory().equals(ItemCategory.MANASTONE)) {
-			// int level = it.getLevel();
-			// if (!manastones.containsKey(level)) {
-			// manastones.put(level, new ArrayList<ItemTemplate>());
-			// }
-			// manastones.get(level).add(it);
-			// }
-			if (it.getActions() == null) {
-				continue;
+		if (its != null) {
+			for (ItemTemplate it : its) {
+				items.put(it.getTemplateId(), it);
+				if (it.getNamedesc() != null && !it.getNamedesc().isBlank()) {
+					itemsByName.putIfAbsent(it.getNamedesc().toLowerCase(Locale.ROOT), it);
+				}
+				if (!it.getName().isBlank()) {
+					itemsByName.putIfAbsent(it.getName().toLowerCase(Locale.ROOT), it);
+				}
+				allItems.put(it.getTemplateId(), it);
+				// if (it.getCategory().equals(ItemCategory.MANASTONE)) {
+				// int level = it.getLevel();
+				// if (!manastones.containsKey(level)) {
+				// manastones.put(level, new ArrayList<ItemTemplate>());
+				// }
+				// manastones.get(level).add(it);
+				// }
+				if (it.getActions() == null) {
+					continue;
+				}
 			}
 		}
 		its = null;
+	}
+
+	/**
+	 * 以分片结果装配物品数据：分片按序合并，自定义模板按 ID 覆盖或新增，最后一次性重建全部索引。
+	 * Assembles item data from shard results: shards merge in order, custom templates override or
+	 * append by id, then all indexes are rebuilt in a single pass.
+	 *
+	 * @param shards 分片加载结果 / shard load results
+	 * @param customOverrides 自定义覆盖模板，可为 null / custom override templates, may be {@code null}
+	 */
+	public void assembleFrom(List<ItemData> shards, ItemData customOverrides) {
+		Map<Integer, ItemTemplate> merged = new LinkedHashMap<>();
+		for (ItemData shard : shards) {
+			merged.putAll(shard.getItemData());
+		}
+		int replaced = 0;
+		int added = 0;
+		if (customOverrides != null) {
+			for (Map.Entry<Integer, ItemTemplate> override : customOverrides.getItemData().entrySet()) {
+				if (merged.containsKey(override.getKey())) {
+					replaced++;
+				} else {
+					added++;
+				}
+				merged.put(override.getKey(), override.getValue());
+			}
+			log.info(I18n.get("log.static_data.item_custom_overrides", replaced + added, replaced, added));
+		}
+		setData(new ArrayList<>(merged.values()));
 	}
 
 	/**
@@ -169,23 +199,16 @@ public class ItemData extends ReloadableData {
 	}
 
 	/**
-	 * 热重载物品模板 XML 并通知管理员。
-	 * Hot-reloads item templates from XML and notifies the admin.
+	 * 通过分片并行路径热重载物品模板并通知管理员。
+	 * Hot-reloads item templates via the parallel shard path and notifies the admin.
 	 *
 	 * @param admin 触发重载的管理员 / admin who triggered the reload
 	 */
 	@Override
 	public void reload(Player admin) {
 		try {
-			JAXBContext jc = JAXBContext.newInstance(StaticData.class);
-			Unmarshaller un = jc.createUnmarshaller();
-			un.setSchema(getSchema("./data/static_data/static_data.xsd"));
-			List<ItemTemplate> newTemplates = new ArrayList<ItemTemplate>();
-			ItemData data = (ItemData) un.unmarshal(Config.dataFile("./data/static_data/items/item_templates.xml"));
-			if (data != null && data.getData() != null) {
-				newTemplates.addAll(data.getData());
-			}
-			DataManager.ITEM_DATA.setData(newTemplates);
+			ItemData fresh = XmlDataLoader.getInstance().loadItemData();
+			DataManager.ITEM_DATA.setData(new ArrayList<>(fresh.getItemData().values()));
 		} catch (Exception e) {
 			PacketSendUtility.sendMessage(admin, "Item templates reload failed!");
 			log.error(I18n.get("log.b18c257924d5", e));

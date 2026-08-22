@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  *
  * @author KID
  */
-@XmlRootElement(name = "item_restriction_cleanups")
+@XmlRootElement(name = "cleanup")
 @XmlAccessorType(XmlAccessType.NONE)
 public class ItemCleanupTemplate {
 
