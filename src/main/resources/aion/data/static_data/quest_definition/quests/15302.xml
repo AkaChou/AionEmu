@@ -64,5 +64,29 @@
       <choice action="SELECTED_QUEST_REWARD7" reward-index="8"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-  </transitions>
+      <!-- retail 步骤物品 182215860:CHECK_USER 双边(有物完成/无物失败页)。 -->
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805327" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="182215860" count="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805327" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="182215860" count="1" expected="false"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>

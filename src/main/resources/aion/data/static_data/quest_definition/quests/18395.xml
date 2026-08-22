@@ -110,5 +110,14 @@
     <npc-complete npc-id="835649" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" complete-reward-index="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-  </transitions>
+      <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798926" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+</transitions>
 </quest-definition>
