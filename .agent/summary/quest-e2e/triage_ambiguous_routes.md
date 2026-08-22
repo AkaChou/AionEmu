@@ -82,6 +82,12 @@
 typed 枚举,按"先写 XML 符号→再跑 generate_quest_dialog_enums.py 从客户端
 字典重生成(+8 动作/+10 页面)"的顺序保持引用驱动契约。
 | 10 | SETPRO 完成路由(有宿主) | 58 | `8fc6f1276` | 行数 624→564 |
+| 11 | CHECK_USER 双边 + BFS 链(36 任务) | 36 | `8c7940400` | 行数 564→546;runtime 431 全绿 |
+
+批 11 要点:外部 catalog 预加载重构(`9a9d65fc1`)阻塞编译期间,36 个任务的边
+按 XML well-formed 预检先行写盘并提交,编译恢复后补跑全部验证(逐任务编译、
+门禁、审计、runtime 套件)全绿。CHECK_USER 双边=has-item true→reward /
+false→CHECK_USER_ITEM_FAIL,物品 id 取 data_driven give_item_id。
 
 批 10 要点:SETPRO 缺口中宿主齐全的 58 任务批量补完成边(→REWARD);
 68 任务页面无宿主(链式)留待 BFS;CHECK_USER 184 行需逐任务证明检查对象
