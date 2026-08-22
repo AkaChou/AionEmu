@@ -134,12 +134,15 @@ public class XmlDataLoader {
 	 *
 	 * <p>分片/紧凑定义加载存在"池任务内部再提交子任务并 join"的嵌套结构；放在 commonPool
 	 * 上会触发 managedBlock 补偿线程的丢失唤醒竞态（实测 JDK 26 下主线程 join 永久挂起、
-	 * 全部 worker 空闲），因此使用独立定长池。父任务最多 2 个（NPC/物品）且只等待自己的
-	 * 子任务，池至少保留 4 个线程以避免父任务占满 worker。
+	 * 全部 worker 空闲），因此使用独立定长池。当前嵌套父任务共 5 个（物品、技能、NPC 模板、
+	 * NPC 掉落、零售 AI）；固定线程数必须始终大于父任务数，否则全部 worker 都可能成为
+	 * 等待自身子任务的父任务而死锁——新增嵌套父任务前务必核对这一上限。
 	 * Shard/compact loads nest "submit children and join them" inside pool tasks; on the commonPool this
 	 * exposed a managedBlock lost-wakeup race (observed on JDK 26: main joined forever while all workers
-	 * idled), so a dedicated fixed pool is used instead. At most 2 parent tasks (NPC/items) wait only on
-	 * their own children, so at least 4 workers leave capacity for their child tasks.
+	 * idled), so a dedicated fixed pool is used instead. There are currently 5 nested parent tasks
+	 * (items, skills, NPC templates, NPC drops, retail AI); the fixed size must always exceed the
+	 * parent count or every worker could become a parent waiting on its own queued children and
+	 * deadlock — re-check this bound before adding another nested parent.
 	 */
 	private static final java.util.concurrent.ExecutorService STATIC_DATA_POOL =
 		java.util.concurrent.Executors.newFixedThreadPool(

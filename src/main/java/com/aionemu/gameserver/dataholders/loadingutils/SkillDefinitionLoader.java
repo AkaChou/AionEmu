@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -17,7 +18,7 @@ import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.model.ExclusiveAttribute;
 
-import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBContext;
 
 /**
  * 从拆分包中的分卷 XML 加载技能定义，并展开技能组与字段引用。
@@ -33,14 +34,31 @@ final class SkillDefinitionLoader {
 			Map<String, String> fieldNames = readFieldNames(groupsDocument);
 			Map<String, Element> groups = readGroups(groupsDocument);
 			int expectedTemplates = Integer.parseInt(requiredAttribute(bundle, "templates"));
-			List<SkillTemplate> templates = new ArrayList<>(expectedTemplates);
-			Unmarshaller unmarshaller = XmlDataLoader.createJaxbContext(SkillData.class).createUnmarshaller();
-
+			List<File> partFiles = new ArrayList<>();
 			for (Element part : childElements(bundle, "part")) {
-				Document document = parse(new File(directory, requiredAttribute(part, "file")));
-				expand(document, groups, fieldNames);
-				SkillData data = (SkillData) unmarshaller.unmarshal(document);
-				templates.addAll(data.getSkillTemplates());
+				partFiles.add(new File(directory, requiredAttribute(part, "file")));
+			}
+			// 各 part 互不依赖，groups/fieldNames 只读共享；并行解析后在调用线程按 part
+			// 顺序拼接，保证模板列表确定性。Unmarshaller 非线程安全，每个任务各自创建。
+			// Parts are independent and groups/fieldNames are read-only shared; parse in parallel and
+			// concatenate in part order on the calling thread for deterministic output. Unmarshaller is
+			// not thread-safe, so each task creates its own.
+			// 各 part 互不依赖，groups/fieldNames 只读共享；并行解析后在调用线程按 part
+			// 顺序拼接，保证模板列表确定性。Unmarshaller 非线程安全，每个任务经共享
+			// JAXBContext 自行创建。
+			// Parts are independent and groups/fieldNames are read-only shared; parse in parallel and
+			// concatenate in part order on the calling thread for deterministic output. Unmarshaller is
+			// not thread-safe, so each task creates its own from the shared JAXBContext.
+			JAXBContext jaxbContext = XmlDataLoader.createJaxbContext(SkillData.class);
+			List<CompletableFuture<List<SkillTemplate>>> futures = new ArrayList<>(partFiles.size());
+			for (File partFile : partFiles) {
+				futures.add(CompletableFuture.supplyAsync(() -> loadPart(partFile, groups, fieldNames, jaxbContext),
+					XmlDataLoader.staticDataExecutor()));
+			}
+
+			List<SkillTemplate> templates = new ArrayList<>(expectedTemplates);
+			for (CompletableFuture<List<SkillTemplate>> future : futures) {
+				templates.addAll(future.join());
 			}
 			if (templates.size() != expectedTemplates) {
 				throw new IllegalStateException("Expected " + expectedTemplates + " skill templates, loaded " + templates.size());
@@ -55,6 +73,22 @@ final class SkillDefinitionLoader {
 			return data;
 		} catch (Exception e) {
 			throw new IllegalStateException("Failed to load compact skill definitions from " + directory.getPath(), e);
+		}
+	}
+
+	/**
+	 * 解析单个技能分卷：DOM 解析、展开组与字段引用、JAXB 反序列化。
+	 * Parses one skill part: DOM parse, group/field expansion, then JAXB unmarshalling.
+	 */
+	private static List<SkillTemplate> loadPart(File partFile, Map<String, Element> groups, Map<String, String> fieldNames,
+			JAXBContext jaxbContext) {
+		try {
+			Document document = parse(partFile);
+			expand(document, groups, fieldNames);
+			SkillData data = (SkillData) jaxbContext.createUnmarshaller().unmarshal(document);
+			return data.getSkillTemplates();
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to load skill part " + partFile.getPath(), e);
 		}
 	}
 

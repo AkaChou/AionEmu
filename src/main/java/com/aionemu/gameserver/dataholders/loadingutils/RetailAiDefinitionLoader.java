@@ -91,24 +91,81 @@ final class RetailAiDefinitionLoader {
 	static RetailAiData load(File patternsDirectory, File mappingsFile, File stringsFile, File areasFile,
 			File conditionSpawnsFile, File skillCategoriesFile, File locationAliasesFile, File directPortalsFile,
 			File npcScoresFile, File groupControllersFile, File npcPartiesFile, File dynamicAreasFile) {
-		ConditionSpawns conditionSpawns = conditionSpawnsFile == null
-			? new ConditionSpawns(Map.of(), Map.of(), Map.of()) : loadConditionSpawns(conditionSpawnsFile);
-		Areas areas = loadAreas(areasFile);
-		Map<Integer, Npc> npcs = loadMappings(mappingsFile);
-		Map<Integer, List<NpcParty>> npcParties = npcPartiesFile == null ? Map.of() : loadNpcParties(npcPartiesFile);
-		npcParties.values().stream().flatMap(List::stream).flatMap(party -> party.members().stream())
-			.filter(member -> !npcs.containsKey(member.id())).findFirst().ifPresent(member -> {
-				throw new IllegalStateException("Undefined retail NPC party member: " + member.id());
-			});
-		return new RetailAiData(loadPatterns(patternsDirectory), npcs, loadStrings(stringsFile),
-			skillCategoriesFile == null ? Map.of() : loadSkillCategories(skillCategoriesFile),
-			npcScoresFile == null ? Map.of() : loadNpcScores(npcScoresFile),
+		// 各源文件互不依赖，提交静态数据专用线程池并行加载；仅 NPC 队伍成员校验依赖
+		// mappings 结果，在全部 join 后执行。loadPatterns 内部按文件名排序后逐文件合并，
+		// 仍保持确定性输出。
+		// Source files are independent; load them in parallel on the dedicated static-data pool. Only
+		// the NPC-party member validation depends on the mappings result and runs after all joins.
+		// loadPatterns sorts files by name before merging, so output stays deterministic.
+		java.util.concurrent.CompletableFuture<ConditionSpawns> conditionSpawnsFuture =
+			conditionSpawnsFile == null ? null : java.util.concurrent.CompletableFuture.supplyAsync(
+				() -> loadConditionSpawns(conditionSpawnsFile), XmlDataLoader.staticDataExecutor());
+		java.util.concurrent.CompletableFuture<Map<String, Pattern>> patternsFuture =
+			java.util.concurrent.CompletableFuture.supplyAsync(() -> loadPatterns(patternsDirectory),
+				XmlDataLoader.staticDataExecutor());
+		java.util.concurrent.CompletableFuture<Map<Integer, Npc>> mappingsFuture =
+			java.util.concurrent.CompletableFuture.supplyAsync(() -> loadMappings(mappingsFile),
+				XmlDataLoader.staticDataExecutor());
+		java.util.concurrent.CompletableFuture<Map<String, Integer>> stringsFuture =
+			java.util.concurrent.CompletableFuture.supplyAsync(() -> loadStrings(stringsFile),
+				XmlDataLoader.staticDataExecutor());
+		java.util.concurrent.CompletableFuture<Areas> areasFuture =
+			java.util.concurrent.CompletableFuture.supplyAsync(() -> loadAreas(areasFile),
+				XmlDataLoader.staticDataExecutor());
+		java.util.concurrent.CompletableFuture<Map<Integer, String>> skillCategoriesFuture =
+			skillCategoriesFile == null ? null : java.util.concurrent.CompletableFuture.supplyAsync(
+				() -> loadSkillCategories(skillCategoriesFile), XmlDataLoader.staticDataExecutor());
+		java.util.concurrent.CompletableFuture<Map<Integer, NpcScore>> npcScoresFuture =
+			npcScoresFile == null ? null : java.util.concurrent.CompletableFuture.supplyAsync(
+				() -> loadNpcScores(npcScoresFile), XmlDataLoader.staticDataExecutor());
+		java.util.concurrent.CompletableFuture<Map<Integer, List<GroupController>>> groupControllersFuture =
+			groupControllersFile == null ? null : java.util.concurrent.CompletableFuture.supplyAsync(
+				() -> loadGroupControllers(groupControllersFile), XmlDataLoader.staticDataExecutor());
+		java.util.concurrent.CompletableFuture<Map<Integer, Map<String, List<LocationAliasPoint>>>> locationAliasesFuture =
+			locationAliasesFile == null ? null : java.util.concurrent.CompletableFuture.supplyAsync(
+				() -> loadLocationAliases(locationAliasesFile), XmlDataLoader.staticDataExecutor());
+		java.util.concurrent.CompletableFuture<Map<Integer, DirectPortal>> directPortalsFuture =
+			directPortalsFile == null ? null : java.util.concurrent.CompletableFuture.supplyAsync(
+				() -> loadDirectPortals(directPortalsFile), XmlDataLoader.staticDataExecutor());
+		java.util.concurrent.CompletableFuture<Map<Integer, List<NpcParty>>> npcPartiesFuture =
+			npcPartiesFile == null ? null : java.util.concurrent.CompletableFuture.supplyAsync(
+				() -> loadNpcParties(npcPartiesFile), XmlDataLoader.staticDataExecutor());
+		java.util.concurrent.CompletableFuture<Map<Integer, Map<String, Map<Integer, DynamicArea>>>> dynamicAreasFuture =
+			dynamicAreasFile == null ? null : java.util.concurrent.CompletableFuture.supplyAsync(
+				() -> loadDynamicAreas(dynamicAreasFile), XmlDataLoader.staticDataExecutor());
+
+		ConditionSpawns conditionSpawns = joinOrNull(conditionSpawnsFuture);
+		Map<Integer, Npc> npcs = mappingsFuture.join();
+		Map<Integer, List<NpcParty>> npcParties = joinOrNull(npcPartiesFuture);
+		if (npcParties != null) {
+			npcParties.values().stream().flatMap(List::stream).flatMap(party -> party.members().stream())
+				.filter(member -> !npcs.containsKey(member.id())).findFirst().ifPresent(member -> {
+					throw new IllegalStateException("Undefined retail NPC party member: " + member.id());
+				});
+		}
+		Areas areas = areasFuture.join();
+		Map<Integer, Map<String, Map<Integer, DynamicArea>>> dynamicAreas =
+			dynamicAreasFuture == null ? Map.of() : dynamicAreasFuture.join();
+		return new RetailAiData(patternsFuture.join(), npcs, stringsFuture.join(),
+			skillCategoriesFuture == null ? Map.of() : skillCategoriesFuture.join(),
+			npcScoresFuture == null ? Map.of() : npcScoresFuture.join(),
 			areas.named(), areas.resurrect(), areas.quests(), areas.limits(), areas.groupControls(),
-			groupControllersFile == null ? Map.of() : loadGroupControllers(groupControllersFile), areas.skills(),
-			locationAliasesFile == null ? Map.of() : loadLocationAliases(locationAliasesFile),
-			conditionSpawns.spawns(), conditionSpawns.variables(), conditionSpawns.worldIdsByName(),
-			directPortalsFile == null ? Map.of() : loadDirectPortals(directPortalsFile), npcParties,
-			dynamicAreasFile == null ? Map.of() : loadDynamicAreas(dynamicAreasFile));
+			groupControllersFuture == null ? Map.of() : groupControllersFuture.join(), areas.skills(),
+			locationAliasesFuture == null ? Map.of() : locationAliasesFuture.join(),
+			conditionSpawns == null ? Map.of() : conditionSpawns.spawns(),
+			conditionSpawns == null ? Map.of() : conditionSpawns.variables(),
+			conditionSpawns == null ? Map.of() : conditionSpawns.worldIdsByName(),
+			directPortalsFuture == null ? Map.of() : directPortalsFuture.join(),
+			npcParties == null ? Map.of() : npcParties,
+			dynamicAreas);
+	}
+
+	/**
+	 * 等待可选的并行加载结果；未提交的任务返回 null。
+	 * Awaits an optional parallel load result; returns null when the future was not submitted.
+	 */
+	private static <T> T joinOrNull(java.util.concurrent.CompletableFuture<T> future) {
+		return future == null ? null : future.join();
 	}
 
 	static Map<Integer, Map<String, Map<Integer, DynamicArea>>> loadDynamicAreas(File file) {

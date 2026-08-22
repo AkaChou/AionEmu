@@ -10,7 +10,10 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.function.Function;
 
 import com.aionemu.gameserver.configs.administration.DeveloperConfig;
@@ -343,17 +346,52 @@ public class SpawnEngine {
 	/**
 	 * 从模板刷出所有非副本世界的 NPC。
 	 * Spawns all NPCs from templates for non-instance world maps.
+	 * <p>
+	 * 各地图的生成相互独立且共享状态均有并发保护（IDFactory、World 容器、
+	 * TemporarySpawnEngine、WalkerFormationsCache、门状态等，见各实现），因此按地图
+	 * 并行执行；全部地图完成后统一清理模板并打印统计。任一地图失败时等待其余地图
+	 * 收尾后再抛出，避免留下半初始化世界。
+	 * Per-map generation is independent and all shared state is concurrently protected
+	 * (IDFactory, World containers, TemporarySpawnEngine, WalkerFormationsCache, door
+	 * state, etc., see each implementation), so maps spawn in parallel; template cleanup
+	 * and stats run after all maps finish. On failure, await the remaining maps before
+	 * throwing so the world is not left half-initialized.
 	 */
 	public static void spawnAll() {
 		if (!DeveloperConfig.SPAWN_ENABLE) {
 			log.info(I18n.get("log.6bd421074785"));
 			return;
 		}
+		List<WorldMapTemplate> worldTemplates = new ArrayList<>();
 		for (WorldMapTemplate worldMapTemplate : DataManager.WORLD_MAPS_DATA) {
-			if (worldMapTemplate.isInstance()) {
-				continue;
+			if (!worldMapTemplate.isInstance()) {
+				worldTemplates.add(worldMapTemplate);
 			}
-			spawnBasedOnTemplate(worldMapTemplate);
+		}
+		java.util.concurrent.ExecutorService executor = java.util.concurrent.Executors.newFixedThreadPool(
+			Math.min(worldTemplates.size(), Runtime.getRuntime().availableProcessors()), runnable -> {
+				Thread thread = new Thread(runnable, "world-spawner");
+				thread.setDaemon(true);
+				return thread;
+			});
+		try {
+			List<CompletableFuture<Void>> futures = new ArrayList<>(worldTemplates.size());
+			for (WorldMapTemplate worldMapTemplate : worldTemplates) {
+				futures.add(CompletableFuture.runAsync(
+					() -> spawnBasedOnTemplate(worldMapTemplate), executor));
+			}
+			CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+		} catch (CompletionException e) {
+			Throwable cause = e.getCause();
+			if (cause instanceof RuntimeException runtimeException) {
+				throw runtimeException;
+			}
+			if (cause instanceof Error error) {
+				throw error;
+			}
+			throw e;
+		} finally {
+			executor.shutdown();
 		}
 		DataManager.SPAWNS_DATA2.clearTemplates();
 		printWorldSpawnStats();

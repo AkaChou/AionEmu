@@ -71,10 +71,24 @@ public class NpcDropData {
 		NpcDropData data = new NpcDropData();
 		data.npcDropContext = createNpcDropContext();
 		data.commonDropGroups = loadCommonDropGroups(npcDropsDirectory);
-		data.npcDrop = mergeDrops(listXmlFiles(npcDropsDirectory.toPath()).stream()
+		List<File> partFiles = listXmlFiles(npcDropsDirectory.toPath()).stream()
 			.filter(file -> file.getName().startsWith("npc_drops_part_") && !file.getName().equals("npc_drops_part_old.xml"))
-			.flatMap(file -> data.loadDropsFromFile(file).stream())
-			.collect(Collectors.toList()));
+			.toList();
+		// 分片解析互不依赖，提交静态数据专用线程池并行执行；mergeDrops/rebuildDropIndex
+		// 依赖全部分片结果，保持 join 后在调用线程串行。
+		// Shard parses are independent; submit them to the dedicated static-data pool. mergeDrops and
+		// rebuildDropIndex depend on all shard results and stay serial after joining.
+		java.util.concurrent.Executor executor = XmlDataLoader.staticDataExecutor();
+		List<java.util.concurrent.CompletableFuture<List<NpcDrop>>> futures = new ArrayList<>(partFiles.size());
+		for (File file : partFiles) {
+			futures.add(java.util.concurrent.CompletableFuture
+				.supplyAsync(() -> data.loadDropsFromFile(file), executor));
+		}
+		List<NpcDrop> allDrops = new ArrayList<>();
+		for (java.util.concurrent.CompletableFuture<List<NpcDrop>> future : futures) {
+			allDrops.addAll(future.join());
+		}
+		data.npcDrop = mergeDrops(allDrops);
 		data.rebuildDropIndex();
 		return data;
 	}
