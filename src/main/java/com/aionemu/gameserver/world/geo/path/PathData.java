@@ -5,19 +5,14 @@ import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.ClosedByInterruptException;
-import java.nio.channels.FileChannel;
-import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -49,14 +44,12 @@ public final class PathData {
 	private static final int INDEX_VERSION = 1;
 	private static final int PATH_VERSION_MAJOR = 6;
 	private final Map<Integer, PathFiles> files = new ConcurrentHashMap<>();
-	private final Map<Integer, File> materialized = new ConcurrentHashMap<>();
 	private final Map<Integer, MapData> maps = new LinkedHashMap<>(16, 0.75f, true);
 	private final Map<Integer, ReentrantLock> locks = new ConcurrentHashMap<>();
 	private final Set<Integer> failedMaps = ConcurrentHashMap.newKeySet();
 
 	public int scan() {
 		files.clear();
-		materialized.clear();
 		failedMaps.clear();
 		File directory = Config.geoFile(PATH_DIR);
 		File[] indexes = directory.listFiles((dir, name) -> name.endsWith(".idx"));
@@ -141,12 +134,7 @@ public final class PathData {
 		try {
 			for (int attempt = 0; ; attempt++) {
 				try {
-					File path = materialized.get(worldId);
-					if (path == null) {
-						path = materialize(source);
-						materialized.put(worldId, path);
-					}
-					return MapData.load(path, source.index());
+					return MapData.load(source);
 				} catch (ClosedByInterruptException e) {
 					interrupted = true;
 					Thread.interrupted();
@@ -168,54 +156,6 @@ public final class PathData {
 			failure.initCause(cause);
 		}
 		return failure;
-	}
-
-	private static File materialize(PathFiles source) throws IOException {
-		PathMetadata metadata = PathMetadata.read(source.index());
-		String name = source.compressed().getName();
-		File cache = Config.cacheFile("path/" + name.substring(0, name.length() - 3));
-		if (matches(cache, metadata)) {
-			return cache;
-		}
-		Path parent = cache.toPath().toAbsolutePath().getParent();
-		Files.createDirectories(parent);
-		Path temporary = Files.createTempFile(parent, cache.getName() + ".", ".tmp");
-		MessageDigest digest = sha256();
-		try {
-			try (InputStream input = new DigestInputStream(new GZIPInputStream(Files.newInputStream(source.compressed().toPath())), digest)) {
-				Files.copy(input, temporary, StandardCopyOption.REPLACE_EXISTING);
-			}
-			if (Files.size(temporary) != metadata.size() || !MessageDigest.isEqual(digest.digest(), metadata.sha256())) {
-				throw new IOException("Compressed path differs from index: " + source.compressed());
-			}
-			try {
-				Files.move(temporary, cache.toPath(), StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-			} catch (AtomicMoveNotSupportedException e) {
-				Files.move(temporary, cache.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			}
-			return cache;
-		} finally {
-			Files.deleteIfExists(temporary);
-		}
-	}
-
-	private static boolean matches(File path, PathMetadata metadata) throws IOException {
-		if (!path.isFile() || path.length() != metadata.size()) {
-			return false;
-		}
-		MessageDigest digest = sha256();
-		try (InputStream input = new DigestInputStream(Files.newInputStream(path.toPath()), digest)) {
-			input.transferTo(OutputStream.nullOutputStream());
-		}
-		return MessageDigest.isEqual(digest.digest(), metadata.sha256());
-	}
-
-	private static MessageDigest sha256() {
-		try {
-			return MessageDigest.getInstance("SHA-256");
-		} catch (NoSuchAlgorithmException e) {
-			throw new IllegalStateException(e);
-		}
 	}
 
 	private void evictIfNeeded() {
@@ -312,23 +252,11 @@ public final class PathData {
 		}
 	}
 
-	private record PathFiles(File compressed, File index) {}
-
-	private record PathMetadata(long size, byte[] sha256) {
-
-		private static PathMetadata read(File index) throws IOException {
-			byte[] bytes = Files.readAllBytes(index.toPath());
-			ByteBuffer data = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
-			if (data.remaining() < 84 || data.getInt(0) != INDEX_MAGIC || data.getInt(4) != INDEX_VERSION) {
-				throw new IOException("Unsupported path index: " + index);
-			}
-			long size = data.getLong(40);
-			if (size < 1 || size > Integer.MAX_VALUE) {
-				throw new IOException("Invalid path size in index: " + index);
-			}
-			return new PathMetadata(size, Arrays.copyOfRange(bytes, 48, 80));
-		}
-	}
+	/**
+	 * 单张地图的压缩数据与索引文件对（包内可见，供加载与测试复用）。
+	 * Pair of compressed data and index files for one map (package-visible for loading and tests).
+	 */
+	record PathFiles(File compressed, File index) {}
 
 	/**
 	 * 单张地图的路径数据：分层块（Block）与扇区（Sector）结构。
@@ -381,7 +309,8 @@ public final class PathData {
 			this.blocks = new AtomicReferenceArray<>(blockOffsets.length);
 		}
 
-		static MapData load(File path, File index) throws IOException {
+		static MapData load(PathFiles source) throws IOException {
+			File index = source.index();
 			byte[] indexBytes = Files.readAllBytes(index.toPath());
 			ByteBuffer idx = ByteBuffer.wrap(indexBytes).order(ByteOrder.LITTLE_ENDIAN);
 			if (idx.remaining() < 84 || idx.getInt(0) != INDEX_MAGIC || idx.getInt(4) != INDEX_VERSION) {
@@ -396,21 +325,42 @@ public final class PathData {
 			int portalOffset = positive(idx.getInt(32), "portal table offset");
 			int portalCount = idx.getInt(36);
 			long expectedSize = idx.getLong(40);
+			if (expectedSize < 1 || expectedSize > Integer.MAX_VALUE) {
+				throw new IOException("Invalid path size in index: " + index);
+			}
+			byte[] expectedDigest = Arrays.copyOfRange(indexBytes, 48, 80);
 			int blockCount = idx.getInt(80);
 			if (portalCount < 0 || blockCount != columns * rows || indexBytes.length != 84L + blockCount * 4L) {
 				throw new IOException("Invalid path index dimensions: " + index);
 			}
-			long size = path.length();
-			if (size != expectedSize || size > Integer.MAX_VALUE) {
-				throw new IOException("Path file size differs from index: " + path);
-			}
+			// 与掉落数据一致：直接从压缩源解压到内存，不落盘派生缓存；
+			// 解压同时校验 SHA-256，替代原磁盘缓存的完整性检查。
+			// Like drop data: decompress straight from the compressed source into memory with no
+			// on-disk derived cache; SHA-256 is verified while decompressing, replacing the old
+			// disk-cache integrity check.
+			MessageDigest digest = sha256();
 			ByteBuffer data;
-			try (FileChannel channel = FileChannel.open(path.toPath(), StandardOpenOption.READ)) {
-				data = channel.map(FileChannel.MapMode.READ_ONLY, 0, size).order(ByteOrder.LITTLE_ENDIAN);
+			try (InputStream input = new DigestInputStream(
+					new GZIPInputStream(new BufferedInputStream(Files.newInputStream(source.compressed().toPath()))),
+					digest)) {
+				data = ByteBuffer.allocate((int) expectedSize).order(ByteOrder.LITTLE_ENDIAN);
+				byte[] chunk = new byte[64 * 1024];
+				int read;
+				while ((read = input.read(chunk)) >= 0) {
+					if (data.position() + read > expectedSize) {
+						throw new IOException("Compressed path exceeds indexed size: " + source.compressed());
+					}
+					data.put(chunk, 0, read);
+				}
 			}
+			long size = data.position();
+			if (size != expectedSize || !MessageDigest.isEqual(digest.digest(), expectedDigest)) {
+				throw new IOException("Compressed path differs from index: " + source.compressed());
+			}
+			data.flip();
 			if ((data.getInt(16) >>> 16) != PATH_VERSION_MAJOR || nodeOffset + nodeSize > size
 					|| portalOffset + portalCount * 4L > size) {
-				throw new IOException("Invalid path data header: " + path);
+				throw new IOException("Invalid path data header: " + source.compressed());
 			}
 			int[] offsets = new int[blockCount];
 			int previous = portalOffset + portalCount * 4;
@@ -424,6 +374,14 @@ public final class PathData {
 			}
 			return new MapData(data, width, height, columns, rows, nodeOffset, nodeSize, portalOffset,
 					portalCount, offsets);
+		}
+
+		private static MessageDigest sha256() {
+			try {
+				return MessageDigest.getInstance("SHA-256");
+			} catch (NoSuchAlgorithmException e) {
+				throw new IllegalStateException(e);
+			}
 		}
 
 		private static int positive(int value, String name) throws IOException {

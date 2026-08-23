@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.world.geo.path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -32,7 +31,7 @@ class PathDataTest {
 	Path directory;
 
 	@Test
-	void loadsGzipPathAndRebuildsInvalidCache() throws Exception {
+	void loadsFromCompressedSourceWithoutMaterializingADiskCache() throws Exception {
 		Path geo = directory.resolve("geo/path");
 		Path cache = directory.resolve("cache");
 		Files.createDirectories(geo);
@@ -51,14 +50,36 @@ class PathDataTest {
 			PathData paths = new PathData();
 			assertEquals(1, paths.scan());
 			assertNotNull(paths.getMap(1));
-			Path cached = cache.resolve("path/1.path");
-			assertArrayEquals(data, Files.readAllBytes(cached));
+			assertFalse(Files.exists(cache), "path data must not be materialized into the cache directory");
+		} finally {
+			restore("aion.game.geo.dir", oldGeo);
+			restore("aion.game.cache.dir", oldCache);
+			GeoDataConfig.GEO_PATH_ENABLE = oldEnabled;
+		}
+	}
 
-			Files.write(cached, new byte[data.length]);
-			paths = new PathData();
+	@Test
+	void rejectsCompressedDataThatDiffersFromItsIndex() throws Exception {
+		Path geo = directory.resolve("geo/path");
+		Path cache = directory.resolve("cache");
+		Files.createDirectories(geo);
+		byte[] data = flatLinkedPath();
+		Files.write(geo.resolve("1.idx"), index(data, 137));
+		try (GZIPOutputStream output = new GZIPOutputStream(Files.newOutputStream(geo.resolve("1.path.gz")))) {
+			output.write(Arrays.copyOf(data, data.length - 1));
+		}
+		String oldGeo = System.getProperty("aion.game.geo.dir");
+		String oldCache = System.getProperty("aion.game.cache.dir");
+		boolean oldEnabled = GeoDataConfig.GEO_PATH_ENABLE;
+		try {
+			System.setProperty("aion.game.geo.dir", directory.resolve("geo").toString());
+			System.setProperty("aion.game.cache.dir", cache.toString());
+			GeoDataConfig.GEO_PATH_ENABLE = true;
+			PathData paths = new PathData();
 			assertEquals(1, paths.scan());
-			assertNotNull(paths.getMap(1));
-			assertArrayEquals(data, Files.readAllBytes(cached));
+			assertThrows(IllegalStateException.class, () -> paths.getMap(1));
+			assertFalse(paths.hasMap(1));
+			assertFalse(Files.exists(cache.resolve("path/1.path")), "no cache file may be written for rejected data");
 		} finally {
 			restore("aion.game.geo.dir", oldGeo);
 			restore("aion.game.cache.dir", oldCache);
@@ -128,7 +149,7 @@ class PathDataTest {
 		Files.write(path, data);
 		Files.write(index, index(data, 137));
 
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 		List<PathData.PathPoint> result = map.findPath(0.25f, 0.25f, 1, 1.25f, 0.25f, 1, 100,
 				(x, y) -> Float.NaN);
 
@@ -148,7 +169,7 @@ class PathDataTest {
 		byte[] data = flatLinkedPath();
 		Files.write(path, data);
 		Files.write(index, index(data, 137));
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 
 		map.findPath(0.25f, 0.25f, 1, 1.25f, 0.25f, 1, 100, (x, y) -> Float.NaN);
 		Object workspace = currentSearchWorkspace();
@@ -172,7 +193,7 @@ class PathDataTest {
 		byte[] data = flatLinkedPath((byte) 0xff);
 		Files.write(path, data);
 		Files.write(index, index(data, 137));
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 
 		assertEquals(new PathData.PathPoint(0.25f, 0.25f, 1),
 				map.projectPoint(0.25f, 0.25f, 1.5f, (x, y) -> Float.NaN));
@@ -192,7 +213,7 @@ class PathDataTest {
 		byte[] data = flatLinkedPath();
 		Files.write(path, data);
 		Files.write(index, index(data, 137));
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 
 		PathData.SearchResult result = map.searchAStar(0.25f, 0.25f, 1, 15.75f, 15.75f, 1, 1,
 				(x, y) -> Float.NaN, null);
@@ -208,7 +229,7 @@ class PathDataTest {
 		byte[] data = flatLinkedPath((byte) 0xff);
 		Files.write(path, data);
 		Files.write(index, index(data, 137));
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 
 		PathData.SearchResult result = map.searchAStar(0.25f, 0.25f, 1, 15.75f, 15.75f, 1, 1,
 				(x, y) -> Float.NaN, null);
@@ -227,7 +248,7 @@ class PathDataTest {
 		byte[] data = terrainLinkedPath();
 		Files.write(path, data);
 		Files.write(index, index(data, 137));
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 		PathData.HeightProvider terrain = (x, y) -> x > 1 && x < 1.5f ? 2 : 1;
 
 		assertFalse(map.canWalkStraight(0.25f, 0.25f, 1, 2.25f, 0.25f, 1, terrain, null));
@@ -244,7 +265,7 @@ class PathDataTest {
 		byte[] data = terrainLinkedPath();
 		Files.write(path, data);
 		Files.write(index, index(data, 137));
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 		PathData.HeightProvider terrain = (x, y) -> x > 1 && x < 1.5f ? 1.15f : 1;
 
 		assertFalse(map.canWalkStraight(0.25f, 0.25f, 1, 2.25f, 0.25f, 1, terrain, null));
@@ -263,7 +284,7 @@ class PathDataTest {
 		}
 		Files.write(path, data);
 		Files.write(index, index(data, 256, 16, 1, 137, 0, offsets));
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 
 		PathData.EdgePassability passability = (startX, startY, startZ, targetX, targetY, targetZ) ->
 				!(startX == 0.25f && startY == 0.25f && targetX == 0.75f && targetY == 0.25f);
@@ -284,7 +305,7 @@ class PathDataTest {
 		Files.write(path, data);
 		Files.write(index, index(data, columns * 16, rows * 16, 1, 137, 0,
 				blockOffsets(columns * rows)));
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 		float targetX = columns * 16 - 0.25f;
 
 		PathData.SearchResult lowLevel = map.searchAStar(0.25f, 0.25f, 1, targetX, 0.25f, 1,
@@ -310,7 +331,7 @@ class PathDataTest {
 		Files.write(path, data);
 		Files.write(index, index(data, columns * 16, rows * 16, 1, 137, 0,
 				blockOffsets(columns * rows)));
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 		PathData.EdgePassability wallWithDistantGap = (startX, startY, startZ, targetX, targetY, targetZ) ->
 				!crosses(startX, targetX, 128) || Math.max(startY, targetY) >= 48;
 
@@ -332,7 +353,7 @@ class PathDataTest {
 		Files.write(path, data);
 		Files.write(index, index(data, columns * 16, rows * 16, 1, 137, 0,
 				blockOffsets(columns * rows)));
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 
 		PathData.SearchResult result = map.searchAStar(0.25f, 0.25f, 1, columns * 16 - 0.25f, 0.25f, 1,
 				100, (x, y) -> 1, null, true);
@@ -350,7 +371,7 @@ class PathDataTest {
 		Files.write(path, data);
 		Files.write(index, index(data, 137));
 
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 		List<PathData.PathPoint> result = map.findPath(0.25f, 0.25f, 1, 0.75f, 0.75f, 1, 10,
 				(x, y) -> Float.NaN);
 
@@ -366,7 +387,7 @@ class PathDataTest {
 		Files.write(path, data);
 		Files.write(index, index(data, 137));
 
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 		List<PathData.PathPoint> result = map.findPath(0.25f, 0.25f, 1, 0.75f, 0.75f, 1, 10,
 				(x, y) -> Float.NaN);
 
@@ -382,7 +403,7 @@ class PathDataTest {
 		Files.write(path, data);
 		Files.write(index, index(data, 137));
 
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 		List<PathData.PathPoint> result = map.findPath(0.25f, 0.25f, 1, 0.75f, 0.75f, 1, 10,
 				(x, y) -> Float.NaN,
 				(startX, startY, startZ, targetX, targetY, targetZ) -> startX == targetX || startY == targetY);
@@ -404,7 +425,7 @@ class PathDataTest {
 		Files.write(path, data);
 		Files.write(index, index(data, 137));
 
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 		List<PathData.PathPoint> result = map.findPath(0.25f, 0.25f, 1, 0.75f, 0.75f, 1, 10,
 				(x, y) -> Float.NaN,
 				(startX, startY, startZ, targetX, targetY, targetZ) -> startX != targetX && startY != targetY);
@@ -421,7 +442,7 @@ class PathDataTest {
 		Files.write(path, data);
 		Files.write(index, index(data, 137));
 
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 		List<PathData.PathPoint> result = map.findPath(0.25f, 0.25f, 1.1f, 0.75f, 0.25f, 1.1f, 10,
 				(x, y) -> Float.NaN);
 
@@ -437,7 +458,7 @@ class PathDataTest {
 		Files.write(path, data);
 		Files.write(index, index(data, 137));
 
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 		PathService.BlockedSegment blocked = new PathService.BlockedSegment(0.25f, 0.25f, 1,
 				1.25f, 0.25f, 1, 0.35f, Long.MAX_VALUE);
 		List<PathData.PathPoint> result = map.findPath(0.25f, 0.25f, 1, 1.25f, 0.25f, 1, 100,
@@ -454,7 +475,7 @@ class PathDataTest {
 		byte[] data = flatLinkedPath();
 		Files.write(path, data);
 		Files.write(index, index(data, 137));
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 
 		try (var executor = Executors.newFixedThreadPool(16)) {
 			List<java.util.concurrent.Callable<List<PathData.PathPoint>>> queries = new java.util.ArrayList<>();
@@ -476,7 +497,7 @@ class PathDataTest {
 		Files.write(path, data);
 		Files.write(index, index(data, 137));
 
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 		List<PathData.PathPoint> result = map.findPath(15.25f, 0.25f, 1, 15.75f, 0.25f, 1, 10,
 				(x, y) -> Float.NaN);
 
@@ -492,7 +513,7 @@ class PathDataTest {
 		Files.write(path, data);
 		Files.write(index, index(data, 32, 16, 1, 137, 1, 141, 164));
 
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 		PathData.SearchResult result = map.searchAStar(15.75f, 0.25f, 1, 16.25f, 0.25f, 1, 10,
 				(x, y) -> Float.NaN, null);
 
@@ -508,7 +529,7 @@ class PathDataTest {
 		Files.write(path, data);
 		Files.write(index, index(data, 16, 16, 33, 169, 0, 169));
 
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 		PathData.SearchResult result = map.searchAStar(0.25f, 0.25f, 1, 1.25f, 0.25f, 2, 10,
 				(x, y) -> Float.NaN, null);
 
@@ -523,7 +544,7 @@ class PathDataTest {
 		byte[] data = layeredComplexPath(100, 2100);
 		Files.write(path, data);
 		Files.write(index, index(data, 16, 16, 33, 169, 0, 169));
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 
 		assertEquals(PathData.SearchStatus.NO_PATH,
 				map.searchAStar(0.25f, 0.25f, 1, 1.25f, 0.25f, 21, 10, (x, y) -> Float.NaN, null).status());
@@ -536,10 +557,17 @@ class PathDataTest {
 		byte[] data = layeredComplexPath(100, 500);
 		Files.write(path, data);
 		Files.write(index, index(data, 16, 16, 33, 169, 0, 169));
-		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.MapData map = PathData.MapData.load(gzSource(path, index, data));
 
 		assertEquals(PathData.SearchStatus.NO_PATH,
 				map.searchAStar(0.25f, 0.25f, 1, 1.25f, 0.25f, 5, 10, (x, y) -> Float.NaN, null).status());
+	}
+
+	private static PathData.PathFiles gzSource(Path path, Path index, byte[] data) throws Exception {
+		try (GZIPOutputStream output = new GZIPOutputStream(Files.newOutputStream(path))) {
+			output.write(data);
+		}
+		return new PathData.PathFiles(path.toFile(), index.toFile());
 	}
 
 	private static byte[] flatLinkedPath() {
