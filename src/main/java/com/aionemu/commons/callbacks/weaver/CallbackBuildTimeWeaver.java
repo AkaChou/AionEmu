@@ -8,6 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
@@ -26,6 +27,10 @@ public final class CallbackBuildTimeWeaver {
 		new ObjectCallbackEnhancer(),
 		new GlobalCallbackEnhancer()
 	};
+	private static final byte[] OBJECT_CALLBACK_DESCRIPTOR =
+		"Lcom/aionemu/commons/callbacks/metadata/ObjectCallback;".getBytes(StandardCharsets.ISO_8859_1);
+	private static final byte[] GLOBAL_CALLBACK_DESCRIPTOR =
+		"Lcom/aionemu/commons/callbacks/metadata/GlobalCallback;".getBytes(StandardCharsets.ISO_8859_1);
 
 	private CallbackBuildTimeWeaver() {
 	}
@@ -82,6 +87,9 @@ public final class CallbackBuildTimeWeaver {
 	 * @throws Exception 织入失败时抛出 / When weaving fails
 	 */
 	public static byte[] weaveClassBytes(ClassLoader loader, byte[] classBytes) throws Exception {
+		if (!containsCallbackDescriptor(classBytes)) {
+			return classBytes;
+		}
 		if (isAlreadyWoven(loader, classBytes)) {
 			return classBytes;
 		}
@@ -94,6 +102,41 @@ public final class CallbackBuildTimeWeaver {
 			}
 		}
 		return wovenBytes;
+	}
+
+	/**
+	 * 通过 class 常量池中的注解描述符筛选候选类，避免对普通类创建 Javassist 模型。
+	 * Uses annotation descriptors in the class constant pool to skip ordinary classes before creating Javassist models.
+	 *
+	 * @param classBytes class 字节码 / class bytecode
+	 * @return 可能包含回调注解返回 true / true when callback metadata may be present
+	 */
+	private static boolean containsCallbackDescriptor(byte[] classBytes) {
+		return contains(classBytes, OBJECT_CALLBACK_DESCRIPTOR) || contains(classBytes, GLOBAL_CALLBACK_DESCRIPTOR);
+	}
+
+	/**
+	 * 在 class 字节数组中查找固定字节序列。
+	 * Finds a fixed byte sequence in a class byte array.
+	 *
+	 * @param source 源字节数组 / source bytes
+	 * @param target 待查找字节序列 / byte sequence to find
+	 * @return 找到时返回 true / true when found
+	 */
+	private static boolean contains(byte[] source, byte[] target) {
+		if (target.length == 0 || source.length < target.length) {
+			return false;
+		}
+		for (int sourceIndex = 0; sourceIndex <= source.length - target.length; sourceIndex++) {
+			int targetIndex = 0;
+			while (targetIndex < target.length && source[sourceIndex + targetIndex] == target[targetIndex]) {
+				targetIndex++;
+			}
+			if (targetIndex == target.length) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

@@ -151,6 +151,7 @@ AION_HOME=/path/to/runtime ./aion/start-silent.sh
 | `AION_STOP_TIMEOUT` | `30` | 停止超时（秒），超时后可选强制结束 |
 | `AION_FORCE_STOP` | `true` | 超过 `AION_STOP_TIMEOUT` 后是否强制结束 |
 | `AION_PRESERVE_CONFIG` | `false` | 执行 `package.sh` 时，为 `true` 则保留现有运行配置 |
+| `MAVEN_THREADS` | `1C` | `package.sh` 和 `re-package.sh` 使用的 Maven 并行线程数（设为 `1` 可关闭 Reactor 并行） |
 
 ## 网络端口
 
@@ -207,7 +208,8 @@ mvn package
 也可以使用打包脚本一步完成构建和部署：
 
 ```bash
-./package.sh                              # 默认：clean + 跳过测试 + package + 部署
+./package.sh                              # 默认：clean + 跳过测试 + package + 部署，使用 1C Maven 线程
+MAVEN_THREADS=2C ./package.sh             # 每个可用 CPU 核心使用两个 Maven 线程
 ./package.sh -DskipTests=false package    # 打包时同时运行测试
 ./re-package.sh                           # 部署时保留现有运行配置
 ```

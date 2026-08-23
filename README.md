@@ -151,6 +151,7 @@ Service enablement is configured in `src/main/resources/application.yml` (bundle
 | `AION_STOP_TIMEOUT` | `30` | Stop timeout before force-kill in seconds |
 | `AION_FORCE_STOP` | `true` | Whether to force-kill after `AION_STOP_TIMEOUT` |
 | `AION_PRESERVE_CONFIG` | `false` | Preserve existing runtime config during `package.sh` when `true` |
+| `MAVEN_THREADS` | `1C` | Maven parallel build threads used by `package.sh` and `re-package.sh` (`1` disables reactor parallelism) |
 
 ## Network Endpoints
 
@@ -207,7 +208,8 @@ mvn package
 Or use the packaging wrapper to build and deploy in one step:
 
 ```bash
-./package.sh                              # default: clean + skip tests + package + deploy
+./package.sh                              # default: clean + skip tests + package + deploy, using 1C Maven threads
+MAVEN_THREADS=2C ./package.sh             # use two Maven threads per available CPU core
 ./package.sh -DskipTests=false package    # run tests during packaging
 ./re-package.sh                           # deploy while preserving existing runtime config
 ```
