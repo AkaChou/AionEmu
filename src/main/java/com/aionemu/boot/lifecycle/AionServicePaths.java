@@ -41,8 +41,8 @@ class AionServicePaths {
     }
 
     /**
-     * 配置游戏服日志、配置、数据、地理与缓存目录。
-     * Configures game-server logging, config, data, geo, and cache directories.
+     * 配置游戏服日志、配置、数据与地理目录。
+     * Configures game-server logging, config, data, and geo directories.
      */
     void configureGame() {
         configureLogging();
@@ -50,7 +50,6 @@ class AionServicePaths {
         configureGameData("aion.game.data.dir", "data", "aion/data");
         configureGameData("aion.game.definitions.dir", "definitions", "aion/definitions");
         configureGeoData("aion.game.geo.dir", "geo", "aion/geo");
-        configureDirectory("aion.game.cache.dir", "game/cache");
     }
 
     /**
@@ -172,22 +171,6 @@ class AionServicePaths {
             return true;
         }
         return false;
-    }
-
-    /**
-     * 配置目录属性并确保目录存在。
-     * Configures a directory property and ensures the directory exists.
-     *
-     * @param property 系统属性名 / system property name
-     * @param defaultPath 默认目录路径 / default directory path
-     */
-    private void configureDirectory(String property, String defaultPath) {
-        configure(property, defaultPath);
-        try {
-            Files.createDirectories(Path.of(RUNTIME_PROPERTIES.get(property)));
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to prepare runtime directory " + RUNTIME_PROPERTIES.get(property), e);
-        }
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.aionemu.boot.lifecycle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
@@ -25,7 +26,6 @@ class AionServicePathsTest {
         System.clearProperty("aion.game.data.dir");
         System.clearProperty("aion.game.definitions.dir");
         System.clearProperty("aion.game.geo.dir");
-        System.clearProperty("aion.game.cache.dir");
     }
 
     @Test
@@ -42,7 +42,6 @@ class AionServicePathsTest {
         assertEquals(aionHome.resolve("data").toString(), System.getProperty("aion.game.data.dir"));
         assertEquals(aionHome.resolve("definitions").toString(), System.getProperty("aion.game.definitions.dir"));
         assertEquals(aionHome.resolve("geo").toString(), System.getProperty("aion.game.geo.dir"));
-        assertEquals(aionHome.resolve("game/cache").toString(), System.getProperty("aion.game.cache.dir"));
         assertEquals(aionHome.resolve("log/logback-spring.xml").toString(), System.getProperty("aion.logging.config"));
 
         assertTrue(aionHome.resolve("log/logback-spring.xml").toFile().isFile());
@@ -50,7 +49,8 @@ class AionServicePathsTest {
         assertTrue(aionHome.resolve("config/chat/chatserver.properties").toFile().isFile());
         assertTrue(aionHome.resolve("config/main/gameserver.properties").toFile().isFile());
         assertTrue(aionHome.resolve("data/static_data/items/item/item_template_100000001_100601382.xml").toFile().isFile());
-        assertTrue(aionHome.resolve("game/cache").toFile().isDirectory());
+        assertFalse(java.nio.file.Files.exists(aionHome.resolve("game/cache")),
+            "no derived cache directory should be created");
     }
 
     @Test

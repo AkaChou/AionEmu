@@ -142,14 +142,6 @@ public class Config {
 		return new File(geoDir, stripGeoPrefix(relativePath));
 	}
 
-	public static File cacheFile(String relativePath) {
-		String cacheDir = System.getProperty("aion.game.cache.dir");
-		if (cacheDir == null) {
-			return new File(relativePath);
-		}
-		return new File(cacheDir, stripCachePrefix(relativePath));
-	}
-
 	private static String stripDataPrefix(String path) {
 		String normalized = path.replace('\\', '/');
 		if (normalized.startsWith("./data/")) {
@@ -168,17 +160,6 @@ public class Config {
 		}
 		if (normalized.startsWith("geo/")) {
 			return normalized.substring("geo/".length());
-		}
-		return normalized;
-	}
-
-	private static String stripCachePrefix(String path) {
-		String normalized = path.replace('\\', '/');
-		if (normalized.startsWith("./cache/")) {
-			return normalized.substring("./cache/".length());
-		}
-		if (normalized.startsWith("cache/")) {
-			return normalized.substring("cache/".length());
 		}
 		return normalized;
 	}

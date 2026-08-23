@@ -40,12 +40,10 @@ class GameServerTest {
 		String oldConfigDir = System.getProperty("aion.config.dir");
 		String oldDataDir = System.getProperty("aion.game.data.dir");
 		String oldDefinitionsDir = System.getProperty("aion.game.definitions.dir");
-		String oldCacheDir = System.getProperty("aion.game.cache.dir");
 		try {
 			System.setProperty("aion.config.dir", "AL-Game/config");
 			System.setProperty("aion.game.data.dir", "AL-Game/data");
 			System.setProperty("aion.game.definitions.dir", "AL-Game/definitions");
-			System.setProperty("aion.game.cache.dir", "AL-Game/cache");
 
 			assertEquals(new File("AL-Game/config/administration/commands.properties").getCanonicalFile(),
 				Config.configFile("administration/commands.properties").getCanonicalFile());
@@ -55,13 +53,10 @@ class GameServerTest {
 				Config.dataFile("data/static_data/items/item_templates.xml").getCanonicalFile());
 			assertEquals(new File("AL-Game/definitions/compact/world/fly_path.xml").getCanonicalFile(),
 				Config.definitionFile("definitions/compact/world/fly_path.xml").getCanonicalFile());
-			assertEquals(new File("AL-Game/cache/runtime-index.xml").getCanonicalFile(),
-				Config.cacheFile("./cache/runtime-index.xml").getCanonicalFile());
 		} finally {
 			restoreProperty("aion.config.dir", oldConfigDir);
 			restoreProperty("aion.game.data.dir", oldDataDir);
 			restoreProperty("aion.game.definitions.dir", oldDefinitionsDir);
-			restoreProperty("aion.game.cache.dir", oldCacheDir);
 		}
 	}
 
