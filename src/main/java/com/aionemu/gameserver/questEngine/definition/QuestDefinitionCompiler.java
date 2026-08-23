@@ -493,27 +493,65 @@ public final class QuestDefinitionCompiler {
 
 	private static void validateTransitionConflicts(List<QuestTransition> transitions,
 			Map<String, QuestNode> nodes) {
-		for (int left = 0; left < transitions.size(); left++) {
-			QuestTransition a = transitions.get(left);
-			for (int right = left + 1; right < transitions.size(); right++) {
-				QuestTransition b = transitions.get(right);
-				if (!QuestEvent.overlaps(a.event(), b.event())) {
-					continue;
-				}
-				if (QuestEvent.hasDeterministicPrecedence(a.event(), b.event())) {
-					continue;
-				}
-				if (sourceNodesAreMutuallyExclusive(a, b, nodes)) {
-					continue;
-				}
-				if (mutuallyExclusive(a.conditions(), b.conditions())) {
-					continue;
-				}
-				if (!a.hasExplicitPriority() || !b.hasExplicitPriority() || a.priority().equals(b.priority())) {
-					fail("AMBIGUOUS_TRANSITION", "same event has overlapping transitions without unique priorities: "
-						+ a.event().type());
+		// 按事件具体类型分桶：QuestEvent.overlaps 仅同型（及 KillNpc/KillNpcSet 跨型）可真，
+		// record 的 equals 对不同类型恒为 false，因此跨桶对不可能冲突，无需比较。
+		// 6200 个任务编译时 O(T²) 全对扫描是最大热点（JFR），分桶后只比桶内与 Kill 跨桶对。
+		// Bucket by concrete event type: QuestEvent.overlaps can only be true for same-type pairs
+		// (plus the KillNpc/KillNpcSet cross pair); record equals is always false across types, so
+		// cross-bucket pairs cannot conflict. The full O(T²) scan was the top compile hotspot (JFR).
+		Map<Class<? extends QuestEvent>, List<QuestTransition>> buckets = new LinkedHashMap<>();
+		for (QuestTransition transition : transitions) {
+			buckets.computeIfAbsent(transition.event().getClass(), ignored -> new ArrayList<>())
+				.add(transition);
+		}
+		List<List<QuestTransition>> killBuckets = List.of(
+			buckets.getOrDefault(QuestEvent.KillNpc.class, List.of()),
+			buckets.getOrDefault(QuestEvent.KillNpcSet.class, List.of()));
+		for (List<QuestTransition> bucket : buckets.values()) {
+			validateBucketPairwise(bucket, nodes);
+		}
+		// Kill 单/集合跨型配对：overlaps 是唯一可能跨类型为真的情形。
+		// Kill single/set cross-bucket pairs: the only case overlaps may be true across types.
+		for (int left = 0; left < killBuckets.size(); left++) {
+			for (int right = left + 1; right < killBuckets.size(); right++) {
+				for (QuestTransition a : killBuckets.get(left)) {
+					for (QuestTransition b : killBuckets.get(right)) {
+						checkConflict(a, b, nodes);
+					}
 				}
 			}
+		}
+	}
+
+	/**
+	 * 对同一事件类型的 transition 两两执行冲突校验。
+	 * Runs pairwise conflict checks within one event-type bucket.
+	 */
+	private static void validateBucketPairwise(List<QuestTransition> bucket, Map<String, QuestNode> nodes) {
+		for (int left = 0; left < bucket.size(); left++) {
+			QuestTransition a = bucket.get(left);
+			for (int right = left + 1; right < bucket.size(); right++) {
+				checkConflict(a, bucket.get(right), nodes);
+			}
+		}
+	}
+
+	private static void checkConflict(QuestTransition a, QuestTransition b, Map<String, QuestNode> nodes) {
+		if (!QuestEvent.overlaps(a.event(), b.event())) {
+			return;
+		}
+		if (QuestEvent.hasDeterministicPrecedence(a.event(), b.event())) {
+			return;
+		}
+		if (sourceNodesAreMutuallyExclusive(a, b, nodes)) {
+			return;
+		}
+		if (mutuallyExclusive(a.conditions(), b.conditions())) {
+			return;
+		}
+		if (!a.hasExplicitPriority() || !b.hasExplicitPriority() || a.priority().equals(b.priority())) {
+			fail("AMBIGUOUS_TRANSITION", "same event has overlapping transitions without unique priorities: "
+				+ a.event().type());
 		}
 	}
 

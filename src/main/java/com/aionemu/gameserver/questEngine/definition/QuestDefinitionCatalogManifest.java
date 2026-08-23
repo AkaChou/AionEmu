@@ -208,8 +208,15 @@ public final class QuestDefinitionCatalogManifest {
 
 	private static List<QuestCatalogEntry> compileEntries(List<Entry> entries, ResourceOpener resourceOpener,
 			Schema definitionSchema) {
+		// 编译池刻意保持小并发（3）：预加载与静态数据加载同窗口抢核，JFR 显示 8 线程编译
+		// 会挤占 static-data-loader 拖慢整体；quest 编译无截止时间，让路后剩余工作可在
+		// geo/world 窗口继续，总时间反而更短。
+		// The compile pool deliberately stays small (3): the preload competes with static-data
+		// loading for cores, and JFR showed 8 compile threads starving the static-data loaders.
+		// Quest compilation has no deadline; yielding lets the remainder finish during the
+		// geo/world window, shortening overall startup.
 		int processors = java.lang.management.ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
-		ExecutorService pool = Executors.newFixedThreadPool(Math.min(processors, 8));
+		ExecutorService pool = Executors.newFixedThreadPool(Math.min(processors, 3));
 		try {
 			List<Future<QuestCatalogEntry>> futures = new ArrayList<>(entries.size());
 			for (Entry entry : entries) {
@@ -299,8 +306,10 @@ public final class QuestDefinitionCatalogManifest {
 	 */
 	static List<QuestCatalogEntry> compileResourceEntries(List<String> resources, ClassLoader loader,
 			String missingCode, String readFailedCode) {
+		// 与 compileEntries 同理：小并发避免与静态数据加载抢核（见其注释）。
+		// Same rationale as compileEntries: small concurrency avoids starving static-data loaders.
 		int processors = java.lang.management.ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
-		ExecutorService pool = Executors.newFixedThreadPool(Math.min(processors, 8));
+		ExecutorService pool = Executors.newFixedThreadPool(Math.min(processors, 3));
 		try {
 			List<Future<QuestCatalogEntry>> futures = new ArrayList<>(resources.size());
 			for (String resource : resources) {
