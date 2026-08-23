@@ -26,12 +26,6 @@ public class HTMLConfig {
 	@Property(key = "gameserver.html.root", defaultValue = "./data/static_data/HTML/")
 	public static String HTML_ROOT;
 	/**
-	 * HTML 缓存文件路径。
-	 * HTML cache file path.
-	 */
-	@Property(key = "gameserver.html.cache.file", defaultValue = "./cache/html.cache")
-	public static String HTML_CACHE_FILE;
-	/**
 	 * HTML 文件编码。
 	 * HTML file encoding.
 	 */

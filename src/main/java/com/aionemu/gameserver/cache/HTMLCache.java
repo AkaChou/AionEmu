@@ -3,14 +3,9 @@ package com.aionemu.gameserver.cache;
 
 import com.aionemu.boot.i18n.I18n;
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -123,100 +118,42 @@ public final class HTMLCache {
 	}
 
 	/**
-	 * 重新加载缓存；可选删除磁盘缓存文件后从目录重建。
-	 * Reloads cache; optionally deletes the on-disk cache file and rebuilds from directories.
+	 * 重新加载缓存：直接解析 HTML 源目录并压缩空白。
+	 * 源 HTML 体量很小（数百 KB），序列化派生缓存的收益可忽略且缺少失效指纹，
+	 * 改为始终直读源文件，与掉落/路径数据的"不落盘派生缓存"策略一致。
+	 * Reloads cache: parses the HTML source directory directly with whitespace compaction.
+	 * The source HTML is tiny (hundreds of KB), so a serialized derived cache saves nothing and
+	 * lacks an invalidation fingerprint; always read sources, matching the drop/path-data policy
+	 * of keeping no on-disk derived cache.
 	 *
-	 * @param deleteCacheFile 是否删除磁盘缓存 / whether to delete on-disk cache
+	 * @param deleteCacheFile 兼容保留参数，已无磁盘缓存可删 / kept for compatibility; no disk cache remains
 	 */
-	@SuppressWarnings("unchecked")
 	public synchronized void reload(boolean deleteCacheFile) {
 		cache.clear();
 		loadedFiles = 0;
 		size = 0;
 
-		final File cacheFile = getCacheFile();
-
-		if (deleteCacheFile && cacheFile.exists()) {
-			log.info(I18n.get("log.a5092abd3e6f"));
-
-			cacheFile.delete();
-		}
 		log.info(I18n.get("log.c7a3e61e3ad9"));
 
-		if (cacheFile.exists()) {
-			log.info(I18n.get("log.f60605c6b6c2"));
+		parseDir(htmlRoot());
 
-			ObjectInputStream ois = null;
+		final StringBuilder sb = new StringBuilder(8192);
+
+		for (Entry<String, String> entry : cache.entrySet()) {
 			try {
-				ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(getCacheFile())));
+				final String oldHtml = entry.getValue();
+				final String newHtml = compactHtml(sb, oldHtml);
 
-				cache = (Map<String, String>) ois.readObject();
+				size -= oldHtml.length();
+				size += newHtml.length();
 
-				for (String html : cache.values()) {
-					loadedFiles++;
-					size += html.length();
-				}
-			} catch (Exception e) {
-				log.warn(I18n.get("log.da39a3ee5e6b", e));
-
-				reload(true);
-				return;
-			} finally {
-				IOUtils.closeQuietly(ois);
+				entry.setValue(newHtml);
+			} catch (RuntimeException e) {
+				log.warn(I18n.get("log.948e032dffdf", entry.getKey(), e));
 			}
-		} else {
-			parseDir(htmlRoot());
 		}
 
 		log.info(String.valueOf(this));
-
-		if (cacheFile.exists()) {
-			log.info(I18n.get("log.a9b5faea9e61"));
-		} else {
-			log.info(I18n.get("log.5582d814a952"));
-
-			final StringBuilder sb = new StringBuilder(8192);
-
-			for (Entry<String, String> entry : cache.entrySet()) {
-				try {
-					final String oldHtml = entry.getValue();
-					final String newHtml = compactHtml(sb, oldHtml);
-
-					size -= oldHtml.length();
-					size += newHtml.length();
-
-					entry.setValue(newHtml);
-				} catch (RuntimeException e) {
-					log.warn(I18n.get("log.948e032dffdf", entry.getKey(), e));
-				}
-			}
-			log.info(String.valueOf(this));
-		}
-
-		if (!cacheFile.exists()) {
-			log.info(I18n.get("log.6a3fffecfa57"));
-
-			ObjectOutputStream oos = null;
-			try {
-				oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(getCacheFile())));
-
-				oos.writeObject(cache);
-			} catch (IOException e) {
-				log.warn(I18n.get("log.da39a3ee5e6b", e));
-			} finally {
-				IOUtils.closeQuietly(oos);
-			}
-		}
-	}
-
-	/**
-	 * 磁盘缓存文件路径。
-	 * On-disk cache file path.
-	 *
-	 * @return 缓存文件 / cache file
-	 */
-	private File getCacheFile() {
-		return Config.cacheFile(HTMLConfig.HTML_CACHE_FILE + ".i18n");
 	}
 
 	/**
