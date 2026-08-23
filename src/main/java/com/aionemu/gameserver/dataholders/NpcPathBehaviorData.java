@@ -14,6 +14,14 @@ public final class NpcPathBehaviorData {
 		this.behaviors = Map.copyOf(behaviors);
 	}
 
+	/**
+	 * 返回按 NPC ID 索引的寻路行为只读视图，供合并加载复用扫描结果。
+	 * Read-only view of path behaviors by NPC id, letting merged loads reuse the scan result.
+	 */
+	public Map<Integer, Behavior> behaviors() {
+		return behaviors;
+	}
+
 	public Behavior get(int npcId) {
 		return behaviors.get(npcId);
 	}

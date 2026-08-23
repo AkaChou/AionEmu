@@ -91,6 +91,22 @@ final class RetailAiDefinitionLoader {
 	static RetailAiData load(File patternsDirectory, File mappingsFile, File stringsFile, File areasFile,
 			File conditionSpawnsFile, File skillCategoriesFile, File locationAliasesFile, File directPortalsFile,
 			File npcScoresFile, File groupControllersFile, File npcPartiesFile, File dynamicAreasFile) {
+		return load(patternsDirectory, mappingsFile, stringsFile, areasFile, conditionSpawnsFile,
+			skillCategoriesFile, locationAliasesFile, directPortalsFile, npcScoresFile, groupControllersFile,
+			npcPartiesFile, dynamicAreasFile, null);
+	}
+
+	/**
+	 * 完整加载；提供 {@code npcMappingsSource} 时复用外部已提交的 npc-ai.xml 合并扫描
+	 * （同时产出 NPC 映射与寻路行为），避免同一 27MB 文件被重复解析。
+	 * Full load; with {@code npcMappingsSource} the externally submitted merged npc-ai.xml scan is
+	 * reused (producing both NPC mappings and path behaviors), avoiding a duplicate parse of the
+	 * same 27MB file.
+	 */
+	static RetailAiData load(File patternsDirectory, File mappingsFile, File stringsFile, File areasFile,
+			File conditionSpawnsFile, File skillCategoriesFile, File locationAliasesFile, File directPortalsFile,
+			File npcScoresFile, File groupControllersFile, File npcPartiesFile, File dynamicAreasFile,
+			java.util.concurrent.CompletableFuture<NpcMappings> npcMappingsSource) {
 		// 各源文件互不依赖，提交静态数据专用线程池并行加载；仅 NPC 队伍成员校验依赖
 		// mappings 结果，在全部 join 后执行。loadPatterns 内部按文件名排序后逐文件合并，
 		// 仍保持确定性输出。
@@ -104,8 +120,14 @@ final class RetailAiDefinitionLoader {
 			java.util.concurrent.CompletableFuture.supplyAsync(() -> loadPatterns(patternsDirectory),
 				XmlDataLoader.staticDataExecutor());
 		java.util.concurrent.CompletableFuture<Map<Integer, Npc>> mappingsFuture =
-			java.util.concurrent.CompletableFuture.supplyAsync(() -> loadMappings(mappingsFile),
-				XmlDataLoader.staticDataExecutor());
+			npcMappingsSource != null
+				// npc-ai.xml 已由外部合并扫描解析（同时产出寻路行为）；直接取 NPC 映射
+				// 部分，跳过对同一 27MB 文件的重复解析。
+				// npc-ai.xml was already parsed by the external merged scan (which also yields path
+				// behaviors); take the NPC-mapping half and skip re-parsing the same 27MB file.
+				? npcMappingsSource.thenApply(NpcMappings::npcs)
+				: java.util.concurrent.CompletableFuture.supplyAsync(
+					() -> loadMappings(mappingsFile).npcs(), XmlDataLoader.staticDataExecutor());
 		java.util.concurrent.CompletableFuture<Map<String, Integer>> stringsFuture =
 			java.util.concurrent.CompletableFuture.supplyAsync(() -> loadStrings(stringsFile),
 				XmlDataLoader.staticDataExecutor());
@@ -574,8 +596,22 @@ final class RetailAiDefinitionLoader {
 		}
 	}
 
-	private static Map<Integer, Npc> loadMappings(File file) {
+	/**
+	 * npc-ai.xml 单次扫描的双产出：零售 AI NPC 映射与寻路行为映射。两个消费方
+	 * （RetailAiData 与 NpcPathBehaviorData）读取的属性完全重叠，合并扫描消除对
+	 * 27MB 文件的重复解析。
+	 * Dual result of a single npc-ai.xml scan: retail AI NPC mappings and path behaviors. The two
+	 * consumers (RetailAiData and NpcPathBehaviorData) read fully overlapping attributes, so a
+	 * merged scan removes the duplicate parse of the 27MB file.
+	 */
+	record NpcMappings(Map<Integer, Npc> npcs,
+			Map<Integer, com.aionemu.gameserver.dataholders.NpcPathBehaviorData.Behavior> pathBehaviors) {
+	}
+
+	static NpcMappings loadMappings(File file) {
 		Map<Integer, Npc> npcs = new HashMap<>();
+		Map<Integer, com.aionemu.gameserver.dataholders.NpcPathBehaviorData.Behavior> pathBehaviors =
+			new HashMap<>();
 		XMLInputFactory factory = xmlFactory();
 		try (FileInputStream stream = new FileInputStream(file)) {
 			XMLStreamReader reader = factory.createXMLStreamReader(stream);
@@ -583,6 +619,13 @@ final class RetailAiDefinitionLoader {
 				if (reader.next() == XMLStreamConstants.START_ELEMENT && reader.getLocalName().equals("npc")) {
 					int id = Integer.parseInt(attribute(reader, "id"));
 					String ai = attribute(reader, "ai");
+					pathBehaviors.put(id, new com.aionemu.gameserver.dataholders.NpcPathBehaviorData.Behavior(
+						attribute(reader, "max_chase_time"),
+						com.aionemu.gameserver.dataholders.NpcPathBehaviorData.PathfindFailReaction.valueOf(
+							attribute(reader, "react_to_pathfind_fail", "return_to_sp").toUpperCase(Locale.ROOT)),
+						attribute(reader, "move_type_return", "walk"),
+						Integer.parseInt(attribute(reader, "move_speed_return", "150")),
+						Integer.parseInt(attribute(reader, "decrease_sensory_range_return", "50"))));
 					if (ai != null && !ai.isBlank()) {
 						npcs.put(id, new Npc(id, attribute(reader, "name"), ai,
 							parseInt(attribute(reader, "model_scale", "100")),
@@ -598,7 +641,7 @@ final class RetailAiDefinitionLoader {
 				}
 			}
 			reader.close();
-			return npcs;
+			return new NpcMappings(npcs, pathBehaviors);
 		} catch (Exception e) {
 			throw new IllegalStateException("Failed to load retail NPC AI mappings from " + file.getPath(), e);
 		}

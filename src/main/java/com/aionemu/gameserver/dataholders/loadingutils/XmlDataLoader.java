@@ -62,6 +62,11 @@ import java.util.function.Supplier;
 @Slf4j
 public class XmlDataLoader {
 
+	/** 最近一次 npc-ai.xml 合并扫描任务，供寻路行为与零售 AI 两个加载路径复用。
+	 * Latest merged npc-ai.xml scan future, reused by both the path-behavior and retail-AI load paths.
+	 */
+	private CompletableFuture<RetailAiDefinitionLoader.NpcMappings> npcMappingsFuture;
+
 	private static volatile ObjectProvider<XmlDataLoader> instanceProvider;
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
 	private static final String ITEM_DATA_DIR = "./data/static_data/items";
@@ -135,18 +140,22 @@ public class XmlDataLoader {
 	 * <p>分片/紧凑定义加载存在"池任务内部再提交子任务并 join"的嵌套结构；放在 commonPool
 	 * 上会触发 managedBlock 补偿线程的丢失唤醒竞态（实测 JDK 26 下主线程 join 永久挂起、
 	 * 全部 worker 空闲），因此使用独立定长池。当前嵌套父任务共 5 个（物品、技能、NPC 模板、
-	 * NPC 掉落、零售 AI）；固定线程数必须始终大于父任务数，否则全部 worker 都可能成为
-	 * 等待自身子任务的父任务而死锁——新增嵌套父任务前务必核对这一上限。
+	 * NPC 掉落、零售 AI）；每个父任务在 join 子任务期间会占住一个线程不干活（停车线程），
+	 * 因此池大小 = CPU 数 + 嵌套父任务数：CPU 数保证实际并行解析能力，额外线程吸收停车
+	 * 父任务。新增嵌套父任务时必须同步上调此公式，否则停车线程挤占干活线程导致整体变慢。
 	 * Shard/compact loads nest "submit children and join them" inside pool tasks; on the commonPool this
 	 * exposed a managedBlock lost-wakeup race (observed on JDK 26: main joined forever while all workers
 	 * idled), so a dedicated fixed pool is used instead. There are currently 5 nested parent tasks
-	 * (items, skills, NPC templates, NPC drops, retail AI); the fixed size must always exceed the
-	 * parent count or every worker could become a parent waiting on its own queued children and
-	 * deadlock — re-check this bound before adding another nested parent.
+	 * (items, skills, NPC templates, NPC drops, retail AI); each parent parks one thread while joining
+	 * its children, so pool size = CPU count + nested parent count: the CPU count preserves actual
+	 * parse parallelism and the extra threads absorb parked parents. Raise this formula whenever a new
+	 * nested parent is added, or parked parents will starve the working threads and slow everything down.
 	 */
+	private static final int NESTED_PARENT_TASKS = 5;
+
 	private static final java.util.concurrent.ExecutorService STATIC_DATA_POOL =
 		java.util.concurrent.Executors.newFixedThreadPool(
-			Math.max(4, Runtime.getRuntime().availableProcessors()), runnable -> {
+			Runtime.getRuntime().availableProcessors() + NESTED_PARENT_TASKS, runnable -> {
 				Thread thread = new Thread(runnable, "static-data-loader");
 				thread.setDaemon(true);
 				return thread;
@@ -234,10 +243,16 @@ public class XmlDataLoader {
 		CompletableFuture<NpcSkillData> npcSkillDataFuture = timedAsync("NpcSkillData", this::loadNpcSkillData,
 			phaseTimings);
 		CompletableFuture<AIData> aiDataFuture = timedAsync("AIData", this::loadAiData, phaseTimings);
+		// npc-ai.xml（27MB）同时是寻路行为与零售 AI NPC 映射的源文件；寻路行为任务提交
+		// 单次合并扫描（双产出），零售 AI 任务复用其 Future 跳过对同一文件的重复解析
+		// （见 RetailAiDefinitionLoader.loadMappings）。
+		// npc-ai.xml (27MB) feeds both path behaviors and retail AI NPC mappings; the path-behavior
+		// task submits one merged scan (dual result) and the retail-AI task reuses that future instead
+		// of parsing the same file again (see RetailAiDefinitionLoader.loadMappings).
 		CompletableFuture<NpcPathBehaviorData> npcPathBehaviorDataFuture = timedAsync("NpcPathBehaviorData",
 			this::loadNpcPathBehaviorData, phaseTimings);
-		CompletableFuture<RetailAiData> retailAiDataFuture = timedAsync("RetailAiData", this::loadRetailAiData,
-			phaseTimings);
+		CompletableFuture<RetailAiData> retailAiDataFuture = timedAsync("RetailAiData",
+			() -> loadRetailAiData(npcMappingsFuture), phaseTimings);
 		CompletableFuture<WalkerData> waypointDataFuture = timedAsync("RetailAiWaypoints", this::loadRetailAiWaypointData,
 			phaseTimings);
 		CompletableFuture<WindstreamData> windstreamDataFuture = timedAsync("WindstreamData", this::loadWindstreamData,
@@ -672,19 +687,45 @@ public class XmlDataLoader {
 	}
 
 	public NpcPathBehaviorData loadNpcPathBehaviorData() {
-		NpcPathBehaviorData data = NpcPathBehaviorDefinitionLoader.load(Config.definitionFile(NPC_PATH_BEHAVIOR_FILE));
+		// 提交 npc-ai.xml 单次合并扫描并缓存 Future；零售 AI 加载（loadRetailAiData）复用
+		// 同一结果，避免 27MB 文件被重复解析。
+		// Submits the merged npc-ai.xml scan once and caches the future; the retail-AI load
+		// (loadRetailAiData) reuses the same result so the 27MB file is parsed only once.
+		npcMappingsFuture = CompletableFuture.supplyAsync(
+			() -> RetailAiDefinitionLoader.loadMappings(Config.definitionFile(NPC_PATH_BEHAVIOR_FILE)),
+			staticDataExecutor());
+		NpcPathBehaviorData data = new NpcPathBehaviorData(npcMappingsFuture.join().pathBehaviors());
 		log.info(I18n.get("log.static_data.npc_paths_loaded", data.size()));
 		return data;
 	}
 
 	public RetailAiData loadRetailAiData() {
+		// 独立调用（如测试/GM 重载）：自行提交 npc-ai.xml 合并扫描。
+		// Standalone call (tests / GM reload): submits its own merged npc-ai.xml scan.
+		npcMappingsFuture = CompletableFuture.supplyAsync(
+			() -> RetailAiDefinitionLoader.loadMappings(Config.definitionFile(NPC_PATH_BEHAVIOR_FILE)),
+			staticDataExecutor());
+		return loadRetailAiData(npcMappingsFuture);
+	}
+
+	/**
+	 * 加载零售 AI 数据；提供 {@code npcMappingsSource} 时复用已提交的 npc-ai.xml 合并
+	 * 扫描（同时产出 NPC 映射与寻路行为），避免 27MB 文件被重复读取。
+	 * Loads retail AI data; with {@code npcMappingsSource} the already-submitted merged npc-ai.xml
+	 * scan (producing both NPC mappings and path behaviors) is reused, avoiding a second read of
+	 * the 27MB file.
+	 *
+	 * @param npcMappingsSource 已提交的合并扫描任务，可为 null / submitted merged scan, may be null
+	 * @return 零售 AI 数据 / retail AI data
+	 */
+	public RetailAiData loadRetailAiData(CompletableFuture<RetailAiDefinitionLoader.NpcMappings> npcMappingsSource) {
 		RetailAiData data = RetailAiDefinitionLoader.load(Config.definitionFile(AI_DEFINITIONS_DIR),
 			Config.definitionFile(RETAIL_NPC_AI_MAPPINGS_FILE), Config.definitionFile(RETAIL_AI_STRINGS_FILE),
 			Config.definitionFile(RETAIL_AI_AREAS_FILE), Config.definitionFile(RETAIL_CONDITION_SPAWNS_FILE),
 			Config.definitionFile(RETAIL_SKILL_CATEGORIES_FILE), Config.definitionFile(RETAIL_AI_LOCATION_ALIASES_FILE),
 			Config.definitionFile(RETAIL_DIRECT_PORTALS_FILE), Config.definitionFile(RETAIL_NPC_SCORES_FILE),
 			Config.definitionFile(RETAIL_GROUP_CONTROLLERS_FILE), Config.definitionFile(RETAIL_NPC_PARTIES_FILE),
-			Config.definitionFile(RETAIL_DYNAMIC_AREAS_FILE));
+			Config.definitionFile(RETAIL_DYNAMIC_AREAS_FILE), npcMappingsSource);
 		log.info(I18n.get("log.static_data.condition_spawns_loaded", data.conditionSpawnCount()));
 		log.info(I18n.get("log.static_data.npc_parties_loaded", data.npcPartyCount(), data.npcPartyMemberCount()));
 		log.info(I18n.get("log.static_data.dynamic_areas_loaded", data.dynamicAreaCount()));
