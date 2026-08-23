@@ -45,6 +45,7 @@ public final class GameFeatureServices implements DisposableBean {
 
     /** NPC 喊话服务提供者 / NPC-shouts service provider. */
     private static volatile ObjectProvider<NpcShoutsService> npcShoutsServiceProvider;
+    private static volatile NpcShoutsService resolvedNpcShoutsService;
     /** 争议之地服务提供者 / Dispute-land service provider. */
     private static volatile ObjectProvider<DisputeLandService> disputeLandServiceProvider;
     /** 钢铁之战服务提供者 / Dredgion service provider. */
@@ -66,6 +67,7 @@ public final class GameFeatureServices implements DisposableBean {
     private static volatile SiegeService resolvedSiegeService;
     /** 基地服务提供者 / Base service provider. */
     private static volatile ObjectProvider<BaseService> baseServiceProvider;
+    private static volatile BaseService resolvedBaseService;
     /** A-Station 服务提供者 / A-Station service provider */
     private static volatile ObjectProvider<AStationService> aStationServiceProvider;
     /** F2P 服务提供者 / F2P service provider. */
@@ -88,6 +90,7 @@ public final class GameFeatureServices implements DisposableBean {
     private static volatile ObjectProvider<BanditService> banditServiceProvider;
     /** 静态门服务提供者 / Static-door service provider. */
     private static volatile ObjectProvider<StaticDoorService> staticDoorServiceProvider;
+    private static volatile StaticDoorService resolvedStaticDoorService;
     /** 宠物服务提供者 / Pet service provider. */
     private static volatile ObjectProvider<PetService> petServiceProvider;
     /** 街机升级服务提供者 / Arcade-upgrade service provider. */
@@ -231,11 +234,15 @@ public final class GameFeatureServices implements DisposableBean {
      * @return NPC 喊话服务 / NPC-shouts service
      */
     public static NpcShoutsService npcShoutsService() {
-        ObjectProvider<NpcShoutsService> provider = npcShoutsServiceProvider;
-        if (provider == null) {
-            return NpcShoutsService.getInstance();
+        NpcShoutsService resolved = resolvedNpcShoutsService;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(NpcShoutsService::getInstance);
+        ObjectProvider<NpcShoutsService> provider = npcShoutsServiceProvider;
+        resolved = provider == null ? NpcShoutsService.getInstance()
+                : provider.getIfAvailable(NpcShoutsService::getInstance);
+        resolvedNpcShoutsService = resolved;
+        return resolved;
     }
 
     /**
@@ -350,11 +357,15 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 基地服务 / Base service
      */
     public static BaseService baseService() {
-        ObjectProvider<BaseService> provider = baseServiceProvider;
-        if (provider == null) {
-            return BaseService.getInstance();
+        BaseService resolved = resolvedBaseService;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(BaseService::getInstance);
+        ObjectProvider<BaseService> provider = baseServiceProvider;
+        resolved = provider == null ? BaseService.getInstance()
+                : provider.getIfAvailable(BaseService::getInstance);
+        resolvedBaseService = resolved;
+        return resolved;
     }
 
     /**
@@ -448,7 +459,15 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 静态门服务 / Static-door service
      */
     public static StaticDoorService staticDoorService() {
-        return getIfAvailable(staticDoorServiceProvider, StaticDoorService::getInstance);
+        StaticDoorService resolved = resolvedStaticDoorService;
+        if (resolved != null) {
+            return resolved;
+        }
+        ObjectProvider<StaticDoorService> provider = staticDoorServiceProvider;
+        resolved = provider == null ? StaticDoorService.getInstance()
+                : provider.getIfAvailable(StaticDoorService::getInstance);
+        resolvedStaticDoorService = resolved;
+        return resolved;
     }
 
     /**
@@ -562,6 +581,9 @@ public final class GameFeatureServices implements DisposableBean {
         ladderServiceProvider = null;
         siegeServiceProvider = null;
         resolvedSiegeService = null;
+        resolvedBaseService = null;
+        resolvedStaticDoorService = null;
+        resolvedNpcShoutsService = null;
         baseServiceProvider = null;
         aStationServiceProvider = null;
         f2pServiceProvider = null;

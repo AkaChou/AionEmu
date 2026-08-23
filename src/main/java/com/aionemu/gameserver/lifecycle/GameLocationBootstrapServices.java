@@ -42,6 +42,13 @@ import org.springframework.stereotype.Component;
 public final class GameLocationBootstrapServices implements DisposableBean {
 
     /**
+     * 按服务解析供应器缓存的已解析实例；见 {@link #getIfAvailable}。
+     * Resolved instances cached by their resolution suppliers; see {@link #getIfAvailable}.
+     */
+    private static final java.util.concurrent.ConcurrentHashMap<Supplier<?>, Object> RESOLVED_SERVICES =
+        new java.util.concurrent.ConcurrentHashMap<>();
+
+    /**
      * 漩涡服务提供者。
      * Vortex service provider.
      */
@@ -451,10 +458,19 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 服务实例 / Service instance
      */
     private static <T> T getIfAvailable(ObjectProvider<T> provider, Supplier<T> fallback) {
-        if (provider == null) {
-            return fallback.get();
+        // 解析结果按 fallback 供应器缓存：并行刷怪期间每个 spawn 都会经此处穿过
+        // Spring 单例注册表全局锁（JFR 抓到的成片停车点），缓存后仅首次解析。
+        // Results are cached per fallback supplier: every spawn passes through here and the Spring
+        // singleton-registry global lock during parallel spawning (the JFR hotspot), so resolve once.
+        Object cached = RESOLVED_SERVICES.get(fallback);
+        if (cached != null) {
+            @SuppressWarnings("unchecked")
+            T hit = (T) cached;
+            return hit;
         }
-        return provider.getIfAvailable(fallback);
+        T resolved = provider == null ? fallback.get() : provider.getIfAvailable(fallback);
+        RESOLVED_SERVICES.putIfAbsent(fallback, resolved);
+        return resolved;
     }
 
     /**
@@ -505,5 +521,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
         AbyssLandingService.setInstanceProvider(null);
         LandingUpdateService.setInstanceProvider(null);
         AbyssLandingSpecialService.setInstanceProvider(null);
+        RESOLVED_SERVICES.clear();
     }
 }
