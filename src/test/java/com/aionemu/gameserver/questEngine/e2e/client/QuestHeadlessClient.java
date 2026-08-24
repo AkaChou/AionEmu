@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.e2e.client;
 
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 
 import java.util.List;
@@ -60,6 +62,28 @@ public final class QuestHeadlessClient {
 			state.currentObjectId(), actionId));
 	}
 
+	/**
+	 * 点击奖励窗口中由原生客户端控件发送的 action；该控件不出现在任务 HTML 的
+	 * {@code <Act>} 列表中。
+	 * Clicks an action emitted by a native reward-window control; the control is absent from the quest HTML
+	 * {@code <Act>} list.
+	 */
+	public DispatchOutcome clickNativeAction(int actionId) {
+		if (state.currentPage() != QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()) {
+			throw new IllegalStateException("native reward action requires the reward-selection window");
+		}
+		if (actionId < QuestDialogAction.SELECTED_QUEST_REWARD1.id()
+				|| actionId > QuestDialogAction.SELECTED_QUEST_NOREWARD.id()
+				|| !oracle.actionExists(actionId)) {
+			throw new IllegalArgumentException("action is not a native Aion 5.8 reward-selection action");
+		}
+		if (state.currentNpcId() <= 0 || state.currentObjectId() <= 0) {
+			throw new IllegalStateException("native reward action has no authoritative interaction object");
+		}
+		return dispatch(ClientActionRequest.dialog(state.questId(), state.currentNpcId(),
+			state.currentObjectId(), actionId));
+	}
+
 	/** 完成任务交互物的使用动作。 / Completes a quest interaction-object use action. */
 	public DispatchOutcome useObject(int npcId, int objectId) {
 		state.interactWith(npcId, objectId);
@@ -78,10 +102,6 @@ public final class QuestHeadlessClient {
 
 	private DispatchOutcome dispatch(ClientActionRequest request) {
 		trace.add("CLIENT", request.kind() + ":" + request.event());
-		DispatchOutcome outcome = bridge.dispatch(request);
-		for (ServerPacketObservation packet : outcome.packets()) {
-			state.observe(packet);
-		}
-		return outcome;
+		return bridge.dispatch(request);
 	}
 }

@@ -4,6 +4,7 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.clientpackets.CM_DIALOG_SELECT;
+import com.aionemu.gameserver.network.aion.clientpackets.CM_SHOW_DIALOG;
 import com.aionemu.gameserver.network.aion.clientpackets.CM_USE_ITEM;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.runtime.QuestE2eRuntime;
@@ -22,9 +23,10 @@ import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * 在隔离测试引擎上执行真实 CM_DIALOG_SELECT/CM_USE_ITEM，并在关闭时恢复全部静态 provider。
- * Executes real CM_DIALOG_SELECT/CM_USE_ITEM packets against an isolated test engine and restores every static
- * provider on close.
+ * 在隔离测试引擎上执行真实 CM_DIALOG_SELECT、CM_SHOW_DIALOG 和 CM_USE_ITEM，
+ * 并在关闭时恢复全部静态 provider。
+ * Executes real CM_DIALOG_SELECT, CM_SHOW_DIALOG, and CM_USE_ITEM packets against an isolated test engine and
+ * restores every static provider on close.
  *
  * <p>该夹具持有进程级锁，生命周期内必须使用 try-with-resources；它不启动网络线程，也不访问数据库。
  * The fixture holds a process-wide lock and must be scoped with try-with-resources; it starts no network thread and
@@ -90,6 +92,7 @@ public final class QuestProtocolLoop implements AutoCloseable {
 		if (request.kind() == ClientActionRequest.Kind.WORLD_EVENT) {
 			return runtime.dispatch(request);
 		}
+		runtime.beginRequest(request);
 		QuestStatusSnapshot before = snapshot();
 		QuestRuntimeMetricsCollector.Snapshot metricsBefore = runtime.metricsSnapshot();
 		int traceStart = runtime.trace().entries().size();
@@ -97,7 +100,8 @@ public final class QuestProtocolLoop implements AutoCloseable {
 		boolean handled = false;
 		try {
 			handled = switch (request.kind()) {
-				case DIALOG_SELECT, USE_OBJECT -> dialog(request);
+				case DIALOG_SELECT -> dialog(request);
+				case USE_OBJECT -> useObject(request);
 				case USE_ITEM -> useItem(request);
 				case WORLD_EVENT -> throw new IllegalStateException("world event was not delegated");
 			};
@@ -156,6 +160,14 @@ public final class QuestProtocolLoop implements AutoCloseable {
 		buffer.flip();
 		runPacket(new CM_USE_ITEM(0, AionConnection.State.IN_GAME), buffer);
 		return false;
+	}
+
+	private boolean useObject(ClientActionRequest request) {
+		ByteBuffer buffer = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN)
+			.putInt(request.objectId());
+		buffer.flip();
+		runPacket(new CM_SHOW_DIALOG(0, AionConnection.State.IN_GAME), buffer);
+		return world.protocolDialogHandled(request.objectId());
 	}
 
 	private void runPacket(AionClientPacket packet, ByteBuffer buffer) {

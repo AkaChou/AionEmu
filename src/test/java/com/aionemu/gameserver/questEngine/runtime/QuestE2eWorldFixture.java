@@ -42,6 +42,7 @@ import com.aionemu.gameserver.questEngine.e2e.world.VirtualClock;
 import com.aionemu.gameserver.questEngine.definition.QuestInstanceTarget;
 import com.aionemu.gameserver.questEngine.definition.QuestNpcEmotion;
 import com.aionemu.gameserver.questEngine.definition.QuestSpawnLocation;
+import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.world.WorldPosition;
@@ -529,9 +530,27 @@ public final class QuestE2eWorldFixture implements AutoCloseable {
 		}
 	}
 
-	/** 把 NPC 控制器选择回送到真实 QuestEngine 入口。 / Routes NPC controller selection into the real QuestEngine ingress. */
+	/**
+	 * 把 NPC 控制器选择和交互物完成回送到真实 QuestEngine 入口。
+	 * Routes NPC controller selections and interaction-object completion into the real QuestEngine ingress.
+	 */
 	private static final class ProtocolNpcController extends NpcController {
 		private boolean handled;
+
+		/**
+		 * 将真实 CM_SHOW_DIALOG 解码后的交互请求确定性推进到 AI 使用完成回调。
+		 * Deterministically advances the interaction decoded from a real CM_SHOW_DIALOG to the AI use-completion
+		 * callback.
+		 */
+		@Override
+		public void onDialogRequest(Player player) {
+			handled = GameEngineServices.questEngine().onDialog(new QuestEnv(
+				getOwner(), player, 0, QuestDialog.USE_OBJECT.id()));
+			if (!handled) {
+				handled = GameEngineServices.questEngine().onDialog(new QuestEnv(
+					getOwner(), player, 0, QuestDialog.START_DIALOG.id()));
+			}
+		}
 
 		@Override
 		public void onDialogSelect(int dialogId, Player player, int questId, int extendedRewardIndex) {

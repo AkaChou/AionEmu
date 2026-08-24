@@ -71,6 +71,7 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	private QuestTransition matchedTransition;
 	private QuestRouteResult matchedRouteResult = QuestRouteResult.UNKNOWN;
 	private int routeCandidateCount;
+	private List<QuestAction> committedTransactionActions = List.of();
 
 	public QuestE2eRuntime(CompiledQuestDefinition definition) throws Exception {
 		this.definition = java.util.Objects.requireNonNull(definition, "definition");
@@ -151,6 +152,11 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	public QuestRouteResult matchedRouteResult() { return matchedRouteResult; }
 	/** 返回最后一次分发的候选 route 数。 / Returns the number of route candidates in the last dispatch. */
 	public int routeCandidateCount() { return routeCandidateCount; }
+	/**
+	 * 返回最后一次请求已提交的完整事务动作。
+	 * Returns the complete transactional actions committed by the last request.
+	 */
+	public List<QuestAction> committedTransactionActions() { return committedTransactionActions; }
 	/** 将最后一次实际 route 与准备的目标 transition 对照归因。 / Attributes the last selected route relative to the prepared target transition. */
 	public QuestE2eTransitionMatch transitionMatch() {
 		if (unsupportedFacts) return QuestE2eTransitionMatch.UNSUPPORTED_SCENARIO_FACTS;
@@ -186,6 +192,7 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 		matchedTransition = null;
 		matchedRouteResult = QuestRouteResult.UNKNOWN;
 		routeCandidateCount = 0;
+		committedTransactionActions = List.of();
 		auditEvents.clear();
 		NodeProjection source = sourceProjection(transition);
 		if (source == null) {
@@ -216,6 +223,45 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 		facts.completed.addAll(definition.definition().metadata().prerequisites());
 		world.playerFacts(facts.race, facts.playerClass);
 		state.playerFacts(65, facts.race, facts.playerClass);
+	}
+
+	/**
+	 * 为一次持续会话请求重建事件权威并清空仅属于上一次路由的归因数据，
+	 * 不改变任务、背包或世界进度。
+	 * Re-establishes event authority for one continuous-session request and clears attribution owned only by the
+	 * previous route without changing quest, inventory, or world progress.
+	 *
+	 * @param request 即将进入任务运行时的客户端请求 / client request about to enter the quest runtime
+	 */
+	public void beginRequest(ClientActionRequest request) {
+		java.util.Objects.requireNonNull(request, "request");
+		if (request.questId() != definition.id()) {
+			throw new IllegalArgumentException("request quest does not match runtime definition");
+		}
+		matchedTransition = null;
+		matchedRouteResult = QuestRouteResult.UNKNOWN;
+		routeCandidateCount = 0;
+		committedTransactionActions = List.of();
+		auditEvents.clear();
+		switch (request.event()) {
+			case QuestEvent.TalkToNpc talk -> {
+				facts.targetless = false;
+				facts.itemObjectId = 0;
+				int objectId = request.objectId() > 0 ? request.objectId() : talk.interactionObjectId();
+				if (objectId > 0) {
+					state.interactWith(talk.npcId(), objectId);
+				}
+			}
+			case QuestEvent.UseItem use -> {
+				facts.targetless = false;
+				facts.itemObjectId = request.itemObjectId() > 0 ? request.itemObjectId()
+					: use.itemObjectId() > 0 ? use.itemObjectId() : facts.itemObjectId;
+			}
+			default -> {
+				facts.targetless = true;
+				facts.itemObjectId = 0;
+			}
+		}
 	}
 
 	private NodeProjection sourceProjection(QuestTransition transition) {
@@ -269,8 +315,7 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	 * transition-local conditions or a genuinely eligible quest is incorrectly reduced to {@code NO_MATCH}.</p>
 	 */
 	private void seedMetadataStartConditions(QuestTransition transition, QuestStatus sourceStatus) {
-		QuestStatus targetStatus = nodeStatus(transition.targetNode());
-		if (sourceStatus != QuestStatus.NONE || targetStatus == QuestStatus.NONE) {
+		if (sourceStatus != QuestStatus.NONE) {
 			return;
 		}
 		List<com.aionemu.gameserver.questEngine.definition.QuestStartConditionGroup> groups =
@@ -298,18 +343,9 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 		}
 	}
 
-	private QuestStatus nodeStatus(String label) {
-		return definition.definition().nodes().stream()
-			.filter(node -> java.util.Objects.equals(node.label(), label))
-			.map(node -> node.projection().status())
-			.findFirst().orElse(QuestStatus.NONE);
-	}
-
 	@Override
 	public QuestHeadlessClient.DispatchOutcome dispatch(ClientActionRequest request) {
-		if (request.questId() != definition.id()) {
-			throw new IllegalArgumentException("request quest does not match runtime definition");
-		}
+		beginRequest(request);
 		trace.add("ROUTER", request.event().type());
 		QuestStatus beforeStatus = state.status();
 		int beforeVars = state.packedVariables();
@@ -795,6 +831,7 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 		}
 		@Override public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) throws SQLException {
 			trace.add("TRANSACTION", "actions");
+			List<QuestAction> appliedActions = List.copyOf(actions);
 			for (QuestAction action : actions) {
 				switch (action) {
 					case QuestAction.RemoveItem remove -> { if (remove.removeAll()) facts.inventory.remove(remove.itemId()); else facts.inventory.computeIfPresent(remove.itemId(), (id, count) -> count <= remove.count() ? null : count - remove.count()); }
@@ -802,7 +839,10 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 					default -> { }
 				}
 			}
-			return QuestTransactionParticipant.of(() -> trace.add("TRANSACTION", "actions-commit"),
+			return QuestTransactionParticipant.of(() -> {
+				committedTransactionActions = appliedActions;
+				trace.add("TRANSACTION", "actions-commit");
+			},
 				() -> { facts.inventory.clear(); facts.inventory.putAll(before); trace.add("TRANSACTION", "actions-rollback"); });
 		}
 	}
@@ -811,6 +851,7 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 		private QuestMutationPlan pending;
 		@Override public void apply(Connection connection, int playerId, QuestMutationPlan plan) { pending = plan; trace.add("STATE", "apply:" + plan.nextStatus()); }
 		@Override public void publish(int playerId, QuestMutationPlan plan) {
+			committedTransactionActions = plan.requiredActions();
 			state.project(plan.nextStatus(), plan.nextPackedVariables());
 			QuestState questState = world.player().getQuestStateList().getQuestState(plan.questId());
 			if (questState == null) {
@@ -869,7 +910,7 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 			worldId = 110010000; completeCount = 0; npcCurrentHp = 100; npcMaxHp = 100; maxDp = null;
 			minimumPvpDelta = null; maximumPvpDelta = null; eventActive = true;
 		}
-		private int interactionObjectId() { return state.currentObjectId() > 0 ? state.currentObjectId() : itemObjectId; }
+		private int interactionObjectId() { return itemObjectId > 0 ? itemObjectId : state.currentObjectId(); }
 		private int targetObjectId() { return interactionObjectId(); }
 	}
 }

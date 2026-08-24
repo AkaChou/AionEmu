@@ -329,30 +329,33 @@ class QuestE2eInfrastructureTest {
 	void variableConditionScenarioExercisesTheExpectedCompletionTransition() throws Exception {
 		CompiledQuestDefinition definition = definition(1842);
 		QuestTransition transition = definition.definition().transitions().stream()
-			.filter(candidate -> "m1".equals(candidate.sourceNode()) && "reward".equals(candidate.targetNode())
-				&& candidate.event() instanceof com.aionemu.gameserver.questEngine.definition.QuestEvent.KillNpc)
+			.filter(candidate -> "started".equals(candidate.sourceNode()) && "ready".equals(candidate.targetNode())
+				&& candidate.event() instanceof com.aionemu.gameserver.questEngine.definition.QuestEvent.KillNpcSet)
 			.findFirst().orElseThrow();
 		ClientResourceOracle oracle = ClientResourceOracle.load(CLIENT_MAPPING);
 		QuestE2eAuditRow row = QuestE2eBatchAudit.auditTransition(definition, transition, oracle);
 		assertEquals(QuestE2eTransitionMatch.EXPECTED_TRANSITION_MATCHED, row.transitionMatch(), row::toString);
 		assertEquals(QuestE2eStatus.PASS, row.status(), row::toString);
-		assertEquals("reward", row.matchedTargetNode());
+		assertEquals("ready", row.matchedTargetNode());
 	}
 
 	@Test
 	void runtimeAttributesAConclusiveAlternateTransition() throws Exception {
 		CompiledQuestDefinition definition = definition(1842);
 		QuestTransition expected = definition.definition().transitions().stream()
-			.filter(candidate -> "m1".equals(candidate.sourceNode()) && "m1".equals(candidate.targetNode())
-				&& candidate.event() instanceof com.aionemu.gameserver.questEngine.definition.QuestEvent.KillNpc)
+			.filter(candidate -> "started".equals(candidate.sourceNode()) && "started".equals(candidate.targetNode())
+				&& candidate.event() instanceof com.aionemu.gameserver.questEngine.definition.QuestEvent.KillNpcSet)
+			.filter(candidate -> Integer.valueOf(2).equals(candidate.priority()))
 			.findFirst().orElseThrow();
 		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {
 			runtime.prepare(expected);
-			runtime.state().project(QuestStatus.START, 208);
-			QuestHeadlessClient.DispatchOutcome outcome = runtime.dispatchWorld(expected.event());
+			runtime.state().project(QuestStatus.START, 207);
+			int npcId = ((QuestEvent.KillNpcSet) expected.event()).npcIds().stream()
+				.min(Integer::compareTo).orElseThrow();
+			QuestHeadlessClient.DispatchOutcome outcome = runtime.dispatchWorld(new QuestEvent.KillNpc(npcId));
 			assertFalse(outcome.failed(), outcome::toString);
 			assertEquals(QuestE2eTransitionMatch.ALTERNATE_TRANSITION_MATCHED, runtime.transitionMatch());
-			assertEquals("reward", runtime.matchedTransition().targetNode());
+			assertEquals("ready", runtime.matchedTransition().targetNode());
 		}
 	}
 
