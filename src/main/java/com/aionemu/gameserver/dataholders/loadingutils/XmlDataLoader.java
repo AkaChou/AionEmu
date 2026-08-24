@@ -101,8 +101,8 @@ public class XmlDataLoader {
 	 * Custom item override file (overrides or appends by id; never touched by the shard writer).
 	 */
 	private static final String CUSTOM_ITEM_DEFINITIONS_FILE = "./data/static_data/items/item_template_custom.xml";
-	private static final Pattern ITEM_SHARD_PATTERN = Pattern.compile("item_template_\\d+_\\d+\\.xml");
-	private static final Pattern NPC_SHARD_PATTERN = Pattern.compile("npc_template_\\d+_\\d+\\.xml");
+	private static final Pattern ITEM_SHARD_PATTERN = Pattern.compile("item_template_(\\d+)_(\\d+)\\.xml");
+	private static final Pattern NPC_SHARD_PATTERN = Pattern.compile("npc_template_(\\d+)_(\\d+)\\.xml");
 
 	/**
 	 * 获取 XmlDataLoader 单例（优先 Spring 提供的实例）。
@@ -211,7 +211,8 @@ public class XmlDataLoader {
 	 * Loads static data with a progress reporter by parsing the entry point and unmarshalling each source file separately.
 	 *
 	 * @param progressReporter 进度报告器 / progress reporter
-	 * @return 静态数据，失败则为 null / static data, or null on failure
+	 * @return 静态数据 / loaded static data
+	 * @throws IllegalStateException 静态数据无法加载时 / when static data cannot be loaded
 	 */
 	StaticData loadStaticData(StaticDataProgressReporter progressReporter) {
 		ConcurrentMap<String, Long> phaseTimings = new ConcurrentHashMap<>();
@@ -330,8 +331,8 @@ public class XmlDataLoader {
 			// Attach the throwable separately: the I18n placeholder only carries toString, the stack must be
 			// logged too or the root cause is swallowed.
 			log.error(I18n.get("log.a30b9e9db6fa", e.toString()), e);
+			throw new IllegalStateException("Failed to load static data", e);
 		}
-		return null;
 	}
 
 	/**
@@ -880,7 +881,7 @@ public class XmlDataLoader {
 	 * @param shardDir 源分片目录 / source-shard directory
 	 * @param shardPattern 分片文件名模式 / shard filename pattern
 	 * @param type 数据类型 / data type
-	 * @return 按源文件首个模板 ID 排序的分片 / shards sorted by the first template id in each source file
+	 * @return 按文件名声明的首个模板 ID 排序的分片 / shards sorted by the first template id declared by each filename
 	 */
 	private static List<File> listTemplateShards(File shardDir, Pattern shardPattern, String type) {
 		if (shardDir == null || !shardDir.isDirectory()) {
@@ -892,34 +893,31 @@ public class XmlDataLoader {
 				+ "; expected files matching " + shardPattern.pattern());
 		}
 		List<File> shards = new ArrayList<>(List.of(files));
-		String elementName = "item".equals(type) ? "item_template" : "npc_template";
-		shards.sort(Comparator.comparingLong(file -> firstTemplateId(file, elementName)));
+		shards.sort(Comparator.comparingLong((File file) -> templateShardStartId(file, shardPattern, type))
+			.thenComparing(File::getName));
 		return shards;
 	}
 
 	/**
-	 * 读取分片内首个模板 ID，恢复源文件顺序而不依赖范围文件名的字典序。
-	 * Reads the first template id in a shard so source order does not depend on filename lexicographic order.
+	 * 从生成器约定的范围文件名读取首个模板 ID，避免排序阶段再次扫描大型 XML。
+	 * Reads the first template id from the generator-defined range filename, avoiding
+	 * another scan of the large XML shard during sorting.
 	 */
-	private static long firstTemplateId(File shard, String elementName) {
-		XMLInputFactory factory = XMLInputFactory.newFactory();
-		try (InputStream input = new BufferedInputStream(new FileInputStream(shard))) {
-			XMLStreamReader reader = factory.createXMLStreamReader(input);
-			try {
-				while (reader.hasNext()) {
-					if (reader.next() != XMLStreamConstants.START_ELEMENT || !elementName.equals(reader.getLocalName())) {
-						continue;
-					}
-					String attribute = "item_template".equals(elementName) ? "id" : "npc_id";
-					return Long.parseLong(reader.getAttributeValue(null, attribute));
-				}
-			} finally {
-				reader.close();
-			}
-		} catch (Exception e) {
-			throw new Error("Failed to read first template ID from " + shard.getPath(), e);
+	static long templateShardStartId(File shard, Pattern shardPattern, String type) {
+		var matcher = shardPattern.matcher(shard.getName());
+		if (!matcher.matches()) {
+			throw new Error("Unexpected " + type + " template shard filename: " + shard.getPath());
 		}
-		throw new Error("Template shard is empty: " + shard.getPath());
+		try {
+			long firstId = Long.parseLong(matcher.group(1));
+			long lastId = Long.parseLong(matcher.group(2));
+			if (firstId > lastId) {
+				throw new Error("Invalid " + type + " template shard range: " + shard.getPath());
+			}
+			return firstId;
+		} catch (NumberFormatException e) {
+			throw new Error("Invalid " + type + " template shard range: " + shard.getPath(), e);
+		}
 	}
 
 	/**

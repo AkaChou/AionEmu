@@ -67,6 +67,30 @@ class DataManagerTest {
 	}
 
 	@Test
+	void staticDataFailureIsPropagatedInsteadOfReturningPartialData() {
+		IllegalStateException expected = new IllegalStateException("static data failed");
+		XmlDataLoader loader = new XmlDataLoader() {
+			@Override
+			public StaticData loadStaticData(Supplier<SkillData> skillDataSupplier,
+				ConcurrentMap<String, Long> phaseTimings) {
+				throw expected;
+			}
+
+			@Override
+			public ItemData loadItemData() {
+				return new ItemData();
+			}
+
+			@Override
+			public SkillData loadSkillData(ConcurrentMap<String, Long> phaseTimings) {
+				return new SkillData();
+			}
+		};
+
+		assertSame(expected, assertThrows(IllegalStateException.class, () -> DataManager.loadStaticData(loader)));
+	}
+
+	@Test
 	void duplicateConstructionFailsFastBeforeLoadingData() throws Exception {
 		AtomicBoolean constructed = constructionGuard();
 		constructed.set(true);

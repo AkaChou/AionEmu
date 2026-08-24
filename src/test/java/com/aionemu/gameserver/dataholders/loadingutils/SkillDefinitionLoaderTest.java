@@ -67,6 +67,33 @@ class SkillDefinitionLoaderTest {
 	}
 
 	@Test
+	void expandsOneSharedGroupAcrossParallelParts() throws Exception {
+		int partCount = 32;
+		StringBuilder index = new StringBuilder("<skill_bundle templates=\"")
+			.append(partCount).append("\" groups=\"groups.xml\">");
+		for (int i = 0; i < partCount; i++) {
+			index.append("<part file=\"part-").append(i).append(".xml\"/>");
+		}
+		index.append("</skill_bundle>");
+		Files.writeString(directory.resolve("index.xml"), index);
+		Files.writeString(directory.resolve("groups.xml"), """
+			<skill_groups><field_names><field id="1" name="retail_value"/></field_names><groups>
+				<group id="G"><properties first_target="ME" first_target_range="1" target_relation="FRIEND" target_type="ONLYONE"/></group>
+			</groups></skill_groups>
+			""");
+		for (int i = 0; i < partCount; i++) {
+			writePart("part-" + i + ".xml", 1_000 + i, "STACK_" + i, "value", 0);
+		}
+
+		var data = SkillDefinitionLoader.load(directory.toFile());
+
+		assertEquals(partCount, data.size());
+		for (int i = 0; i < partCount; i++) {
+			assertNotNull(data.getSkillTemplate(1_000 + i).getProperties());
+		}
+	}
+
+	@Test
 	void recordsDetailedLoadPhaseTimings() throws Exception {
 		Files.writeString(directory.resolve("index.xml"), """
 			<skill_bundle templates="1" groups="groups.xml">

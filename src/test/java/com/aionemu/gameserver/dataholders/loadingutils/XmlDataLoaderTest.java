@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -19,6 +20,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -65,6 +67,14 @@ class XmlDataLoaderTest {
 			.filter(field -> field.getAnnotation(XmlElement.class) != null).count();
 
 		assertEquals(xmlElements, XmlDataLoader.staticDataSectionCount());
+	}
+
+	@Test
+	void templateShardStartIdUsesDeclaredFilenameRangeWithoutReadingTheFile() {
+		Pattern pattern = Pattern.compile("item_template_(\\d+)_(\\d+)\\.xml");
+
+		assertEquals(100000001L, XmlDataLoader.templateShardStartId(
+			new File("missing/item_template_100000001_100601382.xml"), pattern, "item"));
 	}
 
 	@Test

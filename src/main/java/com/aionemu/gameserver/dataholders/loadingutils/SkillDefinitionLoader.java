@@ -59,7 +59,7 @@ final class SkillDefinitionLoader {
 			Element bundle = index.getDocumentElement();
 			Document groupsDocument = parse(new File(directory, requiredAttribute(bundle, "groups")));
 			Map<String, String> fieldNames = readFieldNames(groupsDocument);
-			Map<String, Element> groups = readGroups(groupsDocument);
+			Map<String, ExpansionElement> groups = readGroups(groupsDocument);
 			int expectedTemplates = Integer.parseInt(requiredAttribute(bundle, "templates"));
 			List<File> partFiles = new ArrayList<>();
 			for (Element part : childElements(bundle, "part")) {
@@ -114,7 +114,8 @@ final class SkillDefinitionLoader {
 	 * 单遍解析技能分卷：SAX 在流中展开组与字段引用，并把事件直接交给 JAXB。
 	 * Parses one skill part in one pass: SAX expands group/field references and feeds events directly to JAXB.
 	 */
-	private static LoadedSkillPart loadPart(File partFile, Map<String, Element> groups, Map<String, String> fieldNames,
+	private static LoadedSkillPart loadPart(File partFile, Map<String, ExpansionElement> groups,
+			Map<String, String> fieldNames,
 			JAXBContext jaxbContext) {
 		try (FileInputStream stream = new FileInputStream(partFile)) {
 			long start = System.nanoTime();
@@ -176,21 +177,48 @@ final class SkillDefinitionLoader {
 				fieldNames.put(requiredAttribute(field, "id"), requiredAttribute(field, "name"));
 			}
 		}
-		return fieldNames;
+		return Map.copyOf(fieldNames);
 	}
 
-	private static Map<String, Element> readGroups(Document document) {
-		Map<String, Element> groups = new HashMap<>();
+	private static Map<String, ExpansionElement> readGroups(Document document) {
+		Map<String, ExpansionElement> groups = new HashMap<>();
 		for (Element groupsElement : childElements(document.getDocumentElement(), "groups")) {
 			for (Element group : childElements(groupsElement, "group")) {
 				Element fragment = firstChildElement(group);
 				if (fragment == null) {
 					throw new IllegalStateException("Empty skill group: " + requiredAttribute(group, "id"));
 				}
-				groups.put(requiredAttribute(group, "id"), fragment);
+				groups.put(requiredAttribute(group, "id"), toExpansionElement(fragment));
 			}
 		}
-		return groups;
+		return Map.copyOf(groups);
+	}
+
+	/**
+	 * 在串行阶段复制技能组 DOM，避免并行 SAX 任务共享非线程安全节点。
+	 * Copies skill-group DOM during the serial phase so parallel SAX tasks never share non-thread-safe nodes.
+	 *
+	 * @param element 待复制的 DOM 元素 / DOM element to copy
+	 * @return 不可变展开元素 / immutable expansion element
+	 */
+	private static ExpansionElement toExpansionElement(Element element) {
+		List<ExpansionAttribute> attributes = new ArrayList<>();
+		for (int i = 0; i < element.getAttributes().getLength(); i++) {
+			Node attribute = element.getAttributes().item(i);
+			attributes.add(new ExpansionAttribute(attribute.getNodeName(), attribute.getNodeValue()));
+		}
+		List<ExpansionNode> children = new ArrayList<>();
+		for (Node child = element.getFirstChild(); child != null; child = child.getNextSibling()) {
+			if (child instanceof Element childElement) {
+				children.add(toExpansionElement(childElement));
+			} else if (child.getNodeType() == Node.TEXT_NODE || child.getNodeType() == Node.CDATA_SECTION_NODE) {
+				String value = child.getNodeValue();
+				if (!value.isBlank()) {
+					children.add(new ExpansionText(value));
+				}
+			}
+		}
+		return new ExpansionElement(element.getTagName(), List.copyOf(attributes), List.copyOf(children));
 	}
 
 	private static Document parse(File file) throws Exception {
@@ -213,19 +241,20 @@ final class SkillDefinitionLoader {
 	}
 
 	/**
-	 * 把紧凑技能节点转换为完整 JAXB 事件流，不构建分片 DOM；每个加载任务独占实例。
-	 * Converts compact skill nodes into the complete JAXB event stream without a part DOM; each load task owns
-	 * one instance.
+	 * 把紧凑技能节点转换为完整 JAXB 事件流；组展开数据在并行任务之间以不可变树共享。
+	 * Converts compact skill nodes into the complete JAXB event stream; immutable expansion trees are shared
+	 * between parallel tasks.
 	 */
 	private static final class SkillExpansionFilter extends XMLFilterImpl {
 
-		private final Map<String, Element> groups;
+		private final Map<String, ExpansionElement> groups;
 		private final Map<String, String> fieldNames;
 		private final Deque<String> elements = new ArrayDeque<>();
 		private int suppressedGroupDepth;
 		private int retailDepth;
 
-		private SkillExpansionFilter(XMLReader parent, Map<String, Element> groups, Map<String, String> fieldNames) {
+		private SkillExpansionFilter(XMLReader parent, Map<String, ExpansionElement> groups,
+			Map<String, String> fieldNames) {
 			super(parent);
 			this.groups = groups;
 			this.fieldNames = fieldNames;
@@ -247,7 +276,7 @@ final class SkillDefinitionLoader {
 			String parent = elements.peek();
 			if ("skill_template".equals(parent) && "group_ref".equals(name)) {
 				String id = requiredAttribute(attributes, "id", name);
-				Element group = groups.get(id);
+				ExpansionElement group = groups.get(id);
 				if (group == null) {
 					throw new SAXException("Unknown skill group: " + id);
 				}
@@ -310,23 +339,19 @@ final class SkillDefinitionLoader {
 			super.endElement("", "field", "field");
 		}
 
-		private void emitElement(Element element) throws SAXException {
+		private void emitElement(ExpansionElement element) throws SAXException {
 			AttributesImpl attributes = new AttributesImpl();
-			for (int i = 0; i < element.getAttributes().getLength(); i++) {
-				Node attribute = element.getAttributes().item(i);
-				addAttribute(attributes, attribute.getNodeName(), attribute.getNodeValue());
+			for (ExpansionAttribute attribute : element.attributes()) {
+				addAttribute(attributes, attribute.name(), attribute.value());
 			}
-			String name = element.getTagName();
+			String name = element.name();
 			super.startElement("", name, name, attributes);
-			for (Node child = element.getFirstChild(); child != null; child = child.getNextSibling()) {
-				if (child instanceof Element childElement) {
+			for (ExpansionNode child : element.children()) {
+				if (child instanceof ExpansionElement childElement) {
 					emitElement(childElement);
-				} else if (child.getNodeType() == Node.TEXT_NODE || child.getNodeType() == Node.CDATA_SECTION_NODE) {
-					String value = child.getNodeValue();
-					if (!value.isBlank()) {
-						char[] text = value.toCharArray();
-						super.characters(text, 0, text.length);
-					}
+				} else if (child instanceof ExpansionText textNode) {
+					char[] text = textNode.value().toCharArray();
+					super.characters(text, 0, text.length);
 				}
 			}
 			super.endElement("", name, name);
@@ -347,6 +372,35 @@ final class SkillDefinitionLoader {
 		private static String elementName(String localName, String qName) {
 			return localName == null || localName.isEmpty() ? qName : localName;
 		}
+	}
+
+	/**
+	 * 技能组展开树中的不可变节点。
+	 * Immutable node in a skill-group expansion tree.
+	 */
+	private sealed interface ExpansionNode permits ExpansionElement, ExpansionText {
+	}
+
+	/**
+	 * 保留原始元素名称、属性和子节点顺序的不可变技能组元素。
+	 * Immutable skill-group element preserving the original name, attributes, and child order.
+	 */
+	private record ExpansionElement(String name, List<ExpansionAttribute> attributes, List<ExpansionNode> children)
+		implements ExpansionNode {
+	}
+
+	/**
+	 * 技能组中的非空文本或 CDATA 节点。
+	 * Non-blank text or CDATA node in a skill group.
+	 */
+	private record ExpansionText(String value) implements ExpansionNode {
+	}
+
+	/**
+	 * 技能组元素的不可变属性。
+	 * Immutable attribute of a skill-group element.
+	 */
+	private record ExpansionAttribute(String name, String value) {
 	}
 
 	private static List<Element> childElements(Element parent, String name) {
