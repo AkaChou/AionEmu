@@ -48,18 +48,59 @@ public final class QuestHeadlessClient {
 		return dispatch(ClientActionRequest.dialog(questId, npcId, objectId, dialogId));
 	}
 
-	/** 点击当前客户端页面上实际可见的 action。 / Clicks an action actually visible on the current client page. */
+	/**
+	 * 点击不依赖 NPC 或交互对象的客户端原生任务动作。
+	 * Clicks a native client quest action that has no NPC or interaction-object target.
+	 */
+	public DispatchOutcome clickTargetlessAction(int actionId) {
+		if (!oracle.actionExists(actionId)) {
+			throw new IllegalArgumentException("action does not exist in the Aion 5.8 client action table");
+		}
+		return dispatch(ClientActionRequest.targetlessDialog(state.questId(), actionId));
+	}
+
+	/**
+	 * 点击当前客户端页面上实际可见的 action。
+	 * Clicks an action actually visible on the current client page.
+	 */
 	public DispatchOutcome clickPageAction(int actionId) {
 		boolean visible = oracle.visibleActions(state.questId(), state.currentPage()).stream()
 			.anyMatch(action -> action.actionId() == actionId && oracle.actionExists(action.actionId()));
 		if (!visible) {
 			throw new IllegalArgumentException("action is not visible on the current Aion 5.8 client page");
 		}
-		if (state.currentNpcId() <= 0 || state.currentObjectId() <= 0) {
-			throw new IllegalStateException("page action has no authoritative interaction object");
+		if (state.currentNpcId() <= 0) {
+			return dispatch(ClientActionRequest.targetlessDialog(state.questId(), actionId));
+		}
+		if (state.currentObjectId() <= 0 || state.currentPageTargetObjectId() <= 0
+				|| state.currentObjectId() != state.currentPageTargetObjectId()) {
+			throw new IllegalStateException("page action target does not match the authoritative interaction object");
 		}
 		return dispatch(ClientActionRequest.dialog(state.questId(), state.currentNpcId(),
 			state.currentObjectId(), actionId));
+	}
+
+	/**
+	 * 发送客户端页面上唯一的结束对话动作，并在服务端按历史合同无 route、无响应时由客户端本地关闭页面。
+	 * Sends the visible finish-dialog action and closes the page locally only when the server deliberately has no
+	 * route or response under the historical contract.
+	 */
+	public DispatchOutcome finishDialogLocally() {
+		int actionId = QuestDialogAction.FINISH_DIALOG.id();
+		boolean onlyFinishAction = !oracle.visibleActions(state.questId(), state.currentPage()).isEmpty()
+			&& oracle.visibleActions(state.questId(), state.currentPage()).stream()
+			.allMatch(action -> action.actionId() == actionId);
+		if (!onlyFinishAction) {
+			throw new IllegalStateException("client-local finish requires a page whose only visible action is FINISH_DIALOG");
+		}
+		DispatchOutcome outcome = clickPageAction(actionId);
+		if (outcome.failed()) return outcome;
+		if (outcome.handled() || outcome.stateChanged() || !outcome.packets().isEmpty()) {
+			throw new IllegalStateException("client-local finish unexpectedly received a server route or response");
+		}
+		state.closePage();
+		trace.add("CLIENT", "local-finish-dialog:" + actionId);
+		return outcome;
 	}
 
 	/**
@@ -77,8 +118,12 @@ public final class QuestHeadlessClient {
 				|| !oracle.actionExists(actionId)) {
 			throw new IllegalArgumentException("action is not a native Aion 5.8 reward-selection action");
 		}
-		if (state.currentNpcId() <= 0 || state.currentObjectId() <= 0) {
-			throw new IllegalStateException("native reward action has no authoritative interaction object");
+		if (state.currentNpcId() <= 0) {
+			return dispatch(ClientActionRequest.targetlessDialog(state.questId(), actionId));
+		}
+		if (state.currentObjectId() <= 0 || state.currentPageTargetObjectId() <= 0
+				|| state.currentObjectId() != state.currentPageTargetObjectId()) {
+			throw new IllegalStateException("native reward action target does not match the authoritative interaction object");
 		}
 		return dispatch(ClientActionRequest.dialog(state.questId(), state.currentNpcId(),
 			state.currentObjectId(), actionId));
@@ -90,9 +135,24 @@ public final class QuestHeadlessClient {
 		return dispatch(ClientActionRequest.useObject(state.questId(), npcId, objectId));
 	}
 
+	/**
+	 * 使用需要 ACTION_ITEM_USE gate 的任务交互物，并保留同一个权威 objectId。
+	 * Uses a quest interaction object that requires the ACTION_ITEM_USE gate while retaining the same authoritative
+	 * object ID.
+	 */
+	public DispatchOutcome useActionItemObject(int npcId, int objectId) {
+		state.interactWith(npcId, objectId);
+		return dispatch(ClientActionRequest.actionItemUse(state.questId(), npcId, objectId));
+	}
+
 	/** 使用背包中的任务物品。 / Uses a quest item from inventory. */
 	public DispatchOutcome useItem(int itemId, int itemObjectId) {
 		return dispatch(ClientActionRequest.useItem(state.questId(), itemId, itemObjectId));
+	}
+
+	/** 使用背包中的任务物品并等待真实客户端读条完成。 / Uses an inventory quest item and waits for real client cast completion. */
+	public DispatchOutcome playItem(int itemId, int itemObjectId, int animationMillis) {
+		return dispatch(ClientActionRequest.itemPlay(state.questId(), itemId, itemObjectId, animationMillis));
 	}
 
 	/** 注入确定性的世界事件。 / Emits a deterministic world event. */

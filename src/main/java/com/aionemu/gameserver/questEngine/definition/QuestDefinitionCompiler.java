@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -493,57 +494,95 @@ public final class QuestDefinitionCompiler {
 
 	private static void validateTransitionConflicts(List<QuestTransition> transitions,
 			Map<String, QuestNode> nodes) {
-		// 按事件具体类型分桶：QuestEvent.overlaps 仅同型（及 KillNpc/KillNpcSet 跨型）可真，
-		// record 的 equals 对不同类型恒为 false，因此跨桶对不可能冲突，无需比较。
-		// 6200 个任务编译时 O(T²) 全对扫描是最大热点（JFR），分桶后只比桶内与 Kill 跨桶对。
-		// Bucket by concrete event type: QuestEvent.overlaps can only be true for same-type pairs
-		// (plus the KillNpc/KillNpcSet cross pair); record equals is always false across types, so
-		// cross-bucket pairs cannot conflict. The full O(T²) scan was the top compile hotspot (JFR).
-		Map<Class<? extends QuestEvent>, List<QuestTransition>> buckets = new LinkedHashMap<>();
-		for (QuestTransition transition : transitions) {
-			buckets.computeIfAbsent(transition.event().getClass(), ignored -> new ArrayList<>())
-				.add(transition);
+		Map<EventConflictKey, List<ConflictCandidate>> candidatesByEvent =
+			new HashMap<>(Math.max(16, transitions.size() * 2));
+		List<QuestNode> sourceNodes = List.copyOf(nodes.values());
+		Map<String, Integer> sourceNodeIndexes = new HashMap<>(Math.max(16, sourceNodes.size() * 2));
+		for (int index = 0; index < sourceNodes.size(); index++) {
+			sourceNodeIndexes.put(sourceNodes.get(index).label(), index);
 		}
-		List<List<QuestTransition>> killBuckets = List.of(
-			buckets.getOrDefault(QuestEvent.KillNpc.class, List.of()),
-			buckets.getOrDefault(QuestEvent.KillNpcSet.class, List.of()));
-		for (List<QuestTransition> bucket : buckets.values()) {
-			validateBucketPairwise(bucket, nodes);
-		}
-		// Kill 单/集合跨型配对：overlaps 是唯一可能跨类型为真的情形。
-		// Kill single/set cross-bucket pairs: the only case overlaps may be true across types.
-		for (int left = 0; left < killBuckets.size(); left++) {
-			for (int right = left + 1; right < killBuckets.size(); right++) {
-				for (QuestTransition a : killBuckets.get(left)) {
-					for (QuestTransition b : killBuckets.get(right)) {
-						checkConflict(a, b, nodes);
-					}
+		int[] seenCandidates = new int[transitions.size()];
+		for (int ordinal = 0; ordinal < transitions.size(); ordinal++) {
+			QuestTransition transition = transitions.get(ordinal);
+			ConflictCandidate current = new ConflictCandidate(ordinal, transition,
+				compatibleSourceNodes(transition, nodes, sourceNodes, sourceNodeIndexes));
+			List<EventConflictKey> keys = conflictKeys(transition.event());
+			int seenMarker = ordinal + 1;
+			for (int keyIndex = 0; keyIndex < keys.size(); keyIndex++) {
+				List<ConflictCandidate> previousCandidates = candidatesByEvent.get(keys.get(keyIndex));
+				if (previousCandidates == null) {
+					continue;
 				}
+				for (int candidateIndex = 0; candidateIndex < previousCandidates.size(); candidateIndex++) {
+					ConflictCandidate previous = previousCandidates.get(candidateIndex);
+					if (seenCandidates[previous.ordinal()] == seenMarker) {
+						continue;
+					}
+					seenCandidates[previous.ordinal()] = seenMarker;
+					checkConflict(previous, current);
+				}
+			}
+			for (int keyIndex = 0; keyIndex < keys.size(); keyIndex++) {
+				candidatesByEvent.computeIfAbsent(keys.get(keyIndex), ignored -> new ArrayList<>()).add(current);
 			}
 		}
 	}
 
 	/**
-	 * 对同一事件类型的 transition 两两执行冲突校验。
-	 * Runs pairwise conflict checks within one event-type bucket.
+	 * 返回可能消费同一运行时事实的粗粒度事件键。KillNpc 与 KillNpcSet 共享
+	 * NPC 键；最终重叠语义仍由 QuestEvent.overlaps 判定。
+	 * Returns coarse event keys for transitions that may consume the same runtime
+	 * fact. KillNpc and KillNpcSet share NPC keys; QuestEvent.overlaps remains the
+	 * final authority for overlap semantics.
 	 */
-	private static void validateBucketPairwise(List<QuestTransition> bucket, Map<String, QuestNode> nodes) {
-		for (int left = 0; left < bucket.size(); left++) {
-			QuestTransition a = bucket.get(left);
-			for (int right = left + 1; right < bucket.size(); right++) {
-				checkConflict(a, bucket.get(right), nodes);
-			}
+	private static List<EventConflictKey> conflictKeys(QuestEvent event) {
+		if (event instanceof QuestEvent.TalkToNpc talk) {
+			return List.of(new EventConflictKey(QuestEvent.TalkToNpc.class, talk.npcId()));
 		}
+		if (event instanceof QuestEvent.UseItem useItem) {
+			return List.of(new EventConflictKey(QuestEvent.UseItem.class, useItem.itemId()));
+		}
+		if (event instanceof QuestEvent.AttackNpc attack) {
+			return List.of(new EventConflictKey(QuestEvent.AttackNpc.class, attack.npcId()));
+		}
+		if (event instanceof QuestEvent.ItemPlay itemPlay) {
+			return List.of(new EventConflictKey(QuestEvent.ItemPlay.class, itemPlay.itemId()));
+		}
+		if (event instanceof QuestEvent.QuestDialog dialog) {
+			return List.of(new EventConflictKey(QuestEvent.QuestDialog.class, dialog.dialogId()));
+		}
+		if (event instanceof QuestEvent.KillRanked) {
+			return List.of(new EventConflictKey(QuestEvent.KillRanked.class, Boolean.TRUE));
+		}
+		if (event instanceof QuestEvent.AtDistance distance) {
+			return List.of(new EventConflictKey(QuestEvent.AtDistance.class, distance.npcId()));
+		}
+		if (event instanceof QuestEvent.KillInWorld) {
+			return List.of(new EventConflictKey(QuestEvent.KillInWorld.class, Boolean.TRUE));
+		}
+		if (event instanceof QuestEvent.KillNpc kill) {
+			return List.of(new EventConflictKey(QuestEvent.KillNpc.class, kill.npcId()));
+		}
+		if (event instanceof QuestEvent.KillNpcSet kills) {
+			List<EventConflictKey> keys = new ArrayList<>(kills.npcIds().size());
+			for (int npcId : kills.npcIds()) {
+				keys.add(new EventConflictKey(QuestEvent.KillNpc.class, npcId));
+			}
+			return keys;
+		}
+		return List.of(new EventConflictKey(event.getClass(), event));
 	}
 
-	private static void checkConflict(QuestTransition a, QuestTransition b, Map<String, QuestNode> nodes) {
+	private static void checkConflict(ConflictCandidate left, ConflictCandidate right) {
+		QuestTransition a = left.transition();
+		QuestTransition b = right.transition();
 		if (!QuestEvent.overlaps(a.event(), b.event())) {
 			return;
 		}
 		if (QuestEvent.hasDeterministicPrecedence(a.event(), b.event())) {
 			return;
 		}
-		if (sourceNodesAreMutuallyExclusive(a, b, nodes)) {
+		if (sourceNodesAreMutuallyExclusive(left, right)) {
 			return;
 		}
 		if (mutuallyExclusive(a.conditions(), b.conditions())) {
@@ -555,50 +594,60 @@ public final class QuestDefinitionCompiler {
 		}
 	}
 
-	private static boolean sourceNodesAreMutuallyExclusive(QuestTransition left, QuestTransition right,
-			Map<String, QuestNode> nodes) {
-		List<QuestNode> leftSources = sourceCandidates(left, nodes);
-		List<QuestNode> rightSources = sourceCandidates(right, nodes);
-		for (QuestNode leftSource : leftSources) {
-			for (QuestNode rightSource : rightSources) {
-				if (!sameProjection(leftSource.projection(), rightSource.projection())) {
-					continue;
-				}
-				if (conditionsCannotMatchNode(left.conditions(), leftSource)
-						|| conditionsCannotMatchNode(right.conditions(), rightSource)) {
-					continue;
-				}
-				return false;
-			}
-		}
-		return true;
+	private static boolean sourceNodesAreMutuallyExclusive(ConflictCandidate left, ConflictCandidate right) {
+		return !left.compatibleSourceNodes().intersects(right.compatibleSourceNodes());
 	}
 
-	private static List<QuestNode> sourceCandidates(QuestTransition transition, Map<String, QuestNode> nodes) {
+	/**
+	 * 每条 transition 仅计算一次满足显式来源、状态约束与投影条件的节点。
+	 * 合法定义中的节点投影全局唯一，因此共享运行时投影等价于共享节点标签。
+	 * Computes once per transition the nodes compatible with its explicit source,
+	 * status bound, and projection conditions. Node projections are unique in a
+	 * valid definition, so sharing a runtime projection is equivalent to sharing
+	 * a node label.
+	 */
+	private static BitSet compatibleSourceNodes(QuestTransition transition, Map<String, QuestNode> nodes,
+			List<QuestNode> sourceNodes, Map<String, Integer> sourceNodeIndexes) {
+		BitSet compatible = new BitSet(sourceNodes.size());
 		if (transition.sourceNode() != null) {
-			return List.of(nodes.get(transition.sourceNode()));
+			QuestNode node = nodes.get(transition.sourceNode());
+			if (!conditionsCannotMatchNode(transition.conditions(), node)) {
+				compatible.set(sourceNodeIndexes.get(node.label()));
+			}
+			return compatible;
 		}
-		Set<QuestStatus> statuses = new HashSet<>();
+		QuestStatus statusBound = null;
 		for (QuestCondition condition : transition.conditions()) {
 			if (condition instanceof QuestCondition.StatusIs status) {
-				statuses.add(status.status());
+				if (statusBound != null && statusBound != status.status()) {
+					return compatible;
+				}
+				statusBound = status.status();
 			}
 		}
-		if (statuses.size() == 1) {
-			QuestStatus status = statuses.iterator().next();
-			return nodes.values().stream().filter(node -> node.projection().status() == status).toList();
+		if (statusBound != null) {
+			for (int index = 0; index < sourceNodes.size(); index++) {
+				QuestNode node = sourceNodes.get(index);
+				if (node.projection().status() == statusBound
+						&& !conditionsCannotMatchNode(transition.conditions(), node)) {
+					compatible.set(index);
+				}
+			}
+			return compatible;
 		}
-		return List.copyOf(nodes.values());
+		for (int index = 0; index < sourceNodes.size(); index++) {
+			QuestNode node = sourceNodes.get(index);
+			if (!conditionsCannotMatchNode(transition.conditions(), node)) {
+				compatible.set(index);
+			}
+		}
+		return compatible;
 	}
 
-	private static boolean sameProjection(NodeProjection left, NodeProjection right) {
-		if (left.status() != right.status()) {
-			return false;
-		}
-		Set<String> fields = new HashSet<>(left.variables().keySet());
-		fields.addAll(right.variables().keySet());
-		return fields.stream().allMatch(field -> left.variables().getOrDefault(field, 0)
-			.equals(right.variables().getOrDefault(field, 0)));
+	private record EventConflictKey(Class<? extends QuestEvent> eventType, Object value) {
+	}
+
+	private record ConflictCandidate(int ordinal, QuestTransition transition, BitSet compatibleSourceNodes) {
 	}
 
 	private static boolean conditionsCannotMatchNode(List<QuestCondition> conditions, QuestNode node) {

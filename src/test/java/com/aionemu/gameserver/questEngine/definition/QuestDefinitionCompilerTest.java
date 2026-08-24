@@ -248,6 +248,77 @@ class QuestDefinitionCompilerTest {
 	}
 
 	@Test
+	void conflictIndexPreservesTalkToNpcOverlapSemantics() {
+		assertAmbiguous(new QuestEvent.TalkToNpc(700001, 8), new QuestEvent.TalkToNpc(700001, 8));
+		assertAmbiguous(new QuestEvent.TalkToNpc(700001), new QuestEvent.TalkToNpc(700001, 8));
+
+		twoRouteQuest(new QuestEvent.TalkToNpc(700001, 8), new QuestEvent.TalkToNpc(700002, 8)).compile();
+		twoRouteQuest(new QuestEvent.TalkToNpc(700001, 8), new QuestEvent.TalkToNpc(700001, 9)).compile();
+	}
+
+	@Test
+	void conflictIndexPreservesKillNpcSetOverlapSemantics() {
+		assertAmbiguous(new QuestEvent.KillNpcSet(Set.of(210001, 210002)), new QuestEvent.KillNpc(210002));
+		assertAmbiguous(new QuestEvent.KillNpcSet(Set.of(210001, 210002)),
+			new QuestEvent.KillNpcSet(Set.of(210002, 210003)));
+
+		twoRouteQuest(new QuestEvent.KillNpcSet(Set.of(210001, 210002)),
+			new QuestEvent.KillNpcSet(Set.of(210003, 210004))).compile();
+	}
+
+	@Test
+	void conflictIndexPreservesKillInWorldPrecedence() {
+		twoRouteQuest(new QuestEvent.KillInWorld(0), new QuestEvent.KillInWorld(210010000)).compile();
+		twoRouteQuest(new QuestEvent.KillInWorld(210010000), new QuestEvent.KillInWorld(220010000)).compile();
+		assertAmbiguous(new QuestEvent.KillInWorld(210010000), new QuestEvent.KillInWorld(210010000));
+	}
+
+	@Test
+	void conflictIndexCoversSpecializedOverlapKeys() {
+		assertAmbiguous(new QuestEvent.UseItem(182400001, 1), new QuestEvent.UseItem(182400001, 2));
+		assertAmbiguous(new QuestEvent.AttackNpc(210001), new QuestEvent.AttackNpc(210001));
+		assertAmbiguous(new QuestEvent.ItemPlay(182400001, 1000), new QuestEvent.ItemPlay(182400001, 2000));
+		assertAmbiguous(new QuestEvent.QuestDialog(1002), new QuestEvent.QuestDialog(1002));
+		assertAmbiguous(new QuestEvent.KillRanked(1), new QuestEvent.KillRanked(2));
+		assertAmbiguous(new QuestEvent.AtDistance(210001), new QuestEvent.AtDistance(210001));
+		assertAmbiguous(new QuestEvent.LevelUp(), new QuestEvent.LevelUp());
+	}
+
+	@Test
+	void conflictIndexUsesPrecomputedCompatibleSourceNodes() {
+		var mutuallyExclusiveSources = conflictTestQuest();
+		mutuallyExclusiveSources.on(new QuestEvent.AttackNpc(210001)).from("start").goTo("reward");
+		mutuallyExclusiveSources.on(new QuestEvent.AttackNpc(210001)).from("reward").goTo("alternate");
+		mutuallyExclusiveSources.compile();
+
+		var wildcardSource = conflictTestQuest();
+		wildcardSource.on(new QuestEvent.AttackNpc(210001)).from("start").goTo("reward");
+		wildcardSource.on(new QuestEvent.AttackNpc(210001)).when(statusIs(QuestStatus.START)).goTo("alternate");
+		assertEquals("AMBIGUOUS_TRANSITION",
+			assertThrows(QuestCompilationException.class, wildcardSource::compile).code());
+	}
+
+	private static void assertAmbiguous(QuestEvent first, QuestEvent second) {
+		assertEquals("AMBIGUOUS_TRANSITION",
+			assertThrows(QuestCompilationException.class, () -> twoRouteQuest(first, second).compile()).code());
+	}
+
+	private static QuestDsl.QuestBuilder twoRouteQuest(QuestEvent first, QuestEvent second) {
+		QuestDsl.QuestBuilder builder = conflictTestQuest();
+		builder.on(first).from("start").goTo("reward");
+		builder.on(second).from("start").goTo("alternate");
+		return builder;
+	}
+
+	private static QuestDsl.QuestBuilder conflictTestQuest() {
+		return quest(1001)
+			.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
+			.node("start", project(QuestStatus.START, vars("var1", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var1", 1)))
+			.node("alternate", project(QuestStatus.REWARD, vars("var1", 2)));
+	}
+
+	@Test
 	void duplicateRuntimeProjectionFailsClosed() {
 		assertEquals("DUPLICATE_NODE_PROJECTION", assertThrows(QuestCompilationException.class, () -> quest(1001)
 				.node("first", project(QuestStatus.START, vars("var1", 0)))

@@ -15,7 +15,9 @@ public record ClientActionRequest(Kind kind, int questId, int npcId, int objectI
 	public enum Kind {
 		DIALOG_SELECT,
 		USE_OBJECT,
+		ACTION_ITEM_USE,
 		USE_ITEM,
+		ITEM_PLAY,
 		WORLD_EVENT
 	}
 
@@ -39,12 +41,31 @@ public record ClientActionRequest(Kind kind, int questId, int npcId, int objectI
 			new QuestEvent.TalkToNpc(npcId, actionId, objectId));
 	}
 
+	/** 创建不依赖 NPC/objectId 的原生任务对话请求。 / Creates a native quest-dialog request without an NPC/object id. */
+	public static ClientActionRequest targetlessDialog(int questId, int actionId) {
+		return new ClientActionRequest(Kind.DIALOG_SELECT, questId, 0, 0, actionId, 0, 0,
+			new QuestEvent.QuestDialog(actionId));
+	}
+
 	/** 创建交互物使用完成请求。 / Creates an interaction-object use-completion request. */
 	public static ClientActionRequest useObject(int questId, int npcId, int objectId) {
 		if (npcId <= 0 || objectId <= 0) {
 			throw new IllegalArgumentException("object use requires positive npcId and objectId");
 		}
 		return new ClientActionRequest(Kind.USE_OBJECT, questId, npcId, objectId, -1, 0, 0,
+			new QuestEvent.TalkToNpc(npcId, -1, objectId));
+	}
+
+	/**
+	 * 创建会先经过 ACTION_ITEM_USE gate、再完成交互物对话的客户端请求。
+	 * Creates a client request that passes through the ACTION_ITEM_USE gate before completing the interaction-object
+	 * dialog.
+	 */
+	public static ClientActionRequest actionItemUse(int questId, int npcId, int objectId) {
+		if (npcId <= 0 || objectId <= 0) {
+			throw new IllegalArgumentException("action-item use requires positive npcId and objectId");
+		}
+		return new ClientActionRequest(Kind.ACTION_ITEM_USE, questId, npcId, objectId, -1, 0, 0,
 			new QuestEvent.TalkToNpc(npcId, -1, objectId));
 	}
 
@@ -55,6 +76,15 @@ public record ClientActionRequest(Kind kind, int questId, int npcId, int objectI
 		}
 		return new ClientActionRequest(Kind.USE_ITEM, questId, 0, 0, 0, itemId, itemObjectId,
 			new QuestEvent.UseItem(itemId, itemObjectId));
+	}
+
+	/** 创建需要真实客户端读条完成的物品使用请求。 / Creates an item-use request that requires real client cast completion. */
+	public static ClientActionRequest itemPlay(int questId, int itemId, int itemObjectId, int animationMillis) {
+		if (itemId <= 0 || itemObjectId <= 0 || animationMillis <= 0) {
+			throw new IllegalArgumentException("item play requires positive itemId, itemObjectId, and animationMillis");
+		}
+		return new ClientActionRequest(Kind.ITEM_PLAY, questId, 0, 0, 0, itemId, itemObjectId,
+			new QuestEvent.ItemPlay(itemId, animationMillis));
 	}
 
 	/** 创建由内存世界注入的任务事件。 / Creates a quest event emitted by the in-memory world. */

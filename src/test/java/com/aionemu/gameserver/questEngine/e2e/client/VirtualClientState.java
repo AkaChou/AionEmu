@@ -32,6 +32,7 @@ public final class VirtualClientState {
 	private int currentNpcId;
 	private int currentObjectId;
 	private int currentPage;
+	private int currentPageTargetObjectId;
 	private final List<ServerPacketObservation> packets = new ArrayList<>();
 	private final Map<String, Integer> spawnedNpcObjectIds = new LinkedHashMap<>();
 	private final Map<String, Boolean> followingSlots = new LinkedHashMap<>();
@@ -69,6 +70,7 @@ public final class VirtualClientState {
 	/** 关闭当前客户端页面。 / Closes the current client page. */
 	public void closePage() {
 		currentPage = 0;
+		currentPageTargetObjectId = 0;
 	}
 
 	/** 替换一个相关物品的确定数量。 / Replaces the known count of one relevant item. */
@@ -91,6 +93,7 @@ public final class VirtualClientState {
 				closePage();
 			} else {
 				showPage(observation.dialogId());
+				currentPageTargetObjectId = observation.targetObjectId();
 			}
 		}
 	}
@@ -143,6 +146,7 @@ public final class VirtualClientState {
 	public int currentNpcId() { return currentNpcId; }
 	public int currentObjectId() { return currentObjectId; }
 	public int currentPage() { return currentPage; }
+	public int currentPageTargetObjectId() { return currentPageTargetObjectId; }
 	public List<ServerPacketObservation> packets() { return List.copyOf(packets); }
 	public Map<String, Integer> spawnedNpcObjectIds() { return Map.copyOf(spawnedNpcObjectIds); }
 	public Map<String, Boolean> followingSlots() { return Map.copyOf(followingSlots); }

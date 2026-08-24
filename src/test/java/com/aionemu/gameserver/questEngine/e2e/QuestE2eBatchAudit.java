@@ -210,9 +210,13 @@ public final class QuestE2eBatchAudit {
 	private static boolean shouldEscalate(QuestE2eAuditRow row, QuestTransition transition) {
 		boolean protocolEvent = transition.event() instanceof QuestEvent.TalkToNpc talk
 			&& talk.dialogId() != null && talk.dialogId() >= 0
-			|| transition.event() instanceof QuestEvent.UseItem;
+			|| transition.event() instanceof QuestEvent.UseItem
+			|| transition.event() instanceof QuestEvent.ItemPlay;
 		if (!protocolEvent || row.transitionMatch() != QuestE2eTransitionMatch.EXPECTED_TRANSITION_MATCHED) {
 			return false;
+		}
+		if (transition.event() instanceof QuestEvent.ItemPlay) {
+			return true;
 		}
 		if (transition.event() instanceof QuestEvent.UseItem && transition.actions().stream()
 				.anyMatch(QuestE2eBatchAudit::requiresItemProtocol)) {
@@ -269,6 +273,8 @@ public final class QuestE2eBatchAudit {
 				runtime.state().currentObjectId(), talk.dialogId());
 			case QuestEvent.UseItem use -> ClientActionRequest.useItem(definition.id(), use.itemId(),
 				runtime.expectedDialogTargetObjectId());
+			case QuestEvent.ItemPlay itemPlay -> ClientActionRequest.itemPlay(definition.id(), itemPlay.itemId(),
+				runtime.expectedDialogTargetObjectId(), itemPlay.animationMillis());
 			default -> throw new IllegalArgumentException("event has no CM protocol request: " + transition.event().type());
 		};
 	}
@@ -329,6 +335,9 @@ public final class QuestE2eBatchAudit {
 	}
 
 	private static String protocolMode(QuestEvent event) {
+		if (event instanceof QuestEvent.ItemPlay) {
+			return "CM_USE_ITEM+ITEM_PLAY_COMPLETED";
+		}
 		return event instanceof QuestEvent.UseItem ? "CM_USE_ITEM" : "CM_DIALOG_SELECT";
 	}
 
@@ -503,7 +512,7 @@ public final class QuestE2eBatchAudit {
 
 	private static boolean isClick(QuestEvent event) {
 		return event instanceof QuestEvent.TalkToNpc || event instanceof QuestEvent.QuestDialog
-			|| event instanceof QuestEvent.UseItem;
+			|| event instanceof QuestEvent.UseItem || event instanceof QuestEvent.ItemPlay;
 	}
 
 	private static int firstPage(List<ServerPacketObservation> packets) {

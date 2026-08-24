@@ -47,13 +47,23 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="798303" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="798303" action="USE_OBJECT"/>
       </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798303" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <actions>
+        <remove-item item-id="182212216" count="1"/>
+      </actions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
@@ -63,8 +73,8 @@
         <dialog type="TALK_TO_NPC" npc-id="798303" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
-        <remove-item item-id="182212216" count="1"/>
         <grant-reward kind="EXP" id="0" amount="37405" amount-mode="QUEST_BASE"/>
+        <grant-reward kind="ITEM" id="188508000" amount="1"/>
         <complete-quest reward-index="0"/>
       </actions>
       <after-commit>

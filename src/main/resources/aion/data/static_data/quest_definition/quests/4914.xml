@@ -85,7 +85,23 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="203385" source="k1" target="reward" page="SELECT5"/>
+    <transition source="k1" target="k1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203385" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="k1" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203385" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="204837" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

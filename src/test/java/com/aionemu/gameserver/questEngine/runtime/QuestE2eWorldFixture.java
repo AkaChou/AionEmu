@@ -4,6 +4,7 @@ import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.controllers.NpcController;
+import com.aionemu.gameserver.controllers.PlayerController;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.Gender;
@@ -33,6 +34,7 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.questEngine.e2e.client.ServerPacketObservation;
@@ -43,6 +45,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestInstanceTarget;
 import com.aionemu.gameserver.questEngine.definition.QuestNpcEmotion;
 import com.aionemu.gameserver.questEngine.definition.QuestSpawnLocation;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
+import com.aionemu.gameserver.questEngine.model.QuestActionType;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.world.WorldPosition;
@@ -291,6 +294,36 @@ public final class QuestE2eWorldFixture implements AutoCloseable {
 			&& controller.consumeHandled();
 	}
 
+	/**
+	 * 标记下一次对象对话必须先经过 ACTION_ITEM_USE gate。
+	 * Marks the next object dialog as requiring the ACTION_ITEM_USE gate first.
+	 *
+	 * @param objectId 权威交互对象 ID / authoritative interaction object ID
+	 */
+	public void expectActionItemUse(int objectId) {
+		ProtocolNpcController controller = protocolController(objectId);
+		controller.expectActionItemUse();
+	}
+
+	/**
+	 * 消费并返回上一次对象对话的 ACTION_ITEM_USE gate 结果。
+	 * Consumes and returns the ACTION_ITEM_USE gate result from the last object dialog.
+	 *
+	 * @param objectId 权威交互对象 ID / authoritative interaction object ID
+	 * @return gate 是否允许 / whether the gate allowed the interaction
+	 */
+	public boolean protocolActionItemAllowed(int objectId) {
+		return protocolController(objectId).consumeActionItemAllowed();
+	}
+
+	private ProtocolNpcController protocolController(int objectId) {
+		VisibleObject object = objects.get(objectId);
+		if (object instanceof Npc npc && npc.getController() instanceof ProtocolNpcController controller) {
+			return controller;
+		}
+		throw new IllegalArgumentException("no protocol NPC controller for objectId=" + objectId);
+	}
+
 	/** 为 CM_USE_ITEM 种入一个只读任务物品。 / Seeds a read-only quest item for CM_USE_ITEM. */
 	public Item seedQuestItem(int itemId, int itemObjectId) {
 		try {
@@ -360,6 +393,9 @@ public final class QuestE2eWorldFixture implements AutoCloseable {
 		ObjenesisStd objenesis = new ObjenesisStd();
 		Player result = objenesis.newInstance(Player.class);
 		setField(AionObject.class, result, "objectId", PLAYER_ID);
+		VirtualClockPlayerController controller = new VirtualClockPlayerController(clock);
+		setField(VisibleObject.class, result, "controller", controller);
+		controller.setOwner(result);
 		result.setPosition(new WorldPosition(state.worldId()));
 		result.getPosition().setXYZH(state.x(), state.y(), state.z(), state.heading());
 		setField(Player.class, result, "questStateList", new QuestStateList());
@@ -437,6 +473,13 @@ public final class QuestE2eWorldFixture implements AutoCloseable {
 				return ServerPacketObservation.movie(intField(SM_PLAY_MOVIE.class, movie, "movieId"),
 					intField(SM_PLAY_MOVIE.class, movie, "type"));
 			}
+			if (packet instanceof SM_ITEM_USAGE_ANIMATION animation) {
+				return ServerPacketObservation.itemUsageAnimation(
+					intField(SM_ITEM_USAGE_ANIMATION.class, animation, "itemObjId"),
+					intField(SM_ITEM_USAGE_ANIMATION.class, animation, "itemId"),
+					intField(SM_ITEM_USAGE_ANIMATION.class, animation, "time"),
+					intField(SM_ITEM_USAGE_ANIMATION.class, animation, "end"));
+			}
 			return ServerPacketObservation.other(packet.getClass().getSimpleName());
 		} catch (ReflectiveOperationException exception) {
 			return ServerPacketObservation.other(packet.getClass().getSimpleName() + ":reflection-failure");
@@ -484,6 +527,20 @@ public final class QuestE2eWorldFixture implements AutoCloseable {
 		@Override
 		public Stat2 getMovementSpeed() {
 			return new AdditionStat(StatEnum.SPEED, 6000, owner);
+		}
+	}
+
+	/** 只将控制器延迟任务交给虚拟时钟的玩家控制器。 / Player controller that delegates delayed tasks only to the virtual clock. */
+	private static final class VirtualClockPlayerController extends PlayerController {
+		private final VirtualClock clock;
+
+		private VirtualClockPlayerController(VirtualClock clock) {
+			this.clock = java.util.Objects.requireNonNull(clock, "clock");
+		}
+
+		@Override
+		protected void scheduleTaskExecution(Runnable task, long delay) {
+			clock.schedule(delay, task);
 		}
 	}
 
@@ -536,6 +593,8 @@ public final class QuestE2eWorldFixture implements AutoCloseable {
 	 */
 	private static final class ProtocolNpcController extends NpcController {
 		private boolean handled;
+		private boolean actionItemUseExpected;
+		private boolean actionItemAllowed;
 
 		/**
 		 * 将真实 CM_SHOW_DIALOG 解码后的交互请求确定性推进到 AI 使用完成回调。
@@ -544,6 +603,11 @@ public final class QuestE2eWorldFixture implements AutoCloseable {
 		 */
 		@Override
 		public void onDialogRequest(Player player) {
+			if (actionItemUseExpected) {
+				actionItemUseExpected = false;
+				actionItemAllowed = GameEngineServices.questEngine().onCanAct(new QuestEnv(
+					getOwner(), player, 0, 0), getOwner().getNpcId(), QuestActionType.ACTION_ITEM_USE);
+			}
 			handled = GameEngineServices.questEngine().onDialog(new QuestEnv(
 				getOwner(), player, 0, QuestDialog.USE_OBJECT.id()));
 			if (!handled) {
@@ -561,6 +625,27 @@ public final class QuestE2eWorldFixture implements AutoCloseable {
 		private boolean consumeHandled() {
 			boolean result = handled;
 			handled = false;
+			return result;
+		}
+
+		/**
+		 * 重置 gate 结果并要求下一次对话执行 ACTION_ITEM_USE 检查。
+		 * Resets the gate result and requires the next dialog to perform the ACTION_ITEM_USE check.
+		 */
+		private void expectActionItemUse() {
+			actionItemUseExpected = true;
+			actionItemAllowed = false;
+		}
+
+		/**
+		 * 返回并清除最近一次 ACTION_ITEM_USE 检查结果。
+		 * Returns and clears the most recent ACTION_ITEM_USE check result.
+		 *
+		 * @return gate 是否允许 / whether the gate allowed the interaction
+		 */
+		private boolean consumeActionItemAllowed() {
+			boolean result = actionItemAllowed;
+			actionItemAllowed = false;
 			return result;
 		}
 	}

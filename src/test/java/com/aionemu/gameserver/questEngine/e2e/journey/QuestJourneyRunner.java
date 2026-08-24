@@ -8,10 +8,14 @@ import com.aionemu.gameserver.questEngine.e2e.client.ClientResourceOracle;
 import com.aionemu.gameserver.questEngine.e2e.client.QuestHeadlessClient;
 import com.aionemu.gameserver.questEngine.e2e.client.QuestProtocolLoop;
 import com.aionemu.gameserver.questEngine.e2e.client.QuestTrace;
+import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.runtime.QuestE2eRuntime;
+import com.aionemu.gameserver.questEngine.runtime.QuestAuditEvent;
+import com.aionemu.gameserver.questEngine.runtime.QuestRouteResult;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -34,13 +38,19 @@ public final class QuestJourneyRunner implements AutoCloseable {
 
 	/** 一步请求提交后的完整可观察快照。 / Complete observable snapshot after one request. */
 	public record Step(String label, QuestHeadlessClient.DispatchOutcome outcome, QuestStatus status,
-			int packedVariables, int page, int npcId, int objectId, List<QuestAction> committedActions,
-			List<QuestTrace.Entry> trace) {
+			int packedVariables, Map<Integer, Integer> inventory, int page, int npcId, int objectId,
+			List<QuestAction> committedActions,
+			int expectedDialogTargetObjectId, QuestTransition matchedTransition,
+			List<QuestTransition> matchedTransitionCandidates, QuestRouteResult matchedRouteResult, int routeCandidateCount,
+			List<QuestAuditEvent> auditEvents, List<QuestTrace.Entry> trace) {
 		public Step {
 			label = Objects.requireNonNull(label, "label");
 			outcome = Objects.requireNonNull(outcome, "outcome");
 			status = Objects.requireNonNull(status, "status");
+			inventory = Map.copyOf(inventory);
 			committedActions = List.copyOf(committedActions);
+			matchedTransitionCandidates = List.copyOf(matchedTransitionCandidates);
+			auditEvents = List.copyOf(auditEvents);
 			trace = List.copyOf(trace);
 		}
 	}
@@ -52,9 +62,40 @@ public final class QuestJourneyRunner implements AutoCloseable {
 	 */
 	public QuestJourneyRunner(CompiledQuestDefinition definition, QuestTransition initialTransition,
 			ClientResourceOracle oracle) throws Exception {
+		this(definition, initialTransition, oracle, PlayerClass.GLADIATOR);
+	}
+
+	/**
+	 * 使用规划阶段选定的持续职业事实建立单任务 Journey。
+	 * Creates a single-quest journey with the persistent player-class fact selected during planning.
+	 */
+	public QuestJourneyRunner(CompiledQuestDefinition definition, QuestTransition initialTransition,
+			ClientResourceOracle oracle, PlayerClass playerClass) throws Exception {
+		this(definition, initialTransition, oracle, playerClass, Map.of());
+	}
+
+	/**
+	 * 使用规划阶段选定的持续职业和初始背包事实建立单任务 Journey。
+	 * Creates a single-quest journey with the persistent class and initial-inventory facts selected during planning.
+	 */
+	public QuestJourneyRunner(CompiledQuestDefinition definition, QuestTransition initialTransition,
+			ClientResourceOracle oracle, PlayerClass playerClass, Map<Integer, Integer> initialInventory) throws Exception {
+		this(definition, initialTransition, oracle, playerClass, initialInventory, List.of(initialTransition));
+	}
+
+	/**
+	 * 使用规划阶段选定的职业、背包和持续条件事实建立完整 Journey。
+	 * Creates a complete journey with the class, inventory, and persistent condition facts selected during planning.
+	 */
+	public QuestJourneyRunner(CompiledQuestDefinition definition, QuestTransition initialTransition,
+			ClientResourceOracle oracle, PlayerClass playerClass, Map<Integer, Integer> initialInventory,
+			List<QuestTransition> journeyTransitions) throws Exception {
 		this.definition = Objects.requireNonNull(definition, "definition");
 		this.initialTransition = Objects.requireNonNull(initialTransition, "initialTransition");
 		ClientResourceOracle clientOracle = Objects.requireNonNull(oracle, "oracle");
+		PlayerClass journeyPlayerClass = Objects.requireNonNull(playerClass, "playerClass");
+		Map<Integer, Integer> journeyInitialInventory = Map.copyOf(initialInventory);
+		List<QuestTransition> persistentJourneyTransitions = List.copyOf(journeyTransitions);
 		if (!this.definition.definition().transitions().contains(initialTransition)) {
 			throw new IllegalArgumentException("initial transition does not belong to the quest definition");
 		}
@@ -62,6 +103,9 @@ public final class QuestJourneyRunner implements AutoCloseable {
 		QuestProtocolLoop createdProtocol = null;
 		try {
 			createdRuntime.prepare(initialTransition);
+			createdRuntime.replacePlayerClassFacts(journeyPlayerClass);
+			createdRuntime.seedInitialInventoryFacts(journeyInitialInventory);
+			createdRuntime.seedPersistentJourneyConditions(persistentJourneyTransitions);
 			createdProtocol = new QuestProtocolLoop(createdRuntime);
 		} catch (Exception failure) {
 			createdRuntime.close();
@@ -87,11 +131,27 @@ public final class QuestJourneyRunner implements AutoCloseable {
 	}
 
 	/**
+	 * 通过真实 {@code CM_DIALOG_SELECT} 提交不带 NPC/objectId 的客户端任务动作。
+	 * Submits a client quest action without an NPC/object id through a real {@code CM_DIALOG_SELECT}.
+	 */
+	public Step clickTargetlessAction(int actionId) {
+		return perform("targetless-action:" + actionId, () -> client.clickTargetlessAction(actionId));
+	}
+
+	/**
 	 * 点击当前 Aion 5.8 任务页面实际可见的动作。
 	 * Clicks an action visible on the current Aion 5.8 quest page.
 	 */
 	public Step clickVisibleAction(int actionId) {
 		return perform("page-action:" + actionId, () -> client.clickPageAction(actionId));
+	}
+
+	/**
+	 * 发送真实 FINISH_DIALOG 后由客户端关闭一个没有服务端 route 的纯结束页。
+	 * Sends a real FINISH_DIALOG and then lets the client close a terminal page that deliberately has no server route.
+	 */
+	public Step finishDialogLocally() {
+		return perform("client-local-finish-dialog", client::finishDialogLocally);
 	}
 
 	/** 点击原生奖励选择窗口中的动作。 / Clicks an action in the native reward-selection window. */
@@ -112,6 +172,34 @@ public final class QuestJourneyRunner implements AutoCloseable {
 	}
 
 	/**
+	 * 通过真实交互物协议使用对象，再应用一件由 100% 生产 metadata 声明的世界掉落。
+	 * Uses an object through the real interaction protocol, then applies one world drop declared by deterministic
+	 * production metadata.
+	 */
+	public Step useObjectAndReceiveMetadataDrop(int npcId, int itemId) {
+		int objectId = nextObjectId++;
+		runtime.world().seedInteractionNpc(npcId, objectId);
+		return perform("use-object-drop:" + npcId + ":" + itemId, () -> {
+			QuestHeadlessClient.DispatchOutcome outcome = client.useActionItemObject(npcId, objectId);
+			if (!outcome.failed() && outcome.handled()) {
+				runtime.receiveDeterministicMetadataDrop(npcId, itemId);
+			}
+			return outcome;
+		});
+	}
+
+	/** 使用生产 XML 声明的任务物品。 / Uses a quest item declared by production XML. */
+	public Step useItem(int itemId) {
+		return perform("use-item:" + itemId, () -> client.useItem(itemId, nextObjectId++));
+	}
+
+	/** 使用生产 XML 声明并要求读条完成的任务物品。 / Uses a production-XML quest item that requires cast completion. */
+	public Step playItem(int itemId, int animationMillis) {
+		return perform("item-play:" + itemId + ":" + animationMillis,
+			() -> client.playItem(itemId, nextObjectId++, animationMillis));
+	}
+
+	/**
 	 * 向同一个持续运行时注入确定性的世界事件。
 	 * Emits a deterministic world event into the same persistent runtime.
 	 */
@@ -120,8 +208,23 @@ public final class QuestJourneyRunner implements AutoCloseable {
 		return perform("world:" + event.type(), () -> client.emitWorldEvent(event));
 	}
 
+	/**
+	 * 将生产 transition 的事件具体化后注入同一持续运行时。
+	 * Materializes and emits a production transition event into the same persistent runtime.
+	 */
+	public Step emitWorldEvent(QuestTransition transition) {
+		Objects.requireNonNull(transition, "transition");
+		return emitWorldEvent(runtime.materializeEvent(transition));
+	}
+
 	/** 返回当前任务状态。 / Returns the current quest status. */
 	public QuestStatus status() { return runtime.state().status(); }
+
+	/**
+	 * 为下一步物化地图、区域等动态场景事实，且不改变任务状态。
+	 * Materializes dynamic scenario facts such as world and zone for the next step without changing quest state.
+	 */
+	public void prepareStep(QuestTransition transition) { runtime.seedStepConditions(transition); }
 
 	/** 返回当前客户端页面。 / Returns the current client page. */
 	public int page() { return runtime.state().currentPage(); }
@@ -131,6 +234,11 @@ public final class QuestJourneyRunner implements AutoCloseable {
 		return definition.definition().progressLayout().unpack(runtime.state().packedVariables())
 			.getOrDefault(field, 0);
 	}
+
+	/** 返回当前打包进度。 / Returns the current packed quest progress. */
+	public int packedVariables() { return runtime.state().packedVariables(); }
+	/** 返回当前由运行时事实维护的相关背包快照。 / Returns the current relevant-inventory snapshot maintained by runtime facts. */
+	public Map<Integer, Integer> inventorySnapshot() { return runtime.inventorySnapshot(); }
 
 	/**
 	 * 返回构造时准备且在 Journey 中保持不变的入口 transition。
@@ -170,8 +278,11 @@ public final class QuestJourneyRunner implements AutoCloseable {
 		List<QuestTrace.Entry> stepTrace = completeTrace.subList(traceCursor, completeTrace.size());
 		traceCursor = completeTrace.size();
 		Step step = new Step(label, outcome, runtime.state().status(), runtime.state().packedVariables(),
-			runtime.state().currentPage(), runtime.state().currentNpcId(), runtime.state().currentObjectId(),
-			runtime.committedTransactionActions(), stepTrace);
+			runtime.inventorySnapshot(), runtime.state().currentPage(), runtime.state().currentNpcId(),
+			runtime.state().currentObjectId(),
+			runtime.committedTransactionActions(), runtime.expectedDialogTargetObjectId(), runtime.matchedTransition(),
+			runtime.matchedTransitionCandidates(), runtime.matchedRouteResult(), runtime.routeCandidateCount(),
+			runtime.auditEvents(), stepTrace);
 		steps.add(step);
 		return step;
 	}

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <quest-definition id="49715" version="1">
-  <metadata name="[Daily] Lulu of a Problem" display-name-id="1129831" min-level="63" max-level="2147483647" category="FACTION" cannot-share="true">
+  <metadata name="[Daily] Lulu of a Problem" display-name-id="1129831" min-level="63" max-level="2147483647" category="FACTION" cannot-share="true" npc-faction-id="18">
     <races>
       <race id="ASMODIANS"/>
     </races>
-    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false"/>
+    <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="false" cycles="ALL"/>
     <rewards>
       <reward kind="EXP" id="0" amount="3251515"/>
       <reward kind="ITEM" id="186000234" amount="3"/>
@@ -18,9 +18,7 @@
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
     </node>
-    <node label="started" status="START">
-      <var name="var0" value="0"/>
-    </node>
+    <node label="started" status="START"/>
     <node label="reward" status="REWARD">
       <var name="var0" value="10"/>
     </node>
@@ -29,50 +27,10 @@
     </node>
   </nodes>
   <transitions>
-    <!-- 接取/咨询：派系 NPC 高帽军团 (800934/800935)。start_npc_ids=0 派系日任，沿用 FACTION 先例（49607）以 end NPC 承接对话。 -->
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800934" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800934" action="ASK_QUEST_ACCEPT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
-      </after-commit>
-    </transition>
+    <!-- 阵营任务由无目标 QUEST_ACTION 接取；Faction tasks are accepted by targetless QUEST_ACTION. -->
     <transition source="unaccepted" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="800934" action="QUEST_ACCEPT_1"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800934" action="QUEST_ACCEPT_SIMPLE"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800934" action="SETPRO1"/>
+        <dialog type="QUEST_ACTION" actions="QUEST_ACCEPT_1 QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -84,7 +42,7 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="800934" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
+        <dialog type="QUEST_ACTION" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -92,81 +50,14 @@
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="800934" action="FINISH_DIALOG"/>
+        <dialog type="QUEST_ACTION" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800935" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800935" action="ASK_QUEST_ACCEPT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800935" action="QUEST_ACCEPT_1"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800935" action="QUEST_ACCEPT_SIMPLE"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800935" action="SETPRO1"/>
-      </event>
-      <conditions>
-        <start-eligible/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800935" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800935" action="FINISH_DIALOG"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <!-- 击杀鲁鲁巴 (231284/231285/231286/231287/231288/231289) 合计 10 只：var0 计数 0→10，priority 1 计数、0 完成进入奖励。 -->
+    <!-- 击杀鲁鲁巴合计 10 只；第十击保持 START，随后由零售报告动作进入奖励。
+         Kill ten Lulu targets in total; the tenth kill remains START, then the retail report action enters reward. -->
     <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-id="231284"/>
@@ -179,20 +70,6 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <kill-npc npc-id="231284"/>
-      </event>
-      <conditions>
-        <variable-at-least field="var0" value="10"/>
-      </conditions>
-      <actions>
-        <set-variable field="var0" value="10"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
@@ -209,20 +86,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <kill-npc npc-id="231285"/>
-      </event>
-      <conditions>
-        <variable-at-least field="var0" value="10"/>
-      </conditions>
-      <actions>
-        <set-variable field="var0" value="10"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
     <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-id="231286"/>
@@ -235,20 +98,6 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <kill-npc npc-id="231286"/>
-      </event>
-      <conditions>
-        <variable-at-least field="var0" value="10"/>
-      </conditions>
-      <actions>
-        <set-variable field="var0" value="10"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
@@ -265,20 +114,6 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <kill-npc npc-id="231287"/>
-      </event>
-      <conditions>
-        <variable-at-least field="var0" value="10"/>
-      </conditions>
-      <actions>
-        <set-variable field="var0" value="10"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
     <transition source="started" target="started" priority="1">
       <event>
         <kill-npc npc-id="231288"/>
@@ -291,20 +126,6 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <kill-npc npc-id="231288"/>
-      </event>
-      <conditions>
-        <variable-at-least field="var0" value="10"/>
-      </conditions>
-      <actions>
-        <set-variable field="var0" value="10"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <transition source="started" target="started" priority="1">
@@ -321,46 +142,77 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <kill-npc npc-id="231289"/>
-      </event>
-      <conditions>
-        <variable-at-least field="var0" value="10"/>
-      </conditions>
-      <actions>
-        <set-variable field="var0" value="10"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-      </after-commit>
-    </transition>
-    <!-- 进行中：派系 NPC (800934/800935) 对话查看任务详情。 -->
+    <!-- 十次击杀后向南部支部报告；Report to the South Katalam branch after all ten kills. -->
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="800936" action="QUEST_SELECT"/>
       </event>
+      <conditions>
+        <variable-at-least field="var0" value="10"/>
+      </conditions>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="800937" action="QUEST_SELECT"/>
       </event>
+      <conditions>
+        <variable-at-least field="var0" value="10"/>
+      </conditions>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="800938" action="QUEST_SELECT"/>
       </event>
+      <conditions>
+        <variable-at-least field="var0" value="10"/>
+      </conditions>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <!-- 奖励：派系 NPC (800934/800935) 领取固定奖励。 -->
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800936" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="10"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800937" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="10"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800938" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <conditions>
+        <variable-at-least field="var0" value="10"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <!-- 南部支部领取固定奖励；Claim the fixed rewards from the South Katalam branch. -->
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="800936" actions="USE_OBJECT SELECT_QUEST_REWARD"/>

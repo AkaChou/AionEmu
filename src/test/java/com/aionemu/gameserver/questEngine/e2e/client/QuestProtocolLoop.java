@@ -7,6 +7,7 @@ import com.aionemu.gameserver.network.aion.clientpackets.CM_DIALOG_SELECT;
 import com.aionemu.gameserver.network.aion.clientpackets.CM_SHOW_DIALOG;
 import com.aionemu.gameserver.network.aion.clientpackets.CM_USE_ITEM;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.runtime.QuestE2eRuntime;
 import com.aionemu.gameserver.questEngine.runtime.QuestE2eWorldFixture;
 import com.aionemu.gameserver.questEngine.runtime.QuestProductionDispatcher;
@@ -18,15 +19,16 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * 在隔离测试引擎上执行真实 CM_DIALOG_SELECT、CM_SHOW_DIALOG 和 CM_USE_ITEM，
+ * 在隔离测试引擎上执行真实 CM_DIALOG_SELECT、CM_SHOW_DIALOG、CM_USE_ITEM 和 item-play 完成回调，
  * 并在关闭时恢复全部静态 provider。
- * Executes real CM_DIALOG_SELECT, CM_SHOW_DIALOG, and CM_USE_ITEM packets against an isolated test engine and
- * restores every static provider on close.
+ * Executes real CM_DIALOG_SELECT, CM_SHOW_DIALOG, CM_USE_ITEM packets and item-play completion callbacks against an
+ * isolated test engine, then restores every static provider on close.
  *
  * <p>该夹具持有进程级锁，生命周期内必须使用 try-with-resources；它不启动网络线程，也不访问数据库。
  * The fixture holds a process-wide lock and must be scoped with try-with-resources; it starts no network thread and
@@ -94,24 +96,31 @@ public final class QuestProtocolLoop implements AutoCloseable {
 		}
 		runtime.beginRequest(request);
 		QuestStatusSnapshot before = snapshot();
+		List<com.aionemu.gameserver.questEngine.definition.QuestTransition> attributableBefore =
+			runtime.attributableTransitions(request, before.status(), before.packedVariables());
 		QuestRuntimeMetricsCollector.Snapshot metricsBefore = runtime.metricsSnapshot();
 		int traceStart = runtime.trace().entries().size();
+		List<ServerPacketObservation> packets = new ArrayList<>();
 		RuntimeException failure = null;
 		boolean handled = false;
 		try {
 			handled = switch (request.kind()) {
 				case DIALOG_SELECT -> dialog(request);
 				case USE_OBJECT -> useObject(request);
+				case ACTION_ITEM_USE -> actionItemUse(request);
 				case USE_ITEM -> useItem(request);
+				case ITEM_PLAY -> itemPlay(request, packets);
 				case WORLD_EVENT -> throw new IllegalStateException("world event was not delegated");
 			};
 		} catch (RuntimeException exception) {
 			failure = exception;
 		}
-		List<ServerPacketObservation> packets = world.drainPackets();
+		packets.addAll(world.drainPackets());
 		QuestStatusSnapshot after = snapshot();
 		boolean changed = !before.equals(after);
 		QuestRouteResult routeResult = runtime.conclusiveResultSince(metricsBefore);
+		runtime.attributeProtocolResult(request, before.status(), before.packedVariables(), routeResult,
+			attributableBefore);
 		handled |= routeResult == QuestRouteResult.HANDLED || routeResult == QuestRouteResult.BLOCKED;
 		if (failure == null && rolledBackAfter(traceStart)) {
 			failure = new IllegalStateException("protocol quest transaction rolled back");
@@ -162,12 +171,33 @@ public final class QuestProtocolLoop implements AutoCloseable {
 		return false;
 	}
 
+	/** 通过真实 CM_USE_ITEM 启动读条，再推进虚拟时钟执行服务端完成回调。 / Starts a cast through real CM_USE_ITEM, then advances the virtual clock to execute the server completion callback. */
+	private boolean itemPlay(ClientActionRequest request, List<ServerPacketObservation> packets) {
+		if (!(request.event() instanceof QuestEvent.ItemPlay itemPlay)) {
+			throw new IllegalArgumentException("item-play request must carry QuestEvent.ItemPlay");
+		}
+		useItem(request);
+		packets.addAll(world.tick(itemPlay.animationMillis()));
+		return false;
+	}
+
 	private boolean useObject(ClientActionRequest request) {
 		ByteBuffer buffer = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN)
 			.putInt(request.objectId());
 		buffer.flip();
 		runPacket(new CM_SHOW_DIALOG(0, AionConnection.State.IN_GAME), buffer);
 		return world.protocolDialogHandled(request.objectId());
+	}
+
+	/**
+	 * 通过真实 CM_SHOW_DIALOG 走 ACTION_ITEM_USE gate，再要求对象完成对话 route。
+	 * Traverses the ACTION_ITEM_USE gate through a real CM_SHOW_DIALOG and then requires the object dialog route to
+	 * complete.
+	 */
+	private boolean actionItemUse(ClientActionRequest request) {
+		world.expectActionItemUse(request.objectId());
+		boolean dialogHandled = useObject(request);
+		return world.protocolActionItemAllowed(request.objectId()) && dialogHandled;
 	}
 
 	private void runPacket(AionClientPacket packet, ByteBuffer buffer) {

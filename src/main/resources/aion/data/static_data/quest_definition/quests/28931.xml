@@ -31,6 +31,7 @@
     </node>
     <node label="reward" status="REWARD">
       <var name="var0" value="2"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
@@ -109,7 +110,7 @@
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
-        <variable-below field="var1" value="2"/>
+        <variable-below field="var1" value="1"/>
       </conditions>
       <actions>
         <increment-variable field="var1" delta="1"/>
@@ -124,10 +125,11 @@
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>
-        <variable-at-least field="var1" value="2"/>
+        <variable-at-least field="var1" value="1"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="2"/>
+        <set-variable field="var1" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
@@ -147,7 +149,7 @@
         <dialog type="TALK_TO_NPC" npc-id="806260" action="USE_OBJECT"/>
       </event>
       <actions>
-        <remove-item item-id="182213556" count="1"/>
+        <remove-item item-id="182213556" count="ALL"/>
       </actions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
@@ -158,7 +160,7 @@
         <dialog type="TALK_TO_NPC" npc-id="806260" action="SELECT_QUEST_REWARD"/>
       </event>
       <actions>
-        <remove-item item-id="182213556" count="1"/>
+        <remove-item item-id="182213556" count="ALL"/>
       </actions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
@@ -169,7 +171,6 @@
         <dialog type="TALK_TO_NPC" npc-id="806260" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
-        <remove-item item-id="182213556" count="1"/>
         <grant-reward kind="EXP" id="0" amount="7911702" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="188100391" amount="500"/>
         <grant-reward kind="ITEM" id="162000196" amount="5"/>

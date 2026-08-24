@@ -17,6 +17,7 @@ import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.NodeProjection;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
+import com.aionemu.gameserver.questEngine.definition.QuestDrop;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestInstanceTarget;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
@@ -69,6 +70,7 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	private boolean unsupportedFacts;
 	private QuestTransition preparedTransition;
 	private QuestTransition matchedTransition;
+	private List<QuestTransition> matchedTransitionCandidates = List.of();
 	private QuestRouteResult matchedRouteResult = QuestRouteResult.UNKNOWN;
 	private int routeCandidateCount;
 	private List<QuestAction> committedTransactionActions = List.of();
@@ -146,6 +148,8 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	public int expectedDialogTargetObjectId() { return facts.targetless ? 0 : facts.interactionObjectId(); }
 	/** 返回最后一次分发实际命中的 transition；没有结论性 route 时返回 null。 / Returns the transition conclusively selected by the last dispatch, or null when no route concluded. */
 	public QuestTransition matchedTransition() { return matchedTransition; }
+	/** 返回最后一次真实协议请求可归因到的 transition 候选。 / Returns transition candidates attributable to the last real protocol request. */
+	public List<QuestTransition> matchedTransitionCandidates() { return matchedTransitionCandidates; }
 	/** 返回当前准备的目标 transition；未调用 prepare 时返回 null。 / Returns the currently prepared target transition, or null before prepare. */
 	public QuestTransition preparedTransition() { return preparedTransition; }
 	/** 返回实际命中 route 的结论。 / Returns the conclusive result of the selected route. */
@@ -178,6 +182,96 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 		facts.equippedItems.clear();
 		facts.equippedItems.putAll(java.util.Objects.requireNonNull(equippedItems, "equippedItems"));
 	}
+	/**
+	 * 替换整条持续 Journey 使用的玩家职业事实。
+	 * Replaces the player-class fact used by the entire persistent journey.
+	 *
+	 * @param playerClass 规划器选定的具体玩家职业 / concrete player class selected by the planner
+	 */
+	public void replacePlayerClassFacts(PlayerClass playerClass) {
+		facts.playerClass = java.util.Objects.requireNonNull(playerClass, "playerClass");
+		world.playerFacts(facts.race, facts.playerClass);
+		state.playerFacts(state.level(), facts.race, facts.playerClass);
+	}
+	/**
+	 * 种入规划路径开始前已经由前置任务或世界行为提供的背包事实。
+	 * Seeds inventory facts already supplied by prerequisite quests or world behavior before the planned path starts.
+	 *
+	 * @param initialInventory 物品模板 ID 到最小初始数量 / item-template ids to minimum initial counts
+	 */
+	public void seedInitialInventoryFacts(Map<Integer, Integer> initialInventory) {
+		for (Map.Entry<Integer, Integer> entry : Map.copyOf(initialInventory).entrySet()) {
+			if (entry.getKey() <= 0 || entry.getValue() <= 0) {
+				throw new IllegalArgumentException("initial inventory ids and counts must be positive");
+			}
+			facts.inventory.merge(entry.getKey(), entry.getValue(), Math::max);
+			state.setItemCount(entry.getKey(), facts.inventory.get(entry.getKey()));
+		}
+	}
+	/**
+	 * 应用一次由生产 metadata 明确声明且概率为 100% 的交互物掉落；它是世界掉落事实，不伪装成任务 transition。
+	 * Applies one deterministic (100%) interaction-object drop declared by production metadata; this remains a
+	 * world-drop fact and is never presented as a quest transition.
+	 *
+	 * @param npcId 产生掉落的交互物模板 ID / interaction-object template id producing the drop
+	 * @param itemId 已获得的任务物品模板 ID / acquired quest-item template id
+	 */
+	public void receiveDeterministicMetadataDrop(int npcId, int itemId) {
+		QuestDrop drop = definition.definition().metadata().drops().stream()
+			.filter(candidate -> candidate.npcId() == npcId && candidate.itemId() == itemId)
+			.filter(candidate -> candidate.chance() == 100)
+			.findFirst().orElseThrow(() -> new IllegalArgumentException(
+				"production metadata has no deterministic quest drop for npc=" + npcId + " item=" + itemId));
+		facts.inventory.merge(drop.itemId(), 1, Integer::sum);
+		state.setItemCount(drop.itemId(), facts.inventory.get(drop.itemId()));
+		trace.add("WORLD", "metadata-drop:" + drop.npcId() + ":" + drop.itemId());
+	}
+	/**
+	 * 种入规划路径中不会由任务状态迁移改变的角色、资格和能力条件。
+	 * Seeds character, eligibility, and capability conditions that quest-state transitions do not mutate.
+	 *
+	 * @param transitions 已选择路径上的生产 transition / production transitions on the selected path
+	 */
+	public void seedPersistentJourneyConditions(List<QuestTransition> transitions) {
+		for (QuestTransition transition : List.copyOf(transitions)) {
+			for (QuestCondition condition : transition.conditions()) {
+				switch (condition) {
+					case QuestCondition.StatusIs ignored -> { }
+					case QuestCondition.HasItem ignored -> { }
+					case QuestCondition.QuestVariableIs ignored -> { }
+					case QuestCondition.VariableAtLeast ignored -> { }
+					case QuestCondition.VariableBelow ignored -> { }
+					case QuestCondition.VariableSumIs ignored -> { }
+					case QuestCondition.VariableSumBelow ignored -> { }
+					case QuestCondition.WorldIs ignored -> { }
+					case QuestCondition.WorldNpcIs ignored -> { }
+					case QuestCondition.ZoneIs ignored -> { }
+					case QuestCondition.NpcHpBelowPercent ignored -> { }
+					default -> applyCondition(condition);
+				}
+			}
+		}
+		finishConditionFacts();
+		world.playerFacts(facts.race, facts.playerClass);
+		state.playerFacts(state.level(), facts.race, facts.playerClass);
+	}
+	/**
+	 * 在单步请求前物化该 transition 所需的动态世界事实，但不重新投影任务状态。
+	 * Materializes dynamic world facts required by one transition before its request without re-projecting quest state.
+	 *
+	 * @param transition 即将执行的生产 transition / production transition about to execute
+	 */
+	public void seedStepConditions(QuestTransition transition) {
+		for (QuestCondition condition : java.util.Objects.requireNonNull(transition, "transition").conditions()) {
+			switch (condition) {
+				case QuestCondition.WorldIs ignored -> applyCondition(condition);
+				case QuestCondition.WorldNpcIs ignored -> applyCondition(condition);
+				case QuestCondition.ZoneIs ignored -> applyCondition(condition);
+				case QuestCondition.NpcHpBelowPercent ignored -> applyCondition(condition);
+				default -> { }
+			}
+		}
+	}
 	/** 清除装备事实捕获状态，用于验证生产条件求值 fail closed。 / Clears captured equipment facts to verify fail-closed production evaluation. */
 	public void clearCapturedEquipmentFacts() {
 		facts.equipmentCaptured = false;
@@ -190,6 +284,7 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 		preparedTransition = java.util.Objects.requireNonNull(transition, "transition");
 		unsupportedFacts = false;
 		matchedTransition = null;
+		matchedTransitionCandidates = List.of();
 		matchedRouteResult = QuestRouteResult.UNKNOWN;
 		routeCandidateCount = 0;
 		committedTransactionActions = List.of();
@@ -239,6 +334,7 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 			throw new IllegalArgumentException("request quest does not match runtime definition");
 		}
 		matchedTransition = null;
+		matchedTransitionCandidates = List.of();
 		matchedRouteResult = QuestRouteResult.UNKNOWN;
 		routeCandidateCount = 0;
 		committedTransactionActions = List.of();
@@ -256,6 +352,22 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 				facts.targetless = false;
 				facts.itemObjectId = request.itemObjectId() > 0 ? request.itemObjectId()
 					: use.itemObjectId() > 0 ? use.itemObjectId() : facts.itemObjectId;
+				facts.inventory.putIfAbsent(use.itemId(), 1);
+			}
+			case QuestEvent.ItemPlay itemPlay -> {
+				facts.targetless = false;
+				facts.itemObjectId = request.itemObjectId() > 0 ? request.itemObjectId() : facts.itemObjectId;
+				facts.inventory.putIfAbsent(itemPlay.itemId(), 1);
+			}
+			case QuestEvent.GetItem get -> {
+				facts.targetless = true;
+				facts.itemObjectId = 0;
+				facts.inventory.merge(get.itemId(), 1, Math::max);
+			}
+			case QuestEvent.CollectItem collect -> {
+				facts.targetless = true;
+				facts.itemObjectId = 0;
+				facts.inventory.merge(collect.itemId(), collect.count(), Math::max);
 			}
 			default -> {
 				facts.targetless = true;
@@ -297,6 +409,7 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 			case QuestEvent.TalkToNpc talk -> world.seedInteractionNpc(talk.npcId(), 900_000 + talk.npcId());
 			case QuestEvent.UseItem use ->
 				facts.itemObjectId = use.itemObjectId() == 0 ? 800_000 + use.itemId() : use.itemObjectId();
+			case QuestEvent.ItemPlay itemPlay -> facts.itemObjectId = 800_000 + itemPlay.itemId();
 			case QuestEvent.AttackNpc attack -> {
 				world.seedInteractionNpc(attack.npcId(), 900_000 + attack.npcId());
 				facts.targetless = true;
@@ -353,6 +466,7 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 		RuntimeException failure = null;
 		try {
 			QuestDispatchContract contract = request.kind() == ClientActionRequest.Kind.USE_ITEM
+				|| request.kind() == ClientActionRequest.Kind.ITEM_PLAY
 				? QuestDispatchContract.FIRST_NON_UNKNOWN : QuestDispatchContract.EXCLUSIVE;
 			List<QuestEventIndex.Route> routes = eventIndex.routesFor(request.event(), definition.id());
 			routeCandidateCount = routes.size();
@@ -377,10 +491,84 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 			if (routeResult == QuestRouteResult.HANDLED || routeResult == QuestRouteResult.BLOCKED
 					|| routeResult == QuestRouteResult.FAILED) {
 				matchedTransition = routes.get(index).transition();
+				matchedTransitionCandidates = List.of(matchedTransition);
 				matchedRouteResult = routeResult;
 				return;
 			}
 		}
+	}
+
+	/**
+	 * 在真实 CM 请求改变状态和背包前，按完整生产计划可行性筛选可归因 transition。
+	 * Filters attributable transitions by full production-plan feasibility before a real CM request mutates state
+	 * or inventory.
+	 */
+	public List<QuestTransition> attributableTransitions(ClientActionRequest request, QuestStatus status,
+			int packedVariables) {
+		java.util.Objects.requireNonNull(request, "request");
+		java.util.Objects.requireNonNull(status, "status");
+		QuestSnapshot before = snapshot(request.event(), status, packedVariables);
+		return eventIndex.routesFor(request.event(), definition.id()).stream()
+			.map(QuestEventIndex.Route::transition)
+			.filter(transition -> QuestEvent.matches(transition.event(), request.event()))
+			.filter(transition -> QuestMutationPlanner.plan(definition, before, request.event(), transition).isPresent())
+			.findFirst().stream()
+			.toList();
+	}
+
+	/**
+	 * 根据协议执行前后的规范状态，为绕过测试桥并直接进入 QuestEngine 的真实 CM 请求恢复 route 归因。
+	 * Restores route attribution for real CM requests that enter QuestEngine directly instead of the test bridge,
+	 * using canonical state before and after protocol execution.
+	 */
+	public void attributeProtocolResult(ClientActionRequest request, QuestStatus beforeStatus, int beforePackedVariables,
+			QuestRouteResult routeResult, List<QuestTransition> attributableBefore) {
+		java.util.Objects.requireNonNull(request, "request");
+		java.util.Objects.requireNonNull(beforeStatus, "beforeStatus");
+		java.util.Objects.requireNonNull(routeResult, "routeResult");
+		java.util.Objects.requireNonNull(attributableBefore, "attributableBefore");
+		List<QuestEventIndex.Route> routes = eventIndex.routesFor(request.event(), definition.id());
+		routeCandidateCount = routes.size();
+		List<QuestTransition> sourceCandidates = List.copyOf(attributableBefore);
+		List<QuestTransition> attributed = switch (routeResult) {
+			case HANDLED, BLOCKED -> sourceCandidates.stream()
+				.filter(transition -> transitionResultMatches(transition, beforePackedVariables,
+					state.status(), state.packedVariables()))
+				.toList();
+			default -> sourceCandidates;
+		};
+		matchedTransitionCandidates = List.copyOf(attributed);
+		matchedTransition = attributed.size() == 1 ? attributed.getFirst() : null;
+		matchedRouteResult = routeResult;
+	}
+
+	private boolean transitionResultMatches(QuestTransition transition, int beforePackedVariables,
+			QuestStatus status, int packedVariables) {
+		NodeProjection projection = definition.definition().nodes().stream()
+			.filter(node -> node.label().equals(transition.targetNode()))
+			.map(com.aionemu.gameserver.questEngine.definition.QuestNode::projection)
+			.findFirst().orElse(null);
+		if (projection == null) return false;
+		QuestStatus expectedStatus = projection.status();
+		Map<String, Integer> expectedVariables = new LinkedHashMap<>(
+			definition.definition().progressLayout().unpack(beforePackedVariables));
+		Set<String> actionTouchedFields = new HashSet<>();
+		for (QuestAction action : transition.actions()) {
+			if (action instanceof QuestAction.SetStatus setStatus) {
+				expectedStatus = setStatus.status();
+			} else if (action instanceof QuestAction.SetVariable set) {
+				expectedVariables.put(set.field(), set.value());
+				actionTouchedFields.add(set.field());
+			} else if (action instanceof QuestAction.IncrementVariable increment) {
+				expectedVariables.merge(increment.field(), increment.delta(), Integer::sum);
+				actionTouchedFields.add(increment.field());
+			}
+		}
+		projection.variables().forEach((field, value) -> {
+			if (!actionTouchedFields.contains(field)) expectedVariables.put(field, value);
+		});
+		return expectedStatus == status
+			&& definition.definition().progressLayout().pack(expectedVariables) == packedVariables;
 	}
 
 	/** 直接执行一个内存世界事件，供审计器不经过页面点击地走正式 dispatcher。 / Dispatches one world event through the formal dispatcher for audit scenarios. */
@@ -393,8 +581,21 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 		if (preparedTransition == null) {
 			throw new IllegalStateException("no transition has been prepared");
 		}
-		QuestEvent event = switch (preparedTransition.event()) {
-			case QuestEvent.KillNpcSet kills -> new QuestEvent.KillNpc(kills.npcIds().stream().min(Integer::compareTo).orElseThrow());
+		return dispatchWorld(materializeEvent(preparedTransition));
+	}
+
+	/**
+	 * 将生产 XML transition 的声明事件具体化为运行时入口会收到的权威事件。
+	 * Materializes a production-XML transition event into the authoritative event received by runtime ingress.
+	 *
+	 * @param transition 生产目录编译出的 transition / transition compiled from the production directory
+	 * @return 可直接分发的运行时事件 / runtime event ready for dispatch
+	 */
+	public QuestEvent materializeEvent(QuestTransition transition) {
+		java.util.Objects.requireNonNull(transition, "transition");
+		return switch (transition.event()) {
+			case QuestEvent.KillNpcSet kills -> new QuestEvent.KillNpc(
+				kills.npcIds().stream().min(Integer::compareTo).orElseThrow());
 			case QuestEvent.AttackNpc attack -> new QuestEvent.AttackNpc(attack.npcId(),
 				new QuestNpcAttackFacts(PLAYER_ID, state.currentObjectId(), attack.npcId(),
 					facts.npcCurrentHp, facts.npcMaxHp,
@@ -408,13 +609,16 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 				facts.pvpFacts = pvpFacts(1, worldId);
 				yield new QuestEvent.KillInWorld(worldId, facts.pvpFacts);
 			}
-			default -> preparedTransition.event();
+			default -> transition.event();
 		};
-		return dispatchWorld(event);
 	}
 
 	private QuestSnapshot snapshot(Connection ignored, int playerId, int questId, QuestEvent event) {
-		QuestSnapshot snapshot = new QuestSnapshot(playerId, questId, state.status(), state.packedVariables(), facts.inventory,
+		return snapshot(event, state.status(), state.packedVariables());
+	}
+
+	private QuestSnapshot snapshot(QuestEvent event, QuestStatus status, int packedVariables) {
+		QuestSnapshot snapshot = new QuestSnapshot(PLAYER_ID, definition.id(), status, packedVariables, facts.inventory,
 			facts.currencies, true, true, facts.interactionObjectId(), facts.targetObjectId(), state.worldId(),
 			state.instanceId(), state.x(), state.y(), state.z(), state.heading())
 			.withStartEligibility(facts.startEligibility)

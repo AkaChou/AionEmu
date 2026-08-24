@@ -686,6 +686,57 @@ class QuestE2eInfrastructureTest {
 	}
 
 	@Test
+	void protocolLoopCompletesItemPlayOnlyAfterItsVirtualAnimationDuration() throws Exception {
+		CompiledQuestDefinition definition = definition(1466);
+		QuestTransition transition = definition.definition().transitions().stream()
+			.filter(candidate -> candidate.event() instanceof QuestEvent.ItemPlay)
+			.findFirst().orElseThrow();
+		QuestEvent.ItemPlay itemPlay = (QuestEvent.ItemPlay) transition.event();
+		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {
+			runtime.prepare(transition);
+			try (QuestProtocolLoop protocol = new QuestProtocolLoop(runtime)) {
+				QuestHeadlessClient.DispatchOutcome outcome = protocol.dispatch(ClientActionRequest.itemPlay(
+					definition.id(), itemPlay.itemId(), 880_002, itemPlay.animationMillis()));
+
+				assertTrue(outcome.handled(), outcome::toString);
+				assertFalse(outcome.failed(), outcome::toString);
+				assertEquals(QuestStatus.REWARD, runtime.state().status());
+				assertEquals(itemPlay.animationMillis(), runtime.world().clock().nowMillis());
+				assertEquals(QuestE2eTransitionMatch.EXPECTED_TRANSITION_MATCHED,
+					runtime.transitionMatch(), runtime.trace()::toString);
+
+				List<ServerPacketObservation> animations = outcome.packets().stream()
+					.filter(packet -> packet.type() == ServerPacketObservation.Type.ITEM_USAGE_ANIMATION)
+					.toList();
+				assertEquals(2, animations.size(), outcome.packets()::toString);
+				assertEquals(880_002, animations.getFirst().itemObjectId());
+				assertEquals(itemPlay.itemId(), animations.getFirst().itemId());
+				assertEquals(itemPlay.animationMillis(), animations.getFirst().animationMillis());
+				assertEquals(0, animations.getFirst().animationEnd());
+				assertEquals(0, animations.getLast().animationMillis());
+				assertEquals(1, animations.getLast().animationEnd());
+				assertPacketOrder(outcome.packets(), ServerPacketObservation.Type.ITEM_USAGE_ANIMATION,
+					ServerPacketObservation.Type.QUEST_ACTION);
+			}
+		}
+	}
+
+	@Test
+	void batchAuditEscalatesItemPlayThroughTheRealUseAndCompletionProtocol() throws Exception {
+		CompiledQuestDefinition definition = definition(1466);
+		QuestTransition transition = definition.definition().transitions().stream()
+			.filter(candidate -> candidate.event() instanceof QuestEvent.ItemPlay)
+			.findFirst().orElseThrow();
+		ClientResourceOracle oracle = ClientResourceOracle.load(CLIENT_MAPPING);
+
+		QuestE2eAuditRow row = QuestE2eBatchAudit.auditTransition(definition, transition, oracle);
+
+		assertEquals(QuestE2eTransitionMatch.EXPECTED_TRANSITION_MATCHED, row.transitionMatch(), row::toString);
+		assertEquals("CM_USE_ITEM+ITEM_PLAY_COMPLETED", row.validationMode());
+		assertEquals(QuestE2eStatus.PASS, row.status(), row::toString);
+	}
+
+	@Test
 	void batchAuditProducesRowsWithoutUsingSequenceAuditInput() throws Exception {
 		ClientResourceOracle oracle = ClientResourceOracle.load(CLIENT_MAPPING);
 		CompiledQuestDefinition definition = definition(1913);
@@ -754,6 +805,13 @@ class QuestE2eInfrastructureTest {
 		int second = traceIndex(entries, secondPhase, secondDetail);
 		int third = traceIndex(entries, thirdPhase, thirdDetail);
 		assertTrue(first >= 0 && second > first && third > second, entries::toString);
+	}
+
+	private static void assertPacketOrder(List<ServerPacketObservation> packets,
+			ServerPacketObservation.Type first, ServerPacketObservation.Type second) {
+		int firstIndex = packets.stream().map(ServerPacketObservation::type).toList().indexOf(first);
+		int secondIndex = packets.stream().map(ServerPacketObservation::type).toList().indexOf(second);
+		assertTrue(firstIndex >= 0 && secondIndex > firstIndex, packets::toString);
 	}
 
 	private static int traceIndex(List<QuestTrace.Entry> entries, String phase, String detail) {
