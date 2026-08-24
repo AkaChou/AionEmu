@@ -214,7 +214,8 @@ public class XmlDataLoader {
 	 * @return 静态数据，失败则为 null / static data, or null on failure
 	 */
 	StaticData loadStaticData(StaticDataProgressReporter progressReporter) {
-		return loadStaticData(progressReporter, this::loadSkillData, new ConcurrentHashMap<>(), true);
+		ConcurrentMap<String, Long> phaseTimings = new ConcurrentHashMap<>();
+		return loadStaticData(progressReporter, () -> loadSkillData(phaseTimings), phaseTimings, true);
 	}
 
 	private StaticData loadStaticData(StaticDataProgressReporter progressReporter, Supplier<SkillData> skillDataSupplier,
@@ -671,8 +672,28 @@ public class XmlDataLoader {
 		return data;
 	}
 
+	/**
+	 * 加载紧凑技能定义，不向外部计时表发布子阶段。
+	 * Loads compact skill definitions without publishing subphase timings to an external table.
+	 *
+	 * @return 技能数据 / skill data
+	 */
 	public SkillData loadSkillData() {
-		SkillData data = SkillDefinitionLoader.load(Config.definitionFile(SKILL_DEFINITIONS_DIR));
+		return loadSkillData(new ConcurrentHashMap<>());
+	}
+
+	/**
+	 * 加载紧凑技能定义，并将解析子阶段写入静态数据计时表。
+	 * Loads compact skill definitions and publishes parsing subphases to the static-data timing table.
+	 *
+	 * @param phaseTimings 线程安全的阶段计时表 / thread-safe phase timing map
+	 * @return 技能数据 / skill data
+	 */
+	public SkillData loadSkillData(ConcurrentMap<String, Long> phaseTimings) {
+		if (phaseTimings == null) {
+			throw new IllegalArgumentException("phaseTimings must not be null");
+		}
+		SkillData data = SkillDefinitionLoader.load(Config.definitionFile(SKILL_DEFINITIONS_DIR), phaseTimings);
 		log.info(I18n.get("log.static_data.compact_skills_loaded", data.size()));
 		return data;
 	}

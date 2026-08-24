@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.XMLConstants;
 import javax.xml.stream.XMLInputFactory;
@@ -46,6 +47,7 @@ class SkillDefinitionLoaderTest {
 		Files.writeString(directory.resolve("groups.xml"), """
 			<skill_groups><field_names><field id="1" name="retail_value"/></field_names><groups>
 				<group id="G"><properties first_target="ME" first_target_range="1" target_relation="FRIEND" target_type="ONLYONE"/></group>
+				<group id="A"><actions><chargeuse weapon="10" armor="11"/></actions></group>
 			</groups></skill_groups>
 			""");
 		writePart("part-1.xml", 100, "SKILL_ONE", "first", 0);
@@ -62,6 +64,32 @@ class SkillDefinitionLoaderTest {
 		ChargeUseAction charge = (ChargeUseAction) data.getSkillTemplate(100).getActions().getActions().getFirst();
 		assertEquals(10, charge.getWeapon());
 		assertEquals(11, charge.getArmor());
+	}
+
+	@Test
+	void recordsDetailedLoadPhaseTimings() throws Exception {
+		Files.writeString(directory.resolve("index.xml"), """
+			<skill_bundle templates="1" groups="groups.xml">
+				<part file="part-1.xml"/>
+			</skill_bundle>
+			""");
+		Files.writeString(directory.resolve("groups.xml"), """
+			<skill_groups><field_names><field id="1" name="retail_value"/></field_names><groups>
+				<group id="G">
+					<properties first_target="ME" first_target_range="1" target_relation="FRIEND" target_type="ONLYONE"/>
+				</group>
+				<group id="A"><actions><chargeuse weapon="10" armor="11"/></actions></group>
+			</groups></skill_groups>
+			""");
+		writePart("part-1.xml", 100, "SKILL_ONE", "first", 0);
+		var phaseTimings = new ConcurrentHashMap<String, Long>();
+
+		var data = SkillDefinitionLoader.load(directory.toFile(), phaseTimings);
+
+		assertEquals(1, data.size());
+		assertEquals(Set.of("SkillIndexGroupsWall", "SkillJaxbContextWall", "SkillStreamJaxbWork",
+			"SkillCooldownWall"), phaseTimings.keySet());
+		assertTrue(phaseTimings.values().stream().allMatch(duration -> duration >= 0));
 	}
 
 	@Test
@@ -188,7 +216,7 @@ class SkillDefinitionLoaderTest {
 				skillsubtype="BUFF" activation="ACTIVE" duration="0">
 				<group_ref id="G"/>%s<retail><f i="1" o="%d" v="%s"/></retail>
 			</skill_template></skill_data>
-			""".formatted(id, stack, id == 100 ? "<actions><chargeuse weapon=\"10\" armor=\"11\"/></actions>" : "",
+			""".formatted(id, stack, id == 100 ? "<group_ref id=\"A\"/>" : "",
 				occurrence, value));
 	}
 }

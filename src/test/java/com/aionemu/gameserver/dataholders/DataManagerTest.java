@@ -43,7 +43,8 @@ class DataManagerTest {
 			}
 
 			@Override
-			public SkillData loadSkillData() {
+			public SkillData loadSkillData(ConcurrentMap<String, Long> phaseTimings) {
+				phaseTimings.put("SkillStreamJaxbWork", 0L);
 				skillStarted.countDown();
 				return skillData;
 			}
@@ -62,6 +63,7 @@ class DataManagerTest {
 		assertNotNull(loaded);
 		assertTrue(capturedTimings.containsKey("ItemData"));
 		assertTrue(capturedTimings.containsKey("SkillData"));
+		assertTrue(capturedTimings.containsKey("SkillStreamJaxbWork"));
 	}
 
 	@Test

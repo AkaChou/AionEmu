@@ -509,8 +509,8 @@ public final class DataManager {
         ConcurrentMap<String, Long> phaseTimings = new ConcurrentHashMap<>();
         CompletableFuture<ItemData> itemDataFuture = timedDataLoad("ItemData", loader::loadItemData, executor,
                 phaseTimings);
-        CompletableFuture<SkillData> skillDataFuture = timedDataLoad("SkillData", loader::loadSkillData, executor,
-                phaseTimings);
+        CompletableFuture<SkillData> skillDataFuture = timedDataLoad("SkillData",
+                () -> loader.loadSkillData(phaseTimings), executor, phaseTimings);
         try {
             StaticData staticData = loader.loadStaticData(skillDataFuture::join, phaseTimings);
             ItemData itemData = itemDataFuture.join();
