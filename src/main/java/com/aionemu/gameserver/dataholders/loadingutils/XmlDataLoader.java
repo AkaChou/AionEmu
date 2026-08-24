@@ -62,11 +62,6 @@ import java.util.function.Supplier;
 @Slf4j
 public class XmlDataLoader {
 
-	/** 最近一次 npc-ai.xml 合并扫描任务，供寻路行为与零售 AI 两个加载路径复用。
-	 * Latest merged npc-ai.xml scan future, reused by both the path-behavior and retail-AI load paths.
-	 */
-	private CompletableFuture<RetailAiDefinitionLoader.NpcMappings> npcMappingsFuture;
-
 	private static volatile ObjectProvider<XmlDataLoader> instanceProvider;
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
 	private static final String ITEM_DATA_DIR = "./data/static_data/items";
@@ -243,16 +238,15 @@ public class XmlDataLoader {
 		CompletableFuture<NpcSkillData> npcSkillDataFuture = timedAsync("NpcSkillData", this::loadNpcSkillData,
 			phaseTimings);
 		CompletableFuture<AIData> aiDataFuture = timedAsync("AIData", this::loadAiData, phaseTimings);
-		// npc-ai.xml（27MB）同时是寻路行为与零售 AI NPC 映射的源文件；寻路行为任务提交
-		// 单次合并扫描（双产出），零售 AI 任务复用其 Future 跳过对同一文件的重复解析
-		// （见 RetailAiDefinitionLoader.loadMappings）。
-		// npc-ai.xml (27MB) feeds both path behaviors and retail AI NPC mappings; the path-behavior
-		// task submits one merged scan (dual result) and the retail-AI task reuses that future instead
-		// of parsing the same file again (see RetailAiDefinitionLoader.loadMappings).
-		CompletableFuture<NpcPathBehaviorData> npcPathBehaviorDataFuture = timedAsync("NpcPathBehaviorData",
-			this::loadNpcPathBehaviorData, phaseTimings);
+		// npc-ai.xml（27MB）只提交一次合并扫描；两个消费方持有同一个局部 Future，
+		// 消除成员字段跨线程发布竞态，并让寻路行为通过依赖阶段转换而不是占用线程等待。
+		// Submit the merged npc-ai.xml scan (27MB) once. Both consumers hold the same local future,
+		// removing the cross-thread publication race and deriving path behaviors without blocking a worker.
+		NpcMappingStages npcMappingStages = startNpcMappingStages(
+			() -> RetailAiDefinitionLoader.loadMappings(Config.definitionFile(NPC_PATH_BEHAVIOR_FILE)), phaseTimings);
+		CompletableFuture<NpcPathBehaviorData> npcPathBehaviorDataFuture = npcMappingStages.pathBehaviors();
 		CompletableFuture<RetailAiData> retailAiDataFuture = timedAsync("RetailAiData",
-			() -> loadRetailAiData(npcMappingsFuture), phaseTimings);
+			() -> loadRetailAiData(npcMappingStages.source()), phaseTimings);
 		CompletableFuture<WalkerData> waypointDataFuture = timedAsync("RetailAiWaypoints", this::loadRetailAiWaypointData,
 			phaseTimings);
 		CompletableFuture<WindstreamData> windstreamDataFuture = timedAsync("WindstreamData", this::loadWindstreamData,
@@ -266,8 +260,8 @@ public class XmlDataLoader {
 		}, phaseTimings);
 		List<CompletableFuture<?>> definitionFutures = List.of(petDefinitionsFuture, npcDropDataFuture,
 			hotspotLocationDataFuture,
-			motionDataFuture, chargeSkillDataFuture, npcSkillDataFuture, aiDataFuture, npcPathBehaviorDataFuture,
-			retailAiDataFuture, waypointDataFuture, windstreamDataFuture, npcDataFuture);
+			motionDataFuture, chargeSkillDataFuture, npcSkillDataFuture, aiDataFuture, npcMappingStages.source(),
+			npcPathBehaviorDataFuture, retailAiDataFuture, waypointDataFuture, windstreamDataFuture, npcDataFuture);
 		List<StaticDataSection> sections;
 		List<CompletableFuture<LoadedStaticDataSection>> sectionFutures = new ArrayList<>();
 		try {
@@ -626,6 +620,26 @@ public class XmlDataLoader {
 		}, STATIC_DATA_POOL);
 	}
 
+	static NpcMappingStages startNpcMappingStages(
+			Supplier<RetailAiDefinitionLoader.NpcMappings> mappingsSupplier,
+			ConcurrentMap<String, Long> phaseTimings) {
+		CompletableFuture<RetailAiDefinitionLoader.NpcMappings> source = timedAsync("NpcMappings", mappingsSupplier,
+			phaseTimings);
+		CompletableFuture<NpcPathBehaviorData> pathBehaviors = source.thenApply(mappings -> {
+			long start = System.nanoTime();
+			try {
+				return createNpcPathBehaviorData(mappings);
+			} finally {
+				phaseTimings.put("NpcPathBehaviorData", elapsedMillis(start));
+			}
+		});
+		return new NpcMappingStages(source, pathBehaviors);
+	}
+
+	record NpcMappingStages(CompletableFuture<RetailAiDefinitionLoader.NpcMappings> source,
+			CompletableFuture<NpcPathBehaviorData> pathBehaviors) {
+	}
+
 	private static long elapsedMillis(long startNanos) {
 		return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNanos);
 	}
@@ -687,14 +701,13 @@ public class XmlDataLoader {
 	}
 
 	public NpcPathBehaviorData loadNpcPathBehaviorData() {
-		// 提交 npc-ai.xml 单次合并扫描并缓存 Future；零售 AI 加载（loadRetailAiData）复用
-		// 同一结果，避免 27MB 文件被重复解析。
-		// Submits the merged npc-ai.xml scan once and caches the future; the retail-AI load
-		// (loadRetailAiData) reuses the same result so the 27MB file is parsed only once.
-		npcMappingsFuture = CompletableFuture.supplyAsync(
-			() -> RetailAiDefinitionLoader.loadMappings(Config.definitionFile(NPC_PATH_BEHAVIOR_FILE)),
-			staticDataExecutor());
-		NpcPathBehaviorData data = new NpcPathBehaviorData(npcMappingsFuture.join().pathBehaviors());
+		RetailAiDefinitionLoader.NpcMappings mappings = RetailAiDefinitionLoader.loadMappings(
+			Config.definitionFile(NPC_PATH_BEHAVIOR_FILE));
+		return createNpcPathBehaviorData(mappings);
+	}
+
+	private static NpcPathBehaviorData createNpcPathBehaviorData(RetailAiDefinitionLoader.NpcMappings mappings) {
+		NpcPathBehaviorData data = new NpcPathBehaviorData(mappings.pathBehaviors());
 		log.info(I18n.get("log.static_data.npc_paths_loaded", data.size()));
 		return data;
 	}
@@ -702,7 +715,7 @@ public class XmlDataLoader {
 	public RetailAiData loadRetailAiData() {
 		// 独立调用（如测试/GM 重载）：自行提交 npc-ai.xml 合并扫描。
 		// Standalone call (tests / GM reload): submits its own merged npc-ai.xml scan.
-		npcMappingsFuture = CompletableFuture.supplyAsync(
+		CompletableFuture<RetailAiDefinitionLoader.NpcMappings> npcMappingsFuture = CompletableFuture.supplyAsync(
 			() -> RetailAiDefinitionLoader.loadMappings(Config.definitionFile(NPC_PATH_BEHAVIOR_FILE)),
 			staticDataExecutor());
 		return loadRetailAiData(npcMappingsFuture);

@@ -17,7 +17,7 @@ class RetailConditionSpawnPartyLoaderTest {
 	@Test
 	void loadsPartyAsOneProbabilisticChoiceWithSharedToken() throws Exception {
 		Path patterns = Files.createDirectory(tempDir.resolve("patterns"));
-		Files.writeString(patterns.resolve("patterns.xml"), """
+		Files.writeString(patterns.resolve("npcaipatterns_test.xml"), """
 			<root><npc_ai_pattern><name>Test</name><event_handlers/></npc_ai_pattern></root>
 			""");
 		Path mappings = tempDir.resolve("npc-ai.xml");

@@ -552,7 +552,7 @@ final class RetailAiDefinitionLoader {
 	}
 
 	private static Map<String, Pattern> loadPatterns(File directory) {
-		File[] files = directory.listFiles(file -> file.isFile() && file.getName().endsWith(".xml"));
+		File[] files = directory.listFiles(RetailAiDefinitionLoader::isPatternSourceFile);
 		if (files == null || files.length == 0) {
 			throw new IllegalStateException("Retail AI pattern directory not found or empty: " + directory.getPath());
 		}
@@ -563,6 +563,10 @@ final class RetailAiDefinitionLoader {
 			loadPatterns(file, factory, patterns);
 		}
 		return patterns;
+	}
+
+	static boolean isPatternSourceFile(File file) {
+		return file.isFile() && file.getName().startsWith("npcaipatterns") && file.getName().endsWith(".xml");
 	}
 
 	private static void loadPatterns(File file, XMLInputFactory factory, Map<String, Pattern> patterns) {

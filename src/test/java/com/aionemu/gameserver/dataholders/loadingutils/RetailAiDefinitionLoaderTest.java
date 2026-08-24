@@ -6,6 +6,8 @@ import com.aionemu.gameserver.dataholders.WalkerData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -56,7 +58,7 @@ class RetailAiDefinitionLoaderTest {
 	@Test
 	void loadsNpcMappingAndCompilesPhaseRulesByPriority() throws Exception {
 		Path patternsDirectory = Files.createDirectory(tempDir.resolve("ai"));
-		Path patterns = patternsDirectory.resolve("patterns.xml");
+		Path patterns = patternsDirectory.resolve("npcaipatterns_test.xml");
 		Files.writeString(patterns, """
 			<static_bundle><static_document><content><npc_ai_patterns><npc_ai_pattern>
 			<name>IDTiamat_Tahabata</name><event_handlers><on_battle_timer>
@@ -66,6 +68,7 @@ class RetailAiDefinitionLoaderTest {
 			<pattern><priority>7</priority><action_category>PLANNED</action_category><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator><delay>3000</delay></add_battle_timer></actions></pattern>
 			</on_battle_timer></event_handlers></npc_ai_pattern></npc_ai_patterns></content></static_document></static_bundle>
 			""");
+		Files.writeString(patternsDirectory.resolve("npc-ai.xml"), "<invalid");
 		Path mappings = tempDir.resolve("npc-ai.xml");
 		Files.writeString(mappings, """
 			<npc_ai_mappings>
@@ -106,6 +109,41 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals("walk", defaultNpc.returnMoveType());
 		assertEquals(150, defaultNpc.returnSpeedPercent());
 		assertEquals(50, defaultNpc.returnSensoryPercent());
+	}
+
+	@Test
+	void everyRetailPatternSourceUsesThePatternFileNameContract() throws Exception {
+		Path aiDirectory = Path.of("src/main/resources/aion/definitions/compact/ai");
+		List<Path> unexpected;
+		try (var files = Files.list(aiDirectory)) {
+			unexpected = files.filter(Files::isRegularFile)
+				.filter(file -> file.getFileName().toString().endsWith(".xml"))
+				.filter(file -> !RetailAiDefinitionLoader.isPatternSourceFile(file.toFile()))
+				.filter(RetailAiDefinitionLoaderTest::containsNpcAiPattern)
+				.toList();
+		}
+
+		assertTrue(unexpected.isEmpty(), unexpected.toString());
+	}
+
+	private static boolean containsNpcAiPattern(Path file) {
+		XMLInputFactory factory = XMLInputFactory.newFactory();
+		try (var input = Files.newInputStream(file)) {
+			var reader = factory.createXMLStreamReader(input);
+			try {
+				while (reader.hasNext()) {
+					if (reader.next() == XMLStreamConstants.START_ELEMENT
+						&& reader.getLocalName().equals("npc_ai_pattern")) {
+						return true;
+					}
+				}
+			} finally {
+				reader.close();
+			}
+			return false;
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to inspect retail AI definition " + file, e);
+		}
 	}
 
 	@Test

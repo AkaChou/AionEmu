@@ -17,6 +17,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -142,6 +144,21 @@ class XmlDataLoaderTest {
 		assertEquals(1200L, slowest.get(0).getValue());
 		assertEquals("SpawnsData2", slowest.get(1).getKey());
 		assertEquals(2, slowest.size());
+	}
+
+	@Test
+	void sharedNpcMappingStagesInvokeSourceOnlyOnceForBothConsumers() {
+		AtomicInteger sourceLoads = new AtomicInteger();
+		var mappings = new RetailAiDefinitionLoader.NpcMappings(Map.of(), Map.of());
+		var stages = XmlDataLoader.startNpcMappingStages(() -> {
+			sourceLoads.incrementAndGet();
+			return mappings;
+		}, new ConcurrentHashMap<>());
+		var retailMappings = stages.source().thenApply(RetailAiDefinitionLoader.NpcMappings::npcs);
+
+		assertEquals(Map.of(), retailMappings.join());
+		assertEquals(0, stages.pathBehaviors().join().size());
+		assertEquals(1, sourceLoads.get());
 	}
 
 	@Test
