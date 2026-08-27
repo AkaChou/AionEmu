@@ -23,6 +23,8 @@ class QuestHaramelItemCollectingRegressionTest {
 			List.of(new ObjectDrop(700833, 182212013), new ObjectDrop(700951, 182212014))),
 		new QuestCase(18503, 799523, 203166,
 			List.of(new ObjectDrop(700834, 182212004))),
+		new QuestCase(18509, 799523, 799524,
+			List.of(new ObjectDrop(700853, 182212008))),
 		new QuestCase(28503, 799523, 804605,
 			List.of(new ObjectDrop(700834, 182212016))));
 
@@ -37,6 +39,8 @@ class QuestHaramelItemCollectingRegressionTest {
 
 			assertTrue(hasDialog(definition, "unaccepted", questCase.startNpcId(), QuestDialogAction.QUEST_SELECT.id()),
 				"start NPC route for quest " + questCase.questId());
+			assertFalse(hasDialog(definition, "unaccepted", questCase.turnInNpcId(), QuestDialogAction.QUEST_SELECT.id()),
+				"stale turn-in NPC start route for quest " + questCase.questId());
 			assertTrue(hasDialog(definition, "started", questCase.turnInNpcId(), QuestDialogAction.QUEST_SELECT.id()),
 				"turn-in selection route for quest " + questCase.questId());
 			assertTrue(hasDialog(definition, "started", questCase.turnInNpcId(),
@@ -94,12 +98,53 @@ class QuestHaramelItemCollectingRegressionTest {
 		}
 	}
 
+	@Test
+	void quest18509AcceptAndEmptyReportDialogsHaveClientOwnedResponses() {
+		CompiledQuestDefinition definition = load(18509);
+
+		QuestTransition accept = dialog(definition, "unaccepted", "started", 799523,
+			QuestDialogAction.QUEST_ACCEPT_1.id());
+		assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_ACCEPT_1.id())), accept.afterCommit());
+
+		QuestTransition acceptFinish = dialog(definition, "started", "started", 799523,
+			QuestDialogAction.FINISH_DIALOG.id());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+			acceptFinish.afterCommit());
+
+		QuestTransition emptyReport = definition.definition().transitions().stream()
+			.filter(transition -> "started".equals(transition.sourceNode())
+				&& "started".equals(transition.targetNode())
+				&& Integer.valueOf(1).equals(transition.priority())
+				&& transition.event().equals(new QuestEvent.TalkToNpc(799524,
+					QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id())))
+			.findFirst().orElseThrow();
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT6.id())),
+			emptyReport.afterCommit());
+
+		QuestTransition emptyReportFinish = dialog(definition, "started", "started", 799524,
+			QuestDialogAction.FINISH_DIALOG.id());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+			emptyReportFinish.afterCommit());
+	}
+
 	private static boolean hasDialog(CompiledQuestDefinition definition, String sourceNode, int npcId, int dialogId) {
 		return definition.definition().transitions().stream().anyMatch(transition ->
 			sourceNode.equals(transition.sourceNode())
 				&& transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == npcId
 				&& QuestEvent.matches(transition.event(), new QuestEvent.TalkToNpc(npcId, dialogId)));
+	}
+
+	private static QuestTransition dialog(CompiledQuestDefinition definition, String sourceNode, String targetNode,
+		int npcId, int dialogId) {
+		return definition.definition().transitions().stream()
+			.filter(transition -> sourceNode.equals(transition.sourceNode())
+				&& targetNode.equals(transition.targetNode())
+				&& transition.event().equals(new QuestEvent.TalkToNpc(npcId, dialogId)))
+			.findFirst().orElseThrow();
 	}
 
 	private static QuestTransition route(CompiledQuestDefinition definition, QuestEvent event) {
