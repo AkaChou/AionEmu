@@ -34,10 +34,10 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="206378" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_START" npc-id="206379" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_START" npc-id="206380" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_START" npc-id="804707" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="206378" source="unaccepted" target="started" start-page="SELECT_NONE"/>
+    <dialog type="NPC_START" npc-id="206379" source="unaccepted" target="started" start-page="SELECT_NONE"/>
+    <dialog type="NPC_START" npc-id="206380" source="unaccepted" target="started" start-page="SELECT_NONE"/>
+    <dialog type="NPC_START" npc-id="804707" source="unaccepted" target="started" start-page="SELECT1"/>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="804707" action="QUEST_SELECT"/>

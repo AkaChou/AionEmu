@@ -113,7 +113,17 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799523" action="QUEST_SELECT"/>
+        <talk-to-npc npc-id="700853"/>
+      </event>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700853" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799524" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
@@ -121,23 +131,31 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <collect-item item-id="182212020" count="1"/>
+        <dialog type="TALK_TO_NPC" npc-id="799523" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="799523" source="started" target="reward" item-id="182212020" required="1"/>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799524" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <npc-item-report npc-id="799524" source="started" target="reward" item-id="182212020" required="1"/>
     <transition source="started" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799523" action="SET_SUCCEED"/>
+        <dialog type="TALK_TO_NPC" npc-id="799524" action="SET_SUCCEED"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="799523" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="799524" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <transition source="unaccepted" target="unaccepted">

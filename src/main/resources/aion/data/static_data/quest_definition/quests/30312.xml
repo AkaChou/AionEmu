@@ -123,6 +123,21 @@
       </after-commit>
     </transition>
     <npc-item-report npc-id="799322" source="started" target="reward" item-id="182209715" required="20"/>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799322" action="SET_SUCCEED"/>
+      </event>
+      <conditions>
+        <has-item item-id="182209715" count="20"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182209715" count="20"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="799322" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

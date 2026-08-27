@@ -50,6 +50,11 @@
         <has-item item-id="152003005" count="1"/>
         <has-item item-id="152003006" count="1"/>
       </conditions>
+      <actions>
+        <remove-item item-id="152003004" count="1"/>
+        <remove-item item-id="152003005" count="1"/>
+        <remove-item item-id="152003006" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
@@ -76,9 +81,6 @@
         <dialog type="TALK_TO_NPC" npc-id="204096" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
-        <remove-item item-id="152003004" count="1"/>
-        <remove-item item-id="152003005" count="1"/>
-        <remove-item item-id="152003006" count="1"/>
         <grant-reward kind="EXP" id="0" amount="5390338" amount-mode="QUEST_BASE"/>
         <complete-quest reward-index="0"/>
       </actions>

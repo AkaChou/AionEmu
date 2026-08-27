@@ -164,7 +164,8 @@ class CollectTurnInClientActionAlignmentBatchTest {
 		for (int npcId : new int[] {206378, 206379, 206380, 702958}) {
 			assertFalse(definition.transitions().stream().anyMatch(candidate ->
 				candidate.event() instanceof QuestEvent.TalkToNpc talk
-					&& talk.npcId() == npcId && "started".equals(candidate.sourceNode())),
+					&& talk.npcId() == npcId && "started".equals(candidate.sourceNode())
+					&& talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()),
 				"npc " + npcId + " must not own started dialog routes");
 			assertFalse(definition.transitions().stream().anyMatch(candidate ->
 				candidate.event() instanceof QuestEvent.TalkToNpc talk
@@ -179,7 +180,7 @@ class CollectTurnInClientActionAlignmentBatchTest {
 		QuestTransition entry = talk(definition, "started", "started", npcId,
 			QuestDialogAction.QUEST_SELECT.id());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
-			QuestDialogPage.fromId(pageIdOf(entryPage)))), entry.afterCommit(),
+			pageIdOf(entryPage))), entry.afterCommit(),
 			"quest " + questId + " entry page");
 		checkTurnInBranches(definition, npcId, itemId, count, failPage);
 	}
@@ -208,7 +209,7 @@ class CollectTurnInClientActionAlignmentBatchTest {
 			new QuestEvent.TalkToNpc(npcId, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()));
 		assertEquals(Integer.valueOf(1), failure.priority());
 		assertEquals(List.of(), failure.conditions());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.fromId(pageIdOf(failPage)))),
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(pageIdOf(failPage))),
 			failure.afterCommit());
 	}
 

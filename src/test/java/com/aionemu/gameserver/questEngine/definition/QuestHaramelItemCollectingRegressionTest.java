@@ -26,7 +26,9 @@ class QuestHaramelItemCollectingRegressionTest {
 		new QuestCase(18509, 799523, 799524,
 			List.of(new ObjectDrop(700853, 182212008))),
 		new QuestCase(28503, 799523, 804605,
-			List.of(new ObjectDrop(700834, 182212016))));
+			List.of(new ObjectDrop(700834, 182212016))),
+		new QuestCase(28509, 799523, 799524,
+			List.of(new ObjectDrop(700853, 182212020))));
 
 	@Test
 	void haramelItemCollectingQuestsExposeObjectGatesAndUseTheirTurnInNpc() {
@@ -128,6 +130,69 @@ class QuestHaramelItemCollectingRegressionTest {
 			QuestDialogAction.FINISH_DIALOG.id());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
 			emptyReportFinish.afterCommit());
+	}
+
+	@Test
+	void quest28509AcceptAndEmptyReportDialogsHaveClientOwnedResponses() {
+		CompiledQuestDefinition definition = load(28509);
+
+		QuestTransition accept = dialog(definition, "unaccepted", "started", 799523,
+			QuestDialogAction.QUEST_ACCEPT_1.id());
+		assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_ACCEPT_1.id())), accept.afterCommit());
+
+		QuestTransition acceptFinish = dialog(definition, "started", "started", 799523,
+			QuestDialogAction.FINISH_DIALOG.id());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+			acceptFinish.afterCommit());
+
+		QuestTransition emptyReport = definition.definition().transitions().stream()
+			.filter(transition -> "started".equals(transition.sourceNode())
+				&& "started".equals(transition.targetNode())
+				&& Integer.valueOf(1).equals(transition.priority())
+				&& transition.event().equals(new QuestEvent.TalkToNpc(799524,
+					QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id())))
+			.findFirst().orElseThrow();
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT6.id())),
+			emptyReport.afterCommit());
+
+		QuestTransition emptyReportFinish = dialog(definition, "started", "started", 799524,
+			QuestDialogAction.FINISH_DIALOG.id());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+			emptyReportFinish.afterCommit());
+	}
+
+	@Test
+	void quest18505ExposesTurnInNpcGaphyrkWithoutDuplicateStartNpcCompletion() {
+		CompiledQuestDefinition definition = load(18505);
+
+		assertTrue(hasDialog(definition, "unaccepted", 203166, QuestDialogAction.QUEST_SELECT.id()));
+		assertFalse(hasDialog(definition, "unaccepted", 203106, QuestDialogAction.QUEST_SELECT.id()));
+
+		assertTrue(hasDialog(definition, "started", 203106, QuestDialogAction.QUEST_SELECT.id()));
+		assertFalse(hasDialog(definition, "started", 203166, QuestDialogAction.QUEST_SELECT.id()));
+
+		assertTrue(hasDialog(definition, "started", 203166, QuestDialogAction.FINISH_DIALOG.id()));
+		assertTrue(hasDialog(definition, "started", 203106, QuestDialogAction.FINISH_DIALOG.id()));
+
+		assertTrue(hasDialog(definition, "started", 203106, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()));
+		assertFalse(hasDialog(definition, "started", 203166, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()));
+
+		assertTrue(hasDialog(definition, "started", 203106, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id()));
+		assertFalse(hasDialog(definition, "started", 203166, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id()));
+
+		long completeCount203106 = definition.definition().transitions().stream()
+			.filter(t -> "reward".equals(t.sourceNode()) && "complete".equals(t.targetNode())
+				&& t.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 203106)
+			.count();
+		long completeCount203166 = definition.definition().transitions().stream()
+			.filter(t -> "reward".equals(t.sourceNode()) && "complete".equals(t.targetNode())
+				&& t.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 203166)
+			.count();
+		assertTrue(completeCount203106 > 0, "turn-in NPC 203106 completion routes");
+		assertEquals(0, completeCount203166, "no completion routes on start NPC 203166");
 	}
 
 	private static boolean hasDialog(CompiledQuestDefinition definition, String sourceNode, int npcId, int dialogId) {

@@ -116,6 +116,21 @@
       </after-commit>
     </transition>
     <npc-item-report npc-id="799226" source="started" target="reward" item-id="186000098" required="100"/>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799226" action="SET_SUCCEED"/>
+      </event>
+      <conditions>
+        <has-item item-id="186000098" count="100"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="186000098" count="100"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="799226" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
