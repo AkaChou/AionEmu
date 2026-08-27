@@ -163,3 +163,17 @@
 - 验证命令和结果：`xmllint --noout --schema quest_definition.xsd quests/14015.xml` 通过；任务专用测试与生产 catalog/白名单门禁未在本会话运行（未获构建授权，命令已交付给用户）；2026-08-27 用户完成修复后客户端全流程验收，交付时不再弹 load fail，任务正常完成。
 - 复用边界：仅适用于单 NPC 收集交付任务中 `QUEST_SELECT` 入口页不存在、交付动作未挂客户端按钮动作、或 select 页链/未集齐回落缺失的形状。入口页、奖励窗口、未集齐页必须逐一取自该任务的客户端页面契约与旧 handler，不能照搬 14015 的 1011/5/1097；交付动作变体（20002 简化检查等）需另行取证；升级入口发页问题复用 8.1，reward 阶段发不存在页复用 `QUEST_REWARD_PREVIEW_PAGE_CONTRACT`。
 - commit：`e6f4f12cf`。
+
+## 8.13 接取介绍链缺少确认页桥接
+
+- Pattern ID：`INTRO_CHAIN_ACCEPT_PROMPT_BRIDGE_MISSING`。
+- 代表任务：1311「A Germ Of Hope / 希望的苗木」。
+- 搜索症状：接取介绍最后一步 load fail、继续听后没有接受确认、任务无法接取。
+- 玩家可见症状：满足 1310 前置后与艾特南 NPC 203997 对话，`SELECT1(1011) -> SELECT1_1(1012)` 的接取介绍可以翻页，但客户端发送 `SELECT1_1_1(1013)` 后进入 load fail/无确认窗口，接取流程无法继续。
+- 根因：自动补页把 action `SELECT1_1_1(1013)` 错误回显成同 ID 页；旧 handler 的权威合同是 `dialogId == 1013` 时 `sendQuestDialog(env, 4)`，即先打开 `SHOW_ASK_QUEST_ACCEPT_WINDOW(4)`，随后才进入接受/拒绝路由。紧凑 `NPC_START` 积木本身只展开初始查看、剧情、接受和拒绝边，不替代这条客户端介绍页链的终点桥接。
+- 修复层：仅任务 XML 与任务专用测试。`QUEST_SELECT(31) -> SELECT1(1011)`、`SELECT1_1(1012) -> SELECT1_1(1012)` 保持既有页链，`SELECT1_1_1(1013) -> SHOW_ASK_QUEST_ACCEPT_WINDOW(4)` 建立确认桥；接受路径继续由 `NPC_START` 发放苗木 `182201305`、提交 `NONE -> START`、刷新可见性并发送 `QUEST_ACCEPT_1(1003)`。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/1311.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1311ClientDialogAlignmentTest.java`。
+- 第一检查点：先从旧 handler 找最终介绍 action 的响应页，再检查客户端 action/page 图；不要因为 action 与 page 同名就把最后一跳写成同 ID 回显。确认页 4 不是“不存在的升级页”，而是必须由介绍链主动桥接的目标。
+- 验证命令和结果：`QuestDefinitionXmlCompiler.parse` 直接编译 `1311.xml` 通过，展开 31 条 transition；2026-08-28 用户确认任务客户端验收完成，全任务可正常游玩。任务专用 Maven 测试与生产 catalog/白名单门禁本会话未运行（未获构建授权），仍是工程验收待办。
+- 复用边界：仅适用于多页任务接取介绍链的终点必须进入接受确认窗口的形状。不要推广到升级自动登记（复用 8.1）、交付收集判定或交付页链错位（复用 8.12）、奖励预览页错位（复用 `QUEST_REWARD_PREVIEW_PAGE_CONTRACT`）。每条链的入口页、中间页、最终桥接页和接受动作都必须单独取证。
+- commit：`3721d0801`。
