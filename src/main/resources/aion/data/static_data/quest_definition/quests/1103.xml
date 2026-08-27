@@ -131,29 +131,6 @@
       </after-commit>
     </transition>
     <npc-item-report npc-id="203057" source="started" target="reward" item-id="182200201" required="3"/>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203057" action="CHECK_USER_HAS_QUEST_ITEM"/>
-      </event>
-      <conditions>
-        <has-item item-id="182200201" count="3"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182200201" count="3"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203057" action="CHECK_USER_HAS_QUEST_ITEM"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
-      </after-commit>
-    </transition>
     <npc-complete npc-id="203057" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
