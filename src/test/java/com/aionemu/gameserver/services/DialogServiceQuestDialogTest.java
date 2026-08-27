@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 class DialogServiceQuestDialogTest {
@@ -41,6 +42,7 @@ class DialogServiceQuestDialogTest {
 	private static final int QUEST_ID = 1109;
 
 	private GameEngineServices engineServices;
+	private UnhandledQuestEngine questEngine;
 
 	@BeforeAll
 	static void configurePacketProcessor() {
@@ -52,7 +54,8 @@ class DialogServiceQuestDialogTest {
 
 	@BeforeEach
 	void installUnhandledQuestEngine() {
-		engineServices = new GameEngineServices(provider(new UnhandledQuestEngine()), null, null, null, null);
+		questEngine = new UnhandledQuestEngine();
+		engineServices = new GameEngineServices(provider(questEngine), null, null, null, null);
 	}
 
 	@AfterEach
@@ -85,6 +88,16 @@ class DialogServiceQuestDialogTest {
 		DialogService.onDialogSelect(31, player, npc(new QuestItemNpcAI2()), QUEST_ID, 0);
 
 		assertOnlyDialog(player, 0, 0);
+	}
+
+	@Test
+	void simpleNpcDialogUsesGenericPageWithoutQuestOwnerOrQuestDispatch() throws Exception {
+		Player player = playerWithQuest(QuestStatus.NONE);
+
+		DialogService.onSimpleDialogSelect(1012, player, npc(new NamedAi("normal")), 0);
+
+		assertOnlyDialog(player, NPC_OBJECT_ID, 1012);
+		assertFalse(questEngine.dialogCalled);
 	}
 
 	private static Player playerWithQuest(QuestStatus status) throws Exception {
@@ -156,8 +169,11 @@ class DialogServiceQuestDialogTest {
 	}
 
 	private static final class UnhandledQuestEngine extends QuestEngine {
+		private boolean dialogCalled;
+
 		@Override
 		public boolean onDialog(QuestEnv env) {
+			dialogCalled = true;
 			return false;
 		}
 	}

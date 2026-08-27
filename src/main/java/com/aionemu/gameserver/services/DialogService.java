@@ -132,10 +132,30 @@ public class DialogService {
      */
 
     public static void onDialogSelect(int dialogId, final Player player, Npc npc, int questId, int extendedRewardIndex) {
-        QuestEnv env = new QuestEnv(npc, player, questId, dialogId);
-        env.setExtendedRewardIndex(extendedRewardIndex);
-        if (GameEngineServices.questEngine().onDialog(env)) {
-            return;
+        onDialogSelect(dialogId, player, npc, questId, extendedRewardIndex, true);
+    }
+
+    /**
+     * 处理客户端通用选择页上的 NPC 简单对话选项；该入口不再尝试任务路由。
+     * Handles an NPC simple-dialog option from the client's generic selection page without attempting quest routing.
+     *
+     * @param dialogId 对话框选项 ID / dialog option id
+     * @param player 玩家 / player
+     * @param npc 对话 NPC / dialog NPC
+     * @param extendedRewardIndex 扩展奖励索引 / extended reward index
+     */
+    public static void onSimpleDialogSelect(int dialogId, final Player player, Npc npc, int extendedRewardIndex) {
+        onDialogSelect(dialogId, player, npc, 0, extendedRewardIndex, false);
+    }
+
+    private static void onDialogSelect(int dialogId, final Player player, Npc npc, int questId,
+            int extendedRewardIndex, boolean dispatchQuest) {
+        if (dispatchQuest) {
+            QuestEnv env = new QuestEnv(npc, player, questId, dialogId);
+            env.setExtendedRewardIndex(extendedRewardIndex);
+            if (GameEngineServices.questEngine().onDialog(env)) {
+                return;
+            }
         }
         if (player.getAccessLevel() >= 0 && CustomConfig.ENABLE_SHOW_DIALOG_ID) {
             PacketSendUtility.sendMessage(player, "<Quest Id>" + questId);

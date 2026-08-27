@@ -435,6 +435,24 @@ public class NpcController extends CreatureController<Npc> {
 	}
 
 	/**
+	 * 处理客户端通用选择页上的 NPC 简单对话选项，不进入任务路由。
+	 * Handles an NPC simple-dialog option from the client's generic selection page without entering quest routing.
+	 *
+	 * @param dialogId 对话框选项 ID / dialog option id
+	 * @param player 玩家 / player
+	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
+	 */
+	@Override
+	public void onSimpleDialogSelect(int dialogId, final Player player, int extendedRewardIndex) {
+		if (!MathUtil.isInRange(getOwner(), player, getOwner().getObjectTemplate().getTalkDistance() + 2)) {
+			return;
+		}
+		if (!getOwner().getAi2().onDialogSelect(player, dialogId, 0, extendedRewardIndex)) {
+			DialogService.onSimpleDialogSelect(dialogId, player, getOwner(), extendedRewardIndex);
+		}
+	}
+
+	/**
 	 * NPC 受到攻击时的处理。
 	 * Handles the NPC being attacked.
 	 *

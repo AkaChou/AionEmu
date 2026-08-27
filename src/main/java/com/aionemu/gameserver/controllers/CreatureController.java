@@ -462,6 +462,17 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
+	 * 处理从通用选择页发起的 NPC 简单对话选项。
+	 * Handles an NPC simple-dialog option selected from the generic selection page.
+	 *
+	 * @param dialogId 对话框选项 ID / dialog option id
+	 * @param player 玩家 / player
+	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
+	 */
+	public void onSimpleDialogSelect(int dialogId, Player player, int extendedRewardIndex) {
+	}
+
+	/**
 	 * 获取指定任务。
 	 * Gets the task for the given id.
 	 *
