@@ -113,16 +113,42 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799523" action="QUEST_SELECT"/>
+        <talk-to-npc npc-id="700834"/>
+      </event>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700834" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799523" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203166" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203166" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="799523" source="started" target="reward" item-id="182212004" required="5"/>
+    <npc-item-report npc-id="203166" source="started" target="reward" item-id="182212004" required="5"/>
     <transition source="started" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799523" action="SET_SUCCEED"/>
+        <dialog type="TALK_TO_NPC" npc-id="203166" action="SET_SUCCEED"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
@@ -131,7 +157,7 @@
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799523" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="203166" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
@@ -139,7 +165,7 @@
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799523" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="203166" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="GOLD" id="0" amount="33480" amount-mode="QUEST_BASE"/>

@@ -112,7 +112,33 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799523" action="QUEST_SELECT"/>
+        <talk-to-npc npc-id="700834"/>
+      </event>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700834" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799523" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804605" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="804605" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
@@ -143,7 +169,7 @@
     </transition>
     <transition source="started" target="started" priority="1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799523" action="CHECK_USER_HAS_QUEST_ITEM"/>
+        <dialog type="TALK_TO_NPC" npc-id="804605" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
@@ -166,7 +192,7 @@
     </transition>
     <transition source="started" target="started" priority="1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799523" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
+        <dialog type="TALK_TO_NPC" npc-id="804605" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>

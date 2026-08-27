@@ -115,7 +115,27 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799522" action="QUEST_SELECT"/>
+        <talk-to-npc npc-id="700833"/>
+      </event>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700833" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <talk-to-npc npc-id="700951"/>
+      </event>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700951" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799523" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
@@ -123,7 +143,7 @@
     </transition>
     <transition source="started" target="reward" priority="0">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799522" action="CHECK_USER_HAS_QUEST_ITEM"/>
+        <dialog type="TALK_TO_NPC" npc-id="799523" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
         <has-item item-id="182212001" count="5"/>
@@ -140,7 +160,7 @@
     </transition>
     <transition source="started" target="started" priority="1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799522" action="CHECK_USER_HAS_QUEST_ITEM"/>
+        <dialog type="TALK_TO_NPC" npc-id="799523" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
@@ -148,7 +168,7 @@
     </transition>
     <transition source="started" target="reward" priority="0">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799522" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
+        <dialog type="TALK_TO_NPC" npc-id="799523" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
       </event>
       <conditions>
         <has-item item-id="182212001" count="5"/>
@@ -165,7 +185,7 @@
     </transition>
     <transition source="started" target="started" priority="1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799522" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
+        <dialog type="TALK_TO_NPC" npc-id="799523" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -173,14 +193,30 @@
     </transition>
     <transition source="started" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799522" action="SET_SUCCEED"/>
+        <dialog type="TALK_TO_NPC" npc-id="799523" action="SET_SUCCEED"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="799522" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799522" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799523" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="799523" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
     <transition source="unaccepted" target="unaccepted">
