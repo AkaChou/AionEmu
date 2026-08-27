@@ -149,3 +149,17 @@
 - 验证命令和结果：`mvn -q -Dtest=RetailOpenWorldSpawnDataTest test` 通过；`mvn -q -Dtest=QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,QuestPageButtonAuditTest test` 通过，生产 catalog 6200 条编译成功、失败 0、白名单违规 0。runtime 套件在本修复前后失败集合完全一致（20 个基线失败，stash 对比验证），确认无新增回归。
 - 复用边界：仅适用于"使用任务机关 A 触发对 NPC B 的副作用（aggro/spawn/despawn 等）且 A、B 均有 `temporary_spawn` 时间条件"的形状。必须逐对象证明两者窗口一致且副作用动作具备 best-effort 容错；不能推广到无时间条件的普通 spawn，也不能据此把所有 after-commit 动作的 false 都改成成功——玩家不可用（null/未刷出）仍保持硬失败。窗口对齐后仍需保留运行时容错作为纵深防御。
 - commit：`2d2d22dfd`（窗口对齐 + 快照断言）、`c250efaf6`（AddNpcAggro best-effort 容错）。
+
+## 8.12 收集交付任务的动作链与页面整体错位
+
+- Pattern ID：`COLLECT_TURN_IN_DIALOG_CHAIN_MISMATCH`。
+- 代表任务：14015「Not Blinded by Vengeance / 铭刻在心的仇恨」。
+- 搜索症状：交付收集物时 load fail、HtmlPageId 1352 不存在、点击"拿出证物"按钮无响应。
+- 玩家可见症状：击杀图尔辛克拉尔系怪物收集 10 个证物（182215316）后，与 NPC 203098 对话并选择任务 14015 时，客户端弹出 `load fail! Quest_Q14015.html (HtmlPageId 1352) (QuestId 14015)`，交付流程无法继续。
+- 根因：迁移把 `QUEST_SELECT(31)` 的响应页面写成通用 `SELECT2(1352)`，而 Aion 5.8 客户端 `quest_q14015.html` 只含页面 1011/1012/1013/1097/5/9/1008/12/11，不存在 1352；交付判定被挂在动作 `SELECT_QUEST_REWARD(1009)` 上，但客户端页面按钮实际发送 `CHECK_USER_HAS_QUEST_ITEM(39)`（旧 handler 的 `CHECK_COLLECTED_ITEMS`）；1011 -> 1012 -> 1013 的"继续听"页链和未集齐回落页 1097 也缺失。旧 handler 权威合同为 `START_DIALOG -> 1011`、`CHECK_COLLECTED_ITEMS -> 集齐置 REWARD 并发奖励窗口 5 / 未集齐发 1097`。
+- 修复层：仅任务 XML 与任务专用测试。`QUEST_SELECT -> SELECT1(1011)`；补全 `SELECT1_1(1012)`、`SELECT1_1_1(1013)` 页链；交付判定改挂动作 39 并用 `priority="0"/"1"` 拆分两条分支——集齐 10 个时事务内 `set-variable var0=1 + remove-item`、提交后 `LEVEL_AND_VISIBILITY_REFRESH` 并显示 `SHOW_SELECT_QUEST_REWARD_WINDOW1(5)`，未集齐时保持 `started` 并显示 `SELECT1_2(1097)`；升级/区域登记入口保持只提交状态不发页。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/14015.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest14015ClientDialogAlignmentTest.java`。
+- 第一检查点：先查 `docs/quest/client-dialog-mapping/quest-dialog-pages.csv` 与 `quest-dialog-action-details.csv` 确认该任务客户端入口页与交付按钮动作，再对照旧 handler 的 `collectItemCheck` 分支页面；不要假设所有收集任务共用 `CHECK_USER_ITEM_OK(10000)/CHECK_USER_ITEM_FAIL(10001)` 通用页，页面合同以各自任务为准。
+- 验证命令和结果：`xmllint --noout --schema quest_definition.xsd quests/14015.xml` 通过；任务专用测试与生产 catalog/白名单门禁未在本会话运行（未获构建授权，命令已交付给用户）；2026-08-27 用户完成修复后客户端全流程验收，交付时不再弹 load fail，任务正常完成。
+- 复用边界：仅适用于单 NPC 收集交付任务中 `QUEST_SELECT` 入口页不存在、交付动作未挂客户端按钮动作、或 select 页链/未集齐回落缺失的形状。入口页、奖励窗口、未集齐页必须逐一取自该任务的客户端页面契约与旧 handler，不能照搬 14015 的 1011/5/1097；交付动作变体（20002 简化检查等）需另行取证；升级入口发页问题复用 8.1，reward 阶段发不存在页复用 `QUEST_REWARD_PREVIEW_PAGE_CONTRACT`。
+- commit：`e6f4f12cf`。
