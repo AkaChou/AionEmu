@@ -102,7 +102,7 @@ public class HotspotTeleportService {
 				}
 				finishCastBar(player, 0);
 				PacketSendUtility.broadcastPacketAndReceive(player,
-						new SM_HOTSPOT_TELEPORT(3, player.getObjectId(), teleportId));
+						new SM_HOTSPOT_TELEPORT(player, 3, teleportId, cooldown));
 				ActionObserver attackedObserver = new ActionObserver(ObserverType.ATTACKED) {
 					@Override
 					public void attacked(Creature creature) {
