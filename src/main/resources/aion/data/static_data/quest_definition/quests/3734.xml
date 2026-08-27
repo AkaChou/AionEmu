@@ -115,6 +115,11 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700415" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <npc-item-report npc-id="800518" source="started" target="reward" item-id="182202180" required="4"/>
     <transition source="started" target="reward">
       <event>
