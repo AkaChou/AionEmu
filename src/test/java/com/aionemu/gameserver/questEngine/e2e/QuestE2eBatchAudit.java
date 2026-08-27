@@ -5,6 +5,7 @@ import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
@@ -32,7 +33,27 @@ import java.util.Set;
  * report as the expected value.
  */
 public final class QuestE2eBatchAudit {
+	/** 客户端全局行为动作：不依赖任务页面按钮即会发送，判定任务作用域页面缺失时视为可达。 */
+	private static final Set<Integer> CLIENT_GLOBAL_ACTIONS = Set.of(
+		QuestDialogAction.QUEST_SELECT.id(),
+		QuestDialogAction.FINISH_DIALOG.id(),
+		QuestDialogAction.QUEST_ACCEPT_SIMPLE.id(),
+		QuestDialogAction.QUEST_REFUSE_SIMPLE.id(),
+		QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id());
+
 	private QuestE2eBatchAudit() {
+	}
+
+	/**
+	 * 触发动作可达时，任务 html 缺失页面才会被玩家真正触发加载失败；死动作路由的
+	 * 缺失页面没有运行时影响，不应计入审计违例。
+	 * A missing quest page only fails client-side loading when its trigger action is reachable;
+	 * missing-page responses behind dead-action routes have no runtime effect and must not count.
+	 */
+	private static boolean actionReachable(ClientResourceOracle oracle, int questId, QuestEvent event) {
+		int dialogId = dialogId(event);
+		return dialogId <= 0 || CLIENT_GLOBAL_ACTIONS.contains(dialogId)
+			|| oracle.actionVisibleOn(questId, dialogId);
 	}
 
 	/** 对目录中全部 executable owner 生成独立结果。 / Produces independent results for every executable owner in a catalog. */
@@ -223,8 +244,9 @@ public final class QuestE2eBatchAudit {
 			return true;
 		}
 		return switch (row.status()) {
-			case CLICK_NO_RESPONSE, PAGE_NOT_IN_CLIENT, INVALID_INTERACTION_OBJECT, INVALID_DIALOG_PACKET,
-				INVALID_PACKET_ORDER, STATE_CHANGED_WITHOUT_RESPONSE, AFTER_COMMIT_FAILURE, RUNTIME_REQUIRED -> true;
+			case CLICK_NO_RESPONSE, PAGE_NOT_IN_CLIENT, PAGE_NOT_IN_TASK_HTML, INVALID_INTERACTION_OBJECT,
+				INVALID_DIALOG_PACKET, INVALID_PACKET_ORDER, STATE_CHANGED_WITHOUT_RESPONSE, AFTER_COMMIT_FAILURE,
+				RUNTIME_REQUIRED -> true;
 			default -> false;
 		};
 	}
@@ -301,6 +323,10 @@ public final class QuestE2eBatchAudit {
 			return QuestE2eStatus.STATE_MISMATCH;
 		}
 		if (shownPage > 0 && !oracle.pageExists(definition.id(), shownPage)) return QuestE2eStatus.PAGE_NOT_IN_CLIENT;
+		if (shownPage > 0 && !oracle.questPageExists(definition.id(), shownPage)
+			&& actionReachable(oracle, definition.id(), transition.event())) {
+			return QuestE2eStatus.PAGE_NOT_IN_TASK_HTML;
+		}
 		boolean response = hasObservableResponse(outcome, transition);
 		if (!outcome.stateChanged() && !response && requiresQuestItemAiCompletion(definition, transition)) {
 			return QuestE2eStatus.RUNTIME_REQUIRED;
@@ -330,6 +356,9 @@ public final class QuestE2eBatchAudit {
 		if (status == QuestE2eStatus.PASS) return mode + " cleared fast status: " + fastReason;
 		if (status == QuestE2eStatus.PAGE_NOT_IN_CLIENT) {
 			return mode + " confirmed server page " + shownPage + " is absent from Aion 5.8 client tables";
+		}
+		if (status == QuestE2eStatus.PAGE_NOT_IN_TASK_HTML) {
+			return mode + " confirmed server page " + shownPage + " is absent from this quest's Aion 5.8 client html";
 		}
 		return mode + " confirmed " + status;
 	}
@@ -413,6 +442,10 @@ public final class QuestE2eBatchAudit {
 			.filter(node -> node.label().equals(transition.targetNode())).findFirst().orElse(null);
 		if (target == null || runtime.state().status() != target.projection().status()) return QuestE2eStatus.STATE_MISMATCH;
 		if (shownPage > 0 && !oracle.pageExists(definition.id(), shownPage)) return QuestE2eStatus.PAGE_NOT_IN_CLIENT;
+		if (shownPage > 0 && !oracle.questPageExists(definition.id(), shownPage)
+			&& actionReachable(oracle, definition.id(), transition.event())) {
+			return QuestE2eStatus.PAGE_NOT_IN_TASK_HTML;
+		}
 		if (requiresInteractionObject(transition) && runtime.state().currentObjectId() <= 0) {
 			return QuestE2eStatus.INVALID_INTERACTION_OBJECT;
 		}
@@ -470,6 +503,9 @@ public final class QuestE2eBatchAudit {
 		if (status == QuestE2eStatus.PASS) return "";
 		if (outcome.failure() != null) return outcome.failure().getClass().getSimpleName() + ":" + outcome.failure().getMessage();
 		if (status == QuestE2eStatus.PAGE_NOT_IN_CLIENT) return "server page " + shownPage + " is absent from Aion 5.8 client tables";
+		if (status == QuestE2eStatus.PAGE_NOT_IN_TASK_HTML) {
+			return "server page " + shownPage + " is absent from this quest's Aion 5.8 client html";
+		}
 		if (status == QuestE2eStatus.NO_MATCH) return "no transition matched event and prepared source facts";
 		if (status == QuestE2eStatus.RUNTIME_REQUIRED && requiresQuestItemAiCompletion(definition, transition)) {
 			return "quest item response is completed by QuestItemNpcAI2 outside the dispatcher";

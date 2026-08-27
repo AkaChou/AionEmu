@@ -103,6 +103,41 @@ public final class ClientResourceOracle {
 		return htmlPages.containsKey(pageId) || questPages.getOrDefault(questId, Map.of()).containsKey(pageId);
 	}
 
+	/**
+	 * 任务作用域严格判定：页面必须在该任务自己的 quest html 段落索引中。客户端加载
+	 * Quest_Q&lt;id&gt;.html 时按段落定位，全局 HtmlPages 注册表只证明页面 ID 是合法常量，
+	 * 不证明该任务的文件包含该段落；任务无任何页面证据（导出表缺失）时回退全局表，避免无证据误报。
+	 * Quest-scoped strict check: the page must exist in the quest's own quest html section index. The
+	 * client loads Quest_Q&lt;id&gt;.html by section, so the global HtmlPages registry only proves the page
+	 * id is a legal constant, not that this quest's file contains it; quests without any page evidence
+	 * fall back to the global table to avoid evidence-free false positives.
+	 */
+	public boolean questPageExists(int questId, int pageId) {
+		Map<Integer, ClientPage> taskPages = questPages.getOrDefault(questId, Map.of());
+		if (taskPages.isEmpty()) {
+			return htmlPages.containsKey(pageId);
+		}
+		return taskPages.containsKey(pageId);
+	}
+
+	/**
+	 * 判断客户端是否会在该任务的任意任务页面上发送该动作；不在任何页面上的动作是死路由，
+	 * 服务端为其发送缺失页面不会产生运行时影响。全局动作（任务列表、接受/拒绝流等）不在此列。
+	 * Whether the client can send this action on any of the quest's own pages; actions absent from
+	 * every page are dead routes whose missing-page responses have no runtime effect. Global actions
+	 * (quest list, accept/refuse flow) are not covered here.
+	 */
+	public boolean actionVisibleOn(int questId, int actionId) {
+		for (ClientPage page : questPages.getOrDefault(questId, Map.of()).values()) {
+			for (ClientAction action : page.actions()) {
+				if (action.actionId() == actionId) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	/** 返回页面上由客户端资源直接证明可见的动作。 / Returns actions directly proven visible by client resources. */
 	public List<ClientAction> visibleActions(int questId, int pageId) {
 		ClientPage page = questPages.getOrDefault(questId, Map.of()).get(pageId);
