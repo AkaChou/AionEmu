@@ -211,6 +211,17 @@
     </transition>
     <transition source="s3" target="s3">
       <event>
+        <dialog type="TALK_TO_NPC" npc-id="204004" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4_2"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
         <dialog type="TALK_TO_NPC" npc-id="204004" action="SELECT4_2_1"/>
       </event>
       <conditions>
