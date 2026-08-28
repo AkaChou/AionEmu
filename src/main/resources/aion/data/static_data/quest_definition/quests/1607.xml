@@ -13,7 +13,7 @@
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="5" min="0" max="31" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -25,23 +25,53 @@
     <node label="v1" status="START">
       <var name="var0" value="1"/>
     </node>
-    <node label="z1" status="START">
+    <node label="a" status="START">
       <var name="var0" value="2"/>
     </node>
-    <node label="z2" status="START">
+    <node label="b" status="START">
       <var name="var0" value="3"/>
     </node>
-    <node label="z3" status="START">
+    <node label="c" status="START">
       <var name="var0" value="4"/>
     </node>
-    <node label="z4" status="START">
+    <node label="d" status="START">
       <var name="var0" value="5"/>
+    </node>
+    <node label="ab" status="START">
+      <var name="var0" value="6"/>
+    </node>
+    <node label="ac" status="START">
+      <var name="var0" value="7"/>
+    </node>
+    <node label="ad" status="START">
+      <var name="var0" value="8"/>
+    </node>
+    <node label="bc" status="START">
+      <var name="var0" value="9"/>
+    </node>
+    <node label="bd" status="START">
+      <var name="var0" value="10"/>
+    </node>
+    <node label="cd" status="START">
+      <var name="var0" value="11"/>
+    </node>
+    <node label="abc" status="START">
+      <var name="var0" value="12"/>
+    </node>
+    <node label="abd" status="START">
+      <var name="var0" value="13"/>
+    </node>
+    <node label="acd" status="START">
+      <var name="var0" value="14"/>
+    </node>
+    <node label="bcd" status="START">
+      <var name="var0" value="15"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="5"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="5"/>
+      <var name="var0" value="1"/>
     </node>
   </nodes>
   <transitions>
@@ -61,7 +91,6 @@
         <close-dialog/>
       </after-commit>
     </transition>
-
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="QUEST_ACTION" action="QUEST_REFUSE_1"/>
@@ -82,12 +111,22 @@
         <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
+
+    <!-- Step 0: Talk to Kuobe (204578) -->
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204578" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204578" action="SELECT1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
     <transition source="started" target="v1">
@@ -99,7 +138,9 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="v1" target="z1">
+
+    <!-- First scouting location -->
+    <transition source="v1" target="a">
       <event>
         <enter-zone zone="LF3_SENSORY_AREA_Q1607_A_210040000"/>
       </event>
@@ -107,7 +148,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="v1" target="z1">
+    <transition source="v1" target="b">
       <event>
         <enter-zone zone="LF3_SENSORY_AREA_Q1607_B_210040000"/>
       </event>
@@ -115,7 +156,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="v1" target="z1">
+    <transition source="v1" target="c">
       <event>
         <enter-zone zone="LF3_SENSORY_AREA_Q1607_C_210040000"/>
       </event>
@@ -123,7 +164,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="v1" target="z1">
+    <transition source="v1" target="d">
       <event>
         <enter-zone zone="LF3_SENSORY_AREA_Q1607_D_210040000"/>
       </event>
@@ -131,7 +172,33 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="z1" target="z2">
+
+    <!-- Second scouting location -->
+    <transition source="a" target="ab">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_B_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a" target="ac">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_C_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="a" target="ad">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_D_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="b" target="ab">
       <event>
         <enter-zone zone="LF3_SENSORY_AREA_Q1607_A_210040000"/>
       </event>
@@ -139,15 +206,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="z1" target="z2">
-      <event>
-        <enter-zone zone="LF3_SENSORY_AREA_Q1607_B_210040000"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z1" target="z2">
+    <transition source="b" target="bc">
       <event>
         <enter-zone zone="LF3_SENSORY_AREA_Q1607_C_210040000"/>
       </event>
@@ -155,7 +214,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="z1" target="z2">
+    <transition source="b" target="bd">
       <event>
         <enter-zone zone="LF3_SENSORY_AREA_Q1607_D_210040000"/>
       </event>
@@ -163,7 +222,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="z2" target="z3">
+    <transition source="c" target="ac">
       <event>
         <enter-zone zone="LF3_SENSORY_AREA_Q1607_A_210040000"/>
       </event>
@@ -171,7 +230,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="z2" target="z3">
+    <transition source="c" target="bc">
       <event>
         <enter-zone zone="LF3_SENSORY_AREA_Q1607_B_210040000"/>
       </event>
@@ -179,15 +238,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="z2" target="z3">
-      <event>
-        <enter-zone zone="LF3_SENSORY_AREA_Q1607_C_210040000"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="z2" target="z3">
+    <transition source="c" target="cd">
       <event>
         <enter-zone zone="LF3_SENSORY_AREA_Q1607_D_210040000"/>
       </event>
@@ -195,7 +246,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="z3" target="z4">
+    <transition source="d" target="ad">
       <event>
         <enter-zone zone="LF3_SENSORY_AREA_Q1607_A_210040000"/>
       </event>
@@ -203,7 +254,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="z3" target="z4">
+    <transition source="d" target="bd">
       <event>
         <enter-zone zone="LF3_SENSORY_AREA_Q1607_B_210040000"/>
       </event>
@@ -211,7 +262,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="z3" target="z4">
+    <transition source="d" target="cd">
       <event>
         <enter-zone zone="LF3_SENSORY_AREA_Q1607_C_210040000"/>
       </event>
@@ -219,7 +270,17 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="z3" target="z4">
+
+    <!-- Third scouting location -->
+    <transition source="ab" target="abc">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_C_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="ab" target="abd">
       <event>
         <enter-zone zone="LF3_SENSORY_AREA_Q1607_D_210040000"/>
       </event>
@@ -227,7 +288,184 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="z4" target="z4">
+    <transition source="ac" target="abc">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_B_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="ac" target="acd">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_D_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="ad" target="abd">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_B_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="ad" target="acd">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_C_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="bc" target="abc">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_A_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="bc" target="bcd">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_D_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="bd" target="abd">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_A_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="bd" target="bcd">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_C_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="cd" target="acd">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_A_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="cd" target="bcd">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_B_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+
+    <!-- Fourth scouting location -> straight to reward! -->
+    <transition source="abc" target="reward">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_D_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="abd" target="reward">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_C_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="acd" target="reward">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_B_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition source="bcd" target="reward">
+      <event>
+        <enter-zone zone="LF3_SENSORY_AREA_Q1607_A_210040000"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+
+    <!-- Recovery transitions for legacy/reconnect states -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-is field="var0" value="5"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204574" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-is field="var0" value="5"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+
+    <!-- Block item in ongoing/complete states -->
+    <transition source="started" target="started">
+      <event>
+        <use-item item-id="182201744"/>
+      </event>
+      <actions>
+        <block-default-item-use/>
+      </actions>
+    </transition>
+    <transition source="v1" target="v1">
+      <event>
+        <use-item item-id="182201744"/>
+      </event>
+      <actions>
+        <block-default-item-use/>
+      </actions>
+    </transition>
+    <transition source="reward" target="reward">
+      <event>
+        <use-item item-id="182201744"/>
+      </event>
+      <actions>
+        <block-default-item-use/>
+      </actions>
+    </transition>
+    <transition source="complete" target="complete">
+      <event>
+        <use-item item-id="182201744"/>
+      </event>
+      <actions>
+        <block-default-item-use/>
+      </actions>
+    </transition>
+
+    <!-- Reward and complete interactions with Kalendros (204574) -->
+    <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204574" action="QUEST_SELECT"/>
       </event>
@@ -235,37 +473,16 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <transition source="z4" target="reward">
+    <transition source="reward" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204574" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="204574" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <transition source="reward" target="complete">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204574" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
-      </event>
-      <actions>
-        <grant-reward kind="EXP" id="0" amount="1807399" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="186000004" amount="3"/>
-        <complete-quest reward-index="0"/>
-      </actions>
-      <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204578" action="SELECT1_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
-      </after-commit>
-    </transition>
+    <npc-complete npc-id="204574" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>
