@@ -111,6 +111,15 @@
       <after-commit>
         <cancel-quest-timer timer-id="countdown" scope="PLAYER_QUEST"/>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <transition source="v2" target="v2" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203949" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
       </after-commit>
     </transition>
     <transition source="v2" target="unaccepted">
@@ -130,7 +139,7 @@
         <dialog type="TALK_TO_NPC" npc-id="203949" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="203949" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_REWARD2 SELECTED_QUEST_REWARD3 SELECTED_QUEST_REWARD4 SELECTED_QUEST_REWARD5 SELECTED_QUEST_REWARD6 SELECTED_QUEST_REWARD7 SELECTED_QUEST_REWARD8 SELECTED_QUEST_REWARD9 SELECTED_QUEST_REWARD10 SELECTED_QUEST_REWARD11 SELECTED_QUEST_REWARD12 SELECTED_QUEST_REWARD13 SELECTED_QUEST_REWARD14 SELECTED_QUEST_REWARD15 SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
