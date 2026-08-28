@@ -4,6 +4,10 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <work-items>
+      <item id="182201794" count="1"/>
+      <item id="182201795" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="2954681"/>
       <reward kind="AP" id="0" amount="200"/>
@@ -22,7 +26,9 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="stage1" status="START"><var name="var0" value="1"/></node>
+    <node label="stage1" status="START">
+      <var name="var0" value="1"/>
+    </node>
     <node label="reward" status="REWARD">
       <var name="var0" value="0"/>
     </node>
@@ -31,8 +37,12 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="203786" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <!-- 契约外报告页换无按钮反馈。 -->
+    <!-- 步骤 0: 迪亚娜 (203786) 接取任务 -->
+    <dialog type="NPC_START" npc-id="203786" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+      <accept-actions>
+        <give-item item-id="182201794" count="1"/>
+      </accept-actions>
+    </dialog>
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203786" action="QUEST_SELECT"/>
@@ -42,11 +52,7 @@
       </after-commit>
     </transition>
 
-    <npc-complete npc-id="203786" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="730051" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <!-- retail 步骤0(zz_retail_simple_quests.xml):type="TALK" ids="730051" give_item_id="182201795" give_item_count="1" remove_item_id="182201794" remove_item_count="1";对话链按客户端按钮图重建。 -->
+    <!-- 步骤 1: 会说话的镜子 (730051) 注入魔力 -->
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="730051" action="QUEST_SELECT"/>
@@ -76,55 +82,45 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="730051" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="204500" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <!-- retail 步骤1(zz_retail_simple_quests.xml):type="TALK" ids="204500";对话链按客户端按钮图重建。 -->
+
+    <!-- 步骤 2: 佩兰托 (204500) 询问裂缝情报 -->
     <transition source="stage1" target="stage1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204500" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
     <transition source="stage1" target="stage1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204500" action="SELECT2_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="204500" action="SELECT3_1"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
       </after-commit>
     </transition>
     <transition source="stage1" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204500" action="SETPRO1"/>
+        <dialog type="TALK_TO_NPC" npc-id="204500" action="SETPRO2"/>
       </event>
-      <actions>
-        <!-- 无物品变更 -->
-      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="204500" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="204584" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <!-- 契约外报告页换无按钮反馈。 -->
-    <transition source="started" target="started">
+
+    <!-- 步骤 3: 皮埃拉 (204584) 完成任务 -->
+    <transition source="reward" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204584" action="QUEST_SELECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="204584" action="USE_OBJECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-
     <npc-complete npc-id="204584" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
 </quest-definition>
