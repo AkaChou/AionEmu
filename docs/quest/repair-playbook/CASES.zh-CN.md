@@ -214,3 +214,23 @@
 - 验证命令和结果：`QuestDefinitionXmlCompiler.parse` 编译 `1354.xml` 成功；`Quest1354ClientDialogAlignmentTest` 锁定 120 秒倒计时、飞环推进与超时重置链路；2026-08-28 用户客户端全流程实机验证验收通过。
 - 复用边界：适用于限时飞行、限时护送、限时调查等由客户端对话规定具体倒计时时长的任务。
 - commit：`ad0d1385a`。
+
+## 8.16 收集交付分支遗漏道具扣除导致完成后道具残留
+
+- Pattern ID：`COLLECT_ITEM_TURNIN_REMOVAL_MISSING`。
+- 代表任务：14023「Playing Around at the Temple / 地下神殿之谜」。
+- 搜索症状：任务完成后道具还在背包里、石板碎片残留、交任务不扣道具、背包任务物品不消失、收集物无法消耗。
+- 玩家可见症状：玩家在埃拉库斯神殿收集齐 4 块石板碎片（雷之石壁碎片 182215318、海浪石壁碎片 182215319、风之石壁碎片 182215320、火之石壁碎片 182215321）并向调查官卡斯托尔（203967）交付后，返回埃尔特内要塞向泰勒马科斯（203965）领取奖励完成任务，但背包中 4 块石板碎片道具依然存在，未被扣除。
+- 根因：
+  1. 在 `14023.xml` 的 `s2 -> reward` 阶段，NPC 203967 执行 `CHECK_USER_HAS_QUEST_ITEM`（action 39）判定成功跳转到 `reward` 状态时，缺少 `<actions>` 事务块，未声明 4 件石板碎片的 `<remove-item>` 操作；
+  2. 4 件石板碎片属于普通收集物品（`<items>`）而非工作物品（`<work-items>`），引擎在 `COMPLETE` 投影时仅会清理 `questWorkItems()`，普通收集物品不会被自动回收；
+  3. `s1` 阶段 NPC 203967 的 `SELECT2_1`（1353）与 `SELECT2_1_1`（1354）翻页路由曾被错误归属给 `started` 阶段的 NPC 203965，导致中间对话未命中；`reward` 状态下卡斯托尔处也缺少 `FINISH_DIALOG` 退出路由。
+- 修复层：仅修改任务 XML 与增加任务专用回归测试。
+  1. 在 `s2 -> reward` 的 `CHECK_USER_HAS_QUEST_ITEM` 成功分支中添加 4 件石板碎片的 `<remove-item item-id="..." count="1"/>`；
+  2. 修正 `s1` 阶段卡斯托尔对话翻页归属，补充 `reward` 节点下卡斯托尔的 `FINISH_DIALOG` 退出路由；
+  3. 保持 13 种可选武器/装备奖励领取与经验金币发放的完整合同。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/14023.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest14023ClientDialogAlignmentTest.java`。
+- 第一检查点：检查交付 transition（包括 `CHECK_USER_HAS_QUEST_ITEM`、`CHECK_COLLECTED_ITEMS` 或迁移至 `reward`/`complete` 的分支）中的 `<actions>` 是否包含全部已检查道具的 `<remove-item>`；区分普通收集物 `<items>` 与自动回收的 `<work-items>`。
+- 验证命令和结果：`QuestDefinitionXmlCompiler.parse` 编译 `14023.xml` 成功；`Quest14023ClientDialogAlignmentTest` 覆盖自动接取、NPC 对话推进、石板碎片提交扣除与 13 种可选奖励领取链路；生产目录 6200 个任务白名单与目录编译测试 100% 通过；2026-08-28 用户客户端全流程实机验证验收通过，提交后石板碎片正常扣除且背包无残留。
+- 复用边界：适用于收集类使命与支线任务中交付判定通过但未执行扣除导致道具残留在背包的同型问题。若为全 XML 零扣除宏误用，需改用 `npc-item-report`；若为工作道具，需定义为 `<work-items>`。
+- commit：`bd782024d`。

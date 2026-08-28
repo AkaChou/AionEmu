@@ -51,6 +51,7 @@
 | `DEVICE_TARGET_SPAWN_WINDOW_MISMATCH` | 使用任务机关后任务推进但副作用失败、运行时 WARN `AddNpcAggro failed`、激怒目标不出现 | 机关与副作用目标的 `temporary_spawn` 窗口必须覆盖彼此；knownlist 缺席目标的 best-effort 副作用不按硬失败上报，玩家不可用仍保持硬失败 | 比对任务链所有 spawn 窗口与目标 `respawn_time` 空窗；先修窗口对齐再保留运行时容错 | `2d2d22dfd`、`RetailOpenWorldSpawnDataTest#keepsNymphGownRetailReferenceHeightAndNightWindow` |
 | `MULTI_LOCATION_SCOUTING_FINAL_REWARD_TRANSITION` | 侦察完成后没有下一步、调查3个地方后任务空白、动画看完后无法向NPC报告 | 多目标区域/动画侦察通过位掩码记录进度，最后一次侦察直接迁移至 REWARD 并在 after-commit 提交 LEVEL_AND_VISIBILITY_REFRESH；提供 enter-world/talk 平滑恢复，不使用 START 汇总中间节点 | 最终侦察完成 transition 的目标状态与 sync mode；是否误用 START 中间节点导致客户端 step 0/1 与位掩码错位 | `f7ae6a706`、`Quest1336ScoutingForDemokritosRegressionTest#completesTheReportStateForEveryInvestigationOrder` |
 | `TIMED_QUEST_DURATION_ALIGNMENT` | 倒计时时间错误、任务限时与实际不符、4分钟倒计时、飞行考试时间过长、限时2分钟实际4分钟 | 任务 XML 中 `start-quest-timer` 的 `seconds` 参数必须与客户端 HTML 对话/任务描述严格对齐（如 2分钟=120秒，禁止误配为 300秒） | 检查客户端 HTML 对话中的时间描述与 XML `start-quest-timer` 秒数定义 | `ad0d1385a`、`Quest1354ClientDialogAlignmentTest#locksFlightTimerAndRingProgressionContract` |
+| `COLLECT_ITEM_TURNIN_REMOVAL_MISSING` | 任务完成后道具还在背包里、石板碎片残留、交任务不扣道具、背包任务物品不消失 | `CHECK_USER_HAS_QUEST_ITEM` 或交付分支判定持有道具，但 `<actions>` 中缺失 `<remove-item>`；普通收集物不是 `<work-items>`，完成时不自动清理 | 检查交付 transition 的 actions 是否包含全部已检查道具的 `remove-item`；确认是否遗漏 `actions` 块 | `bd782024d`、`Quest14023ClientDialogAlignmentTest#verifiesFullDialogAndItemTurnInContract` |
 
 指纹表至少维护以上五列。一个代表提交可以支撑多个独立 Pattern；这属于对复合修复的检索拆分，不是新增重复案例。新增代表模式时，案例正文记录完整验收证据，指纹表只提炼可搜索的症状别名和抽象 IR/owner 特征，具体 action/page 仅作为代表实例；后续同型任务不把任务 ID 追加进表中。
 
@@ -82,3 +83,4 @@
 | `2d2d22dfd` | 1114 机关与激怒目标的夜间出现窗口不一致 | 任务机关 `temporary_spawn` 窗口必须覆盖或等于副作用目标 NPC 的窗口（700008 对齐 203175 的 21:00-04:00）；`addNpcAggro` 对 knownlist 缺席目标按 best-effort 跳过，玩家不可用仍为硬失败；代表测试为 `RetailOpenWorldSpawnDataTest#keepsNymphGownRetailReferenceHeightAndNightWindow` |
 | `f7ae6a706` | 1336 埃拉库斯沙漠三地点调查完成转入领奖 | 多目标区域侦察任务必须在最后一段动画/地点完成后直接转入 REWARD 并提交 LEVEL_AND_VISIBILITY_REFRESH，禁止插入 START 汇总中间节点导致位掩码丢失与客户端 step 错位；同时为历史遗留存档提供登录与对话平滑恢复 |
 | `ad0d1385a` | 1354 上级飞行术考试倒计时时长对齐 | 任务 XML 的 start-quest-timer 秒数必须严格与客户端对话合同对齐，修复历史 handler 遗留的 300 秒误配为 120 秒 |
+| `bd782024d` | 14023 交付4块石板碎片后道具残留在背包 | 收集交付分支判定成功后必须在事务内包含全部道具的 remove-item；补齐中间 NPC 对话翻页归属与退出路由 |
