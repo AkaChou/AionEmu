@@ -198,3 +198,19 @@
 - 验证命令和结果：`QuestDefinitionXmlCompiler.parse` 编译 `1336.xml` 成功；`Quest1336ScoutingForDemokritosRegressionTest` 覆盖全部 6 种探索顺序转入 `REWARD`、历史状态恢复及领奖完成链路；2026-08-28 用户客户端全流程实测验收通过，3 处地点调查完成后正确出现下一步向德莫克里托斯报告并完成领奖。
 - 复用边界：适用于通过位掩码记录多地点/多区域/多动画侦察目标，完成全部目标后需流转至 NPC 报告领奖的同型任务。单击杀任务复用计数器模式，单 NPC 对话复用 8.1/8.12/8.13。
 - commit：`f7ae6a706`。
+
+## 8.15 限时飞行/考试任务倒计时时长与客户端对话描述不符
+
+- Pattern ID：`TIMED_QUEST_DURATION_ALIGNMENT`。
+- 代表任务：1354「Practical Aerobatics / 上级飞行术考试」。
+- 搜索症状：倒计时时间错误、任务限时与实际不符、4分钟倒计时、飞行考试时间过长、限时2分钟实际4分钟。
+- 玩家可见症状：NPC 对话与任务日志明确说明“限制时间是 2 分钟”（120 秒），但在确认开始考试后客户端实际显示的倒计时从 4 分多钟（04:59）开始递减。
+- 根因：旧 Java handler `_1354Pratical_Aerobatics.java` 误配置了 `QuestService.questTimerStart(env, 300)`（300 秒/5 分钟），XML 迁移时继承了 `seconds="300"`，导致下发给客户端的倒计时封包与客户端对话文本/任务描述不符。
+- 修复层：仅修改任务 XML 与增加任务专用回归测试。
+  1. 将 `1354.xml` 中的 `<start-quest-timer seconds="300" .../>` 修正为 `seconds="120"`；
+  2. 保持 7 个飞行环加速点推进、终点环取消计时器及超时重置回 `started` 节点的完整合同。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/1354.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1354ClientDialogAlignmentTest.java`。
+- 第一检查点：检查任务客户端 HTML 对话中的时间描述（如 `2분` / `2 minutes`）与 XML 中 `<start-quest-timer>` 的 `seconds` 参数是否一致，禁止套用通用 300 秒。
+- 验证命令和结果：`QuestDefinitionXmlCompiler.parse` 编译 `1354.xml` 成功；`Quest1354ClientDialogAlignmentTest` 锁定 120 秒倒计时、飞环推进与超时重置链路；2026-08-28 用户客户端全流程实机验证验收通过。
+- 复用边界：适用于限时飞行、限时护送、限时调查等由客户端对话规定具体倒计时时长的任务。
+- commit：`ad0d1385a`。
