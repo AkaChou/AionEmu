@@ -228,6 +228,9 @@
         <variable-is field="var0" value="5"/>
         <has-item item-id="182215999" count="5"/>
       </conditions>
+      <actions>
+        <remove-item item-id="182215999" count="5"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>

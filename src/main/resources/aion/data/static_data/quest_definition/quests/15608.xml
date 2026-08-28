@@ -203,7 +203,7 @@
         <dialog type="TALK_TO_NPC" npc-id="806165" action="QUEST_SELECT"/>
       </event>
       <actions>
-        <remove-item item-id="182215995" count="1"/>
+        <remove-item item-id="182215998" count="1"/>
       </actions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>

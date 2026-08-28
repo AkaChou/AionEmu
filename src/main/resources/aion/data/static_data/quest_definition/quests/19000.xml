@@ -155,6 +155,9 @@
         <has-item item-id="152003006" count="1"/>
       </conditions>
       <actions>
+        <remove-item item-id="152003004" count="1"/>
+        <remove-item item-id="152003005" count="1"/>
+        <remove-item item-id="152003006" count="1"/>
         <set-status status="REWARD"/>
       </actions>
       <after-commit>

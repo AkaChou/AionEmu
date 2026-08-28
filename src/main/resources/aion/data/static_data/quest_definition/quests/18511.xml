@@ -150,6 +150,7 @@
         <variable-is field="var0" value="0"/>
       </conditions>
       <actions>
+        <remove-item item-id="182212010" count="5"/>
         <give-item item-id="182212011" count="1"/>
       </actions>
       <after-commit>

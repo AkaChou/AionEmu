@@ -215,7 +215,7 @@
         <has-item item-id="182215997" count="1"/>
       </conditions>
       <actions>
-        <remove-item item-id="182215996" count="1"/>
+        <remove-item item-id="182215997" count="1"/>
         <set-variable field="var0" value="5"/>
       </actions>
       <after-commit>

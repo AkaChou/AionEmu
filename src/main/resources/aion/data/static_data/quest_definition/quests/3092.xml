@@ -117,6 +117,9 @@
       <conditions>
         <has-item item-id="182208066" count="7"/>
       </conditions>
+      <actions>
+        <remove-item item-id="182208066" count="7"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>

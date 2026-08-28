@@ -59,6 +59,9 @@
       <conditions>
         <has-item item-id="182213239" count="1"/>
       </conditions>
+      <actions>
+        <remove-item item-id="182213239" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
@@ -218,6 +221,9 @@
       <conditions>
         <has-item item-id="182213239" count="1"/>
       </conditions>
+      <actions>
+        <remove-item item-id="182213239" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
@@ -230,6 +236,9 @@
       <conditions>
         <has-item item-id="182213239" count="1"/>
       </conditions>
+      <actions>
+        <remove-item item-id="182213239" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>

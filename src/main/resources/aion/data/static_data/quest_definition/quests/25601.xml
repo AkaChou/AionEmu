@@ -136,6 +136,7 @@
         <has-item item-id="182216000" count="1"/>
       </conditions>
       <actions>
+        <remove-item item-id="182216000" count="1"/>
         <set-variable field="var0" value="2"/>
       </actions>
       <after-commit>

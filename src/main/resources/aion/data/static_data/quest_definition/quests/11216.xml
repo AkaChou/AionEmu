@@ -221,6 +221,12 @@
         <has-item item-id="182206829" count="1"/>
         <has-item item-id="182206830" count="1"/>
       </conditions>
+      <actions>
+        <remove-item item-id="182206827" count="1"/>
+        <remove-item item-id="182206828" count="1"/>
+        <remove-item item-id="182206829" count="1"/>
+        <remove-item item-id="182206830" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>

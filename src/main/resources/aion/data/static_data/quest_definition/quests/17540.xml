@@ -63,6 +63,9 @@
       <conditions>
         <start-eligible/>
       </conditions>
+      <actions>
+        <remove-item item-id="182216159" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
         <close-dialog/>

@@ -42,6 +42,43 @@ class MissionItemConsumptionBatchRegressionTest {
 	}
 
 	@Test
+	void turnInItemConsumptionContractsAreLocked() throws Exception {
+		// 11216: 德拉坎的研究 4份报告交付扣除
+		assertTransitionRemovesItems(11216, "v1", "reward", Set.of(182206827, 182206828, 182206829, 182206830));
+
+		// 3092: 观察幼龙 7个毒囊交付扣除
+		assertTransitionRemovesItems(3092, "step1", "reward", Set.of(182208066));
+
+		// 29064: 建筑之牙 证物交付扣除
+		assertTransitionRemovesItems(29064, "started", "reward", Set.of(182213239));
+
+		// 15606 & 15608 & 15613: 埃斯特拉任务收集物扣除与错扣纠正
+		assertTransitionRemovesItems(15606, "s4", "reward", Set.of(182215997));
+		assertTransitionRemovesItems(15608, "reward", "reward", Set.of(182215998));
+		assertTransitionRemovesItems(15613, "s5", "reward", Set.of(182215999));
+
+		// 25601 & 25605: 诺斯斯拉远征队信息与物品扣除纠正
+		assertTransitionRemovesItems(25601, "s1", "s2", Set.of(182216000));
+		assertTransitionRemovesItems(25605, "s1", "s2", Set.of(182216004));
+
+		// 1573 & 1636: 毒囊与调查物错扣纠正
+		assertTransitionRemovesItems(1573, "v1", "v2", Set.of(182201734));
+		assertTransitionRemovesItems(1636, "v1", "v2", Set.of(182201786));
+
+		// 2333: 调查材料交付扣除
+		assertTransitionRemovesItems(2333, "started", "v1", Set.of(182204131));
+
+		// 19000: 3种精华交付扣除
+		assertTransitionRemovesItems(19000, "s1", "reward", Set.of(152003004, 152003005, 152003006));
+
+		// 17540: 收集物交付扣除
+		assertTransitionRemovesItems(17540, "s4", "reward", Set.of(182216159));
+
+		// 18511: 工作物转换前置道具扣除
+		assertTransitionRemovesItems(18511, "started", "started", Set.of(182212010));
+	}
+
+	@Test
 	void campaignMissionsConsumeRequiredCollectionItems() throws Exception {
 		// 10010 & 20010: 永恒之塔主线 4 项收集物扣除
 		assertTransitionRemovesItems(10010, "s1", "s2", Set.of(182216171, 182216172, 182216173, 182216174));

@@ -155,7 +155,7 @@
         <use-item item-id="182201784"/>
       </event>
       <actions>
-        <remove-item item-id="182201784" count="1"/>
+        <remove-item item-id="182201734" count="1"/>
         <give-item item-id="182201735" count="1"/>
       </actions>
       <after-commit>
