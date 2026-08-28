@@ -49,6 +49,7 @@
 | `COLLECT_TURN_IN_DIALOG_CHAIN_MISMATCH` | 交付收集物时 load fail、HtmlPageId 不存在、交付按钮无响应 | `QUEST_SELECT` 显示客户端存在的任务入口页；交付判定挂在客户端实际按钮动作 `CHECK_USER_HAS_QUEST_ITEM(39)` 上，用 priority 0/1 拆分集齐进 `REWARD`+奖励窗口与未集齐回落提示页 | 客户端页面契约中该任务的入口页与交付按钮动作；旧 handler 的 collectItemCheck 分支与页面 | `e6f4f12cf`、`Quest14015ClientDialogAlignmentTest#collectDialogChainUsesOnlyClientOwnedPages` |
 | `INTRO_CHAIN_ACCEPT_PROMPT_BRIDGE_MISSING` | 接取介绍最后一步 load fail、无法打开接受窗口、继续听后没有确认 | 多页介绍链不能把每个 action 简单回显成同 ID 页；最后一跳必须按旧脚本桥接到 `SHOW_ASK_QUEST_ACCEPT_WINDOW(4)`，再由 `NPC_START` 的接受/拒绝路由接手 | 旧 handler 的最终介绍 action 响应页；当前 action->page 链和确认页入口 | `3721d0801`、`Quest1311ClientDialogAlignmentTest#acceptDialogChainReachesTheLegacyAcceptWindowAndStartsTheQuest` |
 | `DEVICE_TARGET_SPAWN_WINDOW_MISMATCH` | 使用任务机关后任务推进但副作用失败、运行时 WARN `AddNpcAggro failed`、激怒目标不出现 | 机关与副作用目标的 `temporary_spawn` 窗口必须覆盖彼此；knownlist 缺席目标的 best-effort 副作用不按硬失败上报，玩家不可用仍保持硬失败 | 比对任务链所有 spawn 窗口与目标 `respawn_time` 空窗；先修窗口对齐再保留运行时容错 | `2d2d22dfd`、`RetailOpenWorldSpawnDataTest#keepsNymphGownRetailReferenceHeightAndNightWindow` |
+| `MULTI_LOCATION_SCOUTING_FINAL_REWARD_TRANSITION` | 侦察完成后没有下一步、调查3个地方后任务空白、动画看完后无法向NPC报告 | 多目标区域/动画侦察通过位掩码记录进度，最后一次侦察直接迁移至 REWARD 并在 after-commit 提交 LEVEL_AND_VISIBILITY_REFRESH；提供 enter-world/talk 平滑恢复，不使用 START 汇总中间节点 | 最终侦察完成 transition 的目标状态与 sync mode；是否误用 START 中间节点导致客户端 step 0/1 与位掩码错位 | `f7ae6a706`、`Quest1336ScoutingForDemokritosRegressionTest#completesTheReportStateForEveryInvestigationOrder` |
 
 指纹表至少维护以上五列。一个代表提交可以支撑多个独立 Pattern；这属于对复合修复的检索拆分，不是新增重复案例。新增代表模式时，案例正文记录完整验收证据，指纹表只提炼可搜索的症状别名和抽象 IR/owner 特征，具体 action/page 仅作为代表实例；后续同型任务不把任务 ID 追加进表中。
 
@@ -78,3 +79,4 @@
 | `5511223b0` | 26800 永恒之塔到知识书库的跨地图阶段流 | 先区分任务交互物与实际 portal owner，再用每段 `ENTER_ZONE`、NPC handoff、电影和唯一 reward owner 锁定完整状态链；不能把跨地图阶段压缩为通用接取/领奖模板 |
 | `4a3be57` | 26802 Archives mission live counters | `START` 节点不固定投影 `var0/var1/var2=0`；图书管理员与元素首领两组计数可按任意顺序推进，最后一次击杀进入 `REWARD`；代表测试为 `Quest26802ClientDialogAlignmentTest#finalKillInEitherCounterEntersRewardBeforeReporting` |
 | `2d2d22dfd` | 1114 机关与激怒目标的夜间出现窗口不一致 | 任务机关 `temporary_spawn` 窗口必须覆盖或等于副作用目标 NPC 的窗口（700008 对齐 203175 的 21:00-04:00）；`addNpcAggro` 对 knownlist 缺席目标按 best-effort 跳过，玩家不可用仍为硬失败；代表测试为 `RetailOpenWorldSpawnDataTest#keepsNymphGownRetailReferenceHeightAndNightWindow` |
+| `f7ae6a706` | 1336 埃拉库斯沙漠三地点调查完成转入领奖 | 多目标区域侦察任务必须在最后一段动画/地点完成后直接转入 REWARD 并提交 LEVEL_AND_VISIBILITY_REFRESH，禁止插入 START 汇总中间节点导致位掩码丢失与客户端 step 错位；同时为历史遗留存档提供登录与对话平滑恢复 |

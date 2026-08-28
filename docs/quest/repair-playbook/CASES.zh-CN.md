@@ -177,3 +177,24 @@
 - 验证命令和结果：`QuestDefinitionXmlCompiler.parse` 直接编译 `1311.xml` 通过，展开 31 条 transition；2026-08-28 用户确认任务客户端验收完成，全任务可正常游玩。任务专用 Maven 测试与生产 catalog/白名单门禁本会话未运行（未获构建授权），仍是工程验收待办。
 - 复用边界：仅适用于多页任务接取介绍链的终点必须进入接受确认窗口的形状。不要推广到升级自动登记（复用 8.1）、交付收集判定或交付页链错位（复用 8.12）、奖励预览页错位（复用 `QUEST_REWARD_PREVIEW_PAGE_CONTRACT`）。每条链的入口页、中间页、最终桥接页和接受动作都必须单独取证。
 - commit：`3721d0801`。
+
+## 8.14 多地点侦察任务完成全部调查后未直接转入领奖状态
+
+- Pattern ID：`MULTI_LOCATION_SCOUTING_FINAL_REWARD_TRANSITION`。
+- 代表任务：1336「Scouting for Demokritos / 埃拉库斯沙漠调查」。
+- 搜索症状：侦察完成后没有下一步、调查3个地方后任务空白、动画看完后无法向NPC报告、3处地点调查完未到NPC。
+- 玩家可见症状：玩家在埃拉库斯沙漠完成 3 处调查并看完 3 段动画（movie 43, 44, 45）后，客户端任务追踪面板与任务日志不显示下一步“向德莫克里托斯报告”，步骤显示空白，且 NPC 德莫克里托斯（204006）头顶无领奖黄色问号（`?`），无法继续完成任务。
+- 根因：
+  1. 客户端 `QUEST_Q1336.html` 中 `step 0`（`START` 状态）对应 3 处地点侦察（由 `var0` 的位掩码 16、32、64 分别控制子条目打勾），`step 1` 对应向德莫克里托斯报告，客户端仅在进入 `QuestStatus.REWARD` 时才会激活并显示 `step 1`；
+  2. 原 XML 在完成全部 3 处侦察后（`ab -> 45`、`ac -> 44`、`bc -> 43`），转移到了一个中间节点 `done`（`status="START", var0=1`），导致状态仍为 `START`（无法激活 `step 1`）且 `var0` 掩码丢失（`step 0` 子条目消失），NPC 也没有领奖问号；
+  3. 旧 handler `_1336ScoutingForDemokritos.java` 权威合同为完成第 3 处调查后直接 `changeQuestStep(env, 48, 48, true)` 进入 `REWARD` 状态。
+- 修复层：仅修改任务 XML 与增加任务专用回归测试。
+  1. 移除中间节点 `done`；
+  2. 6 种探索顺序的最后一次动画结束转移（`ab -> 45`、`ac -> 44`、`bc -> 43`）均直接转移到 `reward`（`status="REWARD"`），并在 `after-commit` 中提交 `LEVEL_AND_VISIBILITY_REFRESH`；
+  3. 对历史处于 `START` 且 `var0=112`（三处全完）或 `var0=1`（旧中间节点）的存档，注册 `enter-world` 与 `TALK_TO_NPC 204006 QUEST_SELECT` 的平滑恢复迁移；
+  4. 补齐 `reward` 状态下与德莫克里托斯（204006）的 `QUEST_SELECT`/`USE_OBJECT`（打开 `SELECT2`）及 `<npc-complete>` 奖励选择和完成链。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/1336.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1336ScoutingForDemokritosRegressionTest.java`。
+- 第一检查点：检查多目标调查/区域侦察任务在所有目标达成后是否直接进入 `REWARD` 并提交 `LEVEL_AND_VISIBILITY_REFRESH`；比对客户端 HTML 的 `<steps>` 结构确认各 step 对应的 `QuestStatus`，不要在 `START` 状态下设置无意义的中间汇总变量导致子目标位掩码与后续 step 错位。
+- 验证命令和结果：`QuestDefinitionXmlCompiler.parse` 编译 `1336.xml` 成功；`Quest1336ScoutingForDemokritosRegressionTest` 覆盖全部 6 种探索顺序转入 `REWARD`、历史状态恢复及领奖完成链路；2026-08-28 用户客户端全流程实测验收通过，3 处地点调查完成后正确出现下一步向德莫克里托斯报告并完成领奖。
+- 复用边界：适用于通过位掩码记录多地点/多区域/多动画侦察目标，完成全部目标后需流转至 NPC 报告领奖的同型任务。单击杀任务复用计数器模式，单 NPC 对话复用 8.1/8.12/8.13。
+- commit：`f7ae6a706`。
