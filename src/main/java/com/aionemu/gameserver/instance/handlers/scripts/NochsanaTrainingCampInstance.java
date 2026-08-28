@@ -94,6 +94,20 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
+
+	/**
+	 * 将军死亡后在其当前位置重建出口门，便于击杀后直接离开。
+	 * Recreate the exit gate at the General's current death position for a direct post-kill exit.
+	 *
+	 * @param npc 死亡的 NPC / the dead NPC
+	 */
+	@Override
+	public void onDie(Npc npc) {
+		if (npc.getNpcId() == 256693) { // 诺克萨纳将军。 / Nochsana General.
+			spawn(700438, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading());
+			sendMsg("Nochsana Abyss Gate has appeared.");
+		}
+	}
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {

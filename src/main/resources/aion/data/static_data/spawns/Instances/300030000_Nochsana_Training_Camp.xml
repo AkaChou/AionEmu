@@ -85,9 +85,6 @@
       <spot x="388.605835" y="361.296326" z="385.000000" random_walk="4" h="0" resolve_z="true"/>
       <spot x="387.264618" y="369.567841" z="385.000000" random_walk="4" h="0" resolve_z="true"/>
     </spawn>
-    <spawn npc_id="700438">
-      <spot x="466.667419" y="707.163635" z="347.362946" entity_id="14" h="0" resolve_z="true"/>
-    </spawn>
     <spawn npc_id="256685">
       <spot x="480.109955" y="526.017883" z="364.178101" walker_id="Path_IDAb1_MC_Path_1" h="0" resolve_z="true"/>
       <spot x="370.528076" y="411.506897" z="379.559998" h="55" resolve_z="true"/>
