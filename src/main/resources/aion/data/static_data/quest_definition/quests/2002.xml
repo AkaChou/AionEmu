@@ -228,6 +228,9 @@
       <conditions>
         <has-item item-id="182203003" count="1"/>
       </conditions>
+      <actions>
+        <remove-item item-id="182203003" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5_2"/>

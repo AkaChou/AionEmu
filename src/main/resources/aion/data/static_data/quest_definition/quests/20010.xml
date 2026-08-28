@@ -151,6 +151,10 @@
       </conditions>
       <actions>
         <set-variable field="var0" value="2"/>
+        <remove-item item-id="182216180" count="3"/>
+        <remove-item item-id="182216181" count="1"/>
+        <remove-item item-id="182216182" count="1"/>
+        <remove-item item-id="182216183" count="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>

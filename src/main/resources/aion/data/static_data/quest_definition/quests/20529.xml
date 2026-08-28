@@ -507,6 +507,9 @@
         <variable-is field="var0" value="9"/>
       </conditions>
       <actions>
+        <remove-item item-id="182216090" count="1"/>
+        <remove-item item-id="182216091" count="1"/>
+        <remove-item item-id="182216092" count="1"/>
         <give-item item-id="182216108" count="1"/>
         <set-variable field="var0" value="10"/>
       </actions>

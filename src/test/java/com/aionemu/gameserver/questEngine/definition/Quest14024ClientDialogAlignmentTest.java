@@ -41,21 +41,23 @@ class Quest14024ClientDialogAlignmentTest {
 		assertEquals(List.of(
 			new QuestCondition.QuestVariableIs("var0", 2),
 			new QuestCondition.HasItem(BOOK_ITEM_ID, 1, true)), bookCheck.conditions());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 3)), bookCheck.actions());
+		assertEquals(List.of(
+			new QuestAction.SetVariable("var0", 3),
+			new QuestAction.RemoveItem(BOOK_ITEM_ID, 1)), bookCheck.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
 			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT4_2.id())), bookCheck.afterCommit());
 
 		// 玩家在传送页取消后再次点击 NPC，s3 入口必须直接恢复客户端 select4_2 页面。
 		// Re-opening the NPC after canceling on the teleport page must restore the client select4_2 page for s3.
-		QuestTransition resume = talk(definition, "s3", "s3", QuestDialogAction.QUEST_SELECT.id());
-		assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 3)), resume.conditions());
-		assertEquals(List.of(), resume.actions());
+		QuestTransition s3Select = talk(definition, "s3", "s3", QuestDialogAction.QUEST_SELECT.id());
+		assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 3)), s3Select.conditions());
+		assertEquals(List.of(), s3Select.actions());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT4_2.id())),
-			resume.afterCommit());
+			s3Select.afterCommit());
 
-		// 客户端 select4_2 页面的“继续听”按钮发送 SELECT4_2_1(2121)，服务器必须显示 select4_2_1。
-		// The client select4_2 "continue" button sends SELECT4_2_1(2121); the server must show select4_2_1.
+		// 从 select4_2 点击继续听，显示客户端真实存在的 select4_2_1 页面。
+		// Clicking keep-listening from select4_2 shows the client-owned select4_2_1 page.
 		QuestTransition pageTurn = talk(definition, "s3", "s3", QuestDialogAction.SELECT4_2_1.id());
 		assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 3)), pageTurn.conditions());
 		assertEquals(List.of(), pageTurn.actions());

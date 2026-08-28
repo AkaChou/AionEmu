@@ -57,7 +57,7 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="730326" source="started" target="reward" page="SELECT5"/>
+    <npc-item-report npc-id="217006" source="started" target="reward" item-id="185000102" required="1"/>
     <npc-complete npc-id="730326" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>

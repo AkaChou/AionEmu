@@ -276,6 +276,7 @@
         <grant-reward kind="GOLD" id="0" amount="4000" amount-mode="QUEST_BASE"/>
         <grant-reward kind="EXP" id="0" amount="8325278" amount-mode="QUEST_BASE"/>
         <grant-reward kind="ITEM" id="167000497" amount="1"/>
+        <remove-item item-id="182206030" count="1"/>
         <complete-quest reward-index="1"/>
       </actions>
       <after-commit>

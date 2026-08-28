@@ -196,6 +196,7 @@
         <has-item item-id="182215391" count="1"/>
       </conditions>
       <actions>
+        <remove-item item-id="182215391" count="1"/>
         <give-item item-id="182215392" count="1"/>
         <set-variable field="var0" value="4"/>
       </actions>

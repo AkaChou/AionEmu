@@ -178,6 +178,10 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203944" action="SET_SUCCEED"/>
       </event>
+      <actions>
+        <remove-item item-id="182201328" count="1"/>
+        <remove-item item-id="182201329" count="1"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
