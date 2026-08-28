@@ -4,6 +4,9 @@
     <races>
       <race id="ELYOS"/>
     </races>
+    <work-items>
+      <item id="182202179" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="EXP" id="0" amount="285255"/>
       <reward kind="ITEM" id="188053407" amount="1"/>
@@ -23,18 +26,41 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="gate-destroyed" status="START">
+      <var name="var0" value="1"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="800518" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="800518" source="started" target="reward" page="SELECT2"/>
+    <dialog type="NPC_START" npc-id="800518" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
+      <accept-actions>
+        <give-item item-id="182202179" count="1"/>
+      </accept-actions>
+    </dialog>
+    <transition source="started" target="gate-destroyed">
+      <event>
+        <kill-npc npc-id="256694"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="gate-destroyed" target="reward">
+      <event>
+        <kill-npc npc-id="256693"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_REPORT" npc-id="800518" source="reward" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="800518" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+      <preview actions="USE_OBJECT"/>
     </npc-complete>
   </transitions>
 </quest-definition>

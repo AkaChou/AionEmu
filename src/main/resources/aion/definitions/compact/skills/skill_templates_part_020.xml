@@ -11688,9 +11688,17 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18008" name="공성용 정령 공격" nameId="577345" name_desc="Abyss_Siege_Pet_Light_G1" stack="SKILL_Abyss_Siege_Pet_Light_G1" skill_group_name="Abyss_Siege_Pet_Light_G1" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="10000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="2" hostile_type="NONE">
-    <group_ref id="SG_55A3804A08844C05" />
+    <properties first_target="TARGET" first_target_range="15" target_type="ONLYONE" target_relation="ENEMY" target_species="ALL" awr="false" target_maxcount="1" revision_distance="0" target_status=""/>
     <group_ref id="SG_D41ED527F0140E41" />
-    <group_ref id="SG_823CB916127B85CC" />
+    <effects>
+      <skillatk value="100" delta="0" mode="ADD" rnddmg="1" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
+        <modifiers>
+          <targetrace race="PC_LIGHT_CASTLE_DOOR" value="19900"/>
+          <targetrace race="PC_DARK_CASTLE_DOOR" value="19900"/>
+          <targetrace race="DRAGON_CASTLE_DOOR" value="19900"/>
+        </modifiers>
+      </skillatk>
+    </effects>
     <group_ref id="SG_BF9A807A0960CB4E" />
     <retail>
       <f i="1" v="공성NPC타입" />
