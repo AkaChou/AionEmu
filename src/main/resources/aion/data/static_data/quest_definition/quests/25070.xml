@@ -4,6 +4,9 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
+    <work-items>
+      <item id="182215723" count="1"/>
+    </work-items>
     <rewards>
       <reward kind="GOLD" id="0" amount="133740"/>
       <reward kind="EXP" id="0" amount="9756478"/>
@@ -11,9 +14,6 @@
       <reward kind="ITEM" id="186000237" amount="25"/>
       <reward kind="ITEM" id="162000124" amount="14"/>
     </rewards>
-    <drops>
-      <drop npc-id="731552" item-id="182215723" chance="100" each-member="true" collecting-step="0"/>
-    </drops>
     <start-conditions>
       <condition type="finished" quest-id="25062"/>
     </start-conditions>
@@ -29,7 +29,7 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -41,10 +41,22 @@
     <npc-complete npc-id="804919" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="731552" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="731552" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="731552" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="731552" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731552" action="USE_OBJECT"/>
+      </event>
+      <actions>
+        <give-item item-id="182215723" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

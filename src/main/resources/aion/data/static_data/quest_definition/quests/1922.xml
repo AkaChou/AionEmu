@@ -13,7 +13,7 @@
       <reward kind="ITEM" id="167000497" amount="1"/>
     </rewards>
     <drops>
-      <drop npc-id="700264" item-id="182206030" chance="100" each-member="true" collecting-step="9"/>
+      <drop npc-id="700264" item-id="182206030" chance="100" each-member="true" collecting-step="7"/>
     </drops>
     <kills>
       <kill sequence="1">
@@ -54,6 +54,11 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="s7" target="s7">
+      <event>
+        <can-act template-id="700264" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <!-- 接取：升级自动接取，前置任务 1921 完成。onLvlUpEvent -> defaultOnLvlUpEvent(env, 1921)。 -->
     <transition source="unaccepted" target="started">
       <event>

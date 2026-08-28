@@ -62,6 +62,11 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="v1" target="v1">
+      <event>
+        <can-act template-id="700093" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <transition source="unaccepted" target="started">
       <event>
         <zone-mission-end/>

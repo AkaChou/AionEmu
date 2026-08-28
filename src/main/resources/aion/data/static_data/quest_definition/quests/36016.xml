@@ -35,6 +35,11 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700769" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <!-- 接取/报告:Fortuneer's 派系军需官 799837。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>

@@ -38,7 +38,12 @@
       <var name="var0" value="0"/>
     </node>
   </nodes>
-<transitions>
+  <transitions>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700354" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <dialog type="NPC_START" npc-id="832824" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
     <transition source="started" target="started">
       <event>

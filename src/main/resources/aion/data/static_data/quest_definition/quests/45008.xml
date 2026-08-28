@@ -35,6 +35,11 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700801" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <!-- 接取:FACTION 派系任务无 start NPC(start_npc_ids="0"),由 Field Warden NPC 799848 对话接取。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>

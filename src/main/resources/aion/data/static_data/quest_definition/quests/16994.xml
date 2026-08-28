@@ -40,6 +40,11 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="s0" target="s0">
+      <event>
+        <can-act template-id="702960" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <dialog type="NPC_START" npc-id="804862" source="unaccepted" target="s0" selection-sources="unaccepted s0" start-page="SELECT_NONE"/>
     <transition source="s0" target="s0">
       <event>

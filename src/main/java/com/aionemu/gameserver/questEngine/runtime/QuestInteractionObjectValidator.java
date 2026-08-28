@@ -1,8 +1,11 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.QuestDrop;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import java.util.Objects;
 import java.util.function.IntFunction;
@@ -45,6 +48,35 @@ public final class QuestInteractionObjectValidator {
 					throw new IllegalStateException("quest " + definition.id() + " quest_use_item template "
 						+ canAct.templateId() + " requires an explicit TALK route for side effects");
 				}
+			}
+			validateCatalogDrops(definition, aiNameByTemplate);
+		}
+	}
+
+	private static void validateCatalogDrops(CompiledQuestDefinition definition,
+			IntFunction<String> aiNameByTemplate) {
+		for (QuestDrop drop : definition.definition().metadata().drops()) {
+			if (drop.chance() <= 0 || !"quest_use_item".equals(aiNameByTemplate.apply(drop.npcId()))) {
+				continue;
+			}
+			boolean eligible = definition.definition().transitions().stream().anyMatch(transition -> {
+				if (!(transition.event() instanceof QuestEvent.CanAct canAct)
+						|| canAct.templateId() != drop.npcId()
+						|| !"ACTION_ITEM_USE".equals(canAct.actionType())) {
+					return false;
+				}
+				QuestNode source = definition.definition().nodes().stream()
+					.filter(node -> node.label().equals(transition.sourceNode()))
+					.findFirst().orElse(null);
+				return source != null
+					&& source.projection().status() == QuestStatus.START
+					&& (drop.collectingStep() == 0
+						|| Objects.equals(source.projection().variables().get("var0"), drop.collectingStep()));
+			});
+			if (!eligible) {
+				throw new IllegalStateException("quest " + definition.id() + " quest_use_item catalog drop npc "
+					+ drop.npcId() + " item " + drop.itemId() + " collecting step " + drop.collectingStep()
+					+ " has no matching START ACTION_ITEM_USE eligibility route");
 			}
 		}
 	}

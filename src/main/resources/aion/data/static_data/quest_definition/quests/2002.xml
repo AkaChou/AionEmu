@@ -89,6 +89,19 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="s11" target="s11">
+      <event>
+        <can-act template-id="700045" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="s11" target="s11">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="700045" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <apply-effect skill-id="8343" duration-ms="0"/>
+      </after-commit>
+    </transition>
     <!-- 接取:升级或区域任务结束自动接取(前置 2100)。 -->
     <transition source="unaccepted" target="started">
       <event>

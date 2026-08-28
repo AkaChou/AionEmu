@@ -40,6 +40,21 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700430" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700431" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700432" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <!-- 接取介绍。 Quest-start intro dialog. -->
     <transition source="unaccepted" target="unaccepted">
       <event>

@@ -41,6 +41,11 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700537" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <dialog type="NPC_START" npc-id="203701" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <dialog type="NPC_REPORT" npc-id="203701" source="started" target="reward" page="SELECT2"/>
     <npc-complete npc-id="203701" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">

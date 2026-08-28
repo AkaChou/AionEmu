@@ -22,7 +22,7 @@
       <reward kind="ITEM" id="160010213" amount="1"/>
     </rewards>
     <drops>
-      <drop npc-id="701470" item-id="182215176" chance="100" each-member="true" collecting-step="4"/>
+      <drop npc-id="701470" item-id="182215176" chance="100" each-member="true" collecting-step="3"/>
     </drops>
   </metadata>
   <progress>
@@ -59,6 +59,11 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="a3" target="a3">
+      <event>
+        <can-act template-id="701470" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <!-- 未接取: 查看任务说明(不可接) / Unaccepted: view quest info (not eligible) -->
     <transition source="unaccepted" target="unaccepted">
       <event>

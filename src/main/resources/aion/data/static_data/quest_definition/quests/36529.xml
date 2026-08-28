@@ -34,6 +34,11 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="702763" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <!-- 接取/报告 NPC:Cynthor (804948)。start_npc_ids=0,DSL 按 36503/36500 先例用 end NPC 挂接取对话。收集物 Gold Pearl (182215740) 由物体 Gold Pearl Shell (702763) 交互获得。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>

@@ -44,6 +44,26 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700433" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700434" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700435" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700436" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="205225" action="QUEST_SELECT"/>

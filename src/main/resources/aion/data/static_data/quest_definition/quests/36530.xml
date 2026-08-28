@@ -34,6 +34,11 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="702764" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <!-- 接取/报告 NPC:Cynthor (804948)。start_npc_ids=0,旧引擎经军团面板接取;DSL 按 36520 先例用 end NPC 挂接取对话。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>

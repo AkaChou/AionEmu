@@ -81,6 +81,42 @@ class QuestInteractionObjectCatalogTest {
 	}
 
 	@Test
+	void productionQuestUseItemDropsDeclareActionEligibility() throws Exception {
+		QuestCatalog catalog;
+		try (InputStream input = resource(
+				"aion/data/static_data/quest_definition/quest_definition_catalog.xml")) {
+			catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
+		}
+		Set<Integer> questUseItemNpcs = questUseItemNpcIds();
+		List<String> missing = new ArrayList<>();
+		for (CompiledQuestDefinition definition : catalog.executables()) {
+			List<QuestTransition> transitions = definition.definition().transitions();
+			for (QuestDrop drop : definition.definition().metadata().drops()) {
+				if (drop.chance() <= 0 || !questUseItemNpcs.contains(drop.npcId())) {
+					continue;
+				}
+				boolean eligible = transitions.stream().anyMatch(transition -> {
+					if (!(transition.event() instanceof QuestEvent.CanAct canAct)
+							|| canAct.templateId() != drop.npcId()
+							|| !"ACTION_ITEM_USE".equals(canAct.actionType())) {
+						return false;
+					}
+					return definition.definition().nodes().stream()
+						.anyMatch(node -> node.label().equals(transition.sourceNode())
+							&& node.projection().status() == QuestStatus.START
+							&& (drop.collectingStep() == 0
+								|| Objects.equals(node.projection().variables().get("var0"), drop.collectingStep())));
+				});
+				if (!eligible) {
+					missing.add(definition.id() + ":" + drop.npcId() + ":" + drop.itemId()
+						+ ":step=" + drop.collectingStep());
+				}
+			}
+		}
+		assertEquals(List.of(), missing);
+	}
+
+	@Test
 	void wineBarrel1109UsesCatalogDropTalkAndActionObjectRoutes() throws Exception {
 		CompiledQuestDefinition definition;
 		try (InputStream input = resource(
@@ -118,6 +154,39 @@ class QuestInteractionObjectCatalogTest {
 
 		assertDoesNotThrow(() -> QuestInteractionObjectValidator.validate(dispatcher(definition),
 			templateId -> "quest_use_item"));
+	}
+
+	@Test
+	void catalogDropWithoutActionEligibilityFailsStartupValidation() {
+		QuestMetadata metadata = new QuestMetadata("interaction", 0, 1, 99, Set.of(), "QUEST",
+			RepeatPolicy.once(), Set.of(), List.of(), List.of(),
+			List.of(new QuestDrop(700106, 182200205, 100, true, 0)));
+		CompiledQuestDefinition definition = QuestDsl.quest(990103).metadata(metadata)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.compile();
+
+		IllegalStateException failure = assertThrows(IllegalStateException.class,
+			() -> QuestInteractionObjectValidator.validate(dispatcher(definition),
+				templateId -> "quest_use_item"));
+		assertTrue(failure.getMessage().contains("catalog drop npc 700106"));
+	}
+
+	@Test
+	void catalogDropCollectingStepMustMatchActionSource() {
+		QuestMetadata metadata = new QuestMetadata("interaction", 0, 1, 99, Set.of(), "QUEST",
+			RepeatPolicy.once(), Set.of(), List.of(), List.of(),
+			List.of(new QuestDrop(700106, 182200205, 100, true, 1)));
+		CompiledQuestDefinition definition = QuestDsl.quest(990104).metadata(metadata)
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("started", project(QuestStatus.START, vars("var0", 0)))
+			.on(new QuestEvent.CanAct(700106, "ACTION_ITEM_USE")).from("started").goTo("started")
+			.compile();
+
+		IllegalStateException failure = assertThrows(IllegalStateException.class,
+			() -> QuestInteractionObjectValidator.validate(dispatcher(definition),
+				templateId -> "quest_use_item"));
+		assertTrue(failure.getMessage().contains("collecting step 1"));
 	}
 
 	@Test

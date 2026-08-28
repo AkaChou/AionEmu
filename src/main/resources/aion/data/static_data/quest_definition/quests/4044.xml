@@ -34,6 +34,11 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="700384" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="205171" action="QUEST_SELECT"/>

@@ -37,6 +37,11 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="702959" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <dialog type="NPC_START" npc-id="801763" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <counter-grid>
       <dimension field="var0" required="1" npc-ids="702959"/>

@@ -21,7 +21,7 @@
       <reward kind="ITEM" id="160010215" amount="1"/>
     </rewards>
     <drops>
-      <drop npc-id="701470" item-id="182215177" chance="100" each-member="true" collecting-step="4"/>
+      <drop npc-id="701470" item-id="182215177" chance="100" each-member="true" collecting-step="0"/>
     </drops>
   </metadata>
   <progress>
@@ -42,6 +42,11 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="701470" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <!-- 202549 Shugo：接取对话 / start dialogs -->
     <transition source="unaccepted" target="unaccepted">
       <event>

@@ -44,6 +44,11 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="s0" target="s0">
+      <event>
+        <can-act template-id="700268" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <!-- 升级自动接取（前置 2946）；对应旧 onLvlUpEvent 的 defaultOnLvlUpEvent(2946)。 Level-up auto-accept (prereq 2946); mirrors the old onLvlUpEvent defaultOnLvlUpEvent(2946). -->
     <transition source="unaccepted" target="s0">
       <event>

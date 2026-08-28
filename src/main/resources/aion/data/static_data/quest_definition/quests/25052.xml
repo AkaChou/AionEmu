@@ -39,6 +39,11 @@
     </node>
   </nodes>
   <transitions>
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="731561" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <dialog type="NPC_START" npc-id="804913" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <dialog type="NPC_REPORT" npc-id="804913" source="started" target="reward" page="SELECT2"/>
     <transition source="reward" target="reward">

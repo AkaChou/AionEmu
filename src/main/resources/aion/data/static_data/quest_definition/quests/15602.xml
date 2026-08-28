@@ -375,7 +375,7 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
-    <transition source="s4" target="s4">
+    <transition source="s3" target="s3">
       <event>
         <can-act template-id="703136" action-type="ACTION_ITEM_USE"/>
       </event>
