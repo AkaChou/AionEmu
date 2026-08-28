@@ -10,7 +10,6 @@
 		</spawn>
 		<!-- Captain Hagarkan -->
 		<spawn npc_id="233879">
-            <spot x="251.67194" y="264.56833" z="228.81387" h="91"/>
 		  <spot x="258.531769" y="239.821655" z="231.518051" h="96" random_walk="2" resolve_z="true"/>
         </spawn>
 		<!-- Moving Hyperion -->
@@ -23,7 +22,6 @@
 		</spawn>
 		<!-- Kargate -->
 		<spawn npc_id="204432">
-			<spot x="257.38528" y="223.65582" z="212.26299" h="94"/>
 		  <spot x="272.828857" y="176.814392" z="207.000000" h="93" random_walk="2" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="233886" respawn_time="1">

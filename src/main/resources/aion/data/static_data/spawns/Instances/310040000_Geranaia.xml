@@ -11,7 +11,6 @@
 		</spawn>
 		<!-- Captain Tarbana -->
 		<spawn npc_id="233878">
-            <spot x="251.67194" y="264.56833" z="228.81387" h="91"/>
 		  <spot x="256.375580" y="243.207993" z="229.273560" h="93" random_walk="2" resolve_z="true"/>
         </spawn>
 		<!-- Moving Hyperion -->
@@ -24,8 +23,7 @@
 		</spawn>
 		<!-- Kimeia -->
 		<spawn npc_id="204044">
-			<spot x="257.38528" y="223.65582" z="212.26299" h="94"/>
-		  <spot x="272.664032" y="175.631027" z="207.000000" h="92" random_walk="2" resolve_z="true"/>
+			<spot x="272.664032" y="175.631027" z="207.000000" h="92" random_walk="2" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="233885" respawn_time="1">
 		  <spot x="253.857727" y="197.231339" z="213.092987" h="93" resolve_z="true"/>
