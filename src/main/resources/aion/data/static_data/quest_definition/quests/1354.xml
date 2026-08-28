@@ -140,7 +140,7 @@
         <dialog type="TALK_TO_NPC" npc-id="203983" action="SETPRO1"/>
       </event>
       <after-commit>
-        <start-quest-timer seconds="300" timer-id="countdown" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/>
+        <start-quest-timer seconds="120" timer-id="countdown" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
