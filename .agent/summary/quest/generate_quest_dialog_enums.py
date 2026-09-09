@@ -24,7 +24,7 @@ STANDARD_PAGES = {
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate typed quest dialog enums from client data and XML references.")
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[3])
     parser.add_argument("--check", action="store_true", help="Fail when generated sources differ; do not write.")
     return parser.parse_args()
 

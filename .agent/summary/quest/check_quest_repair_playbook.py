@@ -48,7 +48,7 @@ class ValidationResult:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Validate quest repair Playbook pattern coverage and references.")
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[3])
     return parser.parse_args()
 
 

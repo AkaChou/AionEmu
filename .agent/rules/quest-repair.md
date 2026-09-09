@@ -52,7 +52,7 @@ When `CASES.zh-CN.md` links a matched case to `docs/quest/repair-playbook/cases/
 14. When an already accepted repair establishes a new representative case, use two consecutive local commits so the Playbook can reference a stable repair hash: first commit only the repair sources/tests, then update and commit the Playbook with that repair commit hash. Do not amend the Playbook into a commit whose hash it records.
 15. If the repair was committed while still pending acceptance, preserve its stable hash and make the Playbook follow-up the first commit after the final acceptance evidence arrives. Do not rewrite unrelated history that accumulated while acceptance was pending.
 16. In either sequence, once the case is accepted, do not insert an unrelated commit, push, or issue an acceptance-complete handoff before the Playbook commit. The repair and Playbook commits form one completed delivery batch even when acceptance was obtained later.
-17. After changing Playbook patterns or representative cases, run `python3 scripts/quest/check_quest_repair_playbook.py` and require every indexed or detailed representative commit to resolve and have at least one structured Pattern fingerprint with an existing `TestClass#method` reference.
+17. After changing Playbook patterns or representative cases, run `python3 .agent/summary/quest/check_quest_repair_playbook.py` and require every indexed or detailed representative commit to resolve and have at least one structured Pattern fingerprint with an existing `TestClass#method` reference.
 18. Because `docs/*` is ignored, add every changed Playbook document with explicit paths in the documentation commit:
 
    ```bash

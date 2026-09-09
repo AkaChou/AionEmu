@@ -1,0 +1,14 @@
+{
+ "mode": "glossary-driven",
+ "applied_changes": 871,
+ "normalized_repeated_skills": 427,
+ "files_touched": 79,
+ "dict_entries": 10937,
+ "candidates": 8983,
+ "match_rate_pct": 9.7,
+ "unmatched": 8112,
+ "notes": [
+  "词典为术语表(≥3次过滤+核心)；未匹配多为内部ID/自定义对象名/非实体说明",
+  "需更全词典请基于服务端模板name+客户端STR重建"
+ ]
+}

@@ -1,0 +1,10 @@
+{
+ "fixed_count": 1492,
+ "remaining_acceptable": [
+  8292,
+  10482,
+  12076,
+  21588
+ ],
+ "fixed_all_defects": true
+}
