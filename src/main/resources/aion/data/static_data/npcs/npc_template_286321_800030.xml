@@ -43353,7 +43353,7 @@
     <bound_radius side="0.33" upper="1.87" front="0.33"/>
     <talk_info delay="3" distance="5"/>
   </npc_template>
-<npc_template name_desc="IDCromede_NPC_Robstin" npc_type="NON_ATTACKABLE" level="1" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="371729" attack_delay="2000" npc_id="700965" sensory_range="15" tribe="FIELD_OBJECT_ALL" name="robstin" rank="DISCIPLINED" height="1.8">
+<npc_template name_desc="IDCromede_NPC_Robstin" npc_type="NON_ATTACKABLE" level="1" rating="NORMAL" ai="noaction" hpgauge_level="3" type="GENERAL" name_id="371729" attack_delay="2000" npc_id="700965" sensory_range="15" tribe="FIELD_OBJECT_ALL" name="robstin" rank="DISCIPLINED" height="1.8">
     <stats hp_regen="86" maxHp="172" pdef="57" walk_speed="1.457" mresist="28" mboost_resist="0" run_speed="6" accuracy="93" main_hand_attack="23" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="207" power="23" evasion="144" run_speed_fight="5"/>
     <equipment>
       <item>110100297</item>
