@@ -53,7 +53,6 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
@@ -65,7 +64,6 @@
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
@@ -163,6 +161,7 @@
         <dialog type="TALK_TO_NPC" npc-id="204020" action="SETPRO2"/>
       </event>
       <after-commit>
+        <teleport-player-current-or-default world-id="210040000" x="2006.7308" y="1392.1913" z="118.125" heading="4"/>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
