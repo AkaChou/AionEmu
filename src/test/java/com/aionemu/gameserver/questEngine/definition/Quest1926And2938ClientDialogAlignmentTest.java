@@ -61,7 +61,7 @@ class Quest1926And2938ClientDialogAlignmentTest {
 			new QuestAction.SetVariable("var0", 1)), handoff.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.CloseDialog()), handoff.afterCommit());
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1_2.id())), handoff.afterCommit());
 		assertNull(handoff.priority());
 
 		assertPage(definition, "reward", secondNpcId, QuestDialogAction.QUEST_SELECT,

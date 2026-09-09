@@ -36,6 +36,7 @@ public class cmd_job extends PlayerCommand {
 		player.getSkillList().addSkill(player, 40004, 550); // 缝纫 / Couture
 		player.getSkillList().addSkill(player, 40007, 550); // 炼金 / Alchimie
 		player.getSkillList().addSkill(player, 40008, 550); // 手工制作 / Artisanat
+		player.getSkillList().addSkill(player, 40010, 550); // 家具制作 / Furniture crafting
 	}
 
 	/**
