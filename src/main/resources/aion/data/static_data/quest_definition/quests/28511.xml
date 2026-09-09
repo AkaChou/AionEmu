@@ -114,6 +114,9 @@
       <conditions>
         <has-item item-id="182212022" count="5"/>
       </conditions>
+      <actions>
+        <remove-item item-id="182212022" count="5"/>
+      </actions>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>

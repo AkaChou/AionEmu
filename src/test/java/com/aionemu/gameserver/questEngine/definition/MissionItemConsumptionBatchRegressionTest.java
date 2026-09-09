@@ -76,6 +76,11 @@ class MissionItemConsumptionBatchRegressionTest {
 
 		// 18511: 工作物转换前置道具扣除
 		assertTransitionRemovesItems(18511, "started", "started", Set.of(182212010));
+
+		// 27540 & 28511: legacy collect_items are consumed when the turn-in check succeeds.
+		// 27540、28511：legacy collect_items 交付检查成功时扣除。
+		assertTransitionRemovesItems(27540, "s4", "reward", Set.of(182216160));
+		assertTransitionRemovesItems(28511, "started", "started", Set.of(182212022));
 	}
 
 	@Test
@@ -91,7 +96,7 @@ class MissionItemConsumptionBatchRegressionTest {
 		assertTransitionRemovesItems(14046, "s2", "s3", Set.of(167000323, 152000309, 182215353));
 
 		// 14051: 调查物扣除
-		assertTransitionRemovesItems(14051, "s1", "s2", Set.of(182215337, 182215338));
+		assertTransitionRemovesItems(14051, "s2", "s3", Set.of(182215337, 182215338));
 
 		// 15400 & 25400: 军团援助物资扣除
 		assertTransitionRemovesItems(15400, "s3", "s4", Set.of(182215897, 182215898, 182215899));
