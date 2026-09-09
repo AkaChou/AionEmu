@@ -37,7 +37,7 @@ class Quest1926And2938ClientDialogAlignmentTest {
 			definition.metadata().questWorkItems());
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1));
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 0));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
 
 		QuestTransition levelUp = transition(definition, "unaccepted", new QuestEvent.LevelUp());
@@ -48,6 +48,16 @@ class Quest1926And2938ClientDialogAlignmentTest {
 			levelUp.afterCommit());
 		assertNull(levelUp.priority());
 
+		QuestTransition legacyRewardRecovery = recoveryRoute(definition);
+		assertEquals("reward", legacyRewardRecovery.targetNode());
+		assertEquals(List.of(
+			new QuestCondition.StatusIs(QuestStatus.REWARD),
+			new QuestCondition.QuestVariableIs("var0", 1)), legacyRewardRecovery.conditions());
+		assertEquals(List.of(), legacyRewardRecovery.actions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
+			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), legacyRewardRecovery.afterCommit());
+		assertNull(legacyRewardRecovery.priority());
+
 		assertPage(definition, "started", firstNpcId, QuestDialogAction.QUEST_SELECT,
 			QuestDialogPage.SELECT1);
 		assertPage(definition, "started", firstNpcId, QuestDialogAction.SELECT1_1,
@@ -56,9 +66,7 @@ class Quest1926And2938ClientDialogAlignmentTest {
 		QuestTransition handoff = route(definition, "started", firstNpcId, QuestDialogAction.SET_SUCCEED);
 		assertEquals("reward", handoff.targetNode());
 		assertEquals(List.of(), handoff.conditions());
-		assertEquals(List.of(
-			new QuestAction.GiveItem(workItemId, 1),
-			new QuestAction.SetVariable("var0", 1)), handoff.actions());
+		assertEquals(List.of(new QuestAction.GiveItem(workItemId, 1)), handoff.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1_2.id())), handoff.afterCommit());
@@ -97,7 +105,7 @@ class Quest1926And2938ClientDialogAlignmentTest {
 			assertNull(completion.priority());
 		}
 
-		assertEquals(22, definition.transitions().size());
+		assertEquals(23, definition.transitions().size());
 		assertTrue(routes(definition, "unaccepted", firstNpcId).isEmpty());
 		assertTrue(routes(definition, "unaccepted", secondNpcId).isEmpty());
 		assertTrue(routes(definition, "started", secondNpcId).isEmpty());
@@ -120,6 +128,13 @@ class Quest1926And2938ClientDialogAlignmentTest {
 			.toList();
 		assertEquals(1, routes.size(), "quest " + definition.id() + " " + source + " " + event);
 		return routes.getFirst();
+	}
+
+	private static QuestTransition recoveryRoute(QuestDefinition definition) {
+		return definition.transitions().stream()
+			.filter(candidate -> candidate.sourceNode() == null)
+			.filter(candidate -> candidate.event().equals(new QuestEvent.EnterWorld()))
+			.findFirst().orElseThrow();
 	}
 
 	private static QuestTransition route(QuestDefinition definition, String source, int npcId,

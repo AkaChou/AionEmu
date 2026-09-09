@@ -41,8 +41,7 @@ class Quest2393And3722ItemPlayRewardOwnerTest {
 			new QuestCondition.ZoneIs(FATHER_USE_ZONE, true)), itemPlay.conditions());
 		assertEquals(List.of(
 			new QuestAction.RemoveItem(FATHER_WATER, 1),
-			new QuestAction.GiveItem(FATHER_WARM_WATER, 1),
-			new QuestAction.SetVariable("var0", 1)), itemPlay.actions());
+			new QuestAction.GiveItem(FATHER_WARM_WATER, 1)), itemPlay.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			itemPlay.afterCommit());
 
@@ -62,8 +61,7 @@ class Quest2393And3722ItemPlayRewardOwnerTest {
 			new QuestCondition.QuestVariableIs("var0", 0),
 			new QuestCondition.ZoneIs(YANNIS_USE_ZONE, true)), itemPlay.conditions());
 		assertEquals(List.of(
-			new QuestAction.RemoveItem(YANNIS_TOY, 1),
-			new QuestAction.SetVariable("var0", 1)), itemPlay.actions());
+			new QuestAction.RemoveItem(YANNIS_TOY, 1)), itemPlay.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			itemPlay.afterCommit());
 
@@ -83,8 +81,7 @@ class Quest2393And3722ItemPlayRewardOwnerTest {
 			new QuestCondition.QuestVariableIs("var0", 0),
 			new QuestCondition.ZoneIs(YANNIS_USE_ZONE, true)), itemPlay.conditions());
 		assertEquals(List.of(
-			new QuestAction.RemoveItem(ASMODIAN_WEAPON, 1),
-			new QuestAction.SetVariable("var0", 1)), itemPlay.actions());
+			new QuestAction.RemoveItem(ASMODIAN_WEAPON, 1)), itemPlay.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			itemPlay.afterCommit());
 

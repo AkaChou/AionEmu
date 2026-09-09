@@ -248,3 +248,17 @@
 - 验证命令和结果：`xmllint --noout src/main/resources/aion/data/static_data/quest_definition/quests/3926.xml` 通过；`git diff --check` 通过；用户于 2026-09-09 回复“验证通过”，未限定分支，确认本任务客户端流程验收完成。按项目规则本会话未重跑 Maven focused/catalog/whitelist 门禁，也未启动或重启服务端；启动日志、运行日志、协议 trace 和稳定截图均为 `not captured`。
 - 复用边界：适用于 metadata `title-id` 与奖励 `TITLE` 相同、legacy 没有 quest-level `titleId`、且错误前置会阻断接受或自动接取的任务。若症状来自介绍链末页桥接、收集交付动作/page 错配、奖励预览页错误或自动升级入口，不复用本模式；10521/20521 虽同样缺少 legacy `titleId`，但当前已有自动任务与资格测试把 306 当作门槛，需先确认项目意图；1322 的 legacy `titleId=4` 遗漏属于反向迁移差异，另行处理。
 - commit：`880af62b7`。
+
+## 8.18 旧 handler 的 REWARD packed step 被迁移 XML 改写导致任务书空白
+
+- Pattern ID：`LEGACY_REWARD_STEP_PROJECTION_MISMATCH`。
+- 代表任务：1926/2938「Secret Library Access / 秘密书库出入许可」；同型批次包括 2393、3722、4722、11149、13965、14010、14015、14020、14040、14050、15674、23965、24010、24020、24040、24050、25674、30057、30158、30208。
+- 搜索症状：交接道具或收集物已经处理，任务状态为 `REWARD`，但任务追踪/任务日志空白，下一 NPC 不显示；背包仍有任务道具时尤其容易误判为物品或奖励 owner 问题。
+- 玩家可见症状：1926 在 NPC 203701 领取推荐信后，调试状态显示 `REWARD`、`var0=1` 且背包有 182206022，但任务日志不显示前往 NPC 203894；修复后客户端可以显示下一步并在 203894 完成任务。2938 是同一合同的魔族镜像。
+- 根因：旧 handler 的 `SET_REWARD`、`setStatus(QuestStatus.REWARD)` 或 `useQuestItem(..., true)` 只进入 `REWARD` 并更新任务状态，不写入 packed quest var；迁移 XML 却把 `reward` 节点投影为 `var0=1`，并在 `START -> REWARD` 交接动作中再次 `set-variable var0=1`。`QuestMutationPlanner` 会用目标节点投影覆盖未被动作触及的变量，最终 `SM_QUEST_ACTION` 的 status/step 与 Aion 5.8 客户端任务 step 不一致，页面内容因此为空。
+- 修复层：任务 XML 与任务专用回归测试。22 个定义的 `reward` 节点统一保留 legacy `var0=0`；移除进入 `REWARD` 的冗余 `set-variable`，保留原有物品扣除/发放和页面顺序；新增 `status=REWARD + var0=1` 的 source-less `ENTER_WORLD` 恢复迁移，只同步 `LEVEL_AND_VISIBILITY_REFRESH`，把已经落盘的旧错位状态纠正为当前 reward 投影。1926/2938 继续保留 `SYNC -> SELECT1_2(1097)` 的客户端后续页。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/{1926,2938,2393,3722,4722,11149,13965,14010,14015,14020,14040,14050,15674,23965,24010,24020,24040,24050,25674,30057,30158,30208}.xml`；`src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1926And2938ClientDialogAlignmentTest.java`、`Quest2393And3722ItemPlayRewardOwnerTest.java`、`Quest14015ClientDialogAlignmentTest.java`、`LegacyRewardStepProjectionRegressionTest.java`。
+- 第一检查点：先从旧 handler 或共享 helper 确认进入 `REWARD` 前后是否写了 `setQuestVar`/`changeQuestStep(..., false)`；再对照 XML reward projection、进入 transition 的 actions 和实际 `SM_QUEST_ACTION` packed vars。不要把客户端奖励窗口 page（例如 1097/5）当成任务日志 step，也不要因为 reward 节点通常写 1 就自动填 1。
+- 验证命令和结果：22 个 XML 通过 `xmllint --noout`；结构化审计确认 22 个 reward 节点均为 `var0=0`、`START -> REWARD` 不再改写变量且各有旧存档恢复路由；`git diff --check` 通过。用户于 2026-09-09 确认 1926 客户端/runtime 验证成功，推荐信交接后能显示下一步并在 203894 完成。本次未运行 Maven focused/catalog/whitelist 门禁（遵循项目未授权构建规则），也未启动或重启服务端。
+- 复用边界：仅适用于 legacy 明确进入 `REWARD` 但没有改 packed var、而当前 typed XML 将该次迁移投影成不同变量的任务。若旧 handler 有 `setQuestVar`、`changeQuestStep(..., false)`，或客户端/legacy 明确要求非零 reward var（例如 1336、1920），不得套用；11031/11032 的旧流程是 `var0=2 -> 3`，而现 XML 还缺少前置阶段，需另建完整阶段链案例。
+- commit：`8080744d7`。

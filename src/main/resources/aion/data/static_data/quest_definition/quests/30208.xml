@@ -26,13 +26,25 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="1"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <dialog type="NPC_START" npc-id="798941" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
       <accept-actions>
         <give-item item-id="182209610" count="1"/>
@@ -58,9 +70,6 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799506" action="SET_SUCCEED"/>
       </event>
-      <actions>
-        <set-variable field="var0" value="1"/>
-      </actions>
       <after-commit>
         <delete-interaction-npc schedule-respawn="true"/>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

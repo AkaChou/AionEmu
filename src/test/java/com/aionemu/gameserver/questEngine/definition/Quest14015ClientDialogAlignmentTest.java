@@ -24,7 +24,7 @@ class Quest14015ClientDialogAlignmentTest {
 		QuestDefinition definition = definition().definition();
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1));
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 0));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
 
 		QuestTransition levelUp = transition(definition, "unaccepted", "started", new QuestEvent.LevelUp());
@@ -70,7 +70,6 @@ class Quest14015ClientDialogAlignmentTest {
 		assertEquals(Integer.valueOf(0), success.priority());
 		assertEquals(List.of(new QuestCondition.HasItem(COLLECTED_ITEM_ID, 10)), success.conditions());
 		assertEquals(List.of(
-			new QuestAction.SetVariable("var0", 1),
 			new QuestAction.RemoveItem(COLLECTED_ITEM_ID, 10)), success.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
